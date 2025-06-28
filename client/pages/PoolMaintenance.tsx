@@ -595,7 +595,7 @@ export function PoolMaintenancePage() {
                       }
                     />
                     <Label htmlFor="filtros" className="text-sm">
-                      Filtros
+                      Pré-filtro
                     </Label>
                   </div>
 
