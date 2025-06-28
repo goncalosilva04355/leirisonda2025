@@ -73,7 +73,7 @@ export function MaintenanceReport({
       return `
 💧 RELATÓRIO DE MANUTENÇÃO - LEIRISONDA
 
-���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━
+���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🏊 INFORMAÇÕES DA PISCINA
 
@@ -318,47 +318,35 @@ Relatório gerado em: ${reportDate}
     .header h2 {
       font-size: 18px;
       font-weight: normal;
-      margin-bottom: 15px;
-      opacity: 0.95;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
     }
 
     .content {
-      padding: 40px;
-      background: #ffffff;
+      padding: 30px;
     }
 
     .maintenance-content {
-      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-      border-radius: 16px;
-      padding: 32px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 20px;
       white-space: pre-wrap;
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      line-height: 1.7;
-      color: #374151;
-      position: relative;
-    }
-
-    .maintenance-content::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #3b82f6, #06b6d4);
-      border-radius: 16px 16px 0 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #333;
     }
 
     .footer {
-      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      background: #333;
       color: white;
-      padding: 32px;
+      padding: 20px;
       text-align: center;
-      margin-top: 40px;
-      border-radius: 16px 16px 0 0;
+      margin-top: 30px;
     }
 
     .footer-content {
@@ -509,7 +497,7 @@ Relatório gerado em: ${reportDate}
           // Create mailto with PDF attachment (note: most email clients don't support blob attachments directly)
           const emailSubject = encodeURIComponent(title);
           const emailBody = encodeURIComponent(
-            `Segue em anexo o relatório de manutenç��o.\n\n` +
+            `Segue em anexo o relatório de manutenção.\n\n` +
               `Cliente: ${maintenance.clientName}\n` +
               `Piscina: ${maintenance.poolName}\n` +
               `Localização: ${maintenance.location}\n\n` +
