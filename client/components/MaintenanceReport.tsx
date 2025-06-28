@@ -160,7 +160,7 @@ Data recomendada: ${format(new Date(intervention.nextMaintenanceDate), "dd/MM/yy
     : ""
 }
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📞 CONTACTO
 Leirisonda - Manutenção de Piscinas
@@ -888,9 +888,8 @@ Relatório gerado em: ${reportDate}
           </div>
 
           {isGenerating && (
-            <div className="text-center text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mx-auto mb-2"></div>
-              A gerar PDF profissional...
+            <div className="text-center text-sm text-gray-600">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mx-auto"></div>
             </div>
           )}
         </div>
