@@ -635,15 +635,6 @@ Relatório gerado em: ${reportDate}
             {format(new Date(work.date), "dd/MM/yyyy", { locale: pt })}
           </div>
 
-          <div className="bg-blue-50 p-3 rounded-lg text-center">
-            <p className="text-sm font-medium text-blue-800 mb-1">
-              📄 Todos os relatórios são gerados em PDF profissional
-            </p>
-            <p className="text-xs text-blue-600">
-              Design moderno com logotipo Leirisonda
-            </p>
-          </div>
-
           <div className="grid grid-cols-2 gap-3">
             <Button
               onClick={() => generatePDFReport("download")}
