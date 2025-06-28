@@ -44,39 +44,47 @@ export function Login() {
   };
 
   const handleMobileDeploy = () => {
-    const deployGuide = `📱 ATUALIZAR APP LEIRISONDA
+    const pdfInfo = `📄 SISTEMA DE RELATÓRIOS PDF - LEIRISONDA
 
-🔄 Como atualizar para "Cubicagem de Água":
+🏗️ FUNCIONALIDADES PRINCIPAIS:
+- Relatórios de Manutenção de Piscinas
+- Relatórios de Trabalhos e Intervenções
+- Geração automática de PDFs profissionais
+- Logo da empresa integrado
+- Design moderno em formato A4
 
-1. 🌐 Abre: https://app.netlify.com/drop
-2. 📁 Faz upload da pasta leirisonda-deploy
-3. ⏱️ Aguarda 2-3 minutos
-4. 🔄 Refresh da app (puxa para baixo)
-5. ✅ Testa: Nova Piscina → "Cubicagem de Água"
+🔧 COMO FUNCIONA:
+1. ✅ Login no sistema
+2. 📝 Criar/visualizar relatório
+3. 📄 Clicar em "Partilhar Relatório"
+4. 🎯 Escolher opção (PDF, Email, WhatsApp)
+5. 📋 PDF gerado automaticamente
 
-🆕 NOVIDADES:
-- Sistema completo de manutenção
-- Gestão de intervenções
-- Formulários atualizados
+📱 OPÇÕES DE PARTILHA:
+• Download: Descarrega PDF diretamente
+• Email: PDF + abre cliente de email
+• WhatsApp: PDF + abre WhatsApp
+• Copiar: PDF + copia resumo
 
-App: https://leirisonda.netlify.app
-Netlify: https://app.netlify.com/drop
+⚙️ TECNOLOGIA:
+- jsPDF + html2canvas
+- Templates HTML modernos
+- Formatação A4 profissional
+- Logótipo da Leirisonda
 
-Problemas? Contacta o desenvolvedor.`;
+🌐 Acesso: https://leirisonda.netlify.app`;
 
-    const blob = new Blob([deployGuide], { type: "text/plain" });
+    const blob = new Blob([pdfInfo], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "leirisonda-update.txt";
+    a.download = "leirisonda-pdf-sistema.txt";
     a.click();
     URL.revokeObjectURL(url);
 
-    setTimeout(() => {
-      window.open("https://app.netlify.com/drop", "_blank");
-    }, 500);
-
-    alert("📱 Guia descarregado! A abrir Netlify...");
+    alert(
+      "📄 Informação do sistema PDF descarregada! Faça login para ver os relatórios em ação.",
+    );
   };
 
   // Force no loading state - show login immediately
