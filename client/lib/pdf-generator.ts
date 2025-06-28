@@ -236,22 +236,27 @@ export class PDFGenerator {
           }
 
           html, body {
-            width: 794px;
+            width: 210mm;
+            height: 297mm;
             margin: 0;
             padding: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: 11px;
+            line-height: 1.4;
             color: #111827;
             background: #ffffff;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
           }
 
           .report-container {
-            width: 794px;
+            width: 210mm;
+            height: 297mm;
             background: #ffffff;
             position: relative;
+            display: flex;
+            flex-direction: column;
           }
 
           /* Enhanced Header */
