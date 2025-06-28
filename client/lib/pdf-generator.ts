@@ -259,116 +259,137 @@ export class PDFGenerator {
             flex-direction: column;
           }
 
-          /* Enhanced Header */
+          /* Ultra-Modern Header */
           .header {
-            background: linear-gradient(135deg, ${primaryColor} 0%, ${accentColor} 100%);
+            background: linear-gradient(135deg, ${primaryColor} 0%, ${accentColor} 50%, #1e293b 100%);
             color: white;
-            padding: 40px 50px;
+            padding: 20mm 15mm;
             position: relative;
             overflow: hidden;
-            min-height: 200px;
+            height: 80mm;
+            flex-shrink: 0;
           }
 
           .header::before {
             content: '';
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 2px, transparent 2px);
-            background-size: 20px 20px;
-            animation: drift 30s infinite linear;
+            top: -50%;
+            right: -30%;
+            width: 120%;
+            height: 200%;
+            background:
+              radial-gradient(circle at 30% 80%, rgba(255,255,255,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
           }
 
           .header::after {
             content: '';
             position: absolute;
-            bottom: -100px;
-            right: -100px;
-            width: 200px;
-            height: 200px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.8) 100%);
           }
 
-          @keyframes drift {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-20px, -20px) rotate(360deg); }
+          @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-10px, -10px) rotate(1deg); }
+            66% { transform: translate(10px, -5px) rotate(-1deg); }
           }
 
           .header-content {
             position: relative;
             z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
           }
 
           .header-top {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+            align-items: flex-start;
           }
 
           .logo-section {
             display: flex;
             align-items: center;
+            gap: 15px;
           }
 
           .logo {
             background: white;
-            width: 70px;
-            height: 70px;
-            border-radius: 16px;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            border: 3px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            flex-shrink: 0;
           }
 
-          .logo svg {
-            width: 35px;
-            height: 35px;
-            fill: ${primaryColor};
+          .logo img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
           }
 
           .company-info h1 {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 800;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             letter-spacing: -0.025em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
           }
 
           .company-info .tagline {
-            font-size: 16px;
+            font-size: 12px;
             opacity: 0.9;
             font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
           }
 
-          .report-meta {
+          .header-meta {
             text-align: right;
-            font-size: 13px;
+            font-size: 10px;
             opacity: 0.8;
+            line-height: 1.3;
+          }
+
+          .header-meta .doc-id {
+            background: rgba(255,255,255,0.2);
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 5px;
+            display: inline-block;
           }
 
           .report-title {
+            margin-top: 15px;
+            padding-top: 15px;
             border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 25px;
           }
 
           .report-title h2 {
-            font-size: 28px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             letter-spacing: -0.025em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
           }
 
           .report-title .subtitle {
-            font-size: 16px;
+            font-size: 12px;
             opacity: 0.85;
             font-weight: 400;
           }
