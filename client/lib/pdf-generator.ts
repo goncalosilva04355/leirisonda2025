@@ -18,147 +18,82 @@ export class PDFGenerator {
     options: PDFOptions,
   ): Promise<Blob> {
     try {
-      // Create container with exact A4 dimensions
+      // Create simple container
       const tempContainer = document.createElement("div");
       tempContainer.innerHTML = htmlContent;
       tempContainer.style.position = "absolute";
       tempContainer.style.left = "-9999px";
-      tempContainer.style.width = "180mm"; // A4 width minus margins (210mm - 30mm)
+      tempContainer.style.width = "170mm"; // A4 width minus 40mm margins
+      tempContainer.style.maxHeight = "257mm"; // A4 height minus 40mm margins
       tempContainer.style.fontFamily = "Arial, sans-serif";
-      tempContainer.style.fontSize = "11px";
-      tempContainer.style.lineHeight = "1.3";
-      tempContainer.style.color = "#2c3e50";
-      tempContainer.style.background = "#ffffff";
-      tempContainer.style.padding = "0";
-      tempContainer.style.margin = "0";
+      tempContainer.style.fontSize = "12px";
+      tempContainer.style.lineHeight = "1.4";
+      tempContainer.style.color = "#333";
+      tempContainer.style.background = "#fff";
+      tempContainer.style.overflow = "hidden";
 
       document.body.appendChild(tempContainer);
 
-      // Wait for images and fonts to load
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Wait for content to load
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Generate high-quality canvas
+      // Generate canvas
       const canvas = await html2canvas(tempContainer, {
-        scale: 3,
+        scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
-        imageTimeout: 30000,
-        onclone: (clonedDoc) => {
-          // Ensure images are loaded in cloned document
-          const images = clonedDoc.querySelectorAll("img");
-          images.forEach((img) => {
-            img.crossOrigin = "anonymous";
-          });
-        },
+        height: Math.min(tempContainer.scrollHeight, 970), // Limit height for A4
+        width: tempContainer.scrollWidth,
       });
 
       document.body.removeChild(tempContainer);
 
-      // Create PDF with exact A4 size
+      // Create PDF
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: "a4",
-        compress: true,
       });
 
       // Add metadata
       pdf.setProperties({
         title: options.title,
-        subject: "Relatório Leirisonda",
         author: "Leirisonda",
-        creator: "Sistema Leirisonda",
       });
 
-      // Calculate dimensions to fit A4 exactly
-      const pdfWidth = 210; // A4 width
-      const pdfHeight = 297; // A4 height
-      const margin = 15; // 15mm margin
-      const contentWidth = pdfWidth - margin * 2;
-      const contentHeight = pdfHeight - margin * 2;
+      // Calculate to fit A4 exactly with margins
+      const pdfWidth = 210;
+      const pdfHeight = 297;
+      const margin = 20;
+      const maxWidth = pdfWidth - margin * 2; // 170mm
+      const maxHeight = pdfHeight - margin * 2; // 257mm
 
-      const canvasAspectRatio = canvas.width / canvas.height;
-      const contentAspectRatio = contentWidth / contentHeight;
+      // Calculate actual dimensions
+      const aspectRatio = canvas.width / canvas.height;
+      let width = maxWidth;
+      let height = width / aspectRatio;
 
-      let finalWidth, finalHeight;
-
-      if (canvasAspectRatio > contentAspectRatio) {
-        // Canvas is wider, fit to width
-        finalWidth = contentWidth;
-        finalHeight = contentWidth / canvasAspectRatio;
-      } else {
-        // Canvas is taller, fit to height or split pages
-        if ((canvas.height * contentWidth) / canvas.width <= contentHeight) {
-          // Fits in one page
-          finalHeight = contentHeight;
-          finalWidth = contentHeight * canvasAspectRatio;
-        } else {
-          // Needs multiple pages
-          finalWidth = contentWidth;
-          finalHeight = contentWidth / canvasAspectRatio;
-        }
+      // If too tall, scale down
+      if (height > maxHeight) {
+        height = maxHeight;
+        width = height * aspectRatio;
       }
 
-      const x = margin + (contentWidth - finalWidth) / 2;
+      // Center on page
+      const x = margin + (maxWidth - width) / 2;
       const y = margin;
 
-      // Add first page
+      // Add image to PDF
       pdf.addImage(
-        canvas.toDataURL("image/png", 1.0),
+        canvas.toDataURL("image/png", 0.9),
         "PNG",
         x,
         y,
-        finalWidth,
-        Math.min(finalHeight, contentHeight),
+        width,
+        height,
       );
-
-      // Add additional pages if content is too tall
-      if (finalHeight > contentHeight) {
-        let remainingHeight = finalHeight - contentHeight;
-        let currentY = contentHeight;
-
-        while (remainingHeight > 0) {
-          pdf.addPage();
-
-          const pageHeight = Math.min(remainingHeight, contentHeight);
-          const sourceY = (currentY / finalHeight) * canvas.height;
-          const sourceHeight = (pageHeight / finalHeight) * canvas.height;
-
-          // Create canvas for this page
-          const pageCanvas = document.createElement("canvas");
-          const ctx = pageCanvas.getContext("2d");
-          pageCanvas.width = canvas.width;
-          pageCanvas.height = sourceHeight;
-
-          if (ctx) {
-            ctx.drawImage(
-              canvas,
-              0,
-              sourceY,
-              canvas.width,
-              sourceHeight,
-              0,
-              0,
-              canvas.width,
-              sourceHeight,
-            );
-
-            pdf.addImage(
-              pageCanvas.toDataURL("image/png", 1.0),
-              "PNG",
-              x,
-              margin,
-              finalWidth,
-              pageHeight,
-            );
-          }
-
-          currentY += pageHeight;
-          remainingHeight -= pageHeight;
-        }
-      }
 
       return pdf.output("blob");
     } catch (error) {
