@@ -123,79 +123,35 @@ Relatório gerado em: ${reportDate}
       padding: 10px;
       border-radius: 5px;
       margin-bottom: 20px;
-      position: relative;
-    }
-
-    .logo {
-      height: 60px;
-      width: auto;
-      max-width: 200px;
-      background: white;
-      padding: 8px 16px;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      object-fit: contain;
-    }
-
-    .report-type {
-      background: rgba(255,255,255,0.15);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .header-title {
-      text-align: center;
-      position: relative;
-      z-index: 2;
     }
 
     .header h1 {
-      font-size: 32px;
-      font-weight: 800;
-      margin-bottom: 8px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
 
     .header h2 {
-      font-size: 22px;
-      font-weight: 600;
-      margin-bottom: 15px;
-      opacity: 0.95;
+      font-size: 18px;
+      font-weight: normal;
+      margin-bottom: 5px;
     }
 
-    .header-subtitle {
-      font-size: 16px;
-      font-weight: 400;
+    .header p {
+      font-size: 14px;
       opacity: 0.9;
     }
 
     .content {
-      padding: 40px;
+      padding: 30px;
     }
 
     .section {
-      margin-bottom: 35px;
-      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
+      margin-bottom: 25px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      position: relative;
-    }
-
-    .section::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #10b981, #34d399);
-      border-radius: 16px 16px 0 0;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
