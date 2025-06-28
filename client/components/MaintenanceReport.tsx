@@ -133,7 +133,7 @@ ${
 ${intervention.problems
   .map(
     (p) =>
-      `• ${p.description} (${p.severity === "high" ? "Alta" : p.severity === "medium" ? "Média" : "Baixa"} prioridade) ${p.resolved ? "- RESOLVIDO ���" : "- PENDENTE ❌"}`,
+      `• ${p.description} (${p.severity === "high" ? "Alta" : p.severity === "medium" ? "Média" : "Baixa"} prioridade) ${p.resolved ? "- RESOLVIDO ✅" : "- PENDENTE ❌"}`,
   )
   .join("\n")}
 `
@@ -276,6 +276,7 @@ Relatório gerado em: ${reportDate}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatório de Manutenção - ${maintenance.poolName} - ${Date.now()}</title>
   <style>
+    /* Novo template simplificado - ${Date.now()} */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
