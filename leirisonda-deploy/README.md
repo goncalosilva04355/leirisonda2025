@@ -1,38 +1,61 @@
-# 📱 Leirisonda - Pasta de Deploy
+# 🚀 LEIRISONDA - Deploy Atualizado
 
-## 🎯 **Esta pasta contém:**
+## ✅ NOVA VERSÃO PRONTA!
 
-✅ **index.html** - Página principal da app  
-✅ **manifest.json** - Configuração PWA  
-✅ **sw.js** - Service Worker (funciona offline)  
-✅ **assets/** - CSS e JavaScript compilados
+**Última atualização:** 28 Jun 2024, 18:18  
+**Novas funcionalidades:**
 
-## 🚀 **Como usar:**
+- ✅ Botão "Atualizar App" removido do login
+- ✅ Campo "Filtros" alterado para "Pré-filtro" na manutenção
+- ✅ Correções de bugs e melhorias
 
-### **1. Netlify (Recomendado)**
+---
+
+## 🌐 COMO FAZER DEPLOY NO NETLIFY
+
+### **1. Netlify Drop (Mais Fácil)**
 
 1. **Vai a:** https://app.netlify.com/drop
 2. **Arrasta TODA esta pasta** `leirisonda-deploy`
-3. **✅ Site online automaticamente**
+3. **Aguarda 2-3 minutos**
+4. **URL automático**: `leirisonda-xyz.netlify.app`
 
-### **2. Vercel**
+### **2. Substitui Site Existente**
 
-1. **Vai a:** https://vercel.com/new
-2. **Upload desta pasta**
-3. **Deploy automático**
+Se já tens um site no Netlify:
 
-### **3. Criar APK Android**
+1. **Netlify Dashboard** → **Sites**
+2. **Clica no teu site** → **Deploys**
+3. **"Deploy manually"** → **Arrasta pasta**
 
-1. **Copia URL** do site online
-2. **Vai a:** https://pwabuilder.com
-3. **Cola URL** → "Start" → "Package for Stores"
-4. **Download APK**
+---
 
-## 📱 **Resultado:**
+## 📱 CRIAR APP PARA IPHONE
 
-- ✅ **App web** funcionando online
-- ✅ **PWA instalável**
-- ✅ **APK Android** para download
-- ✅ **Funciona offline**
+Depois do deploy no Netlify:
 
-**🎉 A Leirisonda será uma app nativa!**
+1. **Copia URL** do Netlify (ex: `https://leirisonda-123.netlify.app`)
+2. **Vai a:** https://www.pwabuilder.com
+3. **Cola URL** → **"Start"**
+4. **Download iOS package**
+
+---
+
+## ✅ VERIFICAÇÃO PÓS-DEPLOY
+
+- ✅ Login sem botão "Atualizar App"
+- ✅ Manutenção de piscinas com "Pré-filtro"
+- ✅ App funcional em todos os dispositivos
+- ✅ Versão mais recente online
+
+---
+
+## 🔗 LINKS ÚTEIS
+
+- **📤 Upload:** https://app.netlify.com/drop
+- **📱 PWA Builder:** https://www.pwabuilder.com
+- **🌐 App atual:** https://leirisonda.netlify.app
+
+---
+
+**Pronto para deploy! 🎉**
