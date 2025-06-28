@@ -454,82 +454,253 @@ Relatório gerado em: ${reportDate}
     `.trim();
   };
 
-  const handleShare = async (method: string) => {
+  const generatePDFReport = async () => {
     setIsGenerating(true);
 
     try {
-      const reportContent = generateReportContent();
-      const htmlContent = generateHTMLReport();
+      const reportDate = format(new Date(), "dd/MM/yyyy", { locale: pt });
+      const interventionDate = intervention
+        ? format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })
+        : reportDate;
 
-      switch (method) {
-        case "email":
-          const emailSubject = intervention
-            ? `Relatório de Intervenção - ${maintenance.poolName}`
-            : `Relatório de Manutenção - ${maintenance.poolName}`;
-          const emailBody = encodeURIComponent(reportContent);
-          window.open(
-            `mailto:${maintenance.clientEmail}?subject=${emailSubject}&body=${emailBody}`,
-            "_blank",
-          );
-          break;
+      // Create structured content for PDF
+      const reportContent = intervention
+        ? createInterventionContent()
+        : createMaintenanceContent();
 
-        case "whatsapp":
-          const whatsappText = encodeURIComponent(reportContent);
-          window.open(`https://wa.me/?text=${whatsappText}`, "_blank");
-          break;
+      const pdfData = {
+        type: "maintenance" as const,
+        title: intervention
+          ? `Relatório de Intervenção - ${maintenance.poolName}`
+          : `Relatório de Manutenção - ${maintenance.poolName}`,
+        subtitle: `Cliente: ${maintenance.clientName} • ${maintenance.location}`,
+        date: interventionDate,
+        content: reportContent,
+        additionalInfo: `Tipo: ${getPoolTypeLabel(maintenance.poolType)} • Cubicagem: ${maintenance.waterCubicage || "N/A"}`,
+      };
 
-        case "copy":
-          await navigator.clipboard.writeText(reportContent);
-          alert("📋 Relatório copiado para a área de transferência!");
-          break;
+      const htmlContent = PDFGenerator.createModernReportHTML(pdfData);
 
-        case "download":
-          const blob = new Blob([htmlContent], { type: "text/html" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `relatorio-manutencao-${maintenance.poolName
-            .toLowerCase()
-            .replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.html`;
-          a.click();
-          URL.revokeObjectURL(url);
-          break;
+      const filename = intervention
+        ? `intervencao-${maintenance.poolName.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`
+        : `manutencao-${maintenance.poolName.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`;
 
-        case "print":
-          const printWindow = window.open("", "_blank");
-          if (printWindow) {
-            printWindow.document.write(htmlContent);
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => {
-              printWindow.print();
-              printWindow.close();
-            }, 500);
-          }
-          break;
-
-        case "pdf":
-          // Open in new window optimized for PDF generation
-          const pdfWindow = window.open("", "_blank");
-          if (pdfWindow) {
-            pdfWindow.document.write(htmlContent);
-            pdfWindow.document.close();
-            pdfWindow.focus();
-
-            // Instructions for PDF generation
-            setTimeout(() => {
-              alert(
-                "Para gerar PDF:\n1. Pressiona Ctrl+P (Cmd+P no Mac)\n2. Escolhe 'Guardar como PDF'\n3. Seleciona 'Mais definições' e ativa 'Gráficos de fundo'\n4. Clica 'Guardar'",
-              );
-            }, 1000);
-          }
-          break;
-      }
+      await PDFGenerator.generatePDFFromHTML(htmlContent, {
+        title: pdfData.title,
+        filename: filename,
+        orientation: "portrait",
+      });
     } catch (error) {
-      alert("❌ Erro ao partilhar relatório. Tente novamente.");
+      console.error("PDF generation error:", error);
+      alert("❌ Erro ao gerar PDF. Tente novamente.");
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const createInterventionContent = () => {
+    if (!intervention) return "";
+
+    return `
+      <div class="section">
+        <div class="section-title">📅 Informações da Intervenção</div>
+        <p><strong>Data:</strong> ${format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })}</p>
+        <p><strong>Horário:</strong> ${intervention.timeStart} - ${intervention.timeEnd}</p>
+        <p><strong>Técnicos:</strong> ${intervention.technicians.join(", ")}</p>
+        ${intervention.vehicles.length > 0 ? `<p><strong>Viaturas:</strong> ${intervention.vehicles.join(", ")}</p>` : ""}
+      </div>
+
+      <div class="section">
+        <div class="section-title">🧪 Análise da Água</div>
+        <div class="info-grid">
+          <div class="info-card">
+            <h3>pH</h3>
+            <p>${intervention.waterValues.ph || "N/A"}</p>
+          </div>
+          <div class="info-card">
+            <h3>Cloro</h3>
+            <p>${intervention.waterValues.chlorine || "N/A"} ppm</p>
+          </div>
+          <div class="info-card">
+            <h3>Temperatura</h3>
+            <p>${intervention.waterValues.temperature || "N/A"}°C</p>
+          </div>
+          <div class="info-card">
+            <h3>Sal</h3>
+            <p>${intervention.waterValues.salt || "N/A"} ppm</p>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <strong>Estado da Água:</strong> ${getWaterQualityStatus(intervention.waterValues)}
+        </div>
+      </div>
+
+      ${
+        intervention.chemicalProducts.length > 0
+          ? `
+        <div class="section">
+          <div class="section-title">🧴 Produtos Químicos Utilizados</div>
+          ${intervention.chemicalProducts
+            .map(
+              (product) => `
+            <div class="info-card">
+              <h3>${product.productName}</h3>
+              <p><strong>Quantidade:</strong> ${product.quantity}</p>
+              <p><strong>Observações:</strong> ${product.observations || "Sem observações"}</p>
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        Object.values(intervention.workPerformed).some((v) => v)
+          ? `
+        <div class="section">
+          <div class="section-title">🔧 Trabalho Realizado</div>
+          <ul>
+            ${Object.entries(intervention.workPerformed)
+              .filter(([key, value]) => value && key !== "outros")
+              .map(([key]) => {
+                const labels = {
+                  filtros: "Pré-filtro",
+                  preFiltero: "Pré-filtro",
+                  filtroAreiaVidro: "Filtro Areia/Vidro",
+                  alimenta: "Alimenta",
+                  aspiracao: "Aspiração",
+                  escovagem: "Escovagem",
+                  limpezaFiltros: "Limpeza de Filtros",
+                  tratamentoAlgas: "Tratamento de Algas",
+                };
+                return `<li>✓ ${labels[key as keyof typeof labels] || key}</li>`;
+              })
+              .join("")}
+          </ul>
+          ${intervention.workPerformed.outros ? `<p><strong>Outros:</strong> ${intervention.workPerformed.outros}</p>` : ""}
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        intervention.problems.length > 0
+          ? `
+        <div class="section">
+          <div class="section-title">⚠️ Problemas Identificados</div>
+          ${intervention.problems
+            .map(
+              (problem) => `
+            <div class="info-card">
+              <h3>${problem.description}</h3>
+              <p><strong>Prioridade:</strong> ${problem.priority}</p>
+              <p><strong>Estado:</strong> ${problem.resolved ? "✅ Resolvido" : "🔄 Pendente"}</p>
+              ${problem.solution ? `<p><strong>Solução:</strong> ${problem.solution}</p>` : ""}
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        intervention.observations
+          ? `
+        <div class="section">
+          <div class="section-title">📝 Observações</div>
+          <div class="highlight-box">
+            ${intervention.observations}
+          </div>
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        intervention.nextMaintenanceDate
+          ? `
+        <div class="section">
+          <div class="section-title">📅 Próxima Manutenção</div>
+          <p><strong>Data prevista:</strong> ${format(new Date(intervention.nextMaintenanceDate), "dd/MM/yyyy", { locale: pt })}</p>
+        </div>
+      `
+          : ""
+      }
+    `;
+  };
+
+  const createMaintenanceContent = () => {
+    const totalInterventions = maintenance.interventions?.length || 0;
+    const pendingProblems =
+      maintenance.interventions
+        ?.flatMap((i) => i.problems)
+        .filter((p) => !p.resolved).length || 0;
+
+    return `
+      <div class="section">
+        <div class="section-title">📊 Resumo Geral</div>
+        <div class="info-grid">
+          <div class="info-card">
+            <h3>Total de Intervenções</h3>
+            <p>${totalInterventions}</p>
+          </div>
+          <div class="info-card">
+            <h3>Problemas Pendentes</h3>
+            <p>${pendingProblems}</p>
+          </div>
+          <div class="info-card">
+            <h3>Estado</h3>
+            <p>${maintenance.status === "active" ? "✅ Ativo" : "⏸️ Inativo"}</p>
+          </div>
+        </div>
+      </div>
+
+      ${
+        maintenance.interventions && maintenance.interventions.length > 0
+          ? `
+        <div class="section">
+          <div class="section-title">📋 Histórico de Intervenções</div>
+          ${maintenance.interventions
+            .slice(0, 5)
+            .map(
+              (int) => `
+            <div class="info-card">
+              <h3>${format(new Date(int.date), "dd/MM/yyyy", { locale: pt })}</h3>
+              <p><strong>Técnicos:</strong> ${int.technicians.join(", ")}</p>
+              <p><strong>Trabalho:</strong> ${Object.entries(int.workPerformed)
+                .filter(([, v]) => v)
+                .map(([k]) => k)
+                .join(", ")}</p>
+              ${int.observations ? `<p><strong>Observações:</strong> ${int.observations}</p>` : ""}
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      `
+          : ""
+      }
+
+      <div class="section">
+        <div class="section-title">🏊 Características da Piscina</div>
+        <p><strong>Tipo:</strong> ${getPoolTypeLabel(maintenance.poolType)}</p>
+        <p><strong>Cubicagem de Água:</strong> ${maintenance.waterCubicage || "Não especificado"}</p>
+        <p><strong>Localização:</strong> ${maintenance.location}</p>
+        <p><strong>Cliente:</strong> ${maintenance.clientName}</p>
+        ${maintenance.clientEmail ? `<p><strong>Email:</strong> ${maintenance.clientEmail}</p>` : ""}
+        ${maintenance.clientPhone ? `<p><strong>Telefone:</strong> ${maintenance.clientPhone}</p>` : ""}
+      </div>
+    `;
+  };
+
+  const handleShare = async (method: string) => {
+    // Always generate PDF regardless of method
+    await generatePDFReport();
   };
 
   return (
