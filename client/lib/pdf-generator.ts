@@ -16,105 +16,180 @@ export class PDFGenerator {
   static async generatePDFFromHTML(
     htmlContent: string,
     options: PDFOptions,
-  ): Promise<void> {
+  ): Promise<Blob> {
     try {
-      // Create a temporary container with better styling
+      // Create a temporary container with full A4 size
       const tempContainer = document.createElement("div");
       tempContainer.innerHTML = htmlContent;
       tempContainer.style.position = "absolute";
       tempContainer.style.left = "-9999px";
-      tempContainer.style.width = "794px"; // A4 width in pixels (210mm @ 96dpi)
-      tempContainer.style.minHeight = "1123px"; // A4 height in pixels (297mm @ 96dpi)
+      tempContainer.style.width = "210mm"; // Full A4 width
+      tempContainer.style.minHeight = "297mm"; // Full A4 height
       tempContainer.style.fontFamily =
         '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-      tempContainer.style.fontSize = "14px";
-      tempContainer.style.lineHeight = "1.5";
+      tempContainer.style.fontSize = "12px";
+      tempContainer.style.lineHeight = "1.4";
       tempContainer.style.color = "#1f2937";
       tempContainer.style.background = "#ffffff";
-      tempContainer.style.padding = "0";
       tempContainer.style.margin = "0";
+      tempContainer.style.padding = "0";
       tempContainer.style.boxSizing = "border-box";
+      tempContainer.style.transform = "scale(1)";
 
       document.body.appendChild(tempContainer);
 
-      // Wait for any fonts or images to load
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Wait for fonts and images to load
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Generate high-quality canvas
+      // Generate ultra high-quality canvas
       const canvas = await html2canvas(tempContainer, {
-        scale: 3, // Higher scale for better quality
+        scale: 4, // Maximum quality
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         height: tempContainer.scrollHeight,
         width: tempContainer.scrollWidth,
         logging: false,
-        imageTimeout: 15000,
+        imageTimeout: 20000,
         removeContainer: false,
+        foreignObjectRendering: true,
       });
 
       // Remove temporary container
       document.body.removeChild(tempContainer);
 
-      // Create PDF with metadata
+      // Create PDF with full A4 dimensions
       const pdf = new jsPDF({
         orientation: options.orientation || "portrait",
         unit: "mm",
-        format: options.format || "a4",
+        format: [210, 297], // Exact A4 dimensions
         compress: true,
+        precision: 2,
       });
 
-      // Add metadata
+      // Add comprehensive metadata
       pdf.setProperties({
         title: options.title,
-        subject: "Relatório Leirisonda",
-        author: "Leirisonda - Sistema de Gestão",
-        creator: "Leirisonda App",
-        producer: "Leirisonda PDF Generator",
+        subject: "Relatório Profissional Leirisonda",
+        author: "Leirisonda - Sistema de Gestão Profissional",
+        creator: "Leirisonda Professional PDF Generator",
+        producer: "Leirisonda App v2.0",
+        keywords: "leirisonda, relatório, obras, manutenção, piscinas",
       });
 
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 297; // A4 height in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
+      // Use full A4 page dimensions with minimal margins
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 5; // Small margin
+      const contentWidth = pageWidth - margin * 2;
+      const contentHeight = pageHeight - margin * 2;
 
-      let position = 0;
+      const imgAspectRatio = canvas.width / canvas.height;
+      const pageAspectRatio = contentWidth / contentHeight;
 
-      // Add first page with high quality
+      let imgWidth, imgHeight;
+
+      if (imgAspectRatio > pageAspectRatio) {
+        // Image is wider, fit to width
+        imgWidth = contentWidth;
+        imgHeight = contentWidth / imgAspectRatio;
+      } else {
+        // Image is taller, fit to height
+        imgHeight = contentHeight;
+        imgWidth = contentHeight * imgAspectRatio;
+      }
+
+      const x = margin + (contentWidth - imgWidth) / 2;
+      const y = margin + (contentHeight - imgHeight) / 2;
+
+      // Add image with maximum quality
       pdf.addImage(
-        canvas.toDataURL("image/jpeg", 0.95),
-        "JPEG",
-        0,
-        position,
+        canvas.toDataURL("image/png", 1.0), // Maximum quality PNG
+        "PNG",
+        x,
+        y,
         imgWidth,
         imgHeight,
         undefined,
-        "FAST",
+        "SLOW", // Highest quality compression
       );
-      heightLeft -= pageHeight;
 
-      // Add additional pages if needed
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
+      // Calculate if additional pages are needed
+      const totalHeight = (canvas.height * imgWidth) / canvas.width;
+      let currentHeight = imgHeight;
+      let pageNum = 1;
+
+      while (currentHeight < totalHeight && pageNum < 10) {
+        // Limit pages for safety
         pdf.addPage();
-        pdf.addImage(
-          canvas.toDataURL("image/jpeg", 0.95),
-          "JPEG",
-          0,
-          position,
-          imgWidth,
-          imgHeight,
-          undefined,
-          "FAST",
-        );
-        heightLeft -= pageHeight;
+        pageNum++;
+
+        const remainingHeight = totalHeight - currentHeight;
+        const nextPageHeight = Math.min(remainingHeight, contentHeight);
+
+        // Calculate source position for next page
+        const sourceY = (currentHeight / imgHeight) * canvas.height;
+        const sourceHeight = (nextPageHeight / imgHeight) * canvas.height;
+
+        // Create canvas for this page section
+        const pageCanvas = document.createElement("canvas");
+        const pageCtx = pageCanvas.getContext("2d");
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = sourceHeight;
+
+        if (pageCtx) {
+          pageCtx.drawImage(
+            canvas,
+            0,
+            sourceY,
+            canvas.width,
+            sourceHeight,
+            0,
+            0,
+            canvas.width,
+            sourceHeight,
+          );
+
+          pdf.addImage(
+            pageCanvas.toDataURL("image/png", 1.0),
+            "PNG",
+            margin,
+            margin,
+            contentWidth,
+            nextPageHeight,
+            undefined,
+            "SLOW",
+          );
+        }
+
+        currentHeight += nextPageHeight;
       }
 
-      // Save PDF
-      pdf.save(options.filename);
+      // Return PDF as blob for sharing
+      return pdf.output("blob");
     } catch (error) {
       console.error("Error generating PDF:", error);
       throw new Error("Erro ao gerar PDF. Tente novamente.");
+    }
+  }
+
+  static async downloadPDF(
+    htmlContent: string,
+    options: PDFOptions,
+  ): Promise<void> {
+    try {
+      const pdfBlob = await this.generatePDFFromHTML(htmlContent, options);
+
+      // Create download link
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = options.filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      throw new Error("Erro ao fazer download do PDF.");
     }
   }
 
