@@ -270,84 +270,251 @@ Relatório gerado em: ${reportDate}
 
     return `
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Relatório de Manutenção - ${maintenance.poolName} - ${Date.now()}</title>
+  <title>Relatório de Manutenção - ${maintenance.poolName}</title>
   <style>
-    /* Novo template simplificado - ${Date.now()} */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: white;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.5;
+      color: #1a202c;
+      background: #ffffff;
       font-size: 14px;
+      -webkit-font-smoothing: antialiased;
     }
 
     .container {
       max-width: 210mm;
       margin: 0 auto;
-      background: white;
+      background: #ffffff;
       min-height: 297mm;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
     }
 
     .header {
-      background: #0077cc;
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
       color: white;
-      padding: 30px;
-      text-align: center;
+      padding: 40px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
 
     .logo {
-      height: 50px;
+      height: 65px;
       width: auto;
       background: white;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 20px;
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    .header h1 {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 10px;
+    .company-info h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .header h2 {
-      font-size: 18px;
-      font-weight: normal;
+    .company-info .tagline {
+      font-size: 16px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .header-meta {
+      text-align: right;
+      background: rgba(255,255,255,0.15);
+      padding: 15px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-meta .date {
+      font-size: 14px;
+      font-weight: 500;
       margin-bottom: 5px;
     }
 
-    .header p {
-      font-size: 14px;
+    .header-meta .ref {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .report-title {
+      text-align: center;
+      border-top: 2px solid rgba(255,255,255,0.3);
+      padding-top: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .report-title h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .report-title .subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      opacity: 0.95;
+      margin-bottom: 5px;
+    }
+
+    .report-title .location {
+      font-size: 16px;
       opacity: 0.9;
     }
 
     .content {
-      padding: 30px;
+      padding: 40px 30px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .info-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      border-left: 4px solid #0ea5e9;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .info-card .label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0ea5e9;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .info-card .value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a202c;
     }
 
     .maintenance-content {
-      background: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 20px;
+      background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .maintenance-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0ea5e9, #06b6d4);
+    }
+
+    .maintenance-content .content-text {
       white-space: pre-wrap;
-      font-size: 14px;
-      line-height: 1.6;
-      color: #333;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #2d3748;
+      font-weight: 400;
     }
 
     .footer {
-      background: #333;
+      background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
       color: white;
-      padding: 20px;
+      padding: 30px;
+      margin-top: 40px;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .footer-contact {
+      text-align: right;
+      font-size: 14px;
+    }
+
+    .footer-contact .email {
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .footer-contact .website {
+      opacity: 0.9;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 15px;
       text-align: center;
-      margin-top: 30px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    @media print {
+      body { background: white; }
+      .container { box-shadow: none; }
+    }
+
+    @page {
+      margin: 0;
+      size: A4;
     }
 
     .footer-content {
