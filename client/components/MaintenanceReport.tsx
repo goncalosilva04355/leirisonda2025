@@ -73,7 +73,7 @@ export function MaintenanceReport({
       return `
 💧 RELATÓRIO DE MANUTENÇÃO - LEIRISONDA
 
-���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━━
 
 🏊 INFORMAÇÕES DA PISCINA
 
@@ -276,17 +276,14 @@ Relatório gerado em: ${reportDate}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatório de Manutenção - ${maintenance.poolName}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.5;
-      color: #111827;
-      background: #ffffff;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: white;
       font-size: 14px;
-      font-weight: 400;
     }
 
     .container {
@@ -294,85 +291,33 @@ Relatório gerado em: ${reportDate}
       margin: 0 auto;
       background: white;
       min-height: 297mm;
-      position: relative;
     }
 
     .header {
-      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%);
+      background: #0077cc;
       color: white;
-      padding: 32px 40px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .header::before {
-      content: '';
-      position: absolute;
-      top: -100px;
-      right: -100px;
-      width: 200px;
-      height: 200px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 50%;
-    }
-
-    .header::after {
-      content: '';
-      position: absolute;
-      bottom: -80px;
-      left: -80px;
-      width: 160px;
-      height: 160px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 50%;
-    }
-
-    .logo-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      position: relative;
-      z-index: 2;
+      padding: 30px;
+      text-align: center;
     }
 
     .logo {
-      height: 60px;
+      height: 50px;
       width: auto;
-      max-width: 200px;
       background: white;
-      padding: 8px 16px;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      object-fit: contain;
-    }
-
-    .report-type {
-      background: rgba(255,255,255,0.15);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .header-title {
-      text-align: center;
-      position: relative;
-      z-index: 2;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 20px;
     }
 
     .header h1 {
-      font-size: 32px;
-      font-weight: 800;
-      margin-bottom: 8px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
 
     .header h2 {
-      font-size: 22px;
-      font-weight: 600;
+      font-size: 18px;
+      font-weight: normal;
       margin-bottom: 15px;
       opacity: 0.95;
     }
@@ -564,7 +509,7 @@ Relatório gerado em: ${reportDate}
           // Create mailto with PDF attachment (note: most email clients don't support blob attachments directly)
           const emailSubject = encodeURIComponent(title);
           const emailBody = encodeURIComponent(
-            `Segue em anexo o relatório de manutenção.\n\n` +
+            `Segue em anexo o relatório de manutenç��o.\n\n` +
               `Cliente: ${maintenance.clientName}\n` +
               `Piscina: ${maintenance.poolName}\n` +
               `Localização: ${maintenance.location}\n\n` +
