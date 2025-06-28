@@ -196,12 +196,6 @@ export class PDFGenerator {
     additionalInfo?: string;
   }): string {
     const reportDate = new Date().toLocaleDateString("pt-PT");
-    const reportTime = new Date().toLocaleTimeString("pt-PT", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    const icon = data.type === "work" ? "🏗️" : "💧";
     const primaryColor =
       data.type === "work" ? this.LEIRISONDA_RED : this.LEIRISONDA_BLUE;
 
@@ -214,7 +208,7 @@ export class PDFGenerator {
         <style>
           @page {
             size: A4;
-            margin: 15mm;
+            margin: 20mm;
           }
 
           * {
@@ -224,232 +218,186 @@ export class PDFGenerator {
           }
 
           body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 11px;
-            line-height: 1.3;
-            color: #2c3e50;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
             background: white;
-            width: 180mm;
-            min-height: 267mm;
+            width: 170mm;
+            max-height: 257mm;
           }
 
           .report-container {
             width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            max-height: 257mm;
+            overflow: hidden;
           }
 
-          /* Modern Header */
+          /* Simple Header */
           .header {
-            background: linear-gradient(135deg, ${primaryColor} 0%, #34495e 100%);
+            background: ${primaryColor};
             color: white;
-            padding: 15mm 0;
-            margin-bottom: 8mm;
-            border-radius: 3mm;
-            position: relative;
-          }
-
-          .header::after {
-            content: '';
-            position: absolute;
-            bottom: -3mm;
-            left: 0;
-            right: 0;
-            height: 1mm;
-            background: linear-gradient(90deg, ${primaryColor}, transparent, ${primaryColor});
-          }
-
-          .header-content {
-            padding: 0 8mm;
+            padding: 20px;
+            margin-bottom: 20px;
           }
 
           .header-top {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 6mm;
+            align-items: center;
+            margin-bottom: 15px;
           }
 
           .logo-section {
             display: flex;
             align-items: center;
-            gap: 4mm;
+            gap: 15px;
           }
 
           .logo {
             background: white;
-            width: 12mm;
-            height: 12mm;
-            border-radius: 2mm;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2mm 8mm rgba(0,0,0,0.2);
           }
 
           .logo img {
-            width: 8mm;
-            height: 8mm;
+            width: 45px;
+            height: 45px;
             object-fit: contain;
           }
 
           .company-info h1 {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 1mm;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
           }
 
           .company-info .tagline {
-            font-size: 10px;
-            opacity: 0.95;
-            font-weight: 400;
+            font-size: 14px;
           }
 
           .header-meta {
             text-align: right;
-            font-size: 9px;
-            line-height: 1.2;
-          }
-
-          .doc-id {
-            background: rgba(255,255,255,0.2);
-            padding: 1mm 2mm;
-            border-radius: 2mm;
-            font-weight: 600;
-            margin-top: 1mm;
-            display: inline-block;
-            font-size: 8px;
-          }
-
-          .report-title {
-            border-top: 0.5mm solid rgba(255,255,255,0.3);
-            padding-top: 4mm;
+            font-size: 12px;
           }
 
           .report-title h2 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 1mm;
-            display: flex;
-            align-items: center;
-            gap: 2mm;
+            font-size: 18px;
+            font-weight: bold;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            padding-top: 15px;
           }
 
           .report-title .subtitle {
-            font-size: 10px;
-            opacity: 0.9;
+            font-size: 14px;
+            margin-top: 5px;
           }
 
           /* Content */
           .content {
-            flex: 1;
-            padding: 0 0 5mm 0;
+            max-height: 160mm;
+            overflow: hidden;
           }
 
           .info-header {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3mm;
-            margin-bottom: 6mm;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
           }
 
           .info-card {
-            background: #f8f9fa;
-            border: 0.3mm solid #e9ecef;
-            border-radius: 2mm;
-            padding: 3mm;
-            border-left: 1mm solid ${primaryColor};
+            flex: 1;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            border-left: 4px solid ${primaryColor};
           }
 
           .info-card .label {
-            font-size: 8px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: bold;
             color: ${primaryColor};
-            margin-bottom: 1mm;
+            margin-bottom: 3px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
           }
 
           .info-card .value {
-            font-size: 11px;
-            font-weight: 600;
-            color: #2c3e50;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
           }
 
           .section {
-            margin-bottom: 6mm;
-            background: white;
-            border: 0.3mm solid #e9ecef;
-            border-radius: 2mm;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             overflow: hidden;
           }
 
           .section-header {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 3mm;
-            border-bottom: 0.3mm solid #e9ecef;
+            background: #f5f5f5;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
           }
 
           .section-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin: 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
           }
 
           .section-content {
-            padding: 3mm;
+            padding: 10px;
           }
 
           .highlight-box {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-            border: 0.5mm solid ${primaryColor}40;
-            border-radius: 2mm;
-            padding: 3mm;
-            margin: 3mm 0;
+            background: #f0f8ff;
+            border: 1px solid ${primaryColor};
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
           }
 
           .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 2mm 0;
-            font-size: 10px;
+            font-size: 11px;
           }
 
           .data-table th {
             background: ${primaryColor};
             color: white;
-            padding: 2mm;
+            padding: 5px;
             text-align: left;
-            font-weight: 600;
-            font-size: 9px;
-            text-transform: uppercase;
+            font-weight: bold;
           }
 
           .data-table td {
-            padding: 2mm;
-            border-bottom: 0.3mm solid #e9ecef;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
           }
 
           .data-table tr:nth-child(even) {
-            background: #f8f9fa;
+            background: #f9f9f9;
           }
 
           .enhanced-list {
             list-style: none;
             padding: 0;
-            margin: 2mm 0;
           }
 
           .enhanced-list li {
-            background: #f8f9fa;
-            border: 0.3mm solid #e9ecef;
-            border-radius: 1.5mm;
-            padding: 2mm;
-            margin-bottom: 1mm;
-            font-size: 10px;
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            padding: 5px 8px;
+            margin-bottom: 3px;
+            font-size: 11px;
           }
 
           .enhanced-list li::before {
@@ -460,93 +408,77 @@ export class PDFGenerator {
 
           /* Footer */
           .footer {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: #333;
             color: white;
-            padding: 4mm;
-            margin-top: auto;
-            border-radius: 2mm;
+            padding: 15px;
+            margin-top: 20px;
           }
 
           .footer-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2mm;
+            margin-bottom: 10px;
           }
 
           .footer-logo {
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 16px;
+            font-weight: bold;
           }
 
           .footer-contact {
             text-align: right;
-            font-size: 9px;
-            line-height: 1.3;
+            font-size: 10px;
           }
 
           .footer-bottom {
-            border-top: 0.3mm solid rgba(255,255,255,0.2);
-            padding-top: 2mm;
+            border-top: 1px solid #555;
+            padding-top: 10px;
             text-align: center;
-            font-size: 8px;
-            opacity: 0.8;
+            font-size: 9px;
           }
         </style>
       </head>
       <body>
         <div class="report-container">
           <div class="header">
-            <div class="header-content">
-              <div class="header-top">
-                <div class="logo-section">
-                  <div class="logo">
-                    <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Leirisonda Logo" crossorigin="anonymous" />
-                  </div>
-                  <div class="company-info">
-                    <h1>Leirisonda</h1>
-                    <div class="tagline">Gestão Profissional de Obras e Manutenção</div>
-                  </div>
+            <div class="header-top">
+              <div class="logo-section">
+                <div class="logo">
+                  <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Leirisonda Logo" />
                 </div>
-                <div class="header-meta">
-                  <div><strong>Data:</strong> ${reportDate}</div>
-                  <div><strong>Hora:</strong> ${reportTime}</div>
-                  <div class="doc-id">DOC-${String(Math.floor(Math.random() * 10000)).padStart(4, "0")}</div>
+                <div class="company-info">
+                  <h1>Leirisonda</h1>
+                  <div class="tagline">Gestão de Obras e Manutenção</div>
                 </div>
               </div>
+              <div class="header-meta">
+                <div><strong>Data:</strong> ${reportDate}</div>
+                <div><strong>REL:</strong> ${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}</div>
+              </div>
+            </div>
 
-              <div class="report-title">
-                <h2>${icon} ${data.title}</h2>
-                ${data.subtitle ? `<div class="subtitle">${data.subtitle}</div>` : ""}
-              </div>
+            <div class="report-title">
+              <h2>${data.title}</h2>
+              ${data.subtitle ? `<div class="subtitle">${data.subtitle}</div>` : ""}
             </div>
           </div>
 
           <div class="content">
             <div class="info-header">
               <div class="info-card">
-                <div class="label">Data do Relatório</div>
+                <div class="label">Data Relatório</div>
                 <div class="value">${reportDate}</div>
               </div>
               <div class="info-card">
-                <div class="label">Data de Referência</div>
+                <div class="label">Data Referência</div>
                 <div class="value">${data.date}</div>
               </div>
               <div class="info-card">
-                <div class="label">Documento</div>
-                <div class="value">REL-${String(Math.floor(Math.random() * 10000)).padStart(4, "0")}</div>
+                <div class="label">Estado</div>
+                <div class="value">${data.additionalInfo || "Concluído"}</div>
               </div>
             </div>
-
-            ${
-              data.additionalInfo
-                ? `
-              <div class="highlight-box">
-                <strong>Informação Adicional:</strong> ${data.additionalInfo}
-              </div>
-            `
-                : ""
-            }
 
             <div>${data.content}</div>
           </div>
@@ -555,14 +487,12 @@ export class PDFGenerator {
             <div class="footer-content">
               <div class="footer-logo">Leirisonda</div>
               <div class="footer-contact">
-                <div><strong>Email:</strong> info@leirisonda.pt</div>
-                <div><strong>Tel:</strong> (+351) 000 000 000</div>
-                <div><strong>Web:</strong> leirisonda.pt</div>
+                <div>info@leirisonda.pt</div>
+                <div>www.leirisonda.pt</div>
               </div>
             </div>
             <div class="footer-bottom">
-              <div>© ${new Date().getFullYear()} Leirisonda - Todos os direitos reservados.</div>
-              <div>Documento gerado automaticamente pelo Sistema de Gestão Leirisonda</div>
+              © ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
             </div>
           </div>
         </div>
