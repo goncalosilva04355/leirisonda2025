@@ -360,9 +360,9 @@ Relatório gerado em: ${reportDate}
         <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Leirisonda Logo" class="logo" />
       </div>
       <div class="header-title">
-        <h1><span class="emoji">🏗️</span>Relatório de Obra</h1>
-        <h2>${work.title}</h2>
-        <p class="header-subtitle">Leirisonda - Construção e Manutenção</p>
+        <h1>${work.title}</h1>
+        <h2>Cliente: ${work.client || "Não especificado"}</h2>
+        <p class="header-subtitle">${work.location}</p>
       </div>
     </div>
 
