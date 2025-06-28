@@ -177,17 +177,6 @@ Problemas? Contacta o desenvolvedor.`;
               )}
             </Button>
           </form>
-
-          {/* Mobile Deploy Button */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <Button
-              type="button"
-              onClick={handleMobileDeploy}
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium h-12"
-            >
-              📱 Atualizar App (iPhone)
-            </Button>
-          </div>
         </div>
 
         {/* Copyright */}
