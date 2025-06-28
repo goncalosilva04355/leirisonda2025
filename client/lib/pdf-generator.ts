@@ -149,9 +149,6 @@ export class PDFGenerator {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=794, initial-scale=1.0">
         <title>${data.title}</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
         <style>
           * {
             margin: 0;
@@ -159,28 +156,19 @@ export class PDFGenerator {
             box-sizing: border-box;
           }
 
-          html, body {
-            width: 210mm;
-            height: 297mm;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            font-size: 11px;
+          body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
             line-height: 1.4;
-            color: #111827;
-            background: #ffffff;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow: hidden;
+            color: #333;
+            background: #fff;
           }
 
           .report-container {
-            width: 210mm;
-            height: 297mm;
-            background: #ffffff;
-            position: relative;
-            display: flex;
-            flex-direction: column;
+            max-width: 800px;
+            margin: 0;
+            padding: 20px;
+            background: #fff;
           }
 
           /* Ultra-Modern Header */
