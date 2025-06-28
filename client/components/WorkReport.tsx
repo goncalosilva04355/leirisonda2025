@@ -206,10 +206,23 @@ Relatório gerado em: ${reportDate}
 
     .section {
       margin-bottom: 35px;
-      background: #ffffff;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
       border: 1px solid #e5e7eb;
-      border-radius: 12px;
+      border-radius: 16px;
       overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      border-radius: 16px 16px 0 0;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
