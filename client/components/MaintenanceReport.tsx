@@ -276,30 +276,31 @@ Relatório gerado em: ${reportDate}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatório de Manutenção - ${maintenance.poolName}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', Arial, sans-serif;
-      line-height: 1.6;
-      color: #1f2937;
-      background: #f0f9ff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.5;
+      color: #111827;
+      background: #ffffff;
       font-size: 14px;
+      font-weight: 400;
     }
 
     .container {
       max-width: 210mm;
       margin: 0 auto;
       background: white;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
       min-height: 297mm;
+      position: relative;
     }
 
     .header {
-      background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%);
       color: white;
-      padding: 40px 40px 30px 40px;
+      padding: 32px 40px;
       position: relative;
       overflow: hidden;
     }
@@ -307,46 +308,71 @@ Relatório gerado em: ${reportDate}
     .header::before {
       content: '';
       position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 150px;
-      height: 150px;
-      background: rgba(255,255,255,0.1);
+      top: -100px;
+      right: -100px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      left: -80px;
+      width: 160px;
+      height: 160px;
+      background: rgba(255,255,255,0.05);
       border-radius: 50%;
     }
 
     .logo-section {
       display: flex;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 25px;
+      justify-content: space-between;
+      margin-bottom: 24px;
       position: relative;
+      z-index: 2;
     }
 
     .logo {
-      width: 220px;
-      height: auto;
+      height: 60px;
+      width: auto;
+      max-width: 200px;
       background: white;
-      padding: 15px 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 8px 16px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      object-fit: contain;
+    }
+
+    .report-type {
+      background: rgba(255,255,255,0.15);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .header-title {
       text-align: center;
       position: relative;
+      z-index: 2;
     }
 
     .header h1 {
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 32px;
+      font-weight: 800;
       margin-bottom: 8px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .header h2 {
-      font-size: 20px;
-      font-weight: 500;
+      font-size: 22px;
+      font-weight: 600;
       margin-bottom: 15px;
       opacity: 0.95;
     }
