@@ -110,7 +110,7 @@ ${
       ([key]) =>
         `• ${key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1")}`,
     )
-    .join("\n") || "• Verificação geral"
+    .join("\n") || "�� Verificação geral"
 }
 
 ${intervention.workPerformed.outros ? `• ${intervention.workPerformed.outros}` : ""}
@@ -260,6 +260,21 @@ Relatório gerado em: ${reportDate}
 
 © ${new Date().getFullYear()} Leirisonda - Todos os direitos reservados.
       `.trim();
+    }
+  };
+
+  const getPoolTypeLabel = (type: string) => {
+    switch (type) {
+      case "residential":
+        return "Residencial";
+      case "commercial":
+        return "Comercial";
+      case "public":
+        return "Pública";
+      case "sports":
+        return "Desportiva";
+      default:
+        return "Não especificado";
     }
   };
 
