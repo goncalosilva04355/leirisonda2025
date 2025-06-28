@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { PDFGenerator } from "@/lib/pdf-generator";
 
 interface MaintenanceReportProps {
   maintenance: PoolMaintenance;
@@ -453,90 +454,362 @@ Relatório gerado em: ${reportDate}
     `.trim();
   };
 
-  const handleShare = async (method: string) => {
+  const generatePDFReport = async (shareMethod?: string) => {
     setIsGenerating(true);
 
     try {
-      const reportContent = generateReportContent();
-      const htmlContent = generateHTMLReport();
+      const reportDate = format(new Date(), "dd/MM/yyyy", { locale: pt });
+      const interventionDate = intervention
+        ? format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })
+        : reportDate;
 
-      switch (method) {
-        case "email":
-          const emailSubject = intervention
-            ? `Relatório de Intervenção - ${maintenance.poolName}`
-            : `Relatório de Manutenção - ${maintenance.poolName}`;
-          const emailBody = encodeURIComponent(reportContent);
-          window.open(
-            `mailto:${maintenance.clientEmail}?subject=${emailSubject}&body=${emailBody}`,
-            "_blank",
-          );
-          break;
+      // Create structured content for PDF
+      const reportContent = intervention
+        ? createInterventionContent()
+        : createMaintenanceContent();
 
-        case "whatsapp":
-          const whatsappText = encodeURIComponent(reportContent);
-          window.open(`https://wa.me/?text=${whatsappText}`, "_blank");
-          break;
+      const pdfData = {
+        type: "maintenance" as const,
+        title: intervention
+          ? `Relatório de Intervenção - ${maintenance.poolName}`
+          : `Relatório de Manutenção - ${maintenance.poolName}`,
+        subtitle: `Cliente: ${maintenance.clientName} • ${maintenance.location}`,
+        date: interventionDate,
+        content: reportContent,
+        additionalInfo: `Tipo: ${getPoolTypeLabel(maintenance.poolType)} • Cubicagem: ${maintenance.waterCubicage || "N/A"}`,
+      };
 
-        case "copy":
-          await navigator.clipboard.writeText(reportContent);
-          alert("📋 Relatório copiado para a área de transferência!");
-          break;
+      const htmlContent = PDFGenerator.createModernReportHTML(pdfData);
 
-        case "download":
-          const blob = new Blob([htmlContent], { type: "text/html" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `relatorio-manutencao-${maintenance.poolName
-            .toLowerCase()
-            .replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.html`;
-          a.click();
-          URL.revokeObjectURL(url);
-          break;
+      const filename = intervention
+        ? `intervencao-${maintenance.poolName.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`
+        : `manutencao-${maintenance.poolName.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`;
 
-        case "print":
-          const printWindow = window.open("", "_blank");
-          if (printWindow) {
-            printWindow.document.write(htmlContent);
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => {
-              printWindow.print();
-              printWindow.close();
-            }, 500);
-          }
-          break;
+      if (shareMethod) {
+        // Generate PDF blob for sharing
+        const pdfBlob = await PDFGenerator.generatePDFFromHTML(htmlContent, {
+          title: pdfData.title,
+          filename: filename,
+          orientation: "portrait",
+        });
 
-        case "pdf":
-          // Open in new window optimized for PDF generation
-          const pdfWindow = window.open("", "_blank");
-          if (pdfWindow) {
-            pdfWindow.document.write(htmlContent);
-            pdfWindow.document.close();
-            pdfWindow.focus();
-
-            // Instructions for PDF generation
-            setTimeout(() => {
-              alert(
-                "Para gerar PDF:\n1. Pressiona Ctrl+P (Cmd+P no Mac)\n2. Escolhe 'Guardar como PDF'\n3. Seleciona 'Mais definições' e ativa 'Gráficos de fundo'\n4. Clica 'Guardar'",
-              );
-            }, 1000);
-          }
-          break;
+        await handlePDFShare(shareMethod, pdfBlob, pdfData.title, filename);
+      } else {
+        // Direct download
+        await PDFGenerator.downloadPDF(htmlContent, {
+          title: pdfData.title,
+          filename: filename,
+          orientation: "portrait",
+        });
       }
     } catch (error) {
-      alert("❌ Erro ao partilhar relatório. Tente novamente.");
+      console.error("PDF generation error:", error);
+      alert("❌ Erro ao gerar PDF. Tente novamente.");
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handlePDFShare = async (
+    method: string,
+    pdfBlob: Blob,
+    title: string,
+    filename: string,
+  ) => {
+    try {
+      switch (method) {
+        case "email":
+          // Create mailto with PDF attachment (note: most email clients don't support blob attachments directly)
+          const emailSubject = encodeURIComponent(title);
+          const emailBody = encodeURIComponent(
+            `Segue em anexo o relatório de manutenção.\n\n` +
+              `Cliente: ${maintenance.clientName}\n` +
+              `Piscina: ${maintenance.poolName}\n` +
+              `Localização: ${maintenance.location}\n\n` +
+              `Este relatório foi gerado automaticamente pelo sistema Leirisonda.\n\n` +
+              `Cumprimentos,\nEquipa Leirisonda`,
+          );
+
+          // For email, we'll download the PDF and let user attach manually
+          const url = URL.createObjectURL(pdfBlob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(url);
+
+          // Then open email client
+          setTimeout(() => {
+            window.open(
+              `mailto:${maintenance.clientEmail || ""}?subject=${emailSubject}&body=${emailBody}`,
+              "_blank",
+            );
+          }, 500);
+          break;
+
+        case "whatsapp":
+          // Download PDF first, then open WhatsApp
+          const whatsappUrl = URL.createObjectURL(pdfBlob);
+          const whatsappLink = document.createElement("a");
+          whatsappLink.href = whatsappUrl;
+          whatsappLink.download = filename;
+          whatsappLink.click();
+          URL.revokeObjectURL(whatsappUrl);
+
+          const whatsappText = encodeURIComponent(
+            `📄 Relatório de Manutenção - ${maintenance.poolName}\n\n` +
+              `Cliente: ${maintenance.clientName}\n` +
+              `Localização: ${maintenance.location}\n\n` +
+              `Relatório em PDF descarregado. ` +
+              `Gerado automaticamente pelo sistema Leirisonda.`,
+          );
+
+          setTimeout(() => {
+            window.open(`https://wa.me/?text=${whatsappText}`, "_blank");
+          }, 500);
+          break;
+
+        case "copy":
+          // Copy summary to clipboard and download PDF
+          const copyUrl = URL.createObjectURL(pdfBlob);
+          const copyLink = document.createElement("a");
+          copyLink.href = copyUrl;
+          copyLink.download = filename;
+          copyLink.click();
+          URL.revokeObjectURL(copyUrl);
+
+          const summaryText = `📄 Relatório: ${title}\nCliente: ${maintenance.clientName}\nPiscina: ${maintenance.poolName}\nLocalização: ${maintenance.location}\n\nRelatório PDF descarregado automaticamente.`;
+          await navigator.clipboard.writeText(summaryText);
+          alert("📋 Resumo copiado e PDF descarregado!");
+          break;
+
+        case "download":
+        default:
+          // Direct download
+          const downloadUrl = URL.createObjectURL(pdfBlob);
+          const downloadLink = document.createElement("a");
+          downloadLink.href = downloadUrl;
+          downloadLink.download = filename;
+          downloadLink.click();
+          URL.revokeObjectURL(downloadUrl);
+          break;
+      }
+    } catch (error) {
+      console.error("Error sharing PDF:", error);
+      alert("❌ Erro ao partilhar PDF. O ficheiro foi descarregado.");
+    }
+  };
+  const createInterventionContent = () => {
+    if (!intervention) return "";
+
+    return `
+      <div class="section">
+        <div class="section-title">📅 Informações da Intervenção</div>
+        <p><strong>Data:</strong> ${format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })}</p>
+        <p><strong>Horário:</strong> ${intervention.timeStart} - ${intervention.timeEnd}</p>
+        <p><strong>Técnicos:</strong> ${intervention.technicians.join(", ")}</p>
+        ${intervention.vehicles.length > 0 ? `<p><strong>Viaturas:</strong> ${intervention.vehicles.join(", ")}</p>` : ""}
+      </div>
+
+      <div class="section">
+        <div class="section-title">🧪 Análise da Água</div>
+        <div class="info-grid">
+          <div class="info-card">
+            <h3>pH</h3>
+            <p>${intervention.waterValues.ph || "N/A"}</p>
+          </div>
+          <div class="info-card">
+            <h3>Cloro</h3>
+            <p>${intervention.waterValues.chlorine || "N/A"} ppm</p>
+          </div>
+          <div class="info-card">
+            <h3>Temperatura</h3>
+            <p>${intervention.waterValues.temperature || "N/A"}°C</p>
+          </div>
+          <div class="info-card">
+            <h3>Sal</h3>
+            <p>${intervention.waterValues.salt || "N/A"} ppm</p>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <strong>Estado da Água:</strong> ${getWaterQualityStatus(intervention.waterValues)}
+        </div>
+      </div>
+
+      ${
+        intervention.chemicalProducts.length > 0
+          ? `
+        <div class="section">
+          <div class="section-title">🧴 Produtos Químicos Utilizados</div>
+          ${intervention.chemicalProducts
+            .map(
+              (product) => `
+            <div class="info-card">
+              <h3>${product.productName}</h3>
+              <p><strong>Quantidade:</strong> ${product.quantity}</p>
+              <p><strong>Observações:</strong> ${product.observations || "Sem observações"}</p>
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        Object.values(intervention.workPerformed).some((v) => v)
+          ? `
+        <div class="section">
+          <div class="section-title">🔧 Trabalho Realizado</div>
+          <ul>
+            ${Object.entries(intervention.workPerformed)
+              .filter(([key, value]) => value && key !== "outros")
+              .map(([key]) => {
+                const labels = {
+                  filtros: "Pré-filtro",
+                  preFiltero: "Pré-filtro",
+                  filtroAreiaVidro: "Filtro Areia/Vidro",
+                  alimenta: "Alimenta",
+                  aspiracao: "Aspiração",
+                  escovagem: "Escovagem",
+                  limpezaFiltros: "Limpeza de Filtros",
+                  tratamentoAlgas: "Tratamento de Algas",
+                };
+                return `<li>✓ ${labels[key as keyof typeof labels] || key}</li>`;
+              })
+              .join("")}
+          </ul>
+          ${intervention.workPerformed.outros ? `<p><strong>Outros:</strong> ${intervention.workPerformed.outros}</p>` : ""}
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        intervention.problems.length > 0
+          ? `
+        <div class="section">
+          <div class="section-title">⚠️ Problemas Identificados</div>
+          ${intervention.problems
+            .map(
+              (problem) => `
+            <div class="info-card">
+              <h3>${problem.description}</h3>
+              <p><strong>Prioridade:</strong> ${problem.priority}</p>
+              <p><strong>Estado:</strong> ${problem.resolved ? "✅ Resolvido" : "🔄 Pendente"}</p>
+              ${problem.solution ? `<p><strong>Solução:</strong> ${problem.solution}</p>` : ""}
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        intervention.observations
+          ? `
+        <div class="section">
+          <div class="section-title">📝 Observações</div>
+          <div class="highlight-box">
+            ${intervention.observations}
+          </div>
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        intervention.nextMaintenanceDate
+          ? `
+        <div class="section">
+          <div class="section-title">📅 Próxima Manutenção</div>
+          <p><strong>Data prevista:</strong> ${format(new Date(intervention.nextMaintenanceDate), "dd/MM/yyyy", { locale: pt })}</p>
+        </div>
+      `
+          : ""
+      }
+    `;
+  };
+
+  const createMaintenanceContent = () => {
+    const totalInterventions = maintenance.interventions?.length || 0;
+    const pendingProblems =
+      maintenance.interventions
+        ?.flatMap((i) => i.problems)
+        .filter((p) => !p.resolved).length || 0;
+
+    return `
+      <div class="section">
+        <div class="section-title">📊 Resumo Geral</div>
+        <div class="info-grid">
+          <div class="info-card">
+            <h3>Total de Intervenções</h3>
+            <p>${totalInterventions}</p>
+          </div>
+          <div class="info-card">
+            <h3>Problemas Pendentes</h3>
+            <p>${pendingProblems}</p>
+          </div>
+          <div class="info-card">
+            <h3>Estado</h3>
+            <p>${maintenance.status === "active" ? "✅ Ativo" : "⏸️ Inativo"}</p>
+          </div>
+        </div>
+      </div>
+
+      ${
+        maintenance.interventions && maintenance.interventions.length > 0
+          ? `
+        <div class="section">
+          <div class="section-title">📋 Histórico de Intervenções</div>
+          ${maintenance.interventions
+            .slice(0, 5)
+            .map(
+              (int) => `
+            <div class="info-card">
+              <h3>${format(new Date(int.date), "dd/MM/yyyy", { locale: pt })}</h3>
+              <p><strong>Técnicos:</strong> ${int.technicians.join(", ")}</p>
+              <p><strong>Trabalho:</strong> ${Object.entries(int.workPerformed)
+                .filter(([, v]) => v)
+                .map(([k]) => k)
+                .join(", ")}</p>
+              ${int.observations ? `<p><strong>Observações:</strong> ${int.observations}</p>` : ""}
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      `
+          : ""
+      }
+
+      <div class="section">
+        <div class="section-title">🏊 Características da Piscina</div>
+        <p><strong>Tipo:</strong> ${getPoolTypeLabel(maintenance.poolType)}</p>
+        <p><strong>Cubicagem de Água:</strong> ${maintenance.waterCubicage || "Não especificado"}</p>
+        <p><strong>Localização:</strong> ${maintenance.location}</p>
+        <p><strong>Cliente:</strong> ${maintenance.clientName}</p>
+        ${maintenance.clientEmail ? `<p><strong>Email:</strong> ${maintenance.clientEmail}</p>` : ""}
+        ${maintenance.clientPhone ? `<p><strong>Telefone:</strong> ${maintenance.clientPhone}</p>` : ""}
+      </div>
+    `;
+  };
+
+  const handleShare = async (method: string) => {
+    // Always generate PDF regardless of method
+    await generatePDFReport();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full">
-          <Share className="mr-2 h-4 w-4" />
-          Partilhar Relatório
+          <FileText className="mr-2 h-4 w-4" />
+          Relatório PDF
         </Button>
       </DialogTrigger>
 
@@ -544,7 +817,7 @@ Relatório gerado em: ${reportDate}
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Droplets className="mr-2 h-5 w-5 text-cyan-600" />
-            Partilhar Relatório de Manutenção
+            Relatório de Manutenção
           </DialogTitle>
         </DialogHeader>
 
@@ -564,9 +837,27 @@ Relatório gerado em: ${reportDate}
             )}
           </div>
 
+          <div className="bg-blue-50 p-3 rounded-lg text-center">
+            <p className="text-sm font-medium text-blue-800 mb-1">
+              📄 Todos os relatórios são gerados em PDF profissional
+            </p>
+            <p className="text-xs text-blue-600">
+              Design moderno com logotipo Leirisonda
+            </p>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <Button
-              onClick={() => handleShare("email")}
+              onClick={() => generatePDFReport("download")}
+              disabled={isGenerating}
+              className="w-full bg-blue-600 hover:bg-blue-700"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Download PDF
+            </Button>
+
+            <Button
+              onClick={() => generatePDFReport("email")}
               disabled={isGenerating}
               variant="outline"
               className="w-full"
@@ -576,7 +867,7 @@ Relatório gerado em: ${reportDate}
             </Button>
 
             <Button
-              onClick={() => handleShare("whatsapp")}
+              onClick={() => generatePDFReport("whatsapp")}
               disabled={isGenerating}
               variant="outline"
               className="w-full"
@@ -586,7 +877,7 @@ Relatório gerado em: ${reportDate}
             </Button>
 
             <Button
-              onClick={() => handleShare("copy")}
+              onClick={() => generatePDFReport("copy")}
               disabled={isGenerating}
               variant="outline"
               className="w-full"
@@ -594,41 +885,11 @@ Relatório gerado em: ${reportDate}
               <Copy className="mr-2 h-4 w-4" />
               Copiar
             </Button>
-
-            <Button
-              onClick={() => handleShare("download")}
-              disabled={isGenerating}
-              variant="outline"
-              className="w-full"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Download
-            </Button>
-
-            <Button
-              onClick={() => handleShare("pdf")}
-              disabled={isGenerating}
-              variant="outline"
-              className="w-full"
-            >
-              <FileText className="mr-2 h-4 w-4" />
-              Gerar PDF
-            </Button>
-
-            <Button
-              onClick={() => handleShare("print")}
-              disabled={isGenerating}
-              variant="outline"
-              className="w-full"
-            >
-              <Printer className="mr-2 h-4 w-4" />
-              Imprimir
-            </Button>
           </div>
 
           {isGenerating && (
             <div className="text-center text-sm text-gray-600">
-              A gerar relatório...
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mx-auto"></div>
             </div>
           )}
         </div>

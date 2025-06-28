@@ -595,7 +595,7 @@ export function PoolMaintenancePage() {
                       }
                     />
                     <Label htmlFor="filtros" className="text-sm">
-                      Filtros
+                      Pré-filtro
                     </Label>
                   </div>
 
@@ -845,7 +845,7 @@ export function PoolMaintenancePage() {
                   </h5>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
                     {maintenance.maintenanceWork.filtros && (
-                      <span className="text-blue-700">✓ Filtros</span>
+                      <span className="text-blue-700">✓ Pré-filtro</span>
                     )}
                     {maintenance.maintenanceWork.preFiltero && (
                       <span className="text-blue-700">✓ Pré-filtro</span>
