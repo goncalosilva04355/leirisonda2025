@@ -256,38 +256,41 @@ export class PDFGenerator {
 
           .info-card {
             flex: 1;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            border-left: 4px solid ${primaryColor};
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 5px solid ${primaryColor};
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
           }
 
           .info-card .label {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: bold;
             color: ${primaryColor};
-            margin-bottom: 3px;
+            margin-bottom: 5px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
           }
 
           .info-card .value {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
-            color: #333;
+            color: #1a202c;
           }
 
           .section {
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
           }
 
           .section-header {
-            background: #f5f5f5;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
           }
 
           .section-title {
