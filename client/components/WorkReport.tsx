@@ -154,29 +154,42 @@ Relatório gerado em: ${reportDate}
     }
 
     .logo {
-      width: 220px;
-      height: auto;
+      height: 60px;
+      width: auto;
+      max-width: 200px;
       background: white;
-      padding: 15px 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 8px 16px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      object-fit: contain;
+    }
+
+    .report-type {
+      background: rgba(255,255,255,0.15);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .header-title {
       text-align: center;
       position: relative;
+      z-index: 2;
     }
 
     .header h1 {
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 32px;
+      font-weight: 800;
       margin-bottom: 8px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .header h2 {
-      font-size: 20px;
-      font-weight: 500;
+      font-size: 22px;
+      font-weight: 600;
       margin-bottom: 15px;
       opacity: 0.95;
     }
