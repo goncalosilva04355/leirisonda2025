@@ -396,8 +396,10 @@ export class PDFGenerator {
 
           /* Content Area */
           .content {
-            padding: 50px;
+            padding: 10mm 15mm;
             background: #ffffff;
+            flex: 1;
+            overflow: hidden;
           }
 
           /* Enhanced Info Grid */
