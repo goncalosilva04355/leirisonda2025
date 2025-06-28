@@ -461,7 +461,7 @@ Relatório gerado em: ${reportDate}
         additionalInfo: `Estado: ${work.status === "completed" ? "Concluída" : work.status === "in-progress" ? "Em Progresso" : "Pendente"}`,
       };
 
-      const htmlContent = PDFGenerator.createModernReportHTML(pdfData);
+      const htmlContent = generateHTMLReport();
 
       const filename = `obra-${work.title.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`;
 
