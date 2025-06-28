@@ -90,7 +90,7 @@ Relatório gerado em: ${reportDate}
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Relatório de Obra - ${work.title}</title>
+  <title>Relatório de Obra - ${work.title} - ${Date.now()}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
