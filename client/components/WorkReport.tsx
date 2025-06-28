@@ -485,80 +485,129 @@ Relatório gerado em: ${reportDate}
     `.trim();
   };
 
-  const handleShare = async (method: string) => {
+  const generatePDFReport = async () => {
     setIsGenerating(true);
 
     try {
-      const reportContent = generateReportContent();
-      const htmlContent = generateHTMLReport();
+      const workDate = format(new Date(work.date), "dd/MM/yyyy", {
+        locale: pt,
+      });
 
-      switch (method) {
-        case "email":
-          const emailSubject = `Relatório de Obra - ${work.title}`;
-          const emailBody = encodeURIComponent(reportContent);
-          window.open(
-            `mailto:?subject=${emailSubject}&body=${emailBody}`,
-            "_blank",
-          );
-          break;
+      // Create structured content for PDF
+      const reportContent = createWorkContent();
 
-        case "whatsapp":
-          const whatsappText = encodeURIComponent(reportContent);
-          window.open(`https://wa.me/?text=${whatsappText}`, "_blank");
-          break;
+      const pdfData = {
+        type: "work" as const,
+        title: `Relatório de Obra - ${work.title}`,
+        subtitle: `Localização: ${work.location}`,
+        date: workDate,
+        content: reportContent,
+        additionalInfo: `Estado: ${work.status === "completed" ? "Concluída" : work.status === "in-progress" ? "Em Progresso" : "Pendente"}`,
+      };
 
-        case "copy":
-          await navigator.clipboard.writeText(reportContent);
-          alert("📋 Relatório copiado para a área de transferência!");
-          break;
+      const htmlContent = PDFGenerator.createModernReportHTML(pdfData);
 
-        case "download":
-          const blob = new Blob([htmlContent], { type: "text/html" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `relatorio-obra-${work.title
-            .toLowerCase()
-            .replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.html`;
-          a.click();
-          URL.revokeObjectURL(url);
-          break;
+      const filename = `obra-${work.title.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`;
 
-        case "print":
-          const printWindow = window.open("", "_blank");
-          if (printWindow) {
-            printWindow.document.write(htmlContent);
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => {
-              printWindow.print();
-              printWindow.close();
-            }, 500);
-          }
-          break;
-
-        case "pdf":
-          // Open in new window optimized for PDF generation
-          const pdfWindow = window.open("", "_blank");
-          if (pdfWindow) {
-            pdfWindow.document.write(htmlContent);
-            pdfWindow.document.close();
-            pdfWindow.focus();
-
-            // Instructions for PDF generation
-            setTimeout(() => {
-              alert(
-                "Para gerar PDF:\n1. Pressiona Ctrl+P (Cmd+P no Mac)\n2. Escolhe 'Guardar como PDF'\n3. Seleciona 'Mais definições' e ativa 'Gráficos de fundo'\n4. Clica 'Guardar'",
-              );
-            }, 1000);
-          }
-          break;
-      }
+      await PDFGenerator.generatePDFFromHTML(htmlContent, {
+        title: pdfData.title,
+        filename: filename,
+        orientation: "portrait",
+      });
     } catch (error) {
-      alert("❌ Erro ao partilhar relatório. Tente novamente.");
+      console.error("PDF generation error:", error);
+      alert("❌ Erro ao gerar PDF. Tente novamente.");
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const createWorkContent = () => {
+    return `
+      <div class="section">
+        <div class="section-title">👷 Equipa</div>
+        <div class="info-grid">
+          <div class="info-card">
+            <h3>Técnicos</h3>
+            <p>${work.technicians.join(", ")}</p>
+          </div>
+          <div class="info-card">
+            <h3>Viaturas</h3>
+            <p>${work.vehicles.join(", ")}</p>
+          </div>
+        </div>
+      </div>
+
+      ${
+        work.description
+          ? `
+        <div class="section">
+          <div class="section-title">📝 Descrição da Obra</div>
+          <div class="highlight-box">
+            ${work.description}
+          </div>
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        work.materials && work.materials.length > 0
+          ? `
+        <div class="section">
+          <div class="section-title">🔧 Materiais Utilizados</div>
+          ${work.materials
+            .map(
+              (material) => `
+            <div class="info-card">
+              <h3>${material.name}</h3>
+              <p><strong>Quantidade:</strong> ${material.quantity}</p>
+              ${material.supplier ? `<p><strong>Fornecedor:</strong> ${material.supplier}</p>` : ""}
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        work.observations
+          ? `
+        <div class="section">
+          <div class="section-title">🔍 Observações</div>
+          <div class="highlight-box">
+            ${work.observations}
+          </div>
+        </div>
+      `
+          : ""
+      }
+
+      <div class="section">
+        <div class="section-title">📊 Estado da Obra</div>
+        <div class="info-card">
+          <h3>Estado Atual</h3>
+          <p>${work.status === "completed" ? "✅ Concluída" : work.status === "in-progress" ? "🔄 Em Progresso" : "⏳ Pendente"}</p>
+        </div>
+        ${
+          work.workSheetCompleted
+            ? `
+          <div class="info-card">
+            <h3>Folha de Obra</h3>
+            <p>✅ Completa</p>
+          </div>
+        `
+            : ""
+        }
+      </div>
+    `;
+  };
+
+  const handleShare = async (method: string) => {
+    // Always generate PDF regardless of method
+    await generatePDFReport();
   };
 
   return (
