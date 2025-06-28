@@ -1,0 +1,28 @@
+{
+  "name": "Leirisonda - Gestão de Obras",
+  "short_name": "Leirisonda",
+  "description": "Sistema de gestão de obras e manutenção de piscinas",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#61a5d6",
+  "theme_color": "#007784",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "id": "leirisonda-obras",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMwMDc3ODQiLz4KPHBhdGggZD0iTTQ4IDEyMEM0OCA5MC45MDk5IDcwLjkwOTkgNjggMTAwIDY4UzE1MiA5MC45MDk5IDE1MiAxMjBWMTQ0SDQ4VjEyMFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMiIvPgo8cGF0aCBkPSJNNjQgMTA0QzY0IDk1LjE2MzQgNzEuMTYzNCA4OCA4MCA4OFMxMDQgOTUuMTYzNCAxMDQgMTA0VjEyOEg2NFYxMDRaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz4KPHA+eDwgZD0iTTgwIDk2Qzg0LjQxODMgOTYgODggOTkuNTgxNyA4OCAxMDRWMTEySDgwVjEwNEM4MCA5OS41ODE3IDc2LjQxODMgOTYgNzIgOTZTNjQgOTkuNTgxNyA2NCAxMDRWMTEySDcyVjEwNEM3MiA5OS41ODE3IDc1LjU4MTcgOTYgODAgOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMwMDc3ODQiLz4KPHBhdGggZD0iTTEyOCAzMjBDMTI4IDI0My4yNjkgMTg5LjI2OSAxODIgMjY2IDE4MlMzODQgMjQzLjI2OSAzODQgMzIwVjM4NEgxMjhWMzIwWiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4yIi8+CjxwYXRoIGQ9Ik0xNzEgMjc4QzE3MSAyNTQuODA0IDE4OS44MDQgMjM2IDIxMyAyMzZTMjU1IDI1NC44MDQgMjU1IDI3OFYzNDJIMTcxVjI3OFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPgo8cGF0aCBkPSJNMjEzIDI1NkMyMjQuMDQ2IDI1NiAyMzMgMjY0Ljk1NCAyMzMgMjc2VjMwMEgyMTNWMjc2QzIxMyAyNjQuOTU0IDIwNC4wNDYgMjU2IDE5MyAyNTZTMTcxIDI2NC45NTQgMTcxIDI3NlYzMDBIMTkzVjI3NkMxOTMgMjY0Ljk1NCAyMDEuOTU0IDI1NiAyMTMgMjU2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "pt-PT"
+}
