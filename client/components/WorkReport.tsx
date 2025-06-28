@@ -244,12 +244,11 @@ Relatório gerado em: ${reportDate}
     }
 
     .footer {
-      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      background: #333;
       color: white;
-      padding: 32px;
+      padding: 20px;
       text-align: center;
-      margin-top: 40px;
-      border-radius: 16px 16px 0 0;
+      margin-top: 30px;
     }
 
     .footer-content {
