@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { PDFGenerator } from "@/lib/pdf-generator";
 
 interface WorkReportProps {
   work: Work;
