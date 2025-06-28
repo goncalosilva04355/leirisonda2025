@@ -90,17 +90,16 @@ Relatório gerado em: ${reportDate}
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Relatório de Obra - ${work.title}</title>
+  <title>Relatório de Obra - ${work.title} - ${Date.now()}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
+    /* Novo template simplificado - ${Date.now()} */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', Arial, sans-serif;
+      font-family: Arial, sans-serif;
       line-height: 1.6;
-      color: #1f2937;
-      background: #f9fafb;
+      color: #333;
+      background: white;
       font-size: 14px;
     }
 
@@ -108,91 +107,51 @@ Relatório gerado em: ${reportDate}
       max-width: 210mm;
       margin: 0 auto;
       background: white;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
       min-height: 297mm;
     }
 
     .header {
-      background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+      background: #00aa44;
       color: white;
-      padding: 40px 40px 30px 40px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .header::before {
-      content: '';
-      position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 150px;
-      height: 150px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 50%;
-    }
-
-    .header::after {
-      content: '';
-      position: absolute;
-      bottom: -30px;
-      left: -30px;
-      width: 100px;
-      height: 100px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 50%;
-    }
-
-    .logo-section {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 25px;
-      position: relative;
+      padding: 30px;
+      text-align: center;
     }
 
     .logo {
-      width: 220px;
-      height: auto;
+      height: 50px;
+      width: auto;
       background: white;
-      padding: 15px 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .header-title {
-      text-align: center;
-      position: relative;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 20px;
     }
 
     .header h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
 
     .header h2 {
-      font-size: 20px;
-      font-weight: 500;
-      margin-bottom: 15px;
-      opacity: 0.95;
+      font-size: 18px;
+      font-weight: normal;
+      margin-bottom: 5px;
     }
 
-    .header-subtitle {
-      font-size: 16px;
-      font-weight: 400;
+    .header p {
+      font-size: 14px;
       opacity: 0.9;
     }
 
     .content {
-      padding: 40px;
+      padding: 30px;
     }
 
     .section {
-      margin-bottom: 35px;
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
+      margin-bottom: 25px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
       overflow: hidden;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
@@ -286,11 +245,11 @@ Relatório gerado em: ${reportDate}
     }
 
     .footer {
-      background: linear-gradient(135deg, #1f2937, #374151);
+      background: #333;
       color: white;
-      padding: 30px;
+      padding: 20px;
       text-align: center;
-      margin-top: 40px;
+      margin-top: 30px;
     }
 
     .footer-content {
@@ -339,14 +298,11 @@ Relatório gerado em: ${reportDate}
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo-section">
-        <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Leirisonda Logo" class="logo" />
-      </div>
-      <div class="header-title">
-        <h1><span class="emoji">🏗️</span>Relatório de Obra</h1>
-        <h2>${work.title}</h2>
-        <p class="header-subtitle">Leirisonda - Construção e Manutenção</p>
-      </div>
+      <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Leirisonda Logo" class="logo" />
+      <h1>Relatório de Obra</h1>
+      <h2>${work.title}</h2>
+      <p>Cliente: ${work.client || "Não especificado"}</p>
+      <p>${work.location}</p>
     </div>
 
     <div class="content">
@@ -505,7 +461,7 @@ Relatório gerado em: ${reportDate}
         additionalInfo: `Estado: ${work.status === "completed" ? "Concluída" : work.status === "in-progress" ? "Em Progresso" : "Pendente"}`,
       };
 
-      const htmlContent = PDFGenerator.createModernReportHTML(pdfData);
+      const htmlContent = generateHTMLReport();
 
       const filename = `obra-${work.title.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`;
 
@@ -633,15 +589,6 @@ Relatório gerado em: ${reportDate}
             <br />
             <strong>Data:</strong>{" "}
             {format(new Date(work.date), "dd/MM/yyyy", { locale: pt })}
-          </div>
-
-          <div className="bg-blue-50 p-3 rounded-lg text-center">
-            <p className="text-sm font-medium text-blue-800 mb-1">
-              📄 Todos os relatórios são gerados em PDF profissional
-            </p>
-            <p className="text-xs text-blue-600">
-              Design moderno com logotipo Leirisonda
-            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3">

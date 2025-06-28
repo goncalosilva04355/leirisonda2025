@@ -141,6 +141,7 @@ export class PDFGenerator {
         <meta charset="UTF-8">
         <title>${data.title}</title>
         <style>
+          /* Novo design moderno - ${Date.now()} */
           @page {
             size: A4;
             margin: 20mm;
@@ -168,68 +169,78 @@ export class PDFGenerator {
             overflow: hidden;
           }
 
-          /* Simple Header */
+          /* Modern Header */
           .header {
-            background: ${primaryColor};
+            background: linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%);
             color: white;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
           }
 
           .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
           }
 
           .logo-section {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
           }
 
           .logo {
             background: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
           }
 
           .logo img {
-            width: 45px;
-            height: 45px;
+            width: 55px;
+            height: 55px;
             object-fit: contain;
           }
 
           .company-info h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
           }
 
           .company-info .tagline {
-            font-size: 14px;
+            font-size: 16px;
+            opacity: 0.9;
           }
 
           .header-meta {
             text-align: right;
-            font-size: 12px;
+            font-size: 13px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
           }
 
           .report-title h2 {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: bold;
-            border-top: 1px solid rgba(255,255,255,0.3);
-            padding-top: 15px;
+            border-top: 2px solid rgba(255,255,255,0.4);
+            padding-top: 18px;
+            margin-top: 10px;
           }
 
           .report-title .subtitle {
-            font-size: 14px;
-            margin-top: 5px;
+            font-size: 16px;
+            margin-top: 8px;
+            opacity: 0.95;
           }
 
           /* Content */
@@ -246,38 +257,41 @@ export class PDFGenerator {
 
           .info-card {
             flex: 1;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            border-left: 4px solid ${primaryColor};
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 5px solid ${primaryColor};
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
           }
 
           .info-card .label {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: bold;
             color: ${primaryColor};
-            margin-bottom: 3px;
+            margin-bottom: 5px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
           }
 
           .info-card .value {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
-            color: #333;
+            color: #1a202c;
           }
 
           .section {
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
           }
 
           .section-header {
-            background: #f5f5f5;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
           }
 
           .section-title {
@@ -341,36 +355,41 @@ export class PDFGenerator {
             font-weight: bold;
           }
 
-          /* Footer */
+          /* Modern Footer */
           .footer {
-            background: #333;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
             color: white;
-            padding: 15px;
-            margin-top: 20px;
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
           }
 
           .footer-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
           }
 
           .footer-logo {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
           }
 
           .footer-contact {
             text-align: right;
-            font-size: 10px;
+            font-size: 12px;
+            opacity: 0.9;
           }
 
           .footer-bottom {
-            border-top: 1px solid #555;
-            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 12px;
             text-align: center;
-            font-size: 9px;
+            font-size: 11px;
+            opacity: 0.8;
           }
         </style>
       </head>

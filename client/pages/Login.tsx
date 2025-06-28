@@ -43,50 +43,6 @@ export function Login() {
     }
   };
 
-  const handleMobileDeploy = () => {
-    const pdfInfo = `📄 SISTEMA DE RELATÓRIOS PDF - LEIRISONDA
-
-🏗️ FUNCIONALIDADES PRINCIPAIS:
-- Relatórios de Manutenção de Piscinas
-- Relatórios de Trabalhos e Intervenções
-- Geração automática de PDFs profissionais
-- Logo da empresa integrado
-- Design moderno em formato A4
-
-🔧 COMO FUNCIONA:
-1. ✅ Login no sistema
-2. 📝 Criar/visualizar relatório
-3. 📄 Clicar em "Partilhar Relatório"
-4. 🎯 Escolher opção (PDF, Email, WhatsApp)
-5. 📋 PDF gerado automaticamente
-
-📱 OPÇÕES DE PARTILHA:
-• Download: Descarrega PDF diretamente
-• Email: PDF + abre cliente de email
-• WhatsApp: PDF + abre WhatsApp
-• Copiar: PDF + copia resumo
-
-⚙️ TECNOLOGIA:
-- jsPDF + html2canvas
-- Templates HTML modernos
-- Formatação A4 profissional
-- Logótipo da Leirisonda
-
-🌐 Acesso: https://leirisonda.netlify.app`;
-
-    const blob = new Blob([pdfInfo], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "leirisonda-pdf-sistema.txt";
-    a.click();
-    URL.revokeObjectURL(url);
-
-    alert(
-      "📄 Informação do sistema PDF descarregada! Faça login para ver os relatórios em ação.",
-    );
-  };
-
   // Force no loading state - show login immediately
   // if (isLoading) removed to prevent infinite loading
 
@@ -115,43 +71,6 @@ export function Login() {
 
           {/* Login Form */}
           <div className="p-8">
-            {/* PDF Demo Section */}
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-4 mb-6">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <svg
-                    className="w-4 h-4 text-blue-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="font-semibold text-blue-900">
-                  Sistema de Relatórios PDF
-                </h3>
-              </div>
-              <p className="text-sm text-blue-700 mb-3">
-                ✅ Geração automática de PDFs profissionais
-                <br />
-                ✅ Relatórios de manutenção e trabalhos
-                <br />✅ Partilha via Email, WhatsApp e Download
-              </p>
-              <button
-                type="button"
-                onClick={handleMobileDeploy}
-                className="text-xs bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                📄 Ver Como Funciona
-              </button>
-            </div>
-
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <Label

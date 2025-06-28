@@ -53,7 +53,7 @@ export function MaintenanceReport({
     if (ph >= 7.0 && ph <= 7.4 && chlorine >= 1.0 && chlorine <= 2.0) {
       return "✅ Qualidade Excelente";
     } else if (ph >= 6.8 && ph <= 7.6 && chlorine >= 0.8 && chlorine <= 2.5) {
-      return "⚠️ Qualidade Aceitável";
+      return "��️ Qualidade Aceitável";
     } else {
       return "❌ Qualidade Inadequada";
     }
@@ -110,7 +110,7 @@ ${
       ([key]) =>
         `• ${key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1")}`,
     )
-    .join("\n") || "• Verificação geral"
+    .join("\n") || "�� Verificação geral"
 }
 
 ${intervention.workPerformed.outros ? `• ${intervention.workPerformed.outros}` : ""}
@@ -270,7 +270,7 @@ Relatório gerado em: ${reportDate}
 
     return `
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -278,28 +278,33 @@ Relatório gerado em: ${reportDate}
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
-      font-family: 'Inter', Arial, sans-serif;
-      line-height: 1.6;
-      color: #1f2937;
-      background: #f0f9ff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.5;
+      color: #1a202c;
+      background: #ffffff;
       font-size: 14px;
+      -webkit-font-smoothing: antialiased;
     }
 
     .container {
       max-width: 210mm;
       margin: 0 auto;
-      background: white;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      background: #ffffff;
       min-height: 297mm;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
     }
 
     .header {
-      background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
       color: white;
-      padding: 40px 40px 30px 40px;
+      padding: 40px 30px;
       position: relative;
       overflow: hidden;
     }
@@ -309,70 +314,207 @@ Relatório gerado em: ${reportDate}
       position: absolute;
       top: -50px;
       right: -50px;
-      width: 150px;
-      height: 150px;
+      width: 100px;
+      height: 100px;
       background: rgba(255,255,255,0.1);
       border-radius: 50%;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
     }
 
     .logo-section {
       display: flex;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 25px;
-      position: relative;
+      gap: 20px;
     }
 
     .logo {
-      width: 220px;
-      height: auto;
+      height: 65px;
+      width: auto;
       background: white;
-      padding: 15px 20px;
+      padding: 12px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    .header-title {
-      text-align: center;
-      position: relative;
-    }
-
-    .header h1 {
+    .company-info h1 {
       font-size: 28px;
       font-weight: 700;
-      margin-bottom: 8px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      margin-bottom: 5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .header h2 {
-      font-size: 20px;
+    .company-info .tagline {
+      font-size: 16px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .header-meta {
+      text-align: right;
+      background: rgba(255,255,255,0.15);
+      padding: 15px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-meta .date {
+      font-size: 14px;
       font-weight: 500;
-      margin-bottom: 15px;
+      margin-bottom: 5px;
+    }
+
+    .header-meta .ref {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .report-title {
+      text-align: center;
+      border-top: 2px solid rgba(255,255,255,0.3);
+      padding-top: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .report-title h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .report-title .subtitle {
+      font-size: 18px;
+      font-weight: 400;
       opacity: 0.95;
+      margin-bottom: 5px;
+    }
+
+    .report-title .location {
+      font-size: 16px;
+      opacity: 0.9;
     }
 
     .content {
-      padding: 40px;
+      padding: 40px 30px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .info-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      border-left: 4px solid #0ea5e9;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .info-card .label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0ea5e9;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .info-card .value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a202c;
     }
 
     .maintenance-content {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 30px;
+      background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
       border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .maintenance-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0ea5e9, #06b6d4);
+    }
+
+    .maintenance-content .content-text {
       white-space: pre-wrap;
-      font-family: 'Inter', monospace;
-      font-size: 14px;
-      line-height: 1.8;
-      color: #374151;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #2d3748;
+      font-weight: 400;
     }
 
     .footer {
-      background: linear-gradient(135deg, #1f2937, #374151);
+      background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
       color: white;
       padding: 30px;
-      text-align: center;
       margin-top: 40px;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .footer-contact {
+      text-align: right;
+      font-size: 14px;
+    }
+
+    .footer-contact .email {
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .footer-contact .website {
+      opacity: 0.9;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 15px;
+      text-align: center;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    @media print {
+      body { background: white; }
+      .container { box-shadow: none; }
+    }
+
+    @page {
+      margin: 0;
+      size: A4;
     }
 
     .footer-content {
@@ -421,31 +563,59 @@ Relatório gerado em: ${reportDate}
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo-section">
-        <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Leirisonda Logo" class="logo" />
+      <div class="header-content">
+        <div class="logo-section">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Logótipo Leirisonda" class="logo" />
+          <div class="company-info">
+            <h1>Leirisonda</h1>
+            <div class="tagline">Gestão de Obras e Manutenção</div>
+          </div>
+        </div>
+        <div class="header-meta">
+          <div class="date">Data: ${reportDate}</div>
+          <div class="ref">REF: ${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}</div>
+        </div>
       </div>
-      <div class="header-title">
-        <h1><span class="emoji">💧</span>Relatório de Manutenção</h1>
-        <h2>${maintenance.poolName}</h2>
-        <p style="font-size: 16px; opacity: 0.9;">Leirisonda - Manutenção de Piscinas</p>
+
+      <div class="report-title">
+        <h2>Relatório de Manutenção de Piscina</h2>
+        <div class="subtitle">${maintenance.poolName}</div>
+        <div class="subtitle">Cliente: ${maintenance.clientName}</div>
+        <div class="location">${maintenance.location}</div>
       </div>
     </div>
 
     <div class="content">
-      <div class="maintenance-content">${content}</div>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="label">Data do Relatório</div>
+          <div class="value">${reportDate}</div>
+        </div>
+        <div class="info-card">
+          <div class="label">Tipo de Piscina</div>
+          <div class="value">${getPoolTypeLabel(maintenance.poolType)}</div>
+        </div>
+        <div class="info-card">
+          <div class="label">Cubicagem de Água</div>
+          <div class="value">${maintenance.waterCubicage || "N/A"}</div>
+        </div>
+      </div>
+
+      <div class="maintenance-content">
+        <div class="content-text">${content}</div>
+      </div>
     </div>
 
     <div class="footer">
       <div class="footer-content">
-        <h3>📞 Informações de Contacto</h3>
-        <p><strong>Leirisonda - Manutenção de Piscinas</strong></p>
-        <p>Email: info@leirisonda.pt</p>
-        <p>Telefone: [Inserir contacto]</p>
-        <p>Website: www.leirisonda.pt</p>
-        <div class="footer-note">
-          <p>Relatório gerado automaticamente em ${reportDate}</p>
-          <p>© ${new Date().getFullYear()} Leirisonda - Todos os direitos reservados</p>
+        <div class="footer-logo">Leirisonda</div>
+        <div class="footer-contact">
+          <div class="email">info@leirisonda.pt</div>
+          <div class="website">www.leirisonda.pt</div>
         </div>
+      </div>
+      <div class="footer-bottom">
+        © ${new Date().getFullYear()} Leirisonda - Sistema Profissional de Gestão de Obras e Manutenção
       </div>
     </div>
   </div>
@@ -479,7 +649,7 @@ Relatório gerado em: ${reportDate}
         additionalInfo: `Tipo: ${getPoolTypeLabel(maintenance.poolType)} • Cubicagem: ${maintenance.waterCubicage || "N/A"}`,
       };
 
-      const htmlContent = PDFGenerator.createModernReportHTML(pdfData);
+      const htmlContent = generateHTMLReport();
 
       const filename = intervention
         ? `intervencao-${maintenance.poolName.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`
@@ -596,7 +766,7 @@ Relatório gerado em: ${reportDate}
       }
     } catch (error) {
       console.error("Error sharing PDF:", error);
-      alert("❌ Erro ao partilhar PDF. O ficheiro foi descarregado.");
+      alert("�� Erro ao partilhar PDF. O ficheiro foi descarregado.");
     }
   };
   const createInterventionContent = () => {
@@ -835,15 +1005,6 @@ Relatório gerado em: ${reportDate}
                 })}
               </>
             )}
-          </div>
-
-          <div className="bg-blue-50 p-3 rounded-lg text-center">
-            <p className="text-sm font-medium text-blue-800 mb-1">
-              📄 Todos os relatórios são gerados em PDF profissional
-            </p>
-            <p className="text-xs text-blue-600">
-              Design moderno com logotipo Leirisonda
-            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
