@@ -92,30 +92,31 @@ Relatório gerado em: ${reportDate}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatório de Obra - ${work.title}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', Arial, sans-serif;
-      line-height: 1.6;
-      color: #1f2937;
-      background: #f9fafb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.5;
+      color: #111827;
+      background: #ffffff;
       font-size: 14px;
+      font-weight: 400;
     }
 
     .container {
       max-width: 210mm;
       margin: 0 auto;
       background: white;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
       min-height: 297mm;
+      position: relative;
     }
 
     .header {
-      background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+      background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
       color: white;
-      padding: 40px 40px 30px 40px;
+      padding: 32px 40px;
       position: relative;
       overflow: hidden;
     }
@@ -123,21 +124,21 @@ Relatório gerado em: ${reportDate}
     .header::before {
       content: '';
       position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 150px;
-      height: 150px;
-      background: rgba(255,255,255,0.1);
+      top: -100px;
+      right: -100px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,0.08);
       border-radius: 50%;
     }
 
     .header::after {
       content: '';
       position: absolute;
-      bottom: -30px;
-      left: -30px;
-      width: 100px;
-      height: 100px;
+      bottom: -80px;
+      left: -80px;
+      width: 160px;
+      height: 160px;
       background: rgba(255,255,255,0.05);
       border-radius: 50%;
     }
@@ -145,8 +146,10 @@ Relatório gerado em: ${reportDate}
     .logo-section {
       display: flex;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 25px;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 2;
       position: relative;
     }
 
