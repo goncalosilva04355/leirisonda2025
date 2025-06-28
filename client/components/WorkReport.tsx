@@ -611,62 +611,28 @@ Relatório gerado em: ${reportDate}
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          <Share className="mr-2 h-4 w-4" />
-          Partilhar Relatório
-        </Button>
-      </DialogTrigger>
-
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center">
-            <FileText className="mr-2 h-5 w-5 text-blue-600" />
-            Partilhar Relatório de Obra
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-4">
-          <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
-            <strong>Obra:</strong> {work.title}
-            <br />
-            <strong>Data:</strong>{" "}
-            {format(new Date(work.date), "dd/MM/yyyy", { locale: pt })}
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              onClick={() => handleShare("email")}
-              disabled={isGenerating}
-              variant="outline"
-              className="w-full"
-            >
-              <Mail className="mr-2 h-4 w-4" />
-              Email
-            </Button>
-
-            <Button
-              onClick={() => handleShare("whatsapp")}
-              disabled={isGenerating}
-              variant="outline"
-              className="w-full"
-            >
-              <MessageCircle className="mr-2 h-4 w-4" />
-              WhatsApp
-            </Button>
-
-            <Button
-              onClick={() => handleShare("copy")}
-              disabled={isGenerating}
-              variant="outline"
-              className="w-full"
-            >
-              <Copy className="mr-2 h-4 w-4" />
-              Copiar
-            </Button>
-
-            <Button
+    <>
+      <Button
+        onClick={generatePDFReport}
+        disabled={isGenerating}
+        variant="outline"
+        className="w-full"
+      >
+        {isGenerating ? (
+          <>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+            A gerar PDF...
+          </>
+        ) : (
+          <>
+            <FileText className="mr-2 h-4 w-4" />
+            Gerar Relatório PDF
+          </>
+        )}
+      </Button>
+    </>
+  );
+}
               onClick={() => handleShare("download")}
               disabled={isGenerating}
               variant="outline"
