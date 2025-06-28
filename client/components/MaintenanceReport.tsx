@@ -263,21 +263,6 @@ Relatório gerado em: ${reportDate}
     }
   };
 
-  const getPoolTypeLabel = (type: string) => {
-    switch (type) {
-      case "residential":
-        return "Residencial";
-      case "commercial":
-        return "Comercial";
-      case "public":
-        return "Pública";
-      case "sports":
-        return "Desportiva";
-      default:
-        return "Não especificado";
-    }
-  };
-
   const generateHTMLReport = () => {
     // Similar HTML generation as WorkReport but adapted for maintenance
     const reportDate = format(new Date(), "dd/MM/yyyy", { locale: pt });
