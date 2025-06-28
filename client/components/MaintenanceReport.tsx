@@ -454,7 +454,7 @@ Relatório gerado em: ${reportDate}
     `.trim();
   };
 
-  const generatePDFReport = async () => {
+  const generatePDFReport = async (shareMethod?: string) => {
     setIsGenerating(true);
 
     try {
@@ -485,11 +485,23 @@ Relatório gerado em: ${reportDate}
         ? `intervencao-${maintenance.poolName.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`
         : `manutencao-${maintenance.poolName.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`;
 
-      await PDFGenerator.generatePDFFromHTML(htmlContent, {
-        title: pdfData.title,
-        filename: filename,
-        orientation: "portrait",
-      });
+      if (shareMethod) {
+        // Generate PDF blob for sharing
+        const pdfBlob = await PDFGenerator.generatePDFFromHTML(htmlContent, {
+          title: pdfData.title,
+          filename: filename,
+          orientation: "portrait",
+        });
+
+        await handlePDFShare(shareMethod, pdfBlob, pdfData.title, filename);
+      } else {
+        // Direct download
+        await PDFGenerator.downloadPDF(htmlContent, {
+          title: pdfData.title,
+          filename: filename,
+          orientation: "portrait",
+        });
+      }
     } catch (error) {
       console.error("PDF generation error:", error);
       alert("❌ Erro ao gerar PDF. Tente novamente.");
@@ -498,6 +510,95 @@ Relatório gerado em: ${reportDate}
     }
   };
 
+  const handlePDFShare = async (
+    method: string,
+    pdfBlob: Blob,
+    title: string,
+    filename: string,
+  ) => {
+    try {
+      switch (method) {
+        case "email":
+          // Create mailto with PDF attachment (note: most email clients don't support blob attachments directly)
+          const emailSubject = encodeURIComponent(title);
+          const emailBody = encodeURIComponent(
+            `Segue em anexo o relatório de manutenção.\n\n` +
+              `Cliente: ${maintenance.clientName}\n` +
+              `Piscina: ${maintenance.poolName}\n` +
+              `Localização: ${maintenance.location}\n\n` +
+              `Este relatório foi gerado automaticamente pelo sistema Leirisonda.\n\n` +
+              `Cumprimentos,\nEquipa Leirisonda`,
+          );
+
+          // For email, we'll download the PDF and let user attach manually
+          const url = URL.createObjectURL(pdfBlob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(url);
+
+          // Then open email client
+          setTimeout(() => {
+            window.open(
+              `mailto:${maintenance.clientEmail || ""}?subject=${emailSubject}&body=${emailBody}`,
+              "_blank",
+            );
+          }, 500);
+          break;
+
+        case "whatsapp":
+          // Download PDF first, then open WhatsApp
+          const whatsappUrl = URL.createObjectURL(pdfBlob);
+          const whatsappLink = document.createElement("a");
+          whatsappLink.href = whatsappUrl;
+          whatsappLink.download = filename;
+          whatsappLink.click();
+          URL.revokeObjectURL(whatsappUrl);
+
+          const whatsappText = encodeURIComponent(
+            `📄 Relatório de Manutenção - ${maintenance.poolName}\n\n` +
+              `Cliente: ${maintenance.clientName}\n` +
+              `Localização: ${maintenance.location}\n\n` +
+              `Relatório em PDF descarregado. ` +
+              `Gerado automaticamente pelo sistema Leirisonda.`,
+          );
+
+          setTimeout(() => {
+            window.open(`https://wa.me/?text=${whatsappText}`, "_blank");
+          }, 500);
+          break;
+
+        case "copy":
+          // Copy summary to clipboard and download PDF
+          const copyUrl = URL.createObjectURL(pdfBlob);
+          const copyLink = document.createElement("a");
+          copyLink.href = copyUrl;
+          copyLink.download = filename;
+          copyLink.click();
+          URL.revokeObjectURL(copyUrl);
+
+          const summaryText = `📄 Relatório: ${title}\nCliente: ${maintenance.clientName}\nPiscina: ${maintenance.poolName}\nLocalização: ${maintenance.location}\n\nRelatório PDF descarregado automaticamente.`;
+          await navigator.clipboard.writeText(summaryText);
+          alert("📋 Resumo copiado e PDF descarregado!");
+          break;
+
+        case "download":
+        default:
+          // Direct download
+          const downloadUrl = URL.createObjectURL(pdfBlob);
+          const downloadLink = document.createElement("a");
+          downloadLink.href = downloadUrl;
+          downloadLink.download = filename;
+          downloadLink.click();
+          URL.revokeObjectURL(downloadUrl);
+          break;
+      }
+    } catch (error) {
+      console.error("Error sharing PDF:", error);
+      alert("❌ Erro ao partilhar PDF. O ficheiro foi descarregado.");
+    }
+  };
   const createInterventionContent = () => {
     if (!intervention) return "";
 
