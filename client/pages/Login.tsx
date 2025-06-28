@@ -202,7 +202,6 @@ export function Login() {
                     )}
                   </button>
                 </div>
-<<<<<<< HEAD
               </div>
 
               {error && (
@@ -230,13 +229,6 @@ export function Login() {
               </Button>
             </form>
           </div>
-=======
-              ) : (
-                "Entrar"
-              )}
-            </Button>
-          </form>
->>>>>>> e2d9e5a4a6c9940ac49a26b978198754154aeaf5
         </div>
 
         {/* Copyright */}
