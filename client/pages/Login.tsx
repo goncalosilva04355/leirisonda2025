@@ -87,7 +87,6 @@ Problemas? Contacta o desenvolvedor.`;
       <div className="w-full max-w-lg">
         {/* Modern Card Container */}
         <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
-
           {/* Header Section */}
           <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-8 text-white text-center relative">
             <div className="absolute inset-0 bg-black/10"></div>
@@ -100,7 +99,9 @@ Problemas? Contacta o desenvolvedor.`;
                 />
               </div>
               <h1 className="text-2xl font-bold mb-2">Leirisonda</h1>
-              <p className="text-blue-100 opacity-90">Sistema de Gestão de Obras</p>
+              <p className="text-blue-100 opacity-90">
+                Sistema de Gestão de Obras
+              </p>
             </div>
           </div>
 
@@ -110,16 +111,29 @@ Problemas? Contacta o desenvolvedor.`;
             <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-4 mb-6">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <svg
+                    className="w-4 h-4 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-blue-900">Sistema de Relatórios PDF</h3>
+                <h3 className="font-semibold text-blue-900">
+                  Sistema de Relatórios PDF
+                </h3>
               </div>
               <p className="text-sm text-blue-700 mb-3">
-                ✅ Geração automática de PDFs profissionais<br/>
-                ✅ Relatórios de manutenção e trabalhos<br/>
-                ✅ Partilha via Email, WhatsApp e Download
+                ✅ Geração automática de PDFs profissionais
+                <br />
+                ✅ Relatórios de manutenção e trabalhos
+                <br />✅ Partilha via Email, WhatsApp e Download
               </p>
               <button
                 type="button"
@@ -131,87 +145,88 @@ Problemas? Contacta o desenvolvedor.`;
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <Label
-                htmlFor="email"
-                className="text-sm font-medium text-gray-700"
-              >
-                Email
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
-                className="mt-1 h-12"
-                disabled={isSubmitting}
-                style={{ height: "48px", fontSize: "16px" }}
-              />
-            </div>
-
-            <div>
-              <Label
-                htmlFor="password"
-                className="text-sm font-medium text-gray-700"
-              >
-                Palavra-passe
-              </Label>
-              <div className="relative">
+              <div>
+                <Label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Email
+                </Label>
                 <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="mt-1 pr-12 h-12"
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="seu@email.com"
+                  className="mt-1 h-12"
                   disabled={isSubmitting}
                   style={{ height: "48px", fontSize: "16px" }}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
-                </button>
               </div>
-            </div>
 
-            {error && (
-              <Alert className="border-red-200 bg-red-50">
-                <AlertCircle className="h-4 w-4 text-red-600" />
-                <AlertDescription className="text-red-800">
-                  {error}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            <Button
-              type="submit"
-              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <div className="flex items-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>A entrar...</span>
+              <div>
+                <Label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Palavra-passe
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="mt-1 pr-12 h-12"
+                    disabled={isSubmitting}
+                    style={{ height: "48px", fontSize: "16px" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
                 </div>
-              ) : (
-                "Entrar"
+              </div>
+
+              {error && (
+                <Alert className="border-red-200 bg-red-50">
+                  <AlertCircle className="h-4 w-4 text-red-600" />
+                  <AlertDescription className="text-red-800">
+                    {error}
+                  </AlertDescription>
+                </Alert>
               )}
-            </Button>
-          </form>
+
+              <Button
+                type="submit"
+                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>A entrar...</span>
+                  </div>
+                ) : (
+                  "Entrar"
+                )}
+              </Button>
+            </form>
+          </div>
         </div>
 
         {/* Copyright */}
-        <div className="text-center mt-8">
-          <p className="text-white/70 text-sm">
-            © 2024 Leirisonda - Todos os direitos reservados. v1.0 - PROD READY
+        <div className="text-center mt-6">
+          <p className="text-white/80 text-sm font-medium">
+            © 2024 Leirisonda - Sistema Profissional de Gestão
           </p>
         </div>
       </div>
