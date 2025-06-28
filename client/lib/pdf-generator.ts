@@ -209,30 +209,37 @@ export class PDFGenerator {
           }
 
           .company-info h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
           }
 
           .company-info .tagline {
-            font-size: 14px;
+            font-size: 16px;
+            opacity: 0.9;
           }
 
           .header-meta {
             text-align: right;
-            font-size: 12px;
+            font-size: 13px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
           }
 
           .report-title h2 {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: bold;
-            border-top: 1px solid rgba(255,255,255,0.3);
-            padding-top: 15px;
+            border-top: 2px solid rgba(255,255,255,0.4);
+            padding-top: 18px;
+            margin-top: 10px;
           }
 
           .report-title .subtitle {
-            font-size: 14px;
-            margin-top: 5px;
+            font-size: 16px;
+            margin-top: 8px;
+            opacity: 0.95;
           }
 
           /* Content */
