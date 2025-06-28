@@ -83,25 +83,54 @@ Problemas? Contacta o desenvolvedor.`;
   // if (isLoading) removed to prevent infinite loading
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        {/* Logo and Header */}
-        <div className="text-center mb-8">
-          <div className="mx-auto w-32 h-20 bg-white rounded-xl flex items-center justify-center mb-6 shadow-lg p-2">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800"
-              alt="Leirisonda Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Leirisonda</h1>
-          <p className="text-blue-100 mb-8">Sistema de Gestão de Obras</p>
-          {/* EMERGENCY PUSH - LEIRISONDA PRODUCTION READY NOW */}
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center p-4">
+      <div className="w-full max-w-lg">
+        {/* Modern Card Container */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
 
-        {/* Login Form */}
-        <div className="bg-white p-8 rounded-xl shadow-xl">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Header Section */}
+          <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-8 text-white text-center relative">
+            <div className="absolute inset-0 bg-black/10"></div>
+            <div className="relative z-10">
+              <div className="mx-auto w-24 h-24 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-lg p-3">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800"
+                  alt="Leirisonda Logo"
+                  className="w-16 h-16 object-contain"
+                />
+              </div>
+              <h1 className="text-2xl font-bold mb-2">Leirisonda</h1>
+              <p className="text-blue-100 opacity-90">Sistema de Gestão de Obras</p>
+            </div>
+          </div>
+
+          {/* Login Form */}
+          <div className="p-8">
+            {/* PDF Demo Section */}
+            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-4 mb-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-blue-900">Sistema de Relatórios PDF</h3>
+              </div>
+              <p className="text-sm text-blue-700 mb-3">
+                ✅ Geração automática de PDFs profissionais<br/>
+                ✅ Relatórios de manutenção e trabalhos<br/>
+                ✅ Partilha via Email, WhatsApp e Download
+              </p>
+              <button
+                type="button"
+                onClick={handleMobileDeploy}
+                className="text-xs bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                📄 Ver Como Funciona
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <Label
                 htmlFor="email"
