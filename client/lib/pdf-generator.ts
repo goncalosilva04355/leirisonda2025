@@ -18,75 +18,145 @@ export class PDFGenerator {
     options: PDFOptions,
   ): Promise<Blob> {
     try {
-      // Create simple container
+      // Create container with exact A4 dimensions
       const tempContainer = document.createElement("div");
       tempContainer.innerHTML = htmlContent;
       tempContainer.style.position = "absolute";
       tempContainer.style.left = "-9999px";
-      tempContainer.style.width = "800px";
-      tempContainer.style.padding = "20px";
+      tempContainer.style.width = "180mm"; // A4 width minus margins (210mm - 30mm)
       tempContainer.style.fontFamily = "Arial, sans-serif";
-      tempContainer.style.fontSize = "14px";
-      tempContainer.style.lineHeight = "1.4";
-      tempContainer.style.color = "#333";
-      tempContainer.style.background = "#fff";
+      tempContainer.style.fontSize = "11px";
+      tempContainer.style.lineHeight = "1.3";
+      tempContainer.style.color = "#2c3e50";
+      tempContainer.style.background = "#ffffff";
+      tempContainer.style.padding = "0";
+      tempContainer.style.margin = "0";
 
       document.body.appendChild(tempContainer);
 
-      // Simple wait
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Wait for images and fonts to load
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Generate canvas with basic settings
+      // Generate high-quality canvas
       const canvas = await html2canvas(tempContainer, {
-        scale: 2,
+        scale: 3,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
+        imageTimeout: 30000,
+        onclone: (clonedDoc) => {
+          // Ensure images are loaded in cloned document
+          const images = clonedDoc.querySelectorAll("img");
+          images.forEach((img) => {
+            img.crossOrigin = "anonymous";
+          });
+        },
       });
 
       document.body.removeChild(tempContainer);
 
-      // Create simple PDF
+      // Create PDF with exact A4 size
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: "a4",
+        compress: true,
       });
 
       // Add metadata
       pdf.setProperties({
         title: options.title,
+        subject: "Relatório Leirisonda",
         author: "Leirisonda",
+        creator: "Sistema Leirisonda",
       });
 
-      // Add image to fill A4
-      const imgWidth = 210;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      // Calculate dimensions to fit A4 exactly
+      const pdfWidth = 210; // A4 width
+      const pdfHeight = 297; // A4 height
+      const margin = 15; // 15mm margin
+      const contentWidth = pdfWidth - margin * 2;
+      const contentHeight = pdfHeight - margin * 2;
 
+      const canvasAspectRatio = canvas.width / canvas.height;
+      const contentAspectRatio = contentWidth / contentHeight;
+
+      let finalWidth, finalHeight;
+
+      if (canvasAspectRatio > contentAspectRatio) {
+        // Canvas is wider, fit to width
+        finalWidth = contentWidth;
+        finalHeight = contentWidth / canvasAspectRatio;
+      } else {
+        // Canvas is taller, fit to height or split pages
+        if ((canvas.height * contentWidth) / canvas.width <= contentHeight) {
+          // Fits in one page
+          finalHeight = contentHeight;
+          finalWidth = contentHeight * canvasAspectRatio;
+        } else {
+          // Needs multiple pages
+          finalWidth = contentWidth;
+          finalHeight = contentWidth / canvasAspectRatio;
+        }
+      }
+
+      const x = margin + (contentWidth - finalWidth) / 2;
+      const y = margin;
+
+      // Add first page
       pdf.addImage(
-        canvas.toDataURL("image/jpeg", 0.9),
-        "JPEG",
-        0,
-        0,
-        imgWidth,
-        imgHeight,
+        canvas.toDataURL("image/png", 1.0),
+        "PNG",
+        x,
+        y,
+        finalWidth,
+        Math.min(finalHeight, contentHeight),
       );
 
-      // Add more pages if needed
-      if (imgHeight > 297) {
-        let currentHeight = 297;
-        while (currentHeight < imgHeight) {
+      // Add additional pages if content is too tall
+      if (finalHeight > contentHeight) {
+        let remainingHeight = finalHeight - contentHeight;
+        let currentY = contentHeight;
+
+        while (remainingHeight > 0) {
           pdf.addPage();
-          pdf.addImage(
-            canvas.toDataURL("image/jpeg", 0.9),
-            "JPEG",
-            0,
-            -currentHeight,
-            imgWidth,
-            imgHeight,
-          );
-          currentHeight += 297;
+
+          const pageHeight = Math.min(remainingHeight, contentHeight);
+          const sourceY = (currentY / finalHeight) * canvas.height;
+          const sourceHeight = (pageHeight / finalHeight) * canvas.height;
+
+          // Create canvas for this page
+          const pageCanvas = document.createElement("canvas");
+          const ctx = pageCanvas.getContext("2d");
+          pageCanvas.width = canvas.width;
+          pageCanvas.height = sourceHeight;
+
+          if (ctx) {
+            ctx.drawImage(
+              canvas,
+              0,
+              sourceY,
+              canvas.width,
+              sourceHeight,
+              0,
+              0,
+              canvas.width,
+              sourceHeight,
+            );
+
+            pdf.addImage(
+              pageCanvas.toDataURL("image/png", 1.0),
+              "PNG",
+              x,
+              margin,
+              finalWidth,
+              pageHeight,
+            );
+          }
+
+          currentY += pageHeight;
+          remainingHeight -= pageHeight;
         }
       }
 
