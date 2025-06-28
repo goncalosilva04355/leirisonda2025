@@ -449,11 +449,12 @@ Relatório gerado em: ${reportDate}
     <div class="header">
       <div class="logo-section">
         <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Leirisonda Logo" class="logo" />
+        <div class="report-type">Relatório de Manutenção</div>
       </div>
       <div class="header-title">
-        <h1><span class="emoji">💧</span>Relatório de Manutenção</h1>
-        <h2>${maintenance.poolName}</h2>
-        <p style="font-size: 16px; opacity: 0.9;">Leirisonda - Manutenção de Piscinas</p>
+        <h1>${maintenance.poolName}</h1>
+        <h2>Cliente: ${maintenance.clientName}</h2>
+        <p style="font-size: 16px; opacity: 0.9; margin-top: 8px;">${maintenance.location}</p>
       </div>
     </div>
 
