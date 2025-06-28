@@ -354,36 +354,41 @@ export class PDFGenerator {
             font-weight: bold;
           }
 
-          /* Footer */
+          /* Modern Footer */
           .footer {
-            background: #333;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
             color: white;
-            padding: 15px;
-            margin-top: 20px;
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
           }
 
           .footer-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
           }
 
           .footer-logo {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
           }
 
           .footer-contact {
             text-align: right;
-            font-size: 10px;
+            font-size: 12px;
+            opacity: 0.9;
           }
 
           .footer-bottom {
-            border-top: 1px solid #555;
-            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 12px;
             text-align: center;
-            font-size: 9px;
+            font-size: 11px;
+            opacity: 0.8;
           }
         </style>
       </head>
