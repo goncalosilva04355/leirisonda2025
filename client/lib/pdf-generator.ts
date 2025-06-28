@@ -168,40 +168,43 @@ export class PDFGenerator {
             overflow: hidden;
           }
 
-          /* Simple Header */
+          /* Modern Header */
           .header {
-            background: ${primaryColor};
+            background: linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%);
             color: white;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
           }
 
           .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
           }
 
           .logo-section {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
           }
 
           .logo {
             background: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
           }
 
           .logo img {
-            width: 45px;
-            height: 45px;
+            width: 55px;
+            height: 55px;
             object-fit: contain;
           }
 
