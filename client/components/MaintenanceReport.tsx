@@ -397,7 +397,7 @@ Relatório gerado em: ${reportDate}
   <div class="container">
     <div class="header">
       <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Leirisonda Logo" class="logo" />
-      <h1>Relatório de Manutenção</h1>
+      <h1>Relatório de Manutenç��o</h1>
       <h2>${maintenance.poolName}</h2>
       <p>Cliente: ${maintenance.clientName}</p>
       <p>${maintenance.location}</p>
@@ -444,7 +444,7 @@ Relatório gerado em: ${reportDate}
         additionalInfo: `Tipo: ${getPoolTypeLabel(maintenance.poolType)} • Cubicagem: ${maintenance.waterCubicage || "N/A"}`,
       };
 
-      const htmlContent = PDFGenerator.createModernReportHTML(pdfData);
+      const htmlContent = generateHTMLReport();
 
       const filename = intervention
         ? `intervencao-${maintenance.poolName.toLowerCase().replace(/\s+/g, "-")}-${format(new Date(), "yyyy-MM-dd")}.pdf`
