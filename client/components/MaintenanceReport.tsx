@@ -704,48 +704,28 @@ Relatório gerado em: ${reportDate}
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          <Share className="mr-2 h-4 w-4" />
-          Partilhar Relatório
-        </Button>
-      </DialogTrigger>
-
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center">
-            <Droplets className="mr-2 h-5 w-5 text-cyan-600" />
-            Partilhar Relatório de Manutenção
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-4">
-          <div className="text-sm text-gray-600 bg-cyan-50 p-3 rounded-lg">
-            <strong>Piscina:</strong> {maintenance.poolName}
-            <br />
-            <strong>Cliente:</strong> {maintenance.clientName}
-            {intervention && (
-              <>
-                <br />
-                <strong>Intervenção:</strong>{" "}
-                {format(new Date(intervention.date), "dd/MM/yyyy", {
-                  locale: pt,
-                })}
-              </>
-            )}
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              onClick={() => handleShare("email")}
-              disabled={isGenerating}
-              variant="outline"
-              className="w-full"
-            >
-              <Mail className="mr-2 h-4 w-4" />
-              Email
-            </Button>
+    <>
+      <Button
+        onClick={generatePDFReport}
+        disabled={isGenerating}
+        variant="outline"
+        className="w-full"
+      >
+        {isGenerating ? (
+          <>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+            A gerar PDF...
+          </>
+        ) : (
+          <>
+            <FileText className="mr-2 h-4 w-4" />
+            Gerar Relatório PDF
+          </>
+        )}
+      </Button>
+    </>
+  );
+}
 
             <Button
               onClick={() => handleShare("whatsapp")}
