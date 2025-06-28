@@ -563,22 +563,60 @@ Relatório gerado em: ${reportDate}
 <body>
   <div class="container">
     <div class="header">
-      <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Leirisonda Logo" class="logo" />
-      <h1>Relatório de Manutenç��o</h1>
-      <h2>${maintenance.poolName}</h2>
-      <p>Cliente: ${maintenance.clientName}</p>
-      <p>${maintenance.location}</p>
+      <div class="header-content">
+        <div class="logo-section">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Logótipo Leirisonda" class="logo" />
+          <div class="company-info">
+            <h1>Leirisonda</h1>
+            <div class="tagline">Gestão de Obras e Manutenção</div>
+          </div>
+        </div>
+        <div class="header-meta">
+          <div class="date">Data: ${reportDate}</div>
+          <div class="ref">REF: ${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}</div>
+        </div>
+      </div>
+
+      <div class="report-title">
+        <h2>Relatório de Manutenção de Piscina</h2>
+        <div class="subtitle">${maintenance.poolName}</div>
+        <div class="subtitle">Cliente: ${maintenance.clientName}</div>
+        <div class="location">${maintenance.location}</div>
+      </div>
     </div>
 
     <div class="content">
-      <div class="maintenance-content">${content}</div>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="label">Data do Relatório</div>
+          <div class="value">${reportDate}</div>
+        </div>
+        <div class="info-card">
+          <div class="label">Tipo de Piscina</div>
+          <div class="value">${getPoolTypeLabel(maintenance.poolType)}</div>
+        </div>
+        <div class="info-card">
+          <div class="label">Cubicagem de Água</div>
+          <div class="value">${maintenance.waterCubicage || "N/A"}</div>
+        </div>
+      </div>
+
+      <div class="maintenance-content">
+        <div class="content-text">${content}</div>
+      </div>
     </div>
 
     <div class="footer">
-      <h3>Leirisonda - Manutenção de Piscinas</h3>
-      <p>Email: info@leirisonda.pt | Website: www.leirisonda.pt</p>
-      <p>Relatório gerado em ${reportDate}</p>
-      <p>© ${new Date().getFullYear()} Leirisonda - Todos os direitos reservados</p>
+      <div class="footer-content">
+        <div class="footer-logo">Leirisonda</div>
+        <div class="footer-contact">
+          <div class="email">info@leirisonda.pt</div>
+          <div class="website">www.leirisonda.pt</div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © ${new Date().getFullYear()} Leirisonda - Sistema Profissional de Gestão de Obras e Manutenção
+      </div>
     </div>
   </div>
 </body>
