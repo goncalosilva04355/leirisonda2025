@@ -160,7 +160,7 @@ Data recomendada: ${format(new Date(intervention.nextMaintenanceDate), "dd/MM/yy
     : ""
 }
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━��━
 
 📞 CONTACTO
 Leirisonda - Manutenção de Piscinas
@@ -805,25 +805,96 @@ Relatório gerado em: ${reportDate}
   };
 
   return (
-    <>
-      <Button
-        onClick={generatePDFReport}
-        disabled={isGenerating}
-        variant="outline"
-        className="w-full"
-      >
-        {isGenerating ? (
-          <>
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-            A gerar PDF...
-          </>
-        ) : (
-          <>
-            <FileText className="mr-2 h-4 w-4" />
-            Gerar Relatório PDF
-          </>
-        )}
-      </Button>
-    </>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="w-full">
+          <FileText className="mr-2 h-4 w-4" />
+          Relatório PDF
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center">
+            <Droplets className="mr-2 h-5 w-5 text-cyan-600" />
+            Relatório de Manutenção
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="text-sm text-gray-600 bg-cyan-50 p-3 rounded-lg">
+            <strong>Piscina:</strong> {maintenance.poolName}
+            <br />
+            <strong>Cliente:</strong> {maintenance.clientName}
+            {intervention && (
+              <>
+                <br />
+                <strong>Intervenção:</strong>{" "}
+                {format(new Date(intervention.date), "dd/MM/yyyy", {
+                  locale: pt,
+                })}
+              </>
+            )}
+          </div>
+
+          <div className="bg-blue-50 p-3 rounded-lg text-center">
+            <p className="text-sm font-medium text-blue-800 mb-1">
+              📄 Todos os relatórios são gerados em PDF profissional
+            </p>
+            <p className="text-xs text-blue-600">
+              Design moderno com logotipo Leirisonda
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              onClick={() => generatePDFReport("download")}
+              disabled={isGenerating}
+              className="w-full bg-blue-600 hover:bg-blue-700"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Download PDF
+            </Button>
+
+            <Button
+              onClick={() => generatePDFReport("email")}
+              disabled={isGenerating}
+              variant="outline"
+              className="w-full"
+            >
+              <Mail className="mr-2 h-4 w-4" />
+              Email
+            </Button>
+
+            <Button
+              onClick={() => generatePDFReport("whatsapp")}
+              disabled={isGenerating}
+              variant="outline"
+              className="w-full"
+            >
+              <MessageCircle className="mr-2 h-4 w-4" />
+              WhatsApp
+            </Button>
+
+            <Button
+              onClick={() => generatePDFReport("copy")}
+              disabled={isGenerating}
+              variant="outline"
+              className="w-full"
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Copiar
+            </Button>
+          </div>
+
+          {isGenerating && (
+            <div className="text-center text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mx-auto mb-2"></div>
+              A gerar PDF profissional...
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
