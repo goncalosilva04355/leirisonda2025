@@ -303,7 +303,7 @@ export function SyncManager() {
 
               {/* Backup List */}
               <div className="max-h-40 overflow-y-auto space-y-2">
-                {backups.slice(0, 5).map((backup: any, index) => (
+                {backups.slice(0, 5).map((backup: any) => (
                   <div
                     key={backup.id}
                     className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
