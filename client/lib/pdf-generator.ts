@@ -125,11 +125,7 @@ export class PDFGenerator {
     content: string;
     additionalInfo?: string;
   }): string {
-    const reportDate = new Date().toLocaleDateString("pt-PT", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    const reportDate = new Date().toLocaleDateString("pt-PT");
     const reportTime = new Date().toLocaleTimeString("pt-PT", {
       hour: "2-digit",
       minute: "2-digit",
@@ -138,18 +134,19 @@ export class PDFGenerator {
     const icon = data.type === "work" ? "🏗️" : "💧";
     const primaryColor =
       data.type === "work" ? this.LEIRISONDA_RED : this.LEIRISONDA_BLUE;
-    const accentColor = data.type === "work" ? "#dc2626" : "#0891b2";
-    const lightBg =
-      data.type === "work" ? "#fef2f2" : this.LEIRISONDA_BLUE_LIGHT;
 
     return `
       <!DOCTYPE html>
       <html lang="pt">
       <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=794, initial-scale=1.0">
         <title>${data.title}</title>
         <style>
+          @page {
+            size: A4;
+            margin: 15mm;
+          }
+
           * {
             margin: 0;
             padding: 0;
@@ -157,177 +154,232 @@ export class PDFGenerator {
           }
 
           body {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            line-height: 1.4;
-            color: #333;
-            background: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 11px;
+            line-height: 1.3;
+            color: #2c3e50;
+            background: white;
+            width: 180mm;
+            min-height: 267mm;
           }
 
           .report-container {
-            max-width: 800px;
-            margin: 0;
-            padding: 20px;
-            background: #fff;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
           }
 
+          /* Modern Header */
           .header {
-            background: ${primaryColor};
+            background: linear-gradient(135deg, ${primaryColor} 0%, #34495e 100%);
             color: white;
-            padding: 30px;
-            margin-bottom: 20px;
+            padding: 15mm 0;
+            margin-bottom: 8mm;
+            border-radius: 3mm;
+            position: relative;
+          }
+
+          .header::after {
+            content: '';
+            position: absolute;
+            bottom: -3mm;
+            left: 0;
+            right: 0;
+            height: 1mm;
+            background: linear-gradient(90deg, ${primaryColor}, transparent, ${primaryColor});
+          }
+
+          .header-content {
+            padding: 0 8mm;
           }
 
           .header-top {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            align-items: flex-start;
+            margin-bottom: 6mm;
           }
 
           .logo-section {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 4mm;
           }
 
           .logo {
             background: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
+            width: 12mm;
+            height: 12mm;
+            border-radius: 2mm;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 2mm 8mm rgba(0,0,0,0.2);
           }
 
           .logo img {
-            width: 35px;
-            height: 35px;
+            width: 8mm;
+            height: 8mm;
             object-fit: contain;
           }
 
           .company-info h1 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 1mm;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
           }
 
           .company-info .tagline {
-            font-size: 14px;
+            font-size: 10px;
+            opacity: 0.95;
+            font-weight: 400;
           }
 
           .header-meta {
             text-align: right;
-            font-size: 12px;
+            font-size: 9px;
+            line-height: 1.2;
+          }
+
+          .doc-id {
+            background: rgba(255,255,255,0.2);
+            padding: 1mm 2mm;
+            border-radius: 2mm;
+            font-weight: 600;
+            margin-top: 1mm;
+            display: inline-block;
+            font-size: 8px;
+          }
+
+          .report-title {
+            border-top: 0.5mm solid rgba(255,255,255,0.3);
+            padding-top: 4mm;
           }
 
           .report-title h2 {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 1mm;
+            display: flex;
+            align-items: center;
+            gap: 2mm;
           }
 
           .report-title .subtitle {
-            font-size: 14px;
+            font-size: 10px;
+            opacity: 0.9;
           }
 
+          /* Content */
           .content {
-            padding: 20px 0;
+            flex: 1;
+            padding: 0 0 5mm 0;
           }
 
           .info-header {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 3mm;
+            margin-bottom: 6mm;
           }
 
           .info-card {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            border-left: 4px solid ${primaryColor};
+            background: #f8f9fa;
+            border: 0.3mm solid #e9ecef;
+            border-radius: 2mm;
+            padding: 3mm;
+            border-left: 1mm solid ${primaryColor};
           }
 
           .info-card .label {
-            font-size: 11px;
-            font-weight: bold;
+            font-size: 8px;
+            font-weight: 600;
             color: ${primaryColor};
-            margin-bottom: 5px;
+            margin-bottom: 1mm;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
           }
 
           .info-card .value {
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
+            font-size: 11px;
+            font-weight: 600;
+            color: #2c3e50;
           }
 
           .section {
-            margin-bottom: 30px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            margin-bottom: 6mm;
+            background: white;
+            border: 0.3mm solid #e9ecef;
+            border-radius: 2mm;
+            overflow: hidden;
           }
 
           .section-header {
-            background: #f5f5f5;
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 3mm;
+            border-bottom: 0.3mm solid #e9ecef;
           }
 
           .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
             margin: 0;
           }
 
           .section-content {
-            padding: 15px;
+            padding: 3mm;
           }
 
-          .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin: 10px 0;
+          .highlight-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 0.5mm solid ${primaryColor}40;
+            border-radius: 2mm;
+            padding: 3mm;
+            margin: 3mm 0;
           }
 
-          .data-item {
-            background: #f9f9f9;
-            border: 1px solid #eee;
-            border-radius: 6px;
-            padding: 10px;
-            border-left: 3px solid ${primaryColor};
+          .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2mm 0;
+            font-size: 10px;
           }
 
-          .data-item .label {
-            font-size: 11px;
-            font-weight: bold;
-            color: #666;
-            margin-bottom: 3px;
+          .data-table th {
+            background: ${primaryColor};
+            color: white;
+            padding: 2mm;
+            text-align: left;
+            font-weight: 600;
+            font-size: 9px;
+            text-transform: uppercase;
           }
 
-          .data-item .value {
-            font-size: 13px;
-            font-weight: bold;
-            color: #333;
+          .data-table td {
+            padding: 2mm;
+            border-bottom: 0.3mm solid #e9ecef;
+          }
+
+          .data-table tr:nth-child(even) {
+            background: #f8f9fa;
           }
 
           .enhanced-list {
             list-style: none;
             padding: 0;
-            margin: 10px 0;
+            margin: 2mm 0;
           }
 
           .enhanced-list li {
-            background: #f9f9f9;
-            border: 1px solid #eee;
-            border-radius: 6px;
-            padding: 8px 12px;
-            margin-bottom: 5px;
+            background: #f8f9fa;
+            border: 0.3mm solid #e9ecef;
+            border-radius: 1.5mm;
+            padding: 2mm;
+            margin-bottom: 1mm;
+            font-size: 10px;
           }
 
           .enhanced-list li::before {
@@ -336,67 +388,39 @@ export class PDFGenerator {
             font-weight: bold;
           }
 
-          .highlight-box {
-            background: #f0f8ff;
-            border: 1px solid ${primaryColor};
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
-          }
-
-          .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 10px 0;
-          }
-
-          .data-table th {
-            background: ${primaryColor};
-            color: white;
-            padding: 8px 10px;
-            text-align: left;
-            font-weight: bold;
-            font-size: 12px;
-          }
-
-          .data-table td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #ddd;
-          }
-
-          .data-table tr:nth-child(even) {
-            background: #f9f9f9;
-          }
-
+          /* Footer */
           .footer {
-            background: #333;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 20px;
-            margin-top: 30px;
+            padding: 4mm;
+            margin-top: auto;
+            border-radius: 2mm;
           }
 
           .footer-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 2mm;
           }
 
           .footer-logo {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 700;
           }
 
           .footer-contact {
             text-align: right;
-            font-size: 12px;
+            font-size: 9px;
+            line-height: 1.3;
           }
 
           .footer-bottom {
-            border-top: 1px solid #555;
-            padding-top: 15px;
+            border-top: 0.3mm solid rgba(255,255,255,0.2);
+            padding-top: 2mm;
             text-align: center;
-            font-size: 11px;
+            font-size: 8px;
+            opacity: 0.8;
           }
         </style>
       </head>
@@ -407,7 +431,7 @@ export class PDFGenerator {
               <div class="header-top">
                 <div class="logo-section">
                   <div class="logo">
-                    <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Leirisonda Logo" />
+                    <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Leirisonda Logo" crossorigin="anonymous" />
                   </div>
                   <div class="company-info">
                     <h1>Leirisonda</h1>
@@ -461,14 +485,14 @@ export class PDFGenerator {
             <div class="footer-content">
               <div class="footer-logo">Leirisonda</div>
               <div class="footer-contact">
-                <p><strong>Email:</strong> info@leirisonda.pt</p>
-                <p><strong>Telefone:</strong> (+351) 000 000 000</p>
-                <p><strong>Website:</strong> www.leirisonda.pt</p>
+                <div><strong>Email:</strong> info@leirisonda.pt</div>
+                <div><strong>Tel:</strong> (+351) 000 000 000</div>
+                <div><strong>Web:</strong> leirisonda.pt</div>
               </div>
             </div>
             <div class="footer-bottom">
-              <p>© ${new Date().getFullYear()} Leirisonda - Todos os direitos reservados.</p>
-              <p>Documento confidencial gerado automaticamente pelo Sistema de Gestão Leirisonda</p>
+              <div>© ${new Date().getFullYear()} Leirisonda - Todos os direitos reservados.</div>
+              <div>Documento gerado automaticamente pelo Sistema de Gestão Leirisonda</div>
             </div>
           </div>
         </div>
