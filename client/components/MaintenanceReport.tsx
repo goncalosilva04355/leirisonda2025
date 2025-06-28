@@ -53,7 +53,7 @@ export function MaintenanceReport({
     if (ph >= 7.0 && ph <= 7.4 && chlorine >= 1.0 && chlorine <= 2.0) {
       return "✅ Qualidade Excelente";
     } else if (ph >= 6.8 && ph <= 7.6 && chlorine >= 0.8 && chlorine <= 2.5) {
-      return "⚠️ Qualidade Aceitável";
+      return "��️ Qualidade Aceitável";
     } else {
       return "❌ Qualidade Inadequada";
     }
@@ -379,26 +379,41 @@ Relatório gerado em: ${reportDate}
 
     .content {
       padding: 40px;
+      background: #ffffff;
     }
 
     .maintenance-content {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 30px;
-      border: 1px solid #e2e8f0;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       white-space: pre-wrap;
-      font-family: 'Inter', monospace;
-      font-size: 14px;
-      line-height: 1.8;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
       color: #374151;
+      position: relative;
+    }
+
+    .maintenance-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      border-radius: 16px 16px 0 0;
     }
 
     .footer {
-      background: linear-gradient(135deg, #1f2937, #374151);
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
       color: white;
-      padding: 30px;
+      padding: 32px;
       text-align: center;
       margin-top: 40px;
+      border-radius: 16px 16px 0 0;
     }
 
     .footer-content {
