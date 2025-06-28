@@ -92,17 +92,14 @@ Relatório gerado em: ${reportDate}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatório de Obra - ${work.title}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.5;
-      color: #111827;
-      background: #ffffff;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: white;
       font-size: 14px;
-      font-weight: 400;
     }
 
     .container {
@@ -110,46 +107,22 @@ Relatório gerado em: ${reportDate}
       margin: 0 auto;
       background: white;
       min-height: 297mm;
-      position: relative;
     }
 
     .header {
-      background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+      background: #00aa44;
       color: white;
-      padding: 32px 40px;
-      position: relative;
-      overflow: hidden;
+      padding: 30px;
+      text-align: center;
     }
 
-    .header::before {
-      content: '';
-      position: absolute;
-      top: -100px;
-      right: -100px;
-      width: 200px;
-      height: 200px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 50%;
-    }
-
-    .header::after {
-      content: '';
-      position: absolute;
-      bottom: -80px;
-      left: -80px;
-      width: 160px;
-      height: 160px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 50%;
-    }
-
-    .logo-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      position: relative;
-      z-index: 2;
+    .logo {
+      height: 50px;
+      width: auto;
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 20px;
       position: relative;
     }
 
