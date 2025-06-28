@@ -680,19 +680,17 @@ export class PDFGenerator {
               <div class="header-top">
                 <div class="logo-section">
                   <div class="logo">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
-                      <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" fill="none"/>
-                    </svg>
+                    <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Leirisonda Logo" />
                   </div>
                   <div class="company-info">
                     <h1>Leirisonda</h1>
                     <div class="tagline">Gestão Profissional de Obras e Manutenção</div>
                   </div>
                 </div>
-                <div class="report-meta">
-                  <div><strong>Gerado em:</strong> ${reportDate}</div>
+                <div class="header-meta">
+                  <div><strong>Data:</strong> ${reportDate}</div>
                   <div><strong>Hora:</strong> ${reportTime}</div>
+                  <div class="doc-id">DOC-${String(Math.floor(Math.random() * 10000)).padStart(4, "0")}</div>
                 </div>
               </div>
 
