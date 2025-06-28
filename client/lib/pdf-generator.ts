@@ -597,8 +597,9 @@ export class PDFGenerator {
           .footer {
             background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
             color: white;
-            padding: 40px 50px 30px;
-            margin-top: 40px;
+            padding: 8mm 15mm 6mm;
+            margin-top: auto;
+            flex-shrink: 0;
           }
 
           .footer-content {
