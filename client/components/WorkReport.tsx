@@ -92,6 +92,7 @@ Relatório gerado em: ${reportDate}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatório de Obra - ${work.title} - ${Date.now()}</title>
   <style>
+    /* Novo template simplificado - ${Date.now()} */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
