@@ -407,17 +407,10 @@ Relatório gerado em: ${reportDate}
     </div>
 
     <div class="footer">
-      <div class="footer-content">
-        <h3>📞 Informações de Contacto</h3>
-        <p><strong>Leirisonda - Manutenção de Piscinas</strong></p>
-        <p>Email: info@leirisonda.pt</p>
-        <p>Telefone: [Inserir contacto]</p>
-        <p>Website: www.leirisonda.pt</p>
-        <div class="footer-note">
-          <p>Relatório gerado automaticamente em ${reportDate}</p>
-          <p>© ${new Date().getFullYear()} Leirisonda - Todos os direitos reservados</p>
-        </div>
-      </div>
+      <h3>Leirisonda - Manutenção de Piscinas</h3>
+      <p>Email: info@leirisonda.pt | Website: www.leirisonda.pt</p>
+      <p>Relatório gerado em ${reportDate}</p>
+      <p>© ${new Date().getFullYear()} Leirisonda - Todos os direitos reservados</p>
     </div>
   </div>
 </body>
@@ -567,7 +560,7 @@ Relatório gerado em: ${reportDate}
       }
     } catch (error) {
       console.error("Error sharing PDF:", error);
-      alert("❌ Erro ao partilhar PDF. O ficheiro foi descarregado.");
+      alert("�� Erro ao partilhar PDF. O ficheiro foi descarregado.");
     }
   };
   const createInterventionContent = () => {
