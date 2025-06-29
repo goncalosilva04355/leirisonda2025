@@ -330,7 +330,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      await signOut(auth);
+      // Only try Firebase signOut if auth is available
+      if (auth) {
+        await signOut(auth);
+      }
       setUser(null);
       localStorage.removeItem("leirisonda_user");
       firebaseService.cleanup();
