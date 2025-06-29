@@ -53,6 +53,7 @@ export function CreateIntervention() {
     waterValues: {
       ph: 0,
       salt: 0,
+      orp: 0,
       temperature: 0,
       chlorine: 0,
       bromine: 0,
