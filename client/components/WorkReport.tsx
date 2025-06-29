@@ -3,11 +3,37 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import {
   FileText,
+  Share,
   Download,
   Mail,
   MessageCircle,
   Copy,
+  Printer,
   Construction,
+  User,
+  MapPin,
+  Clock,
+  Calendar,
+  Car,
+  Users,
+  Camera,
+  AlertTriangle,
+  CheckCircle,
+  TrendingUp,
+  BarChart3,
+  Activity,
+  Zap,
+  Shield,
+  Target,
+  Award,
+  Info,
+  Eye,
+  Phone,
+  Mail as MailIcon,
+  Home,
+  Building,
+  Wrench,
+  Settings,
 } from "lucide-react";
 import { Work } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -18,6 +44,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { PDFGenerator } from "@/lib/pdf-generator";
 
 interface WorkReportProps {
@@ -38,6 +67,35 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
     return labels[status as keyof typeof labels] || status;
   };
 
+  const getStatusInfo = (status: string) => {
+    switch (status) {
+      case "pendente":
+        return {
+          label: "Pendente",
+          color: "bg-red-100 text-red-800",
+          icon: Clock,
+        };
+      case "em_progresso":
+        return {
+          label: "Em Progresso",
+          color: "bg-orange-100 text-orange-800",
+          icon: Activity,
+        };
+      case "concluida":
+        return {
+          label: "Concluída",
+          color: "bg-green-100 text-green-800",
+          icon: CheckCircle,
+        };
+      default:
+        return {
+          label: status,
+          color: "bg-gray-100 text-gray-800",
+          icon: Info,
+        };
+    }
+  };
+
   const getTypeLabel = (type: string) => {
     const labels = {
       piscina: "Piscina",
@@ -48,231 +106,277 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
     return labels[type as keyof typeof labels] || type;
   };
 
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "piscina":
+        return Building;
+      case "manutencao":
+        return Wrench;
+      case "avaria":
+        return AlertTriangle;
+      case "montagem":
+        return Settings;
+      default:
+        return Construction;
+    }
+  };
+
   const calculateWorkDuration = () => {
     if (!work.entryTime || !work.exitTime) return "N/A";
 
     try {
-      const entry = new Date(`2000-01-01 ${work.entryTime}`);
-      const exit = new Date(`2000-01-01 ${work.exitTime}`);
+      const entry = new Date(work.entryTime);
+      const exit = new Date(work.exitTime);
       const diff = exit.getTime() - entry.getTime();
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      return `${hours}h${minutes > 0 ? ` ${minutes}min` : ""}`;
+      return `${hours}h ${minutes}min`;
     } catch {
       return "N/A";
     }
   };
 
-  const createWorkContent = () => {
-    const workDuration = calculateWorkDuration();
-    const workDate = format(new Date(work.createdAt), "dd/MM/yyyy", {
-      locale: pt,
-    });
+  // Helper function to process and include photos in PDF
+  const createPhotoGallery = (photos: any[], title: string) => {
+    if (!photos || photos.length === 0) return "";
+
+    const photosHTML = photos
+      .map(
+        (photo, index) => `
+        <div class="photo-item">
+          <img src="${photo.url}" alt="${title} ${index + 1}" class="photo-img" crossorigin="anonymous" />
+          <div class="photo-caption">${title} ${index + 1}</div>
+        </div>
+      `,
+      )
+      .join("");
 
     return `
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">🏗️ Informações da Obra</div>
+      <div class="pdf-section">
+        <div class="pdf-section-header">
+          <div class="pdf-section-title">📸 ${title}</div>
         </div>
-        <div class="section-content">
-          <div class="work-info-grid">
-            <div class="work-detail">
-              <span class="label">Folha de Obra Nº:</span>
-              <span class="value">${work.workSheetNumber}</span>
+        <div class="pdf-section-content">
+          <div class="pdf-photo-gallery">
+            ${photosHTML}
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  const createWorkContent = () => {
+    const workDuration = calculateWorkDuration();
+    const statusInfo = getStatusInfo(work.status);
+    const TypeIcon = getTypeIcon(work.type);
+
+    return `
+      <!-- Modern Header -->
+      <div class="pdf-header-modern">
+        <div class="pdf-header-left">
+          <h1 class="pdf-main-title">Relatório de Obra</h1>
+          <h2 class="pdf-subtitle">${work.clientName}</h2>
+          <div class="pdf-date">📅 ${format(new Date(work.createdAt), "dd 'de' MMMM 'de' yyyy", { locale: pt })}</div>
+        </div>
+        <div class="pdf-header-right">
+          <div class="pdf-ref-number">REF: ${work.workSheetNumber}</div>
+          <div class="pdf-status-badge ${statusInfo.color.replace(/text-/, "color-").replace(/bg-/, "bg-")}">${statusInfo.label}</div>
+        </div>
+      </div>
+
+      <!-- Work Information Card -->
+      <div class="pdf-card pdf-card-primary">
+        <div class="pdf-card-header">
+          <h3 class="pdf-card-title">🏗️ Informações da Obra</h3>
+        </div>
+        <div class="pdf-card-content">
+          <div class="pdf-info-grid">
+            <div class="pdf-info-item">
+              <span class="pdf-info-label">Folha de Obra:</span>
+              <span class="pdf-info-value">${work.workSheetNumber}</span>
             </div>
-            <div class="work-detail">
-              <span class="label">Tipo de Trabalho:</span>
-              <span class="value">${getTypeLabel(work.type)}</span>
+            <div class="pdf-info-item">
+              <span class="pdf-info-label">Tipo de Trabalho:</span>
+              <span class="pdf-info-value">${getTypeLabel(work.type)}</span>
             </div>
-            <div class="work-detail">
-              <span class="label">Estado:</span>
-              <span class="value status-${work.status}">${getStatusLabel(work.status)}</span>
+            <div class="pdf-info-item">
+              <span class="pdf-info-label">Estado:</span>
+              <span class="pdf-info-value pdf-status-${work.status}">${statusInfo.label}</span>
             </div>
-            <div class="work-detail">
-              <span class="label">Data de Criação:</span>
-              <span class="value">${workDate}</span>
+            <div class="pdf-info-item">
+              <span class="pdf-info-label">Data de Criação:</span>
+              <span class="pdf-info-value">${format(new Date(work.createdAt), "dd/MM/yyyy", { locale: pt })}</span>
             </div>
-            <div class="work-detail">
-              <span class="label">Horário de Entrada:</span>
-              <span class="value">${work.entryTime || "N/A"}</span>
-            </div>
-            <div class="work-detail">
-              <span class="label">Horário de Saída:</span>
-              <span class="value">${work.exitTime || "N/A"}</span>
-            </div>
-            <div class="work-detail">
-              <span class="label">Duração Total:</span>
-              <span class="value">${workDuration}</span>
-            </div>
-            <div class="work-detail">
-              <span class="label">Folha Preenchida:</span>
-              <span class="value ${work.workSheetCompleted ? "status-completed" : "status-pending"}">
-                ${work.workSheetCompleted ? "✅ Sim" : "❌ Pendente"}
-              </span>
+            <div class="pdf-info-item">
+              <span class="pdf-info-label">Folha Obra:</span>
+              <span class="pdf-info-value ${work.workSheetCompleted ? "pdf-status-completed" : "pdf-status-pending"}">${work.workSheetCompleted ? "✅ Concluída" : "❌ Pendente"}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">👤 Informações do Cliente</div>
+      <!-- Client Information Card -->
+      <div class="pdf-card pdf-card-secondary">
+        <div class="pdf-card-header">
+          <h3 class="pdf-card-title">👤 Informações do Cliente</h3>
         </div>
-        <div class="section-content">
-          <div class="client-info-grid">
-            <div class="client-detail">
-              <span class="label">Nome:</span>
-              <span class="value">${work.clientName}</span>
+        <div class="pdf-card-content">
+          <div class="pdf-info-grid">
+            <div class="pdf-info-item">
+              <span class="pdf-info-label">Nome:</span>
+              <span class="pdf-info-value">${work.clientName}</span>
             </div>
-            <div class="client-detail">
-              <span class="label">Morada:</span>
-              <span class="value">${work.address}</span>
+            <div class="pdf-info-item">
+              <span class="pdf-info-label">Contacto:</span>
+              <span class="pdf-info-value">${work.contact}</span>
             </div>
-            <div class="client-detail">
-              <span class="label">Contacto:</span>
-              <span class="value">${work.contact}</span>
+            <div class="pdf-info-item pdf-info-item-full">
+              <span class="pdf-info-label">Morada:</span>
+              <span class="pdf-info-value">${work.address}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">👷 Equipa de Trabalho</div>
+      <!-- Timing Information Card -->
+      <div class="pdf-card pdf-card-timing">
+        <div class="pdf-card-header">
+          <h3 class="pdf-card-title">⏰ Informações de Tempo</h3>
         </div>
-        <div class="section-content">
-          <div class="team-info">
-            <div class="team-item">
-              <span class="team-label">Técnicos Responsáveis:</span>
-              <div class="team-list">
-                ${
-                  work.technicians.length > 0
-                    ? work.technicians
-                        .map(
-                          (tech) => `<span class="team-member">${tech}</span>`,
-                        )
-                        .join("")
-                    : '<span class="no-data">Não especificado</span>'
-                }
-              </div>
+        <div class="pdf-card-content">
+          <div class="pdf-info-grid">
+            <div class="pdf-info-item">
+              <span class="pdf-info-label">Entrada:</span>
+              <span class="pdf-info-value">${work.entryTime ? format(new Date(work.entryTime), "dd/MM/yyyy HH:mm", { locale: pt }) : "N/A"}</span>
             </div>
-            <div class="team-item">
-              <span class="team-label">Viaturas Utilizadas:</span>
-              <div class="team-list">
-                ${
-                  work.vehicles.length > 0
-                    ? work.vehicles
-                        .map(
-                          (vehicle) =>
-                            `<span class="vehicle-item">${vehicle}</span>`,
-                        )
-                        .join("")
-                    : '<span class="no-data">Não especificado</span>'
-                }
-              </div>
+            <div class="pdf-info-item">
+              <span class="pdf-info-label">Saída:</span>
+              <span class="pdf-info-value">${work.exitTime ? format(new Date(work.exitTime), "dd/MM/yyyy HH:mm", { locale: pt }) : "N/A"}</span>
+            </div>
+            <div class="pdf-info-item">
+              <span class="pdf-info-label">Duração:</span>
+              <span class="pdf-info-value pdf-duration">${workDuration}</span>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Team Information Card -->
+      ${
+        work.technicians && work.technicians.length > 0
+          ? `
+      <div class="pdf-card pdf-card-team">
+        <div class="pdf-card-header">
+          <h3 class="pdf-card-title">👥 Equipa de Trabalho</h3>
+        </div>
+        <div class="pdf-card-content">
+          <div class="pdf-team-section">
+            <h4 class="pdf-subsection-title">🔧 Técnicos</h4>
+            <div class="pdf-team-list">
+              ${work.technicians
+                .map(
+                  (tech) => `
+                <div class="pdf-team-member">
+                  <span class="pdf-team-icon">👨‍🔧</span>
+                  <span class="pdf-team-name">${tech}</span>
+                </div>
+              `,
+                )
+                .join("")}
+            </div>
+          </div>
+          
+          ${
+            work.vehicles && work.vehicles.length > 0
+              ? `
+          <div class="pdf-team-section">
+            <h4 class="pdf-subsection-title">🚐 Viaturas</h4>
+            <div class="pdf-team-list">
+              ${work.vehicles
+                .map(
+                  (vehicle) => `
+                <div class="pdf-team-member">
+                  <span class="pdf-team-icon">🚐</span>
+                  <span class="pdf-team-name">${vehicle}</span>
+                </div>
+              `,
+                )
+                .join("")}
+            </div>
+          </div>`
+              : ""
+          }
+        </div>
+      </div>`
+          : ""
+      }
+
+      <!-- Work Performed Card -->
       ${
         work.workPerformed
           ? `
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">🔧 Trabalho Realizado</div>
+      <div class="pdf-card pdf-card-work">
+        <div class="pdf-card-header">
+          <h3 class="pdf-card-title">🔨 Trabalho Realizado</h3>
         </div>
-        <div class="section-content">
-          <div class="work-performed-box">
-            ${work.workPerformed.replace(/\n/g, "<br>")}
-          </div>
+        <div class="pdf-card-content">
+          <div class="pdf-work-content">${work.workPerformed}</div>
         </div>
-      </div>
-      `
+      </div>`
           : ""
       }
 
-      ${
-        work.photos && work.photos.length > 0
-          ? `
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">📸 Registo Fotográfico da Obra</div>
-        </div>
-        <div class="section-content">
-          <div class="photos-grid">
-            ${work.photos
-              .slice(0, 8) // Limit to 8 photos
-              .map(
-                (photo) => `
-                <div class="photo-item">
-                  <div class="photo-container">
-                    <img src="${photo.url}" alt="${photo.filename}" />
-                  </div>
-                  <div class="photo-info">
-                    <div class="photo-filename">${photo.filename}</div>
-                    <div class="photo-date">${format(new Date(photo.uploadedAt), "dd/MM/yyyy HH:mm", { locale: pt })}</div>
-                  </div>
-                </div>
-              `,
-              )
-              .join("")}
-          </div>
-          <div class="photos-summary">
-            <strong>Total de fotos:</strong> ${work.photos.length}
-            ${work.photos.length > 8 ? ` • Mostrando 8 de ${work.photos.length} fotos` : ""}
-          </div>
-        </div>
-      </div>
-      `
-          : ""
-      }
-
+      <!-- Observations Card -->
       ${
         work.observations
           ? `
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">📝 Observações</div>
+      <div class="pdf-card pdf-card-observations">
+        <div class="pdf-card-header">
+          <h3 class="pdf-card-title">📝 Observações</h3>
         </div>
-        <div class="section-content">
-          <div class="observations-box">
-            ${work.observations.replace(/\n/g, "<br>")}
-          </div>
+        <div class="pdf-card-content">
+          <div class="pdf-observations-content">${work.observations}</div>
         </div>
-      </div>
-      `
+      </div>`
           : ""
       }
 
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">📋 Resumo Final</div>
+      <!-- Photos Section -->
+      ${work.photos && work.photos.length > 0 ? createPhotoGallery(work.photos, "Fotos da Obra") : ""}
+
+      <!-- Summary Card -->
+      <div class="pdf-card pdf-card-summary">
+        <div class="pdf-card-header">
+          <h3 class="pdf-card-title">📊 Resumo da Obra</h3>
         </div>
-        <div class="section-content">
-          <div class="summary-grid">
-            <div class="summary-item">
-              <div class="summary-label">Estado da Obra</div>
-              <div class="summary-value status-${work.status}">
-                ${getStatusLabel(work.status)}
+        <div class="pdf-card-content">
+          <div class="pdf-summary-grid">
+            <div class="pdf-summary-item">
+              <div class="pdf-summary-icon">🏗️</div>
+              <div class="pdf-summary-details">
+                <div class="pdf-summary-label">Tipo de Obra</div>
+                <div class="pdf-summary-value">${getTypeLabel(work.type)}</div>
               </div>
             </div>
-            <div class="summary-item">
-              <div class="summary-label">Documentação</div>
-              <div class="summary-value ${work.workSheetCompleted ? "status-completed" : "status-pending"}">
-                ${work.workSheetCompleted ? "✅ Completa" : "❌ Pendente"}
+            <div class="pdf-summary-item">
+              <div class="pdf-summary-icon">⏱️</div>
+              <div class="pdf-summary-details">
+                <div class="pdf-summary-label">Duração</div>
+                <div class="pdf-summary-value">${workDuration}</div>
               </div>
             </div>
-            <div class="summary-item">
-              <div class="summary-label">Total de Fotos</div>
-              <div class="summary-value">
-                ${work.photos?.length || 0}
+            <div class="pdf-summary-item">
+              <div class="pdf-summary-icon">👥</div>
+              <div class="pdf-summary-details">
+                <div class="pdf-summary-label">Técnicos</div>
+                <div class="pdf-summary-value">${work.technicians ? work.technicians.length : 0}</div>
               </div>
             </div>
-            <div class="summary-item">
-              <div class="summary-label">Data de Atualização</div>
-              <div class="summary-value">
-                ${format(new Date(work.updatedAt), "dd/MM/yyyy", { locale: pt })}
+            <div class="pdf-summary-item">
+              <div class="pdf-summary-icon">📋</div>
+              <div class="pdf-summary-details">
+                <div class="pdf-summary-label">Estado</div>
+                <div class="pdf-summary-value ${statusInfo.color.replace(/text-/, "color-").replace(/bg-/, "bg-")}">${statusInfo.label}</div>
               </div>
             </div>
           </div>
@@ -281,768 +385,759 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
     `;
   };
 
-  const generateHTMLReport = () => {
-    const reportDate = format(new Date(), "dd/MM/yyyy", { locale: pt });
-    const content = createWorkContent();
-
-    return `
-<!DOCTYPE html>
-<html lang="pt-PT">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Relatório de Obra - ${work.clientName}</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.5;
-      color: #1a202c;
-      background: #ffffff;
-      font-size: 13px;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .container {
-      max-width: 210mm;
-      margin: 0 auto;
-      background: #ffffff;
-      min-height: 297mm;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, #b30229 0%, #8b0220 100%);
-      color: white;
-      padding: 40px 30px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .header::before {
-      content: '';
-      position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 100px;
-      height: 100px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 50%;
-    }
-
-    .header-content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 25px;
-    }
-
-    .logo-section {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .logo {
-      height: 65px;
-      width: auto;
-      background: white;
-      padding: 12px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-
-    .company-info h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 5px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .company-info .tagline {
-      font-size: 16px;
-      opacity: 0.9;
-      font-weight: 400;
-    }
-
-    .header-meta {
-      text-align: right;
-      background: rgba(255,255,255,0.15);
-      padding: 15px;
-      border-radius: 10px;
-      backdrop-filter: blur(10px);
-    }
-
-    .header-meta .date {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 5px;
-    }
-
-    .header-meta .ref {
-      font-size: 12px;
-      opacity: 0.8;
-    }
-
-    .report-title {
-      text-align: center;
-      border-top: 2px solid rgba(255,255,255,0.3);
-      padding-top: 20px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .report-title h2 {
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .report-title .subtitle {
-      font-size: 18px;
-      font-weight: 400;
-      opacity: 0.95;
-      margin-bottom: 5px;
-    }
-
-    .report-title .location {
-      font-size: 16px;
-      opacity: 0.9;
-    }
-
-    /* Content */
-    .content {
-      padding: 40px 30px;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .info-card {
-      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      border-left: 4px solid #b30229;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-
-    .info-card .label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #b30229;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-
-    .info-card .value {
-      font-size: 16px;
-      font-weight: 600;
-      color: #1a202c;
-    }
-
-    /* Enhanced Section Styling */
-    .section {
-      margin-bottom: 20px;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      page-break-inside: avoid;
-    }
-
-    .section-header {
-      background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-      padding: 12px 16px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .section-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #2d3748;
-      margin: 0;
-    }
-
-    .section-content {
-      padding: 16px;
-    }
-
-    /* Work and Client Info Grids */
-    .work-info-grid, .client-info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .work-detail, .client-detail {
-      background: #f8fafc;
-      padding: 10px;
-      border-radius: 6px;
-      border-left: 3px solid #b30229;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .work-detail .label, .client-detail .label {
-      font-size: 11px;
-      font-weight: 600;
-      color: #b30229;
-      text-transform: uppercase;
-      flex: 0 0 50%;
-    }
-
-    .work-detail .value, .client-detail .value {
-      font-size: 13px;
-      font-weight: 600;
-      color: #1a202c;
-      text-align: right;
-      flex: 1;
-    }
-
-    /* Status Colors */
-    .status-pendente { color: #d69e2e; }
-    .status-em_progresso { color: #3182ce; }
-    .status-concluida { color: #38a169; }
-    .status-completed { color: #38a169; font-weight: 600; }
-    .status-pending { color: #d69e2e; font-weight: 600; }
-
-    /* Team Info */
-    .team-info {
-      space-y: 12px;
-    }
-
-    .team-item {
-      margin-bottom: 12px;
-    }
-
-    .team-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #4a5568;
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .team-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .team-member, .vehicle-item {
-      background: #ebf8ff;
-      border: 1px solid #90cdf4;
-      color: #2b6cb0;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 500;
-    }
-
-    .no-data {
-      color: #a0aec0;
-      font-style: italic;
-      font-size: 11px;
-    }
-
-    /* Work Performed */
-    .work-performed-box {
-      background: #f7fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      padding: 12px;
-      font-size: 12px;
-      line-height: 1.6;
-      color: #2d3748;
-    }
-
-    /* Photos Grid */
-    .photos-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .photo-item {
-      background: #f7fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      overflow: hidden;
-      page-break-inside: avoid;
-    }
-
-    .photo-container {
-      width: 100%;
-      height: 80px;
-      overflow: hidden;
-      background: #edf2f7;
-    }
-
-    .photo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .photo-info {
-      padding: 6px;
-    }
-
-    .photo-filename {
-      font-size: 10px;
-      font-weight: 500;
-      color: #2d3748;
-      margin-bottom: 2px;
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .photo-date {
-      font-size: 9px;
-      color: #718096;
-    }
-
-    .photos-summary {
-      font-size: 11px;
-      color: #4a5568;
-      text-align: center;
-      padding: 8px;
-      background: #f7fafc;
-      border-radius: 4px;
-    }
-
-    /* Observations */
-    .observations-box {
-      background: #f7fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      padding: 12px;
-      font-size: 12px;
-      line-height: 1.5;
-      color: #2d3748;
-    }
-
-    /* Summary Grid */
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-
-    .summary-item {
-      background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 12px;
-      text-align: center;
-      border-left: 4px solid #b30229;
-    }
-
-    .summary-label {
-      font-size: 11px;
-      color: #718096;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .summary-value {
-      font-size: 14px;
-      font-weight: 600;
-      color: #1a202c;
-    }
-
-    /* Footer */
-    .footer {
-      background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-      color: white;
-      padding: 30px;
-      margin-top: 40px;
-    }
-
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .footer-logo {
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .footer-contact {
-      text-align: right;
-      font-size: 14px;
-    }
-
-    .footer-contact .email {
-      font-weight: 500;
-      margin-bottom: 3px;
-    }
-
-    .footer-contact .website {
-      opacity: 0.9;
-    }
-
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.2);
-      padding-top: 15px;
-      text-align: center;
-      font-size: 12px;
-      opacity: 0.8;
-    }
-
-    @media print {
-      body { background: white; }
-      .container { box-shadow: none; }
-    }
-
-    @page {
-      margin: 0;
-      size: A4;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <div class="header-content">
-        <div class="logo-section">
-          <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800" alt="Logótipo Leirisonda" class="logo" />
-          <div class="company-info">
-            <h1>Leirisonda</h1>
-            <div class="tagline">Gestão de Obras e Manutenção</div>
-          </div>
-        </div>
-        <div class="header-meta">
-          <div class="date">Data: ${reportDate}</div>
-          <div class="ref">REF: ${work.workSheetNumber}</div>
-        </div>
-      </div>
-
-      <div class="report-title">
-        <h2>Relatório de Obra</h2>
-        <div class="subtitle">${work.clientName}</div>
-        <div class="location">${work.address}</div>
-      </div>
-    </div>
-
-    <div class="content">
-      <div class="info-grid">
-        <div class="info-card">
-          <div class="label">Data do Relatório</div>
-          <div class="value">${reportDate}</div>
-        </div>
-        <div class="info-card">
-          <div class="label">Tipo de Obra</div>
-          <div class="value">${getTypeLabel(work.type)}</div>
-        </div>
-        <div class="info-card">
-          <div class="label">Estado Atual</div>
-          <div class="value">${getStatusLabel(work.status)}</div>
-        </div>
-      </div>
-
-      ${content}
-    </div>
-
-    <div class="footer">
-      <div class="footer-content">
-        <div class="footer-logo">Leirisonda</div>
-        <div class="footer-contact">
-          <div class="email">info@leirisonda.pt</div>
-          <div class="website">www.leirisonda.pt</div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        © ${new Date().getFullYear()} Leirisonda - Sistema Profissional de Gestão de Obras e Manutenção
-      </div>
-    </div>
-  </div>
-</body>
-</html>
-    `.trim();
-  };
-
   const generatePDFReport = async (shareMethod?: string, retryCount = 0) => {
     setIsGenerating(true);
-    const maxRetries = 2;
 
     try {
-      const workDate = format(new Date(work.createdAt), "dd/MM/yyyy", {
-        locale: pt,
+      const content = createWorkContent();
+
+      const pdfData = {
+        title: `Relatório de Obra - ${work.clientName}`,
+        subtitle: `Folha de Obra: ${work.workSheetNumber}`,
+        date: format(new Date(work.createdAt), "dd/MM/yyyy", { locale: pt }),
+        additionalInfo: `Tipo: ${getTypeLabel(work.type)} • Estado: ${getStatusInfo(work.status).label}`,
+      };
+
+      const modernPDFStyles = `
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+          
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          
+          body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #ffffff;
+          }
+
+          .pdf-header-modern {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 32px;
+            margin-bottom: 24px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+          }
+
+          .pdf-main-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+          }
+
+          .pdf-subtitle {
+            font-size: 18px;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-bottom: 8px;
+          }
+
+          .pdf-date {
+            font-size: 14px;
+            opacity: 0.8;
+          }
+
+          .pdf-ref-number {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+          }
+
+          .pdf-status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+          }
+
+          .pdf-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+          }
+
+          .pdf-card-header {
+            background: #f8fafc;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          .pdf-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+          }
+
+          .pdf-card-content {
+            padding: 24px;
+          }
+
+          .pdf-card-primary .pdf-card-header { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); }
+          .pdf-card-secondary .pdf-card-header { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
+          .pdf-card-timing .pdf-card-header { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); }
+          .pdf-card-team .pdf-card-header { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); }
+          .pdf-card-work .pdf-card-header { background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); }
+          .pdf-card-observations .pdf-card-header { background: linear-gradient(135deg, #fef7ed 0%, #fed7aa 100%); }
+          .pdf-card-summary .pdf-card-header { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); }
+
+          .pdf-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+          }
+
+          .pdf-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+          }
+
+          .pdf-info-item-full {
+            grid-column: 1 / -1;
+          }
+
+          .pdf-info-label {
+            font-weight: 600;
+            color: #6b7280;
+            min-width: 120px;
+          }
+
+          .pdf-info-value {
+            font-weight: 500;
+            color: #1f2937;
+            text-align: right;
+          }
+
+          .pdf-status-pendente {
+            color: #dc2626;
+            font-weight: 600;
+          }
+
+          .pdf-status-em_progresso {
+            color: #ea580c;
+            font-weight: 600;
+          }
+
+          .pdf-status-concluida {
+            color: #059669;
+            font-weight: 600;
+          }
+
+          .pdf-status-completed {
+            color: #059669;
+            font-weight: 600;
+          }
+
+          .pdf-status-pending {
+            color: #dc2626;
+            font-weight: 600;
+          }
+
+          .pdf-duration {
+            color: #0ea5e9;
+            font-weight: 600;
+          }
+
+          .pdf-team-section {
+            margin-bottom: 20px;
+          }
+
+          .pdf-subsection-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+          }
+
+          .pdf-team-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+          }
+
+          .pdf-team-member {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 6px;
+            font-size: 13px;
+          }
+
+          .pdf-team-icon {
+            font-size: 16px;
+          }
+
+          .pdf-team-name {
+            font-weight: 500;
+            color: #1f2937;
+          }
+
+          .pdf-work-content {
+            background: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+            white-space: pre-wrap;
+          }
+
+          .pdf-observations-content {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+            white-space: pre-wrap;
+          }
+
+          .pdf-photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+          }
+
+          .pdf-photo-item {
+            text-align: center;
+          }
+
+          .pdf-photo-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+          }
+
+          .pdf-photo-caption {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 8px;
+          }
+
+          .pdf-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+          }
+
+          .pdf-summary-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+          }
+
+          .pdf-summary-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+          }
+
+          .pdf-summary-details {
+            flex: 1;
+          }
+
+          .pdf-summary-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+          }
+
+          .pdf-summary-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+          }
+
+          /* Color utilities */
+          .bg-red-100 { background-color: #fee2e2; }
+          .color-red-800 { color: #991b1b; }
+          .bg-orange-100 { background-color: #ffedd5; }
+          .color-orange-800 { color: #9a3412; }
+          .bg-green-100 { background-color: #dcfce7; }
+          .color-green-800 { color: #166534; }
+          .bg-gray-100 { background-color: #f3f4f6; }
+          .color-gray-800 { color: #1f2937; }
+
+          @media print {
+            .pdf-card { page-break-inside: avoid; }
+            .pdf-team-section { page-break-inside: avoid; }
+          }
+        </style>
+      `;
+
+      const htmlContent = PDFGenerator.createModernReportHTML({
+        type: "work",
+        title: pdfData.title,
+        subtitle: pdfData.subtitle,
+        date: pdfData.date,
+        content: content + modernPDFStyles,
+        additionalInfo: pdfData.additionalInfo,
       });
 
-      const htmlContent = generateHTMLReport();
+      const filename = `obra_${work.workSheetNumber.replace(/\s+/g, "_")}_${format(new Date(), "yyyyMMdd", { locale: pt })}.pdf`;
 
-      const filename = `obra-${work.clientName.toLowerCase().replace(/\s+/g, "-")}-${work.workSheetNumber}-${format(new Date(), "yyyy-MM-dd")}.pdf`;
-
-      if (shareMethod) {
-        // Generate PDF blob for sharing
-        const pdfBlob = await PDFGenerator.generatePDFFromHTML(htmlContent, {
-          title: `Relatório de Obra - ${work.clientName}`,
-          filename: filename,
-          orientation: "portrait",
-        });
-
-        await handlePDFShare(
-          shareMethod,
-          pdfBlob,
-          `Relatório de Obra - ${work.clientName}`,
-          filename,
-        );
-      } else {
-        // Direct download
-        await PDFGenerator.downloadPDF(htmlContent, {
-          title: `Relatório de Obra - ${work.clientName}`,
-          filename: filename,
-          orientation: "portrait",
-        });
-      }
-
-      // Success feedback
-      if (shareMethod) {
-        alert("✅ PDF gerado com sucesso!");
-      }
+      await PDFGenerator.downloadPDF(htmlContent, {
+        title: pdfData.title,
+        filename: filename,
+      });
     } catch (error) {
-      console.error("PDF generation error:", error);
-
-      // Retry logic for transient errors
-      if (retryCount < maxRetries) {
-        console.log(
-          `Retrying PDF generation (attempt ${retryCount + 1}/${maxRetries + 1})`,
-        );
-
-        // Wait a bit before retrying
-        await new Promise((resolve) =>
-          setTimeout(resolve, 1000 * (retryCount + 1)),
-        );
-
-        setIsGenerating(false); // Reset state for retry
-        return generatePDFReport(shareMethod, retryCount + 1);
-      }
-
-      // Show user-friendly error message
-      let errorMessage = "❌ Erro ao gerar PDF.";
-
-      if (error instanceof Error) {
-        if (error.message.includes("imagens")) {
-          errorMessage =
-            "❌ Erro nas imagens do relatório. Verifique a conexão e tente novamente.";
-        } else if (error.message.includes("muito grande")) {
-          errorMessage =
-            "❌ Relatório muito extenso. Tente gerar com menos fotos.";
-        } else if (error.message.includes("conectividade")) {
-          errorMessage =
-            "❌ Problema de conexão. Verifique a internet e tente novamente.";
-        } else if (error.message.includes("visual")) {
-          errorMessage =
-            "❌ Erro na geração visual. Tente recarregar a página.";
-        } else {
-          errorMessage = `❌ ${error.message}`;
-        }
-      }
-
-      // Show error with retry option
-      const shouldRetry = confirm(`${errorMessage}\n\n🔄 Tentar novamente?`);
-
-      if (shouldRetry) {
-        setIsGenerating(false);
-        // Small delay before retry
-        setTimeout(() => generatePDFReport(shareMethod, 0), 500);
-        return;
-      }
+      console.error("Error generating PDF:", error);
+      alert(
+        "Erro ao gerar PDF: " +
+          (error instanceof Error ? error.message : "Erro desconhecido"),
+      );
     } finally {
       setIsGenerating(false);
     }
   };
 
-  const handlePDFShare = async (
-    method: string,
-    pdfBlob: Blob,
-    title: string,
-    filename: string,
-  ) => {
-    try {
-      switch (method) {
-        case "email":
-          const url = URL.createObjectURL(pdfBlob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = filename;
-          a.click();
-          URL.revokeObjectURL(url);
+  const renderWorkPreview = () => {
+    const statusInfo = getStatusInfo(work.status);
+    const StatusIcon = statusInfo.icon;
+    const TypeIcon = getTypeIcon(work.type);
+    const workDuration = calculateWorkDuration();
 
-          const emailSubject = encodeURIComponent(title);
-          const emailBody = encodeURIComponent(
-            `Segue em anexo o relatório de obra.\n\n` +
-              `Cliente: ${work.clientName}\n` +
-              `Morada: ${work.address}\n` +
-              `Folha de Obra: ${work.workSheetNumber}\n\n` +
-              `Este relatório foi gerado automaticamente pelo sistema Leirisonda.\n\n` +
-              `Cumprimentos,\nEquipa Leirisonda`,
-          );
+    return (
+      <div className="space-y-6">
+        {/* Header Card */}
+        <Card className="overflow-hidden">
+          <div className="bg-gradient-to-r from-red-500 to-red-600 text-white p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold flex items-center gap-2">
+                  <TypeIcon className="h-6 w-6" />
+                  {work.clientName}
+                </h2>
+                <p className="text-red-100 mt-1">
+                  Folha de Obra: {work.workSheetNumber}
+                </p>
+              </div>
+              <Badge className={`${statusInfo.color} flex items-center gap-1`}>
+                <StatusIcon className="h-4 w-4" />
+                {statusInfo.label}
+              </Badge>
+            </div>
+          </div>
+        </Card>
 
-          setTimeout(() => {
-            window.open(
-              `mailto:?subject=${emailSubject}&body=${emailBody}`,
-              "_blank",
-            );
-          }, 500);
-          break;
+        {/* Work Info Card */}
+        <Card>
+          <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100">
+            <CardTitle className="flex items-center gap-2">
+              <Construction className="h-5 w-5" />
+              Informações da Obra
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center gap-3">
+                <FileText className="h-4 w-4 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Tipo de Trabalho</p>
+                  <p className="font-semibold">{getTypeLabel(work.type)}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Calendar className="h-4 w-4 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Data de Criação</p>
+                  <p className="font-semibold">
+                    {format(new Date(work.createdAt), "dd/MM/yyyy", {
+                      locale: pt,
+                    })}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <User className="h-4 w-4 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Cliente</p>
+                  <p className="font-semibold">{work.clientName}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="h-4 w-4 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Contacto</p>
+                  <p className="font-semibold">{work.contact}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 md:col-span-2">
+                <MapPin className="h-4 w-4 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Morada</p>
+                  <p className="font-semibold">{work.address}</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        case "whatsapp":
-          const whatsappUrl = URL.createObjectURL(pdfBlob);
-          const whatsappLink = document.createElement("a");
-          whatsappLink.href = whatsappUrl;
-          whatsappLink.download = filename;
-          whatsappLink.click();
-          URL.revokeObjectURL(whatsappUrl);
+        {/* Timing Card */}
+        <Card>
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              Informações de Tempo
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex items-center gap-3">
+                <Calendar className="h-4 w-4 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Entrada</p>
+                  <p className="font-semibold">
+                    {work.entryTime
+                      ? format(new Date(work.entryTime), "dd/MM/yyyy HH:mm", {
+                          locale: pt,
+                        })
+                      : "N/A"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Calendar className="h-4 w-4 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Saída</p>
+                  <p className="font-semibold">
+                    {work.exitTime
+                      ? format(new Date(work.exitTime), "dd/MM/yyyy HH:mm", {
+                          locale: pt,
+                        })
+                      : "N/A"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Clock className="h-4 w-4 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Duração</p>
+                  <p className="font-semibold text-blue-600">{workDuration}</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-          const whatsappText = encodeURIComponent(
-            `📄 Relatório de Obra - ${work.clientName}\n\n` +
-              `Folha de Obra: ${work.workSheetNumber}\n` +
-              `Morada: ${work.address}\n\n` +
-              `Relatório em PDF descarregado. ` +
-              `Gerado automaticamente pelo sistema Leirisonda.`,
-          );
+        {/* Team Information */}
+        {(work.technicians && work.technicians.length > 0) ||
+        (work.vehicles && work.vehicles.length > 0) ? (
+          <Card>
+            <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50">
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Equipa de Trabalho
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-6">
+                {work.technicians && work.technicians.length > 0 && (
+                  <div>
+                    <h4 className="flex items-center gap-2 font-semibold text-gray-800 mb-3">
+                      <Users className="h-4 w-4 text-blue-500" />
+                      Técnicos ({work.technicians.length})
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {work.technicians.map((technician, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 p-2 bg-blue-50 rounded-lg"
+                        >
+                          <User className="h-4 w-4 text-blue-600" />
+                          <span className="text-sm font-medium">
+                            {technician}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-          setTimeout(() => {
-            window.open(`https://wa.me/?text=${whatsappText}`, "_blank");
-          }, 500);
-          break;
+                {work.vehicles && work.vehicles.length > 0 && (
+                  <div>
+                    <h4 className="flex items-center gap-2 font-semibold text-gray-800 mb-3">
+                      <Car className="h-4 w-4 text-green-500" />
+                      Viaturas ({work.vehicles.length})
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {work.vehicles.map((vehicle, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 p-2 bg-green-50 rounded-lg"
+                        >
+                          <Car className="h-4 w-4 text-green-600" />
+                          <span className="text-sm font-medium">{vehicle}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
 
-        case "copy":
-          const copyUrl = URL.createObjectURL(pdfBlob);
-          const copyLink = document.createElement("a");
-          copyLink.href = copyUrl;
-          copyLink.download = filename;
-          copyLink.click();
-          URL.revokeObjectURL(copyUrl);
+        {/* Work Performed */}
+        {work.workPerformed && (
+          <Card>
+            <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50">
+              <CardTitle className="flex items-center gap-2">
+                <Wrench className="h-5 w-5" />
+                Trabalho Realizado
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg">
+                <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                  {work.workPerformed}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-          const summaryText = `📄 Relatório: ${title}\nCliente: ${work.clientName}\nMorada: ${work.address}\nFolha: ${work.workSheetNumber}\n\nRelatório PDF descarregado automaticamente.`;
-          await navigator.clipboard.writeText(summaryText);
-          alert("📋 Resumo copiado e PDF descarregado!");
-          break;
+        {/* Photos */}
+        {work.photos && work.photos.length > 0 && (
+          <Card>
+            <CardHeader className="bg-gradient-to-r from-gray-50 to-slate-50">
+              <CardTitle className="flex items-center gap-2">
+                <Camera className="h-5 w-5" />
+                Fotos da Obra ({work.photos.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {work.photos.map((photo, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={photo.url}
+                      alt={`Obra ${index + 1}`}
+                      className="w-full h-32 object-cover rounded-lg border-2 border-gray-200 group-hover:border-blue-400 transition-colors"
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity rounded-lg flex items-center justify-center">
+                      <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-        case "download":
-        default:
-          const downloadUrl = URL.createObjectURL(pdfBlob);
-          const downloadLink = document.createElement("a");
-          downloadLink.href = downloadUrl;
-          downloadLink.download = filename;
-          downloadLink.click();
-          URL.revokeObjectURL(downloadUrl);
-          break;
-      }
-    } catch (error) {
-      console.error("Error sharing PDF:", error);
-      alert("❌ Erro ao partilhar PDF. O ficheiro foi descarregado.");
-    }
+        {/* Observations */}
+        {work.observations && (
+          <Card>
+            <CardHeader className="bg-gradient-to-r from-yellow-50 to-amber-50">
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Observações
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-lg">
+                <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                  {work.observations}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Summary */}
+        <Card>
+          <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Resumo da Obra
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-red-50 rounded-lg">
+                <TypeIcon className="h-8 w-8 text-red-600 mx-auto mb-2" />
+                <div className="text-sm text-gray-600">Tipo</div>
+                <div className="font-bold text-sm">
+                  {getTypeLabel(work.type)}
+                </div>
+              </div>
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <Clock className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                <div className="text-sm text-gray-600">Duração</div>
+                <div className="font-bold text-sm">{workDuration}</div>
+              </div>
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <Users className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                <div className="text-sm text-gray-600">T��cnicos</div>
+                <div className="font-bold text-lg">
+                  {work.technicians ? work.technicians.length : 0}
+                </div>
+              </div>
+              <div className="text-center p-4 bg-orange-50 rounded-lg">
+                <CheckCircle className="h-8 w-8 text-orange-600 mx-auto mb-2" />
+                <div className="text-sm text-gray-600">Folha Obra</div>
+                <div
+                  className={`font-bold text-sm ${work.workSheetCompleted ? "text-green-600" : "text-red-600"}`}
+                >
+                  {work.workSheetCompleted ? "Concluída" : "Pendente"}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
+        <Button
+          variant="outline"
+          className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 border-0"
+        >
           <FileText className="mr-2 h-4 w-4" />
-          Relatório PDF
+          Relatório PDF Profissional
         </Button>
       </DialogTrigger>
-
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center">
-            <Construction className="mr-2 h-5 w-5 text-red-600" />
-            Relatório de Obra
+          <DialogTitle className="flex items-center text-xl">
+            <Construction className="mr-2 h-6 w-6 text-red-600" />
+            Relatório de Obra - {work.clientName}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <div className="text-sm text-gray-600 bg-red-50 p-3 rounded-lg">
-            <strong>Cliente:</strong> {work.clientName}
-            <br />
-            <strong>Folha Nº:</strong> {work.workSheetNumber}
-            <br />
-            <strong>Estado:</strong> {getStatusLabel(work.status)}
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Preview */}
+          <div className="lg:col-span-3">{renderWorkPreview()}</div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              onClick={() => generatePDFReport("download")}
-              disabled={isGenerating}
-              className="w-full bg-red-600 hover:bg-red-700"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Download PDF
-            </Button>
+          {/* Sidebar Actions */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-6 space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">
+                    Informações do Relatório
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">
+                      Folha de Obra
+                    </p>
+                    <p className="font-semibold">{work.workSheetNumber}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Cliente</p>
+                    <p className="font-semibold">{work.clientName}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">
+                      Tipo de Trabalho
+                    </p>
+                    <p className="font-semibold">{getTypeLabel(work.type)}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Estado</p>
+                    <Badge className={getStatusInfo(work.status).color}>
+                      {getStatusInfo(work.status).label}
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
 
-            <Button
-              onClick={() => generatePDFReport("email")}
-              disabled={isGenerating}
-              variant="outline"
-              className="w-full"
-            >
-              <Mail className="mr-2 h-4 w-4" />
-              Email
-            </Button>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Gerar & Partilhar</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button
+                    onClick={() => generatePDFReport("download")}
+                    disabled={isGenerating}
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    {isGenerating ? "A gerar..." : "Descarregar PDF"}
+                  </Button>
 
-            <Button
-              onClick={() => generatePDFReport("whatsapp")}
-              disabled={isGenerating}
-              variant="outline"
-              className="w-full"
-            >
-              <MessageCircle className="mr-2 h-4 w-4" />
-              WhatsApp
-            </Button>
+                  <Separator />
 
-            <Button
-              onClick={() => generatePDFReport("copy")}
-              disabled={isGenerating}
-              variant="outline"
-              className="w-full"
-            >
-              <Copy className="mr-2 h-4 w-4" />
-              Copiar
-            </Button>
-          </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      onClick={() => generatePDFReport("email")}
+                      disabled={isGenerating}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Mail className="mr-1 h-3 w-3" />
+                      Email
+                    </Button>
+                    <Button
+                      onClick={() => generatePDFReport("whatsapp")}
+                      disabled={isGenerating}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <MessageCircle className="mr-1 h-3 w-3" />
+                      WhatsApp
+                    </Button>
+                  </div>
 
-          {isGenerating && (
-            <div className="text-center p-4 bg-red-50 rounded-lg border border-red-200">
-              <div className="flex flex-col items-center gap-3">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
-                <div className="text-sm text-red-700 font-medium">
-                  📄 Gerando relatório PDF...
-                </div>
-                <div className="text-xs text-red-600">
-                  Aguarde, pode levar alguns segundos no móvel
-                </div>
-              </div>
+                  <Button
+                    onClick={() => generatePDFReport("copy")}
+                    disabled={isGenerating}
+                    variant="outline"
+                    className="w-full"
+                    size="sm"
+                  >
+                    <Copy className="mr-2 h-3 w-3" />
+                    Copiar Link
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {isGenerating && (
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+                      <div className="text-center">
+                        <p className="text-sm font-medium text-gray-900">
+                          Gerando PDF...
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Incluindo todas as fotos e informações detalhadas
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
