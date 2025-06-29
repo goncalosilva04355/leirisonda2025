@@ -208,12 +208,40 @@ export function CreateWork() {
             className="w-full h-full object-contain"
           />
         </div>
-        <div>
+        <div className="flex-1">
           <h1 className="text-3xl font-bold text-gray-900">Nova Obra</h1>
           <p className="mt-1 text-gray-600">
             Criar uma nova obra no sistema Leirisonda
           </p>
         </div>
+
+        {/* Connection Status */}
+        <div className="flex items-center space-x-2">
+          {isOnline ? (
+            <>
+              <Wifi className="w-4 h-4 text-green-600" />
+              <span className="text-sm text-green-600">Online</span>
+              {isSyncing && (
+                <span className="text-xs text-gray-500">Sincronizando...</span>
+              )}
+            </>
+          ) : (
+            <>
+              <WifiOff className="w-4 h-4 text-orange-600" />
+              <span className="text-sm text-orange-600">Offline</span>
+            </>
+          )}</div>
+      </div>
+
+      {/* Offline Warning */}
+      {!isOnline && (
+        <Alert className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Está no modo offline. Os dados serão guardados localmente e sincronizados quando a ligação for restabelecida.
+          </AlertDescription>
+        </Alert>
+      )}
       </div>
 
       {/* Form */}
