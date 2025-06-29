@@ -306,11 +306,11 @@ export function MaintenanceReport({
       </div>
 
       <!-- Pool Information Card -->
-      <div class="pdf-card pdf-card-primary">
-        <div class="pdf-card-header">
-          <h3 class="pdf-card-title">🏊‍♂️ Informações da Piscina</h3>
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">🏊‍♂️ Informações da Piscina</div>
         </div>
-        <div class="pdf-card-content">
+        <div class="section-content">
           <div class="pdf-info-grid">
             <div class="pdf-info-item">
               <span class="pdf-info-label">Nome:</span>
