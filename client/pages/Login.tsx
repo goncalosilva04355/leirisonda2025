@@ -55,10 +55,10 @@ export function Login() {
           <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-8 text-white text-center relative">
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="relative z-10">
-              <div className="mx-auto w-32 h-32 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-xl p-4">
+              <div className="mx-auto w-40 h-20 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-xl p-3">
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fb4eb4a9e6feb44b09201dbb824b8737c?format=webp&width=800"
-                  alt="Leirisonda Logo"
+                  src="/leirisonda-logo-complete.svg"
+                  alt="Leirisonda Logo Completo"
                   className="w-full h-full object-contain"
                 />
               </div>
