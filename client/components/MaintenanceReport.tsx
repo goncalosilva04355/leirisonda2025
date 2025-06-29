@@ -249,7 +249,7 @@ ${maintenance.observations}
     : ""
 }
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📞 CONTACTO
 Leirisonda - Manutenção de Piscinas
@@ -1234,7 +1234,6 @@ Relatório gerado em: ${reportDate}
       filtros: "Limpeza de Filtros",
       preFiltero: "Pré-filtro",
       filtroAreiaVidro: "Filtro Areia/Vidro",
-      alimenta: "Sistema de Alimentação",
       enchimentoAutomatico: "Enchimento Automático",
       linhaAgua: "Linha de Água",
       limpezaFundo: "Limpeza do Fundo",
