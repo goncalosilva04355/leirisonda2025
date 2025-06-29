@@ -57,7 +57,7 @@ export function Login() {
             <div className="relative z-10">
               <div className="mx-auto w-32 h-32 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-xl p-4">
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fb4eb4a9e6feb44b09201dbb824b8737c?format=webp&width=800"
+                  src="/leirisonda-logo-complete.svg"
                   alt="Leirisonda Logo"
                   className="w-full h-full object-contain"
                 />

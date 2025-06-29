@@ -54,7 +54,6 @@ export function PoolMaintenancePage() {
       filtros: false,
       preFiltro: false,
       filtroAreiaVidro: false,
-      alimenta: false,
       enchimentoAutomatico: false,
       linhaAgua: false,
       outros: "",
@@ -642,18 +641,7 @@ export function PoolMaintenancePage() {
                     ⚙️ Sistemas da Piscina
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-4">
-                    <div className="flex items-center space-x-3">
-                      <Checkbox
-                        id="alimenta"
-                        checked={formData.maintenanceWork.alimenta}
-                        onCheckedChange={(checked) =>
-                          updateFormData("maintenanceWork.alimenta", checked)
-                        }
-                      />
-                      <Label htmlFor="alimenta" className="text-sm">
-                        Alimentação/Dosagem
-                      </Label>
-                    </div>
+
 
                     <div className="flex items-center space-x-3">
                       <Checkbox
@@ -889,10 +877,6 @@ export function PoolMaintenancePage() {
                       Sistemas da Piscina
                     </h6>
                     <div className="flex flex-wrap gap-2">
-                      {maintenance.maintenanceWork.alimenta && (
-                        <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                          ✓ Alimentação/Dosagem
-                        </span>
                       )}
                       {maintenance.maintenanceWork.enchimentoAutomatico && (
                         <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
