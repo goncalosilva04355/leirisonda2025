@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Home,
   Briefcase,
@@ -14,6 +14,7 @@ import {
   Activity,
   Building,
   Wrench,
+  ArrowLeft,
 } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import { Button } from "./ui/button";
