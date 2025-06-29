@@ -20,9 +20,6 @@ export function Layout() {
           </div>
         </main>
       </div>
-
-      {/* Real-time Sync Notifications */}
-      <SyncNotifications />
     </div>
   );
 }
