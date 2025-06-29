@@ -101,7 +101,7 @@ export function PoolMaintenancePage() {
         vehicles: ["Carrinha Leirisonda 1"],
         maintenanceWork: {
           filtros: true,
-          preFiltero: true,
+          preFiltro: true,
           filtroAreiaVidro: false,
           alimenta: false,
           enchimentoAutomatico: true,
@@ -130,7 +130,7 @@ export function PoolMaintenancePage() {
         vehicles: ["Carrinha Leirisonda 2"],
         maintenanceWork: {
           filtros: false,
-          preFiltero: false,
+          preFiltro: false,
           filtroAreiaVidro: true,
           alimenta: true,
           enchimentoAutomatico: false,
