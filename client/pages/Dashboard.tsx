@@ -197,7 +197,9 @@ export function Dashboard() {
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4" />
-                  <span>{format(new Date(), "EEEE, dd 'de' MMMM", { locale: pt })}</span>
+                  <span>
+                    {format(new Date(), "EEEE, dd 'de' MMMM", { locale: pt })}
+                  </span>
                 </div>
                 <div className="w-px h-4 bg-gray-300"></div>
                 <div className="flex items-center space-x-2">
@@ -212,29 +214,6 @@ export function Dashboard() {
 
       {/* Firebase Sync Status */}
       <FirebaseStatus />
-
-          <div className="flex flex-col sm:flex-row gap-4">
-            {user?.permissions?.canCreateWorks && (
-              <button
-                className="group relative bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center"
-                onClick={() => navigate("/create-work")}
-              >
-                <Plus className="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform duration-200" />
-                Nova Obra
-              </button>
-            )}
-            {user?.permissions?.canViewMaintenance && (
-              <button
-                className="group relative bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center"
-                onClick={() => navigate("/pool-maintenance")}
-              >
-                <Droplets className="w-4 h-4 mr-2 text-blue-600 group-hover:scale-110 transition-transform duration-200" />
-                Manutenção
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         <div
