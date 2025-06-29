@@ -39,6 +39,17 @@ export class FirebaseService {
 
   // Users Collection
   async getUsers(): Promise<User[]> {
+    if (!this.isFirebaseAvailable) {
+      // Fallback to localStorage
+      try {
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
+        return users;
+      } catch (error) {
+        console.error("Error fetching local users:", error);
+        return [];
+      }
+    }
+
     try {
       const usersRef = collection(db, "users");
       const snapshot = await getDocs(usersRef);
