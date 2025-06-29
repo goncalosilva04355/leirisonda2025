@@ -53,6 +53,7 @@ export function CreateIntervention() {
     waterValues: {
       ph: 0,
       salt: 0,
+      orp: 0,
       temperature: 0,
       chlorine: 0,
       bromine: 0,
@@ -553,11 +554,31 @@ export function CreateIntervention() {
               <Input
                 id="salt"
                 type="number"
-                placeholder="3000"
+                step="0.1"
+                placeholder="3.2"
                 value={formData.waterValues.salt || ""}
                 onChange={(e) =>
                   handleInputChange(
                     "salt",
+                    parseFloat(e.target.value) || 0,
+                    "waterValues",
+                  )
+                }
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="orp">ORP (mv)</Label>
+              <Input
+                id="orp"
+                type="number"
+                min="0"
+                max="1000"
+                placeholder="650"
+                value={formData.waterValues.orp || ""}
+                onChange={(e) =>
+                  handleInputChange(
+                    "orp",
                     parseInt(e.target.value) || 0,
                     "waterValues",
                   )

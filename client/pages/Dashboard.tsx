@@ -111,7 +111,7 @@ export function Dashboard() {
     });
 
     // Get recent works (last 5)
-    const sortedWorks = works
+    const sortedWorks = worksList
       .sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
@@ -211,26 +211,10 @@ export function Dashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-        <div
-          className="stat-card-leirisonda stat-card-primary hover-leirisonda"
-          onClick={() => navigateToWorks()}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <FileText className="w-6 h-6 text-blue-600" />
-            <span className="text-2xl lg:text-3xl font-bold text-gray-900">
-              {stats.totalWorks}
-            </span>
-          </div>
-          <h3 className="text-sm font-semibold text-gray-900 mb-1">
-            Total de Obras
-          </h3>
-          <p className="text-xs text-gray-600">Todas registadas</p>
-        </div>
-
-        <div
-          className="stat-card-leirisonda stat-card-danger hover-leirisonda"
-          onClick={() => navigateToWorks("pendente")}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Link
+          to="/works?status=pendente"
+          className="stat-card-leirisonda stat-card-danger hover-leirisonda block"
         >
           <div className="flex items-center justify-between mb-3">
             <Clock className="w-6 h-6 text-red-600" />
@@ -242,11 +226,11 @@ export function Dashboard() {
             Pendentes
           </h3>
           <p className="text-xs text-gray-600">Necessitam atenção</p>
-        </div>
+        </Link>
 
-        <div
-          className="stat-card-leirisonda stat-card-warning hover-leirisonda"
-          onClick={() => navigateToWorks("em_progresso")}
+        <Link
+          to="/works?status=em_progresso"
+          className="stat-card-leirisonda stat-card-warning hover-leirisonda block"
         >
           <div className="flex items-center justify-between mb-3">
             <TrendingUp className="w-6 h-6 text-orange-600" />
@@ -258,11 +242,11 @@ export function Dashboard() {
             Em Progresso
           </h3>
           <p className="text-xs text-gray-600">A decorrer</p>
-        </div>
+        </Link>
 
-        <div
-          className="stat-card-leirisonda stat-card-success hover-leirisonda"
-          onClick={() => navigateToWorks("concluida")}
+        <Link
+          to="/works?status=concluida"
+          className="stat-card-leirisonda stat-card-success hover-leirisonda block"
         >
           <div className="flex items-center justify-between mb-3">
             <CheckCircle className="w-6 h-6 text-green-600" />
@@ -274,11 +258,11 @@ export function Dashboard() {
             Concluídas
           </h3>
           <p className="text-xs text-gray-600">Finalizadas</p>
-        </div>
+        </Link>
 
-        <div
-          className="stat-card-leirisonda stat-card-danger hover-leirisonda"
-          onClick={() => navigateToWorksSheets("pending")}
+        <Link
+          to="/works?worksheet=pending"
+          className="stat-card-leirisonda stat-card-danger hover-leirisonda block"
         >
           <div className="flex items-center justify-between mb-3">
             <FileText className="w-6 h-6 text-red-600" />
@@ -290,7 +274,7 @@ export function Dashboard() {
             Folhas por Fazer
           </h3>
           <p className="text-xs text-gray-600">Por preencher</p>
-        </div>
+        </Link>
       </div>
 
       {/* Main Content Grid */}

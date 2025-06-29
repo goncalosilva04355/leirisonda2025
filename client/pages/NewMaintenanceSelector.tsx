@@ -72,13 +72,10 @@ export function NewMaintenanceSelector() {
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate(-1)}
-            className="p-2"
-          >
-            <ArrowLeft className="h-5 w-5" />
+          <Button variant="ghost" size="sm" asChild className="p-2">
+            <Link to="/maintenance">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
           </Button>
           <div className="flex items-center gap-3">
             <Waves className="h-8 w-8 text-blue-600" />

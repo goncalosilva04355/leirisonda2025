@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 const statusOptions = [
   { value: "all", label: "Todos os Estados" },
@@ -37,7 +38,7 @@ const worksheetOptions = [
 
 export function WorksList() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [works, setWorks] = useState<Work[]>([]);
+  const { works } = useFirebaseSync();
   const [filteredWorks, setFilteredWorks] = useState<Work[]>([]);
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get("search") || "",
@@ -52,9 +53,18 @@ export function WorksList() {
     searchParams.get("worksheet") || "all",
   );
 
+  // React to URL parameter changes
   useEffect(() => {
-    loadWorks();
-  }, []);
+    const status = searchParams.get("status") || "all";
+    const type = searchParams.get("type") || "all";
+    const worksheet = searchParams.get("worksheet") || "all";
+    const search = searchParams.get("search") || "";
+
+    setStatusFilter(status);
+    setTypeFilter(type);
+    setWorksheetFilter(worksheet);
+    setSearchTerm(search);
+  }, [searchParams]);
 
   useEffect(() => {
     filterWorks();
@@ -78,16 +88,8 @@ export function WorksList() {
     setSearchParams(params);
   };
 
-  const loadWorks = () => {
-    const storedWorks = localStorage.getItem("leirisonda_works");
-    if (storedWorks) {
-      const worksData = JSON.parse(storedWorks);
-      setWorks(worksData);
-    }
-  };
-
   const filterWorks = () => {
-    let filtered = [...works];
+    let filtered = [...(works || [])];
 
     // Filter by search term
     if (searchTerm) {

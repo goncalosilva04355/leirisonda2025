@@ -197,17 +197,6 @@ export function MaintenanceDetail() {
           </div>
 
           <Link
-            to={`/maintenance/${maintenance.id}/edit`}
-            className="flex-1 sm:flex-none"
-          >
-            <Button variant="outline" className="w-full sm:w-auto">
-              <Edit className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">Editar</span>
-              <span className="sm:hidden">Editar</span>
-            </Button>
-          </Link>
-
-          <Link
             to={`/maintenance/${maintenance.id}/new-intervention`}
             className="flex-1 sm:flex-none"
           >
@@ -387,7 +376,9 @@ export function MaintenanceDetail() {
                         className={`text-sm ${getWaterQualityColor(intervention)}`}
                       >
                         pH: {intervention.waterValues.ph || "N/A"} • Cl:{" "}
-                        {intervention.waterValues.chlorine || "N/A"}
+                        {intervention.waterValues.chlorine || "N/A"} • ORP:{" "}
+                        {intervention.waterValues.orp || "N/A"} • Sal:{" "}
+                        {intervention.waterValues.salt || "N/A"}
                       </span>
                     </div>
                     <div className="text-sm text-gray-600 mt-1">
