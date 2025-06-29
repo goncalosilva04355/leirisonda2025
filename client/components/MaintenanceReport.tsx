@@ -1096,7 +1096,7 @@ Relatório gerado em: ${reportDate}
           ? `
         <div class="section">
           <div class="section-header">
-            <div class="section-title">��� Próxima Manutenção Programada</div>
+            <div class="section-title">📅 Próxima Manutenção Programada</div>
           </div>
           <div class="section-content">
             <div class="next-maintenance-box">
@@ -1157,23 +1157,137 @@ Relatório gerado em: ${reportDate}
       maintenance.interventions
         ?.flatMap((i) => i.problems)
         .filter((p) => !p.resolved).length || 0;
+    const resolvedProblems =
+      maintenance.interventions
+        ?.flatMap((i) => i.problems)
+        .filter((p) => p.resolved).length || 0;
+
+    // Get last intervention data
+    const lastIntervention =
+      maintenance.interventions && maintenance.interventions.length > 0
+        ? maintenance.interventions.sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          )[0]
+        : null;
+
+    // Calculate total photos
+    const totalPoolPhotos = maintenance.photos?.length || 0;
+    const totalInterventionPhotos =
+      maintenance.interventions?.reduce(
+        (sum, int) => sum + (int.photos?.length || 0),
+        0,
+      ) || 0;
 
     return `
       <div class="section">
-        <div class="section-title">📊 Resumo Geral</div>
-        <div class="info-grid">
-          <div class="info-card">
-            <h3>Total de Intervenções</h3>
-            <p>${totalInterventions}</p>
+        <div class="section-header">
+          <div class="section-title">🏊 Informações Completas da Piscina</div>
+        </div>
+        <div class="section-content">
+          <div class="pool-info-grid">
+            <div class="pool-detail">
+              <span class="label">Nome da Piscina:</span>
+              <span class="value">${maintenance.poolName}</span>
+            </div>
+            <div class="pool-detail">
+              <span class="label">Tipo:</span>
+              <span class="value">${getPoolTypeLabel(maintenance.poolType)}</span>
+            </div>
+            <div class="pool-detail">
+              <span class="label">Cubicagem de Água:</span>
+              <span class="value">${maintenance.waterCubicage || "Não especificado"}</span>
+            </div>
+            <div class="pool-detail">
+              <span class="label">Estado:</span>
+              <span class="value ${maintenance.status === "active" ? "status-active" : "status-inactive"}">
+                ${
+                  maintenance.status === "active"
+                    ? "✅ Ativa"
+                    : maintenance.status === "inactive"
+                      ? "⏸️ Inativa"
+                      : "🌻 Sazonal"
+                }
+              </span>
+            </div>
+            <div class="pool-detail">
+              <span class="label">Localização:</span>
+              <span class="value">${maintenance.location}</span>
+            </div>
+            <div class="pool-detail">
+              <span class="label">Data de Criação:</span>
+              <span class="value">${format(new Date(maintenance.createdAt), "dd/MM/yyyy", { locale: pt })}</span>
+            </div>
           </div>
-          <div class="info-card">
-            <h3>Problemas Pendentes</h3>
-            <p>${pendingProblems}</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">👤 Informações do Cliente</div>
+        </div>
+        <div class="section-content">
+          <div class="client-info-grid">
+            <div class="client-detail">
+              <span class="label">Nome:</span>
+              <span class="value">${maintenance.clientName}</span>
+            </div>
+            ${
+              maintenance.clientPhone
+                ? `
+            <div class="client-detail">
+              <span class="label">Telefone:</span>
+              <span class="value">${maintenance.clientPhone}</span>
+            </div>`
+                : ""
+            }
+            ${
+              maintenance.clientEmail
+                ? `
+            <div class="client-detail">
+              <span class="label">Email:</span>
+              <span class="value">${maintenance.clientEmail}</span>
+            </div>`
+                : ""
+            }
           </div>
-          <div class="info-card">
-            <h3>Estado</h3>
-            <p>${maintenance.status === "active" ? "✅ Ativo" : "⏸️ Inativo"}</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">📊 Estatísticas Detalhadas</div>
+        </div>
+        <div class="section-content">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-number">${totalInterventions}</div>
+              <div class="stat-label">Total de Intervenções</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">${pendingProblems}</div>
+              <div class="stat-label">Problemas Pendentes</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">${resolvedProblems}</div>
+              <div class="stat-label">Problemas Resolvidos</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">${totalPoolPhotos + totalInterventionPhotos}</div>
+              <div class="stat-label">Total de Fotos</div>
+            </div>
           </div>
+          ${
+            lastIntervention
+              ? `
+          <div class="last-intervention-summary">
+            <strong>Última Intervenção:</strong> ${format(new Date(lastIntervention.date), "dd/MM/yyyy", { locale: pt })}
+            <br>
+            <strong>Técnicos:</strong> ${lastIntervention.technicians.join(", ")}
+            <br>
+            <strong>Estado da Água:</strong> ${getWaterQualityStatus(lastIntervention.waterValues)}
+          </div>`
+              : ""
+          }
         </div>
       </div>
 
@@ -1181,37 +1295,167 @@ Relatório gerado em: ${reportDate}
         maintenance.interventions && maintenance.interventions.length > 0
           ? `
         <div class="section">
-          <div class="section-title">📋 Histórico de Intervenções</div>
-          ${maintenance.interventions
-            .slice(0, 5)
-            .map(
-              (int) => `
-            <div class="info-card">
-              <h3>${format(new Date(int.date), "dd/MM/yyyy", { locale: pt })}</h3>
-              <p><strong>Técnicos:</strong> ${int.technicians.join(", ")}</p>
-              <p><strong>Trabalho:</strong> ${Object.entries(int.workPerformed)
-                .filter(([, v]) => v)
-                .map(([k]) => k)
-                .join(", ")}</p>
-              ${int.observations ? `<p><strong>Observações:</strong> ${int.observations}</p>` : ""}
+          <div class="section-header">
+            <div class="section-title">📋 Histórico Detalhado de Intervenções</div>
+          </div>
+          <div class="section-content">
+            <div class="interventions-table">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Técnicos</th>
+                    <th>pH</th>
+                    <th>Cloro</th>
+                    <th>Temp.</th>
+                    <th>Problemas</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${maintenance.interventions
+                    .sort(
+                      (a, b) =>
+                        new Date(b.date).getTime() - new Date(a.date).getTime(),
+                    )
+                    .slice(0, 10) // Show last 10 interventions
+                    .map(
+                      (int) => `
+                    <tr>
+                      <td>${format(new Date(int.date), "dd/MM/yy", { locale: pt })}</td>
+                      <td>${int.technicians.slice(0, 2).join(", ")}${int.technicians.length > 2 ? "..." : ""}</td>
+                      <td>${int.waterValues.ph || "N/A"}</td>
+                      <td>${int.waterValues.chlorine || "N/A"}</td>
+                      <td>${int.waterValues.temperature || "N/A"}°C</td>
+                      <td>${int.problems.length}</td>
+                      <td class="status-${int.problems.every((p) => p.resolved) ? "good" : "warning"}">
+                        ${
+                          int.problems.length === 0
+                            ? "✅"
+                            : int.problems.every((p) => p.resolved)
+                              ? "✅"
+                              : "⚠️"
+                        }
+                      </td>
+                    </tr>
+                  `,
+                    )
+                    .join("")}
+                </tbody>
+              </table>
             </div>
-          `,
-            )
-            .join("")}
+            ${
+              maintenance.interventions.length > 10
+                ? `<div class="table-note">Mostrando as últimas 10 intervenções de ${totalInterventions} no total.</div>`
+                : ""
+            }
+          </div>
         </div>
       `
           : ""
       }
 
-      <div class="section">
-        <div class="section-title">🏊 Características da Piscina</div>
-        <p><strong>Tipo:</strong> ${getPoolTypeLabel(maintenance.poolType)}</p>
-        <p><strong>Cubicagem de Água:</strong> ${maintenance.waterCubicage || "Não especificado"}</p>
-        <p><strong>Localização:</strong> ${maintenance.location}</p>
-        <p><strong>Cliente:</strong> ${maintenance.clientName}</p>
-        ${maintenance.clientEmail ? `<p><strong>Email:</strong> ${maintenance.clientEmail}</p>` : ""}
-        ${maintenance.clientPhone ? `<p><strong>Telefone:</strong> ${maintenance.clientPhone}</p>` : ""}
-      </div>
+      ${
+        maintenance.photos && maintenance.photos.length > 0
+          ? `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">📸 Galeria de Fotos da Piscina</div>
+          </div>
+          <div class="section-content">
+            <div class="photos-grid">
+              ${maintenance.photos
+                .slice(0, 8) // Limit to 8 photos for space
+                .map(
+                  (photo) => `
+                <div class="photo-item">
+                  <div class="photo-container">
+                    <img src="${photo.url}" alt="${photo.description || photo.filename}" />
+                  </div>
+                  <div class="photo-info">
+                    <div class="photo-description">${photo.description || "Sem descrição"}</div>
+                    <div class="photo-category">${
+                      photo.category
+                        ? photo.category === "general"
+                          ? "Geral"
+                          : photo.category === "equipment"
+                            ? "Equipamentos"
+                            : photo.category === "issues"
+                              ? "Problemas"
+                              : photo.category === "before"
+                                ? "Antes"
+                                : photo.category === "after"
+                                  ? "Depois"
+                                  : photo.category
+                        : "Geral"
+                    }</div>
+                    <div class="photo-date">${format(new Date(photo.uploadedAt), "dd/MM/yyyy", { locale: pt })}</div>
+                  </div>
+                </div>
+              `,
+                )
+                .join("")}
+            </div>
+            <div class="photos-summary">
+              <strong>Fotos da piscina:</strong> ${totalPoolPhotos} •
+              <strong>Fotos de intervenções:</strong> ${totalInterventionPhotos}
+              ${maintenance.photos.length > 8 ? ` • Mostrando 8 de ${maintenance.photos.length} fotos da piscina` : ""}
+            </div>
+          </div>
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        maintenance.observations
+          ? `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">📝 Observações Gerais</div>
+          </div>
+          <div class="section-content">
+            <div class="observations-box">
+              ${maintenance.observations.replace(/\n/g, "<br>")}
+            </div>
+          </div>
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        pendingProblems > 0
+          ? `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">⚠️ Problemas Pendentes</div>
+          </div>
+          <div class="section-content">
+            ${maintenance.interventions
+              .flatMap((int) => int.problems.filter((p) => !p.resolved))
+              .map(
+                (problem) => `
+              <div class="problem-card pending">
+                <div class="problem-text">${problem.description}</div>
+                <div class="problem-severity severity-${problem.severity}">
+                  ${
+                    problem.severity === "high"
+                      ? "Alta"
+                      : problem.severity === "medium"
+                        ? "Média"
+                        : "Baixa"
+                  } Prioridade
+                </div>
+              </div>
+            `,
+              )
+              .join("")}
+          </div>
+        </div>
+      `
+          : ""
+      }
     `;
   };
 
