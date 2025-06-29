@@ -95,7 +95,7 @@ ${intervention.vehicles.length > 0 ? `Viaturas: ${intervention.vehicles.join(", 
 pH: ${intervention.waterValues.ph || "N/A"}
 Cloro: ${intervention.waterValues.chlorine || "N/A"} ppm
 Temperatura: ${intervention.waterValues.temperature || "N/A"}°C
-Sal: ${intervention.waterValues.salt || "N/A"} ppm
+Sal: ${intervention.waterValues.salt || "N/A"} gr/lt
 ${intervention.waterValues.bromine ? `Bromo: ${intervention.waterValues.bromine} ppm` : ""}
 ${intervention.waterValues.alkalinity ? `Alcalinidade: ${intervention.waterValues.alkalinity}` : ""}
 
@@ -1325,8 +1325,8 @@ Relatório gerado em: ${reportDate}
             </div>
             <div class="water-param">
               <div class="param-label">Sal</div>
-              <div class="param-value">${intervention.waterValues.salt || "N/A"} ppm</div>
-              <div class="param-range">Piscina salgada: 3000-4000 ppm</div>
+              <div class="param-value">${intervention.waterValues.salt || "N/A"} gr/lt</div>
+              <div class="param-range">Piscina salgada: 3000-4000 gr/lt</div>
             </div>
             ${
               intervention.waterValues.bromine
