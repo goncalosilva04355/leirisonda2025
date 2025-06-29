@@ -192,7 +192,7 @@ export function NewMaintenanceSelector() {
                 <Waves className="h-12 w-12 mx-auto mb-3 text-gray-300" />
                 <p>Nenhuma piscina encontrada</p>
                 {searchTerm && (
-                  <p className="text-sm">Tenta ajustar os termos de pesquisa</p>
+                  <p className="text-sm">Tente ajustar os termos de pesquisa</p>
                 )}
               </div>
             )}
