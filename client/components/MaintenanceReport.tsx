@@ -249,7 +249,7 @@ ${maintenance.observations}
     : ""
 }
 
-━━━━━━━━━���━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📞 CONTACTO
 Leirisonda - Manutenção de Piscinas
@@ -2249,27 +2249,124 @@ Relatório gerado em: ${reportDate}
       }
 
       ${
+        totalChemicalProducts > 0
+          ? `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">🧴 Análise Completa de Produtos Químicos (${totalChemicalProducts} aplicações)</div>
+          </div>
+          <div class="section-content">
+            <div class="products-analysis">
+              ${(() => {
+                const productStats =
+                  maintenance.interventions?.reduce(
+                    (acc, int) => {
+                      int.chemicalProducts.forEach((product) => {
+                        if (!acc[product.productName]) {
+                          acc[product.productName] = {
+                            count: 0,
+                            totalQuantity: 0,
+                            unit: product.unit,
+                            dates: [],
+                          };
+                        }
+                        acc[product.productName].count++;
+                        acc[product.productName].totalQuantity +=
+                          product.quantity;
+                        acc[product.productName].dates.push(
+                          format(new Date(int.date), "dd/MM/yyyy", {
+                            locale: pt,
+                          }),
+                        );
+                      });
+                      return acc;
+                    },
+                    {} as Record<
+                      string,
+                      {
+                        count: number;
+                        totalQuantity: number;
+                        unit: string;
+                        dates: string[];
+                      }
+                    >,
+                  ) || {};
+
+                return Object.entries(productStats)
+                  .sort((a, b) => b[1].count - a[1].count)
+                  .map(
+                    ([productName, stats]) => `
+                    <div style="background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                      <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                        <h5 style="margin: 0; font-size: 14px; font-weight: 600; color: #2d3748; flex: 1;">${productName}</h5>
+                        <div style="font-size: 12px; color: #4a5568;">
+                          <strong>${stats.count}x aplicado</strong> • <strong>${stats.totalQuantity}${stats.unit} total</strong>
+                        </div>
+                      </div>
+                      <div style="font-size: 11px; color: #718096;">
+                        <strong>Datas:</strong> ${stats.dates.slice(-3).join(", ")}${stats.dates.length > 3 ? ` (+${stats.dates.length - 3} mais)` : ""}
+                      </div>
+                      <div style="font-size: 11px; color: #4a5568; margin-top: 4px;">
+                        <strong>Finalidade:</strong> ${getProductPurpose(productName)}
+                      </div>
+                    </div>
+                  `,
+                  )
+                  .join("");
+              })()}
+            </div>
+          </div>
+        </div>
+      `
+          : ""
+      }
+
+      ${
         pendingProblems > 0
           ? `
         <div class="section">
           <div class="section-header">
-            <div class="section-title">⚠️ Problemas Pendentes</div>
+            <div class="section-title">⚠️ Problemas Pendentes de Resolução (${pendingProblems} problemas)</div>
           </div>
           <div class="section-content">
             ${maintenance.interventions
-              .flatMap((int) => int.problems.filter((p) => !p.resolved))
+              .flatMap((int, intIndex) =>
+                int.problems
+                  .filter((p) => !p.resolved)
+                  .map((problem) => ({
+                    ...problem,
+                    interventionDate: format(new Date(int.date), "dd/MM/yyyy", {
+                      locale: pt,
+                    }),
+                    interventionIndex: totalInterventions - intIndex,
+                  })),
+              )
               .map(
                 (problem) => `
-              <div class="problem-card pending">
-                <div class="problem-text">${problem.description}</div>
-                <div class="problem-severity severity-${problem.severity}">
+              <div class="problem-card pending" style="margin-bottom: 12px;">
+                <div class="problem-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                  <div class="problem-text" style="font-size: 13px; font-weight: 500; color: #1a202c; flex: 1;">
+                    ${problem.description}
+                  </div>
+                  <div style="font-size: 10px; color: #718096; text-align: right;">
+                    Intervenção #${problem.interventionIndex}<br>
+                    ${problem.interventionDate}
+                  </div>
+                </div>
+                <div class="problem-severity severity-${problem.severity}" style="display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; ${
+                  problem.severity === "high"
+                    ? "background: #fed7d7; color: #c53030;"
+                    : problem.severity === "medium"
+                      ? "background: #fbd38d; color: #b45309;"
+                      : "background: #c6f6d5; color: #276749;"
+                }">
                   ${
                     problem.severity === "high"
-                      ? "Alta"
+                      ? "ALTA PRIORIDADE"
                       : problem.severity === "medium"
-                        ? "Média"
-                        : "Baixa"
-                  } Prioridade
+                        ? "MÉDIA PRIORIDADE"
+                        : "BAIXA PRIORIDADE"
+                  }
                 </div>
               </div>
             `,
