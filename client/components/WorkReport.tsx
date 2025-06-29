@@ -171,26 +171,13 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
     const TypeIcon = getTypeIcon(work.type);
 
     return `
-      <!-- Modern Header -->
-      <div class="pdf-header-modern">
-        <div class="pdf-header-left">
-          <h1 class="pdf-main-title">Relatório de Obra</h1>
-          <h2 class="pdf-subtitle">${work.clientName}</h2>
-          <div class="pdf-date">📅 ${format(new Date(work.createdAt), "dd 'de' MMMM 'de' yyyy", { locale: pt })}</div>
+      <!-- Work Information -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">🏗️ Informações da Obra</div>
         </div>
-        <div class="pdf-header-right">
-          <div class="pdf-ref-number">REF: ${work.workSheetNumber}</div>
-          <div class="pdf-status-badge ${statusInfo.color.replace(/text-/, "color-").replace(/bg-/, "bg-")}">${statusInfo.label}</div>
-        </div>
-      </div>
-
-      <!-- Work Information Card -->
-      <div class="pdf-card pdf-card-primary">
-        <div class="pdf-card-header">
-          <h3 class="pdf-card-title">🏗️ Informações da Obra</h3>
-        </div>
-        <div class="pdf-card-content">
-          <div class="pdf-info-grid">
+        <div class="section-content">
+          <div class="info-grid">
             <div class="pdf-info-item">
               <span class="pdf-info-label">Folha de Obra:</span>
               <span class="pdf-info-value">${work.workSheetNumber}</span>
