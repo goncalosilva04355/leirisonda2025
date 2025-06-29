@@ -14,6 +14,9 @@ import {
   Minus,
   AlertTriangle,
   Camera,
+  Wifi,
+  WifiOff,
+  AlertCircle,
 } from "lucide-react";
 import { PoolMaintenance, MaintenanceIntervention } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -30,6 +33,7 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PoolPhotoUpload } from "@/components/PoolPhotoUpload";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function CreateIntervention() {
   const { maintenanceId } = useParams<{ maintenanceId: string }>();
