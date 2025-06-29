@@ -111,7 +111,7 @@ export function Dashboard() {
     });
 
     // Get recent works (last 5)
-    const sortedWorks = works
+    const sortedWorks = worksList
       .sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
