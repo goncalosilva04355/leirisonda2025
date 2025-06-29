@@ -306,7 +306,7 @@ export function MaintenanceList() {
           </h3>
           <p className="text-gray-600 mb-6">
             {searchTerm || statusFilter !== "all"
-              ? "Tenta ajustar os filtros de pesquisa."
+              ? "Tente ajustar os filtros de pesquisa."
               : "Comece por registrar a primeira piscina."}
           </p>
           {!searchTerm && statusFilter === "all" && (
