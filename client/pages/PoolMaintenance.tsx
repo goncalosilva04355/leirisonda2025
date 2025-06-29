@@ -531,11 +531,28 @@ export function PoolMaintenancePage() {
                     <Input
                       id="salt"
                       type="number"
+                      step="0.1"
                       value={formData.waterValues.salt || ""}
                       onChange={(e) =>
                         updateFormData("waterValues.salt", e.target.value)
                       }
-                      placeholder="3200"
+                      placeholder="3.2"
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="orp">ORP (mv)</Label>
+                    <Input
+                      id="orp"
+                      type="number"
+                      min="0"
+                      max="1000"
+                      value={formData.waterValues.orp || ""}
+                      onChange={(e) =>
+                        updateFormData("waterValues.orp", e.target.value)
+                      }
+                      placeholder="650"
                       className="mt-1"
                     />
                   </div>
