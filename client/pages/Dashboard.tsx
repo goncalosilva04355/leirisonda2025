@@ -21,12 +21,16 @@ import { Work, DashboardStats } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { SyncStatus } from "@/components/SyncStatus";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
+import { FirebaseStatus } from "@/components/FirebaseStatus";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
 export function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { works, maintenances, isOnline, isSyncing, lastSync } =
+    useFirebaseSync();
   const [stats, setStats] = useState<DashboardStats>({
     totalWorks: 0,
     pendingWorks: 0,
@@ -53,7 +57,7 @@ export function Dashboard() {
 
   useEffect(() => {
     loadDashboardData();
-  }, []);
+  }, [works, maintenances]); // React to Firebase data changes
 
   useEffect(() => {
     if (searchTerm.trim()) {
@@ -64,10 +68,10 @@ export function Dashboard() {
   }, [searchTerm]);
 
   const performSearch = () => {
-    const storedWorks = localStorage.getItem("leirisonda_works");
-    const works: Work[] = storedWorks ? JSON.parse(storedWorks) : [];
+    // Use Firebase synced data instead of localStorage directly
+    const worksList = works || [];
 
-    const filtered = works.filter(
+    const filtered = worksList.filter(
       (work) =>
         work.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         work.workSheetNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -79,19 +83,25 @@ export function Dashboard() {
   };
 
   const loadDashboardData = () => {
-    const storedWorks = localStorage.getItem("leirisonda_works");
-    const works: Work[] = storedWorks ? JSON.parse(storedWorks) : [];
+    // Use Firebase synced data instead of localStorage directly
+    const worksList = works || [];
 
     // Calculate stats
-    const totalWorks = works.length;
-    const pendingWorks = works.filter((w) => w.status === "pendente").length;
-    const inProgressWorks = works.filter(
+    const totalWorks = worksList.length;
+    const pendingWorks = worksList.filter(
+      (w) => w.status === "pendente",
+    ).length;
+    const inProgressWorks = worksList.filter(
       (w) => w.status === "em_progresso",
     ).length;
-    const completedWorks = works.filter((w) => w.status === "concluida").length;
+    const completedWorks = worksList.filter(
+      (w) => w.status === "concluida",
+    ).length;
 
     // Calculate work sheets pending (not completed)
-    const workSheetsPending = works.filter((w) => !w.workSheetCompleted).length;
+    const workSheetsPending = worksList.filter(
+      (w) => !w.workSheetCompleted,
+    ).length;
 
     setStats({
       totalWorks,
@@ -187,43 +197,23 @@ export function Dashboard() {
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4" />
-                  <span className="font-medium">
+                  <span>
                     {format(new Date(), "EEEE, dd 'de' MMMM", { locale: pt })}
                   </span>
                 </div>
-                <div className="hidden sm:flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                    <span>Online</span>
-                  </div>
-                  <SyncStatus />
+                <div className="w-px h-4 bg-gray-300"></div>
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-4 h-4" />
+                  <span>{format(new Date(), "HH:mm")}</span>
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="flex flex-col sm:flex-row gap-4">
-            {user?.permissions?.canCreateWorks && (
-              <button
-                className="group relative bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center"
-                onClick={() => navigate("/create-work")}
-              >
-                <Plus className="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform duration-200" />
-                Nova Obra
-              </button>
-            )}
-            {user?.permissions?.canViewMaintenance && (
-              <button
-                className="group relative bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center"
-                onClick={() => navigate("/pool-maintenance")}
-              >
-                <Droplets className="w-4 h-4 mr-2 text-blue-600 group-hover:scale-110 transition-transform duration-200" />
-                Manutenção
-              </button>
-            )}
-          </div>
         </div>
       </div>
+
+      {/* Firebase Sync Status */}
+      <FirebaseStatus />
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         <div
