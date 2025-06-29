@@ -470,7 +470,7 @@ export function MaintenanceDetail() {
               Nenhuma intervenção registrada
             </h3>
             <p className="text-gray-600 mb-6">
-              Registra a primeira intervenção nesta piscina.
+              Registre a primeira intervenção nesta piscina.
             </p>
             <Link to={`/maintenance/${maintenance.id}/new-intervention`}>
               <Button className="btn-primary">
