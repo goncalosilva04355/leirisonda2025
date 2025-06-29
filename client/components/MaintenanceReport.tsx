@@ -289,7 +289,7 @@ Relatório gerado em: ${reportDate}
       line-height: 1.5;
       color: #1a202c;
       background: #ffffff;
-      font-size: 14px;
+      font-size: 13px;
       -webkit-font-smoothing: antialiased;
     }
 
