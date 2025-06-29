@@ -57,7 +57,7 @@ export function CreateIntervention() {
     chemicalProducts: [{ productName: "", quantity: 0, unit: "kg" }],
     workPerformed: {
       filtros: false,
-      preFiltero: false,
+      preFiltro: false,
       filtroAreiaVidro: false,
       alimenta: false,
       enchimentoAutomatico: false,

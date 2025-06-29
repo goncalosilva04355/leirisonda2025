@@ -52,7 +52,7 @@ export function PoolMaintenancePage() {
     vehicles: [] as string[],
     maintenanceWork: {
       filtros: false,
-      preFiltero: false,
+      preFiltro: false,
       filtroAreiaVidro: false,
       alimenta: false,
       enchimentoAutomatico: false,
@@ -101,7 +101,7 @@ export function PoolMaintenancePage() {
         vehicles: ["Carrinha Leirisonda 1"],
         maintenanceWork: {
           filtros: true,
-          preFiltero: true,
+          preFiltro: true,
           filtroAreiaVidro: false,
           alimenta: false,
           enchimentoAutomatico: true,
@@ -130,7 +130,7 @@ export function PoolMaintenancePage() {
         vehicles: ["Carrinha Leirisonda 2"],
         maintenanceWork: {
           filtros: false,
-          preFiltero: false,
+          preFiltro: false,
           filtroAreiaVidro: true,
           alimenta: true,
           enchimentoAutomatico: false,
@@ -585,89 +585,104 @@ export function PoolMaintenancePage() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Trabalhos de Manutenção Realizados
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="filtros"
-                      checked={formData.maintenanceWork.filtros}
-                      onCheckedChange={(checked) =>
-                        updateFormData("maintenanceWork.filtros", checked)
-                      }
-                    />
-                    <Label htmlFor="filtros" className="text-sm">
-                      Pré-filtro
-                    </Label>
-                  </div>
 
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="preFiltero"
-                      checked={formData.maintenanceWork.preFiltero}
-                      onCheckedChange={(checked) =>
-                        updateFormData("maintenanceWork.preFiltero", checked)
-                      }
-                    />
-                    <Label htmlFor="preFiltero" className="text-sm">
-                      Pré-filtro
-                    </Label>
-                  </div>
+                {/* Filtração */}
+                <div className="mb-6">
+                  <h4 className="text-md font-medium text-gray-700 mb-3 flex items-center">
+                    🔧 Sistema de Filtração
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-4">
+                    <div className="flex items-center space-x-3">
+                      <Checkbox
+                        id="filtros"
+                        checked={formData.maintenanceWork.filtros}
+                        onCheckedChange={(checked) =>
+                          updateFormData("maintenanceWork.filtros", checked)
+                        }
+                      />
+                      <Label htmlFor="filtros" className="text-sm">
+                        Limpeza de Filtros
+                      </Label>
+                    </div>
 
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="filtroAreiaVidro"
-                      checked={formData.maintenanceWork.filtroAreiaVidro}
-                      onCheckedChange={(checked) =>
-                        updateFormData(
-                          "maintenanceWork.filtroAreiaVidro",
-                          checked,
-                        )
-                      }
-                    />
-                    <Label htmlFor="filtroAreiaVidro" className="text-sm">
-                      Filtro Areia/Vidro
-                    </Label>
-                  </div>
+                    <div className="flex items-center space-x-3">
+                      <Checkbox
+                        id="preFiltro"
+                        checked={formData.maintenanceWork.preFiltro}
+                        onCheckedChange={(checked) =>
+                          updateFormData("maintenanceWork.preFiltro", checked)
+                        }
+                      />
+                      <Label htmlFor="preFiltro" className="text-sm">
+                        Pré-filtro
+                      </Label>
+                    </div>
 
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="alimenta"
-                      checked={formData.maintenanceWork.alimenta}
-                      onCheckedChange={(checked) =>
-                        updateFormData("maintenanceWork.alimenta", checked)
-                      }
-                    />
-                    <Label htmlFor="alimenta" className="text-sm">
-                      Alimenta
-                    </Label>
+                    <div className="flex items-center space-x-3">
+                      <Checkbox
+                        id="filtroAreiaVidro"
+                        checked={formData.maintenanceWork.filtroAreiaVidro}
+                        onCheckedChange={(checked) =>
+                          updateFormData(
+                            "maintenanceWork.filtroAreiaVidro",
+                            checked,
+                          )
+                        }
+                      />
+                      <Label htmlFor="filtroAreiaVidro" className="text-sm">
+                        Filtro Areia/Vidro
+                      </Label>
+                    </div>
                   </div>
+                </div>
 
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="enchimentoAutomatico"
-                      checked={formData.maintenanceWork.enchimentoAutomatico}
-                      onCheckedChange={(checked) =>
-                        updateFormData(
-                          "maintenanceWork.enchimentoAutomatico",
-                          checked,
-                        )
-                      }
-                    />
-                    <Label htmlFor="enchimentoAutomatico" className="text-sm">
-                      Enchimento Automático
-                    </Label>
-                  </div>
+                {/* Sistemas da Piscina */}
+                <div className="mb-6">
+                  <h4 className="text-md font-medium text-gray-700 mb-3 flex items-center">
+                    ⚙️ Sistemas da Piscina
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-4">
+                    <div className="flex items-center space-x-3">
+                      <Checkbox
+                        id="alimenta"
+                        checked={formData.maintenanceWork.alimenta}
+                        onCheckedChange={(checked) =>
+                          updateFormData("maintenanceWork.alimenta", checked)
+                        }
+                      />
+                      <Label htmlFor="alimenta" className="text-sm">
+                        Alimentação/Dosagem
+                      </Label>
+                    </div>
 
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="linhaAgua"
-                      checked={formData.maintenanceWork.linhaAgua}
-                      onCheckedChange={(checked) =>
-                        updateFormData("maintenanceWork.linhaAgua", checked)
-                      }
-                    />
-                    <Label htmlFor="linhaAgua" className="text-sm">
-                      Linha Água
-                    </Label>
+                    <div className="flex items-center space-x-3">
+                      <Checkbox
+                        id="enchimentoAutomatico"
+                        checked={formData.maintenanceWork.enchimentoAutomatico}
+                        onCheckedChange={(checked) =>
+                          updateFormData(
+                            "maintenanceWork.enchimentoAutomatico",
+                            checked,
+                          )
+                        }
+                      />
+                      <Label htmlFor="enchimentoAutomatico" className="text-sm">
+                        Enchimento Automático
+                      </Label>
+                    </div>
+
+                    <div className="flex items-center space-x-3">
+                      <Checkbox
+                        id="linhaAgua"
+                        checked={formData.maintenanceWork.linhaAgua}
+                        onCheckedChange={(checked) =>
+                          updateFormData("maintenanceWork.linhaAgua", checked)
+                        }
+                      />
+                      <Label htmlFor="linhaAgua" className="text-sm">
+                        Limpeza Linha de Água
+                      </Label>
+                    </div>
                   </div>
                 </div>
 
@@ -839,39 +854,66 @@ export function PoolMaintenancePage() {
                 </div>
 
                 {/* Maintenance Work Done */}
-                <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                  <h5 className="font-medium text-blue-900 mb-2">
-                    Trabalhos Realizados:
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                  <h5 className="font-medium text-blue-900 mb-3">
+                    🔧 Trabalhos Realizados
                   </h5>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                    {maintenance.maintenanceWork.filtros && (
-                      <span className="text-blue-700">✓ Pré-filtro</span>
-                    )}
-                    {maintenance.maintenanceWork.preFiltero && (
-                      <span className="text-blue-700">✓ Pré-filtro</span>
-                    )}
-                    {maintenance.maintenanceWork.filtroAreiaVidro && (
-                      <span className="text-blue-700">
-                        ✓ Filtro Areia/Vidro
-                      </span>
-                    )}
-                    {maintenance.maintenanceWork.alimenta && (
-                      <span className="text-blue-700">✓ Alimenta</span>
-                    )}
-                    {maintenance.maintenanceWork.enchimentoAutomatico && (
-                      <span className="text-blue-700">
-                        ✓ Enchimento Automático
-                      </span>
-                    )}
-                    {maintenance.maintenanceWork.linhaAgua && (
-                      <span className="text-blue-700">✓ Linha Água</span>
-                    )}
+
+                  {/* Filtração */}
+                  <div className="mb-3">
+                    <h6 className="text-xs font-medium text-blue-800 mb-1 uppercase tracking-wide">
+                      Sistema de Filtração
+                    </h6>
+                    <div className="flex flex-wrap gap-2">
+                      {maintenance.maintenanceWork.filtros && (
+                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Limpeza de Filtros
+                        </span>
+                      )}
+                      {maintenance.maintenanceWork.preFiltro && (
+                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Pré-filtro
+                        </span>
+                      )}
+                      {maintenance.maintenanceWork.filtroAreiaVidro && (
+                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Filtro Areia/Vidro
+                        </span>
+                      )}
+                    </div>
                   </div>
+
+                  {/* Sistemas */}
+                  <div className="mb-3">
+                    <h6 className="text-xs font-medium text-blue-800 mb-1 uppercase tracking-wide">
+                      Sistemas da Piscina
+                    </h6>
+                    <div className="flex flex-wrap gap-2">
+                      {maintenance.maintenanceWork.alimenta && (
+                        <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Alimentação/Dosagem
+                        </span>
+                      )}
+                      {maintenance.maintenanceWork.enchimentoAutomatico && (
+                        <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Enchimento Automático
+                        </span>
+                      )}
+                      {maintenance.maintenanceWork.linhaAgua && (
+                        <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Limpeza Linha de Água
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
                   {maintenance.maintenanceWork.outros && (
-                    <p className="text-sm text-blue-700 mt-2">
-                      <span className="font-medium">Outros:</span>{" "}
-                      {maintenance.maintenanceWork.outros}
-                    </p>
+                    <div className="mt-3 pt-2 border-t border-blue-200">
+                      <p className="text-sm text-blue-700">
+                        <span className="font-medium">Outros trabalhos:</span>{" "}
+                        {maintenance.maintenanceWork.outros}
+                      </p>
+                    </div>
                   )}
                 </div>
 
