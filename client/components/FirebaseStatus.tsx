@@ -109,13 +109,19 @@ export function FirebaseStatus() {
 
       {/* Status Messages */}
       <div className="mt-3 space-y-1">
-        {!isOnline && (
+        {!isFirebaseAvailable && (
+          <p className="text-xs text-blue-600">
+            📱 Modo local ativo - dados guardados no dispositivo
+          </p>
+        )}
+
+        {isFirebaseAvailable && !isOnline && (
           <p className="text-xs text-orange-600">
             📱 Modo offline ativo - dados guardados localmente
           </p>
         )}
 
-        {isOnline && (
+        {isFirebaseAvailable && isOnline && (
           <p className="text-xs text-green-600">
             ☁️ Sincronização automática ativa
           </p>
