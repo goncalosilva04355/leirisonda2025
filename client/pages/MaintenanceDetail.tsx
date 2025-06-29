@@ -24,40 +24,62 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MaintenanceReport } from "@/components/MaintenanceReport";
 import { PhotoGallery } from "@/components/PhotoGallery";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function MaintenanceDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { maintenances, deleteMaintenance } = useFirebaseSync();
   const [maintenance, setMaintenance] = useState<PoolMaintenance | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     loadMaintenance();
-  }, [id]);
+  }, [id, maintenances]);
 
   const loadMaintenance = () => {
     try {
-      const stored = localStorage.getItem("pool_maintenances");
-      if (stored) {
-        const maintenances: PoolMaintenance[] = JSON.parse(stored);
-        const found = maintenances.find((m) => m.id === id);
-        if (found) {
-          // Ensure photos array exists
-          if (!found.photos) {
-            found.photos = [];
-          }
-          // Ensure interventions have photos
-          found.interventions = found.interventions.map((intervention) => ({
-            ...intervention,
-            photos: intervention.photos || [],
-          }));
-          setMaintenance(found);
-        } else {
-          setError("Piscina não encontrada");
+      if (!id) return;
+
+      // Use dados do Firebase sync em primeiro lugar
+      const found = maintenances.find((m) => m.id === id);
+      if (found) {
+        // Ensure photos array exists
+        if (!found.photos) {
+          found.photos = [];
         }
+        // Ensure interventions have photos
+        found.interventions = found.interventions.map((intervention) => ({
+          ...intervention,
+          photos: intervention.photos || [],
+        }));
+        setMaintenance(found);
       } else {
-        setError("Nenhuma piscina encontrada");
+        // Fallback para localStorage se não encontrar no Firebase
+        const stored = localStorage.getItem("pool_maintenances");
+        if (stored) {
+          const localMaintenances: PoolMaintenance[] = JSON.parse(stored);
+          const localFound = localMaintenances.find((m) => m.id === id);
+          if (localFound) {
+            // Ensure photos array exists
+            if (!localFound.photos) {
+              localFound.photos = [];
+            }
+            // Ensure interventions have photos
+            localFound.interventions = localFound.interventions.map(
+              (intervention) => ({
+                ...intervention,
+                photos: intervention.photos || [],
+              }),
+            );
+            setMaintenance(localFound);
+          } else {
+            setError("Piscina não encontrada");
+          }
+        } else {
+          setError("Nenhuma piscina encontrada");
+        }
       }
     } catch (err) {
       setError("Erro ao carregar dados");

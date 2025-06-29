@@ -14,6 +14,9 @@ import {
   Minus,
   AlertTriangle,
   Camera,
+  Wifi,
+  WifiOff,
+  AlertCircle,
 } from "lucide-react";
 import { PoolMaintenance, MaintenanceIntervention } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -30,10 +33,13 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PoolPhotoUpload } from "@/components/PoolPhotoUpload";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function CreateIntervention() {
   const { maintenanceId } = useParams<{ maintenanceId: string }>();
   const navigate = useNavigate();
+  const { updateMaintenance, maintenances, isOnline, isSyncing } =
+    useFirebaseSync();
   const [maintenance, setMaintenance] = useState<PoolMaintenance | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -86,16 +92,27 @@ export function CreateIntervention() {
         timeEnd: format(endTime, "HH:mm"),
       }));
     }
-  }, [maintenanceId]);
+  }, [maintenanceId, maintenances]); // React to changes in maintenances data
 
   const loadMaintenance = () => {
     try {
-      const stored = localStorage.getItem("pool_maintenances");
-      if (stored) {
-        const maintenances: PoolMaintenance[] = JSON.parse(stored);
-        const found = maintenances.find((m) => m.id === maintenanceId);
-        if (found) {
-          setMaintenance(found);
+      // Use dados do Firebase sync em primeiro lugar
+      const found = maintenances.find((m) => m.id === maintenanceId);
+      if (found) {
+        setMaintenance(found);
+      } else {
+        // Fallback para localStorage apenas se não encontrar no Firebase
+        const stored = localStorage.getItem("pool_maintenances");
+        if (stored) {
+          const localMaintenances: PoolMaintenance[] = JSON.parse(stored);
+          const localFound = localMaintenances.find(
+            (m) => m.id === maintenanceId,
+          );
+          if (localFound) {
+            setMaintenance(localFound);
+          } else {
+            setError("Piscina não encontrada");
+          }
         } else {
           setError("Piscina não encontrada");
         }
@@ -258,7 +275,7 @@ export function CreateIntervention() {
         updatedAt: new Date().toISOString(),
       };
 
-      // Update maintenance with new intervention
+      // Update maintenance with new intervention using Firebase sync
       const updatedMaintenance: PoolMaintenance = {
         ...maintenance,
         interventions: [...maintenance.interventions, newIntervention],
@@ -266,18 +283,11 @@ export function CreateIntervention() {
         updatedAt: new Date().toISOString(),
       };
 
-      // Save to localStorage
-      const existingMaintenances = JSON.parse(
-        localStorage.getItem("pool_maintenances") || "[]",
-      );
-      const updatedMaintenances = existingMaintenances.map(
-        (m: PoolMaintenance) =>
-          m.id === maintenance.id ? updatedMaintenance : m,
-      );
-
-      localStorage.setItem(
-        "pool_maintenances",
-        JSON.stringify(updatedMaintenances),
+      // Use Firebase sync to update maintenance with automatic sync
+      await updateMaintenance(maintenance.id, updatedMaintenance);
+      console.log(
+        "✅ Intervenção criada e sincronizada automaticamente:",
+        newIntervention.id,
       );
 
       navigate(`/maintenance/${maintenance.id}`);
@@ -308,7 +318,7 @@ export function CreateIntervention() {
         >
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <div>
+        <div className="flex-1">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center">
             <Waves className="mr-3 h-8 w-8 text-blue-600" />
             Nova Intervenção
@@ -317,7 +327,36 @@ export function CreateIntervention() {
             {maintenance.poolName} • {maintenance.location}
           </p>
         </div>
+
+        {/* Connection Status */}
+        <div className="flex items-center space-x-2">
+          {isOnline ? (
+            <>
+              <Wifi className="w-4 h-4 text-green-600" />
+              <span className="text-sm text-green-600">Online</span>
+              {isSyncing && (
+                <span className="text-xs text-gray-500">Sincronizando...</span>
+              )}
+            </>
+          ) : (
+            <>
+              <WifiOff className="w-4 h-4 text-orange-600" />
+              <span className="text-sm text-orange-600">Offline</span>
+            </>
+          )}
+        </div>
       </div>
+
+      {/* Offline Warning */}
+      {!isOnline && (
+        <Alert className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Está no modo offline. Os dados serão guardados localmente e
+            sincronizados quando a ligação for restabelecida.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Info */}

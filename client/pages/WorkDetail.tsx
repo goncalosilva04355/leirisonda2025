@@ -31,36 +31,50 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function WorkDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { works, deleteWork } = useFirebaseSync();
   const [work, setWork] = useState<Work | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadWork();
-  }, [id]);
+  }, [id, works]);
 
   const loadWork = () => {
-    const storedWorks = localStorage.getItem("leirisonda_works");
-    if (storedWorks && id) {
-      const works: Work[] = JSON.parse(storedWorks);
-      const foundWork = works.find((w) => w.id === id);
-      setWork(foundWork || null);
+    if (!id) return;
+
+    // Use dados do Firebase sync em primeiro lugar
+    const foundWork = works.find((w) => w.id === id);
+    if (foundWork) {
+      setWork(foundWork);
+    } else {
+      // Fallback para localStorage se não encontrar no Firebase
+      const storedWorks = localStorage.getItem("leirisonda_works");
+      if (storedWorks) {
+        const localWorks: Work[] = JSON.parse(storedWorks);
+        const localWork = localWorks.find((w) => w.id === id);
+        setWork(localWork || null);
+      } else {
+        setWork(null);
+      }
     }
     setLoading(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!work) return;
 
-    const storedWorks = localStorage.getItem("leirisonda_works");
-    if (storedWorks) {
-      const works: Work[] = JSON.parse(storedWorks);
-      const updatedWorks = works.filter((w) => w.id !== work.id);
-      localStorage.setItem("leirisonda_works", JSON.stringify(updatedWorks));
+    try {
+      // Use Firebase sync to delete work with automatic sync
+      await deleteWork(work.id);
+      console.log("✅ Obra eliminada e sincronizada automaticamente:", work.id);
       navigate("/works");
+    } catch (error) {
+      console.error("❌ Erro ao eliminar obra:", error);
     }
   };
 

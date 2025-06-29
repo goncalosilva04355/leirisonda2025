@@ -9,6 +9,8 @@ import {
   Calendar,
   Flag,
   AlertCircle,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import { Work } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -25,6 +27,7 @@ import {
 import { PhotoUpload } from "@/components/PhotoUpload";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { WorkReport } from "@/components/WorkReport";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 const statusOptions = [
   { value: "pendente", label: "Pendente" },
@@ -35,6 +38,7 @@ const statusOptions = [
 export function EditWork() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { works, updateWork, isOnline, isSyncing } = useFirebaseSync();
   const [work, setWork] = useState<Work | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,33 +64,57 @@ export function EditWork() {
 
   useEffect(() => {
     loadWork();
-  }, [id]);
+  }, [id, works]);
 
   const loadWork = () => {
-    const storedWorks = localStorage.getItem("leirisonda_works");
-    if (storedWorks && id) {
-      const works: Work[] = JSON.parse(storedWorks);
-      const foundWork = works.find((w) => w.id === id);
-      if (foundWork) {
-        setWork(foundWork);
-        setFormData({
-          clientName: foundWork.clientName,
-          address: foundWork.address,
-          contact: foundWork.contact,
-          entryTime: format(
-            new Date(foundWork.entryTime),
-            "yyyy-MM-dd'T'HH:mm",
-          ),
-          exitTime: foundWork.exitTime
-            ? format(new Date(foundWork.exitTime), "yyyy-MM-dd'T'HH:mm")
-            : "",
-          status: foundWork.status,
-          observations: foundWork.observations,
-          workPerformed: foundWork.workPerformed,
-          workSheetCompleted: foundWork.workSheetCompleted || false,
-        });
-        setVehicles(foundWork.vehicles);
-        setTechnicians(foundWork.technicians);
+    if (!id) return;
+
+    // Use dados do Firebase sync em primeiro lugar
+    const foundWork = works.find((w) => w.id === id);
+    if (foundWork) {
+      setWork(foundWork);
+      setFormData({
+        clientName: foundWork.clientName,
+        address: foundWork.address,
+        contact: foundWork.contact,
+        entryTime: format(new Date(foundWork.entryTime), "yyyy-MM-dd'T'HH:mm"),
+        exitTime: foundWork.exitTime
+          ? format(new Date(foundWork.exitTime), "yyyy-MM-dd'T'HH:mm")
+          : "",
+        status: foundWork.status,
+        observations: foundWork.observations,
+        workPerformed: foundWork.workPerformed,
+        workSheetCompleted: foundWork.workSheetCompleted || false,
+      });
+      setVehicles(foundWork.vehicles);
+      setTechnicians(foundWork.technicians);
+    } else {
+      // Fallback para localStorage se não encontrar no Firebase
+      const storedWorks = localStorage.getItem("leirisonda_works");
+      if (storedWorks) {
+        const localWorks: Work[] = JSON.parse(storedWorks);
+        const localWork = localWorks.find((w) => w.id === id);
+        if (localWork) {
+          setWork(localWork);
+          setFormData({
+            clientName: localWork.clientName,
+            address: localWork.address,
+            contact: localWork.contact,
+            entryTime: format(
+              new Date(localWork.entryTime),
+              "yyyy-MM-dd'T'HH:mm",
+            ),
+            exitTime: localWork.exitTime
+              ? format(new Date(localWork.exitTime), "yyyy-MM-dd'T'HH:mm")
+              : "",
+            status: localWork.status,
+            observations: localWork.observations,
+            workPerformed: localWork.workPerformed,
+            workSheetCompleted: localWork.workSheetCompleted || false,
+          });
+          setVehicles(localWork.vehicles);
+          setTechnicians(localWork.technicians);
+        }
       }
     }
     setLoading(false);
@@ -149,13 +177,12 @@ export function EditWork() {
         updatedAt: new Date().toISOString(),
       };
 
-      // Save to localStorage
-      const storedWorks = localStorage.getItem("leirisonda_works");
-      const works: Work[] = storedWorks ? JSON.parse(storedWorks) : [];
-      const updatedWorks = works.map((w) =>
-        w.id === work.id ? updatedWork : w,
+      // Use Firebase sync to update work with automatic sync
+      await updateWork(work.id, updatedWork);
+      console.log(
+        "✅ Obra atualizada e sincronizada automaticamente:",
+        work.id,
       );
-      localStorage.setItem("leirisonda_works", JSON.stringify(updatedWorks));
 
       // Navigate back to work detail
       navigate(`/works/${work.id}`);
