@@ -14,6 +14,8 @@ import {
   Flag,
   Camera,
   AlertCircle,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import { Work, CreateWorkData } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,7 @@ import {
 } from "@/components/ui/select";
 import { PhotoUpload } from "@/components/PhotoUpload";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 const workTypes = [
   { value: "piscina", label: "Piscina" },
@@ -45,6 +48,7 @@ const statusOptions = [
 
 export function CreateWork() {
   const navigate = useNavigate();
+  const { createWork, isOnline, isSyncing } = useFirebaseSync();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -111,9 +115,8 @@ export function CreateWork() {
     }
 
     try {
-      // Create new work
-      const newWork: Work = {
-        id: Date.now().toString(),
+      // Prepare work data
+      const workData = {
         workSheetNumber: formData.workSheetNumber,
         type: formData.type,
         clientName: formData.clientName.trim(),
@@ -137,19 +140,16 @@ export function CreateWork() {
         observations: formData.observations.trim(),
         workPerformed: formData.workPerformed.trim(),
         workSheetCompleted: formData.workSheetCompleted,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       };
 
-      // Save to localStorage
-      const storedWorks = localStorage.getItem("leirisonda_works");
-      const works: Work[] = storedWorks ? JSON.parse(storedWorks) : [];
-      works.push(newWork);
-      localStorage.setItem("leirisonda_works", JSON.stringify(works));
+      // Create work using Firebase sync
+      const workId = await createWork(workData);
+      console.log("✅ Obra criada com sucesso:", workId);
 
-      // Navigate to the new work detail page
-      navigate(`/works/${newWork.id}`);
+      // Navigate to works list
+      navigate("/works");
     } catch (err) {
+      console.error("❌ Erro ao criar obra:", err);
       setError("Erro ao criar a obra. Tente novamente.");
       setIsSubmitting(false);
     }
@@ -208,13 +208,42 @@ export function CreateWork() {
             className="w-full h-full object-contain"
           />
         </div>
-        <div>
+        <div className="flex-1">
           <h1 className="text-3xl font-bold text-gray-900">Nova Obra</h1>
           <p className="mt-1 text-gray-600">
             Criar uma nova obra no sistema Leirisonda
           </p>
         </div>
+
+        {/* Connection Status */}
+        <div className="flex items-center space-x-2">
+          {isOnline ? (
+            <>
+              <Wifi className="w-4 h-4 text-green-600" />
+              <span className="text-sm text-green-600">Online</span>
+              {isSyncing && (
+                <span className="text-xs text-gray-500">Sincronizando...</span>
+              )}
+            </>
+          ) : (
+            <>
+              <WifiOff className="w-4 h-4 text-orange-600" />
+              <span className="text-sm text-orange-600">Offline</span>
+            </>
+          )}
+        </div>
       </div>
+
+      {/* Offline Warning */}
+      {!isOnline && (
+        <Alert className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Está no modo offline. Os dados serão guardados localmente e
+            sincronizados quando a ligação for restabelecida.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Form */}
       <div className="max-w-4xl">

@@ -10,6 +10,9 @@ import {
   Mail,
   Droplets,
   Camera,
+  Wifi,
+  WifiOff,
+  AlertCircle,
 } from "lucide-react";
 import { PoolMaintenance } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -25,9 +28,11 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PoolPhotoUpload } from "@/components/PoolPhotoUpload";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function CreateMaintenance() {
   const navigate = useNavigate();
+  const { createMaintenance, isOnline, isSyncing } = useFirebaseSync();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -79,8 +84,8 @@ export function CreateMaintenance() {
         uploadedAt: photo.uploadedAt,
       }));
 
-      const newMaintenance: PoolMaintenance = {
-        id: crypto.randomUUID(),
+      // Prepare maintenance data
+      const maintenanceData = {
         poolName: formData.poolName.trim(),
         location: formData.location.trim(),
         clientName: formData.clientName.trim(),
@@ -92,19 +97,11 @@ export function CreateMaintenance() {
         status: formData.status,
         photos: processedPhotos,
         observations: formData.observations.trim(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       };
 
-      // Save to localStorage
-      const existingMaintenances = JSON.parse(
-        localStorage.getItem("pool_maintenances") || "[]",
-      );
-      const updatedMaintenances = [...existingMaintenances, newMaintenance];
-      localStorage.setItem(
-        "pool_maintenances",
-        JSON.stringify(updatedMaintenances),
-      );
+      // Create maintenance using Firebase sync
+      const maintenanceId = await createMaintenance(maintenanceData);
+      console.log("✅ Manutenção criada com sucesso:", maintenanceId);
 
       navigate("/pool-maintenance");
     } catch (err) {
@@ -315,7 +312,7 @@ export function CreateMaintenance() {
 
         <div className="glass-card p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">
-            Observações Gerais
+            Observaç��es Gerais
           </h2>
 
           <Textarea
