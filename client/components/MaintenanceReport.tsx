@@ -460,10 +460,465 @@ Relatório gerado em: ${reportDate}
 
     .maintenance-content .content-text {
       white-space: pre-wrap;
-      font-size: 15px;
-      line-height: 1.7;
+      font-size: 14px;
+      line-height: 1.6;
       color: #2d3748;
       font-weight: 400;
+    }
+
+    /* Enhanced Section Styling */
+    .section {
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      page-break-inside: avoid;
+    }
+
+    .section-header {
+      background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2d3748;
+      margin: 0;
+    }
+
+    .section-content {
+      padding: 16px;
+    }
+
+    /* Data Item Styling */
+    .data-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid #f7fafc;
+    }
+
+    .data-item:last-child {
+      border-bottom: none;
+    }
+
+    .data-item .label {
+      font-weight: 500;
+      color: #4a5568;
+      flex: 0 0 40%;
+    }
+
+    .data-item .value {
+      font-weight: 600;
+      color: #1a202c;
+      flex: 1;
+      text-align: right;
+    }
+
+    /* Grid Layouts */
+    .info-grid, .pool-info-grid, .client-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .pool-detail, .client-detail {
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 3px solid #3182ce;
+    }
+
+    .pool-detail .label, .client-detail .label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #3182ce;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .pool-detail .value, .client-detail .value {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a202c;
+    }
+
+    /* Water Analysis Grid */
+    .water-analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .water-param {
+      background: linear-gradient(135deg, #ebf8ff 0%, #ffffff 100%);
+      border: 1px solid #3182ce;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .param-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #3182ce;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .param-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 4px;
+    }
+
+    .param-range {
+      font-size: 10px;
+      color: #718096;
+      font-style: italic;
+    }
+
+    /* Water Quality Status */
+    .water-quality-summary {
+      background: #f7fafc;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+
+    .quality-excellent {
+      background: #f0fff4;
+      border: 1px solid #9ae6b4;
+      color: #276749;
+    }
+
+    .quality-acceptable {
+      background: #fffbeb;
+      border: 1px solid #fbd38d;
+      color: #b45309;
+    }
+
+    .quality-poor {
+      background: #fed7d7;
+      border: 1px solid #fc8181;
+      color: #c53030;
+    }
+
+    /* Statistics Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-item {
+      background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      border-left: 4px solid #3182ce;
+    }
+
+    .stat-number {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #718096;
+      font-weight: 500;
+    }
+
+    /* Work Grid */
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .work-item {
+      display: flex;
+      align-items: center;
+      background: #f0fff4;
+      border: 1px solid #9ae6b4;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .work-item.completed .work-icon {
+      color: #38a169;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .work-text {
+      color: #276749;
+      font-weight: 500;
+    }
+
+    .additional-work {
+      background: #ebf8ff;
+      border: 1px solid #90cdf4;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 12px;
+      color: #2b6cb0;
+      margin-top: 8px;
+    }
+
+    /* Problem Cards */
+    .problem-card {
+      background: #fff5f5;
+      border: 1px solid #feb2b2;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .problem-card.resolved {
+      background: #f0fff4;
+      border-color: #9ae6b4;
+    }
+
+    .problem-card.pending {
+      background: #fffbeb;
+      border-color: #fbd38d;
+    }
+
+    .problem-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .problem-header h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a202c;
+      margin: 0;
+      flex: 1;
+    }
+
+    .severity-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .severity-high {
+      background: #fed7d7;
+      color: #c53030;
+    }
+
+    .severity-medium {
+      background: #fbd38d;
+      color: #b45309;
+    }
+
+    .severity-low {
+      background: #c6f6d5;
+      color: #276749;
+    }
+
+    .status-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .status-badge.resolved {
+      background: #c6f6d5;
+      color: #276749;
+    }
+
+    .status-badge.pending {
+      background: #fbd38d;
+      color: #b45309;
+    }
+
+    .solution-text {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #4a5568;
+      font-style: italic;
+    }
+
+    /* Photos Grid */
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .photo-item {
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+      page-break-inside: avoid;
+    }
+
+    .photo-container {
+      width: 100%;
+      height: 80px;
+      overflow: hidden;
+      background: #edf2f7;
+    }
+
+    .photo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-info {
+      padding: 6px;
+    }
+
+    .photo-description {
+      font-size: 10px;
+      font-weight: 500;
+      color: #2d3748;
+      margin-bottom: 2px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .photo-category {
+      font-size: 9px;
+      color: #3182ce;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .photo-date {
+      font-size: 9px;
+      color: #718096;
+      margin-top: 2px;
+    }
+
+    .photos-summary {
+      font-size: 11px;
+      color: #4a5568;
+      text-align: center;
+      padding: 8px;
+      background: #f7fafc;
+      border-radius: 4px;
+    }
+
+    /* Enhanced Table Styling */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
+    .data-table th {
+      background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+      color: white;
+      padding: 6px 4px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 10px;
+    }
+
+    .data-table td {
+      padding: 5px 4px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 11px;
+    }
+
+    .data-table tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .data-table tr:hover {
+      background: #ebf8ff;
+    }
+
+    .table-note {
+      font-size: 10px;
+      color: #718096;
+      text-align: center;
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* Status Classes */
+    .status-active {
+      color: #276749;
+      font-weight: 600;
+    }
+
+    .status-inactive {
+      color: #b45309;
+      font-weight: 600;
+    }
+
+    .status-good {
+      color: #276749;
+    }
+
+    .status-warning {
+      color: #b45309;
+    }
+
+    /* Observations Box */
+    .observations-box {
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #2d3748;
+    }
+
+    /* Summary Boxes */
+    .last-intervention-summary, .next-maintenance-box {
+      background: #ebf8ff;
+      border: 1px solid #90cdf4;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 12px;
+      color: #2b6cb0;
+      margin-top: 12px;
+    }
+
+    .next-date {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .next-info {
+      font-size: 11px;
+      color: #4a5568;
+      font-style: italic;
     }
 
     .footer {
