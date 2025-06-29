@@ -185,7 +185,7 @@ export class DefaultDataService {
               ],
               workPerformed: {
                 filtros: true,
-                preFiltero: true,
+                preFiltro: true,
                 filtroAreiaVidro: false,
                 alimenta: true,
                 enchimentoAutomatico: false,
