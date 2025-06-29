@@ -94,6 +94,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const createGlobalUsersInFirebase = async () => {
+    // Only try to create users if Firestore is available
+    if (!db) {
+      console.log("📱 Firestore not available - skipping global user creation");
+      return;
+    }
+
     const globalUsers = [
       {
         email: "gongonsilva@gmail.com",
