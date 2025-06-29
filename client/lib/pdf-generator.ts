@@ -57,12 +57,21 @@ export class PDFGenerator {
     let tempContainer: HTMLElement | null = null;
 
     try {
+      // Clear any cached styles to force refresh
+      const cacheBuster = Date.now();
+      console.log(`🔄 Iniciando geração PDF (${cacheBuster})`);
+
       // Detect mobile device for optimized settings
       const isMobile = this.isMobileDevice();
 
       // Create container preserving custom styles
       tempContainer = document.createElement("div");
-      tempContainer.innerHTML = htmlContent;
+      // Add cache buster to force content refresh
+      const enhancedContent = htmlContent.replace(
+        /(<style[^>]*>)/g,
+        `$1/* Cache-Buster: ${cacheBuster} */`,
+      );
+      tempContainer.innerHTML = enhancedContent;
       tempContainer.style.position = "absolute";
       tempContainer.style.left = "-9999px";
       tempContainer.style.top = "-9999px";
