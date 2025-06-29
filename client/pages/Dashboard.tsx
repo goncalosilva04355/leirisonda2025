@@ -57,7 +57,7 @@ export function Dashboard() {
 
   useEffect(() => {
     loadDashboardData();
-  }, []);
+  }, [works, maintenances]); // React to Firebase data changes
 
   useEffect(() => {
     if (searchTerm.trim()) {
