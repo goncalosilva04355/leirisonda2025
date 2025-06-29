@@ -47,7 +47,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
   const handleGoBack = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    navigate(-1);
+    navigate("/");
   };
 
   return (
