@@ -5,7 +5,17 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  User as FirebaseUser,
+} from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { User, AuthContextType, UserPermissions } from "@shared/types";
+import { auth, db } from "@/lib/firebase";
+import { firebaseService } from "@/services/FirebaseService";
 import { dataSyncService } from "@/services/DataSync";
 import "@/services/DefaultData"; // Initialize default data
 
