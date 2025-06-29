@@ -11,6 +11,17 @@ export function useFirebaseSync() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSync, setLastSync] = useState<Date | null>(null);
+  const [isFirebaseAvailable] = useState(() => {
+    // Check if Firebase is properly initialized
+    try {
+      return (
+        window.firebase !== undefined ||
+        (typeof db !== "undefined" && db !== null)
+      );
+    } catch {
+      return false;
+    }
+  });
 
   // Monitor online status
   useEffect(() => {
