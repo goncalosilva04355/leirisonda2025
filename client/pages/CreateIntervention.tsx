@@ -59,7 +59,6 @@ export function CreateIntervention() {
       filtros: false,
       preFiltro: false,
       filtroAreiaVidro: false,
-      alimenta: false,
       enchimentoAutomatico: false,
       linhaAgua: false,
       limpezaFundo: false,

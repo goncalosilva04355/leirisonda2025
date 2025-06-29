@@ -116,7 +116,6 @@ export interface MaintenanceIntervention {
     filtros: boolean;
     preFiltro: boolean;
     filtroAreiaVidro: boolean;
-    alimenta: boolean;
     enchimentoAutomatico: boolean;
     linhaAgua: boolean;
     limpezaFundo: boolean;

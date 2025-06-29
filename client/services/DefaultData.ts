@@ -187,7 +187,6 @@ export class DefaultDataService {
                 filtros: true,
                 preFiltro: true,
                 filtroAreiaVidro: false,
-                alimenta: true,
                 enchimentoAutomatico: false,
                 linhaAgua: true,
                 limpezaFundo: true,
