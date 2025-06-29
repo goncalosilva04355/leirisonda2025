@@ -75,7 +75,7 @@ export function NewMaintenanceSelector() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate("/pool-maintenance")}
+            onClick={() => navigate(-1)}
             className="p-2"
           >
             <ArrowLeft className="h-5 w-5" />
