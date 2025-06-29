@@ -122,7 +122,6 @@ export function useFirebaseSync() {
     const unsubscribeWorks = firebaseService.listenToWorks((updatedWorks) => {
       setWorks(updatedWorks);
       setLastSync(new Date());
-      console.log(`📋 Real-time: ${updatedWorks.length} works synced`);
     });
 
     // Listen to maintenances with instant updates
@@ -130,9 +129,6 @@ export function useFirebaseSync() {
       (updatedMaintenances) => {
         setMaintenances(updatedMaintenances);
         setLastSync(new Date());
-        console.log(
-          `🏊 Real-time: ${updatedMaintenances.length} maintenances synced`,
-        );
       },
     );
 
@@ -141,7 +137,6 @@ export function useFirebaseSync() {
     if (user.permissions.canViewUsers) {
       unsubscribeUsers = firebaseService.listenToUsers((updatedUsers) => {
         setUsers(updatedUsers);
-        console.log(`👥 Real-time: ${updatedUsers.length} users synced`);
       });
     }
 
