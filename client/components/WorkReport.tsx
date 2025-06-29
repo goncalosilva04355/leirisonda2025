@@ -202,24 +202,24 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
         </div>
       </div>
 
-      <!-- Client Information Card -->
-      <div class="pdf-card pdf-card-secondary">
-        <div class="pdf-card-header">
-          <h3 class="pdf-card-title">👤 Informações do Cliente</h3>
+      <!-- Client Information -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">👤 Informações do Cliente</div>
         </div>
-        <div class="pdf-card-content">
-          <div class="pdf-info-grid">
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Nome:</span>
-              <span class="pdf-info-value">${work.clientName}</span>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="label">Nome</div>
+              <div class="value">${work.clientName}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Contacto:</span>
-              <span class="pdf-info-value">${work.contact}</span>
+            <div class="info-card">
+              <div class="label">Contacto</div>
+              <div class="value">${work.contact}</div>
             </div>
-            <div class="pdf-info-item pdf-info-item-full">
-              <span class="pdf-info-label">Morada:</span>
-              <span class="pdf-info-value">${work.address}</span>
+            <div class="info-card">
+              <div class="label">Morada</div>
+              <div class="value">${work.address}</div>
             </div>
           </div>
         </div>
