@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import { Button } from "./ui/button";
-import { SyncManager } from "./SyncManager";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -143,11 +142,6 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                     </Link>
                   );
                 })}
-
-                {/* Sync Manager */}
-                <div className="px-4 py-2">
-                  <SyncManager />
-                </div>
               </>
             )}
           </nav>
