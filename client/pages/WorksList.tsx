@@ -88,16 +88,8 @@ export function WorksList() {
     setSearchParams(params);
   };
 
-  const loadWorks = () => {
-    const storedWorks = localStorage.getItem("leirisonda_works");
-    if (storedWorks) {
-      const worksData = JSON.parse(storedWorks);
-      setWorks(worksData);
-    }
-  };
-
   const filterWorks = () => {
-    let filtered = [...works];
+    let filtered = [...(works || [])];
 
     // Filter by search term
     if (searchTerm) {
