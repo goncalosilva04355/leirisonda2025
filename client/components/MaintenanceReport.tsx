@@ -1052,7 +1052,7 @@ Relatório gerado em: ${reportDate}
       </div>
 
       <div class="report-title">
-        <h2>Relatório de Manutenção de Piscina</h2>
+        <h2>Relat��rio de Manutenção de Piscina</h2>
         <div class="subtitle">${maintenance.poolName}</div>
         <div class="subtitle">Cliente: ${maintenance.clientName}</div>
         <div class="location">${maintenance.location}</div>
@@ -1346,7 +1346,53 @@ Relatório gerado em: ${reportDate}
           ? "quality-acceptable"
           : "quality-poor";
 
+    // Get ideal water values for comparison
+    const getIdealValues = () => {
+      return {
+        ph: "7.0 - 7.4",
+        chlorine: "1.0 - 2.5 ppm",
+        alkalinity: "80 - 120 ppm",
+        temperature: "24 - 28°C",
+        salt: "3.0 - 4.0 gr/lt",
+      };
+    };
+
+    const idealValues = getIdealValues();
+
+    // Create comprehensive content with all information
     return `
+      <!-- Pool Information Section -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">🏊‍♂️ Informações da Piscina</div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="data-item">
+              <span class="label">Nome:</span>
+              <span class="value">${maintenance.poolName}</span>
+            </div>
+            <div class="data-item">
+              <span class="label">Cliente:</span>
+              <span class="value">${maintenance.clientName}</span>
+            </div>
+            <div class="data-item">
+              <span class="label">Morada:</span>
+              <span class="value">${maintenance.address}</span>
+            </div>
+            <div class="data-item">
+              <span class="label">Tipo:</span>
+              <span class="value">${getPoolTypeLabel(maintenance.poolType)}</span>
+            </div>
+            <div class="data-item">
+              <span class="label">Estado:</span>
+              <span class="value">${maintenance.status === "ativa" ? "Ativa" : "Inativa"}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Intervention Details Section -->
       <div class="section">
         <div class="section-header">
           <div class="section-title">📅 Informações da Intervenção</div>
@@ -1640,7 +1686,7 @@ Relatório gerado em: ${reportDate}
                 <strong>Data Recomendada:</strong> ${format(new Date(intervention.nextMaintenanceDate), "dd/MM/yyyy", { locale: pt })}
               </div>
               <div class="next-info">
-                A próxima manutenção foi programada baseada nas condições atuais da piscina e nos resultados desta intervenção.
+                A próxima manutenção foi programada baseada nas condiç��es atuais da piscina e nos resultados desta intervenção.
               </div>
             </div>
           </div>
