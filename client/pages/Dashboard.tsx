@@ -29,6 +29,8 @@ import { pt } from "date-fns/locale";
 export function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { works, maintenances, isOnline, isSyncing, lastSync } =
+    useFirebaseSync();
   const [stats, setStats] = useState<DashboardStats>({
     totalWorks: 0,
     pendingWorks: 0,
