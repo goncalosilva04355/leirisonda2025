@@ -523,6 +523,18 @@ export function MaintenanceReport({
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
     );
 
+    // Helper function for water quality color
+    const getWaterQualityColor = (waterValues: any) => {
+      const ph = waterValues.ph;
+      const chlorine = waterValues.chlorine;
+      if (ph >= 7.0 && ph <= 7.4 && chlorine >= 1.0 && chlorine <= 2.5) {
+        return "success";
+      } else if (ph >= 6.8 && ph <= 7.6 && chlorine >= 0.8 && chlorine <= 3.0) {
+        return "warning";
+      }
+      return "danger";
+    };
+
     // Calculate statistics
     const totalInterventions = sortedInterventions.length;
     const last30Days = sortedInterventions.filter(
@@ -614,7 +626,7 @@ export function MaintenanceReport({
       <!-- Statistics Section -->
       <div class="section">
         <div class="section-header">
-          <div class="section-title">��� Estatísticas Gerais</div>
+          <div class="section-title">📊 Estatísticas Gerais</div>
         </div>
         <div class="section-content">
           <div class="summary-grid">
