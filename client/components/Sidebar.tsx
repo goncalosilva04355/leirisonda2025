@@ -117,6 +117,16 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2">
+            {/* Back button for desktop */}
+            <button
+              onClick={handleGoBack}
+              className="nav-item-leirisonda mb-4"
+              title="Voltar à página anterior"
+            >
+              <ArrowLeft className="mr-3 h-5 w-5" />
+              Voltar
+            </button>
+
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive =
