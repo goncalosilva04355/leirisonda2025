@@ -606,19 +606,23 @@ export class PDFGenerator {
                   <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Leirisonda Logo" />
                 </div>
                 <div class="company-info">
-                  <h1>Leirisonda</h1>
-                  <div class="tagline">Gestão de Obras e Manutenção</div>
+                  <h1>🏗️ LEIRISONDA - NOVO DESIGN</h1>
+                  <div class="tagline">Gestão Avançada de Obras e Manutenção 2025</div>
                 </div>
               </div>
               <div class="header-meta">
-                <div><strong>Data:</strong> ${reportDate}</div>
-                <div><strong>REL:</strong> ${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}</div>
+                <div><strong>📅 Data:</strong> ${reportDate}</div>
+                <div><strong>🔢 REL:</strong> ${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}</div>
+                <div><strong>⏰ Gerado:</strong> ${new Date().toLocaleTimeString("pt-PT")}</div>
               </div>
             </div>
 
             <div class="report-title">
-              <h2>${data.title}</h2>
-              ${data.subtitle ? `<div class="subtitle">${data.subtitle}</div>` : ""}
+              <h2>📋 ${data.title} - VERSÃO ATUALIZADA</h2>
+              ${data.subtitle ? `<div class="subtitle">✨ ${data.subtitle}</div>` : ""}
+              <div class="update-info" style="font-size: 14px; margin-top: 10px; opacity: 0.9;">
+                🆕 Relatório completamente atualizado em ${new Date().toLocaleString("pt-PT")}
+              </div>
             </div>
           </div>
 
