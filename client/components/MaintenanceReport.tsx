@@ -369,6 +369,41 @@ export function MaintenanceReport({
       </div>`
           : ""
       }
+
+      <!-- Comprehensive Summary -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">📊 Resumo Completo da Intervenção</div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="label">Status da Água</div>
+              <div class="value">${getWaterQualityStatus(intervention.waterValues).label}</div>
+            </div>
+            <div class="info-card">
+              <div class="label">Trabalhos Realizados</div>
+              <div class="value">${Object.values(intervention.workPerformed).filter((v) => v).length} tarefas</div>
+            </div>
+            <div class="info-card">
+              <div class="label">Produtos Aplicados</div>
+              <div class="value">${intervention.chemicalProducts ? intervention.chemicalProducts.length : 0} produtos</div>
+            </div>
+            <div class="info-card">
+              <div class="label">Fotos Registadas</div>
+              <div class="value">${intervention.photos ? intervention.photos.length : 0} fotos</div>
+            </div>
+            <div class="info-card">
+              <div class="label">Relatório Gerado</div>
+              <div class="value">${format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: pt })}</div>
+            </div>
+            <div class="info-card">
+              <div class="label">Versão do Relatório</div>
+              <div class="value">v${format(new Date(), "yyyyMMdd.HHmm", { locale: pt })}</div>
+            </div>
+          </div>
+        </div>
+      </div>
     `;
   };
 
