@@ -23,5 +23,3 @@ export const auth = getAuth(app);
 console.log("🔥 Firebase Leirisonda initialized successfully");
 
 export default app;
-
-export default app;
