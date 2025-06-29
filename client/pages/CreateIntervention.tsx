@@ -92,7 +92,7 @@ export function CreateIntervention() {
         timeEnd: format(endTime, "HH:mm"),
       }));
     }
-  }, [maintenanceId]);
+  }, [maintenanceId, maintenances]); // React to changes in maintenances data
 
   const loadMaintenance = () => {
     try {
