@@ -1,0 +1,27 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo com cores da Leirisonda -->
+  <rect width="180" height="180" rx="40" fill="#b30229"/>
+  
+  <!-- Logo da Leirisonda -->
+  <circle cx="90" cy="90" r="65" fill="#007784"/>
+  
+  <!-- Símbolo de construção/obra */
+  <rect x="55" y="75" width="70" height="8" fill="white" rx="2"/>
+  <rect x="55" y="90" width="70" height="8" fill="white" rx="2"/>
+  <rect x="55" y="105" width="70" height="8" fill="white" rx="2"/>
+  
+  <!-- Ferramentas */
+  <rect x="70" y="45" width="10" height="35" fill="white" rx="2"/>
+  <rect x="100" y="45" width="10" height="35" fill="white" rx="2"/>
+  
+  <!-- Base/fundação */
+  <rect x="45" y="125" width="90" height="18" fill="white" rx="4"/>
+  
+  <!-- Detalhes decorativos */
+  <circle cx="60" cy="60" r="5" fill="white" opacity="0.9"/>
+  <circle cx="120" cy="60" r="5" fill="white" opacity="0.9"/>
+  <circle cx="90" cy="35" r="4" fill="white" opacity="0.7"/>
+  
+  <!-- Texto "L" estilizado no centro -->
+  <text x="90" y="100" text-anchor="middle" dominant-baseline="middle" fill="white" font-family="Arial, sans-serif" font-size="40" font-weight="bold">L</text>
+</svg>
