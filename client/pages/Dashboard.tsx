@@ -471,9 +471,6 @@ export function Dashboard() {
             </div>
           </div>
 
-          {/* Firebase Status */}
-          <FirebaseStatus />
-
           {/* Search Works */}
           <div className="card-leirisonda">
             <div className="flex items-center space-x-3 mb-6">
