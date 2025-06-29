@@ -769,7 +769,7 @@ export function MaintenanceReport({
                 </h4>
                 <div style="font-size: 11px; color: #666; margin-bottom: 10px;">
                   ⏰ ${intervention.timeStart} - ${intervention.timeEnd} (${calculateDuration(intervention.timeStart, intervention.timeEnd)}) |
-                  👥 ${intervention.technicians.join(", ")}
+                  ���� ${intervention.technicians.join(", ")}
                 </div>
               </div>
 
@@ -946,6 +946,20 @@ export function MaintenanceReport({
             .summary-label { font-size: 10px; color: #666; margin-bottom: 5px; }
             .summary-value { font-size: 14px; font-weight: bold; }
             .observations-content { padding: 10px; background: #fffdf7; border-left: 4px solid #f59e0b; border-radius: 4px; font-size: 11px; line-height: 1.5; }
+            .additional-stats { margin-top: 15px; padding: 10px; background: #f0fff4; border-radius: 6px; font-size: 11px; }
+            .problems-list { margin: 15px 0; }
+            .problem-item { margin-bottom: 15px; padding: 12px; background: #fef2f2; border-left: 4px solid #ef4444; border-radius: 6px; }
+            .problem-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+            .problem-status { font-size: 10px; color: #ef4444; font-weight: bold; }
+            .problem-date { font-size: 10px; color: #666; }
+            .problem-description { font-size: 11px; color: #374151; margin-bottom: 5px; }
+            .problem-priority { font-size: 10px; color: #f59e0b; font-weight: bold; }
+            .intervention-card { page-break-inside: avoid; }
+            .intervention-header { border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 10px; }
+            @media print {
+              .intervention-card { break-inside: avoid; }
+              .section { break-inside: avoid; }
+            }
           </style>
         `,
         additionalInfo: pdfData.additionalInfo,
