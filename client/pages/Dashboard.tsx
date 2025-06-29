@@ -211,23 +211,7 @@ export function Dashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-        <div
-          className="stat-card-leirisonda stat-card-primary hover-leirisonda"
-          onClick={() => navigateToWorks()}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <FileText className="w-6 h-6 text-blue-600" />
-            <span className="text-2xl lg:text-3xl font-bold text-gray-900">
-              {stats.totalWorks}
-            </span>
-          </div>
-          <h3 className="text-sm font-semibold text-gray-900 mb-1">
-            Total de Obras
-          </h3>
-          <p className="text-xs text-gray-600">Todas registadas</p>
-        </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
           className="stat-card-leirisonda stat-card-danger hover-leirisonda"
           onClick={() => navigateToWorks("pendente")}
