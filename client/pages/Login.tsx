@@ -55,97 +55,12 @@ export function Login() {
           <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-8 text-white text-center relative">
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="relative z-10">
-              <div className="mx-auto w-28 h-28 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-xl p-2">
-                <svg
-                  width="96"
-                  height="96"
-                  viewBox="0 0 180 180"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-24 h-24"
-                >
-                  {/* Fundo com cores da Leirisonda */}
-                  <rect width="180" height="180" rx="40" fill="#b30229" />
-
-                  {/* Logo principal da Leirisonda */}
-                  <circle cx="90" cy="90" r="65" fill="#007784" />
-
-                  {/* Letra "L" estilizada da Leirisonda */}
-                  <rect
-                    x="65"
-                    y="55"
-                    width="12"
-                    height="70"
-                    fill="white"
-                    rx="3"
-                  />
-                  <rect
-                    x="65"
-                    y="113"
-                    width="40"
-                    height="12"
-                    fill="white"
-                    rx="3"
-                  />
-
-                  {/* Elementos de construção/obra */}
-                  <rect
-                    x="85"
-                    y="65"
-                    width="25"
-                    height="6"
-                    fill="white"
-                    opacity="0.9"
-                    rx="2"
-                  />
-                  <rect
-                    x="85"
-                    y="78"
-                    width="25"
-                    height="6"
-                    fill="white"
-                    opacity="0.7"
-                    rx="2"
-                  />
-                  <rect
-                    x="85"
-                    y="91"
-                    width="25"
-                    height="6"
-                    fill="white"
-                    opacity="0.5"
-                    rx="2"
-                  />
-
-                  {/* Ferramentas/detalhes decorativos */}
-                  <circle cx="115" cy="70" r="4" fill="white" opacity="0.8" />
-                  <circle cx="120" cy="85" r="3" fill="white" opacity="0.6" />
-                  <rect
-                    x="115"
-                    y="100"
-                    width="12"
-                    height="4"
-                    fill="white"
-                    opacity="0.7"
-                    rx="1"
-                  />
-
-                  {/* Pontos decorativos no topo */}
-                  <circle cx="75" cy="40" r="2.5" fill="white" opacity="0.6" />
-                  <circle cx="105" cy="40" r="2.5" fill="white" opacity="0.6" />
-                  <circle cx="90" cy="30" r="3" fill="white" opacity="0.8" />
-
-                  {/* Base/fundação */}
-                  <rect
-                    x="50"
-                    y="140"
-                    width="80"
-                    height="8"
-                    fill="white"
-                    opacity="0.9"
-                    rx="2"
-                  />
-                </svg>
+              <div className="mx-auto w-32 h-32 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-xl p-4">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F47e8b5f7c13c4ff488dd5581a8039630?format=webp&width=800"
+                  alt="Leirisonda Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <h1 className="text-2xl font-bold mb-2">Leirisonda</h1>
               <p className="text-blue-100 opacity-90">
