@@ -106,7 +106,7 @@ export function NewMaintenanceSelector() {
                 <div>
                   <h3 className="font-semibold text-gray-900">Nova Piscina</h3>
                   <p className="text-sm text-gray-600">
-                    Registar nova piscina no sistema
+                    Registrar nova piscina no sistema
                   </p>
                 </div>
               </div>
