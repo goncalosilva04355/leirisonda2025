@@ -212,10 +212,6 @@ export function Dashboard() {
 
       {/* Firebase Sync Status */}
       <FirebaseStatus />
-                </div>
-              </div>
-            </div>
-          </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
             {user?.permissions?.canCreateWorks && (
