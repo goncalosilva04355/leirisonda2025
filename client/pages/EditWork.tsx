@@ -177,13 +177,12 @@ export function EditWork() {
         updatedAt: new Date().toISOString(),
       };
 
-      // Save to localStorage
-      const storedWorks = localStorage.getItem("leirisonda_works");
-      const works: Work[] = storedWorks ? JSON.parse(storedWorks) : [];
-      const updatedWorks = works.map((w) =>
-        w.id === work.id ? updatedWork : w,
+      // Use Firebase sync to update work with automatic sync
+      await updateWork(work.id, updatedWork);
+      console.log(
+        "✅ Obra atualizada e sincronizada automaticamente:",
+        work.id,
       );
-      localStorage.setItem("leirisonda_works", JSON.stringify(updatedWorks));
 
       // Navigate back to work detail
       navigate(`/works/${work.id}`);
