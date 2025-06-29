@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import { Button } from "./ui/button";
-import { SyncManager } from "./SyncManager";
 
 interface SidebarProps {
   isOpen: boolean;
