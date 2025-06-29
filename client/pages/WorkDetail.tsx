@@ -36,6 +36,7 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 export function WorkDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { works, deleteWork } = useFirebaseSync();
   const [work, setWork] = useState<Work | null>(null);
   const [loading, setLoading] = useState(true);
 
