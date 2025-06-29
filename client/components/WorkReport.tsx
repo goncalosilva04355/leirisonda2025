@@ -162,6 +162,68 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
           </div>
         </div>
       </div>
+
+      <!-- Enhanced Work Summary -->
+      <div class="pdf-card pdf-card-final-summary">
+        <div class="pdf-card-header">
+          <h3 class="pdf-card-title">📋 Resumo Final Detalhado</h3>
+        </div>
+        <div class="pdf-card-content">
+          <div class="pdf-summary-grid">
+            <div class="pdf-summary-item">
+              <div class="pdf-summary-icon">📅</div>
+              <div class="pdf-summary-details">
+                <div class="pdf-summary-label">Data de Criação</div>
+                <div class="pdf-summary-value">${format(new Date(work.createdAt), "dd/MM/yyyy", { locale: pt })}</div>
+              </div>
+            </div>
+            <div class="pdf-summary-item">
+              <div class="pdf-summary-icon">🏗️</div>
+              <div class="pdf-summary-details">
+                <div class="pdf-summary-label">Folha de Obra</div>
+                <div class="pdf-summary-value">${work.workSheetNumber}</div>
+              </div>
+            </div>
+            <div class="pdf-summary-item">
+              <div class="pdf-summary-icon">📊</div>
+              <div class="pdf-summary-details">
+                <div class="pdf-summary-label">Folha Concluída</div>
+                <div class="pdf-summary-value ${work.workSheetCompleted ? "text-green-600" : "text-red-600"}">${work.workSheetCompleted ? "✅ Sim" : "❌ Não"}</div>
+              </div>
+            </div>
+            <div class="pdf-summary-item">
+              <div class="pdf-summary-icon">📱</div>
+              <div class="pdf-summary-details">
+                <div class="pdf-summary-label">Contacto</div>
+                <div class="pdf-summary-value">${work.contact}</div>
+              </div>
+            </div>
+            <div class="pdf-summary-item">
+              <div class="pdf-summary-icon">📄</div>
+              <div class="pdf-summary-details">
+                <div class="pdf-summary-label">Relatório Gerado</div>
+                <div class="pdf-summary-value">${format(new Date(), "dd/MM/yyyy HH:mm", { locale: pt })}</div>
+              </div>
+            </div>
+            <div class="pdf-summary-item">
+              <div class="pdf-summary-icon">🔢</div>
+              <div class="pdf-summary-details">
+                <div class="pdf-summary-label">Versão</div>
+                <div class="pdf-summary-value">v${format(new Date(), "yyyyMMdd.HHmm", { locale: pt })}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Summary Info -->
+          <div style="margin-top: 20px; padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #dc2626;">
+            <h4 style="margin-bottom: 10px; color: #dc2626;">ℹ️ Informação Adicional</h4>
+            <p style="margin: 5px 0;"><strong>Morada:</strong> ${work.address}</p>
+            ${work.workPerformed ? `<p style="margin: 5px 0;"><strong>Trabalho realizado:</strong> Detalhado na secção anterior</p>` : '<p style="margin: 5px 0;"><strong>Trabalho realizado:</strong> Não especificado</p>'}
+            ${work.observations ? `<p style="margin: 5px 0;"><strong>Observações:</strong> Incluídas no relatório</p>` : '<p style="margin: 5px 0;"><strong>Observações:</strong> Nenhuma observação registada</p>'}
+            <p style="margin: 5px 0;"><strong>Fotos:</strong> ${work.photos ? work.photos.length : 0} fotos anexadas</p>
+          </div>
+        </div>
+      </div>
     `;
   };
 
@@ -237,7 +299,7 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
               <span class="pdf-info-value">${work.entryTime ? format(new Date(work.entryTime), "dd/MM/yyyy HH:mm", { locale: pt }) : "N/A"}</span>
             </div>
             <div class="pdf-info-item">
-              <span class="pdf-info-label">Sa��da:</span>
+              <span class="pdf-info-label">Saída:</span>
               <span class="pdf-info-value">${work.exitTime ? format(new Date(work.exitTime), "dd/MM/yyyy HH:mm", { locale: pt }) : "N/A"}</span>
             </div>
             <div class="pdf-info-item">
@@ -379,7 +441,7 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
       // Force fresh content generation
       const currentTimestamp = new Date().toISOString();
       console.log(
-        `���� Gerando relatório de obra atualizado em: ${currentTimestamp}`,
+        `🔨 Gerando relatório de obra atualizado em: ${currentTimestamp}`,
       );
 
       const content = createWorkContent();
