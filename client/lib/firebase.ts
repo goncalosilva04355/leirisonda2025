@@ -2,13 +2,14 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 
+// Configuração Firebase para desenvolvimento local
 const firebaseConfig = {
-  apiKey: "AIzaSyDDemo-FakeKey-ForLeirisondaApp",
-  authDomain: "leirisonda-obras.firebaseapp.com",
-  projectId: "leirisonda-obras",
-  storageBucket: "leirisonda-obras.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef123456",
+  apiKey: "demo-key",
+  authDomain: "demo-project.firebaseapp.com",
+  projectId: "demo-project",
+  storageBucket: "demo-project.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:demo",
 };
 
 // Initialize Firebase
