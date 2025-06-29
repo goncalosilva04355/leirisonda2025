@@ -183,18 +183,13 @@ export function useFirebaseSync() {
       maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
     ): Promise<string> => {
       try {
-        console.log("🏊 Creating maintenance with auto-sync...");
-
         // Create maintenance (FirebaseService handles Firebase/local automatically)
         const maintenanceId =
           await firebaseService.createMaintenance(maintenanceData);
 
-        // Auto-sync after creation (if Firebase available and online)
+        // Update sync timestamp
         if (isFirebaseAvailable && isOnline) {
           setLastSync(new Date());
-          console.log("✅ Maintenance created and auto-synced:", maintenanceId);
-        } else {
-          console.log("📱 Maintenance created locally:", maintenanceId);
         }
 
         return maintenanceId;
