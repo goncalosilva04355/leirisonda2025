@@ -142,11 +142,6 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                     </Link>
                   );
                 })}
-
-                {/* Sync Manager */}
-                <div className="px-4 py-2">
-                  <SyncManager />
-                </div>
               </>
             )}
           </nav>
