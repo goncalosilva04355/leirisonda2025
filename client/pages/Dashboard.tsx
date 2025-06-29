@@ -197,16 +197,21 @@ export function Dashboard() {
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4" />
-                  <span className="font-medium">
-                    {format(new Date(), "EEEE, dd 'de' MMMM", { locale: pt })}
-                  </span>
+                  <span>{format(new Date(), "EEEE, dd 'de' MMMM", { locale: pt })}</span>
                 </div>
-                <div className="hidden sm:flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                    <span>Online</span>
-                  </div>
-                  <SyncStatus />
+                <div className="w-px h-4 bg-gray-300"></div>
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-4 h-4" />
+                  <span>{format(new Date(), "HH:mm")}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Firebase Sync Status */}
+      <FirebaseStatus />
                 </div>
               </div>
             </div>
