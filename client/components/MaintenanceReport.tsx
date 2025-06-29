@@ -341,11 +341,11 @@ export function MaintenanceReport({
       </div>
 
       <!-- Intervention Details Card -->
-      <div class="pdf-card pdf-card-secondary">
-        <div class="pdf-card-header">
-          <h3 class="pdf-card-title">📋 Detalhes da Intervenção</h3>
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">📋 Detalhes da Intervenção</div>
         </div>
-        <div class="pdf-card-content">
+        <div class="section-content">
           <div class="pdf-info-grid">
             <div class="pdf-info-item">
               <span class="pdf-info-label">Data:</span>
