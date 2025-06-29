@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Home,
   Briefcase,
@@ -14,6 +14,7 @@ import {
   Activity,
   Building,
   Wrench,
+  ArrowLeft,
 } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import { Button } from "./ui/button";
@@ -36,10 +37,17 @@ const adminNavigation = [
 
 export function Sidebar({ isOpen, onToggle }: SidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleGoBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(-1);
   };
 
   return (
@@ -53,6 +61,25 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
           className="bg-white shadow-lg hover-leirisonda"
         >
           {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </Button>
+      </div>
+
+      {/* Back button - positioned below menu button */}
+      <div
+        className="lg:hidden fixed z-50"
+        style={{
+          top: "max(env(safe-area-inset-top, 16px) + 76px, 116px)",
+          left: "max(env(safe-area-inset-left, 16px) + 16px, 24px)",
+        }}
+      >
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleGoBack}
+          className="bg-white shadow-lg hover-leirisonda"
+          title="Voltar à página anterior"
+        >
+          <ArrowLeft className="h-5 w-5" />
         </Button>
       </div>
 
@@ -92,6 +119,16 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2">
+            {/* Back button for desktop */}
+            <button
+              onClick={handleGoBack}
+              className="nav-item-leirisonda mb-4"
+              title="Voltar à página anterior"
+            >
+              <ArrowLeft className="mr-3 h-5 w-5" />
+              Voltar
+            </button>
+
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive =

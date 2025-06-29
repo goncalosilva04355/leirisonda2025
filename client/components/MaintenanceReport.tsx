@@ -199,7 +199,7 @@ export function MaintenanceReport({
                 ? `
             <tr>
               <td class="table-label">Volume:</td>
-              <td class="table-value">${maintenance.waterCubicage} litros</td>
+              <td class="table-value">${maintenance.waterCubicage} m³</td>
             </tr>`
                 : ""
             }
@@ -615,7 +615,7 @@ export function MaintenanceReport({
                 ? `
             <tr>
               <td class="table-label">Volume:</td>
-              <td class="table-value">${maintenance.waterCubicage} litros</td>
+              <td class="table-value">${maintenance.waterCubicage} m³</td>
             </tr>`
                 : ""
             }
@@ -911,7 +911,7 @@ export function MaintenanceReport({
         date: intervention
           ? format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })
           : new Date().toLocaleDateString("pt-PT"),
-        additionalInfo: `Cliente: ${maintenance.clientName} • Tipo: ${getPoolTypeLabel(maintenance.poolType)} • Volume: ${maintenance.waterCubicage || "N/A"} litros`,
+        additionalInfo: `Cliente: ${maintenance.clientName} • Tipo: ${getPoolTypeLabel(maintenance.poolType)} • Volume: ${maintenance.waterCubicage || "N/A"} m³`,
       };
 
       const htmlContent = PDFGenerator.createModernReportHTML({

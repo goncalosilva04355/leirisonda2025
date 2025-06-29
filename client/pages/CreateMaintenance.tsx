@@ -241,7 +241,7 @@ export function CreateMaintenance() {
                 <Input
                   id="waterCubicage"
                   type="text"
-                  placeholder="Ex: 50m³ ou 50000L"
+                  placeholder="Ex: 50m³"
                   value={formData.waterCubicage}
                   onChange={(e) =>
                     handleInputChange("waterCubicage", e.target.value)

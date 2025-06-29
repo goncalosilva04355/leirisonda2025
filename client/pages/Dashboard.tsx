@@ -20,9 +20,7 @@ import {
 import { Work, DashboardStats } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
-import { SyncStatus } from "@/components/SyncStatus";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
-import { FirebaseStatus } from "@/components/FirebaseStatus";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
@@ -212,8 +210,6 @@ export function Dashboard() {
         </div>
       </div>
 
-      {/* Firebase Sync Status */}
-      <FirebaseStatus />
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         <div
@@ -465,13 +461,12 @@ export function Dashboard() {
 
             <div className="space-y-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Cliente, folha obra, morada..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="input-leirisonda pl-10 text-sm"
+                  className="input-leirisonda text-sm"
                 />
               </div>
 
