@@ -13,31 +13,15 @@ const firebaseConfig = {
   measurementId: "G-R9W43EHH2C",
 };
 
-let app: any = null;
-let db: any = null;
-let auth: any = null;
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
-// Inicializar Firebase apenas se em ambiente de produção com credenciais válidas
-const isValidConfig = firebaseConfig.apiKey !== "demo-key";
+// Initialize Firebase services
+export const db = getFirestore(app);
+export const auth = getAuth(app);
 
-if (isValidConfig) {
-  try {
-    // Initialize Firebase
-    app = initializeApp(firebaseConfig);
+console.log("🔥 Firebase Leirisonda initialized successfully");
 
-    // Initialize Firebase services
-    db = getFirestore(app);
-    auth = getAuth(app);
-
-    console.log("✅ Firebase initialized successfully");
-  } catch (error) {
-    console.warn("⚠️ Firebase initialization failed:", error);
-  }
-} else {
-  console.log("🔧 Firebase disabled - using local storage only");
-}
-
-// Export placeholder functions when Firebase is not available
-export { db, auth };
+export default app;
 
 export default app;
