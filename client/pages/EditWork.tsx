@@ -64,14 +64,14 @@ export function EditWork() {
 
   useEffect(() => {
     loadWork();
-  }, [id]);
+  }, [id, works]);
 
   const loadWork = () => {
-    const storedWorks = localStorage.getItem("leirisonda_works");
-    if (storedWorks && id) {
-      const works: Work[] = JSON.parse(storedWorks);
-      const foundWork = works.find((w) => w.id === id);
-      if (foundWork) {
+    if (!id) return;
+
+    // Use dados do Firebase sync em primeiro lugar
+    const foundWork = works.find((w) => w.id === id);
+    if (foundWork) {
         setWork(foundWork);
         setFormData({
           clientName: foundWork.clientName,
