@@ -32,6 +32,7 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function CreateMaintenance() {
   const navigate = useNavigate();
+  const { createMaintenance, isOnline, isSyncing } = useFirebaseSync();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -319,7 +320,7 @@ export function CreateMaintenance() {
 
         <div className="glass-card p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">
-            Observações Gerais
+            Observaç��es Gerais
           </h2>
 
           <Textarea
