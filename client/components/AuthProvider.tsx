@@ -166,6 +166,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     firebaseUser: FirebaseUser,
   ): Promise<User | null> => {
     try {
+      // Check if Firestore is available
+      if (!db) {
+        console.log("📱 Firestore not available - creating local user");
+        // Create a local user
+        const defaultUser: User = {
+          id: firebaseUser.uid,
+          email: firebaseUser.email || "",
+          name:
+            firebaseUser.displayName ||
+            firebaseUser.email?.split("@")[0] ||
+            "Utilizador",
+          role: "user",
+          permissions: defaultUserPermissions,
+          createdAt: new Date().toISOString(),
+        };
+        return defaultUser;
+      }
+
       const userRef = doc(db, "users", firebaseUser.email || firebaseUser.uid);
       const userSnap = await getDoc(userRef);
 
