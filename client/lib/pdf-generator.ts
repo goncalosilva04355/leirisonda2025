@@ -38,7 +38,7 @@ export class PDFGenerator {
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
-        height: Math.min(tempContainer.scrollHeight, 970), // Limit height for A4
+        height: tempContainer.scrollHeight, // Allow full content height
         width: tempContainer.scrollWidth,
       });
 
