@@ -32,7 +32,11 @@ export class FirebaseService {
   constructor() {
     // Check if Firebase is available
     try {
-      this.isFirebaseAvailable = db !== null && auth !== null && typeof db === 'object' && typeof auth === 'object';
+      this.isFirebaseAvailable =
+        db !== null &&
+        auth !== null &&
+        typeof db === "object" &&
+        typeof auth === "object";
       if (this.isFirebaseAvailable) {
         console.log("🔥 FirebaseService running with Firebase sync");
       } else {
@@ -49,34 +53,37 @@ export class FirebaseService {
     if (!this.isFirebaseAvailable || !db) {
       // Fallback to localStorage
       try {
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
         return users;
       } catch (error) {
-        console.error('Error fetching local users:', error);
+        console.error("Error fetching local users:", error);
         return [];
       }
     }
 
     try {
-      const usersRef = collection(db, 'users');
+      const usersRef = collection(db, "users");
       const snapshot = await getDocs(usersRef);
-      return snapshot.docs.map(doc => ({
+      return snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
+        createdAt:
+          doc.data().createdAt?.toDate?.()?.toISOString() ||
+          doc.data().createdAt,
       })) as User[];
     } catch (error) {
-      console.error('Error fetching users from Firebase, falling back to local:', error);
+      console.error(
+        "Error fetching users from Firebase, falling back to local:",
+        error,
+      );
       // Fallback to localStorage if Firebase fails
       try {
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
         return users;
       } catch (localError) {
-        console.error('Error fetching local users:', localError);
+        console.error("Error fetching local users:", localError);
         return [];
       }
-    }
-  }
     }
   }
 
