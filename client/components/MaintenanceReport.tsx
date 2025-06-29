@@ -1297,23 +1297,6 @@ Relatório gerado em: ${reportDate}
   const createInterventionContent = () => {
     if (!intervention) return "";
 
-    // Get all work performed labels
-    const workLabels = {
-      filtros: "Limpeza de Filtros",
-      preFiltero: "Pré-filtro",
-      filtroAreiaVidro: "Filtro Areia/Vidro",
-      enchimentoAutomatico: "Enchimento Automático",
-      linhaAgua: "Linha de Água",
-      limpezaFundo: "Limpeza do Fundo",
-      limpezaParedes: "Limpeza das Paredes",
-      limpezaSkimmers: "Limpeza dos Skimmers",
-      verificacaoEquipamentos: "Verificação de Equipamentos",
-      aspiracao: "Aspiração",
-      escovagem: "Escovagem",
-      limpezaFiltros: "Limpeza de Filtros",
-      tratamentoAlgas: "Tratamento de Algas",
-    };
-
     // Get water quality status with color coding
     const getWaterQualityColor = (waterValues: any) => {
       const ph = waterValues.ph;
