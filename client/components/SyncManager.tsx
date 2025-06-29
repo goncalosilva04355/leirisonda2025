@@ -63,7 +63,7 @@ export function SyncManager() {
         showNotification("success", "Sincronização concluída com sucesso!");
         setSyncStatus(dataSyncService.getSyncStatus());
       } else {
-        showNotification("error", "Erro na sincronização. Tenta novamente.");
+        showNotification("error", "Erro na sincronização. Tente novamente.");
       }
     } catch (error) {
       showNotification("error", "Erro na sincronização.");
