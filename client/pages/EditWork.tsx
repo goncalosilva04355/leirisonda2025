@@ -38,6 +38,7 @@ const statusOptions = [
 export function EditWork() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { works, updateWork, isOnline, isSyncing } = useFirebaseSync();
   const [work, setWork] = useState<Work | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
