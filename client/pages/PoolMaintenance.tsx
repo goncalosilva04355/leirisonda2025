@@ -331,7 +331,7 @@ export function PoolMaintenancePage() {
           </DialogTrigger>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Registar Nova Manutenção</DialogTitle>
+              <DialogTitle>Registrar Nova Manutenção</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-6">
