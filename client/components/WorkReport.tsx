@@ -178,25 +178,25 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
         </div>
         <div class="section-content">
           <div class="info-grid">
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Folha de Obra:</span>
-              <span class="pdf-info-value">${work.workSheetNumber}</span>
+            <div class="info-card">
+              <div class="label">Folha de Obra</div>
+              <div class="value">${work.workSheetNumber}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Tipo de Trabalho:</span>
-              <span class="pdf-info-value">${getTypeLabel(work.type)}</span>
+            <div class="info-card">
+              <div class="label">Tipo de Trabalho</div>
+              <div class="value">${getTypeLabel(work.type)}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Estado:</span>
-              <span class="pdf-info-value pdf-status-${work.status}">${statusInfo.label}</span>
+            <div class="info-card">
+              <div class="label">Estado</div>
+              <div class="value">${statusInfo.label}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Data de Criação:</span>
-              <span class="pdf-info-value">${format(new Date(work.createdAt), "dd/MM/yyyy", { locale: pt })}</span>
+            <div class="info-card">
+              <div class="label">Data de Criação</div>
+              <div class="value">${format(new Date(work.createdAt), "dd/MM/yyyy", { locale: pt })}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Folha Obra:</span>
-              <span class="pdf-info-value ${work.workSheetCompleted ? "pdf-status-completed" : "pdf-status-pending"}">${work.workSheetCompleted ? "✅ Concluída" : "❌ Pendente"}</span>
+            <div class="info-card">
+              <div class="label">Folha Obra</div>
+              <div class="value">${work.workSheetCompleted ? "✅ Concluída" : "❌ Pendente"}</div>
             </div>
           </div>
         </div>
