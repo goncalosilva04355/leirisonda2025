@@ -100,6 +100,7 @@ export interface MaintenanceIntervention {
   waterValues: {
     ph: number;
     salt: number;
+    orp: number;
     temperature: number;
     chlorine: number;
     bromine: number;
