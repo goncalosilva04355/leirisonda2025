@@ -53,10 +53,6 @@ export function WorksList() {
     searchParams.get("worksheet") || "all",
   );
 
-  useEffect(() => {
-    loadWorks();
-  }, []);
-
   // React to URL parameter changes
   useEffect(() => {
     const status = searchParams.get("status") || "all";
