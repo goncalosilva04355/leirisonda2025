@@ -160,7 +160,7 @@ Data recomendada: ${format(new Date(intervention.nextMaintenanceDate), "dd/MM/yy
     : ""
 }
 
-━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📞 CONTACTO
 Leirisonda - Manutenção de Piscinas
@@ -180,7 +180,7 @@ Relatório gerado em: ${reportDate}
       return `
 💧 RELATÓRIO GERAL DE MANUTENÇÃO - LEIRISONDA
 
-━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━��━━━━━━━━━━━━━━━━���━━━━━━━━━━━━━━━━━━━
 
 🏊 INFORMAÇÕES DA PISCINA
 
@@ -1766,7 +1766,7 @@ Relatório gerado em: ${reportDate}
 
       <div class="section">
         <div class="section-header">
-          <div class="section-title">📊 Estatísticas Detalhadas</div>
+          <div class="section-title">📊 Estatísticas Completas de Manutenção</div>
         </div>
         <div class="section-content">
           <div class="stats-grid">
@@ -1786,16 +1786,89 @@ Relatório gerado em: ${reportDate}
               <div class="stat-number">${totalPoolPhotos + totalInterventionPhotos}</div>
               <div class="stat-label">Total de Fotos</div>
             </div>
+            <div class="stat-item">
+              <div class="stat-number">${totalChemicalProducts}</div>
+              <div class="stat-label">Produtos Aplicados</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">${averageWorkTimeHours}h</div>
+              <div class="stat-label">Tempo Médio/Intervenção</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">${Math.round((totalWorkTime / (1000 * 60 * 60)) * 10) / 10}h</div>
+              <div class="stat-label">Tempo Total Trabalho</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">${waterTrends.filter((w) => w.quality.includes("Excelente")).length}</div>
+              <div class="stat-label">Análises Excelentes</div>
+            </div>
           </div>
+
+          ${
+            topTechnicians
+              ? `
+          <div class="info-grid">
+            <div class="data-item">
+              <span class="label">Técnicos Mais Ativos:</span>
+              <span class="value">${topTechnicians}</span>
+            </div>
+          </div>`
+              : ""
+          }
+
           ${
             lastIntervention
               ? `
           <div class="last-intervention-summary">
             <strong>Última Intervenção:</strong> ${format(new Date(lastIntervention.date), "dd/MM/yyyy", { locale: pt })}
+            (${lastIntervention.timeStart} - ${lastIntervention.timeEnd})
             <br>
             <strong>Técnicos:</strong> ${lastIntervention.technicians.join(", ")}
             <br>
             <strong>Estado da Água:</strong> ${getWaterQualityStatus(lastIntervention.waterValues)}
+            <br>
+            <strong>Produtos Utilizados:</strong> ${lastIntervention.chemicalProducts.length} produtos
+            <br>
+            <strong>Problemas:</strong> ${lastIntervention.problems.length} identificados, ${lastIntervention.problems.filter((p) => p.resolved).length} resolvidos
+          </div>`
+              : ""
+          }
+
+          ${
+            waterTrends.length > 0
+              ? `
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">📈 Tendência da Qualidade da Água (Últimas 5 Análises)</div>
+            </div>
+            <div class="section-content">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>pH</th>
+                    <th>Cloro (ppm)</th>
+                    <th>Avaliação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${waterTrends
+                    .map(
+                      (trend) => `
+                    <tr>
+                      <td>${trend.date}</td>
+                      <td>${trend.ph}</td>
+                      <td>${trend.chlorine}</td>
+                      <td class="status-${trend.quality.includes("Excelente") ? "good" : trend.quality.includes("Aceitável") ? "warning" : "danger"}">
+                        ${trend.quality}
+                      </td>
+                    </tr>
+                  `,
+                    )
+                    .join("")}
+                </tbody>
+              </table>
+            </div>
           </div>`
               : ""
           }
