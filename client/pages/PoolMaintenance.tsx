@@ -214,7 +214,7 @@ export function PoolMaintenancePage() {
 
       setIsDialogOpen(false);
     } catch (err) {
-      setError("Erro ao registar manutenção. Tente novamente.");
+      setError("Erro ao registrar manutenção. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
@@ -318,7 +318,7 @@ export function PoolMaintenancePage() {
             Manutenção de Piscinas
           </h1>
           <p className="mt-2 text-gray-600">
-            Registar e monitorizar valores da água
+            Registrar e monitorizar valores da água
           </p>
         </div>
 
@@ -331,7 +331,7 @@ export function PoolMaintenancePage() {
           </DialogTrigger>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Registar Nova Manutenção</DialogTitle>
+              <DialogTitle>Registrar Nova Manutenção</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -752,7 +752,7 @@ export function PoolMaintenancePage() {
               Nenhuma manutenção registada
             </h3>
             <p className="text-gray-600 mb-4">
-              Comece por registar a primeira manutenção de piscina.
+              Comece por registrar a primeira manutenção de piscina.
             </p>
           </div>
         ) : (

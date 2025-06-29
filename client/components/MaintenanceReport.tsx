@@ -302,12 +302,12 @@ export function MaintenanceReport({
             </tbody>
           </table>
           <div class="water-summary">
-            <strong>Avaliação Geral:</strong> 
+            <strong>Avaliação Geral:</strong>
             <span class="${waterQualityClass}">${getWaterQualityStatus(intervention.waterValues)}</span>
           </div>
         </div>
       </div>
-      
+
       <!-- Work Performed Section -->
       ${
         Object.values(intervention.workPerformed).some((v) => v)
@@ -350,7 +350,7 @@ export function MaintenanceReport({
             </div>`
                 : ""
             }
-            
+
             <!-- Sistemas da Piscina -->
             ${
               Object.entries(intervention.workPerformed).filter(
@@ -403,7 +403,7 @@ export function MaintenanceReport({
             </div>`
                 : ""
             }
-            
+
             ${
               intervention.workPerformed.outros
                 ? `
@@ -518,7 +518,64 @@ export function MaintenanceReport({
   const createMaintenanceContent = () => {
     const currentDate = new Date().toLocaleDateString("pt-PT");
 
+    // Sort interventions by date (most recent first)
+    const sortedInterventions = [...(maintenance.interventions || [])].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
+
+    // Helper function for water quality color
+    const getWaterQualityColor = (waterValues: any) => {
+      const ph = waterValues.ph;
+      const chlorine = waterValues.chlorine;
+      if (ph >= 7.0 && ph <= 7.4 && chlorine >= 1.0 && chlorine <= 2.5) {
+        return "success";
+      } else if (ph >= 6.8 && ph <= 7.6 && chlorine >= 0.8 && chlorine <= 3.0) {
+        return "warning";
+      }
+      return "danger";
+    };
+
+    // Calculate statistics
+    const totalInterventions = sortedInterventions.length;
+    const last30Days = sortedInterventions.filter(
+      (i) => new Date(i.date).getTime() > Date.now() - 30 * 24 * 60 * 60 * 1000,
+    ).length;
+
+    const pendingProblems = sortedInterventions
+      .flatMap((i) => i.problems || [])
+      .filter((p) => !p.resolved);
+
+    // Most active technicians
+    const technicianFrequency: Record<string, number> = {};
+    sortedInterventions.forEach((i) => {
+      i.technicians.forEach((tech) => {
+        technicianFrequency[tech] = (technicianFrequency[tech] || 0) + 1;
+      });
+    });
+    const mostActiveTechnician = Object.entries(technicianFrequency).sort(
+      ([, a], [, b]) => b - a,
+    )[0];
+
+    // Chemical products analysis
+    const allProducts = sortedInterventions.flatMap(
+      (i) => i.chemicalProducts || [],
+    );
+    const productFrequency: Record<string, number> = {};
+    allProducts.forEach((p) => {
+      productFrequency[p.productName] =
+        (productFrequency[p.productName] || 0) + 1;
+    });
+    const mostUsedProduct = Object.entries(productFrequency).sort(
+      ([, a], [, b]) => b - a,
+    )[0];
+
+    // Water quality trend (last 5 interventions with pH and chlorine data)
+    const waterQualityTrend = sortedInterventions
+      .filter((i) => i.waterValues.ph > 0 && i.waterValues.chlorine > 0)
+      .slice(0, 5);
+
     return `
+      <!-- Pool Information Section -->
       <div class="section">
         <div class="section-header">
           <div class="section-title">🏊‍♂️ Informações da Piscina</div>
@@ -532,6 +589,14 @@ export function MaintenanceReport({
             <tr>
               <td class="table-label">Cliente:</td>
               <td class="table-value">${maintenance.clientName}</td>
+            </tr>
+            <tr>
+              <td class="table-label">Contacto:</td>
+              <td class="table-value">${maintenance.clientPhone || "N/A"}</td>
+            </tr>
+            <tr>
+              <td class="table-label">Email:</td>
+              <td class="table-value">${maintenance.clientEmail || "N/A"}</td>
             </tr>
             <tr>
               <td class="table-label">Morada:</td>
@@ -558,6 +623,272 @@ export function MaintenanceReport({
         </div>
       </div>
 
+      <!-- Statistics Section -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">📊 Estatísticas Gerais</div>
+        </div>
+        <div class="section-content">
+          <div class="summary-grid">
+            <div class="summary-item">
+              <div class="summary-label">Total de Intervenções</div>
+              <div class="summary-value">${totalInterventions}</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Últimos 30 Dias</div>
+              <div class="summary-value">${last30Days}</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Problemas Pendentes</div>
+              <div class="summary-value ${pendingProblems.length > 0 ? "quality-poor" : "quality-excellent"}">${pendingProblems.length}</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Técnico Mais Ativo</div>
+              <div class="summary-value">${mostActiveTechnician ? mostActiveTechnician[0] : "N/A"}</div>
+            </div>
+          </div>
+          ${
+            mostUsedProduct
+              ? `
+          <div class="additional-stats">
+            <p><strong>Produto mais utilizado:</strong> ${mostUsedProduct[0]} (${mostUsedProduct[1]} vezes)</p>
+          </div>
+          `
+              : ""
+          }
+        </div>
+      </div>
+
+      <!-- Water Quality Trend -->
+      ${
+        waterQualityTrend.length > 0
+          ? `
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">🧪 Tendência da Qualidade da Água</div>
+        </div>
+        <div class="section-content">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>pH</th>
+                <th>Cloro</th>
+                <th>Temperatura</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${waterQualityTrend
+                .map((intervention) => {
+                  const qualityColor =
+                    getWaterQualityColor(intervention.waterValues) === "success"
+                      ? "quality-excellent"
+                      : getWaterQualityColor(intervention.waterValues) ===
+                          "warning"
+                        ? "quality-acceptable"
+                        : "quality-poor";
+                  const qualityLabel =
+                    getWaterQualityColor(intervention.waterValues) === "success"
+                      ? "✅ Excelente"
+                      : getWaterQualityColor(intervention.waterValues) ===
+                          "warning"
+                        ? "⚠️ Aceitável"
+                        : "❌ Ajustar";
+                  return `
+                <tr>
+                  <td>${format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })}</td>
+                  <td>${intervention.waterValues.ph || "N/A"}</td>
+                  <td>${intervention.waterValues.chlorine || "N/A"} ppm</td>
+                  <td>${intervention.waterValues.temperature || "N/A"}°C</td>
+                  <td class="${qualityColor}">${qualityLabel}</td>
+                </tr>
+                `;
+                })
+                .join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      `
+          : ""
+      }
+
+      <!-- Pending Problems -->
+      ${
+        pendingProblems.length > 0
+          ? `
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">⚠️ Problemas Pendentes</div>
+        </div>
+        <div class="section-content">
+          <div class="problems-list">
+            ${pendingProblems
+              .map((problem, index) => {
+                const relatedIntervention = sortedInterventions.find((i) =>
+                  i.problems?.some(
+                    (p) => p.description === problem.description,
+                  ),
+                );
+                return `
+              <div class="problem-item">
+                <div class="problem-header">
+                  <span class="problem-status">❌ Não Resolvido</span>
+                  <span class="problem-date">${relatedIntervention ? format(new Date(relatedIntervention.date), "dd/MM/yyyy", { locale: pt }) : "Data desconhecida"}</span>
+                </div>
+                <div class="problem-description">${problem.description}</div>
+                ${problem.priority ? `<div class="problem-priority">Prioridade: ${problem.priority}</div>` : ""}
+              </div>
+              `;
+              })
+              .join("")}
+          </div>
+        </div>
+      </div>
+      `
+          : ""
+      }
+
+      <!-- All Interventions Details -->
+      ${
+        sortedInterventions.length > 0
+          ? `
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">📅 Histórico Completo de Intervenções (${totalInterventions})</div>
+        </div>
+        <div class="section-content">
+          ${sortedInterventions
+            .map(
+              (intervention, index) => `
+            <div class="intervention-card" style="margin-bottom: 20px; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; ${index % 2 === 0 ? "background-color: #f8fafc;" : "background-color: white;"}">
+              <div class="intervention-header">
+                <h4 style="margin: 0 0 10px 0; color: #2d3748; font-size: 14px;">
+                  📅 Intervenção ${index + 1} - ${format(new Date(intervention.date), "dd 'de' MMMM 'de' yyyy", { locale: pt })}
+                </h4>
+                <div style="font-size: 11px; color: #666; margin-bottom: 10px;">
+                  ⏰ ${intervention.timeStart} - ${intervention.timeEnd} (${calculateDuration(intervention.timeStart, intervention.timeEnd)}) |
+                  ���� ${intervention.technicians.join(", ")}
+                </div>
+              </div>
+
+              <!-- Water Analysis for this intervention -->
+              <div class="intervention-water" style="margin: 10px 0;">
+                <strong style="font-size: 12px; color: #2d3748;">🧪 Análise da Água:</strong>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 5px;">
+                  ${intervention.waterValues.ph ? `<div style="font-size: 10px; text-align: center; padding: 5px; background: white; border-radius: 4px; border: 1px solid #e2e8f0;"><div>pH</div><div style="font-weight: bold;">${intervention.waterValues.ph}</div></div>` : ""}
+                  ${intervention.waterValues.chlorine ? `<div style="font-size: 10px; text-align: center; padding: 5px; background: white; border-radius: 4px; border: 1px solid #e2e8f0;"><div>Cloro</div><div style="font-weight: bold;">${intervention.waterValues.chlorine} ppm</div></div>` : ""}
+                  ${intervention.waterValues.temperature ? `<div style="font-size: 10px; text-align: center; padding: 5px; background: white; border-radius: 4px; border: 1px solid #e2e8f0;"><div>Temp.</div><div style="font-weight: bold;">${intervention.waterValues.temperature}°C</div></div>` : ""}
+                  ${intervention.waterValues.alkalinity ? `<div style="font-size: 10px; text-align: center; padding: 5px; background: white; border-radius: 4px; border: 1px solid #e2e8f0;"><div>Alcal.</div><div style="font-weight: bold;">${intervention.waterValues.alkalinity} ppm</div></div>` : ""}
+                </div>
+              </div>
+
+              <!-- Work performed for this intervention -->
+              ${
+                Object.values(intervention.workPerformed).some((v) => v)
+                  ? `
+              <div class="intervention-work" style="margin: 10px 0;">
+                <strong style="font-size: 12px; color: #2d3748;">🔧 Trabalho Realizado:</strong>
+                <div style="margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px;">
+                  ${Object.entries(intervention.workPerformed)
+                    .filter(([key, value]) => value && key !== "outros")
+                    .map(
+                      ([key]) =>
+                        `<span style="font-size: 9px; background: #10b981; color: white; padding: 2px 6px; border-radius: 12px;">✓ ${workLabels[key as keyof typeof workLabels] || key}</span>`,
+                    )
+                    .join("")}
+                  ${intervention.workPerformed.outros ? `<span style="font-size: 9px; background: #3b82f6; color: white; padding: 2px 6px; border-radius: 12px;">📝 ${intervention.workPerformed.outros}</span>` : ""}
+                </div>
+              </div>
+              `
+                  : ""
+              }
+
+              <!-- Chemical products for this intervention -->
+              ${
+                intervention.chemicalProducts &&
+                intervention.chemicalProducts.length > 0
+                  ? `
+              <div class="intervention-chemicals" style="margin: 10px 0;">
+                <strong style="font-size: 12px; color: #2d3748;">🧴 Produtos Químicos:</strong>
+                <div style="margin-top: 5px;">
+                  ${intervention.chemicalProducts
+                    .map(
+                      (product) =>
+                        `<div style="font-size: 10px; color: #666; margin: 2px 0;">• ${product.productName} (${product.quantity} ${product.unit}) - ${getProductPurpose(product.productName)}</div>`,
+                    )
+                    .join("")}
+                </div>
+              </div>
+              `
+                  : ""
+              }
+
+              <!-- Problems for this intervention -->
+              ${
+                intervention.problems && intervention.problems.length > 0
+                  ? `
+              <div class="intervention-problems" style="margin: 10px 0;">
+                <strong style="font-size: 12px; color: #2d3748;">⚠️ Problemas Identificados:</strong>
+                <div style="margin-top: 5px;">
+                  ${intervention.problems
+                    .map(
+                      (problem) =>
+                        `<div style="font-size: 10px; color: ${problem.resolved ? "#10b981" : "#ef4444"}; margin: 2px 0;">${problem.resolved ? "✅" : "❌"} ${problem.description}</div>`,
+                    )
+                    .join("")}
+                </div>
+              </div>
+              `
+                  : ""
+              }
+
+              <!-- Photos for this intervention -->
+              ${
+                intervention.photos && intervention.photos.length > 0
+                  ? `
+              <div class="intervention-photos" style="margin: 10px 0;">
+                <strong style="font-size: 12px; color: #2d3748;">📸 Fotos da Intervenção (${intervention.photos.length}):</strong>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 5px;">
+                  ${intervention.photos
+                    .slice(0, 6)
+                    .map(
+                      (photo, photoIndex) =>
+                        `<img src="${photo}" alt="Foto ${photoIndex + 1}" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0;" crossorigin="anonymous" />`,
+                    )
+                    .join("")}
+                  ${intervention.photos.length > 6 ? `<div style="display: flex; align-items: center; justify-content: center; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 10px; color: #666;">+${intervention.photos.length - 6} fotos</div>` : ""}
+                </div>
+              </div>
+              `
+                  : ""
+              }
+
+              <!-- Observations for this intervention -->
+              ${
+                intervention.observations
+                  ? `
+              <div class="intervention-observations" style="margin: 10px 0;">
+                <strong style="font-size: 12px; color: #2d3748;">📝 Observações:</strong>
+                <div style="font-size: 10px; color: #666; margin-top: 5px; padding: 8px; background: #fffdf7; border-left: 3px solid #f59e0b; border-radius: 4px;">
+                  ${intervention.observations}
+                </div>
+              </div>
+              `
+                  : ""
+              }
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      </div>
+      `
+          : ""
+      }
+
+      <!-- Pool Photos Section -->
       ${maintenance.photos && maintenance.photos.length > 0 ? createPhotoGallery(maintenance.photos, "Fotos da Piscina") : ""}
     `;
   };
@@ -615,6 +946,20 @@ export function MaintenanceReport({
             .summary-label { font-size: 10px; color: #666; margin-bottom: 5px; }
             .summary-value { font-size: 14px; font-weight: bold; }
             .observations-content { padding: 10px; background: #fffdf7; border-left: 4px solid #f59e0b; border-radius: 4px; font-size: 11px; line-height: 1.5; }
+            .additional-stats { margin-top: 15px; padding: 10px; background: #f0fff4; border-radius: 6px; font-size: 11px; }
+            .problems-list { margin: 15px 0; }
+            .problem-item { margin-bottom: 15px; padding: 12px; background: #fef2f2; border-left: 4px solid #ef4444; border-radius: 6px; }
+            .problem-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+            .problem-status { font-size: 10px; color: #ef4444; font-weight: bold; }
+            .problem-date { font-size: 10px; color: #666; }
+            .problem-description { font-size: 11px; color: #374151; margin-bottom: 5px; }
+            .problem-priority { font-size: 10px; color: #f59e0b; font-weight: bold; }
+            .intervention-card { page-break-inside: avoid; }
+            .intervention-header { border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 10px; }
+            @media print {
+              .intervention-card { break-inside: avoid; }
+              .section { break-inside: avoid; }
+            }
           </style>
         `,
         additionalInfo: pdfData.additionalInfo,

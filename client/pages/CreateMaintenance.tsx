@@ -132,7 +132,7 @@ export function CreateMaintenance() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center">
             <Waves className="mr-3 h-8 w-8 text-blue-600" />
-            Registar Nova Piscina
+            Registrar Nova Piscina
           </h1>
           <p className="text-gray-600 mt-1">
             Adiciona uma nova piscina ao sistema de manutenção

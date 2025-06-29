@@ -25,6 +25,7 @@ import { MaintenanceList } from "./pages/MaintenanceList";
 import { CreateMaintenance } from "./pages/CreateMaintenance";
 import { MaintenanceDetail } from "./pages/MaintenanceDetail";
 import { CreateIntervention } from "./pages/CreateIntervention";
+import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
 import { MobileDeploy } from "./pages/MobileDeploy";
 import { NotFound } from "./pages/NotFound";
 
@@ -65,6 +66,10 @@ function App() {
               <Route
                 path="maintenance/:maintenanceId/new-intervention"
                 element={<CreateIntervention />}
+              />
+              <Route
+                path="maintenance/new-general"
+                element={<NewMaintenanceSelector />}
               />
               <Route path="mobile-deploy" element={<MobileDeploy />} />
               <Route
