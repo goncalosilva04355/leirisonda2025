@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MaintenanceReport } from "@/components/MaintenanceReport";
 import { PhotoGallery } from "@/components/PhotoGallery";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function MaintenanceDetail() {
   const { id } = useParams<{ id: string }>();
