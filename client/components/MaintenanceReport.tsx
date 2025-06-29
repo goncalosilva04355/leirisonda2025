@@ -1395,58 +1395,99 @@ Relatório gerado em: ${reportDate}
       <!-- Intervention Details Section -->
       <div class="section">
         <div class="section-header">
-          <div class="section-title">📅 Informações da Intervenção</div>
+          <div class="section-title">📅 Detalhes da Intervenção</div>
         </div>
         <div class="section-content">
-          <div class="info-grid">
-            <div class="data-item">
-              <span class="label">Data:</span>
-              <span class="value">${format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">Horário:</span>
-              <span class="value">${intervention.timeStart} - ${intervention.timeEnd}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">Duração:</span>
-              <span class="value">${calculateDuration(intervention.timeStart, intervention.timeEnd)}</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <span class="label">Técnicos Responsáveis:</span>
-            <span class="value">${intervention.technicians.join(", ")}</span>
-          </div>
-          ${
-            intervention.vehicles.length > 0
-              ? `<div class="data-item">
-              <span class="label">Viaturas Utilizadas:</span>
-              <span class="value">${intervention.vehicles.join(", ")}</span>
-            </div>`
-              : ""
-          }
+          <table class="data-table">
+            <tr>
+              <td class="table-label">Data:</td>
+              <td class="table-value">${format(new Date(intervention.date), "dd 'de' MMMM 'de' yyyy", { locale: pt })}</td>
+            </tr>
+            <tr>
+              <td class="table-label">Horário:</td>
+              <td class="table-value">${intervention.timeStart} - ${intervention.timeEnd}</td>
+            </tr>
+            <tr>
+              <td class="table-label">Duração:</td>
+              <td class="table-value">${calculateDuration(intervention.timeStart, intervention.timeEnd)}</td>
+            </tr>
+            <tr>
+              <td class="table-label">Técnicos:</td>
+              <td class="table-value">${intervention.technicians.join(", ")}</td>
+            </tr>
+            ${
+              intervention.vehicles.length > 0
+                ? `
+            <tr>
+              <td class="table-label">Viaturas:</td>
+              <td class="table-value">${intervention.vehicles.join(", ")}</td>
+            </tr>`
+                : ""
+            }
+          </table>
         </div>
       </div>
 
+      <!-- Water Analysis Section -->
       <div class="section">
         <div class="section-header">
           <div class="section-title">🧪 Análise Completa da Água</div>
         </div>
         <div class="section-content">
-          <div class="water-analysis-grid">
-            <div class="water-param">
-              <div class="param-label">pH</div>
-              <div class="param-value">${intervention.waterValues.ph || "N/A"}</div>
-              <div class="param-range">Ideal: 7.0-7.4</div>
-            </div>
-            <div class="water-param">
-              <div class="param-label">Cloro</div>
-              <div class="param-value">${intervention.waterValues.chlorine || "N/A"} ppm</div>
-              <div class="param-range">Ideal: 1.0-2.0 ppm</div>
-            </div>
-            <div class="water-param">
-              <div class="param-label">Temperatura</div>
-              <div class="param-value">${intervention.waterValues.temperature || "N/A"}°C</div>
-              <div class="param-range">Conforto: 24-28°C</div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Parâmetro</th>
+                <th>Valor Medido</th>
+                <th>Valor Ideal</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="${getWaterQualityColor(intervention.waterValues) === "success" ? "water-excellent" : getWaterQualityColor(intervention.waterValues) === "warning" ? "water-warning" : "water-danger"}">
+                <td><strong>pH</strong></td>
+                <td>${intervention.waterValues.ph || "N/A"}</td>
+                <td>${idealValues.ph}</td>
+                <td>${getWaterQualityColor(intervention.waterValues) === "success" ? "✅ Excelente" : getWaterQualityColor(intervention.waterValues) === "warning" ? "⚠️ Aceitável" : "❌ Ajustar"}</td>
+              </tr>
+              <tr class="${intervention.waterValues.chlorine >= 1.0 && intervention.waterValues.chlorine <= 2.5 ? "water-excellent" : intervention.waterValues.chlorine >= 0.8 && intervention.waterValues.chlorine <= 3.0 ? "water-warning" : "water-danger"}">
+                <td><strong>Cloro</strong></td>
+                <td>${intervention.waterValues.chlorine || "N/A"} ppm</td>
+                <td>${idealValues.chlorine}</td>
+                <td>${intervention.waterValues.chlorine >= 1.0 && intervention.waterValues.chlorine <= 2.5 ? "✅ Excelente" : intervention.waterValues.chlorine >= 0.8 && intervention.waterValues.chlorine <= 3.0 ? "⚠️ Aceitável" : "❌ Ajustar"}</td>
+              </tr>
+              ${
+                intervention.waterValues.alkalinity
+                  ? `
+              <tr>
+                <td><strong>Alcalinidade</strong></td>
+                <td>${intervention.waterValues.alkalinity} ppm</td>
+                <td>${idealValues.alkalinity}</td>
+                <td>${intervention.waterValues.alkalinity >= 80 && intervention.waterValues.alkalinity <= 120 ? "✅ Excelente" : "⚠️ Monitorizar"}</td>
+              </tr>`
+                  : ""
+              }
+              <tr>
+                <td><strong>Temperatura</strong></td>
+                <td>${intervention.waterValues.temperature || "N/A"}°C</td>
+                <td>${idealValues.temperature}</td>
+                <td>${intervention.waterValues.temperature >= 24 && intervention.waterValues.temperature <= 28 ? "✅ Confortável" : "📊 Informativo"}</td>
+              </tr>
+              ${
+                intervention.waterValues.salt
+                  ? `
+              <tr>
+                <td><strong>Sal</strong></td>
+                <td>${intervention.waterValues.salt} gr/lt</td>
+                <td>${idealValues.salt}</td>
+                <td>${intervention.waterValues.salt >= 3.0 && intervention.waterValues.salt <= 4.0 ? "✅ Excelente" : "⚠️ Ajustar"}</td>
+              </tr>`
+                  : ""
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
             </div>
             <div class="water-param">
               <div class="param-label">Sal</div>
