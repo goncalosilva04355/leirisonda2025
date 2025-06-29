@@ -511,7 +511,7 @@ export function CreateIntervention() {
             </div>
 
             <div>
-              <Label htmlFor="salt">Sal (ppm)</Label>
+              <Label htmlFor="salt">Sal (gr/lt)</Label>
               <Input
                 id="salt"
                 type="number"

@@ -523,7 +523,7 @@ export function PoolMaintenancePage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="salt">Sal (ppm)</Label>
+                    <Label htmlFor="salt">Sal (gr/lt)</Label>
                     <Input
                       id="salt"
                       type="number"
@@ -806,7 +806,7 @@ export function PoolMaintenancePage() {
 
                       const units: { [key: string]: string } = {
                         ph: "",
-                        salt: "ppm",
+                        salt: "gr/lt",
                         temperature: "°C",
                         chlorine: "ppm",
                         bromine: "ppm",
