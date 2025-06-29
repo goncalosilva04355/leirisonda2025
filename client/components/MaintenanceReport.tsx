@@ -327,37 +327,41 @@ export function MaintenanceReport({
         </div>
       </div>
 
-      <!-- Intervention Details Card -->
+      <!-- Intervention Details -->
       <div class="section">
         <div class="section-header">
           <div class="section-title">📋 Detalhes da Intervenção</div>
         </div>
         <div class="section-content">
-          <div class="pdf-info-grid">
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Data:</span>
-              <span class="pdf-info-value">${format(new Date(intervention.date), "dd 'de' MMMM 'de' yyyy", { locale: pt })}</span>
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="label">Data</div>
+              <div class="value">${format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Horário:</span>
-              <span class="pdf-info-value">${intervention.timeStart} - ${intervention.timeEnd}</span>
+            <div class="info-card">
+              <div class="label">Horário</div>
+              <div class="value">${intervention.timeStart} - ${intervention.timeEnd}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Duração:</span>
-              <span class="pdf-info-value pdf-duration">${calculateDuration(intervention.timeStart, intervention.timeEnd)}</span>
+            <div class="info-card">
+              <div class="label">Duração</div>
+              <div class="value">${calculateDuration(intervention.timeStart, intervention.timeEnd)}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Técnicos:</span>
-              <span class="pdf-info-value">${intervention.technicians.join(", ")}</span>
+            <div class="info-card">
+              <div class="label">Técnicos</div>
+              <div class="value">${intervention.technicians.join(", ")}</div>
             </div>
             ${
               intervention.vehicles && intervention.vehicles.length > 0
                 ? `
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Viaturas:</span>
-              <span class="pdf-info-value">${intervention.vehicles.join(", ")}</span>
+            <div class="info-card">
+              <div class="label">Viaturas</div>
+              <div class="value">${intervention.vehicles.join(", ")}</div>
             </div>`
                 : ""
+            }
+          </div>
+        </div>
+      </div>
             }
           </div>
         </div>
