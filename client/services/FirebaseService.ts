@@ -31,9 +31,20 @@ export class FirebaseService {
 
   constructor() {
     // Check if Firebase is available
-    this.isFirebaseAvailable = db !== null && auth !== null;
-    if (!this.isFirebaseAvailable) {
-      console.log("📱 FirebaseService running in local-only mode");
+    try {
+      this.isFirebaseAvailable =
+        db !== null &&
+        auth !== null &&
+        typeof db === "object" &&
+        typeof auth === "object";
+      if (this.isFirebaseAvailable) {
+        console.log("🔥 FirebaseService running with Firebase sync");
+      } else {
+        console.log("📱 FirebaseService running in local-only mode");
+      }
+    } catch (error) {
+      console.log("📱 FirebaseService fallback to local-only mode:", error);
+      this.isFirebaseAvailable = false;
     }
   }
 
