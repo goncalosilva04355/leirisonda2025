@@ -205,17 +205,12 @@ export function useFirebaseSync() {
   const updateWork = useCallback(
     async (workId: string, updates: Partial<Work>): Promise<void> => {
       try {
-        console.log("📋 Updating work with auto-sync:", workId);
-
         // Update work (FirebaseService handles Firebase/local automatically)
         await firebaseService.updateWork(workId, updates);
 
-        // Auto-sync after update (if Firebase available and online)
+        // Update sync timestamp
         if (isFirebaseAvailable && isOnline) {
           setLastSync(new Date());
-          console.log("✅ Work updated and auto-synced:", workId);
-        } else {
-          console.log("📱 Work updated locally:", workId);
         }
       } catch (error) {
         console.error("❌ Error updating work:", error);
@@ -232,17 +227,12 @@ export function useFirebaseSync() {
       updates: Partial<PoolMaintenance>,
     ): Promise<void> => {
       try {
-        console.log("🏊 Updating maintenance with auto-sync:", maintenanceId);
-
         // Update maintenance (FirebaseService handles Firebase/local automatically)
         await firebaseService.updateMaintenance(maintenanceId, updates);
 
-        // Auto-sync after update (if Firebase available and online)
+        // Update sync timestamp
         if (isFirebaseAvailable && isOnline) {
           setLastSync(new Date());
-          console.log("✅ Maintenance updated and auto-synced:", maintenanceId);
-        } else {
-          console.log("📱 Maintenance updated locally:", maintenanceId);
         }
       } catch (error) {
         console.error("❌ Error updating maintenance:", error);
