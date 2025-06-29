@@ -84,8 +84,8 @@ export function CreateMaintenance() {
         uploadedAt: photo.uploadedAt,
       }));
 
-      const newMaintenance: PoolMaintenance = {
-        id: crypto.randomUUID(),
+      // Prepare maintenance data
+      const maintenanceData = {
         poolName: formData.poolName.trim(),
         location: formData.location.trim(),
         clientName: formData.clientName.trim(),
@@ -97,19 +97,11 @@ export function CreateMaintenance() {
         status: formData.status,
         photos: processedPhotos,
         observations: formData.observations.trim(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       };
 
-      // Save to localStorage
-      const existingMaintenances = JSON.parse(
-        localStorage.getItem("pool_maintenances") || "[]",
-      );
-      const updatedMaintenances = [...existingMaintenances, newMaintenance];
-      localStorage.setItem(
-        "pool_maintenances",
-        JSON.stringify(updatedMaintenances),
-      );
+      // Create maintenance using Firebase sync
+      const maintenanceId = await createMaintenance(maintenanceData);
+      console.log("✅ Manutenção criada com sucesso:", maintenanceId);
 
       navigate("/pool-maintenance");
     } catch (err) {
