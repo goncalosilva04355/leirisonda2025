@@ -45,7 +45,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
   return (
     <>
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      <div className="lg:hidden mobile-menu-button">
         <Button
           variant="outline"
           size="icon"
