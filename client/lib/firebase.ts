@@ -12,29 +12,31 @@ const firebaseConfig = {
   appId: "1:000000000000:web:demo",
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+let app: any = null;
+let db: any = null;
+let auth: any = null;
 
-// Initialize Firebase services
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+// Inicializar Firebase apenas se em ambiente de produção com credenciais válidas
+const isValidConfig = firebaseConfig.apiKey !== "demo-key";
 
-// For development - use emulators if available
-if (import.meta.env.DEV && typeof window !== "undefined") {
+if (isValidConfig) {
   try {
-    // Only connect to emulators in development
-    if (!auth.config.emulator) {
-      connectAuthEmulator(auth, "http://localhost:9099", {
-        disableWarnings: true,
-      });
-    }
-    if (!db._delegate._databaseId.projectId.includes("emulator")) {
-      connectFirestoreEmulator(db, "localhost", 8080);
-    }
+    // Initialize Firebase
+    app = initializeApp(firebaseConfig);
+
+    // Initialize Firebase services
+    db = getFirestore(app);
+    auth = getAuth(app);
+
+    console.log("✅ Firebase initialized successfully");
   } catch (error) {
-    // Emulators not available, use production Firebase
-    console.log("Firebase emulators not available, using production Firebase");
+    console.warn("⚠️ Firebase initialization failed:", error);
   }
+} else {
+  console.log("🔧 Firebase disabled - using local storage only");
 }
+
+// Export placeholder functions when Firebase is not available
+export { db, auth };
 
 export default app;
