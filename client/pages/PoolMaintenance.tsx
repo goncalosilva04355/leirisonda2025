@@ -854,39 +854,66 @@ export function PoolMaintenancePage() {
                 </div>
 
                 {/* Maintenance Work Done */}
-                <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                  <h5 className="font-medium text-blue-900 mb-2">
-                    Trabalhos Realizados:
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                  <h5 className="font-medium text-blue-900 mb-3">
+                    🔧 Trabalhos Realizados
                   </h5>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                    {maintenance.maintenanceWork.filtros && (
-                      <span className="text-blue-700">✓ Pré-filtro</span>
-                    )}
-                    {maintenance.maintenanceWork.preFiltero && (
-                      <span className="text-blue-700">✓ Pré-filtro</span>
-                    )}
-                    {maintenance.maintenanceWork.filtroAreiaVidro && (
-                      <span className="text-blue-700">
-                        ✓ Filtro Areia/Vidro
-                      </span>
-                    )}
-                    {maintenance.maintenanceWork.alimenta && (
-                      <span className="text-blue-700">✓ Alimenta</span>
-                    )}
-                    {maintenance.maintenanceWork.enchimentoAutomatico && (
-                      <span className="text-blue-700">
-                        ✓ Enchimento Automático
-                      </span>
-                    )}
-                    {maintenance.maintenanceWork.linhaAgua && (
-                      <span className="text-blue-700">✓ Linha Água</span>
-                    )}
+
+                  {/* Filtração */}
+                  <div className="mb-3">
+                    <h6 className="text-xs font-medium text-blue-800 mb-1 uppercase tracking-wide">
+                      Sistema de Filtração
+                    </h6>
+                    <div className="flex flex-wrap gap-2">
+                      {maintenance.maintenanceWork.filtros && (
+                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Limpeza de Filtros
+                        </span>
+                      )}
+                      {maintenance.maintenanceWork.preFiltro && (
+                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Pré-filtro
+                        </span>
+                      )}
+                      {maintenance.maintenanceWork.filtroAreiaVidro && (
+                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Filtro Areia/Vidro
+                        </span>
+                      )}
+                    </div>
                   </div>
+
+                  {/* Sistemas */}
+                  <div className="mb-3">
+                    <h6 className="text-xs font-medium text-blue-800 mb-1 uppercase tracking-wide">
+                      Sistemas da Piscina
+                    </h6>
+                    <div className="flex flex-wrap gap-2">
+                      {maintenance.maintenanceWork.alimenta && (
+                        <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Alimentação/Dosagem
+                        </span>
+                      )}
+                      {maintenance.maintenanceWork.enchimentoAutomatico && (
+                        <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Enchimento Automático
+                        </span>
+                      )}
+                      {maintenance.maintenanceWork.linhaAgua && (
+                        <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                          ✓ Limpeza Linha de Água
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
                   {maintenance.maintenanceWork.outros && (
-                    <p className="text-sm text-blue-700 mt-2">
-                      <span className="font-medium">Outros:</span>{" "}
-                      {maintenance.maintenanceWork.outros}
-                    </p>
+                    <div className="mt-3 pt-2 border-t border-blue-200">
+                      <p className="text-sm text-blue-700">
+                        <span className="font-medium">Outros trabalhos:</span>{" "}
+                        {maintenance.maintenanceWork.outros}
+                      </p>
+                    </div>
                   )}
                 </div>
 
