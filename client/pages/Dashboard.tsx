@@ -212,9 +212,10 @@ export function Dashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div
-          className="stat-card-leirisonda stat-card-danger hover-leirisonda"
-          onClick={() => navigateToWorks("pendente")}
+
+        <Link
+          to="/works?status=pendente"
+          className="stat-card-leirisonda stat-card-danger hover-leirisonda block"
         >
           <div className="flex items-center justify-between mb-3">
             <Clock className="w-6 h-6 text-red-600" />
