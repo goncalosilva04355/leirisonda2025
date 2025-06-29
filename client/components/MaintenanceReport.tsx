@@ -1294,6 +1294,35 @@ Relatório gerado em: ${reportDate}
       alert("�� Erro ao partilhar PDF. O ficheiro foi descarregado.");
     }
   };
+  // Helper function to process and include photos in PDF
+  const createPhotoGallery = (photos: string[], title: string) => {
+    if (!photos || photos.length === 0) return "";
+
+    const photosHTML = photos
+      .map(
+        (photo, index) => `
+        <div class="photo-item">
+          <img src="${photo}" alt="${title} ${index + 1}" class="photo-img" />
+          <div class="photo-caption">${title} ${index + 1}</div>
+        </div>
+      `,
+      )
+      .join("");
+
+    return `
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">📸 ${title}</div>
+        </div>
+        <div class="section-content">
+          <div class="photo-gallery">
+            ${photosHTML}
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
   const createInterventionContent = () => {
     if (!intervention) return "";
 
@@ -1301,9 +1330,9 @@ Relatório gerado em: ${reportDate}
     const getWaterQualityColor = (waterValues: any) => {
       const ph = waterValues.ph;
       const chlorine = waterValues.chlorine;
-      if (ph >= 7.0 && ph <= 7.4 && chlorine >= 1.0 && chlorine <= 2.0) {
+      if (ph >= 7.0 && ph <= 7.4 && chlorine >= 1.0 && chlorine <= 2.5) {
         return "success";
-      } else if (ph >= 6.8 && ph <= 7.6 && chlorine >= 0.8 && chlorine <= 2.5) {
+      } else if (ph >= 6.8 && ph <= 7.6 && chlorine >= 0.8 && chlorine <= 3.0) {
         return "warning";
       }
       return "danger";
