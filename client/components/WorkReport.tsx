@@ -285,7 +285,7 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
                 .join("")}
             </div>
           </div>
-          
+
           ${
             work.vehicles && work.vehicles.length > 0
               ? `
@@ -401,9 +401,9 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
       const modernPDFStyles = `
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-          
+
           * { box-sizing: border-box; margin: 0; padding: 0; }
-          
+
           body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
@@ -692,7 +692,7 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
         title: pdfData.title,
         subtitle: pdfData.subtitle,
         date: pdfData.date,
-        content: content + modernPDFStyles,
+        content: content,
         additionalInfo: pdfData.additionalInfo,
       });
 
@@ -990,7 +990,7 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
               </div>
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <Users className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                <div className="text-sm text-gray-600">T��cnicos</div>
+                <div className="text-sm text-gray-600">Técnicos</div>
                 <div className="font-bold text-lg">
                   {work.technicians ? work.technicians.length : 0}
                 </div>
