@@ -10,7 +10,8 @@
   "orientation": "portrait-primary",
   "scope": "/",
   "prefer_related_applications": false,
-  "id": "leirisonda-obras-2025",
+  "id": "leirisonda-obras-2025-v2",
+  "version": "2.0.1",
   "icons": [
     {
       "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIiIGhlaWdodD0iNzIiIHZpZXdCb3g9IjAgMCA3MiA3MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcyIiBoZWlnaHQ9IjcyIiByeD0iMTYiIGZpbGw9IiNiMzAyMjkiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMyAxOGgxOHYtMkg5VjhIOXYzSDZ2M0gzVjE4Wm0wIDBoMTh2LTJIOVY4SDl2M0g2djNIM1YxOFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik05IDhoMnYySDlWOFptNiAwaDJ2MkgxNlY4WiIgZmlsbD0iIzAwNzc4NCIvPgo8cGF0aCBkPSJNNiAxNGgzdjNINnYtM1ptNiAwaDN2M0gxMnYtM1ptNiAwaDN2M0gxOHYtM1oiIGZpbGw9IiMwMDc3ODQiIG9wYWNpdHk9IjAuNyIvPgo8L3N2Zz4KPC9zdmc+",
