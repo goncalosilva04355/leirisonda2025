@@ -36,6 +36,23 @@ export function MaintenanceReport({
   const [isOpen, setIsOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  // Define work labels at component level to be accessible everywhere
+  const workLabels = {
+    filtros: "Limpeza de Filtros",
+    preFiltero: "Pré-filtro",
+    filtroAreiaVidro: "Filtro Areia/Vidro",
+    enchimentoAutomatico: "Enchimento Automático",
+    linhaAgua: "Linha de Água",
+    limpezaFundo: "Limpeza do Fundo",
+    limpezaParedes: "Limpeza das Paredes",
+    limpezaSkimmers: "Limpeza dos Skimmers",
+    verificacaoEquipamentos: "Verificação de Equipamentos",
+    aspiracao: "Aspiração",
+    escovagem: "Escovagem",
+    limpezaFiltros: "Limpeza de Filtros",
+    tratamentoAlgas: "Tratamento de Algas",
+  };
+
   const getPoolTypeLabel = (type: string) => {
     const labels = {
       outdoor: "Exterior",
