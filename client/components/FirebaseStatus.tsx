@@ -111,20 +111,25 @@ export function FirebaseStatus() {
       <div className="mt-3 space-y-1">
         {!isFirebaseAvailable && (
           <p className="text-xs text-blue-600">
-            📱 Modo local ativo - dados guardados no dispositivo
+            📱 Modo local - dados guardados no dispositivo
           </p>
         )}
 
         {isFirebaseAvailable && !isOnline && (
           <p className="text-xs text-orange-600">
-            📱 Modo offline ativo - dados guardados localmente
+            📱 Offline - sincronização automática quando voltar online
           </p>
         )}
 
         {isFirebaseAvailable && isOnline && (
-          <p className="text-xs text-green-600">
-            ☁️ Sincronização automática ativa
-          </p>
+          <div className="space-y-1">
+            <p className="text-xs text-green-600">
+              ⚡ Sincronização instantânea ativa
+            </p>
+            <p className="text-xs text-gray-500">
+              Dados sincronizam automaticamente a cada alteração
+            </p>
+          </div>
         )}
       </div>
     </div>
