@@ -275,7 +275,7 @@ export function CreateIntervention() {
         updatedAt: new Date().toISOString(),
       };
 
-      // Update maintenance with new intervention
+      // Update maintenance with new intervention using Firebase sync
       const updatedMaintenance: PoolMaintenance = {
         ...maintenance,
         interventions: [...maintenance.interventions, newIntervention],
@@ -283,18 +283,11 @@ export function CreateIntervention() {
         updatedAt: new Date().toISOString(),
       };
 
-      // Save to localStorage
-      const existingMaintenances = JSON.parse(
-        localStorage.getItem("pool_maintenances") || "[]",
-      );
-      const updatedMaintenances = existingMaintenances.map(
-        (m: PoolMaintenance) =>
-          m.id === maintenance.id ? updatedMaintenance : m,
-      );
-
-      localStorage.setItem(
-        "pool_maintenances",
-        JSON.stringify(updatedMaintenances),
+      // Use Firebase sync to update maintenance with automatic sync
+      await updateMaintenance(maintenance.id, updatedMaintenance);
+      console.log(
+        "✅ Intervenção criada e sincronizada automaticamente:",
+        newIntervention.id,
       );
 
       navigate(`/maintenance/${maintenance.id}`);
