@@ -181,6 +181,22 @@ export function MaintenanceReport({
               ? "Reduzir cloro"
               : "Perfeito",
       },
+      orp: {
+        value: waterValues.orp ? `${waterValues.orp} mv` : "N/A",
+        ideal: "650 - 750 mv",
+        status:
+          waterValues.orp >= 650 && waterValues.orp <= 750
+            ? "excellent"
+            : waterValues.orp >= 600 && waterValues.orp <= 800
+              ? "acceptable"
+              : "poor",
+        advice:
+          waterValues.orp < 650
+            ? "Aumentar ORP"
+            : waterValues.orp > 750
+              ? "Reduzir ORP"
+              : "Perfeito",
+      },
       temperature: {
         value: temperature ? `${temperature}°C` : "N/A",
         ideal: "24 - 28°C",
@@ -1050,9 +1066,9 @@ export function MaintenanceReport({
       const modernPDFStyles = `
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-          
+
           * { box-sizing: border-box; margin: 0; padding: 0; }
-          
+
           body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
@@ -2603,7 +2619,7 @@ export function MaintenanceReport({
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
                         <div>
                           <p className="text-xs font-medium text-gray-600 mb-1">
-                            👨‍🔧 Técnicos
+                            ����‍🔧 Técnicos
                           </p>
                           <p className="text-sm font-medium">
                             {intervention.technicians.join(", ")}
