@@ -2046,8 +2046,16 @@ Relatório gerado em: ${reportDate}
           </div>
 
           {isGenerating && (
-            <div className="text-center text-sm text-gray-600">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex flex-col items-center gap-3">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <div className="text-sm text-blue-700 font-medium">
+                  📄 Gerando relatório PDF...
+                </div>
+                <div className="text-xs text-blue-600">
+                  Aguarde, pode levar alguns segundos no móvel
+                </div>
+              </div>
             </div>
           )}
         </div>
