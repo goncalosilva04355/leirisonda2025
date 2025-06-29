@@ -12,8 +12,10 @@ import {
   Save,
   Eye,
   AlertCircle,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
-import { PoolMaintenance } from "@shared/types";
+import { PoolMaintenance, MaintenanceIntervention } from "@shared/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +29,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function PoolMaintenancePage() {
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
