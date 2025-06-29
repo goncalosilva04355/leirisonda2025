@@ -29,6 +29,7 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 export function MaintenanceDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { maintenances, deleteMaintenance } = useFirebaseSync();
   const [maintenance, setMaintenance] = useState<PoolMaintenance | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
