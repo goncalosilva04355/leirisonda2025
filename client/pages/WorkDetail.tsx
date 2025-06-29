@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function WorkDetail() {
   const { id } = useParams<{ id: string }>();
