@@ -51,7 +51,6 @@ const firebaseConfig = {
 ### Utilizadores globais (funcionam em qualquer dispositivo):
 
 - `gongonsilva@gmail.com` / `19867gsf` (Admin)
-- `alexkamaryta@gmail.com` / `69alexandre` (Admin)
 - `tecnico@leirisonda.pt` / `tecnico123` (User)
 - `supervisor@leirisonda.pt` / `supervisor123` (Admin limitado)
 

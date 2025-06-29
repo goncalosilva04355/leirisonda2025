@@ -111,16 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           createdAt: new Date().toISOString(),
         },
       },
-      {
-        email: "alexkamaryta@gmail.com",
-        userData: {
-          email: "alexkamaryta@gmail.com",
-          name: "Alexandre Fernandes",
-          role: "admin" as const,
-          permissions: defaultAdminPermissions,
-          createdAt: new Date().toISOString(),
-        },
-      },
+
       {
         email: "tecnico@leirisonda.pt",
         userData: {
@@ -278,18 +269,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               createdAt: new Date().toISOString(),
             },
           },
-          {
-            email: "alexkamaryta@gmail.com",
-            password: "69alexandre",
-            user: {
-              id: "alexandre1",
-              email: "alexkamaryta@gmail.com",
-              name: "Alexandre Fernandes",
-              role: "admin" as const,
-              permissions: defaultAdminPermissions,
-              createdAt: new Date().toISOString(),
-            },
-          },
+
           {
             email: "tecnico@leirisonda.pt",
             password: "tecnico123",

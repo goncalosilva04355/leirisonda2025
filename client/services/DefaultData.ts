@@ -87,15 +87,6 @@ export class DefaultDataService {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
-        {
-          id: crypto.randomUUID(),
-          email: "alexkamaryta@gmail.com",
-          name: "Alexandre Fernandes",
-          role: "admin",
-          permissions: defaultAdminPermissions,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
       ];
 
       localStorage.setItem("users", JSON.stringify(defaultUsers));
