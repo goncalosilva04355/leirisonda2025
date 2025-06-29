@@ -160,17 +160,12 @@ export function useFirebaseSync() {
       workData: Omit<Work, "id" | "createdAt" | "updatedAt">,
     ): Promise<string> => {
       try {
-        console.log("📋 Creating work with auto-sync...");
-
         // Create work (FirebaseService handles Firebase/local automatically)
         const workId = await firebaseService.createWork(workData);
 
-        // Auto-sync after creation (if Firebase available and online)
+        // Update sync timestamp
         if (isFirebaseAvailable && isOnline) {
           setLastSync(new Date());
-          console.log("✅ Work created and auto-synced:", workId);
-        } else {
-          console.log("📱 Work created locally:", workId);
         }
 
         return workId;
