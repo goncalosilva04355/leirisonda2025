@@ -62,7 +62,7 @@ export function Login() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <h1 className="text-2xl font-bold mb-2">Leirisonda</h1>
+              <h1 className="text-2xl font-bold mb-2 text-white">Leirisonda</h1>
               <p className="text-blue-100 opacity-90">
                 Sistema de Gestão de Obras
               </p>
