@@ -264,9 +264,11 @@ Relatório gerado em: ${reportDate}
   };
 
   const generateHTMLReport = () => {
-    // Similar HTML generation as WorkReport but adapted for maintenance
+    // Generate modern HTML report with enhanced layout and photos
     const reportDate = format(new Date(), "dd/MM/yyyy", { locale: pt });
-    const content = generateReportContent();
+    const content = intervention
+      ? createInterventionContent()
+      : createMaintenanceContent();
 
     return `
 <!DOCTYPE html>
