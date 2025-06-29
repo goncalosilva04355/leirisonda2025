@@ -67,6 +67,10 @@ function App() {
                 path="maintenance/:maintenanceId/new-intervention"
                 element={<CreateIntervention />}
               />
+              <Route
+                path="maintenance/new-general"
+                element={<NewMaintenanceSelector />}
+              />
               <Route path="mobile-deploy" element={<MobileDeploy />} />
               <Route
                 path="old-pool-maintenance"
