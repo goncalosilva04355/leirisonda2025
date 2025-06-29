@@ -96,12 +96,23 @@ export function CreateIntervention() {
 
   const loadMaintenance = () => {
     try {
-      const stored = localStorage.getItem("pool_maintenances");
-      if (stored) {
-        const maintenances: PoolMaintenance[] = JSON.parse(stored);
-        const found = maintenances.find((m) => m.id === maintenanceId);
-        if (found) {
-          setMaintenance(found);
+      // Use dados do Firebase sync em primeiro lugar
+      const found = maintenances.find((m) => m.id === maintenanceId);
+      if (found) {
+        setMaintenance(found);
+      } else {
+        // Fallback para localStorage apenas se não encontrar no Firebase
+        const stored = localStorage.getItem("pool_maintenances");
+        if (stored) {
+          const localMaintenances: PoolMaintenance[] = JSON.parse(stored);
+          const localFound = localMaintenances.find(
+            (m) => m.id === maintenanceId,
+          );
+          if (localFound) {
+            setMaintenance(localFound);
+          } else {
+            setError("Piscina não encontrada");
+          }
         } else {
           setError("Piscina não encontrada");
         }
