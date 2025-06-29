@@ -20,12 +20,21 @@ import { User, Work, PoolMaintenance } from "@shared/types";
 export class FirebaseService {
   private static instance: FirebaseService;
   private unsubscribes: (() => void)[] = [];
+  private isFirebaseAvailable: boolean = false;
 
   static getInstance(): FirebaseService {
     if (!FirebaseService.instance) {
       FirebaseService.instance = new FirebaseService();
     }
     return FirebaseService.instance;
+  }
+
+  constructor() {
+    // Check if Firebase is available
+    this.isFirebaseAvailable = db !== null && auth !== null;
+    if (!this.isFirebaseAvailable) {
+      console.log("📱 FirebaseService running in local-only mode");
+    }
   }
 
   // Users Collection
