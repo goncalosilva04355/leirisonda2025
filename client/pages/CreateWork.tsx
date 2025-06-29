@@ -230,7 +230,8 @@ export function CreateWork() {
               <WifiOff className="w-4 h-4 text-orange-600" />
               <span className="text-sm text-orange-600">Offline</span>
             </>
-          )}</div>
+          )}
+        </div>
       </div>
 
       {/* Offline Warning */}
@@ -238,11 +239,11 @@ export function CreateWork() {
         <Alert className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Está no modo offline. Os dados serão guardados localmente e sincronizados quando a ligação for restabelecida.
+            Está no modo offline. Os dados serão guardados localmente e
+            sincronizados quando a ligação for restabelecida.
           </AlertDescription>
         </Alert>
       )}
-      </div>
 
       {/* Form */}
       <div className="max-w-4xl">
