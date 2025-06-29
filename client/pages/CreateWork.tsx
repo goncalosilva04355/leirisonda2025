@@ -115,9 +115,8 @@ export function CreateWork() {
     }
 
     try {
-      // Create new work
-      const newWork: Work = {
-        id: Date.now().toString(),
+      // Prepare work data
+      const workData = {
         workSheetNumber: formData.workSheetNumber,
         type: formData.type,
         clientName: formData.clientName.trim(),
@@ -141,19 +140,16 @@ export function CreateWork() {
         observations: formData.observations.trim(),
         workPerformed: formData.workPerformed.trim(),
         workSheetCompleted: formData.workSheetCompleted,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       };
 
-      // Save to localStorage
-      const storedWorks = localStorage.getItem("leirisonda_works");
-      const works: Work[] = storedWorks ? JSON.parse(storedWorks) : [];
-      works.push(newWork);
-      localStorage.setItem("leirisonda_works", JSON.stringify(works));
+      // Create work using Firebase sync
+      const workId = await createWork(workData);
+      console.log("✅ Obra criada com sucesso:", workId);
 
-      // Navigate to the new work detail page
-      navigate(`/works/${newWork.id}`);
+      // Navigate to works list
+      navigate("/works");
     } catch (err) {
+      console.error("❌ Erro ao criar obra:", err);
       setError("Erro ao criar a obra. Tente novamente.");
       setIsSubmitting(false);
     }
