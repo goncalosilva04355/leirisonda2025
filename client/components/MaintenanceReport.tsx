@@ -199,7 +199,7 @@ export function MaintenanceReport({
                 ? `
             <tr>
               <td class="table-label">Volume:</td>
-              <td class="table-value">${maintenance.waterCubicage} litros</td>
+              <td class="table-value">${maintenance.waterCubicage} m³</td>
             </tr>`
                 : ""
             }
