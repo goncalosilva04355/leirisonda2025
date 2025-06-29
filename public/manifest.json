@@ -14,37 +14,37 @@
   "version": "2.0.1",
   "icons": [
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIiIGhlaWdodD0iNzIiIHZpZXdCb3g9IjAgMCA3MiA3MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjcyIiBoZWlnaHQ9IjcyIiByeD0iMTYiIGZpbGw9IiNiMzAyMjkiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMyAxOGgxOHYtMkg5VjhIOXYzSDZ2M0gzVjE4Wm0wIDBoMTh2LTJIOVY4SDl2M0g2djNIM1YxOFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik05IDhoMnYySDlWOFptNiAwaDJ2MkgxNlY4WiIgZmlsbD0iIzAwNzc4NCIvPgo8cGF0aCBkPSJNNiAxNGgzdjNINnYtM1ptNiAwaDN2M0gxMnYtM1ptNiAwaDN2M0gxOHYtM1oiIGZpbGw9IiMwMDc3ODQiIG9wYWNpdHk9IjAuNyIvPgo8L3N2Zz4KPC9zdmc+",
+      "src": "/leirisonda-logo-complete.svg",
       "sizes": "72x72",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjAiIGZpbGw9IiNiMzAyMjkiLz4KPHN2ZyB4PSIxOCIgeT0iMTgiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMyAxOGgxOHYtMkg5VjhIOXYzSDZ2M0gzVjE4WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTkgOGgydjJIOVY4Wm02IDBoMnYySDE2Vjhab0g5IDhoMnYySDlWOFptNiAwaDJ2MkgxNlY4WiIgZmlsbD0iIzAwNzc4NCIvPgo8cGF0aCBkPSJNNiAxNGgzdjNINnYtM1ptNiAwaDN2M0gxMnYtM1ptNiAwaDN2M0gxOHYtM1oiIGZpbGw9IiMwMDc3ODQiIG9wYWNpdHk9IjAuOCIvPgo8cGF0aCBkPSJNMTIgNEwxNCA2aDJWNEgxMlptMCA0TDE0IDEwaDJWOEgxMlptMCA0TDE0IDE0aDJWMTJIMTJabTAgNEwxNCAxOGgyVjE2SDEyWiIgZmlsbD0iIzAwNzc4NCIgb3BhY2l0eT0iMC42Ii8+Cjwvc3ZnPgo8L3N2Zz4=",
+      "src": "/leirisonda-logo-complete.svg",
       "sizes": "96x96",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiByeD0iMjgiIGZpbGw9IiNiMzAyMjkiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMyAxOGgxOHYtMkg5VjhIOXYzSDZ2M0gzVjE4WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTkgOGgydjJIOVY4Wm02IDBoMnYySDE2Vjhab0g5IDhoMnYySDlWOFptNiAwaDJ2MkgxNlY4WiIgZmlsbD0iIzAwNzc4NCIvPgo8cGF0aCBkPSJNNiAxNGgzdjNINnYtM1ptNiAwaDN2M0gxMnYtM1ptNiAwaDN2M0gxOHYtM1oiIGZpbGw9IiMwMDc3ODQiIG9wYWNpdHk9IjAuOSIvPgo8cGF0aCBkPSJNMTIgNEwxNCA2aDJWNEgxMlptMCA0TDE0IDEwaDJWOEgxMlptMCA0TDE0IDE0aDJWMTJIMTJabTAgNEwxNCAxOGgyVjE2SDEyWiIgZmlsbD0iIzAwNzc4NCIgb3BhY2l0eT0iMC43Ii8+CjxwYXRoIGQ9Ik00IDIwaDE2djJINFYyMFptNC00aDh2Mkg4VjE2WiIgZmlsbD0iIzAwNzc4NCIgb3BhY2l0eT0iMC41Ii8+Cjwvc3ZnPgo8L3N2Zz4=",
+      "src": "/leirisonda-logo-complete.svg",
       "sizes": "128x128",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjE0NCIgdmlld0JveD0iMCAwIDE0NCAxNDQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNDQiIGhlaWdodD0iMTQ0IiByeD0iMzIiIGZpbGw9IiNiMzAyMjkiLz4KPHN2ZyB4PSIzMiIgeT0iMzIiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMyAxOGgxOHYtMkg5VjhIOXYzSDZ2M0gzVjE4WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTkgOGgydjJIOVY4Wm02IDBoMnYySDE2Vjhab0g5IDhoMnYySDlWOFptNiAwaDJ2MkgxNlY4WiIgZmlsbD0iIzAwNzc4NCIvPgo8cGF0aCBkPSJNNiAxNGgzdjNINnYtM1ptNiAwaDN2M0gxMnYtM1ptNiAwaDN2M0gxOHYtM1oiIGZpbGw9IiMwMDc3ODQiIG9wYWNpdHk9IjAuOSIvPgo8cGF0aCBkPSJNMTIgNEwxNCA2aDJWNEgxMlptMCA0TDE0IDEwaDJWOEgxMlptMCA0TDE0IDE0aDJWMTJIMTJabTAgNEwxNCAxOGgyVjE2SDEyWiIgZmlsbD0iIzAwNzc4NCIgb3BhY2l0eT0iMC43Ii8+CjxwYXRoIGQ9Ik00IDIwaDEydjJINFYyMFptNCAtNGg4djJIOFYxNlptLTQgLTRoMTZ2Mkg0VjEyWiIgZmlsbD0iIzAwNzc4NCIgb3BhY2l0eT0iMC42Ii8+CjxjaXJjbGUgY3g9IjE4IiBjeT0iNiIgcj0iMiIgZmlsbD0iIzAwNzc4NCIvPgo8L3N2Zz4KPC9zdmc+",
+      "src": "/leirisonda-logo-complete.svg",
       "sizes": "144x144",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDgiIGZpbGw9IiNiMzAyMjkiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMyAxOGgxOHYtMkg5VjhIOXYzSDZ2M0gzVjE4WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTkgOGgydjJIOVY4Wm02IDBoMnYySDE2Vjhab0g5IDhoMnYySDlWOFptNiAwaDJ2MkgxNlY4WiIgZmlsbD0iIzAwNzc4NCIvPgo8cGF0aCBkPSJNNiAxNGgzdjNINnYtM1ptNiAwaDN2M0gxMnYtM1ptNiAwaDN2M0gxOHYtM1oiIGZpbGw9IiMwMDc3ODQiIG9wYWNpdHk9IjAuOSIvPgo8cGF0aCBkPSJNMTIgNEwxNCA2aDJWNEgxMlptMCA0TDE0IDEwaDJWOEgxMlptMCA0TDE0IDE0aDJWMTJIMTJabTAgNEwxNCAxOGgyVjE2SDEyWiIgZmlsbD0iIzAwNzc4NCIgb3BhY2l0eT0iMC43Ii8+CjxwYXRoIGQ9Ik00IDIwaDEydjJINFYyMFptNCAtNGg4djJIOFYxNlptLTQgLTRoMTZ2Mkg0VjEyWm0wIC00aDE2djJINFY4WiIgZmlsbD0iIzAwNzc4NCIgb3BhY2l0eT0iMC42Ii8+CjxjaXJjbGUgY3g9IjE4IiBjeT0iNiIgcj0iMyIgZmlsbD0iIzAwNzc4NCIvPgo8cGF0aCBkPSJNMiAyaDIwdjJIMlYyWiIgZmlsbD0iIzAwNzc4NCIgb3BhY2l0eT0iMC40Ii8+Cjwvc3ZnPgo8L3N2Zz4=",
+      "src": "/leirisonda-logo-complete.svg",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTI4IiBmaWxsPSIjYjMwMjI5Ii8+CjxzdmcgeD0iMTI4IiB5PSIxMjgiIHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0zIDE4aDE4di0ySDlWOEg5djNINnYzSDNWMThaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOSA4aDJ2Mkg5VjhaTTYgMGgydjJINlY4Wm02IDBoMnYySDE2Vjhab0g5IDhoMnYySDlWOFptNiAwaDJ2MkgxNlY4WiIgZmlsbD0iIzAwNzc4NCIvPgo8cGF0aCBkPSJNNiAxNGgzdjNINnYtM1ptNiAwaDN2M0gxMnYtM1ptNiAwaDN2M0gxOHYtM1oiIGZpbGw9IiMwMDc3ODQiIG9wYWNpdHk9IjAuOSIvPgo8cGF0aCBkPSJNMTIgNEwxNCA2aDJWNEgxMlptMCA0TDE0IDEwaDJWOEgxMlptMCA0TDE0IDE0aDJWMTJIMTJabTAgNEwxNCAxOGgyVjE2SDEyWiIgZmlsbD0iIzAwNzc4NCIgb3BhY2l0eT0iMC44Ii8+CjxwYXRoIGQ9Ik00IDIwaDEydjJINFYyMFptNCAtNGg4djJIOFYxNlptLTQgLTRoMTZ2Mkg0VjEyWm0wIC00aDE2djJINFY4Wm0wIC00aDE2djJINFY0WiIgZmlsbD0iIzAwNzc4NCIgb3BhY2l0eT0iMC43Ii8+CjxjaXJjbGUgY3g9IjE4IiBjeT0iNiIgcj0iNCIgZmlsbD0iIzAwNzc4NCIvPgo8cGF0aCBkPSJNMiAyaDIwdjRIMlYyWm0wIDRoMjB2NEgyVjZabTAgNGgyMHY0SDJWMTBaIiBmaWxsPSIjMDA3Nzg0IiBvcGFjaXR5PSIwLjUiLz4KPHRleHQgeD0iMTIiIHk9IjIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIyIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9ImJvbGQiPkw8L3RleHQ+Cjwvc3ZnPgo8L3N2Zz4=",
+      "src": "/leirisonda-logo-complete.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
@@ -60,7 +60,7 @@
       "url": "/dashboard",
       "icons": [
         {
-          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjAiIGZpbGw9IiNiMzAyMjkiLz4KPC9zdmc+",
+          "src": "/leirisonda-logo-complete.svg",
           "sizes": "96x96"
         }
       ]
@@ -72,7 +72,7 @@
       "url": "/create-work",
       "icons": [
         {
-          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjAiIGZpbGw9IiMwMDc3ODQiLz4KPC9zdmc+",
+          "src": "/leirisonda-logo-complete.svg",
           "sizes": "96x96"
         }
       ]
