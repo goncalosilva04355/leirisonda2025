@@ -160,7 +160,7 @@ Data recomendada: ${format(new Date(intervention.nextMaintenanceDate), "dd/MM/yy
     : ""
 }
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━��━━━━━━━━━━━━━━━━━━
 
 📞 CONTACTO
 Leirisonda - Manutenção de Piscinas
@@ -1626,13 +1626,68 @@ Relatório gerado em: ${reportDate}
           )[0]
         : null;
 
-    // Calculate total photos
+    // Calculate detailed statistics
     const totalPoolPhotos = maintenance.photos?.length || 0;
     const totalInterventionPhotos =
       maintenance.interventions?.reduce(
         (sum, int) => sum + (int.photos?.length || 0),
         0,
       ) || 0;
+
+    const totalChemicalProducts =
+      maintenance.interventions?.reduce(
+        (sum, int) => sum + int.chemicalProducts.length,
+        0,
+      ) || 0;
+
+    const totalWorkTime =
+      maintenance.interventions?.reduce((sum, int) => {
+        try {
+          const start = new Date(`2000-01-01 ${int.timeStart}`);
+          const end = new Date(`2000-01-01 ${int.timeEnd}`);
+          const diff = end.getTime() - start.getTime();
+          return sum + diff;
+        } catch {
+          return sum;
+        }
+      }, 0) || 0;
+
+    const averageWorkTimeHours =
+      totalInterventions > 0
+        ? Math.round(
+            (totalWorkTime / (1000 * 60 * 60) / totalInterventions) * 10,
+          ) / 10
+        : 0;
+
+    // Most common technicians
+    const technicianCount =
+      maintenance.interventions?.reduce(
+        (acc, int) => {
+          int.technicians.forEach((tech) => {
+            acc[tech] = (acc[tech] || 0) + 1;
+          });
+          return acc;
+        },
+        {} as Record<string, number>,
+      ) || {};
+
+    const topTechnicians = Object.entries(technicianCount)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([name, count]) => `${name} (${count}x)`)
+      .join(", ");
+
+    // Water quality trends
+    const waterTrends =
+      maintenance.interventions
+        ?.filter((int) => int.waterValues.ph && int.waterValues.chlorine)
+        .slice(-5)
+        .map((int) => ({
+          date: format(new Date(int.date), "dd/MM", { locale: pt }),
+          ph: int.waterValues.ph,
+          chlorine: int.waterValues.chlorine,
+          quality: getWaterQualityStatus(int.waterValues),
+        })) || [];
 
     return `
       <div class="section">
