@@ -202,35 +202,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (email: string, password: string): Promise<boolean> => {
       try {
         setIsLoading(true);
-        console.log("🔐 Attempting Firebase login for:", email);
 
-        // Try Firebase Auth login
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password,
-        );
-        const firebaseUser = userCredential.user;
+        // Check if Firebase is available
+        if (auth && auth !== null) {
+          console.log("🔐 Attempting Firebase login for:", email);
 
-        console.log("✅ Firebase Auth successful");
+          try {
+            // Try Firebase Auth login
+            const userCredential = await signInWithEmailAndPassword(
+              auth,
+              email,
+              password,
+            );
+            const firebaseUser = userCredential.user;
 
-        // Get user data from Firestore
-        const userData = await getUserFromFirestore(firebaseUser);
+            console.log("✅ Firebase Auth successful");
 
-        if (userData) {
-          setUser(userData);
-          localStorage.setItem("leirisonda_user", JSON.stringify(userData));
+            // Get user data from Firestore
+            const userData = await getUserFromFirestore(firebaseUser);
 
-          // Start real-time data sync
-          console.log("🔄 Starting Firebase real-time sync...");
-          await firebaseService.syncLocalDataToFirebase();
+            if (userData) {
+              setUser(userData);
+              localStorage.setItem("leirisonda_user", JSON.stringify(userData));
 
-          return true;
+              // Start real-time data sync
+              console.log("🔄 Starting Firebase real-time sync...");
+              await firebaseService.syncLocalDataToFirebase();
+
+              return true;
+            }
+
+            return false;
+          } catch (firebaseError: any) {
+            console.log("⚠️ Firebase Auth failed, trying legacy login...");
+          }
+        } else {
+          console.log("📱 Firebase not available, using local authentication");
         }
-
-        return false;
-      } catch (firebaseError: any) {
-        console.log("⚠️ Firebase Auth failed, trying legacy login...");
 
         // Fallback to legacy local login
         const globalUsers = [
