@@ -180,7 +180,7 @@ Relatório gerado em: ${reportDate}
       return `
 💧 RELATÓRIO GERAL DE MANUTENÇÃO - LEIRISONDA
 
-━━━��━━━━━━━━━━━━━━━━���━━━━━━━━━━━━━━━━━━━
+━━━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🏊 INFORMAÇÕES DA PISCINA
 
@@ -1880,51 +1880,210 @@ Relatório gerado em: ${reportDate}
           ? `
         <div class="section">
           <div class="section-header">
-            <div class="section-title">📋 Histórico Detalhado de Intervenções</div>
+            <div class="section-title">📋 Histórico Completo de Intervenções (Todas as ${totalInterventions} Intervenções)</div>
           </div>
           <div class="section-content">
-            <div class="interventions-table">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Data</th>
-                    <th>Técnicos</th>
-                    <th>pH</th>
-                    <th>Cloro</th>
-                    <th>Temp.</th>
-                    <th>Problemas</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${maintenance.interventions
-                    .sort(
-                      (a, b) =>
-                        new Date(b.date).getTime() - new Date(a.date).getTime(),
-                    )
-                    .slice(0, 10) // Show last 10 interventions
-                    .map(
-                      (int) => `
-                    <tr>
-                      <td>${format(new Date(int.date), "dd/MM/yy", { locale: pt })}</td>
-                      <td>${int.technicians.slice(0, 2).join(", ")}${int.technicians.length > 2 ? "..." : ""}</td>
-                      <td>${int.waterValues.ph || "N/A"}</td>
-                      <td>${int.waterValues.chlorine || "N/A"}</td>
-                      <td>${int.waterValues.temperature || "N/A"}°C</td>
-                      <td>${int.problems.length}</td>
-                      <td class="status-${int.problems.every((p) => p.resolved) ? "good" : "warning"}">
-                        ${
-                          int.problems.length === 0
-                            ? "✅"
-                            : int.problems.every((p) => p.resolved)
-                              ? "✅"
-                              : "⚠️"
-                        }
-                      </td>
-                    </tr>
-                  `,
-                    )
-                    .join("")}
+            ${maintenance.interventions
+              .sort(
+                (a, b) =>
+                  new Date(b.date).getTime() - new Date(a.date).getTime(),
+              )
+              .map(
+                (int, index) => `
+                <div class="intervention-detail-card" style="margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; page-break-inside: avoid;">
+                  <div class="intervention-header" style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 12px 16px; border-bottom: 1px solid #e2e8f0;">
+                    <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: #2d3748;">
+                      Intervenção #${totalInterventions - index} - ${format(new Date(int.date), "dd/MM/yyyy", { locale: pt })}
+                    </h4>
+                    <div style="font-size: 12px; color: #4a5568; margin-top: 4px;">
+                      ${int.timeStart} - ${int.timeEnd} • Técnicos: ${int.technicians.join(", ")}
+                      ${int.vehicles.length > 0 ? ` • Viaturas: ${int.vehicles.join(", ")}` : ""}
+                    </div>
+                  </div>
+
+                  <div class="intervention-content" style="padding: 16px;">
+                    <!-- Análise da Água -->
+                    <div class="water-analysis-mini" style="margin-bottom: 12px;">
+                      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px;">
+                        <div style="background: #f7fafc; padding: 6px; border-radius: 4px; text-align: center; font-size: 11px;">
+                          <div style="font-weight: 600; color: #3182ce;">pH</div>
+                          <div style="font-weight: 700;">${int.waterValues.ph || "N/A"}</div>
+                        </div>
+                        <div style="background: #f7fafc; padding: 6px; border-radius: 4px; text-align: center; font-size: 11px;">
+                          <div style="font-weight: 600; color: #3182ce;">Cloro</div>
+                          <div style="font-weight: 700;">${int.waterValues.chlorine || "N/A"} ppm</div>
+                        </div>
+                        <div style="background: #f7fafc; padding: 6px; border-radius: 4px; text-align: center; font-size: 11px;">
+                          <div style="font-weight: 600; color: #3182ce;">Temp.</div>
+                          <div style="font-weight: 700;">${int.waterValues.temperature || "N/A"}°C</div>
+                        </div>
+                        <div style="background: #f7fafc; padding: 6px; border-radius: 4px; text-align: center; font-size: 11px;">
+                          <div style="font-weight: 600; color: #3182ce;">Sal</div>
+                          <div style="font-weight: 700;">${int.waterValues.salt || "N/A"} gr/lt</div>
+                        </div>
+                      </div>
+                      <div style="text-align: center; font-size: 11px; padding: 4px; background: ${
+                        getWaterQualityStatus(int.waterValues).includes(
+                          "Excelente",
+                        )
+                          ? "#f0fff4"
+                          : getWaterQualityStatus(int.waterValues).includes(
+                                "Aceitável",
+                              )
+                            ? "#fffbeb"
+                            : "#fed7d7"
+                      }; border-radius: 4px;">
+                        <strong>Estado:</strong> ${getWaterQualityStatus(int.waterValues)}
+                      </div>
+                    </div>
+
+                    <!-- Trabalho Realizado -->
+                    ${
+                      Object.values(int.workPerformed).some((v) => v)
+                        ? `
+                    <div class="work-performed-mini" style="margin-bottom: 12px;">
+                      <div style="font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #2d3748;">🔧 Trabalho Realizado:</div>
+                      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; font-size: 10px;">
+                        ${Object.entries(int.workPerformed)
+                          .filter(([key, value]) => value && key !== "outros")
+                          .map(
+                            ([key]) => `
+                            <div style="background: #f0fff4; padding: 4px 6px; border-radius: 3px; border: 1px solid #9ae6b4;">
+                              ✓ ${workLabels[key as keyof typeof workLabels] || key}
+                            </div>
+                          `,
+                          )
+                          .join("")}
+                      </div>
+                      ${
+                        int.workPerformed.outros
+                          ? `
+                      <div style="margin-top: 6px; font-size: 11px; background: #ebf8ff; padding: 6px; border-radius: 4px;">
+                        <strong>Adicional:</strong> ${int.workPerformed.outros}
+                      </div>`
+                          : ""
+                      }
+                    </div>`
+                        : ""
+                    }
+
+                    <!-- Produtos Químicos -->
+                    ${
+                      int.chemicalProducts.length > 0
+                        ? `
+                    <div class="products-mini" style="margin-bottom: 12px;">
+                      <div style="font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #2d3748;">🧴 Produtos Aplicados:</div>
+                      <div style="display: grid; gap: 4px; font-size: 10px;">
+                        ${int.chemicalProducts
+                          .map(
+                            (product) => `
+                            <div style="background: #fff7ed; padding: 4px 6px; border-radius: 3px; border: 1px solid #fed7aa; display: flex; justify-content: space-between;">
+                              <span>${product.productName}</span>
+                              <span><strong>${product.quantity}${product.unit}</strong></span>
+                            </div>
+                          `,
+                          )
+                          .join("")}
+                      </div>
+                    </div>`
+                        : ""
+                    }
+
+                    <!-- Problemas -->
+                    ${
+                      int.problems.length > 0
+                        ? `
+                    <div class="problems-mini" style="margin-bottom: 12px;">
+                      <div style="font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #2d3748;">⚠️ Problemas (${int.problems.length}):</div>
+                      ${int.problems
+                        .map(
+                          (problem) => `
+                        <div style="background: ${problem.resolved ? "#f0fff4" : "#fffbeb"}; padding: 6px; border-radius: 4px; border: 1px solid ${problem.resolved ? "#9ae6b4" : "#fbd38d"}; margin-bottom: 4px; font-size: 10px;">
+                          <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                            <span style="font-weight: 500;">${problem.description}</span>
+                            <span style="font-size: 9px; font-weight: 600; color: ${
+                              problem.severity === "high"
+                                ? "#c53030"
+                                : problem.severity === "medium"
+                                  ? "#b45309"
+                                  : "#276749"
+                            };">
+                              ${problem.severity === "high" ? "ALTA" : problem.severity === "medium" ? "MÉDIA" : "BAIXA"}
+                            </span>
+                          </div>
+                          <div style="font-weight: 600; color: ${problem.resolved ? "#276749" : "#b45309"};">
+                            ${problem.resolved ? "✅ RESOLVIDO" : "🔄 PENDENTE"}
+                          </div>
+                        </div>
+                      `,
+                        )
+                        .join("")}
+                    </div>`
+                        : ""
+                    }
+
+                    <!-- Fotos -->
+                    ${
+                      int.photos && int.photos.length > 0
+                        ? `
+                    <div class="photos-mini" style="margin-bottom: 12px;">
+                      <div style="font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #2d3748;">📸 Fotos (${int.photos.length}):</div>
+                      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;">
+                        ${int.photos
+                          .slice(0, 4)
+                          .map(
+                            (photo) => `
+                          <div style="background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 4px; overflow: hidden;">
+                            <div style="width: 100%; height: 40px; background: #edf2f7; position: relative;">
+                              <img src="${photo.url}" alt="${photo.description || "Foto"}" style="width: 100%; height: 100%; object-fit: cover;" />
+                            </div>
+                            <div style="padding: 2px 4px; font-size: 8px; color: #4a5568; text-align: center;">
+                              ${photo.description ? photo.description.substring(0, 20) + (photo.description.length > 20 ? "..." : "") : "Sem descrição"}
+                            </div>
+                          </div>
+                        `,
+                          )
+                          .join("")}
+                      </div>
+                      ${
+                        int.photos.length > 4
+                          ? `
+                      <div style="text-align: center; font-size: 10px; color: #4a5568; margin-top: 4px;">
+                        ... e mais ${int.photos.length - 4} fotos
+                      </div>`
+                          : ""
+                      }
+                    </div>`
+                        : ""
+                    }
+
+                    <!-- Observações -->
+                    ${
+                      int.observations
+                        ? `
+                    <div class="observations-mini">
+                      <div style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #2d3748;">📝 Observações:</div>
+                      <div style="background: #f7fafc; padding: 6px; border-radius: 4px; font-size: 10px; color: #2d3748; line-height: 1.4;">
+                        ${int.observations}
+                      </div>
+                    </div>`
+                        : ""
+                    }
+
+                    <!-- Próxima Manutenção -->
+                    ${
+                      int.nextMaintenanceDate
+                        ? `
+                    <div style="margin-top: 8px; background: #ebf8ff; padding: 6px; border-radius: 4px; font-size: 10px; text-align: center;">
+                      <strong>Próxima manutenção recomendada:</strong> ${format(new Date(int.nextMaintenanceDate), "dd/MM/yyyy", { locale: pt })}
+                    </div>`
+                        : ""
+                    }
+                  </div>
+                </div>
+              `,
+              )
+              .join("")}
                 </tbody>
               </table>
             </div>
