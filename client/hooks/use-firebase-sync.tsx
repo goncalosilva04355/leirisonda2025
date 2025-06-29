@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { User, Work, PoolMaintenance } from "@shared/types";
-import { firebaseService } from "@/services/FirebaseService";
-import { useAuth } from "@/components/AuthProvider";
+import { useState, useEffect } from 'react';
+import { User, Work, PoolMaintenance } from '@shared/types';
+import { firebaseService } from '@/services/FirebaseService';
+import { useAuth } from '@/components/AuthProvider';
 
 export function useFirebaseSync() {
   const { user } = useAuth();
@@ -14,10 +14,7 @@ export function useFirebaseSync() {
   const [isFirebaseAvailable] = useState(() => {
     // Check if Firebase is properly initialized
     try {
-      return (
-        window.firebase !== undefined ||
-        (typeof db !== "undefined" && db !== null)
-      );
+      return window.firebase !== undefined || (typeof db !== 'undefined' && db !== null);
     } catch {
       return false;
     }
@@ -27,21 +24,21 @@ export function useFirebaseSync() {
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
-      console.log("🌐 App is online - syncing data...");
+      console.log('🌐 App is online - syncing data...');
       syncData();
     };
 
     const handleOffline = () => {
       setIsOnline(false);
-      console.log("📱 App is offline - using local data");
+      console.log('📱 App is offline - using local data');
     };
 
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
@@ -50,7 +47,7 @@ export function useFirebaseSync() {
     if (!user) return;
 
     if (!isFirebaseAvailable) {
-      console.log("📱 Local mode - no sync needed");
+      console.log('📱 Local mode - no sync needed');
       setLastSync(new Date());
       return;
     }
@@ -59,15 +56,15 @@ export function useFirebaseSync() {
 
     try {
       setIsSyncing(true);
-      console.log("🔄 Starting Firebase sync...");
+      console.log('🔄 Starting Firebase sync...');
 
       // Sync local data to Firebase first
       await firebaseService.syncLocalDataToFirebase();
 
       setLastSync(new Date());
-      console.log("✅ Firebase sync completed");
+      console.log('✅ Firebase sync completed');
     } catch (error) {
-      console.error("❌ Firebase sync failed:", error);
+      console.error('❌ Firebase sync failed:', error);
     } finally {
       setIsSyncing(false);
     }
@@ -75,49 +72,42 @@ export function useFirebaseSync() {
 
   // Set up real-time listeners when user is authenticated
   useEffect(() => {
-    if (!user || !isOnline) {
+    if (!user) {
       // Load from localStorage when offline or not authenticated
       loadLocalData();
       return;
     }
 
-    console.log("🔄 Setting up Firebase real-time listeners...");
+    console.log('🔄 Setting up real-time sync listeners...');
 
-    // Listen to works
+    // Always setup listeners (they handle offline/online internally)
+    // Listen to works with real-time updates
     const unsubscribeWorks = firebaseService.listenToWorks((firebaseWorks) => {
       setWorks(firebaseWorks);
-      // Update localStorage for offline access
-      localStorage.setItem("works", JSON.stringify(firebaseWorks));
-      console.log(`📋 Received ${firebaseWorks.length} works from Firebase`);
+      console.log(`📋 Real-time update: ${firebaseWorks.length} works`);
+      setLastSync(new Date());
     });
 
-    // Listen to maintenances
-    const unsubscribeMaintenances = firebaseService.listenToMaintenances(
-      (firebaseMaintenances) => {
-        setMaintenances(firebaseMaintenances);
-        // Update localStorage for offline access
-        localStorage.setItem(
-          "pool_maintenances",
-          JSON.stringify(firebaseMaintenances),
-        );
-        console.log(
-          `🏊 Received ${firebaseMaintenances.length} maintenances from Firebase`,
-        );
-      },
-    );
+    // Listen to maintenances with real-time updates
+    const unsubscribeMaintenances = firebaseService.listenToMaintenances((firebaseMaintenances) => {
+      setMaintenances(firebaseMaintenances);
+      console.log(`🏊 Real-time update: ${firebaseMaintenances.length} maintenances`);
+      setLastSync(new Date());
+    });
 
     // Listen to users (admin only)
     let unsubscribeUsers: (() => void) | undefined;
     if (user.permissions.canViewUsers) {
       unsubscribeUsers = firebaseService.listenToUsers((firebaseUsers) => {
         setUsers(firebaseUsers);
-        localStorage.setItem("users", JSON.stringify(firebaseUsers));
-        console.log(`👥 Received ${firebaseUsers.length} users from Firebase`);
+        console.log(`👥 Real-time update: ${firebaseUsers.length} users`);
       });
     }
 
-    // Initial sync
-    syncData();
+    // Initial sync if Firebase available
+    if (isFirebaseAvailable && isOnline) {
+      syncData();
+    }
 
     // Cleanup listeners
     return () => {
@@ -125,36 +115,24 @@ export function useFirebaseSync() {
       unsubscribeMaintenances();
       if (unsubscribeUsers) unsubscribeUsers();
     };
-  }, [user, isOnline]);
-
-  // Load data from localStorage (offline mode)
-  const loadLocalData = () => {
-    try {
-      const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
-      const localMaintenances = JSON.parse(
-        localStorage.getItem("pool_maintenances") || "[]",
-      );
-      const localUsers = JSON.parse(localStorage.getItem("users") || "[]");
-
+  }, [user]);
       setWorks(localWorks);
       setMaintenances(localMaintenances);
       setUsers(localUsers);
 
-      console.log("📱 Loaded data from localStorage (offline mode)");
+      console.log('📱 Loaded data from localStorage (offline mode)');
     } catch (error) {
-      console.error("❌ Error loading local data:", error);
+      console.error('❌ Error loading local data:', error);
     }
   };
 
   // Create new work (with Firebase sync)
-  const createWork = async (
-    workData: Omit<Work, "id" | "createdAt" | "updatedAt">,
-  ): Promise<string> => {
+  const createWork = async (workData: Omit<Work, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
     try {
       if (isOnline && user) {
         // Create in Firebase
         const workId = await firebaseService.createWork(workData);
-        console.log("✅ Work created in Firebase:", workId);
+        console.log('✅ Work created in Firebase:', workId);
         return workId;
       } else {
         // Create locally
@@ -167,27 +145,24 @@ export function useFirebaseSync() {
 
         const updatedWorks = [...works, newWork];
         setWorks(updatedWorks);
-        localStorage.setItem("works", JSON.stringify(updatedWorks));
+        localStorage.setItem('works', JSON.stringify(updatedWorks));
 
-        console.log("📱 Work created locally (offline)");
+        console.log('📱 Work created locally (offline)');
         return newWork.id;
       }
     } catch (error) {
-      console.error("❌ Error creating work:", error);
+      console.error('❌ Error creating work:', error);
       throw error;
     }
   };
 
   // Create new maintenance (with Firebase sync)
-  const createMaintenance = async (
-    maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
-  ): Promise<string> => {
+  const createMaintenance = async (maintenanceData: Omit<PoolMaintenance, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
     try {
       if (isOnline && user) {
         // Create in Firebase
-        const maintenanceId =
-          await firebaseService.createMaintenance(maintenanceData);
-        console.log("✅ Maintenance created in Firebase:", maintenanceId);
+        const maintenanceId = await firebaseService.createMaintenance(maintenanceData);
+        console.log('✅ Maintenance created in Firebase:', maintenanceId);
         return maintenanceId;
       } else {
         // Create locally
@@ -200,79 +175,63 @@ export function useFirebaseSync() {
 
         const updatedMaintenances = [...maintenances, newMaintenance];
         setMaintenances(updatedMaintenances);
-        localStorage.setItem(
-          "pool_maintenances",
-          JSON.stringify(updatedMaintenances),
-        );
+        localStorage.setItem('pool_maintenances', JSON.stringify(updatedMaintenances));
 
-        console.log("📱 Maintenance created locally (offline)");
+        console.log('📱 Maintenance created locally (offline)');
         return newMaintenance.id;
       }
     } catch (error) {
-      console.error("❌ Error creating maintenance:", error);
+      console.error('❌ Error creating maintenance:', error);
       throw error;
     }
   };
 
   // Update work (with Firebase sync)
-  const updateWork = async (
-    workId: string,
-    updates: Partial<Work>,
-  ): Promise<void> => {
+  const updateWork = async (workId: string, updates: Partial<Work>): Promise<void> => {
     try {
       if (isOnline && user) {
         // Update in Firebase
         await firebaseService.updateWork(workId, updates);
-        console.log("✅ Work updated in Firebase:", workId);
+        console.log('✅ Work updated in Firebase:', workId);
       } else {
         // Update locally
-        const updatedWorks = works.map((work) =>
+        const updatedWorks = works.map(work =>
           work.id === workId
             ? { ...work, ...updates, updatedAt: new Date().toISOString() }
-            : work,
+            : work
         );
         setWorks(updatedWorks);
-        localStorage.setItem("works", JSON.stringify(updatedWorks));
+        localStorage.setItem('works', JSON.stringify(updatedWorks));
 
-        console.log("📱 Work updated locally (offline)");
+        console.log('📱 Work updated locally (offline)');
       }
     } catch (error) {
-      console.error("❌ Error updating work:", error);
+      console.error('❌ Error updating work:', error);
       throw error;
     }
   };
 
   // Update maintenance (with Firebase sync)
-  const updateMaintenance = async (
-    maintenanceId: string,
-    updates: Partial<PoolMaintenance>,
-  ): Promise<void> => {
+  const updateMaintenance = async (maintenanceId: string, updates: Partial<PoolMaintenance>): Promise<void> => {
     try {
       if (isOnline && user) {
         // Update in Firebase
         await firebaseService.updateMaintenance(maintenanceId, updates);
-        console.log("✅ Maintenance updated in Firebase:", maintenanceId);
+        console.log('✅ Maintenance updated in Firebase:', maintenanceId);
       } else {
         // Update locally
-        const updatedMaintenances = maintenances.map((maintenance) =>
+        const updatedMaintenances = maintenances.map(maintenance =>
           maintenance.id === maintenanceId
-            ? {
-                ...maintenance,
-                ...updates,
-                updatedAt: new Date().toISOString(),
-              }
-            : maintenance,
+            ? { ...maintenance, ...updates, updatedAt: new Date().toISOString() }
+            : maintenance
         );
         setMaintenances(updatedMaintenances);
-        localStorage.setItem(
-          "pool_maintenances",
-          JSON.stringify(updatedMaintenances),
-        );
+        localStorage.setItem('pool_maintenances', JSON.stringify(updatedMaintenances));
 
-        console.log("📱 Maintenance updated locally (offline)");
+        console.log('📱 Maintenance updated locally (offline)');
       }
     } catch (error) {
-      console.error("❌ Error updating maintenance:", error);
+      console.error('❌ Error updating maintenance:', error);
       throw error;
     }
   };
