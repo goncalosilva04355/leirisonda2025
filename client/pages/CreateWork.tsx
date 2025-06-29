@@ -14,6 +14,8 @@ import {
   Flag,
   Camera,
   AlertCircle,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import { Work, CreateWorkData } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,7 @@ import {
 } from "@/components/ui/select";
 import { PhotoUpload } from "@/components/PhotoUpload";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 const workTypes = [
   { value: "piscina", label: "Piscina" },
