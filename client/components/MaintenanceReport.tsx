@@ -292,49 +292,36 @@ export function MaintenanceReport({
     const qualityStatus = getWaterQualityStatus(intervention.waterValues);
 
     return `
-      <!-- Modern Header -->
-      <div class="pdf-header-modern">
-        <div class="pdf-header-left">
-          <h1 class="pdf-main-title">Relatório de Intervenção</h1>
-          <h2 class="pdf-subtitle">${maintenance.poolName}</h2>
-          <div class="pdf-date">📅 ${format(new Date(intervention.date), "dd 'de' MMMM 'de' yyyy", { locale: pt })}</div>
-        </div>
-        <div class="pdf-header-right">
-          <div class="pdf-ref-number">REF: ${format(new Date(intervention.date), "yyyyMMdd", { locale: pt })}-${maintenance.poolName.replace(/\s+/g, "").substring(0, 3).toUpperCase()}</div>
-          <div class="pdf-status-badge ${qualityStatus.color.replace(/text-/, "color-").replace(/bg-/, "bg-")}">${qualityStatus.label}</div>
-        </div>
-      </div>
-
-      <!-- Pool Information Card -->
+      <!-- Pool Information -->
       <div class="section">
         <div class="section-header">
           <div class="section-title">🏊‍♂️ Informações da Piscina</div>
         </div>
         <div class="section-content">
-          <div class="pdf-info-grid">
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Nome:</span>
-              <span class="pdf-info-value">${maintenance.poolName}</span>
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="label">Nome</div>
+              <div class="value">${maintenance.poolName}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Cliente:</span>
-              <span class="pdf-info-value">${maintenance.clientName}</span>
+            <div class="info-card">
+              <div class="label">Cliente</div>
+              <div class="value">${maintenance.clientName}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Morada:</span>
-              <span class="pdf-info-value">${maintenance.address}</span>
+            <div class="info-card">
+              <div class="label">Morada</div>
+              <div class="value">${maintenance.address}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Tipo:</span>
-              <span class="pdf-info-value">${getPoolTypeLabel(maintenance.poolType)}</span>
+            <div class="info-card">
+              <div class="label">Tipo</div>
+              <div class="value">${getPoolTypeLabel(maintenance.poolType)}</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Volume:</span>
-              <span class="pdf-info-value">${maintenance.waterCubicage || "N/A"} m³</span>
+            <div class="info-card">
+              <div class="label">Volume</div>
+              <div class="value">${maintenance.waterCubicage || "N/A"} m³</div>
             </div>
-            <div class="pdf-info-item">
-              <span class="pdf-info-label">Estado:</span>
-              <span class="pdf-info-value pdf-status-active">${maintenance.status === "ativa" ? "Ativa" : "Inativa"}</span>
+            <div class="info-card">
+              <div class="label">Estado</div>
+              <div class="value">${maintenance.status === "ativa" ? "Ativa" : "Inativa"}</div>
             </div>
           </div>
         </div>
