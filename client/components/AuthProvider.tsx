@@ -93,10 +93,146 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loadStoredUser();
   }, []);
 
+  const createGlobalUsersInFirebase = async () => {
+    const globalUsers = [
+      {
+        email: "gongonsilva@gmail.com",
+        userData: {
+          email: "gongonsilva@gmail.com",
+          name: "Gonçalo Silva",
+          role: "admin" as const,
+          permissions: defaultAdminPermissions,
+          createdAt: new Date().toISOString(),
+        },
+      },
+      {
+        email: "alexkamaryta@gmail.com",
+        userData: {
+          email: "alexkamaryta@gmail.com",
+          name: "Alexandre Fernandes",
+          role: "admin" as const,
+          permissions: defaultAdminPermissions,
+          createdAt: new Date().toISOString(),
+        },
+      },
+      {
+        email: "tecnico@leirisonda.pt",
+        userData: {
+          email: "tecnico@leirisonda.pt",
+          name: "Técnico Leirisonda",
+          role: "user" as const,
+          permissions: defaultUserPermissions,
+          createdAt: new Date().toISOString(),
+        },
+      },
+      {
+        email: "supervisor@leirisonda.pt",
+        userData: {
+          email: "supervisor@leirisonda.pt",
+          name: "Supervisor",
+          role: "admin" as const,
+          permissions: {
+            ...defaultAdminPermissions,
+            canDeleteUsers: false,
+            canDeleteWorks: false,
+          },
+          createdAt: new Date().toISOString(),
+        },
+      },
+    ];
+
+    for (const globalUser of globalUsers) {
+      try {
+        const userRef = doc(db, "users", globalUser.email);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            id: globalUser.email,
+            ...globalUser.userData,
+          });
+          console.log(`✅ Created global user: ${globalUser.userData.name}`);
+        }
+      } catch (error) {
+        console.error(
+          `❌ Error creating global user ${globalUser.email}:`,
+          error,
+        );
+      }
+    }
+  };
+
+  const getUserFromFirestore = async (
+    firebaseUser: FirebaseUser,
+  ): Promise<User | null> => {
+    try {
+      const userRef = doc(db, "users", firebaseUser.email || firebaseUser.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data() as User;
+        return {
+          ...userData,
+          id: userSnap.id,
+        };
+      }
+
+      // If user doesn't exist in Firestore, create default user
+      const defaultUser: User = {
+        id: firebaseUser.uid,
+        email: firebaseUser.email || "",
+        name:
+          firebaseUser.displayName ||
+          firebaseUser.email?.split("@")[0] ||
+          "Utilizador",
+        role: "user",
+        permissions: defaultUserPermissions,
+        createdAt: new Date().toISOString(),
+      };
+
+      await setDoc(userRef, defaultUser);
+      return defaultUser;
+    } catch (error) {
+      console.error("Error getting user from Firestore:", error);
+      return null;
+    }
+  };
+
   const login = useCallback(
     async (email: string, password: string): Promise<boolean> => {
       try {
-        // Predefined global users that work on any device
+        setIsLoading(true);
+        console.log("🔐 Attempting Firebase login for:", email);
+
+        // Try Firebase Auth login
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password,
+        );
+        const firebaseUser = userCredential.user;
+
+        console.log("✅ Firebase Auth successful");
+
+        // Get user data from Firestore
+        const userData = await getUserFromFirestore(firebaseUser);
+
+        if (userData) {
+          setUser(userData);
+          localStorage.setItem("leirisonda_user", JSON.stringify(userData));
+
+          // Start real-time data sync
+          console.log("🔄 Starting Firebase real-time sync...");
+          await firebaseService.syncLocalDataToFirebase();
+
+          return true;
+        }
+
+        return false;
+      } catch (firebaseError: any) {
+        console.log("⚠️ Firebase Auth failed, trying legacy login...");
+
+        // Fallback to legacy local login
         const globalUsers = [
           {
             email: "gongonsilva@gmail.com",
@@ -105,6 +241,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               id: "admin",
               email: "gongonsilva@gmail.com",
               name: "Gonçalo Silva",
+              role: "admin" as const,
+              permissions: defaultAdminPermissions,
+              createdAt: new Date().toISOString(),
+            },
+          },
+          {
+            email: "alexkamaryta@gmail.com",
+            password: "69alexandre",
+            user: {
+              id: "alexandre1",
+              email: "alexkamaryta@gmail.com",
+              name: "Alexandre Fernandes",
               role: "admin" as const,
               permissions: defaultAdminPermissions,
               createdAt: new Date().toISOString(),
@@ -138,100 +286,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               createdAt: new Date().toISOString(),
             },
           },
-          {
-            email: "user@leirisonda.pt",
-            password: "user123",
-            user: {
-              id: "user1",
-              email: "user@leirisonda.pt",
-              name: "Utilizador",
-              role: "user" as const,
-              permissions: defaultUserPermissions,
-              createdAt: new Date().toISOString(),
-            },
-          },
-          {
-            email: "alexkamaryta@gmail.com",
-            password: "69alexandre",
-            user: {
-              id: "alexandre1",
-              email: "alexkamaryta@gmail.com",
-              name: "Alexandre Fernandes",
-              role: "admin" as const,
-              permissions: defaultAdminPermissions,
-              createdAt: new Date().toISOString(),
-            },
-          },
         ];
 
-        // Check global users first
-        console.log("🔍 Checking global users for:", email);
         const globalUser = globalUsers.find(
           (u) => u.email === email && u.password === password,
         );
 
         if (globalUser) {
-          console.log("✅ Global user found:", globalUser.user.name);
+          console.log("✅ Legacy user found:", globalUser.user.name);
           setUser(globalUser.user);
           localStorage.setItem(
             "leirisonda_user",
             JSON.stringify(globalUser.user),
           );
 
-          // Start auto-sync when user logs in
-          console.log("🔄 Starting automatic data synchronization...");
-          dataSyncService.startAutoSync(5); // Sync every 5 minutes
+          // Try to create user in Firebase for next time
+          try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            await createGlobalUsersInFirebase();
+          } catch (createError) {
+            console.log("ℹ️ User might already exist in Firebase");
+          }
 
           return true;
-        } else {
-          console.log("❌ No global user match for:", email, password);
         }
 
-        // Check additional users
-        const storedUsers = localStorage.getItem("leirisonda_users");
-        console.log("🔍 Checking stored users:", storedUsers);
-
-        if (storedUsers) {
-          const users: User[] = JSON.parse(storedUsers);
-          console.log("👥 Parsed users:", users);
-
-          const foundUser = users.find((u) => u.email === email);
-          console.log("🔎 Found user for email", email, ":", foundUser);
-
-          if (foundUser) {
-            const storedPassword = localStorage.getItem(
-              `password_${foundUser.id}`,
-            );
-            console.log(
-              "🔐 Stored password for user",
-              foundUser.id,
-              ":",
-              storedPassword,
-            );
-            console.log("🔑 Provided password:", password);
-
-            if (storedPassword === password) {
-              console.log("✅ Password match! Logging in...");
-              setUser(foundUser);
-              localStorage.setItem(
-                "leirisonda_user",
-                JSON.stringify(foundUser),
-              );
-              return true;
-            } else {
-              console.log("❌ Password mismatch");
-            }
-          } else {
-            console.log("❌ User not found");
-          }
-        } else {
-          console.log("❌ No stored users found");
-        }
-
+        console.error("❌ Login failed:", firebaseError.message);
         return false;
-      } catch (error) {
-        console.error("Login error:", error);
-        return false;
+      } finally {
+        setIsLoading(false);
       }
     },
     [],
