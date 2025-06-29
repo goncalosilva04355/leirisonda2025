@@ -73,7 +73,7 @@ export function MaintenanceReport({
       return `
 💧 RELATÓRIO DE MANUTENÇÃO - LEIRISONDA
 
-���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━���━
+���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🏊 INFORMAÇÕES DA PISCINA
 
@@ -249,7 +249,7 @@ ${maintenance.observations}
     : ""
 }
 
-━━━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━���━��━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📞 CONTACTO
 Leirisonda - Manutenção de Piscinas
@@ -2095,12 +2095,11 @@ Relatório gerado em: ${reportDate}
           ? `
         <div class="section">
           <div class="section-header">
-            <div class="section-title">📸 Galeria de Fotos da Piscina</div>
+            <div class="section-title">📸 Galeria Completa de Fotos da Piscina (${totalPoolPhotos} fotos)</div>
           </div>
           <div class="section-content">
             <div class="photos-grid">
               ${maintenance.photos
-                .slice(0, 8) // Limit to 8 photos for space
                 .map(
                   (photo) => `
                 <div class="photo-item">
@@ -2131,16 +2130,106 @@ Relatório gerado em: ${reportDate}
                 )
                 .join("")}
             </div>
-            <div class="photos-summary">
-              <strong>Fotos da piscina:</strong> ${totalPoolPhotos} •
-              <strong>Fotos de intervenções:</strong> ${totalInterventionPhotos}
-              ${maintenance.photos.length > 8 ? ` • Mostrando 8 de ${maintenance.photos.length} fotos da piscina` : ""}
-            </div>
           </div>
         </div>
       `
           : ""
       }
+
+      ${
+        totalInterventionPhotos > 0
+          ? `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">📷 Todas as Fotos de Intervenções (${totalInterventionPhotos} fotos)</div>
+          </div>
+          <div class="section-content">
+            ${
+              maintenance.interventions
+                ?.filter((int) => int.photos && int.photos.length > 0)
+                .sort(
+                  (a, b) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime(),
+                )
+                .map(
+                  (int) => `
+                <div style="margin-bottom: 20px; page-break-inside: avoid;">
+                  <h5 style="margin: 0 0 10px 0; font-size: 13px; font-weight: 600; color: #2d3748; background: #f7fafc; padding: 8px; border-radius: 4px;">
+                    Fotos da Intervenção - ${format(new Date(int.date), "dd/MM/yyyy", { locale: pt })} (${int.photos.length} fotos)
+                  </h5>
+                  <div class="photos-grid">
+                    ${int.photos
+                      .map(
+                        (photo) => `
+                        <div class="photo-item">
+                          <div class="photo-container">
+                            <img src="${photo.url}" alt="${photo.description || photo.filename}" />
+                          </div>
+                          <div class="photo-info">
+                            <div class="photo-description">${photo.description || "Sem descrição"}</div>
+                            <div class="photo-date">${format(new Date(photo.uploadedAt), "dd/MM/yyyy HH:mm", { locale: pt })}</div>
+                          </div>
+                        </div>
+                      `,
+                      )
+                      .join("")}
+                  </div>
+                </div>
+              `,
+                )
+                .join("") || ""
+            }
+          </div>
+        </div>
+      `
+          : ""
+      }
+
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">📊 Resumo Fotográfico Completo</div>
+        </div>
+        <div class="section-content">
+          <div class="photos-summary" style="background: #f7fafc; padding: 12px; border-radius: 6px; font-size: 12px;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+              <div>
+                <strong>📸 Fotos da Piscina:</strong> ${totalPoolPhotos}<br>
+                <strong>📷 Fotos de Intervenções:</strong> ${totalInterventionPhotos}<br>
+                <strong>🖼️ Total de Fotos:</strong> ${totalPoolPhotos + totalInterventionPhotos}
+              </div>
+              <div>
+                <strong>🗂️ Categorias:</strong><br>
+                ${
+                  maintenance.photos?.reduce(
+                    (acc, photo) => {
+                      const category = photo.category || "general";
+                      acc[category] = (acc[category] || 0) + 1;
+                      return acc;
+                    },
+                    {} as Record<string, number>,
+                  )
+                    ? Object.entries(
+                        maintenance.photos.reduce(
+                          (acc, photo) => {
+                            const category = photo.category || "general";
+                            acc[category] = (acc[category] || 0) + 1;
+                            return acc;
+                          },
+                          {} as Record<string, number>,
+                        ),
+                      )
+                        .map(
+                          ([cat, count]) =>
+                            `${cat === "general" ? "Geral" : cat === "equipment" ? "Equipamentos" : cat === "issues" ? "Problemas" : cat === "before" ? "Antes" : cat === "after" ? "Depois" : cat}: ${count}`,
+                        )
+                        .join("<br>")
+                    : "Sem categorização"
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       ${
         maintenance.observations
