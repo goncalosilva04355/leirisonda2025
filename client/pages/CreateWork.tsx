@@ -48,6 +48,7 @@ const statusOptions = [
 
 export function CreateWork() {
   const navigate = useNavigate();
+  const { createWork, isOnline, isSyncing } = useFirebaseSync();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
