@@ -641,8 +641,6 @@ export function PoolMaintenancePage() {
                     ⚙️ Sistemas da Piscina
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-4">
-
-
                     <div className="flex items-center space-x-3">
                       <Checkbox
                         id="enchimentoAutomatico"
@@ -877,7 +875,6 @@ export function PoolMaintenancePage() {
                       Sistemas da Piscina
                     </h6>
                     <div className="flex flex-wrap gap-2">
-                      )}
                       {maintenance.maintenanceWork.enchimentoAutomatico && (
                         <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
                           ✓ Enchimento Automático
