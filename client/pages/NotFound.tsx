@@ -45,7 +45,8 @@ export function NotFound() {
         {/* Help */}
         <div className="pt-6 border-t border-border">
           <p className="text-sm text-muted-foreground">
-            Se continuar a ter problemas, contacte o suporte técnico.
+            Se continuar a ter problemas, entre em contacto com o suporte
+            técnico.
           </p>
         </div>
       </div>
