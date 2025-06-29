@@ -38,7 +38,7 @@ const worksheetOptions = [
 
 export function WorksList() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [works, setWorks] = useState<Work[]>([]);
+  const { works } = useFirebaseSync();
   const [filteredWorks, setFilteredWorks] = useState<Work[]>([]);
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get("search") || "",
