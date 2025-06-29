@@ -38,6 +38,8 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 export function CreateIntervention() {
   const { maintenanceId } = useParams<{ maintenanceId: string }>();
   const navigate = useNavigate();
+  const { updateMaintenance, maintenances, isOnline, isSyncing } =
+    useFirebaseSync();
   const [maintenance, setMaintenance] = useState<PoolMaintenance | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
