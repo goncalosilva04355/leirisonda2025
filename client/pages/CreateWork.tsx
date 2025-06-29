@@ -505,7 +505,7 @@ export function CreateWork() {
 
             <div className="space-y-6">
               <div>
-                <Label htmlFor="observations">Observaç��es</Label>
+                <Label htmlFor="observations">Observações</Label>
                 <Textarea
                   id="observations"
                   value={formData.observations}
