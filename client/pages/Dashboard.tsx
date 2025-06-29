@@ -221,15 +221,6 @@ export function Dashboard() {
                 Manutenção
               </button>
             )}
-            {user?.role === "admin" && (
-              <button
-                className="group relative bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center"
-                onClick={() => navigate("/user-data")}
-              >
-                <Users className="w-4 h-4 mr-2 text-purple-600 group-hover:scale-110 transition-transform duration-200" />
-                Dados
-              </button>
-            )}
           </div>
         </div>
       </div>
