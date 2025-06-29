@@ -237,7 +237,7 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
               <span class="pdf-info-value">${work.entryTime ? format(new Date(work.entryTime), "dd/MM/yyyy HH:mm", { locale: pt }) : "N/A"}</span>
             </div>
             <div class="pdf-info-item">
-              <span class="pdf-info-label">Saída:</span>
+              <span class="pdf-info-label">Sa��da:</span>
               <span class="pdf-info-value">${work.exitTime ? format(new Date(work.exitTime), "dd/MM/yyyy HH:mm", { locale: pt }) : "N/A"}</span>
             </div>
             <div class="pdf-info-item">
@@ -376,13 +376,19 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
     setIsGenerating(true);
 
     try {
+      // Force fresh content generation
+      const currentTimestamp = new Date().toISOString();
+      console.log(
+        `���� Gerando relatório de obra atualizado em: ${currentTimestamp}`,
+      );
+
       const content = createWorkContent();
 
       const pdfData = {
-        title: `Relatório de Obra - ${work.clientName}`,
-        subtitle: `Folha de Obra: ${work.workSheetNumber}`,
+        title: `Relatório de Obra Atualizado - ${work.clientName}`,
+        subtitle: `Folha de Obra: ${work.workSheetNumber} • Atualizado: ${format(new Date(), "dd/MM/yyyy HH:mm", { locale: pt })}`,
         date: format(new Date(work.createdAt), "dd/MM/yyyy", { locale: pt }),
-        additionalInfo: `Tipo: ${getTypeLabel(work.type)} • Estado: ${getStatusInfo(work.status).label}`,
+        additionalInfo: `Tipo: ${getTypeLabel(work.type)} • Estado: ${getStatusInfo(work.status).label} • Versão: ${format(new Date(), "yyyyMMdd-HHmm", { locale: pt })}`,
       };
 
       const modernPDFStyles = `
