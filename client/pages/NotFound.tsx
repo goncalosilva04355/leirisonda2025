@@ -32,13 +32,11 @@ export function NotFound() {
             </Link>
           </Button>
 
-          <Button
-            variant="outline"
-            onClick={() => window.history.back()}
-            className="w-full"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Página Anterior
+          <Button variant="outline" asChild className="w-full">
+            <Link to="/">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Página Anterior
+            </Link>
           </Button>
         </div>
 
