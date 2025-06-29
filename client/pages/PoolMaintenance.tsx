@@ -32,7 +32,8 @@ import {
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function PoolMaintenancePage() {
-  const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
+  const { maintenances, updateMaintenance, isOnline, isSyncing } =
+    useFirebaseSync();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
