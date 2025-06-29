@@ -326,7 +326,7 @@ export function MaintenanceList() {
           <Link to="/maintenance/new-general">
             <Button
               size="lg"
-              className="bg-red-600 hover:bg-red-700 text-white shadow-lg px-8 py-3 text-lg font-medium"
+              className="bg-red-600 hover:bg-red-700 text-white shadow-lg px-8 py-3 text-lg font-medium rounded-lg"
             >
               <Plus className="mr-2 h-5 w-5" />
               Nova
