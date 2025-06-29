@@ -779,7 +779,9 @@ export function MaintenanceReport({
               className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
             >
               <Download className="mr-2 h-4 w-4" />
-              {isGenerating ? "A gerar PDF..." : "Descarregar PDF Completo"}
+              {isGenerating
+                ? "🔄 Gerando NOVO PDF..."
+                : "⬇️ DESCARREGAR PDF NOVO (V2.0)"}
             </Button>
           </div>
 
