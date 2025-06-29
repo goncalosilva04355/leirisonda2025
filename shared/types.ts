@@ -114,7 +114,7 @@ export interface MaintenanceIntervention {
   }[];
   workPerformed: {
     filtros: boolean;
-    preFiltero: boolean;
+    preFiltro: boolean;
     filtroAreiaVidro: boolean;
     alimenta: boolean;
     enchimentoAutomatico: boolean;
