@@ -68,10 +68,10 @@ export function Dashboard() {
   }, [searchTerm]);
 
   const performSearch = () => {
-    const storedWorks = localStorage.getItem("leirisonda_works");
-    const works: Work[] = storedWorks ? JSON.parse(storedWorks) : [];
+    // Use Firebase synced data instead of localStorage directly
+    const worksList = works || [];
 
-    const filtered = works.filter(
+    const filtered = worksList.filter(
       (work) =>
         work.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         work.workSheetNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
