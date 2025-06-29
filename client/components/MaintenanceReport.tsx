@@ -1852,7 +1852,7 @@ export function MaintenanceReport({
         title: pdfData.title,
         subtitle: pdfData.subtitle,
         date: pdfData.date,
-        content: content + modernPDFStyles,
+        content: content,
         additionalInfo: pdfData.additionalInfo,
       });
 
