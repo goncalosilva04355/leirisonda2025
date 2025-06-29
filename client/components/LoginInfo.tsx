@@ -30,12 +30,6 @@ export function LoginInfo() {
       password: "user123",
       role: "Utilizador - Básico",
     },
-    {
-      name: "Alexandre Fernandes",
-      email: "alexkamaryta@gmail.com",
-      password: "69alexandre",
-      role: "Admin - Acesso completo",
-    },
   ];
 
   const copyEmail = async (email: string) => {
