@@ -1059,7 +1059,7 @@ Relatório gerado em: ${reportDate}
       </div>
 
       <div class="maintenance-content">
-        <div class="content-text">${content}</div>
+        ${content}
       </div>
     </div>
 
@@ -1661,7 +1661,7 @@ Relatório gerado em: ${reportDate}
                   maintenance.status === "active"
                     ? "✅ Ativa"
                     : maintenance.status === "inactive"
-                      ? "⏸️ Inativa"
+                      ? "⏸��� Inativa"
                       : "🌻 Sazonal"
                 }
               </span>
