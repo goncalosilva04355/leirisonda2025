@@ -47,7 +47,15 @@ export function useFirebaseSync() {
 
   // Sync data when online
   const syncData = async () => {
-    if (!isOnline || !user) return;
+    if (!user) return;
+
+    if (!isFirebaseAvailable) {
+      console.log("📱 Local mode - no sync needed");
+      setLastSync(new Date());
+      return;
+    }
+
+    if (!isOnline) return;
 
     try {
       setIsSyncing(true);
