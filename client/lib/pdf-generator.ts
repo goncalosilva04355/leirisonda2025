@@ -336,7 +336,7 @@ export class PDFGenerator {
         <meta charset="UTF-8">
         <title>${data.title}</title>
         <style>
-          /* Novo design moderno - ${Date.now()} */
+          /* Design moderno atualizado - ${Date.now()} - v2.0 */
           @page {
             size: A4;
             margin: 20mm;
