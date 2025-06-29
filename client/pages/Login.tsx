@@ -55,42 +55,83 @@ export function Login() {
           <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-8 text-white text-center relative">
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="relative z-10">
-              <div className="mx-auto w-24 h-24 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-lg p-2">
+              <div className="mx-auto w-28 h-28 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-xl p-3 border-4 border-white/20">
                 <svg
-                  width="80"
-                  height="80"
-                  viewBox="0 0 100 100"
+                  width="88"
+                  height="88"
+                  viewBox="0 0 120 120"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-full h-full"
                 >
-                  {/* Fundo circular com cores da Leirisonda */}
-                  <circle cx="50" cy="50" r="45" fill="#b30229" />
-                  <circle cx="50" cy="50" r="35" fill="#007784" />
+                  {/* Fundo principal */}
+                  <circle cx="60" cy="60" r="55" fill="#b30229" />
+                  <circle cx="60" cy="60" r="42" fill="#007784" />
 
-                  {/* Símbolo de construção/obra */}
-                  <rect x="35" y="40" width="30" height="3" fill="white" />
-                  <rect x="35" y="47" width="30" height="3" fill="white" />
-                  <rect x="35" y="54" width="30" height="3" fill="white" />
-
-                  {/* Ferramenta/chave */}
-                  <rect x="42" y="30" width="4" height="15" fill="white" />
-                  <rect x="54" y="30" width="4" height="15" fill="white" />
-
-                  {/* Base/fundação */}
+                  {/* Logo "L" estilizado da Leirisonda */}
                   <rect
-                    x="30"
-                    y="65"
-                    width="40"
+                    x="35"
+                    y="30"
+                    width="8"
+                    height="45"
+                    fill="white"
+                    rx="2"
+                  />
+                  <rect
+                    x="35"
+                    y="67"
+                    width="25"
                     height="8"
                     fill="white"
                     rx="2"
                   />
 
-                  {/* Detalhes decorativos */}
-                  <circle cx="35" cy="35" r="2" fill="white" opacity="0.8" />
-                  <circle cx="65" cy="35" r="2" fill="white" opacity="0.8" />
-                  <circle cx="50" cy="25" r="1.5" fill="white" opacity="0.6" />
+                  {/* Elementos de construção */}
+                  <rect
+                    x="50"
+                    y="35"
+                    width="20"
+                    height="4"
+                    fill="white"
+                    opacity="0.9"
+                    rx="1"
+                  />
+                  <rect
+                    x="50"
+                    y="45"
+                    width="20"
+                    height="4"
+                    fill="white"
+                    opacity="0.7"
+                    rx="1"
+                  />
+                  <rect
+                    x="50"
+                    y="55"
+                    width="20"
+                    height="4"
+                    fill="white"
+                    opacity="0.5"
+                    rx="1"
+                  />
+
+                  {/* Ferramentas/detalhes */}
+                  <circle cx="75" cy="40" r="3" fill="white" opacity="0.8" />
+                  <circle cx="80" cy="50" r="2" fill="white" opacity="0.6" />
+                  <rect
+                    x="75"
+                    y="60"
+                    width="8"
+                    height="3"
+                    fill="white"
+                    opacity="0.7"
+                    rx="1"
+                  />
+
+                  {/* Pontos decorativos */}
+                  <circle cx="45" cy="25" r="1.5" fill="white" opacity="0.6" />
+                  <circle cx="75" cy="25" r="1.5" fill="white" opacity="0.6" />
+                  <circle cx="60" cy="20" r="2" fill="white" opacity="0.8" />
                 </svg>
               </div>
               <h1 className="text-2xl font-bold mb-2">Leirisonda</h1>
