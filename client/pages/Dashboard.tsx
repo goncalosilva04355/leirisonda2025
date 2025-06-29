@@ -83,19 +83,25 @@ export function Dashboard() {
   };
 
   const loadDashboardData = () => {
-    const storedWorks = localStorage.getItem("leirisonda_works");
-    const works: Work[] = storedWorks ? JSON.parse(storedWorks) : [];
+    // Use Firebase synced data instead of localStorage directly
+    const worksList = works || [];
 
     // Calculate stats
-    const totalWorks = works.length;
-    const pendingWorks = works.filter((w) => w.status === "pendente").length;
-    const inProgressWorks = works.filter(
+    const totalWorks = worksList.length;
+    const pendingWorks = worksList.filter(
+      (w) => w.status === "pendente",
+    ).length;
+    const inProgressWorks = worksList.filter(
       (w) => w.status === "em_progresso",
     ).length;
-    const completedWorks = works.filter((w) => w.status === "concluida").length;
+    const completedWorks = worksList.filter(
+      (w) => w.status === "concluida",
+    ).length;
 
     // Calculate work sheets pending (not completed)
-    const workSheetsPending = works.filter((w) => !w.workSheetCompleted).length;
+    const workSheetsPending = worksList.filter(
+      (w) => !w.workSheetCompleted,
+    ).length;
 
     setStats({
       totalWorks,
