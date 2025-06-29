@@ -13,80 +13,180 @@ export class PDFGenerator {
   private static readonly LEIRISONDA_RED = "#B3022A";
   private static readonly LEIRISONDA_BLUE_LIGHT = "#EFF5F6";
 
+  // Check if device is mobile for optimized settings
+  private static isMobileDevice(): boolean {
+    return (
+      window.innerWidth < 768 ||
+      /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      )
+    );
+  }
+
+  // Wait for images to load completely
+  private static async waitForImages(container: HTMLElement): Promise<void> {
+    const images = container.querySelectorAll("img");
+    const imagePromises = Array.from(images).map((img) => {
+      if (img.complete) return Promise.resolve();
+
+      return new Promise<void>((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          console.warn("Image timeout:", img.src);
+          resolve(); // Continue even if image fails
+        }, 5000);
+
+        img.onload = () => {
+          clearTimeout(timeout);
+          resolve();
+        };
+        img.onerror = () => {
+          clearTimeout(timeout);
+          console.warn("Image failed to load:", img.src);
+          resolve(); // Continue even if image fails
+        };
+      });
+    });
+
+    await Promise.all(imagePromises);
+  }
+
   static async generatePDFFromHTML(
     htmlContent: string,
     options: PDFOptions,
   ): Promise<Blob> {
+    let tempContainer: HTMLElement | null = null;
+
     try {
+      // Detect mobile device for optimized settings
+      const isMobile = this.isMobileDevice();
+
       // Create container preserving custom styles
-      const tempContainer = document.createElement("div");
+      tempContainer = document.createElement("div");
       tempContainer.innerHTML = htmlContent;
       tempContainer.style.position = "absolute";
       tempContainer.style.left = "-9999px";
+      tempContainer.style.top = "-9999px";
       tempContainer.style.width = "210mm"; // Full A4 width for modern layout
       tempContainer.style.overflow = "visible"; // Allow content to expand
+      tempContainer.style.zIndex = "-1000";
 
       document.body.appendChild(tempContainer);
 
-      // Wait for content to load
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Wait for content and images to load
+      await new Promise((resolve) =>
+        setTimeout(resolve, isMobile ? 1000 : 500),
+      );
+      await this.waitForImages(tempContainer);
 
-      // Generate canvas
-      const canvas = await html2canvas(tempContainer, {
-        scale: 2,
+      // Mobile-optimized canvas settings
+      const canvasOptions = {
+        scale: isMobile ? 1.5 : 2, // Lower scale on mobile to prevent memory issues
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
-        height: tempContainer.scrollHeight, // Allow full content height
+        height: tempContainer.scrollHeight,
         width: tempContainer.scrollWidth,
-      });
+        removeContainer: true,
+        imageTimeout: 5000,
+        onclone: (clonedDoc: Document) => {
+          // Ensure all styles are properly cloned
+          const clonedContainer = clonedDoc.body.firstChild as HTMLElement;
+          if (clonedContainer) {
+            clonedContainer.style.width = "210mm";
+            clonedContainer.style.overflow = "visible";
+          }
+        },
+      };
 
-      document.body.removeChild(tempContainer);
+      // Generate canvas with error handling
+      let canvas: HTMLCanvasElement;
+      try {
+        canvas = await html2canvas(tempContainer, canvasOptions);
+      } catch (canvasError) {
+        console.error("Canvas generation error:", canvasError);
+        // Retry with even more conservative settings
+        const retryOptions = {
+          ...canvasOptions,
+          scale: 1,
+          height: Math.min(tempContainer.scrollHeight, 3000), // Limit height
+          width: Math.min(tempContainer.scrollWidth, 800), // Limit width
+        };
+        canvas = await html2canvas(tempContainer, retryOptions);
+      }
 
-      // Create PDF
+      // Clean up container as soon as possible
+      if (tempContainer && tempContainer.parentNode) {
+        document.body.removeChild(tempContainer);
+        tempContainer = null;
+      }
+
+      // Validate canvas
+      if (!canvas || canvas.width === 0 || canvas.height === 0) {
+        throw new Error("Falha na geração do conteúdo visual");
+      }
+
+      // Create PDF with mobile-optimized settings
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: "a4",
+        compress: true, // Enable compression
+        precision: 2, // Reduce precision for smaller file size
       });
 
       // Add metadata
       pdf.setProperties({
         title: options.title,
         author: "Leirisonda",
+        creator: "Leirisonda PDF Generator",
       });
 
       // Calculate for A4 with proper scaling
       const pdfWidth = 210;
       const pdfHeight = 297;
-      const margin = 10; // Smaller margins for more content
+      const margin = 10;
       const maxWidth = pdfWidth - margin * 2;
       const maxHeight = pdfHeight - margin * 2;
 
       // Calculate scaling to fit width
-      const scaleToFitWidth = maxWidth / (canvas.width / 2); // Adjust for 2x scale
-      const scaledHeight = (canvas.height / 2) * scaleToFitWidth;
+      const usedScale = isMobile ? 1.5 : 2;
+      const scaleToFitWidth = maxWidth / (canvas.width / usedScale);
+      const scaledHeight = (canvas.height / usedScale) * scaleToFitWidth;
 
       let currentY = margin;
-      const canvasData = canvas.toDataURL("image/png", 0.9);
+
+      // Convert canvas to image with quality optimization
+      let canvasData: string;
+      try {
+        canvasData = canvas.toDataURL("image/jpeg", isMobile ? 0.7 : 0.8); // Lower quality on mobile
+      } catch (toDataURLError) {
+        console.error("Canvas toDataURL error:", toDataURLError);
+        // Fallback to PNG with lower quality
+        canvasData = canvas.toDataURL("image/png");
+      }
 
       // If content fits in one page
       if (scaledHeight <= maxHeight) {
         pdf.addImage(
           canvasData,
-          "PNG",
+          "JPEG",
           margin,
           currentY,
           maxWidth,
           scaledHeight,
+          undefined,
+          "MEDIUM", // Medium compression
         );
       } else {
-        // Multi-page support
+        // Multi-page support with memory optimization
         const pageHeight = maxHeight;
         const totalPages = Math.ceil(scaledHeight / pageHeight);
+        const maxPages = isMobile ? 10 : 20; // Limit pages on mobile
 
-        for (let i = 0; i < totalPages; i++) {
+        const actualPages = Math.min(totalPages, maxPages);
+
+        for (let i = 0; i < actualPages; i++) {
           if (i > 0) {
             pdf.addPage();
             currentY = margin;
@@ -101,10 +201,15 @@ export class PDFGenerator {
           // Create a cropped canvas for this page
           const pageCanvas = document.createElement("canvas");
           const pageCtx = pageCanvas.getContext("2d");
+
+          if (!pageCtx) {
+            throw new Error("Não foi possível criar contexto do canvas");
+          }
+
           pageCanvas.width = canvas.width;
           pageCanvas.height = sourceHeight;
 
-          pageCtx?.drawImage(
+          pageCtx.drawImage(
             canvas,
             0,
             sourceY,
@@ -119,21 +224,76 @@ export class PDFGenerator {
           const actualPageHeight =
             (sourceHeight / canvas.height) * scaledHeight;
 
-          pdf.addImage(
-            pageCanvas.toDataURL("image/png", 0.9),
-            "PNG",
-            margin,
-            currentY,
-            maxWidth,
-            actualPageHeight,
+          try {
+            const pageImageData = pageCanvas.toDataURL(
+              "image/jpeg",
+              isMobile ? 0.7 : 0.8,
+            );
+            pdf.addImage(
+              pageImageData,
+              "JPEG",
+              margin,
+              currentY,
+              maxWidth,
+              actualPageHeight,
+              undefined,
+              "MEDIUM",
+            );
+          } catch (pageError) {
+            console.error(`Error adding page ${i + 1}:`, pageError);
+            // Continue with next page
+          }
+        }
+
+        if (totalPages > actualPages) {
+          console.warn(
+            `PDF truncated: ${actualPages}/${totalPages} pages due to mobile limitations`,
           );
         }
+      }
+
+      // Force garbage collection if available
+      if ((window as any).gc) {
+        (window as any).gc();
       }
 
       return pdf.output("blob");
     } catch (error) {
       console.error("Error generating PDF:", error);
-      throw new Error("Erro ao gerar PDF. Tente novamente.");
+
+      // Clean up on error
+      if (tempContainer && tempContainer.parentNode) {
+        try {
+          document.body.removeChild(tempContainer);
+        } catch (cleanupError) {
+          console.error("Cleanup error:", cleanupError);
+        }
+      }
+
+      // Provide more specific error messages
+      if (error instanceof Error) {
+        if (error.message.includes("canvas")) {
+          throw new Error(
+            "Erro na geração do PDF: problema com imagens. Tente novamente.",
+          );
+        } else if (
+          error.message.includes("memory") ||
+          error.message.includes("limit")
+        ) {
+          throw new Error(
+            "Erro na geração do PDF: documento muito grande. Tente reduzir o conteúdo.",
+          );
+        } else if (
+          error.message.includes("network") ||
+          error.message.includes("cors")
+        ) {
+          throw new Error(
+            "Erro na geração do PDF: problema de conectividade. Verifique a internet.",
+          );
+        }
+      }
+
+      throw new Error("Erro ao gerar PDF. Tente novamente em alguns segundos.");
     }
   }
 

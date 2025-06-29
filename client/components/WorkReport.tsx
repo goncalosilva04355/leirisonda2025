@@ -786,8 +786,9 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
     `.trim();
   };
 
-  const generatePDFReport = async (shareMethod?: string) => {
+  const generatePDFReport = async (shareMethod?: string, retryCount = 0) => {
     setIsGenerating(true);
+    const maxRetries = 2;
 
     try {
       const workDate = format(new Date(work.createdAt), "dd/MM/yyyy", {
@@ -820,9 +821,59 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
           orientation: "portrait",
         });
       }
+
+      // Success feedback
+      if (shareMethod) {
+        alert("✅ PDF gerado com sucesso!");
+      }
     } catch (error) {
       console.error("PDF generation error:", error);
-      alert("❌ Erro ao gerar PDF. Tente novamente.");
+
+      // Retry logic for transient errors
+      if (retryCount < maxRetries) {
+        console.log(
+          `Retrying PDF generation (attempt ${retryCount + 1}/${maxRetries + 1})`,
+        );
+
+        // Wait a bit before retrying
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000 * (retryCount + 1)),
+        );
+
+        setIsGenerating(false); // Reset state for retry
+        return generatePDFReport(shareMethod, retryCount + 1);
+      }
+
+      // Show user-friendly error message
+      let errorMessage = "❌ Erro ao gerar PDF.";
+
+      if (error instanceof Error) {
+        if (error.message.includes("imagens")) {
+          errorMessage =
+            "❌ Erro nas imagens do relatório. Verifique a conexão e tente novamente.";
+        } else if (error.message.includes("muito grande")) {
+          errorMessage =
+            "❌ Relatório muito extenso. Tente gerar com menos fotos.";
+        } else if (error.message.includes("conectividade")) {
+          errorMessage =
+            "❌ Problema de conexão. Verifique a internet e tente novamente.";
+        } else if (error.message.includes("visual")) {
+          errorMessage =
+            "❌ Erro na geração visual. Tente recarregar a página.";
+        } else {
+          errorMessage = `❌ ${error.message}`;
+        }
+      }
+
+      // Show error with retry option
+      const shouldRetry = confirm(`${errorMessage}\n\n🔄 Tentar novamente?`);
+
+      if (shouldRetry) {
+        setIsGenerating(false);
+        // Small delay before retry
+        setTimeout(() => generatePDFReport(shareMethod, 0), 500);
+        return;
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -980,9 +1031,16 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
           </div>
 
           {isGenerating && (
-            <div className="text-center text-sm text-gray-600">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600 mx-auto mb-2"></div>
-              A gerar relatório PDF...
+            <div className="text-center p-4 bg-red-50 rounded-lg border border-red-200">
+              <div className="flex flex-col items-center gap-3">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+                <div className="text-sm text-red-700 font-medium">
+                  📄 Gerando relatório PDF...
+                </div>
+                <div className="text-xs text-red-600">
+                  Aguarde, pode levar alguns segundos no móvel
+                </div>
+              </div>
             </div>
           )}
         </div>
