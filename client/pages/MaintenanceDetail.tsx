@@ -387,7 +387,9 @@ export function MaintenanceDetail() {
                         className={`text-sm ${getWaterQualityColor(intervention)}`}
                       >
                         pH: {intervention.waterValues.ph || "N/A"} • Cl:{" "}
-                        {intervention.waterValues.chlorine || "N/A"}
+                        {intervention.waterValues.chlorine || "N/A"} • ORP:{" "}
+                        {intervention.waterValues.orp || "N/A"} • Sal:{" "}
+                        {intervention.waterValues.salt || "N/A"}
                       </span>
                     </div>
                     <div className="text-sm text-gray-600 mt-1">
