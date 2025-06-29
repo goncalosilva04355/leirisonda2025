@@ -14,39 +14,39 @@
   "version": "2.0.1",
   "icons": [
     {
-      "src": "/leirisonda-logo-complete.svg",
+      "src": "/apple-touch-icon.png",
       "sizes": "72x72",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/leirisonda-logo-complete.svg",
+      "src": "/apple-touch-icon.png",
       "sizes": "96x96",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/leirisonda-logo-complete.svg",
+      "src": "/apple-touch-icon.png",
       "sizes": "128x128",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/leirisonda-logo-complete.svg",
+      "src": "/apple-touch-icon.png",
       "sizes": "144x144",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/leirisonda-logo-complete.svg",
+      "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/leirisonda-logo-complete.svg",
+      "src": "/apple-touch-icon-180x180.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
