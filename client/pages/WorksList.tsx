@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 const statusOptions = [
   { value: "all", label: "Todos os Estados" },
