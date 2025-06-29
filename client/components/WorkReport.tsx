@@ -751,7 +751,8 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
         additionalInfo: pdfData.additionalInfo,
       });
 
-      const filename = `obra_${work.workSheetNumber.replace(/\s+/g, "_")}_${format(new Date(), "yyyyMMdd", { locale: pt })}.pdf`;
+      const filename = `obra_${work.workSheetNumber.replace(/\s+/g, "_")}_${format(new Date(), "yyyyMMdd-HHmmss", { locale: pt })}.pdf`;
+      console.log(`📥 Fazendo download da obra: ${filename}`);
 
       await PDFGenerator.downloadPDF(htmlContent, {
         title: pdfData.title,
