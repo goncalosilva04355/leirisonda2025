@@ -44,7 +44,9 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
     logout();
   };
 
-  const handleGoBack = () => {
+  const handleGoBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     navigate(-1);
   };
 
