@@ -786,8 +786,9 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
     `.trim();
   };
 
-  const generatePDFReport = async (shareMethod?: string) => {
+  const generatePDFReport = async (shareMethod?: string, retryCount = 0) => {
     setIsGenerating(true);
+    const maxRetries = 2;
 
     try {
       const workDate = format(new Date(work.createdAt), "dd/MM/yyyy", {
@@ -820,9 +821,59 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
           orientation: "portrait",
         });
       }
+
+      // Success feedback
+      if (shareMethod) {
+        alert("✅ PDF gerado com sucesso!");
+      }
     } catch (error) {
       console.error("PDF generation error:", error);
-      alert("❌ Erro ao gerar PDF. Tente novamente.");
+
+      // Retry logic for transient errors
+      if (retryCount < maxRetries) {
+        console.log(
+          `Retrying PDF generation (attempt ${retryCount + 1}/${maxRetries + 1})`,
+        );
+
+        // Wait a bit before retrying
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000 * (retryCount + 1)),
+        );
+
+        setIsGenerating(false); // Reset state for retry
+        return generatePDFReport(shareMethod, retryCount + 1);
+      }
+
+      // Show user-friendly error message
+      let errorMessage = "❌ Erro ao gerar PDF.";
+
+      if (error instanceof Error) {
+        if (error.message.includes("imagens")) {
+          errorMessage =
+            "❌ Erro nas imagens do relatório. Verifique a conexão e tente novamente.";
+        } else if (error.message.includes("muito grande")) {
+          errorMessage =
+            "❌ Relatório muito extenso. Tente gerar com menos fotos.";
+        } else if (error.message.includes("conectividade")) {
+          errorMessage =
+            "❌ Problema de conexão. Verifique a internet e tente novamente.";
+        } else if (error.message.includes("visual")) {
+          errorMessage =
+            "❌ Erro na geração visual. Tente recarregar a página.";
+        } else {
+          errorMessage = `❌ ${error.message}`;
+        }
+      }
+
+      // Show error with retry option
+      const shouldRetry = confirm(`${errorMessage}\n\n🔄 Tentar novamente?`);
+
+      if (shouldRetry) {
+        setIsGenerating(false);
+        // Small delay before retry
+        setTimeout(() => generatePDFReport(shareMethod, 0), 500);
+        return;
+      }
     } finally {
       setIsGenerating(false);
     }
