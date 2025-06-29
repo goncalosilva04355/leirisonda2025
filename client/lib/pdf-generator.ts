@@ -18,19 +18,13 @@ export class PDFGenerator {
     options: PDFOptions,
   ): Promise<Blob> {
     try {
-      // Create simple container
+      // Create container preserving custom styles
       const tempContainer = document.createElement("div");
       tempContainer.innerHTML = htmlContent;
       tempContainer.style.position = "absolute";
       tempContainer.style.left = "-9999px";
-      tempContainer.style.width = "170mm"; // A4 width minus 40mm margins
-      tempContainer.style.maxHeight = "257mm"; // A4 height minus 40mm margins
-      tempContainer.style.fontFamily = "Arial, sans-serif";
-      tempContainer.style.fontSize = "12px";
-      tempContainer.style.lineHeight = "1.4";
-      tempContainer.style.color = "#333";
-      tempContainer.style.background = "#fff";
-      tempContainer.style.overflow = "hidden";
+      tempContainer.style.width = "210mm"; // Full A4 width for modern layout
+      tempContainer.style.overflow = "visible"; // Allow content to expand
 
       document.body.appendChild(tempContainer);
 
@@ -44,7 +38,7 @@ export class PDFGenerator {
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
-        height: Math.min(tempContainer.scrollHeight, 970), // Limit height for A4
+        height: tempContainer.scrollHeight, // Allow full content height
         width: tempContainer.scrollWidth,
       });
 
@@ -63,37 +57,78 @@ export class PDFGenerator {
         author: "Leirisonda",
       });
 
-      // Calculate to fit A4 exactly with margins
+      // Calculate for A4 with proper scaling
       const pdfWidth = 210;
       const pdfHeight = 297;
-      const margin = 20;
-      const maxWidth = pdfWidth - margin * 2; // 170mm
-      const maxHeight = pdfHeight - margin * 2; // 257mm
+      const margin = 10; // Smaller margins for more content
+      const maxWidth = pdfWidth - margin * 2;
+      const maxHeight = pdfHeight - margin * 2;
 
-      // Calculate actual dimensions
-      const aspectRatio = canvas.width / canvas.height;
-      let width = maxWidth;
-      let height = width / aspectRatio;
+      // Calculate scaling to fit width
+      const scaleToFitWidth = maxWidth / (canvas.width / 2); // Adjust for 2x scale
+      const scaledHeight = (canvas.height / 2) * scaleToFitWidth;
 
-      // If too tall, scale down
-      if (height > maxHeight) {
-        height = maxHeight;
-        width = height * aspectRatio;
+      let currentY = margin;
+      const canvasData = canvas.toDataURL("image/png", 0.9);
+
+      // If content fits in one page
+      if (scaledHeight <= maxHeight) {
+        pdf.addImage(
+          canvasData,
+          "PNG",
+          margin,
+          currentY,
+          maxWidth,
+          scaledHeight,
+        );
+      } else {
+        // Multi-page support
+        const pageHeight = maxHeight;
+        const totalPages = Math.ceil(scaledHeight / pageHeight);
+
+        for (let i = 0; i < totalPages; i++) {
+          if (i > 0) {
+            pdf.addPage();
+            currentY = margin;
+          }
+
+          const sourceY = (i * pageHeight * canvas.height) / scaledHeight;
+          const sourceHeight = Math.min(
+            (pageHeight * canvas.height) / scaledHeight,
+            canvas.height - sourceY,
+          );
+
+          // Create a cropped canvas for this page
+          const pageCanvas = document.createElement("canvas");
+          const pageCtx = pageCanvas.getContext("2d");
+          pageCanvas.width = canvas.width;
+          pageCanvas.height = sourceHeight;
+
+          pageCtx?.drawImage(
+            canvas,
+            0,
+            sourceY,
+            canvas.width,
+            sourceHeight,
+            0,
+            0,
+            canvas.width,
+            sourceHeight,
+          );
+
+          const actualPageHeight =
+            (sourceHeight / canvas.height) * scaledHeight;
+
+          pdf.addImage(
+            pageCanvas.toDataURL("image/png", 0.9),
+            "PNG",
+            margin,
+            currentY,
+            maxWidth,
+            actualPageHeight,
+          );
+        }
       }
-
-      // Center on page
-      const x = margin + (maxWidth - width) / 2;
-      const y = margin;
-
-      // Add image to PDF
-      pdf.addImage(
-        canvas.toDataURL("image/png", 0.9),
-        "PNG",
-        x,
-        y,
-        width,
-        height,
-      );
 
       return pdf.output("blob");
     } catch (error) {
