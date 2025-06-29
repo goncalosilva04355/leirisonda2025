@@ -772,38 +772,150 @@ Relatório gerado em: ${reportDate}
   const createInterventionContent = () => {
     if (!intervention) return "";
 
+    // Get all work performed labels
+    const workLabels = {
+      filtros: "Limpeza de Filtros",
+      preFiltero: "Pré-filtro",
+      filtroAreiaVidro: "Filtro Areia/Vidro",
+      alimenta: "Sistema de Alimentação",
+      enchimentoAutomatico: "Enchimento Automático",
+      linhaAgua: "Linha de Água",
+      limpezaFundo: "Limpeza do Fundo",
+      limpezaParedes: "Limpeza das Paredes",
+      limpezaSkimmers: "Limpeza dos Skimmers",
+      verificacaoEquipamentos: "Verificação de Equipamentos",
+      aspiracao: "Aspiração",
+      escovagem: "Escovagem",
+      limpezaFiltros: "Limpeza de Filtros",
+      tratamentoAlgas: "Tratamento de Algas",
+    };
+
+    // Get water quality status with color coding
+    const getWaterQualityColor = (waterValues: any) => {
+      const ph = waterValues.ph;
+      const chlorine = waterValues.chlorine;
+      if (ph >= 7.0 && ph <= 7.4 && chlorine >= 1.0 && chlorine <= 2.0) {
+        return "success";
+      } else if (ph >= 6.8 && ph <= 7.6 && chlorine >= 0.8 && chlorine <= 2.5) {
+        return "warning";
+      }
+      return "danger";
+    };
+
+    const waterQualityColor = getWaterQualityColor(intervention.waterValues);
+    const waterQualityClass =
+      waterQualityColor === "success"
+        ? "quality-excellent"
+        : waterQualityColor === "warning"
+          ? "quality-acceptable"
+          : "quality-poor";
+
     return `
       <div class="section">
-        <div class="section-title">📅 Informações da Intervenção</div>
-        <p><strong>Data:</strong> ${format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })}</p>
-        <p><strong>Horário:</strong> ${intervention.timeStart} - ${intervention.timeEnd}</p>
-        <p><strong>Técnicos:</strong> ${intervention.technicians.join(", ")}</p>
-        ${intervention.vehicles.length > 0 ? `<p><strong>Viaturas:</strong> ${intervention.vehicles.join(", ")}</p>` : ""}
+        <div class="section-header">
+          <div class="section-title">📅 Informações da Intervenção</div>
+        </div>
+        <div class="section-content">
+          <div class="info-grid">
+            <div class="data-item">
+              <span class="label">Data:</span>
+              <span class="value">${format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })}</span>
+            </div>
+            <div class="data-item">
+              <span class="label">Horário:</span>
+              <span class="value">${intervention.timeStart} - ${intervention.timeEnd}</span>
+            </div>
+            <div class="data-item">
+              <span class="label">Duração:</span>
+              <span class="value">${calculateDuration(intervention.timeStart, intervention.timeEnd)}</span>
+            </div>
+          </div>
+          <div class="data-item">
+            <span class="label">Técnicos Responsáveis:</span>
+            <span class="value">${intervention.technicians.join(", ")}</span>
+          </div>
+          ${
+            intervention.vehicles.length > 0
+              ? `<div class="data-item">
+              <span class="label">Viaturas Utilizadas:</span>
+              <span class="value">${intervention.vehicles.join(", ")}</span>
+            </div>`
+              : ""
+          }
+        </div>
       </div>
 
       <div class="section">
-        <div class="section-title">🧪 Análise da Água</div>
-        <div class="info-grid">
-          <div class="info-card">
-            <h3>pH</h3>
-            <p>${intervention.waterValues.ph || "N/A"}</p>
-          </div>
-          <div class="info-card">
-            <h3>Cloro</h3>
-            <p>${intervention.waterValues.chlorine || "N/A"} ppm</p>
-          </div>
-          <div class="info-card">
-            <h3>Temperatura</h3>
-            <p>${intervention.waterValues.temperature || "N/A"}°C</p>
-          </div>
-          <div class="info-card">
-            <h3>Sal</h3>
-            <p>${intervention.waterValues.salt || "N/A"} ppm</p>
-          </div>
+        <div class="section-header">
+          <div class="section-title">🧪 Análise Completa da Água</div>
         </div>
+        <div class="section-content">
+          <div class="water-analysis-grid">
+            <div class="water-param">
+              <div class="param-label">pH</div>
+              <div class="param-value">${intervention.waterValues.ph || "N/A"}</div>
+              <div class="param-range">Ideal: 7.0-7.4</div>
+            </div>
+            <div class="water-param">
+              <div class="param-label">Cloro</div>
+              <div class="param-value">${intervention.waterValues.chlorine || "N/A"} ppm</div>
+              <div class="param-range">Ideal: 1.0-2.0 ppm</div>
+            </div>
+            <div class="water-param">
+              <div class="param-label">Temperatura</div>
+              <div class="param-value">${intervention.waterValues.temperature || "N/A"}°C</div>
+              <div class="param-range">Conforto: 24-28°C</div>
+            </div>
+            <div class="water-param">
+              <div class="param-label">Sal</div>
+              <div class="param-value">${intervention.waterValues.salt || "N/A"} ppm</div>
+              <div class="param-range">Piscina salgada: 3000-4000 ppm</div>
+            </div>
+            ${
+              intervention.waterValues.bromine
+                ? `
+            <div class="water-param">
+              <div class="param-label">Bromo</div>
+              <div class="param-value">${intervention.waterValues.bromine} ppm</div>
+              <div class="param-range">Ideal: 2-4 ppm</div>
+            </div>`
+                : ""
+            }
+            ${
+              intervention.waterValues.alkalinity
+                ? `
+            <div class="water-param">
+              <div class="param-label">Alcalinidade</div>
+              <div class="param-value">${intervention.waterValues.alkalinity} ppm</div>
+              <div class="param-range">Ideal: 80-120 ppm</div>
+            </div>`
+                : ""
+            }
+            ${
+              intervention.waterValues.hardness
+                ? `
+            <div class="water-param">
+              <div class="param-label">Dureza</div>
+              <div class="param-value">${intervention.waterValues.hardness} ppm</div>
+              <div class="param-range">Ideal: 150-300 ppm</div>
+            </div>`
+                : ""
+            }
+            ${
+              intervention.waterValues.stabilizer
+                ? `
+            <div class="water-param">
+              <div class="param-label">Estabilizador</div>
+              <div class="param-value">${intervention.waterValues.stabilizer} ppm</div>
+              <div class="param-range">Ideal: 30-50 ppm</div>
+            </div>`
+                : ""
+            }
+          </div>
 
-        <div class="highlight-box">
-          <strong>Estado da Água:</strong> ${getWaterQualityStatus(intervention.waterValues)}
+          <div class="water-quality-summary ${waterQualityClass}">
+            <strong>Avaliação Geral da Água:</strong> ${getWaterQualityStatus(intervention.waterValues)}
+          </div>
         </div>
       </div>
 
@@ -811,18 +923,37 @@ Relatório gerado em: ${reportDate}
         intervention.chemicalProducts.length > 0
           ? `
         <div class="section">
-          <div class="section-title">🧴 Produtos Químicos Utilizados</div>
-          ${intervention.chemicalProducts
-            .map(
-              (product) => `
-            <div class="info-card">
-              <h3>${product.productName}</h3>
-              <p><strong>Quantidade:</strong> ${product.quantity}</p>
-              <p><strong>Observações:</strong> ${product.observations || "Sem observações"}</p>
+          <div class="section-header">
+            <div class="section-title">🧴 Produtos Químicos Aplicados</div>
+          </div>
+          <div class="section-content">
+            <div class="products-table">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Unidade</th>
+                    <th>Finalidade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${intervention.chemicalProducts
+                    .map(
+                      (product) => `
+                    <tr>
+                      <td><strong>${product.productName}</strong></td>
+                      <td>${product.quantity}</td>
+                      <td>${product.unit}</td>
+                      <td>${getProductPurpose(product.productName)}</td>
+                    </tr>
+                  `,
+                    )
+                    .join("")}
+                </tbody>
+              </table>
             </div>
-          `,
-            )
-            .join("")}
+          </div>
         </div>
       `
           : ""
@@ -832,26 +963,32 @@ Relatório gerado em: ${reportDate}
         Object.values(intervention.workPerformed).some((v) => v)
           ? `
         <div class="section">
-          <div class="section-title">🔧 Trabalho Realizado</div>
-          <ul>
-            ${Object.entries(intervention.workPerformed)
-              .filter(([key, value]) => value && key !== "outros")
-              .map(([key]) => {
-                const labels = {
-                  filtros: "Pré-filtro",
-                  preFiltero: "Pré-filtro",
-                  filtroAreiaVidro: "Filtro Areia/Vidro",
-                  alimenta: "Alimenta",
-                  aspiracao: "Aspiração",
-                  escovagem: "Escovagem",
-                  limpezaFiltros: "Limpeza de Filtros",
-                  tratamentoAlgas: "Tratamento de Algas",
-                };
-                return `<li>✓ ${labels[key as keyof typeof labels] || key}</li>`;
-              })
-              .join("")}
-          </ul>
-          ${intervention.workPerformed.outros ? `<p><strong>Outros:</strong> ${intervention.workPerformed.outros}</p>` : ""}
+          <div class="section-header">
+            <div class="section-title">🔧 Trabalho Realizado</div>
+          </div>
+          <div class="section-content">
+            <div class="work-grid">
+              ${Object.entries(intervention.workPerformed)
+                .filter(([key, value]) => value && key !== "outros")
+                .map(
+                  ([key]) => `
+                  <div class="work-item completed">
+                    <span class="work-icon">✓</span>
+                    <span class="work-text">${workLabels[key as keyof typeof workLabels] || key}</span>
+                  </div>
+                `,
+                )
+                .join("")}
+            </div>
+            ${
+              intervention.workPerformed.outros
+                ? `<div class="additional-work">
+                <strong>Trabalho Adicional:</strong><br>
+                ${intervention.workPerformed.outros}
+              </div>`
+                : ""
+            }
+          </div>
         </div>
       `
           : ""
@@ -861,19 +998,77 @@ Relatório gerado em: ${reportDate}
         intervention.problems.length > 0
           ? `
         <div class="section">
-          <div class="section-title">⚠️ Problemas Identificados</div>
-          ${intervention.problems
-            .map(
-              (problem) => `
-            <div class="info-card">
-              <h3>${problem.description}</h3>
-              <p><strong>Prioridade:</strong> ${problem.priority}</p>
-              <p><strong>Estado:</strong> ${problem.resolved ? "✅ Resolvido" : "🔄 Pendente"}</p>
-              ${problem.solution ? `<p><strong>Solução:</strong> ${problem.solution}</p>` : ""}
+          <div class="section-header">
+            <div class="section-title">⚠️ Problemas Identificados e Soluções</div>
+          </div>
+          <div class="section-content">
+            ${intervention.problems
+              .map(
+                (problem) => `
+              <div class="problem-card ${problem.resolved ? "resolved" : "pending"}">
+                <div class="problem-header">
+                  <h4>${problem.description}</h4>
+                  <span class="severity-badge severity-${problem.severity}">
+                    ${
+                      problem.severity === "high"
+                        ? "Alta"
+                        : problem.severity === "medium"
+                          ? "Média"
+                          : "Baixa"
+                    } Prioridade
+                  </span>
+                </div>
+                <div class="problem-status">
+                  <span class="status-badge ${problem.resolved ? "resolved" : "pending"}">
+                    ${problem.resolved ? "✅ Resolvido" : "🔄 Pendente"}
+                  </span>
+                  ${
+                    problem.resolved && problem.solution
+                      ? `<div class="solution-text">
+                      <strong>Solução Aplicada:</strong> ${problem.solution}
+                    </div>`
+                      : ""
+                  }
+                </div>
+              </div>
+            `,
+              )
+              .join("")}
+          </div>
+        </div>
+      `
+          : ""
+      }
+
+      ${
+        intervention.photos && intervention.photos.length > 0
+          ? `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">📸 Registo Fotográfico da Intervenção</div>
+          </div>
+          <div class="section-content">
+            <div class="photos-grid">
+              ${intervention.photos
+                .map(
+                  (photo) => `
+                <div class="photo-item">
+                  <div class="photo-container">
+                    <img src="${photo.url}" alt="${photo.description || photo.filename}" />
+                  </div>
+                  <div class="photo-info">
+                    <div class="photo-description">${photo.description || "Sem descrição"}</div>
+                    <div class="photo-date">${format(new Date(photo.uploadedAt), "dd/MM/yyyy HH:mm", { locale: pt })}</div>
+                  </div>
+                </div>
+              `,
+                )
+                .join("")}
             </div>
-          `,
-            )
-            .join("")}
+            <div class="photos-summary">
+              <strong>Total de fotos:</strong> ${intervention.photos.length}
+            </div>
+          </div>
         </div>
       `
           : ""
@@ -883,9 +1078,13 @@ Relatório gerado em: ${reportDate}
         intervention.observations
           ? `
         <div class="section">
-          <div class="section-title">📝 Observações</div>
-          <div class="highlight-box">
-            ${intervention.observations}
+          <div class="section-header">
+            <div class="section-title">📝 Observações Técnicas</div>
+          </div>
+          <div class="section-content">
+            <div class="observations-box">
+              ${intervention.observations.replace(/\n/g, "<br>")}
+            </div>
           </div>
         </div>
       `
@@ -896,13 +1095,60 @@ Relatório gerado em: ${reportDate}
         intervention.nextMaintenanceDate
           ? `
         <div class="section">
-          <div class="section-title">📅 Próxima Manutenção</div>
-          <p><strong>Data prevista:</strong> ${format(new Date(intervention.nextMaintenanceDate), "dd/MM/yyyy", { locale: pt })}</p>
+          <div class="section-header">
+            <div class="section-title">��� Próxima Manutenção Programada</div>
+          </div>
+          <div class="section-content">
+            <div class="next-maintenance-box">
+              <div class="next-date">
+                <strong>Data Recomendada:</strong> ${format(new Date(intervention.nextMaintenanceDate), "dd/MM/yyyy", { locale: pt })}
+              </div>
+              <div class="next-info">
+                A próxima manutenção foi programada baseada nas condições atuais da piscina e nos resultados desta intervenção.
+              </div>
+            </div>
+          </div>
         </div>
       `
           : ""
       }
     `;
+  };
+
+  // Helper function to calculate duration
+  const calculateDuration = (start: string, end: string) => {
+    try {
+      const startTime = new Date(`2000-01-01 ${start}`);
+      const endTime = new Date(`2000-01-01 ${end}`);
+      const diff = endTime.getTime() - startTime.getTime();
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      return `${hours}h${minutes > 0 ? ` ${minutes}min` : ""}`;
+    } catch {
+      return "N/A";
+    }
+  };
+
+  // Helper function to determine product purpose
+  const getProductPurpose = (productName: string) => {
+    const purposes: { [key: string]: string } = {
+      cloro: "Desinfeção",
+      acid: "Correção pH",
+      algicida: "Prevenção algas",
+      floculante: "Clarificação",
+      alcalinizante: "Correção alcalinidade",
+      sal: "Eletrólise salina",
+      antiespuma: "Controlo espuma",
+      choque: "Tratamento choque",
+    };
+
+    const lowerName = productName.toLowerCase();
+    for (const [key, purpose] of Object.entries(purposes)) {
+      if (lowerName.includes(key)) {
+        return purpose;
+      }
+    }
+    return "Tratamento geral";
   };
 
   const createMaintenanceContent = () => {
