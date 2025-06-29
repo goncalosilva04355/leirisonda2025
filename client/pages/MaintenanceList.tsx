@@ -313,7 +313,7 @@ export function MaintenanceList() {
             <Link to="/create-maintenance">
               <Button className="btn-primary">
                 <Plus className="mr-2 h-4 w-4" />
-                Registar Primeira Piscina
+                Registrar Primeira Piscina
               </Button>
             </Link>
           )}
