@@ -56,6 +56,19 @@ export function WorksList() {
     loadWorks();
   }, []);
 
+  // React to URL parameter changes
+  useEffect(() => {
+    const status = searchParams.get("status") || "all";
+    const type = searchParams.get("type") || "all";
+    const worksheet = searchParams.get("worksheet") || "all";
+    const search = searchParams.get("search") || "";
+
+    setStatusFilter(status);
+    setTypeFilter(type);
+    setWorksheetFilter(worksheet);
+    setSearchTerm(search);
+  }, [searchParams]);
+
   useEffect(() => {
     filterWorks();
     updateURL();
