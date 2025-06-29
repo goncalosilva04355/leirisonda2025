@@ -752,7 +752,7 @@ export function PoolMaintenancePage() {
               Nenhuma manutenção registada
             </h3>
             <p className="text-gray-600 mb-4">
-              Comece por registar a primeira manutenção de piscina.
+              Comece por registrar a primeira manutenção de piscina.
             </p>
           </div>
         ) : (
