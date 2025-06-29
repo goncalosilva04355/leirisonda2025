@@ -55,12 +55,43 @@ export function Login() {
           <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-8 text-white text-center relative">
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="relative z-10">
-              <div className="mx-auto w-24 h-24 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-lg p-3">
-                <img
-                  src="/apple-touch-icon.png"
-                  alt="Leirisonda Logo"
-                  className="w-16 h-16 object-contain"
-                />
+              <div className="mx-auto w-24 h-24 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-lg p-2">
+                <svg
+                  width="80"
+                  height="80"
+                  viewBox="0 0 100 100"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-full h-full"
+                >
+                  {/* Fundo circular com cores da Leirisonda */}
+                  <circle cx="50" cy="50" r="45" fill="#b30229" />
+                  <circle cx="50" cy="50" r="35" fill="#007784" />
+
+                  {/* Símbolo de construção/obra */}
+                  <rect x="35" y="40" width="30" height="3" fill="white" />
+                  <rect x="35" y="47" width="30" height="3" fill="white" />
+                  <rect x="35" y="54" width="30" height="3" fill="white" />
+
+                  {/* Ferramenta/chave */}
+                  <rect x="42" y="30" width="4" height="15" fill="white" />
+                  <rect x="54" y="30" width="4" height="15" fill="white" />
+
+                  {/* Base/fundação */}
+                  <rect
+                    x="30"
+                    y="65"
+                    width="40"
+                    height="8"
+                    fill="white"
+                    rx="2"
+                  />
+
+                  {/* Detalhes decorativos */}
+                  <circle cx="35" cy="35" r="2" fill="white" opacity="0.8" />
+                  <circle cx="65" cy="35" r="2" fill="white" opacity="0.8" />
+                  <circle cx="50" cy="25" r="1.5" fill="white" opacity="0.6" />
+                </svg>
               </div>
               <h1 className="text-2xl font-bold mb-2">Leirisonda</h1>
               <p className="text-blue-100 opacity-90">
