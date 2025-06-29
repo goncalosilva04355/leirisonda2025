@@ -119,6 +119,22 @@ export class FirebaseService {
   async createWork(
     workData: Omit<Work, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
+    if (!this.isFirebaseAvailable) {
+      // Fallback to localStorage
+      const newWork: Work = {
+        ...workData,
+        id: crypto.randomUUID(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      const works = JSON.parse(localStorage.getItem("works") || "[]");
+      works.push(newWork);
+      localStorage.setItem("works", JSON.stringify(works));
+
+      return newWork.id;
+    }
+
     try {
       const worksRef = collection(db, "works");
       const docRef = await addDoc(worksRef, {
