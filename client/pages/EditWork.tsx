@@ -9,6 +9,8 @@ import {
   Calendar,
   Flag,
   AlertCircle,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import { Work } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -25,6 +27,7 @@ import {
 import { PhotoUpload } from "@/components/PhotoUpload";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { WorkReport } from "@/components/WorkReport";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 const statusOptions = [
   { value: "pendente", label: "Pendente" },
