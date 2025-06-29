@@ -139,16 +139,19 @@ export function MaintenanceReport({
   const createInterventionContent = () => {
     if (!intervention) return "";
 
+    // Enhanced content with timestamp to force refresh
+    const timestamp = new Date().toISOString();
+
     return `
-      <!-- Pool Information -->
+      <!-- Pool Information - Updated ${timestamp} -->
       <div class="section">
         <div class="section-header">
-          <div class="section-title">🏊‍♂️ Informações da Piscina</div>
+          <div class="section-title">🏊‍♂️ Informações Completas da Piscina</div>
         </div>
         <div class="section-content">
           <div class="info-grid">
             <div class="info-card">
-              <div class="label">Nome</div>
+              <div class="label">Nome da Piscina</div>
               <div class="value">${maintenance.poolName}</div>
             </div>
             <div class="info-card">
@@ -156,20 +159,28 @@ export function MaintenanceReport({
               <div class="value">${maintenance.clientName}</div>
             </div>
             <div class="info-card">
-              <div class="label">Morada</div>
+              <div class="label">Contacto Cliente</div>
+              <div class="value">${maintenance.clientPhone || "N/A"}</div>
+            </div>
+            <div class="info-card">
+              <div class="label">Email Cliente</div>
+              <div class="value">${maintenance.clientEmail || "N/A"}</div>
+            </div>
+            <div class="info-card">
+              <div class="label">Morada Completa</div>
               <div class="value">${maintenance.address}</div>
             </div>
             <div class="info-card">
-              <div class="label">Tipo</div>
+              <div class="label">Tipo de Piscina</div>
               <div class="value">${getPoolTypeLabel(maintenance.poolType)}</div>
             </div>
             <div class="info-card">
-              <div class="label">Volume</div>
+              <div class="label">Volume de Água</div>
               <div class="value">${maintenance.waterCubicage || "N/A"} m³</div>
             </div>
             <div class="info-card">
-              <div class="label">Estado</div>
-              <div class="value">${maintenance.status === "ativa" ? "Ativa" : "Inativa"}</div>
+              <div class="label">Estado da Piscina</div>
+              <div class="value">${maintenance.status === "ativa" ? "✅ Ativa" : "❌ Inativa"}</div>
             </div>
           </div>
         </div>
