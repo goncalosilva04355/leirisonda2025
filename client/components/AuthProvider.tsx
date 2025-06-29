@@ -320,13 +320,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
     try {
+      await signOut(auth);
       setUser(null);
       localStorage.removeItem("leirisonda_user");
+      firebaseService.cleanup();
     } catch (error) {
       console.error("Logout error:", error);
     }
+  }, []);
+
+  // Listen to Firebase Auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser && !user) {
+        // User is signed in with Firebase
+        const userData = await getUserFromFirestore(firebaseUser);
+        if (userData) {
+          setUser(userData);
+          localStorage.setItem("leirisonda_user", JSON.stringify(userData));
+
+          // Initialize Firebase sync
+          await firebaseService.syncLocalDataToFirebase();
+        }
+      } else if (!firebaseUser && user) {
+        // User is signed out
+        setUser(null);
+        localStorage.removeItem("leirisonda_user");
+        firebaseService.cleanup();
+      }
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  // Initialize global users in Firebase on first load
+  useEffect(() => {
+    const initializeFirebase = async () => {
+      try {
+        await createGlobalUsersInFirebase();
+      } catch (error) {
+        console.error("Error initializing Firebase:", error);
+      }
+    };
+
+    initializeFirebase();
   }, []);
 
   return (
