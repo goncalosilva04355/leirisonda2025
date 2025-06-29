@@ -25,6 +25,7 @@ import { MaintenanceList } from "./pages/MaintenanceList";
 import { CreateMaintenance } from "./pages/CreateMaintenance";
 import { MaintenanceDetail } from "./pages/MaintenanceDetail";
 import { CreateIntervention } from "./pages/CreateIntervention";
+import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
 import { MobileDeploy } from "./pages/MobileDeploy";
 import { NotFound } from "./pages/NotFound";
 
