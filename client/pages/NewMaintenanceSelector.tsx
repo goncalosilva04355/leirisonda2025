@@ -133,7 +133,7 @@ export function NewMaintenanceSelector() {
         {/* Search for existing pools */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h3 className="font-semibold text-gray-900 mb-4">
-            Selecionar Piscina para Nova Intervenção
+            Seleccionar Piscina para Nova Intervenção
           </h3>
 
           <Input
