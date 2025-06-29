@@ -318,7 +318,7 @@ export function PoolMaintenancePage() {
             Manutenção de Piscinas
           </h1>
           <p className="mt-2 text-gray-600">
-            Registar e monitorizar valores da água
+            Registrar e monitorizar valores da água
           </p>
         </div>
 
@@ -858,7 +858,7 @@ export function PoolMaintenancePage() {
                       )}
                       {maintenance.maintenanceWork.preFiltro && (
                         <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                          �� Pré-filtro
+                          ✓ Pré-filtro
                         </span>
                       )}
                       {maintenance.maintenanceWork.filtroAreiaVidro && (
