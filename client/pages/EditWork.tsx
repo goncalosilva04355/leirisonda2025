@@ -72,25 +72,49 @@ export function EditWork() {
     // Use dados do Firebase sync em primeiro lugar
     const foundWork = works.find((w) => w.id === id);
     if (foundWork) {
-        setWork(foundWork);
-        setFormData({
-          clientName: foundWork.clientName,
-          address: foundWork.address,
-          contact: foundWork.contact,
-          entryTime: format(
-            new Date(foundWork.entryTime),
-            "yyyy-MM-dd'T'HH:mm",
-          ),
-          exitTime: foundWork.exitTime
-            ? format(new Date(foundWork.exitTime), "yyyy-MM-dd'T'HH:mm")
-            : "",
-          status: foundWork.status,
-          observations: foundWork.observations,
-          workPerformed: foundWork.workPerformed,
-          workSheetCompleted: foundWork.workSheetCompleted || false,
-        });
-        setVehicles(foundWork.vehicles);
-        setTechnicians(foundWork.technicians);
+      setWork(foundWork);
+      setFormData({
+        clientName: foundWork.clientName,
+        address: foundWork.address,
+        contact: foundWork.contact,
+        entryTime: format(new Date(foundWork.entryTime), "yyyy-MM-dd'T'HH:mm"),
+        exitTime: foundWork.exitTime
+          ? format(new Date(foundWork.exitTime), "yyyy-MM-dd'T'HH:mm")
+          : "",
+        status: foundWork.status,
+        observations: foundWork.observations,
+        workPerformed: foundWork.workPerformed,
+        workSheetCompleted: foundWork.workSheetCompleted || false,
+      });
+      setVehicles(foundWork.vehicles);
+      setTechnicians(foundWork.technicians);
+    } else {
+      // Fallback para localStorage se não encontrar no Firebase
+      const storedWorks = localStorage.getItem("leirisonda_works");
+      if (storedWorks) {
+        const localWorks: Work[] = JSON.parse(storedWorks);
+        const localWork = localWorks.find((w) => w.id === id);
+        if (localWork) {
+          setWork(localWork);
+          setFormData({
+            clientName: localWork.clientName,
+            address: localWork.address,
+            contact: localWork.contact,
+            entryTime: format(
+              new Date(localWork.entryTime),
+              "yyyy-MM-dd'T'HH:mm",
+            ),
+            exitTime: localWork.exitTime
+              ? format(new Date(localWork.exitTime), "yyyy-MM-dd'T'HH:mm")
+              : "",
+            status: localWork.status,
+            observations: localWork.observations,
+            workPerformed: localWork.workPerformed,
+            workSheetCompleted: localWork.workSheetCompleted || false,
+          });
+          setVehicles(localWork.vehicles);
+          setTechnicians(localWork.technicians);
+        }
       }
     }
     setLoading(false);
