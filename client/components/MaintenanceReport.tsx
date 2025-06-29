@@ -73,7 +73,7 @@ export function MaintenanceReport({
       return `
 💧 RELATÓRIO DE MANUTENÇÃO - LEIRISONDA
 
-���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━���━
 
 🏊 INFORMAÇÕES DA PISCINA
 
@@ -2084,14 +2084,6 @@ Relatório gerado em: ${reportDate}
               `,
               )
               .join("")}
-                </tbody>
-              </table>
-            </div>
-            ${
-              maintenance.interventions.length > 10
-                ? `<div class="table-note">Mostrando as últimas 10 intervenções de ${totalInterventions} no total.</div>`
-                : ""
-            }
           </div>
         </div>
       `
