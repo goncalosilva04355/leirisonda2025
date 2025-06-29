@@ -18,19 +18,13 @@ export class PDFGenerator {
     options: PDFOptions,
   ): Promise<Blob> {
     try {
-      // Create simple container
+      // Create container preserving custom styles
       const tempContainer = document.createElement("div");
       tempContainer.innerHTML = htmlContent;
       tempContainer.style.position = "absolute";
       tempContainer.style.left = "-9999px";
-      tempContainer.style.width = "170mm"; // A4 width minus 40mm margins
-      tempContainer.style.maxHeight = "257mm"; // A4 height minus 40mm margins
-      tempContainer.style.fontFamily = "Arial, sans-serif";
-      tempContainer.style.fontSize = "12px";
-      tempContainer.style.lineHeight = "1.4";
-      tempContainer.style.color = "#333";
-      tempContainer.style.background = "#fff";
-      tempContainer.style.overflow = "hidden";
+      tempContainer.style.width = "210mm"; // Full A4 width for modern layout
+      tempContainer.style.overflow = "visible"; // Allow content to expand
 
       document.body.appendChild(tempContainer);
 
