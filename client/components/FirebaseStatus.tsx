@@ -8,6 +8,15 @@ export function FirebaseStatus() {
   const { user } = useAuth();
   const { isOnline, isSyncing, lastSync, syncData } = useFirebaseSync();
 
+  // Check if Firebase is available
+  const isFirebaseAvailable = React.useMemo(() => {
+    try {
+      return typeof window !== "undefined" && window.firebase !== undefined;
+    } catch {
+      return false;
+    }
+  }, []);
+
   if (!user) return null;
 
   const formatLastSync = (date: Date | null) => {
