@@ -341,6 +341,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Listen to Firebase Auth state changes
   useEffect(() => {
+    // Only setup auth listener if Firebase auth is available
+    if (!auth) {
+      console.log(
+        "📱 Firebase Auth not available - skipping auth state listener",
+      );
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser && !user) {
         // User is signed in with Firebase
