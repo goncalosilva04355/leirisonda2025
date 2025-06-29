@@ -21,7 +21,6 @@ import { Work, DashboardStats } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { SyncStatus } from "@/components/SyncStatus";
-import { FirebaseStatus } from "@/components/FirebaseStatus";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
