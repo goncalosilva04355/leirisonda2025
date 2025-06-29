@@ -575,7 +575,7 @@ export function MaintenanceReport({
         additionalInfo: pdfData.additionalInfo,
       });
 
-      const filename = `${intervention ? "intervencao" : "manutencao"}_${maintenance.poolName.replace(/\s+/g, "_")}_${format(new Date(), "yyyyMMdd-HHmm", { locale: pt })}.pdf`;
+      const filename = `${intervention ? "intervencao" : "manutencao"}_${maintenance.poolName.replace(/\s+/g, "_")}_${format(new Date(), "yyyyMMdd-HHmmss", { locale: pt })}.pdf`;
 
       console.log(`📥 Fazendo download: ${filename}`);
       await PDFGenerator.downloadPDF(htmlContent, {
