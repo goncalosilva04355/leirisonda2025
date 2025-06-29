@@ -498,21 +498,25 @@ export function MaintenanceReport({
     setIsGenerating(true);
 
     try {
+      // Force fresh content generation with current timestamp
+      const currentTimestamp = new Date().toISOString();
+      console.log(`📋 Gerando relatório atualizado em: ${currentTimestamp}`);
+
       const content = intervention
         ? createInterventionContent()
         : createMaintenanceContent();
 
       const pdfData = {
         title: intervention
-          ? `Relatório de Intervenção - ${maintenance.poolName}`
-          : `Relatório de Manutenção - ${maintenance.poolName}`,
+          ? `Relatório de Interven��ão Atualizado - ${maintenance.poolName}`
+          : `Relatório de Manutenção Completo - ${maintenance.poolName}`,
         subtitle: intervention
-          ? `Intervenção de ${format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })}`
-          : `Relatório geral da piscina`,
+          ? `Intervenção de ${format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })} • Atualizado: ${format(new Date(), "dd/MM/yyyy HH:mm", { locale: pt })}`
+          : `Relatório geral da piscina • Atualizado: ${format(new Date(), "dd/MM/yyyy HH:mm", { locale: pt })}`,
         date: intervention
           ? format(new Date(intervention.date), "dd/MM/yyyy", { locale: pt })
           : new Date().toLocaleDateString("pt-PT"),
-        additionalInfo: `Cliente: ${maintenance.clientName} • Tipo: ${getPoolTypeLabel(maintenance.poolType)} • Volume: ${maintenance.waterCubicage || "N/A"} m³`,
+        additionalInfo: `Cliente: ${maintenance.clientName} • Tipo: ${getPoolTypeLabel(maintenance.poolType)} • Volume: ${maintenance.waterCubicage || "N/A"} m³ • Versão: ${format(new Date(), "yyyyMMdd-HHmm", { locale: pt })}`,
       };
 
       const htmlContent = PDFGenerator.createModernReportHTML({
@@ -524,8 +528,9 @@ export function MaintenanceReport({
         additionalInfo: pdfData.additionalInfo,
       });
 
-      const filename = `${intervention ? "intervencao" : "manutencao"}_${maintenance.poolName.replace(/\s+/g, "_")}_${format(new Date(), "yyyyMMdd", { locale: pt })}.pdf`;
+      const filename = `${intervention ? "intervencao" : "manutencao"}_${maintenance.poolName.replace(/\s+/g, "_")}_${format(new Date(), "yyyyMMdd-HHmm", { locale: pt })}.pdf`;
 
+      console.log(`📥 Fazendo download: ${filename}`);
       await PDFGenerator.downloadPDF(htmlContent, {
         title: pdfData.title,
         filename: filename,
