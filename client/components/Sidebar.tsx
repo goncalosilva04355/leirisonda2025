@@ -37,10 +37,15 @@ const adminNavigation = [
 
 export function Sidebar({ isOpen, onToggle }: SidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleGoBack = () => {
+    navigate(-1);
   };
 
   return (
