@@ -67,6 +67,7 @@ class NotificationServiceClass {
         console.log("✅ Service Worker registrado:", registration);
       } catch (error) {
         console.error("❌ Erro ao registrar Service Worker:", error);
+        throw new Error(`Service Worker registration failed: ${error}`);
       }
     }
 
@@ -75,21 +76,62 @@ class NotificationServiceClass {
     if (permission === "granted") {
       console.log("✅ Permissão para notificações concedida");
 
-      // Obter token FCM
+      // Obter token FCM - tentativa sem VAPID key primeiro (usa chave padrão do Firebase)
       try {
-        const token = await getToken(this.messaging, {
-          vapidKey:
-            "BH8x2EsXxnwIoI8OnPo_j7R1mIm6x9SJfmOSoWGdJbT8xGJhq2M7ZjJ8xSLUCQKnP7VeX2HvYfJ6O9yOz6ZFQGE", // Substituir pela sua VAPID key
-        });
-        console.log("🔑 Token FCM:", token);
+        console.log("🔑 Tentando obter token FCM...");
 
-        // Salvar token do usuário
-        await this.saveUserToken(token);
+        // Primeiro tentar sem VAPID key personalizada
+        let token;
+        try {
+          token = await getToken(this.messaging);
+          console.log(
+            "🔑 Token FCM obtido com configuração padrão:",
+            token ? "✅ Sucesso" : "❌ Vazio",
+          );
+        } catch (defaultError) {
+          console.warn(
+            "⚠️ Erro com configuração padrão, tentando com VAPID key personalizada:",
+            defaultError,
+          );
+
+          // Se falhar, tentar com VAPID key personalizada (pode estar incorreta)
+          try {
+            token = await getToken(this.messaging, {
+              vapidKey:
+                "BH8x2EsXxnwIoI8OnPo_j7R1mIm6x9SJfmOSoWGdJbT8xGJhq2M7ZjJ8xSLUCQKnP7VeX2HvYfJ6O9yOz6ZFQGE",
+            });
+            console.log(
+              "🔑 Token FCM obtido com VAPID personalizada:",
+              token ? "✅ Sucesso" : "❌ Vazio",
+            );
+          } catch (vapidError) {
+            console.error("❌ Erro com VAPID key personalizada:", vapidError);
+            console.log(
+              "⚠️ PROBLEMA: VAPID key pode estar incorreta ou expirada",
+            );
+            console.log(
+              "💡 SOLUÇÃO: Notificações funcionarão apenas localmente, sem FCM push",
+            );
+            // Continuar sem token FCM - notificações locais ainda funcionarão
+          }
+        }
+
+        if (token) {
+          console.log("🔑 Token FCM final:", token.substring(0, 20) + "...");
+          // Salvar token do usuário
+          await this.saveUserToken(token);
+        } else {
+          console.warn(
+            "⚠️ Nenhum token FCM obtido - continuando apenas com notificações locais",
+          );
+        }
       } catch (error) {
-        console.error("❌ Erro ao obter token FCM:", error);
+        console.error("❌ Erro geral ao obter token FCM:", error);
+        console.log("💡 Continuando com notificações locais apenas");
       }
     } else {
       console.warn("⚠️ Permissão para notificações negada");
+      throw new Error(`Notification permission denied: ${permission}`);
     }
 
     // Configurar listener para mensagens em primeiro plano
