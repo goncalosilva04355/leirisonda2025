@@ -108,6 +108,7 @@ export function CreateWork() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [showDiagnostics, setShowDiagnostics] = useState(false);
 
   // Verificar se o usuário existe e tem permissão
   if (!user) {
@@ -593,7 +594,7 @@ export function CreateWork() {
                   id="clientName"
                   value={formData.clientName}
                   onChange={(e) => updateFormData("clientName", e.target.value)}
-                  placeholder="Ex: Jo��o Silva"
+                  placeholder="Ex: João Silva"
                   className="mt-1"
                   disabled={isSubmitting}
                 />
