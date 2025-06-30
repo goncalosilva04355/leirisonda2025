@@ -85,21 +85,16 @@ export function useFirebaseSync() {
     };
   }, [user, isFirebaseAvailable]);
 
-  // Sincronização instantânea robusta
+  // Sincronização instantânea com retry automático
   const triggerInstantSync = useCallback(
-    async (reason: string = "manual") => {
-      if (
-        !user ||
-        !isFirebaseAvailable ||
-        !isOnline ||
-        syncInProgress.current
-      ) {
-        console.log(`🚫 Sync cancelado (${reason}):`, {
-          hasUser: !!user,
-          firebaseAvailable: isFirebaseAvailable,
-          isOnline,
-          syncInProgress: syncInProgress.current,
-        });
+    async (reason: string = "manual", retryCount: number = 0) => {
+      if (!user) {
+        console.log(`🚫 Sync cancelado (${reason}): usuário não logado`);
+        return;
+      }
+
+      if (syncInProgress.current && retryCount === 0) {
+        console.log(`⏳ Sync já em progresso (${reason}), aguardando...`);
         return;
       }
 
@@ -107,46 +102,71 @@ export function useFirebaseSync() {
       setIsSyncing(true);
 
       try {
-        console.log(`🔄 Sync instantâneo iniciado (${reason})...`);
+        console.log(
+          `🔄 SYNC ROBUSTO INICIADO (${reason}) - retry: ${retryCount}`,
+        );
 
-        // 1. Sincronizar utilizadores globais primeiro
-        await firebaseService.syncGlobalUsersFromFirebase();
+        // 1. Verificar conectividade
+        if (!isOnline) {
+          throw new Error("Dispositivo offline");
+        }
 
-        // 2. Sincronizar dados locais para Firebase (upload prioritário)
-        console.log("📤 Enviando dados locais para Firebase...");
-        await firebaseService.syncLocalDataToFirebase();
+        if (!isFirebaseAvailable) {
+          throw new Error("Firebase indisponível");
+        }
 
-        // 3. Forçar refresh COMPLETO de dados do Firebase (download)
-        console.log("📥 Baixando dados mais recentes do Firebase...");
-        const [latestWorks, latestMaintenances, latestUsers] =
-          await Promise.all([
-            firebaseService.getWorks(),
-            firebaseService.getMaintenances(),
-            firebaseService.getUsers(),
+        // 2. Sincronização em etapas com timeout
+        const syncTimeout = (promise: Promise<any>, timeout: number) => {
+          return Promise.race([
+            promise,
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error("Timeout")), timeout),
+            ),
           ]);
+        };
 
-        // 4. Verificar se houve novas obras desde a última sincronização
+        // 3. Sync de utilizadores globais
+        console.log("👥 Sincronizando utilizadores...");
+        await syncTimeout(firebaseService.syncGlobalUsersFromFirebase(), 10000);
+
+        // 4. Upload dados locais
+        console.log("📤 Enviando dados locais...");
+        await syncTimeout(firebaseService.syncLocalDataToFirebase(), 15000);
+
+        // 5. Download dados mais recentes
+        console.log("📥 Baixando dados do Firebase...");
+        const [latestWorks, latestMaintenances, latestUsers] =
+          await syncTimeout(
+            Promise.all([
+              firebaseService.getWorks(),
+              firebaseService.getMaintenances(),
+              firebaseService.getUsers(),
+            ]),
+            20000,
+          );
+
+        // 6. Verificar novos dados
         const currentWorksCount = works.length;
         const newWorksCount = latestWorks.length;
 
-        if (newWorksCount > currentWorksCount) {
+        if (newWorksCount !== currentWorksCount) {
           console.log(
-            `🆕 NOVAS OBRAS DETECTADAS: ${currentWorksCount} -> ${newWorksCount}`,
+            `📊 DIFERENÇA DETECTADA: ${currentWorksCount} -> ${newWorksCount} obras`,
           );
 
-          // Identificar obras específicas que são novas
-          const currentWorkIds = new Set(works.map((w) => w.id));
-          const newWorks = latestWorks.filter((w) => !currentWorkIds.has(w.id));
-
-          newWorks.forEach((work) => {
-            console.log(
-              `✨ NOVA OBRA ENCONTRADA: ${work.clientName} (${work.workSheetNumber})`,
-              {
-                criadaEm: work.createdAt,
-                atribuicoes: work.assignedUsers,
-              },
+          if (newWorksCount > currentWorksCount) {
+            const currentWorkIds = new Set(works.map((w) => w.id));
+            const newWorks = latestWorks.filter(
+              (w) => !currentWorkIds.has(w.id),
             );
-          });
+
+            newWorks.forEach((work) => {
+              console.log(
+                `✨ NOVA OBRA: ${work.clientName} (${work.workSheetNumber})`,
+                { atribuições: work.assignedUsers },
+              );
+            });
+          }
         }
 
         // 5. Atualizar estado local com dados mais recentes
