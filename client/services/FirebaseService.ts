@@ -484,7 +484,7 @@ export class FirebaseService {
           maintenances[maintenanceIndex].interventions?.length || 0,
         );
       } else {
-        console.error("❌ Maintenance not found for update:", maintenanceId);
+        console.error("��� Maintenance not found for update:", maintenanceId);
       }
     } catch (error) {
       console.error("Error updating local maintenance:", error);
@@ -670,6 +670,7 @@ export class FirebaseService {
       // Get local data
       const localWorks = this.getLocalWorks();
       const localMaintenances = this.getLocalMaintenances();
+      const localUsers = this.getLocalUsers();
 
       // Sync works
       for (const work of localWorks) {
@@ -720,7 +721,41 @@ export class FirebaseService {
         }
       }
 
-      console.log("✅ Local data sync completed");
+      // Sync users (only dynamically created ones, not predefined)
+      for (const user of localUsers) {
+        try {
+          // Skip predefined users that are managed by AuthProvider
+          const predefinedEmails = [
+            "gongonsilva@gmail.com",
+            "tecnico@leirisonda.pt",
+            "supervisor@leirisonda.pt",
+          ];
+
+          if (predefinedEmails.includes(user.email)) {
+            continue; // Skip predefined users
+          }
+
+          const userRef = doc(db, "users", user.id);
+          const userSnap = await getDoc(userRef);
+
+          if (!userSnap.exists()) {
+            await updateDoc(userRef, {
+              ...user,
+              createdAt: user.createdAt
+                ? new Date(user.createdAt)
+                : serverTimestamp(),
+              updatedAt: user.updatedAt
+                ? new Date(user.updatedAt)
+                : serverTimestamp(),
+            });
+            console.log(`✅ Synced user: ${user.name} (${user.email})`);
+          }
+        } catch (error) {
+          console.error(`❌ Error syncing user ${user.id}:`, error);
+        }
+      }
+
+      console.log("✅ Local data sync completed (works, maintenances, users)");
     } catch (error) {
       console.error("❌ Error syncing local data:", error);
     }
