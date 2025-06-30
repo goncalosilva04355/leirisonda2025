@@ -58,7 +58,7 @@ class NotificationServiceClass {
       // Inicializar listener de eventos de broadcast
       this.initializeNotificationListener();
 
-      this.isInitialized = true;
+      this._isInitialized = true;
       console.log("✅ Serviço de notificações inicializado com sucesso");
       return true;
     } catch (error) {
