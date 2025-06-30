@@ -326,29 +326,36 @@ export function CreateWork() {
 
           console.log("✅ PROCESSO CONCLUÍDO - REDIRECIONANDO...");
 
-          // Navegação super segura com múltiplos fallbacks
+          // Navegação DEFINITIVA para Dashboard após guardar obra
           setTimeout(() => {
             try {
-              // Tentativa 1: React Router navigate
-              navigate("/works");
+              console.log("🏠 Navegando para Dashboard após obra criada");
+              // Tentativa 1: React Router navigate para Dashboard
+              navigate("/dashboard");
             } catch (navError) {
-              console.warn("Navigate falhou, usando window.location");
+              console.warn(
+                "Navigate falhou, usando window.location para Dashboard",
+              );
               try {
-                // Tentativa 2: window.location
-                window.location.href = "/works";
+                // Tentativa 2: window.location para Dashboard
+                window.location.href = "/dashboard";
               } catch (locationError) {
-                console.warn("window.location falhou, usando replace");
+                console.warn(
+                  "window.location falhou, usando replace para Dashboard",
+                );
                 try {
-                  // Tentativa 3: window.location.replace
-                  window.location.replace("/works");
+                  // Tentativa 3: window.location.replace para Dashboard
+                  window.location.replace("/dashboard");
                 } catch (replaceError) {
-                  console.error("Todas as tentativas de navegação falharam");
-                  // Última tentativa: Recarregar página
+                  console.error(
+                    "Todas as tentativas de navegação falharam, recarregando",
+                  );
+                  // Última tentativa: Recarregar página (vai para Dashboard por default)
                   window.location.reload();
                 }
               }
             }
-          }, 200);
+          }, 500);
         } catch (err) {
           console.error("❌ ERRO AO CRIAR OBRA:", err);
 
