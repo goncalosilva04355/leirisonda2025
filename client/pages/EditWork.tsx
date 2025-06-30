@@ -12,6 +12,7 @@ import {
   Wifi,
   WifiOff,
   Users,
+  FileText,
 } from "lucide-react";
 import { Work } from "@shared/types";
 import { Button } from "@/components/ui/button";
