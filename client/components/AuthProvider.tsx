@@ -316,6 +316,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log(
               `✅ UTILIZADOR DINÂMICO ${dynamicUser.name.toUpperCase()} LOGIN SUCESSO`,
             );
+
+            // Inicializar notificações automaticamente após login
+            setTimeout(async () => {
+              try {
+                const { notificationService } = await import(
+                  "@/services/NotificationService"
+                );
+                await notificationService.initialize();
+                console.log(
+                  "🔔 Notificações inicializadas após login (usuário dinâmico)",
+                );
+              } catch (notificationError) {
+                console.warn(
+                  "⚠️ Erro ao inicializar notificações:",
+                  notificationError,
+                );
+              }
+            }, 1000);
+
             setIsLoading(false);
             return true;
           }
