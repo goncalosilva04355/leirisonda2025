@@ -434,6 +434,77 @@ export function WorkDetail() {
             )}
           </div>
 
+          {/* Furo de Água Details - Show only when type is furo_agua */}
+          {work.type === "furo_agua" && work.furoAgua && (
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Detalhes do Furo de Água
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Profundidade</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.profundidade} metros
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Nível da Água</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.nivelAgua} metros
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">
+                      Profundidade da Bomba
+                    </p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.profundidadeBomba} metros
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Caudal do Furo</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.caudalFuro} m³
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Tipo de Coluna</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.tipoColuna}
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Diâmetro da Coluna</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.diametroColuna} mm
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Modelo da Bomba</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.bombaModelo || "Não especificado"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Potência do Motor</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.potenciaMotor} HP
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Voltagem da Bomba</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.voltagem}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Photos */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
