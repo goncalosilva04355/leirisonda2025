@@ -305,29 +305,47 @@ export function CreateWork() {
               variant="outline"
               size="sm"
               onClick={() => {
-                const works = JSON.parse(localStorage.getItem("works") || "[]");
+                const works1 = JSON.parse(
+                  localStorage.getItem("works") || "[]",
+                );
+                const works2 = JSON.parse(
+                  localStorage.getItem("leirisonda_works") || "[]",
+                );
+                const works3 = JSON.parse(
+                  sessionStorage.getItem("temp_works") || "[]",
+                );
+                const consolidated =
+                  firebaseService.consolidateWorksFromAllBackups();
                 const firebaseStatus = firebaseService.getFirebaseStatus();
 
-                console.log("🔍 DEBUG COMPLETO:", {
-                  localStorage: {
-                    total: works.length,
-                    ultimasObras: works.slice(-3).map((w: any) => ({
-                      id: w.id,
-                      cliente: w.clientName,
-                      folhaObra: w.workSheetNumber,
-                      criada: w.createdAt,
-                    })),
+                // Contar obras de emergência
+                let emergencyCount = 0;
+                for (let i = 0; i < localStorage.length; i++) {
+                  const key = localStorage.key(i);
+                  if (key && key.startsWith("emergency_work_"))
+                    emergencyCount++;
+                }
+
+                console.log("🔍 DEBUG SISTEMA BACKUP TRIPLO:", {
+                  backups: {
+                    works: works1.length,
+                    leirisonda_works: works2.length,
+                    temp_works: works3.length,
+                    emergency: emergencyCount,
+                    consolidado: consolidated.length,
                   },
+                  ultimasObras: consolidated.slice(0, 3).map((w: any) => ({
+                    id: w.id,
+                    cliente: w.clientName,
+                    folhaObra: w.workSheetNumber,
+                    criada: w.createdAt,
+                  })),
                   firebase: firebaseStatus,
-                  sync: {
-                    isOnline,
-                    isSyncing,
-                    worksFromSync: works?.length || 0,
-                  },
+                  sync: { isOnline, isSyncing },
                 });
 
                 alert(
-                  `DEBUG:\n✅ ${works.length} obras localStorage\n🔥 Firebase: ${firebaseStatus.isAvailable ? "OK" : "OFF"}\n🌐 Online: ${isOnline}\n🔄 Sync: ${isSyncing}`,
+                  `🔍 DEBUG BACKUP TRIPLO:\n📦 Works: ${works1.length}\n🗂️ Leirisonda: ${works2.length}\n⚡ Temp: ${works3.length}\n🚨 Emergency: ${emergencyCount}\n✅ Consolidado: ${consolidated.length}\n🔥 Firebase: ${firebaseStatus.isAvailable ? "OK" : "OFF"}`,
                 );
               }}
             >
