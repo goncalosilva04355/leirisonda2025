@@ -209,14 +209,14 @@ export function UserSyncDiagnostic() {
     }
   };
 
-  if (!user || user.role !== "admin") {
+  if (!user || user.email !== "gongonsilva@gmail.com") {
     return (
       <div className="leirisonda-main">
         <div className="max-w-md mx-auto mt-20 text-center">
           <AlertCircle className="mx-auto h-12 w-12 text-red-500 mb-4" />
           <h2 className="text-xl font-semibold mb-2">Acesso Restrito</h2>
           <p className="text-gray-600 mb-4">
-            Esta página é apenas para administradores.
+            Esta página é exclusiva para o administrador principal.
           </p>
           <Link
             to="/dashboard"
