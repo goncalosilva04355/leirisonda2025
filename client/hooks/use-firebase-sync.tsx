@@ -90,6 +90,10 @@ export function useFirebaseSync() {
       "leirisonda_sync_trigger",
       handleCrossTabSync as EventListener,
     );
+    window.addEventListener(
+      "leirisonda_delete_notification",
+      handleDeleteNotification as EventListener,
+    );
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
@@ -98,6 +102,10 @@ export function useFirebaseSync() {
       window.removeEventListener(
         "leirisonda_sync_trigger",
         handleCrossTabSync as EventListener,
+      );
+      window.removeEventListener(
+        "leirisonda_delete_notification",
+        handleDeleteNotification as EventListener,
       );
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
