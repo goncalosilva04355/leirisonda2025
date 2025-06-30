@@ -264,7 +264,24 @@ export function CreateWork() {
         folhaObra: workData.workSheetNumber,
         tipo: workData.type,
         atribuicoes: workData.assignedUsers,
+        formDataOriginal: formData.assignedUsers,
+        quantidadeAtribuicoes: workData.assignedUsers.length,
       });
+
+      // VERIFICAÇÃO CRÍTICA: Verificar se atribuições estão válidas
+      if (
+        formData.assignedUsers.length > 0 &&
+        workData.assignedUsers.length === 0
+      ) {
+        console.error(
+          "❌ ERRO CRÍTICO: Atribuições perdidas na preparação dos dados!",
+        );
+        setError(
+          "Erro interno: atribuições de usuários perdidas. Tente novamente.",
+        );
+        setIsSubmitting(false);
+        return;
+      }
 
       // Create work using Firebase sync
       const workId = await createWork(workData);
