@@ -43,7 +43,7 @@ class NotificationServiceClass {
   }
 
   async initialize(): Promise<boolean> {
-    if (this.isInitialized) return true;
+    if (this._isInitialized) return true;
 
     try {
       console.log("🚀 Inicializando serviço de notificações...");
@@ -232,7 +232,7 @@ class NotificationServiceClass {
         data: payload.data,
       });
     } catch (error) {
-      console.error("�� Erro ao processar mensagem foreground:", error);
+      console.error("❌ Erro ao processar mensagem foreground:", error);
     }
   }
 
