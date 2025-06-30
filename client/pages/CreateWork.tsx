@@ -33,6 +33,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 import { firebaseService } from "@/services/FirebaseService";
 import { WorkSaveHelper } from "@/lib/work-save-diagnostics";
+import { useNotifications } from "@/hooks/use-notifications";
 
 const workTypes = [
   { value: "piscina", label: "Piscina" },
@@ -114,6 +115,9 @@ export function CreateWork() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
     const [showDiagnostics, setShowDiagnostics] = useState(false);
+
+    // Hook de notificações
+    const { notifyWorkAssigned } = useNotifications();
 
     // Verificar se o usuário existe e tem permissão
     if (!user) {
@@ -298,6 +302,33 @@ export function CreateWork() {
           // Create work using safe method
           const workId = await safeCreateWork(workData);
           console.log("✅ OBRA CRIADA COM SUCESSO ID:", workId);
+
+          // ENVIAR NOTIFICAÇÕES PARA USUÁRIOS ATRIBUÍDOS
+          if (workData.assignedUsers && workData.assignedUsers.length > 0) {
+            try {
+              console.log(
+                "🔔 Enviando notificações para usuários atribuídos:",
+                workData.assignedUsers,
+              );
+              await notifyWorkAssigned(
+                {
+                  id: workId,
+                  workSheetNumber: workData.workSheetNumber,
+                  clientName: workData.clientName,
+                  type: workData.type,
+                  status: workData.status,
+                },
+                workData.assignedUsers,
+              );
+              console.log("✅ Notificações enviadas com sucesso");
+            } catch (notificationError) {
+              console.warn(
+                "⚠️ Erro ao enviar notificações (não crítico):",
+                notificationError,
+              );
+              // Não interromper o fluxo se notifica��ões falharem
+            }
+          }
 
           // MARCAR que obra foi criada para ErrorBoundary saber
           sessionStorage.setItem("just_created_work", "true");

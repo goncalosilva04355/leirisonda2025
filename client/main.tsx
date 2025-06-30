@@ -34,6 +34,7 @@ import { SyncMonitor } from "./pages/SyncMonitor";
 import SyncDiagnostic from "./pages/SyncDiagnostic";
 import { NotFound } from "./pages/NotFound";
 import { EmergencyDiagnostic } from "./pages/EmergencyDiagnostic";
+import { NotificationSettingsPage } from "./pages/NotificationSettingsPage";
 
 function App() {
   return (
@@ -93,6 +94,10 @@ function App() {
               <Route
                 path="old-pool-maintenance"
                 element={<PoolMaintenancePage />}
+              />
+              <Route
+                path="notification-settings"
+                element={<NotificationSettingsPage />}
               />
             </Route>
 

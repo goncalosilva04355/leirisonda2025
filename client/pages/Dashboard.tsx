@@ -18,6 +18,7 @@ import {
   Search,
   MapPin,
   RefreshCw,
+  Bell,
 } from "lucide-react";
 import { Work, DashboardStats } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
@@ -865,6 +866,16 @@ export function Dashboard() {
                 <Link to="/works">
                   <FileText className="w-4 h-4 mr-3" />
                   Todas as Obras
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full justify-start hover-leirisonda h-auto py-3"
+                asChild
+              >
+                <Link to="/notification-settings">
+                  <Bell className="w-4 h-4 mr-3" />
+                  Configurar Notificações
                 </Link>
               </Button>
               {user?.role === "admin" && (

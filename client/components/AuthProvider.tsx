@@ -268,6 +268,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("leirisonda_last_user", globalUser.email); // Guardar último utilizador
         setUser(loginUser);
         console.log(`✅ ${globalUser.name.toUpperCase()} LOGIN SUCESSO`);
+
+        // Inicializar notificações automaticamente após login
+        setTimeout(async () => {
+          try {
+            const { notificationService } = await import(
+              "@/services/NotificationService"
+            );
+            await notificationService.initialize();
+            console.log("🔔 Notificações inicializadas após login");
+          } catch (notificationError) {
+            console.warn(
+              "⚠️ Erro ao inicializar notificações:",
+              notificationError,
+            );
+          }
+        }, 1000);
+
         setIsLoading(false);
         return true;
       }
@@ -299,6 +316,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log(
               `✅ UTILIZADOR DINÂMICO ${dynamicUser.name.toUpperCase()} LOGIN SUCESSO`,
             );
+
+            // Inicializar notificações automaticamente após login
+            setTimeout(async () => {
+              try {
+                const { notificationService } = await import(
+                  "@/services/NotificationService"
+                );
+                await notificationService.initialize();
+                console.log(
+                  "🔔 Notificações inicializadas após login (usuário dinâmico)",
+                );
+              } catch (notificationError) {
+                console.warn(
+                  "⚠️ Erro ao inicializar notificações:",
+                  notificationError,
+                );
+              }
+            }, 1000);
+
             setIsLoading(false);
             return true;
           }
