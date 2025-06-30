@@ -74,6 +74,16 @@ export function WorksList() {
   }, [searchParams]);
 
   useEffect(() => {
+    console.log("🔍 WORKSLIST DEBUG:", {
+      totalWorks: works?.length || 0,
+      worksData: works
+        ?.slice(0, 3)
+        .map((w) => ({
+          id: w.id,
+          cliente: w.clientName,
+          folha: w.workSheetNumber,
+        })),
+    });
     filterWorks();
     updateURL();
   }, [
