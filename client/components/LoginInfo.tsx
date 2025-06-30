@@ -24,6 +24,48 @@ export function LoginInfo() {
   const [showDebug, setShowDebug] = useState(false);
   const [users, setUsers] = useState<UserDebugInfo[]>([]);
 
+  const fixUserPasswords = () => {
+    try {
+      console.log("🔧 Manual password fix initiated...");
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        const parsedUsers = JSON.parse(storedUsers);
+
+        parsedUsers.forEach((user: any) => {
+          const passwordKeys = [
+            `password_${user.id}`,
+            `password_${user.email}`,
+            `password_${user.email?.trim().toLowerCase()}`,
+          ];
+
+          // Find any existing password
+          let existingPassword = null;
+          for (const key of passwordKeys) {
+            const pwd = localStorage.getItem(key);
+            if (pwd) {
+              existingPassword = pwd;
+              break;
+            }
+          }
+
+          if (existingPassword) {
+            // Ensure password is stored with all variations
+            passwordKeys.forEach((key) => {
+              localStorage.setItem(key, existingPassword);
+              console.log(`🔧 Set password for key: ${key}`);
+            });
+          }
+        });
+
+        console.log("✅ Manual password fix completed");
+        // Reload debug info
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("❌ Error in manual fix:", error);
+    }
+  };
+
   useEffect(() => {
     if (showDebug) {
       try {
