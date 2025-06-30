@@ -49,13 +49,16 @@ const statusOptions = [
 ];
 
 export function CreateWork() {
+  console.log("🏗️ CreateWork component iniciando...");
   const navigate = useNavigate();
 
   // Use try-catch para capturar erros de contexto
   let user, getAllUsers, createWork, isOnline, isSyncing;
 
   try {
+    console.log("🔑 Tentando acessar contexto de autenticação...");
     const authContext = useAuth();
+    console.log("🔥 Tentando acessar contexto do Firebase...");
     const firebaseContext = useFirebaseSync();
 
     user = authContext.user;
@@ -63,6 +66,15 @@ export function CreateWork() {
     createWork = firebaseContext.createWork;
     isOnline = firebaseContext.isOnline ?? true; // Valor padrão
     isSyncing = firebaseContext.isSyncing ?? false; // Valor padrão
+
+    console.log("✅ Contextos carregados com sucesso:", {
+      hasUser: !!user,
+      userEmail: user?.email,
+      hasGetAllUsers: !!getAllUsers,
+      hasCreateWork: !!createWork,
+      isOnline,
+      isSyncing,
+    });
   } catch (error) {
     console.error("❌ Erro ao acessar contextos:", error);
     return (
