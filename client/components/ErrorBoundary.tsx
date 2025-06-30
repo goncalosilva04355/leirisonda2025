@@ -226,6 +226,14 @@ export class ErrorBoundary extends Component<Props, State> {
               </button>
 
               <button
+                onClick={this.handleEmergencyDiagnostic}
+                className="w-full inline-flex items-center justify-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
+                <AlertTriangle className="w-4 h-4 mr-2" />
+                Diagnóstico de Emergência
+              </button>
+
+              <button
                 onClick={this.handleClearData}
                 className="w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
