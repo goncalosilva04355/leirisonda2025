@@ -25,6 +25,12 @@ export function useFirebaseSync() {
   const { user } = authData;
   const [works, setWorks] = useState<Work[]>([]);
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
+
+  // FORÇA LIMPEZA: Sempre retornar array vazio para maintenances
+  useEffect(() => {
+    console.log("🧹 FORÇANDO LIMPEZA: Definindo maintenances como array vazio");
+    setMaintenances([]);
+  }, []);
   const [users, setUsers] = useState<User[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -546,7 +552,7 @@ export function useFirebaseSync() {
             console.log(
               "🔄 Continuando sem throw para permitir verificação local...",
             );
-            return undefined as T; // Retorna undefined para indicar erro não crítico
+            return undefined as T; // Retorna undefined para indicar erro não cr��tico
           }
         }
 
