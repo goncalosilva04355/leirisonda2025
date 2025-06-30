@@ -705,7 +705,7 @@ export function Dashboard() {
                   <Waves className="w-4 h-4 text-teal-600" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Manutenç��es Próximas
+                  Manutenções Próximas
                 </h3>
               </div>
               <Button variant="outline" asChild className="hover-leirisonda">
