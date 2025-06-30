@@ -295,7 +295,7 @@ export function useFirebaseSync() {
       return;
     }
 
-    console.log("💓 SISTEMA DE SINCRONIZA��ÃO ATIVO");
+    console.log("💓 SISTEMA DE SINCRONIZA���ÃO ATIVO");
 
     // Sync inteligente a cada 15 segundos
     heartbeatInterval.current = setInterval(async () => {
@@ -328,7 +328,7 @@ export function useFirebaseSync() {
     // Sync de recuperação a cada 2 minutos para garantir consistência
     const recoveryInterval = setInterval(async () => {
       if (isOnline && isFirebaseAvailable) {
-        console.log("🔄 RECOVERY SYNC: Verificação completa de dados...");
+        console.log("��� RECOVERY SYNC: Verificação completa de dados...");
         await triggerInstantSync("recovery_check");
       }
     }, 120000); // 2 minutos
@@ -764,8 +764,17 @@ export function useFirebaseSync() {
       setTimeout(() => {
         try {
           sessionStorage.removeItem("deleting_work");
+          console.log("🧹 Flag de delete limpa com sucesso");
+        } catch (cleanupError) {
+          console.warn("⚠️ Erro ao limpar flag:", cleanupError);
+        }
       }, 500);
-    } catch (error) {
+    }
+  }, [works]);
+
+  // Handler específico para catch de erros no deleteWork (caso seja necessário)
+  const handleDeleteError = useCallback((error: any, workId: string) => {
+    try {
       console.error(`❌ Erro no deleteWork hook:`, error);
 
       // Limpar flag mesmo com erro
