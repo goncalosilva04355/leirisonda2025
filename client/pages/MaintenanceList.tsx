@@ -16,6 +16,7 @@ import {
   AlertCircle,
   Search,
   Filter,
+  Trash2,
 } from "lucide-react";
 import { PoolMaintenance } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -160,7 +161,19 @@ export function MaintenanceList() {
             </div>
           </div>
 
-          <div className="w-full sm:w-auto shrink-0">
+          <div className="flex gap-2 w-full sm:w-auto shrink-0">
+            {user?.email === "gongonsilva@gmail.com" &&
+              maintenances.length > 0 && (
+                <Button
+                  onClick={handleClearAllPools}
+                  variant="destructive"
+                  size="sm"
+                  className="text-xs"
+                >
+                  <Trash2 className="mr-1 h-3 w-3" />
+                  Limpar Tudo
+                </Button>
+              )}
             <Link to="/create-maintenance" className="block">
               <Button className="btn-primary w-full sm:w-auto">
                 <Plus className="mr-2 h-4 w-4" />
@@ -322,7 +335,7 @@ export function MaintenanceList() {
                   >
                     <Edit className="mr-2 h-4 w-4" />
                     <span className="hidden sm:inline">Editar</span>
-                    <span className="sm:hidden">✏️</span>
+                    <span className="sm:hidden">��️</span>
                   </Button>
                 </Link>
               )}
