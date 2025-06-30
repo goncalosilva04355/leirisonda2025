@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useCallback } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
-import { LoadingPage } from "@/components/LoadingPage";
 
 export const Login = React.memo(function Login() {
   const [email, setEmail] = useState("");
