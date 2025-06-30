@@ -191,15 +191,31 @@ export function LoginInfo() {
         <div
           style={{
             display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: "8px",
             marginBottom: "8px",
           }}
         >
-          <Users size={14} color="#007bff" />
-          <span style={{ fontWeight: "500" }}>
-            Utilizadores Registados: {users.length}
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Users size={14} color="#007bff" />
+            <span style={{ fontWeight: "500" }}>
+              Utilizadores Registados: {users.length}
+            </span>
+          </div>
+          <button
+            onClick={fixUserPasswords}
+            style={{
+              background: "#28a745",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              padding: "4px 8px",
+              fontSize: "10px",
+              cursor: "pointer",
+            }}
+          >
+            🔧 Corrigir
+          </button>
         </div>
 
         {users.length === 0 ? (
