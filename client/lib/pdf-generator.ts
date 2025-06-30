@@ -345,10 +345,9 @@ export class PDFGenerator {
         <meta charset="UTF-8">
         <title>${data.title}</title>
         <style>
-          /* Design moderno atualizado - ${Date.now()} - v2.0 */
           @page {
             size: A4;
-            margin: 20mm;
+            margin: 15mm;
           }
 
           * {
@@ -359,251 +358,184 @@ export class PDFGenerator {
 
           body {
             font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             line-height: 1.4;
             color: #333;
             background: white;
-            width: 170mm;
-            max-height: 257mm;
           }
 
-          .report-container {
-            width: 100%;
-            max-height: 257mm;
-            overflow: hidden;
-          }
-
-          /* Modern Header */
+          /* Clean Header */
           .header {
-            background: linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}cc 100%);
-            color: white;
-            padding: 30px;
-            margin-bottom: 30px;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
-            border-top: 4px solid rgba(255,255,255,0.2);
+            border-bottom: 3px solid #e0e0e0;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
           }
 
           .header-top {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
+            align-items: flex-start;
+            margin-bottom: 15px;
           }
 
           .logo-section {
             display: flex;
             align-items: center;
-            gap: 25px;
-          }
-
-          .logo {
-            background: white;
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 2px solid rgba(255,255,255,0.3);
+            gap: 15px;
           }
 
           .logo img {
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             object-fit: contain;
           }
 
           .company-info h1 {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 5px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            letter-spacing: 1px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 2px;
           }
 
           .company-info .tagline {
-            font-size: 14px;
-            opacity: 0.85;
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 10px;
+            color: #666;
           }
 
           .header-meta {
             text-align: right;
-            font-size: 12px;
-            background: rgba(255,255,255,0.15);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
+            font-size: 10px;
+            color: #666;
+          }
+
+          .report-title {
+            text-align: center;
+            margin-top: 15px;
           }
 
           .report-title h2 {
-            font-size: 24px;
-            font-weight: 600;
-            border-top: 1px solid rgba(255,255,255,0.3);
-            padding-top: 20px;
-            margin-top: 15px;
-            line-height: 1.3;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
           }
 
           .report-title .subtitle {
-            font-size: 16px;
-            margin-top: 10px;
-            opacity: 0.9;
-            font-weight: 400;
+            font-size: 12px;
+            color: #666;
           }
 
-          /* Content */
-          .content {
-            max-height: 160mm;
-            overflow: hidden;
-          }
-
-          .info-header {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-          }
-
-          .info-card {
-            flex: 1;
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 15px;
-            border-left: 5px solid ${primaryColor};
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-          }
-
-          .info-card .label {
-            font-size: 11px;
-            font-weight: bold;
-            color: ${primaryColor};
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
-
-          .info-card .value {
-            font-size: 14px;
-            font-weight: bold;
-            color: #1a202c;
-          }
-
+          /* Content sections */
           .section {
             margin-bottom: 20px;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-          }
-
-          .section-header {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-            padding: 15px;
-            border-bottom: 1px solid #e2e8f0;
           }
 
           .section-title {
-            font-size: 14px;
+            background: #f5f5f5;
+            padding: 8px 12px;
+            font-size: 12px;
             font-weight: bold;
             color: #333;
+            border-left: 4px solid ${primaryColor};
+            margin-bottom: 2px;
           }
 
           .section-content {
-            padding: 10px;
+            background: #fafafa;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
           }
 
-          .highlight-box {
-            background: #f0f8ff;
-            border: 1px solid ${primaryColor};
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
+          /* Info grid for client data */
+          .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
           }
 
+          .info-item {
+            background: white;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+          }
+
+          .info-label {
+            font-size: 10px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 2px;
+          }
+
+          .info-value {
+            font-size: 11px;
+            color: #333;
+          }
+
+          /* Table style for data */
           .data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
+            margin: 10px 0;
+            background: white;
           }
 
           .data-table th {
-            background: ${primaryColor};
-            color: white;
-            padding: 5px;
+            background: #f0f0f0;
+            color: #333;
+            padding: 8px;
             text-align: left;
+            font-size: 10px;
             font-weight: bold;
+            border: 1px solid #d0d0d0;
           }
 
           .data-table td {
-            padding: 5px;
-            border-bottom: 1px solid #ddd;
+            padding: 6px 8px;
+            border: 1px solid #d0d0d0;
+            font-size: 10px;
           }
 
           .data-table tr:nth-child(even) {
             background: #f9f9f9;
           }
 
-          .enhanced-list {
+          /* Simple lists */
+          .simple-list {
             list-style: none;
             padding: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
           }
 
-          .enhanced-list li {
-            background: #f9f9f9;
-            border: 1px solid #eee;
-            border-radius: 3px;
-            padding: 5px 8px;
-            margin-bottom: 3px;
-            font-size: 11px;
+          .simple-list li {
+            padding: 6px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 10px;
           }
 
-          .enhanced-list li::before {
-            content: '✓ ';
-            color: ${primaryColor};
-            font-weight: bold;
+          .simple-list li:last-child {
+            border-bottom: none;
           }
 
-          /* Modern Footer */
+          /* Footer */
           .footer {
-            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            color: white;
-            padding: 20px;
-            margin-top: 25px;
-            border-radius: 10px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-          }
-
-          .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
           }
 
           .footer-logo {
-            font-size: 20px;
-            font-weight: bold;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-          }
-
-          .footer-contact {
-            text-align: right;
             font-size: 12px;
-            opacity: 0.9;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
           }
 
-          .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 12px;
-            text-align: center;
-            font-size: 11px;
-            opacity: 0.8;
+          .footer-info {
+            font-size: 9px;
+            color: #666;
           }
         </style>
       </head>
