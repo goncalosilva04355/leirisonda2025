@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { AlertCircle, Users, Eye, EyeOff } from "lucide-react";
+import { AlertCircle, Users, Eye, EyeOff, Trash2 } from "lucide-react";
+import { DefaultDataService } from "@/services/DefaultData";
 
 interface UserDebugInfo {
   id: string;
@@ -76,6 +77,25 @@ export function LoginInfo() {
       }
     } catch (error) {
       console.error("❌ Error in manual fix:", error);
+    }
+  };
+
+  const cleanUserSystem = () => {
+    if (
+      confirm(
+        "🧹 ATENÇÃO: Isto vai limpar COMPLETAMENTE o sistema de utilizadores e recriar apenas os 2 utilizadores corretos (Gonçalo e Alexandre). Continuar?",
+      )
+    ) {
+      try {
+        DefaultDataService.forceCleanUserSystem();
+        alert(
+          "✅ Sistema de utilizadores limpo e reconfigurado!\n\nUtilizadores disponíveis:\n• gongonsilva@gmail.com / 19867gsf\n• alexkamaryta@gmail.com / 69alexandre",
+        );
+        window.location.reload();
+      } catch (error) {
+        console.error("❌ Error cleaning user system:", error);
+        alert("❌ Erro ao limpar sistema: " + error);
+      }
     }
   };
 
@@ -172,7 +192,32 @@ export function LoginInfo() {
   }, [showDebug]);
 
   if (!showDebug) {
-    return null;
+    return (
+      <button
+        onClick={() => setShowDebug(true)}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          background: "#007bff",
+          color: "white",
+          border: "none",
+          borderRadius: "50%",
+          width: "50px",
+          height: "50px",
+          cursor: "pointer",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+          zIndex: 1000,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "16px",
+        }}
+        title="Mostrar informações de debug"
+      >
+        <Eye size={20} />
+      </button>
+    );
   }
 
   return (
@@ -231,20 +276,37 @@ export function LoginInfo() {
               Utilizadores Registados: {users.length}
             </span>
           </div>
-          <button
-            onClick={fixUserPasswords}
-            style={{
-              background: "#28a745",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              padding: "4px 8px",
-              fontSize: "10px",
-              cursor: "pointer",
-            }}
-          >
-            🔧 Corrigir
-          </button>
+          <div style={{ display: "flex", gap: "4px" }}>
+            <button
+              onClick={fixUserPasswords}
+              style={{
+                background: "#28a745",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "4px 8px",
+                fontSize: "10px",
+                cursor: "pointer",
+              }}
+            >
+              🔧 Corrigir
+            </button>
+            <button
+              onClick={cleanUserSystem}
+              style={{
+                background: "#dc3545",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "4px 8px",
+                fontSize: "10px",
+                cursor: "pointer",
+              }}
+              title="Limpar sistema e recriar apenas 2 utilizadores corretos"
+            >
+              🧹 Limpar
+            </button>
+          </div>
         </div>
 
         {users.length === 0 ? (
@@ -350,8 +412,7 @@ export function LoginInfo() {
       >
         <div>📍 Credenciais pré-definidas:</div>
         <div>• gongonsilva@gmail.com / 19867gsf</div>
-        <div>• tecnico@leirisonda.pt / tecnico123</div>
-        <div>• supervisor@leirisonda.pt / supervisor123</div>
+        <div>• alexkamaryta@gmail.com / 69alexandre</div>
       </div>
     </div>
   );

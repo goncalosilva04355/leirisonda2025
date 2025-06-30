@@ -9,40 +9,11 @@ export function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [authReady, setAuthReady] = useState(false);
 
-  // Get auth context with error handling
-  let authContext;
-  try {
-    authContext = useAuth();
-  } catch (error) {
-    console.error("❌ Error accessing auth context:", error);
-    authContext = {
-      user: null,
-      login: async () => false,
-      logout: () => {},
-      isLoading: false,
-    };
-  }
+  const { user, login, isLoading } = useAuth();
 
-  const { user, login, isLoading } = authContext;
-
-  console.log("🔍 Login component state:", {
-    user: user?.email || "No user",
-    isLoading,
-    authReady,
-    authContextAvailable: !!authContext,
-  });
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log("✅ Auth ready state set to true");
-      setAuthReady(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (user && authReady) {
+  // Se já está logado, redireciona
+  if (user) {
     return <Navigate to="/dashboard" replace />;
   }
 
@@ -51,28 +22,19 @@ export function Login() {
     setError("");
     setIsSubmitting(true);
 
-    console.log("🔐 Login attempt started:", { email });
-
     if (!email || !password) {
-      console.warn("⚠️ Missing credentials");
       setError("Por favor, preencha todos os campos.");
       setIsSubmitting(false);
       return;
     }
 
     try {
-      console.log("🔄 Calling login function...");
       const success = await login(email, password);
-      console.log("✅ Login function result:", success);
 
       if (!success) {
-        console.error("❌ Login failed - invalid credentials");
         setError("Email ou palavra-passe incorretos.");
-      } else {
-        console.log("🎉 Login successful!");
       }
     } catch (err) {
-      console.error("💥 Login error:", err);
       setError("Erro ao iniciar sessão. Tente novamente.");
     } finally {
       setIsSubmitting(false);

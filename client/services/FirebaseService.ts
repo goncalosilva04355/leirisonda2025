@@ -727,8 +727,7 @@ export class FirebaseService {
           // Skip predefined users that are managed by AuthProvider
           const predefinedEmails = [
             "gongonsilva@gmail.com",
-            "tecnico@leirisonda.pt",
-            "supervisor@leirisonda.pt",
+            "alexkamaryta@gmail.com",
           ];
 
           if (predefinedEmails.includes(user.email)) {
