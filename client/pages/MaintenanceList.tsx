@@ -300,6 +300,22 @@ export function MaintenanceList() {
                 </Button>
               </Link>
 
+              {user?.permissions?.canEditMaintenance && (
+                <Link
+                  to={`/edit-maintenance/${maintenance.id}`}
+                  className="flex-1"
+                >
+                  <Button
+                    variant="outline"
+                    className="w-full justify-center text-blue-600 border-blue-300 hover:bg-blue-50"
+                  >
+                    <Edit className="mr-2 h-4 w-4" />
+                    <span className="hidden sm:inline">Editar</span>
+                    <span className="sm:hidden">✏️</span>
+                  </Button>
+                </Link>
+              )}
+
               <Link
                 to={`/maintenance/${maintenance.id}/new-intervention`}
                 className="flex-1"
