@@ -90,19 +90,35 @@ export function UsersList() {
               : " (modo offline)"}
           </p>
         </div>
-        <button
-          onClick={() => navigate("/create-user")}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#28a745",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          + Novo Utilizador
-        </button>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            onClick={() => navigate("/user-sync-diagnostic")}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#17a2b8",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontSize: "14px",
+            }}
+          >
+            🔍 Diagnóstico
+          </button>
+          <button
+            onClick={() => navigate("/create-user")}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#28a745",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            + Novo Utilizador
+          </button>
+        </div>
       </div>
 
       {users.length === 0 ? (
