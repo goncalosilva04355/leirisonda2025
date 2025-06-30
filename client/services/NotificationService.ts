@@ -83,40 +83,47 @@ class NotificationServiceClass {
       try {
         console.log("🔑 Tentando obter token FCM...");
 
-        // Primeiro tentar sem VAPID key personalizada
+        // Tentar obter token FCM com configuração mais robusta
         let token;
         try {
+          // Primeiro tentar com configuração padrão (mais seguro)
           token = await getToken(this.messaging);
-          console.log(
-            "🔑 Token FCM obtido com configuração padrão:",
-            token ? "✅ Sucesso" : "❌ Vazio",
-          );
-        } catch (defaultError) {
-          console.warn(
-            "⚠️ Erro com configuração padrão, tentando com VAPID key personalizada:",
-            defaultError,
-          );
 
-          // Se falhar, tentar com VAPID key personalizada (pode estar incorreta)
-          try {
-            token = await getToken(this.messaging, {
-              vapidKey:
-                "BH8x2EsXxnwIoI8OnPo_j7R1mIm6x9SJfmOSoWGdJbT8xGJhq2M7ZjJ8xSLUCQKnP7VeX2HvYfJ6O9yOz6ZFQGE",
-            });
+          if (token) {
             console.log(
-              "🔑 Token FCM obtido com VAPID personalizada:",
-              token ? "✅ Sucesso" : "❌ Vazio",
+              "🔑 Token FCM obtido com configuração padrão: ✅ Sucesso",
             );
-          } catch (vapidError) {
-            console.error("❌ Erro com VAPID key personalizada:", vapidError);
-            console.log(
-              "⚠️ PROBLEMA: VAPID key pode estar incorreta ou expirada",
-            );
-            console.log(
-              "💡 SOLUÇÃO: Notificações funcionarão apenas localmente, sem FCM push",
-            );
-            // Continuar sem token FCM - notificações locais ainda funcionarão
+          } else {
+            console.warn("⚠️ Token vazio com configuração padrão");
+            // Tentar com configuração alternativa apenas se necessário
+            console.log("💡 Continuando apenas com notificações locais");
           }
+        } catch (tokenError) {
+          console.warn("⚠️ Erro ao obter token FCM:", tokenError);
+
+          // Verificar se é erro de VAPID key ou outro problema
+          if (tokenError instanceof Error) {
+            if (
+              tokenError.message.includes("messaging/invalid-vapid-key") ||
+              tokenError.message.includes(
+                "string did not match the expected pattern",
+              )
+            ) {
+              console.error("❌ VAPID key inválida detectada");
+              console.log(
+                "💡 SOLUÇÃO: Configurar VAPID key correta no Firebase Console",
+              );
+            } else if (
+              tokenError.message.includes("messaging/unsupported-browser")
+            ) {
+              console.warn("⚠️ Browser não suportado para FCM");
+            } else {
+              console.error("❌ Erro desconhecido no FCM:", tokenError.message);
+            }
+          }
+
+          console.log("💡 Continuando com notificações locais apenas");
+          // Não tentar VAPID key alternativa que pode estar incorreta
         }
 
         if (token) {
