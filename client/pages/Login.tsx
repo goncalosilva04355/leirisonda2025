@@ -68,25 +68,26 @@ export function Login() {
     }
 
     try {
-      console.log("🔄 Calling login function with:", {
-        email: email.trim(),
-        password: password.trim(),
-      });
-      const success = await login(email.trim(), password.trim());
-      console.log("✅ Login function result:", success);
+      console.log("🔄 CALLING LOGIN:", email, "/", password);
+      const success = await login(email, password);
+      console.log("🔄 LOGIN RESULT:", success);
 
-      if (!success) {
-        console.error("❌ Login failed - invalid credentials");
-        setError("Email ou palavra-passe incorretos.");
+      if (success) {
+        console.log("🎉 SUCCESS - REDIRECTING");
+        // Force redirect
+        window.location.href = "/dashboard";
       } else {
-        console.log("🎉 Login successful!");
+        console.log("❌ FAILED");
+        setError(
+          "Credenciais inválidas. Use: gongonsilva@gmail.com / 19867gsf ou alexkamaryta@gmail.com / 69alexandre",
+        );
       }
     } catch (err) {
-      console.error("💥 Login error:", err);
-      setError("Erro ao iniciar sessão. Tente novamente.");
-    } finally {
-      setIsSubmitting(false);
+      console.error("💥 ERROR:", err);
+      setError("Erro no login");
     }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -265,7 +266,7 @@ export function Login() {
                   fontSize: "14px",
                 }}
               >
-                <span>⚠️</span>
+                <span>⚠���</span>
                 <span>{error}</span>
               </div>
             )}
