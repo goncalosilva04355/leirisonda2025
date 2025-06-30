@@ -322,7 +322,10 @@ export class FirebaseService {
   async createWork(
     workData: Omit<Work, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
-    console.log("🔄 INICIANDO CRIAÇÃO DE OBRA:", workData.clientName);
+    console.log(
+      "🔄 INICIANDO CRIAÇÃO DE OBRA SUPER ROBUSTA:",
+      workData.clientName,
+    );
 
     // VALIDAÇÃO CRÍTICA: Verificar se assignedUsers está presente e válido
     if (workData.assignedUsers) {
@@ -579,7 +582,7 @@ export class FirebaseService {
           ...updates,
           updatedAt: serverTimestamp(),
         });
-        console.log("🔥 Work updated in Firebase:", workId);
+        console.log("�� Work updated in Firebase:", workId);
       } catch (error) {
         console.error(
           "⚠️ Firebase update failed, work updated locally:",
