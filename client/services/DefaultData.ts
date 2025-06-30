@@ -73,7 +73,7 @@ export class DefaultDataService {
 
       localStorage.setItem("users", JSON.stringify(defaultUsers));
 
-      // Store passwords for default users
+      // Store passwords for default users with multiple keys for compatibility
       defaultUsers.forEach((user) => {
         let password = "";
         switch (user.email) {
@@ -86,8 +86,19 @@ export class DefaultDataService {
         }
 
         if (password) {
-          localStorage.setItem(`password_${user.id}`, password);
-          localStorage.setItem(`password_${user.email}`, password);
+          // Multiple keys to ensure compatibility
+          const passwordKeys = [
+            `password_${user.id}`,
+            `password_${user.email}`,
+            `password_${user.email.toLowerCase()}`,
+            `password_${user.email.trim().toLowerCase()}`,
+          ];
+
+          passwordKeys.forEach((key) => {
+            localStorage.setItem(key, password);
+          });
+
+          console.log(`✅ Password stored for ${user.name}: ${password}`);
         }
       });
 
