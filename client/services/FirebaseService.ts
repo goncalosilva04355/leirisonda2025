@@ -588,7 +588,7 @@ export class FirebaseService {
           }
         }
       } else {
-        console.error("⚠️ BACKUP TRIPLO LOCAL FALHOU:", {
+        console.error("⚠��� BACKUP TRIPLO LOCAL FALHOU:", {
           backup1: !!savedWork1,
           backup2: !!savedWork2,
           backup3: !!savedWork3,
@@ -1013,7 +1013,7 @@ export class FirebaseService {
           );
           if (alexandreWorks.length > 0) {
             console.log(
-              `🎯 OBRAS PARA ALEXANDRE DETECTADAS: ${alexandreWorks.length}`,
+              `���� OBRAS PARA ALEXANDRE DETECTADAS: ${alexandreWorks.length}`,
               alexandreWorks.map((w) => ({
                 id: w.id,
                 cliente: w.clientName,
@@ -1378,16 +1378,6 @@ export class FirebaseService {
     } catch (error) {
       console.error("❌ Erro ao sincronizar utilizadores globais:", error);
     }
-  }
-
-  // Get Firebase availability status
-  getFirebaseStatus(): { isAvailable: boolean; message: string } {
-    return {
-      isAvailable: this.isFirebaseAvailable,
-      message: this.isFirebaseAvailable
-        ? "Firebase connected and syncing"
-        : "Running in local-only mode",
-    };
   }
 }
 
