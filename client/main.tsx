@@ -79,7 +79,6 @@ function App() {
                 element={<NewMaintenanceSelector />}
               />
               <Route path="mobile-deploy" element={<MobileDeploy />} />
-              <Route path="debug-works" element={<DebugWorks />} />
               <Route
                 path="old-pool-maintenance"
                 element={<PoolMaintenancePage />}
