@@ -239,6 +239,62 @@ export class FirebaseService {
     }
   }
 
+  // Função para consolidar obras de todos os backups
+  consolidateWorksFromAllBackups(): Work[] {
+    try {
+      console.log("🔄 CONSOLIDANDO OBRAS DE TODOS OS BACKUPS...");
+
+      // Coletar de todas as fontes
+      const works1 = JSON.parse(localStorage.getItem("works") || "[]");
+      const works2 = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      const works3 = JSON.parse(sessionStorage.getItem("temp_works") || "[]");
+
+      // Coletar obras de emergência
+      const emergencyWorks: Work[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("emergency_work_")) {
+          try {
+            const emergencyWork = JSON.parse(localStorage.getItem(key) || "");
+            emergencyWorks.push(emergencyWork);
+          } catch (error) {
+            console.error("Erro ao recuperar obra de emergência:", key);
+          }
+        }
+      }
+
+      // Consolidar tudo em um array único (sem duplicatas)
+      const allWorks = [...works1, ...works2, ...works3, ...emergencyWorks];
+      const uniqueWorks = allWorks.filter(
+        (work, index, self) =>
+          index === self.findIndex((w) => w.id === work.id),
+      );
+
+      // Ordenar por data de criação (mais recentes primeiro)
+      uniqueWorks.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+
+      console.log(
+        `✅ CONSOLIDAÇÃO COMPLETA: ${uniqueWorks.length} obras únicas consolidadas`,
+      );
+      console.log(
+        `📊 FONTES: works(${works1.length}) + leirisonda_works(${works2.length}) + temp_works(${works3.length}) + emergency(${emergencyWorks.length})`,
+      );
+
+      // Salvar versão consolidada como principal
+      localStorage.setItem("works", JSON.stringify(uniqueWorks));
+
+      return uniqueWorks;
+    } catch (error) {
+      console.error("❌ ERRO NA CONSOLIDAÇÃO:", error);
+      return this.getLocalWorks();
+    }
+  }
+
   async createWork(
     workData: Omit<Work, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
