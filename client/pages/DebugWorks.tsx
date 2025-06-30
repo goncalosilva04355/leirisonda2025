@@ -19,7 +19,6 @@ import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 import { firebaseService } from "@/services/FirebaseService";
-import { SyncTestButton } from "@/components/SyncTestButton";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
@@ -80,7 +79,7 @@ export function DebugWorks() {
       const consolidatedWorks =
         firebaseService.consolidateWorksFromAllBackups();
 
-      // Análise de atribuições
+      // Análise de atribuiç��es
       const worksWithAssignments = works.filter(
         (work) => work.assignedUsers && work.assignedUsers.length > 0,
       );
@@ -268,7 +267,7 @@ Se NÃO aparecer, há problema de sincronização Firebase!
 
       loadDebugInfo();
     } catch (error) {
-      console.error("❌ Erro no teste de sincronização:", error);
+      console.error("�� Erro no teste de sincronização:", error);
       alert(`Erro no teste: ${error}`);
     } finally {
       setIsTestingSync(false);
