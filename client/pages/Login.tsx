@@ -12,7 +12,54 @@ export const Login = React.memo(function Login() {
   // Usar useAuth normalmente sem try-catch problemático
   const authContext = useAuth();
 
-  // Se não há contexto, usar fallback simples
+  // Declarar todos os callbacks aqui (antes de qualquer return)
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setError("");
+      setIsSubmitting(true);
+
+      if (!email || !password) {
+        setError("Por favor, preencha todos os campos.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      try {
+        if (authContext?.login) {
+          const success = await authContext.login(email, password);
+          if (!success) {
+            setError("Email ou palavra-passe incorretos.");
+          }
+        }
+      } catch (err) {
+        setError("Erro ao iniciar sessão. Tente novamente.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [email, password, authContext],
+  );
+
+  const togglePassword = useCallback(() => {
+    setShowPassword(!showPassword);
+  }, [showPassword]);
+
+  const handleEmailChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+    },
+    [],
+  );
+
+  const handlePasswordChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value);
+    },
+    [],
+  );
+
+  // Após TODOS os hooks, agora podemos fazer early returns
   if (!authContext) {
     return (
       <div
