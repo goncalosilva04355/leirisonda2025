@@ -25,11 +25,11 @@ export function useNotifications() {
   // Verificar status das notificações
   const checkNotificationStatus = useCallback(async () => {
     try {
-      const isSupported = notificationService.getIsSupported();
+      const isSupported = NotificationService.isSupported;
       const permission =
         "Notification" in window ? Notification.permission : null;
       const isEnabled = permission === "granted";
-      const isInitialized = notificationService.getIsInitialized();
+      const isInitialized = NotificationService.isInitialized;
 
       // Verificar se há token salvo para o usuário atual
       const userTokens = JSON.parse(
