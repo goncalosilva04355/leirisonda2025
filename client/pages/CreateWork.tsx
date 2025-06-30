@@ -49,7 +49,7 @@ const statusOptions = [
 
 export function CreateWork() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, getAllUsers } = useAuth();
   const { createWork, isOnline, isSyncing } = useFirebaseSync();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
