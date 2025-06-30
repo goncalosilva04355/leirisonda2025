@@ -251,6 +251,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const fixUserData = useCallback(() => {
+    try {
+      console.log("🔧 Running user data correction...");
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        const users = JSON.parse(storedUsers);
+        let needsUpdate = false;
+
+        users.forEach((user: User) => {
+          // Ensure user has complete structure
+          if (!user.permissions) {
+            user.permissions =
+              user.role === "admin"
+                ? defaultAdminPermissions
+                : defaultUserPermissions;
+            needsUpdate = true;
+          }
+
+          if (!user.updatedAt) {
+            user.updatedAt = user.createdAt || new Date().toISOString();
+            needsUpdate = true;
+          }
+
+          // Check if password exists for this user
+          const passwordById = localStorage.getItem(`password_${user.id}`);
+          const passwordByEmail = localStorage.getItem(
+            `password_${user.email}`,
+          );
+
+          // If password only exists by ID, also store by email for compatibility
+          if (passwordById && !passwordByEmail) {
+            localStorage.setItem(`password_${user.email}`, passwordById);
+            console.log(`🔧 Fixed password storage for ${user.email}`);
+          }
+
+          // If password only exists by email, also store by ID for compatibility
+          if (passwordByEmail && !passwordById) {
+            localStorage.setItem(`password_${user.id}`, passwordByEmail);
+            console.log(`🔧 Fixed password storage for ${user.id}`);
+          }
+        });
+
+        if (needsUpdate) {
+          localStorage.setItem("users", JSON.stringify(users));
+          console.log("🔧 User data structure updated");
+        }
+      }
+    } catch (error) {
+      console.error("❌ Error fixing user data:", error);
+    }
+  }, []);
+
   const login = useCallback(
     async (email: string, password: string): Promise<boolean> => {
       try {
@@ -258,6 +310,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setInitError(null);
 
         console.log("🔐 Starting login process for:", email);
+
+        // Run user data correction first
+        fixUserData();
 
         // First try legacy login for immediate access, then Firebase in background
         const globalUsers = [
