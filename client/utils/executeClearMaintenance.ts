@@ -31,13 +31,12 @@ export function executeClearMaintenanceNow() {
 // Expor globalmente para debug/teste
 (window as any).clearAllPools = executeClearMaintenanceNow;
 
-// Auto-executar se estiver no console
+// Utilitário de limpeza manual - não executa automaticamente
 if (typeof window !== "undefined") {
   console.log(
-    "🔧 Utilitário de limpeza carregado. Digite 'clearAllPools()' no console para executar a limpeza.",
+    "🔧 Utilitário de limpeza carregado. Digite 'clearAllPools()' no console para executar.",
   );
 
-  // Executar limpeza uma única vez conforme solicitado
-  console.log("🧹 EXECUÇÃO ÚNICA: Removendo todas as piscinas...");
-  executeClearMaintenanceNow();
+  // Sistema de limpeza desabilitado para não interferir com a aplicação
+  // Para usar: clearAllPools() no console do navegador
 }
