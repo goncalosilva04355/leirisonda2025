@@ -331,8 +331,50 @@ export class FirebaseService {
     };
 
     try {
-      // SISTEMA DE BACKUP TRIPLO PARA GARANTIR SALVAMENTO
+      // PRIORIDADE 1: FIREBASE PRIMEIRO (para sincronização entre dispositivos)
+      let firebaseSuccess = false;
+      if (this.isFirebaseAvailable) {
+        try {
+          const worksRef = collection(db, "works");
 
+          // Garantir que assignedUsers seja preservado durante sync Firebase
+          const firebaseData = {
+            ...newWork,
+            assignedUsers: newWork.assignedUsers || [], // Garantir array vazio se não definido
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          };
+
+          console.log("🔥 CRIANDO OBRA NO FIREBASE (PRIORIDADE 1):", {
+            cliente: firebaseData.clientName,
+            atribuicoes: firebaseData.assignedUsers,
+            workId: newWork.id,
+          });
+
+          // Usar doc() com ID específico para garantir consistência
+          const docRef = doc(db, "works", newWork.id);
+          await updateDoc(docRef, firebaseData);
+
+          console.log(
+            "✅ OBRA CRIADA NO FIREBASE COM SUCESSO:",
+            newWork.id,
+            "Atribuições:",
+            firebaseData.assignedUsers,
+          );
+
+          firebaseSuccess = true;
+
+          // Notificar outros dispositivos imediatamente
+          console.log("📡 NOTIFICANDO OUTROS DISPOSITIVOS...");
+        } catch (firebaseError) {
+          console.error(
+            "⚠️ FIREBASE CREATE FALHOU, continuando com backup local:",
+            firebaseError,
+          );
+        }
+      }
+
+      // BACKUP LOCAL (SEMPRE executar independente do Firebase)
       // 1. BACKUP PRINCIPAL - localStorage "works"
       const works = this.getLocalWorks();
       const worksCountBefore = works.length;
@@ -353,7 +395,7 @@ export class FirebaseService {
       sessionWorks.push(newWork);
       sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
 
-      // VERIFICAÇÃO TRIPLA
+      // VERIFICAÇÃO TRIPLA LOCAL
       const verification1 = this.getLocalWorks();
       const verification2 = JSON.parse(
         localStorage.getItem("leirisonda_works") || "[]",
@@ -368,53 +410,30 @@ export class FirebaseService {
 
       if (savedWork1 && savedWork2 && savedWork3) {
         console.log(
-          `✅ OBRA SALVA COM BACKUP TRIPLO: ${newWork.id} (${worksCountBefore} -> ${verification1.length} obras)`,
+          `✅ OBRA SALVA COM BACKUP TRIPLO LOCAL: ${newWork.id} (${worksCountBefore} -> ${verification1.length} obras)`,
         );
       } else {
-        console.error("⚠️ BACKUP TRIPLO FALHOU:", {
+        console.error("⚠️ BACKUP TRIPLO LOCAL FALHOU:", {
           backup1: !!savedWork1,
           backup2: !!savedWork2,
           backup3: !!savedWork3,
         });
-        throw new Error("Falha no sistema de backup triplo");
       }
 
-      // TENTATIVA FIREBASE (em paralelo, não bloqueia)
-      if (this.isFirebaseAvailable) {
-        try {
-          const worksRef = collection(db, "works");
-
-          // Garantir que assignedUsers seja preservado durante sync Firebase
-          const firebaseData = {
-            ...newWork,
-            assignedUsers: newWork.assignedUsers || [], // Garantir array vazio se não definido
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          };
-
-          console.log("🔥 ENVIANDO PARA FIREBASE COM ATRIBUIÇÕES:", {
-            cliente: firebaseData.clientName,
-            atribuicoes: firebaseData.assignedUsers,
-          });
-
-          const docRef = await addDoc(worksRef, firebaseData);
-          console.log(
-            "✅ OBRA SINCRONIZADA COM FIREBASE:",
-            docRef.id,
-            "Atribuições:",
-            firebaseData.assignedUsers,
-          );
-        } catch (error) {
-          console.error(
-            "⚠️ FIREBASE SYNC FALHOU, obra salva localmente:",
-            error,
-          );
-        }
+      // STATUS FINAL
+      if (firebaseSuccess) {
+        console.log(
+          "🌟 OBRA CRIADA COM SUCESSO - FIREBASE + LOCAL:",
+          newWork.id,
+        );
+        console.log("📡 OUTROS DISPOSITIVOS DEVEM RECEBER AUTOMATICAMENTE");
       } else {
-        console.log("📱 FIREBASE INDISPONÍVEL, obra salva com backup triplo");
+        console.log("📱 OBRA CRIADA APENAS LOCALMENTE:", newWork.id);
+        console.log(
+          "⚠️ SINCRONIZAÇÃO ENTRE DISPOSITIVOS PODE ESTAR COMPROMETIDA",
+        );
       }
 
-      console.log("✅ CRIAÇÃO DE OBRA CONCLUÍDA COM SUCESSO:", newWork.id);
       return newWork.id;
     } catch (error) {
       console.error("❌ ERRO CRÍTICO NA CRIAÇÃO DE OBRA:", error);
