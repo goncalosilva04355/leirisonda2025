@@ -397,26 +397,38 @@ export class FirebaseService {
   async createMaintenance(
     maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
-    if (!this.isFirebaseAvailable) {
-      return this.createLocalMaintenance(maintenanceData);
+    const newMaintenance: PoolMaintenance = {
+      ...maintenanceData,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    // SEMPRE criar localmente primeiro (sync instantâneo local)
+    const maintenances = this.getLocalMaintenances();
+    maintenances.push(newMaintenance);
+    localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
+    console.log("📱 Maintenance created locally first:", newMaintenance.id);
+
+    // Tentar Firebase em paralelo se disponível
+    if (this.isFirebaseAvailable) {
+      try {
+        const maintenancesRef = collection(db, "maintenances");
+        await addDoc(maintenancesRef, {
+          ...newMaintenance,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+        console.log("🔥 Maintenance synced to Firebase:", newMaintenance.id);
+      } catch (error) {
+        console.error(
+          "⚠️ Firebase sync failed, maintenance saved locally:",
+          error,
+        );
+      }
     }
 
-    try {
-      const maintenancesRef = collection(db, "maintenances");
-      const docRef = await addDoc(maintenancesRef, {
-        ...maintenanceData,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-      console.log("🔥 Maintenance created in Firebase:", docRef.id);
-      return docRef.id;
-    } catch (error) {
-      console.error(
-        "Error creating maintenance in Firebase, falling back to local:",
-        error,
-      );
-      return this.createLocalMaintenance(maintenanceData);
-    }
+    return newMaintenance.id;
   }
 
   private createLocalMaintenance(
