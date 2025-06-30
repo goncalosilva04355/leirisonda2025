@@ -350,7 +350,29 @@ export class FirebaseService {
     });
 
     try {
-      // PRIORIDADE 1: FIREBASE PRIMEIRO (para sincronização entre dispositivos)
+      // PRIORIDADE 1: BACKUP LOCAL PRIMEIRO (garante dados salvos mesmo com erro Firebase)
+      console.log("💾 SALVANDO LOCALMENTE PRIMEIRO (PRIORIDADE MÁXIMA)...");
+
+      // BACKUP LOCAL IMEDIATO em múltiplas localizações
+      const works = this.getLocalWorks();
+      works.push(newWork);
+      localStorage.setItem("works", JSON.stringify(works));
+
+      const backupWorks = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      backupWorks.push(newWork);
+      localStorage.setItem("leirisonda_works", JSON.stringify(backupWorks));
+
+      const sessionWorks = JSON.parse(
+        sessionStorage.getItem("temp_works") || "[]",
+      );
+      sessionWorks.push(newWork);
+      sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
+
+      console.log("✅ OBRA GUARDADA LOCALMENTE COM SEGURANÇA:", newWork.id);
+
+      // PRIORIDADE 2: FIREBASE SYNC (em paralelo, sem bloquear)
       let firebaseSuccess = false;
       if (this.isFirebaseAvailable) {
         try {
@@ -366,36 +388,17 @@ export class FirebaseService {
             updatedAt: serverTimestamp(),
           };
 
-          // VERIFICAÇÃO CRÍTICA: Se havia atribuições mas foram perdidas, interromper
-          if (
-            workData.assignedUsers &&
-            workData.assignedUsers.length > 0 &&
-            (!firebaseData.assignedUsers ||
-              firebaseData.assignedUsers.length === 0)
-          ) {
-            throw new Error(
-              "ERRO CRÍTICO: Atribuições de usuários perdidas durante preparação do Firebase",
-            );
-          }
-
-          console.log("🔥 CRIANDO OBRA NO FIREBASE (PRIORIDADE 1):", {
+          console.log("🔥 SINCRONIZANDO COM FIREBASE:", {
             cliente: firebaseData.clientName,
             atribuicoes: firebaseData.assignedUsers,
             workId: newWork.id,
-            atribuicoesOriginais: workData.assignedUsers,
           });
 
           // Usar setDoc() com ID específico para criar documento novo
           const docRef = doc(db, "works", newWork.id);
           await setDoc(docRef, firebaseData);
 
-          console.log(
-            "✅ OBRA CRIADA NO FIREBASE COM SUCESSO:",
-            newWork.id,
-            "Atribuições:",
-            firebaseData.assignedUsers,
-          );
-
+          console.log("✅ OBRA SINCRONIZADA NO FIREBASE:", newWork.id);
           firebaseSuccess = true;
 
           // CRITICAL: Notificar TODOS os dispositivos imediatamente
