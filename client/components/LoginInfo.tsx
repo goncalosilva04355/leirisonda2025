@@ -172,35 +172,7 @@ export function LoginInfo() {
   }, [showDebug]);
 
   if (!showDebug) {
-    return (
-      <div
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          zIndex: 1000,
-        }}
-      >
-        <button
-          onClick={() => setShowDebug(true)}
-          style={{
-            background: "rgba(0, 0, 0, 0.1)",
-            border: "1px solid rgba(0, 0, 0, 0.2)",
-            borderRadius: "20px",
-            padding: "8px 12px",
-            fontSize: "12px",
-            color: "#666",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "5px",
-          }}
-        >
-          <Eye size={14} />
-          Debug Info
-        </button>
-      </div>
-    );
+    return null;
   }
 
   return (
