@@ -57,12 +57,21 @@ export class PDFGenerator {
     let tempContainer: HTMLElement | null = null;
 
     try {
+      // Clear any cached styles to force refresh
+      const cacheBuster = Date.now();
+      console.log(`🔄 Iniciando geração PDF (${cacheBuster})`);
+
       // Detect mobile device for optimized settings
       const isMobile = this.isMobileDevice();
 
       // Create container preserving custom styles
       tempContainer = document.createElement("div");
-      tempContainer.innerHTML = htmlContent;
+      // Add cache buster to force content refresh
+      const enhancedContent = htmlContent.replace(
+        /(<style[^>]*>)/g,
+        `$1/* Cache-Buster: ${cacheBuster} */`,
+      );
+      tempContainer.innerHTML = enhancedContent;
       tempContainer.style.position = "absolute";
       tempContainer.style.left = "-9999px";
       tempContainer.style.top = "-9999px";
@@ -336,10 +345,9 @@ export class PDFGenerator {
         <meta charset="UTF-8">
         <title>${data.title}</title>
         <style>
-          /* Novo design moderno - ${Date.now()} */
           @page {
             size: A4;
-            margin: 20mm;
+            margin: 15mm;
           }
 
           * {
@@ -350,241 +358,213 @@ export class PDFGenerator {
 
           body {
             font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             line-height: 1.4;
             color: #333;
             background: white;
-            width: 170mm;
-            max-height: 257mm;
           }
 
-          .report-container {
-            width: 100%;
-            max-height: 257mm;
-            overflow: hidden;
-          }
-
-          /* Modern Header */
+          /* Header layout exactly like the image */
           .header {
-            background: linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%);
-            color: white;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
           }
 
           .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            padding-bottom: 15px;
+            position: relative;
           }
 
           .logo-section {
+            flex: 0 0 auto;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 10px;
           }
 
           .logo {
-            background: white;
-            width: 70px;
-            height: 70px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-          }
-
-          .logo img {
-            width: 55px;
-            height: 55px;
+            height: 60px;
+            width: auto;
             object-fit: contain;
           }
 
-          .company-info h1 {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          .company-name {
+            font-size: 12px;
+            color: #333;
+            font-weight: normal;
           }
 
-          .company-info .tagline {
+          .report-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+          }
+
+          .report-title h1 {
             font-size: 16px;
-            opacity: 0.9;
-          }
-
-          .header-meta {
-            text-align: right;
-            font-size: 13px;
-            background: rgba(255,255,255,0.1);
-            padding: 10px;
-            border-radius: 8px;
-          }
-
-          .report-title h2 {
-            font-size: 22px;
             font-weight: bold;
-            border-top: 2px solid rgba(255,255,255,0.4);
-            padding-top: 18px;
-            margin-top: 10px;
+            color: #333;
+            margin-bottom: 2px;
           }
 
           .report-title .subtitle {
-            font-size: 16px;
-            margin-top: 8px;
-            opacity: 0.95;
-          }
-
-          /* Content */
-          .content {
-            max-height: 160mm;
-            overflow: hidden;
-          }
-
-          .info-header {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-          }
-
-          .info-card {
-            flex: 1;
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 15px;
-            border-left: 5px solid ${primaryColor};
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-          }
-
-          .info-card .label {
-            font-size: 11px;
-            font-weight: bold;
-            color: ${primaryColor};
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
-
-          .info-card .value {
             font-size: 14px;
-            font-weight: bold;
-            color: #1a202c;
+            color: #333;
+            margin: 0;
           }
 
-          .section {
-            margin-bottom: 20px;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          .header-meta {
+            flex: 0 0 auto;
+            text-align: right;
+            font-size: 9px;
+            color: #666;
           }
 
-          .section-header {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-            padding: 15px;
-            border-bottom: 1px solid #e2e8f0;
-          }
-
-          .section-title {
+          .page-number {
             font-size: 14px;
             font-weight: bold;
             color: #333;
+            margin-bottom: 5px;
+          }
+
+          .date-time {
+            font-size: 9px;
+            color: #666;
+          }
+
+          .sub-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #666;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+          }
+
+          .sub-left {
+            flex: 1;
+          }
+
+          .sub-right {
+            flex: 1;
+            text-align: right;
+          }
+
+          /* Content sections */
+          .section {
+            margin-bottom: 20px;
+          }
+
+          .section-title {
+            background: #f5f5f5;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            border-left: 4px solid ${primaryColor};
+            margin-bottom: 2px;
           }
 
           .section-content {
-            padding: 10px;
+            background: #fafafa;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
           }
 
-          .highlight-box {
-            background: #f0f8ff;
-            border: 1px solid ${primaryColor};
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
+          /* Info grid for client data */
+          .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
           }
 
+          .info-item {
+            background: white;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+          }
+
+          .info-label {
+            font-size: 10px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 2px;
+          }
+
+          .info-value {
+            font-size: 11px;
+            color: #333;
+          }
+
+          /* Table style for data */
           .data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
+            margin: 10px 0;
+            background: white;
           }
 
           .data-table th {
-            background: ${primaryColor};
-            color: white;
-            padding: 5px;
+            background: #f0f0f0;
+            color: #333;
+            padding: 8px;
             text-align: left;
+            font-size: 10px;
             font-weight: bold;
+            border: 1px solid #d0d0d0;
           }
 
           .data-table td {
-            padding: 5px;
-            border-bottom: 1px solid #ddd;
+            padding: 6px 8px;
+            border: 1px solid #d0d0d0;
+            font-size: 10px;
           }
 
           .data-table tr:nth-child(even) {
             background: #f9f9f9;
           }
 
-          .enhanced-list {
+          /* Simple lists */
+          .simple-list {
             list-style: none;
             padding: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
           }
 
-          .enhanced-list li {
-            background: #f9f9f9;
-            border: 1px solid #eee;
-            border-radius: 3px;
-            padding: 5px 8px;
-            margin-bottom: 3px;
-            font-size: 11px;
+          .simple-list li {
+            padding: 6px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 10px;
           }
 
-          .enhanced-list li::before {
-            content: '✓ ';
-            color: ${primaryColor};
-            font-weight: bold;
+          .simple-list li:last-child {
+            border-bottom: none;
           }
 
-          /* Modern Footer */
+          /* Footer */
           .footer {
-            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            color: white;
-            padding: 20px;
-            margin-top: 25px;
-            border-radius: 10px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-          }
-
-          .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
           }
 
           .footer-logo {
-            font-size: 20px;
-            font-weight: bold;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-          }
-
-          .footer-contact {
-            text-align: right;
             font-size: 12px;
-            opacity: 0.9;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
           }
 
-          .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 12px;
-            text-align: center;
-            font-size: 11px;
-            opacity: 0.8;
+          .footer-info {
+            font-size: 9px;
+            color: #666;
           }
         </style>
       </head>
@@ -593,55 +573,35 @@ export class PDFGenerator {
           <div class="header">
             <div class="header-top">
               <div class="logo-section">
-                <div class="logo">
-                  <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Leirisonda Logo" />
-                </div>
-                <div class="company-info">
-                  <h1>Leirisonda</h1>
-                  <div class="tagline">Gestão de Obras e Manutenção</div>
-                </div>
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Leirisonda Logo" class="logo" />
               </div>
+
+              <div class="report-title">
+                <h1>${data.title}</h1>
+                ${data.subtitle ? `<div class="subtitle">${data.subtitle}</div>` : ""}
+              </div>
+
               <div class="header-meta">
-                <div><strong>Data:</strong> ${reportDate}</div>
-                <div><strong>REL:</strong> ${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}</div>
+                <div class="page-number">1</div>
               </div>
             </div>
 
-            <div class="report-title">
-              <h2>${data.title}</h2>
-              ${data.subtitle ? `<div class="subtitle">${data.subtitle}</div>` : ""}
+            <div class="sub-header">
+              <div class="sub-left">Por: Leirisonda (info@leirisonda.pt)</div>
+              <div class="sub-right">Em: ${reportDate} ${new Date().toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" })}</div>
             </div>
           </div>
 
           <div class="content">
-            <div class="info-header">
-              <div class="info-card">
-                <div class="label">Data Relatório</div>
-                <div class="value">${reportDate}</div>
-              </div>
-              <div class="info-card">
-                <div class="label">Data Referência</div>
-                <div class="value">${data.date}</div>
-              </div>
-              <div class="info-card">
-                <div class="label">Estado</div>
-                <div class="value">${data.additionalInfo || "Concluído"}</div>
-              </div>
-            </div>
-
-            <div>${data.content}</div>
+            ${data.content}
           </div>
 
           <div class="footer">
-            <div class="footer-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
               <div class="footer-logo">Leirisonda</div>
-              <div class="footer-contact">
-                <div>info@leirisonda.pt</div>
-                <div>www.leirisonda.pt</div>
+              <div class="footer-info">
+                Relatório gerado no Sistema de Gestão
               </div>
-            </div>
-            <div class="footer-bottom">
-              © ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
             </div>
           </div>
         </div>

@@ -123,76 +123,90 @@ export function MaintenanceList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="w-12 h-8 bg-white rounded-lg flex items-center justify-center shadow-md p-1 shrink-0">
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800"
-              alt="Leirisonda Logo"
-              className="w-full h-full object-contain"
-            />
+      <div className="space-y-4">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="w-12 h-8 bg-white rounded-lg flex items-center justify-center shadow-md p-1 shrink-0">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=800"
+                alt="Leirisonda Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 flex items-center">
+                <Waves className="mr-3 h-6 lg:h-8 w-6 lg:w-8 text-blue-600 shrink-0" />
+                <span className="truncate">Manutenção de Piscinas</span>
+              </h1>
+              <p className="text-gray-600 mt-1 text-sm lg:text-base">
+                Gerir piscinas e intervenções de manutenção
+              </p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 flex items-center">
-              <Waves className="mr-3 h-6 lg:h-8 w-6 lg:w-8 text-blue-600 shrink-0" />
-              <span className="truncate">Manutenção de Piscinas</span>
-            </h1>
-            <p className="text-gray-600 mt-1 text-sm lg:text-base">
-              Gerir piscinas e intervenções de manutenção
-            </p>
+
+          <div className="w-full sm:w-auto shrink-0">
+            <Link to="/create-maintenance" className="block">
+              <Button className="btn-primary w-full sm:w-auto">
+                <Plus className="mr-2 h-4 w-4" />
+                Nova Piscina
+              </Button>
+            </Link>
           </div>
         </div>
 
-        <div className="w-full sm:w-auto shrink-0">
-          <Link to="/create-maintenance" className="block">
-            <Button className="btn-primary w-full sm:w-auto">
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Piscina
-            </Button>
-          </Link>
+        {/* Search Bar - Prominent placement */}
+        <div className="glass-card p-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="🔍 Pesquisar piscinas por nome, cliente ou localização..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-3 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-lg w-full"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+          <div className="mt-2 text-sm text-gray-600 flex justify-between items-center">
+            <span>
+              <strong>{filteredMaintenances.length}</strong> de{" "}
+              <strong>{maintenances.length}</strong> piscinas encontradas
+            </span>
+            {searchTerm && (
+              <span className="text-blue-600">
+                A pesquisar por: "{searchTerm}"
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="glass-card p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Search className="inline mr-2 h-4 w-4" />
-              Pesquisar
-            </label>
-            <Input
-              type="text"
-              placeholder="Nome da piscina, cliente ou localização..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full"
-            />
-          </div>
-
-          <div>
+      <div className="glass-card p-4">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Filter className="inline mr-2 h-4 w-4" />
-              Estado
+              Filtrar por Estado
             </label>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Filtrar por estado" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="active">Ativas</SelectItem>
-                <SelectItem value="inactive">Inativas</SelectItem>
-                <SelectItem value="seasonal">Sazonais</SelectItem>
+                <SelectItem value="all">📋 Todas as Piscinas</SelectItem>
+                <SelectItem value="active">✅ Piscinas Ativas</SelectItem>
+                <SelectItem value="inactive">❌ Piscinas Inativas</SelectItem>
+                <SelectItem value="seasonal">🌤️ Piscinas Sazonais</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-
-          <div className="flex items-end">
-            <div className="text-sm text-gray-600">
-              <strong>{filteredMaintenances.length}</strong> de{" "}
-              <strong>{maintenances.length}</strong> piscinas
-            </div>
           </div>
         </div>
       </div>
@@ -317,21 +331,6 @@ export function MaintenanceList() {
               </Button>
             </Link>
           )}
-        </div>
-      )}
-
-      {/* Fixed bottom button for Nova Manutenção */}
-      {maintenances.length > 0 && (
-        <div className="fixed bottom-6 left-6 right-6 z-50">
-          <Link to="/maintenance/new-general">
-            <Button
-              size="lg"
-              className="w-full bg-red-600 hover:bg-red-700 text-white shadow-lg px-8 py-4 text-lg font-medium rounded-lg"
-            >
-              <Plus className="mr-2 h-5 w-5" />
-              Nova
-            </Button>
-          </Link>
         </div>
       )}
     </div>
