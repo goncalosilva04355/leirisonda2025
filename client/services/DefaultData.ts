@@ -92,7 +92,12 @@ export class DefaultDataService {
           email: "alexkamaryta@gmail.com",
           name: "Alexandre Fernandes",
           role: "user",
-          permissions: defaultUserPermissions,
+          permissions: {
+            ...defaultUserPermissions,
+            canEditWorks: true,
+            canEditMaintenance: true,
+            canViewReports: true,
+          },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
