@@ -151,7 +151,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               );
             })}
 
-            {user?.role === "admin" && (
+            {user?.email === "gongonsilva@gmail.com" && (
               <>
                 <div className="pt-6 pb-2">
                   <div className="flex items-center px-4 py-2">
