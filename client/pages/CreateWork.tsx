@@ -303,6 +303,33 @@ export function CreateWork() {
           const workId = await safeCreateWork(workData);
           console.log("✅ OBRA CRIADA COM SUCESSO ID:", workId);
 
+          // ENVIAR NOTIFICAÇÕES PARA USUÁRIOS ATRIBUÍDOS
+          if (workData.assignedUsers && workData.assignedUsers.length > 0) {
+            try {
+              console.log(
+                "🔔 Enviando notificações para usuários atribuídos:",
+                workData.assignedUsers,
+              );
+              await notifyWorkAssigned(
+                {
+                  id: workId,
+                  workSheetNumber: workData.workSheetNumber,
+                  clientName: workData.clientName,
+                  type: workData.type,
+                  status: workData.status,
+                },
+                workData.assignedUsers,
+              );
+              console.log("✅ Notificações enviadas com sucesso");
+            } catch (notificationError) {
+              console.warn(
+                "⚠️ Erro ao enviar notificações (não crítico):",
+                notificationError,
+              );
+              // Não interromper o fluxo se notifica��ões falharem
+            }
+          }
+
           // MARCAR que obra foi criada para ErrorBoundary saber
           sessionStorage.setItem("just_created_work", "true");
 
