@@ -263,6 +263,18 @@ const createErrorHTML = (error: any) => {
         <!-- Action Buttons -->
         <div style="space-y: 0.75rem;">
           <button
+            onclick="tryAgain()"
+            style="width: 100%; display: flex; align-items: center; justify-content: center; padding: 0.75rem 1rem; background-color: #16a34a; color: white; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 500; text-decoration: none; transition: background-color 0.2s; margin-bottom: 0.75rem;"
+            onmouseover="this.style.backgroundColor='#15803d'"
+            onmouseout="this.style.backgroundColor='#16a34a'"
+          >
+            <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Tentar Novamente
+          </button>
+
+          <button
             onclick="window.location.reload()"
             style="width: 100%; display: flex; align-items: center; justify-content: center; padding: 0.75rem 1rem; background-color: #2563eb; color: white; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 500; text-decoration: none; transition: background-color 0.2s; margin-bottom: 0.75rem;"
             onmouseover="this.style.backgroundColor='#1d4ed8'"
@@ -272,6 +284,18 @@ const createErrorHTML = (error: any) => {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
             </svg>
             Recarregar Página
+          </button>
+
+          <button
+            onclick="window.location.href='/login'"
+            style="width: 100%; display: flex; align-items: center; justify-content: center; padding: 0.75rem 1rem; background-color: #0891b2; color: white; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 500; text-decoration: none; transition: background-color 0.2s; margin-bottom: 0.75rem;"
+            onmouseover="this.style.backgroundColor='#0e7490'"
+            onmouseout="this.style.backgroundColor='#0891b2'"
+          >
+            <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+            Ir para Login
           </button>
 
           <button
