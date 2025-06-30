@@ -436,11 +436,22 @@ export class PDFGenerator {
           }
 
           .sub-header {
+            display: flex;
+            justify-content: space-between;
             font-size: 9px;
             color: #666;
             margin-top: 10px;
             padding-top: 10px;
             border-top: 1px solid #e0e0e0;
+          }
+
+          .sub-left {
+            flex: 1;
+          }
+
+          .sub-right {
+            flex: 1;
+            text-align: right;
           }
 
           /* Content sections */
