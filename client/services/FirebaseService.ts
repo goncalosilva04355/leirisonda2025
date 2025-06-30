@@ -352,28 +352,37 @@ export class FirebaseService {
       hasAssignments: newWork.assignedUsers.length > 0,
     });
 
+    // ESTRATÉGIA SUPER ROBUSTA: GARANTIR 100% SUCESSO
     try {
-      // PRIORIDADE 1: BACKUP LOCAL PRIMEIRO (garante dados salvos mesmo com erro Firebase)
-      console.log("💾 SALVANDO LOCALMENTE PRIMEIRO (PRIORIDADE MÁXIMA)...");
+      // ETAPA 1: SALVAMENTO LOCAL IMEDIATO TRIPLO + EMERGÊNCIA
+      console.log("💾 EXECUTANDO SALVAMENTO SUPER SEGURO...");
 
-      // BACKUP LOCAL IMEDIATO em múltiplas localizações
+      // Backup 1: Principal
       const works = this.getLocalWorks();
       works.push(newWork);
       localStorage.setItem("works", JSON.stringify(works));
 
+      // Backup 2: Secundário
       const backupWorks = JSON.parse(
         localStorage.getItem("leirisonda_works") || "[]",
       );
       backupWorks.push(newWork);
       localStorage.setItem("leirisonda_works", JSON.stringify(backupWorks));
 
+      // Backup 3: Temporário
       const sessionWorks = JSON.parse(
         sessionStorage.getItem("temp_works") || "[]",
       );
       sessionWorks.push(newWork);
       sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
 
-      console.log("✅ OBRA GUARDADA LOCALMENTE COM SEGURANÇA:", newWork.id);
+      // Backup 4: Emergência individual
+      localStorage.setItem(
+        `emergency_work_${newWork.id}`,
+        JSON.stringify(newWork),
+      );
+
+      console.log("✅ OBRA SALVA EM 4 LOCALIZAÇÕES DIFERENTES:", newWork.id);
 
       // PRIORIDADE 2: FIREBASE SYNC (em paralelo, sem bloquear)
       let firebaseSuccess = false;
@@ -582,7 +591,7 @@ export class FirebaseService {
           ...updates,
           updatedAt: serverTimestamp(),
         });
-        console.log("�� Work updated in Firebase:", workId);
+        console.log("🔥 Work updated in Firebase:", workId);
       } catch (error) {
         console.error(
           "⚠️ Firebase update failed, work updated locally:",
