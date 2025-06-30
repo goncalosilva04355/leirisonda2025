@@ -417,7 +417,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 if (initSuccess) {
                   console.log("📊 Status após inicialização (dinâmico):");
                   console.log(
-                    `  • Inicializado: ${notificationService.getIsInitialized()}`,
+                    `  • Inicializado: ${NotificationService.isInitialized}`,
                   );
                   console.log(
                     `  • Permissão final: ${Notification.permission}`,
