@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
-import { AlertTriangle, RotateCcw } from "lucide-react";
+import { AlertTriangle, RotateCcw, RefreshCw, Home } from "lucide-react";
 
 interface Props {
   children: ReactNode;
@@ -8,31 +8,73 @@ interface Props {
 interface State {
   hasError: boolean;
   error?: Error;
+  errorInfo?: ErrorInfo;
+  retryCount: number;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
+    retryCount: 0,
   };
 
   public static getDerivedStateFromError(error: Error): State {
-    // Don't catch useAuth errors during development hot reload
+    // Handle common development errors
     if (error.message?.includes("useAuth must be used within")) {
       console.warn(
         "AuthProvider context error caught, ignoring during development",
       );
-      return { hasError: false };
+      return { hasError: false, retryCount: 0 };
     }
-    return { hasError: true, error };
+
+    // Handle Firebase initialization errors
+    if (
+      error.message?.includes("Firebase") ||
+      error.message?.includes("firebase")
+    ) {
+      console.warn("Firebase error caught:", error.message);
+      // Try to continue without breaking the app
+      return { hasError: false, retryCount: 0 };
+    }
+
+    // Handle module loading errors
+    if (
+      error.message?.includes("Loading chunk") ||
+      error.message?.includes("ChunkLoadError")
+    ) {
+      console.warn("Chunk loading error, will reload");
+      // Auto-reload for chunk errors
+      setTimeout(() => window.location.reload(), 1000);
+      return { hasError: false, retryCount: 0 };
+    }
+
+    return { hasError: true, error, retryCount: 0 };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Ignore AuthProvider context errors during hot reload
-    if (error.message?.includes("useAuth must be used within")) {
-      console.warn("AuthProvider context error during hot reload, ignoring");
+    // Ignore specific development errors
+    if (
+      error.message?.includes("useAuth must be used within") ||
+      error.message?.includes("Loading chunk") ||
+      error.message?.includes("ChunkLoadError")
+    ) {
       return;
     }
-    console.error("Uncaught error:", error, errorInfo);
+
+    console.error("🚨 Application Error:", error);
+    console.error("🚨 Error Info:", errorInfo);
+
+    // Store error details
+    this.setState({
+      errorInfo,
+      retryCount: this.state.retryCount + 1,
+    });
+
+    // Auto-reload after multiple errors (possible infinite loop protection)
+    if (this.state.retryCount > 3) {
+      console.warn("Multiple errors detected, forcing page reload...");
+      setTimeout(() => window.location.reload(), 2000);
+    }
   }
 
   private handleReset = () => {
