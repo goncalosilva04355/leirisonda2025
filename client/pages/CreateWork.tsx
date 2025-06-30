@@ -51,6 +51,9 @@ export function CreateWork() {
   console.log("🏗️ CreateWork component iniciando...");
   const navigate = useNavigate();
 
+  // PROTEÇÃO MÁXIMA: Envolver todo o componente em try-catch
+  try {
+
   // Use try-catch para capturar erros de contexto
   let user, getAllUsers, createWork, isOnline, isSyncing;
 
