@@ -61,8 +61,8 @@ export function CreateWork() {
     user = authContext.user;
     getAllUsers = authContext.getAllUsers;
     createWork = firebaseContext.createWork;
-    isOnline = firebaseContext.isOnline;
-    isSyncing = firebaseContext.isSyncing;
+    isOnline = firebaseContext.isOnline ?? true; // Valor padrão
+    isSyncing = firebaseContext.isSyncing ?? false; // Valor padrão
   } catch (error) {
     console.error("❌ Erro ao acessar contextos:", error);
     return (
