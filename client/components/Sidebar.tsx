@@ -170,6 +170,24 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               </div>
             </div>
 
+            {/* Link para diagnóstico de notificações (só para Gonçalo) */}
+            {user?.email === "gongonsilva@gmail.com" && (
+              <Link
+                to="/notification-diagnostic"
+                onClick={() => {
+                  if (window.innerWidth < 1024) onToggle();
+                }}
+                className={`nav-item-leirisonda ${
+                  location.pathname === "/notification-diagnostic"
+                    ? "active"
+                    : ""
+                }`}
+              >
+                <Bell className="mr-3 h-5 w-5" />
+                Notificações
+              </Link>
+            )}
+
             {user?.email === "gongonsilva@gmail.com" && (
               <>
                 <div className="pt-6 pb-2">
