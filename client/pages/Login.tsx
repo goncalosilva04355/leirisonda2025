@@ -235,7 +235,7 @@ export function Login() {
                     fontSize: "18px",
                   }}
                 >
-                  {showPassword ? "👁️" : "👁️‍🗨️"}
+                  {showPassword ? "🙈" : "👁️"}
                 </button>
               </div>
             </div>
