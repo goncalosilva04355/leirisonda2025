@@ -30,33 +30,44 @@ console.log("🔥 Firebase Messaging Service Worker inicializado");
 messaging.onBackgroundMessage(function (payload) {
   console.log("📨 Mensagem recebida em background:", payload);
 
-  const notificationTitle = payload.notification?.title || "Leirisonda";
-  const notificationOptions = {
-    body: payload.notification?.body || "Nova notificação",
-    icon: "/leirisonda-icon.svg",
-    badge: "/leirisonda-icon.svg",
-    image: payload.notification?.image,
-    data: payload.data || {},
-    tag: "leirisonda-notification",
-    requireInteraction: true,
-    actions: [
-      {
-        action: "view",
-        title: "Ver Detalhes",
-        icon: "/leirisonda-icon.svg",
-      },
-      {
-        action: "dismiss",
-        title: "Dispensar",
-        icon: "/leirisonda-icon.svg",
-      },
-    ],
-  };
+  try {
+    const notificationTitle = payload.notification?.title || "Leirisonda";
+    const notificationOptions = {
+      body: payload.notification?.body || "Nova notificação",
+      icon: "/leirisonda-icon.svg",
+      badge: "/leirisonda-icon.svg",
+      image: payload.notification?.image,
+      data: payload.data || {},
+      tag: "leirisonda-notification",
+      requireInteraction: true,
+      actions: [
+        {
+          action: "view",
+          title: "Ver Detalhes",
+          icon: "/leirisonda-icon.svg",
+        },
+        {
+          action: "dismiss",
+          title: "Dispensar",
+          icon: "/leirisonda-icon.svg",
+        },
+      ],
+    };
 
-  return self.registration.showNotification(
-    notificationTitle,
-    notificationOptions,
-  );
+    return self.registration.showNotification(
+      notificationTitle,
+      notificationOptions,
+    );
+  } catch (error) {
+    console.error("❌ Erro ao processar mensagem em background:", error);
+
+    // Fallback: mostrar notificação básica
+    return self.registration.showNotification("Leirisonda", {
+      body: "Nova notificação disponível",
+      icon: "/leirisonda-icon.svg",
+      tag: "leirisonda-fallback",
+    });
+  }
 });
 
 // Handle notification click
