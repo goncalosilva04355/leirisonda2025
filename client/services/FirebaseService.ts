@@ -1200,7 +1200,7 @@ export class FirebaseService {
           const workSnap = await getDoc(workRef);
 
           if (!workSnap.exists()) {
-            await updateDoc(workRef, {
+            await setDoc(workRef, {
               ...work,
               createdAt: work.createdAt
                 ? new Date(work.createdAt)
