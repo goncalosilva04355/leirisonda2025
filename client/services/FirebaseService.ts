@@ -232,26 +232,35 @@ export class FirebaseService {
   async createWork(
     workData: Omit<Work, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
-    if (!this.isFirebaseAvailable) {
-      return this.createLocalWork(workData);
+    const newWork: Work = {
+      ...workData,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    // SEMPRE criar localmente primeiro (sync instantâneo local)
+    const works = this.getLocalWorks();
+    works.push(newWork);
+    localStorage.setItem("works", JSON.stringify(works));
+    console.log("📱 Work created locally first:", newWork.id);
+
+    // Tentar Firebase em paralelo se disponível
+    if (this.isFirebaseAvailable) {
+      try {
+        const worksRef = collection(db, "works");
+        await addDoc(worksRef, {
+          ...newWork,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+        console.log("🔥 Work synced to Firebase:", newWork.id);
+      } catch (error) {
+        console.error("⚠️ Firebase sync failed, work saved locally:", error);
+      }
     }
 
-    try {
-      const worksRef = collection(db, "works");
-      const docRef = await addDoc(worksRef, {
-        ...workData,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-      console.log("🔥 Work created in Firebase:", docRef.id);
-      return docRef.id;
-    } catch (error) {
-      console.error(
-        "Error creating work in Firebase, falling back to local:",
-        error,
-      );
-      return this.createLocalWork(workData);
-    }
+    return newWork.id;
   }
 
   private createLocalWork(
