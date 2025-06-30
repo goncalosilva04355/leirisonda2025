@@ -333,43 +333,43 @@ export function CreateWork() {
       } catch (err) {
         console.error("❌ ERRO AO CRIAR OBRA:", err);
 
-        // Tratamento de erro ESPECÍFICO e SEGURO
-        const errorMessage = err instanceof Error ? err.message : String(err);
+        // Tratamento de erro DEFENSIVO - nunca causar ErrorBoundary
+        try {
+          const errorMessage = err instanceof Error ? err.message : String(err);
 
-        // NÃO relançar erro que possa causar ErrorBoundary
-        if (
-          errorMessage.includes("Firebase") ||
-          errorMessage.includes("network") ||
-          errorMessage.includes("fetch") ||
-          errorMessage.includes("conectividade")
-        ) {
-          setError(
-            "Problema de conectividade. A obra pode ter sido guardada localmente. Verifique a lista de obras.",
-          );
-        } else if (
-          errorMessage.includes("atribuições") ||
-          errorMessage.includes("assignedUsers")
-        ) {
-          setError(
-            "Problema com atribuições de usuários. Verifique as seleções e tente novamente.",
-          );
-        } else {
-          setError(
-            `Erro ao guardar obra: ${errorMessage.slice(0, 100)}. Tente novamente.`,
-          );
+          // Classificar tipo de erro sem fazer throw
+          if (
+            errorMessage.includes("Firebase") ||
+            errorMessage.includes("network") ||
+            errorMessage.includes("fetch") ||
+            errorMessage.includes("conectividade")
+          ) {
+            setError(
+              "Problema de conectividade. A obra pode ter sido guardada localmente. Verifique a lista de obras.",
+            );
+          } else if (
+            errorMessage.includes("atribuições") ||
+            errorMessage.includes("assignedUsers")
+          ) {
+            setError(
+              "Problema com atribuições de usuários. Verifique as seleções e tente novamente.",
+            );
+          } else {
+            setError(
+              "Erro ao guardar obra. Por favor, tente novamente ou verifique a lista de obras.",
+            );
+          }
+
+          setIsSubmitting(false);
+
+          // Log para debug sem expor detalhes sensíveis
+          console.error("📝 Erro contido:", errorMessage.substring(0, 100));
+        } catch (handlingError) {
+          // Último recurso se até o tratamento de erro falhar
+          console.error("❌ Erro no tratamento de erro:", handlingError);
+          setError("Erro interno. Tente recarregar a página.");
+          setIsSubmitting(false);
         }
-
-        setIsSubmitting(false);
-
-        // Log detalhado para debugging mas NÃO fazer throw
-        console.error("📝 Detalhes do erro:", {
-          message: errorMessage,
-          stack: err instanceof Error ? err.stack?.slice(0, 500) : undefined,
-          formData: {
-            cliente: formData.clientName,
-            atribuicoes: formData.assignedUsers?.length || 0,
-          },
-        });
       }
     } catch (fatalError) {
       // PROTEÇÃO MÁXIMA: NUNCA deixar erro causar crash/logout
