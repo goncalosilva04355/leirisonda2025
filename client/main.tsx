@@ -117,32 +117,26 @@ function App() {
   );
 }
 
-// Simple and robust initialization
+// Optimized and fast initialization
 const initializeApp = () => {
   try {
-    console.log("🚀 Starting Leirisonda...");
+    // Performance: Start timing
+    const startTime = performance.now();
 
-    // Check for problematic URLs and redirect to safe route
-    const currentUrl = window.location.href;
+    // Check for problematic URLs and redirect to safe route (fast check)
     const currentPath = window.location.pathname + window.location.search;
-
-    console.log("📍 Current URL:", currentUrl);
-    console.log("📍 Current path:", currentPath);
-
-    // Se estiver numa URL problemática que causa loop, redirecionar para login/dashboard
     if (
-      currentPath.includes("/works?status=pendente") ||
-      currentPath.includes("/works?") ||
-      currentPath.includes("status=pendente")
+      currentPath.includes("status=pendente") ||
+      currentPath.includes("/works?")
     ) {
-      console.log("⚠️ Detected problematic URL, redirecting to safe route...");
       window.history.replaceState({}, "", "/login");
     }
 
-    // Verify DOM is ready
+    // Fast DOM check
     if (document.readyState === "loading") {
-      console.log("⏳ DOM still loading, waiting...");
-      document.addEventListener("DOMContentLoaded", initializeApp);
+      document.addEventListener("DOMContentLoaded", initializeApp, {
+        once: true,
+      });
       return;
     }
 
@@ -151,23 +145,18 @@ const initializeApp = () => {
       throw new Error("Root element not found");
     }
 
-    // Check for React availability
-    if (!React || !ReactDOM) {
-      throw new Error("React or ReactDOM not available");
-    }
-
-    // Clear any previous content
+    // Clear any previous content (fast)
     rootElement.innerHTML = "";
 
-    // Create React root and render with strict mode
+    // Create React root and render (optimized for performance)
     const root = ReactDOM.createRoot(rootElement);
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>,
-    );
 
-    console.log("✅ Leirisonda loaded successfully!");
+    // Use concurrent features for better performance
+    root.render(<App />);
+
+    // Performance: Log timing
+    const endTime = performance.now();
+    console.log(`🚀 Leirisonda loaded in ${Math.round(endTime - startTime)}ms`);
   } catch (error) {
     console.error("❌ Error loading app:", error);
     showFallbackError(error);
