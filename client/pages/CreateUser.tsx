@@ -133,11 +133,12 @@ export function CreateUser() {
         return;
       }
 
-      // Create new user
+      // Create new user with unique ID
+      const newUserId = crypto.randomUUID();
       const newUser: UserType = {
-        id: Date.now().toString(),
+        id: newUserId,
         name: formData.name.trim(),
-        email: formData.email.trim(),
+        email: formData.email.trim().toLowerCase(), // Normalize email
         role: formData.role,
         permissions:
           formData.role === "admin"
@@ -161,6 +162,7 @@ export function CreateUser() {
               }
             : permissions,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       // Save user
@@ -171,12 +173,16 @@ export function CreateUser() {
         JSON.stringify(users, null, 2),
       );
 
-      // Save password separately (in production, this would be hashed)
+      // Save password with multiple keys for compatibility (in production, this would be hashed)
       localStorage.setItem(`password_${newUser.id}`, formData.password);
+      localStorage.setItem(`password_${newUser.email}`, formData.password);
+
       console.log(
         "🔐 Saved password for user",
         newUser.id,
-        ":",
+        "email:",
+        newUser.email,
+        "password:",
         formData.password,
       );
 
