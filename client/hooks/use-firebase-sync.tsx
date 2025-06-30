@@ -452,10 +452,20 @@ export function useFirebaseSync() {
 
         // Sync instantâneo automático (se disponível)
         if (isFirebaseAvailable && isOnline) {
-          // Aguardar um tick para operação completar
+          // Para operações de delete, usar timeout mais longo e tratamento especial
+          const delay = operationType.includes("delete") ? 500 : 100;
+
           setTimeout(() => {
-            triggerInstantSync(`after_${operationType}`);
-          }, 100);
+            try {
+              triggerInstantSync(`after_${operationType}`);
+            } catch (syncError) {
+              console.warn(
+                `⚠️ Erro no sync após ${operationType} (operação original bem sucedida):`,
+                syncError,
+              );
+              // Não fazer throw aqui - a operação principal já funcionou
+            }
+          }, delay);
         }
 
         return result;
