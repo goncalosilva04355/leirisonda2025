@@ -90,15 +90,40 @@ export function Dashboard() {
   const [searchResults, setSearchResults] = useState<Work[]>([]);
 
   const navigateToWorks = (status?: string) => {
-    if (status) {
-      navigate(`/works?status=${status}`);
-    } else {
-      navigate("/works");
+    try {
+      console.log("🔗 Navegando para works com status:", status);
+      if (status) {
+        navigate(`/works?status=${status}`);
+      } else {
+        navigate("/works");
+      }
+    } catch (navError) {
+      console.error("❌ Erro na navegação para works:", navError);
+      try {
+        // Fallback para window.location
+        const url = status ? `/works?status=${status}` : "/works";
+        window.location.href = url;
+      } catch (locationError) {
+        console.error("❌ Erro no fallback de navegação:", locationError);
+      }
     }
   };
 
   const navigateToWorksSheets = (type: "pending" | "completed") => {
-    navigate(`/works?worksheet=${type}`);
+    try {
+      console.log("📋 Navegando para worksheets:", type);
+      navigate(`/works?worksheet=${type}`);
+    } catch (navError) {
+      console.error("❌ Erro na navegação para worksheets:", navError);
+      try {
+        window.location.href = `/works?worksheet=${type}`;
+      } catch (locationError) {
+        console.error(
+          "❌ Erro no fallback de navegação para worksheets:",
+          locationError,
+        );
+      }
+    }
   };
 
   useEffect(() => {
