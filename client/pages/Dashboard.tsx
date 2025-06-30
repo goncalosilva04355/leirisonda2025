@@ -757,16 +757,30 @@ export function Dashboard() {
                 </Link>
               </Button>
               {user?.role === "admin" && (
-                <Button
-                  variant="outline"
-                  className="w-full justify-start hover-leirisonda h-auto py-3"
-                  asChild
-                >
-                  <Link to="/create-user">
-                    <Users className="w-4 h-4 mr-3" />
-                    Novo Utilizador
-                  </Link>
-                </Button>
+                <>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start hover-leirisonda h-auto py-3"
+                    asChild
+                  >
+                    <Link to="/create-user">
+                      <Users className="w-4 h-4 mr-3" />
+                      Novo Utilizador
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start hover-leirisonda h-auto py-3 border-blue-200 bg-blue-50 hover:bg-blue-100"
+                    asChild
+                  >
+                    <Link to="/sync-diagnostic">
+                      <RefreshCw className="w-4 h-4 mr-3 text-blue-600" />
+                      <span className="text-blue-700">
+                        Diagnóstico de Sincronização
+                      </span>
+                    </Link>
+                  </Button>
+                </>
               )}
             </div>
           </div>

@@ -31,6 +31,7 @@ import { SystemStatus } from "./pages/SystemStatus";
 import { UserSyncDiagnostic } from "./pages/UserSyncDiagnostic";
 import { DebugWorks } from "./pages/DebugWorks";
 import { SyncMonitor } from "./pages/SyncMonitor";
+import { SyncDiagnostic } from "./pages/SyncDiagnostic";
 import { NotFound } from "./pages/NotFound";
 import { EmergencyDiagnostic } from "./pages/EmergencyDiagnostic";
 
@@ -73,6 +74,7 @@ function App() {
               />
               <Route path="debug-works" element={<DebugWorks />} />
               <Route path="sync-monitor" element={<SyncMonitor />} />
+              <Route path="sync-diagnostic" element={<SyncDiagnostic />} />
               <Route path="pool-maintenance" element={<MaintenanceList />} />
               <Route
                 path="create-maintenance"
