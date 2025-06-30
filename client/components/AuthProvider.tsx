@@ -216,6 +216,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               "leirisonda_user",
               JSON.stringify(dynamicUser),
             );
+            localStorage.setItem("leirisonda_last_user", dynamicUser.email); // Guardar último utilizador
             setUser(dynamicUser);
             console.log(
               `✅ UTILIZADOR DINÂMICO ${dynamicUser.name.toUpperCase()} LOGIN SUCESSO`,
