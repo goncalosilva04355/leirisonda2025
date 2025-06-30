@@ -246,6 +246,10 @@ export function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Palavra-passe"
                   disabled={isSubmitting}
+                  autoComplete="new-password"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
                   style={{
                     width: "100%",
                     height: "48px",
