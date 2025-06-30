@@ -286,7 +286,7 @@ export function MaintenanceReport({
           ? `
       <div class="section">
         <div class="section-header">
-          <div class="section-title">🔧 Trabalho Realizado</div>
+          <div class="section-title">Trabalho Realizado</div>
         </div>
         <div class="section-content">
           ${Object.entries(intervention.workPerformed)
