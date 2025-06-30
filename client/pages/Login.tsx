@@ -36,7 +36,7 @@ export const Login = React.memo(function Login() {
         setIsSubmitting(false);
       }
     },
-    [email, password, authContext],
+    [email, password, login],
   );
 
   const togglePassword = useCallback(() => {
