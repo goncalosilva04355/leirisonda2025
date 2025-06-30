@@ -432,28 +432,7 @@ export class FirebaseService {
         }
       }
 
-      // BACKUP LOCAL (SEMPRE executar independente do Firebase)
-      // 1. BACKUP PRINCIPAL - localStorage "works"
-      const works = this.getLocalWorks();
-      const worksCountBefore = works.length;
-      works.push(newWork);
-      localStorage.setItem("works", JSON.stringify(works));
-
-      // 2. BACKUP SECUNDÁRIO - localStorage "leirisonda_works"
-      const backupWorks = JSON.parse(
-        localStorage.getItem("leirisonda_works") || "[]",
-      );
-      backupWorks.push(newWork);
-      localStorage.setItem("leirisonda_works", JSON.stringify(backupWorks));
-
-      // 3. BACKUP TERCIÁRIO - sessionStorage
-      const sessionWorks = JSON.parse(
-        sessionStorage.getItem("temp_works") || "[]",
-      );
-      sessionWorks.push(newWork);
-      sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
-
-      // VERIFICAÇÃO TRIPLA LOCAL (incluindo atribuições)
+      // VERIFICAÇÃO FINAL DOS BACKUPS LOCAIS (já salvos anteriormente)
       const verification1 = this.getLocalWorks();
       const verification2 = JSON.parse(
         localStorage.getItem("leirisonda_works") || "[]",
