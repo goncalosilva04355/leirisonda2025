@@ -378,6 +378,15 @@ Se NÃO aparecer, há problema de sincronização Firebase!
           <Eye className="w-4 h-4 mr-2" />
           Recarregar Info
         </Button>
+
+        <Button
+          onClick={() => navigate("/sync-monitor")}
+          variant="outline"
+          className="h-auto py-4 bg-green-600 hover:bg-green-700 text-white"
+        >
+          <Activity className="w-4 h-4 mr-2" />
+          Monitor Tempo Real
+        </Button>
       </div>
 
       {/* Informações de Armazenamento */}
