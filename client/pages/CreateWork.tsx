@@ -32,6 +32,7 @@ import { PhotoUpload } from "@/components/PhotoUpload";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 import { firebaseService } from "@/services/FirebaseService";
+import { WorkSaveHelper } from "@/lib/work-save-diagnostics";
 
 const workTypes = [
   { value: "piscina", label: "Piscina" },
