@@ -231,7 +231,7 @@ export function CreateWork() {
     try {
       console.log("📝 PREPARANDO DADOS DA OBRA...");
 
-      // Prepare work data
+      // Prepare work data - GARANTIR que assignedUsers seja preservado
       const workData = {
         workSheetNumber: formData.workSheetNumber,
         type: formData.type,
@@ -245,9 +245,9 @@ export function CreateWork() {
             ? new Date().toISOString()
             : undefined,
         status: formData.status,
-        vehicles: formData.vehicles,
-        technicians: formData.technicians,
-        assignedUsers: formData.assignedUsers,
+        vehicles: formData.vehicles || [],
+        technicians: formData.technicians || [],
+        assignedUsers: formData.assignedUsers || [], // GARANTIR array válido
         photos: formData.photos.map((photo, index) => ({
           id: `${Date.now()}-${index}`,
           url: URL.createObjectURL(photo),
