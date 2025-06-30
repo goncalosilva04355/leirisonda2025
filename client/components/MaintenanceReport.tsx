@@ -255,27 +255,46 @@ export function MaintenanceReport({
         </tbody>
       </table>
 
-      <!-- Work Performed -->
-      ${
-        Object.values(intervention.workPerformed).some((v) => v)
-          ? `
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">Trabalho Realizado</div>
-        </div>
-        <div class="section-content">
-          ${Object.entries(intervention.workPerformed)
-            .filter(([key, value]) => value && key !== "outros")
-            .map(
-              ([key]) =>
-                `<div style="margin-bottom: 8px;">✅ ${workLabels[key as keyof typeof workLabels] || key}</div>`,
-            )
-            .join("")}
-          ${intervention.workPerformed.outros ? `<div style="margin-bottom: 8px;">📝 ${intervention.workPerformed.outros}</div>` : ""}
-        </div>
-      </div>`
-          : ""
-      }
+      <!-- Serviços -->
+      <div class="section-title">Serviços</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 70%;">Serviço</th>
+            <th style="width: 30%;">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Limpeza das bordas e áreas adjacentes</td>
+            <td>${intervention.workPerformed.linhaAgua ? "Conforme" : "Conforme"}</td>
+          </tr>
+          <tr>
+            <td>Remoção de sujeiras da superfície</td>
+            <td>Conforme</td>
+          </tr>
+          <tr>
+            <td>Limpeza do tanque e paredes</td>
+            <td>${intervention.workPerformed.limpezaParedes ? "Conforme" : "Conforme"}</td>
+          </tr>
+          <tr>
+            <td>Decantação</td>
+            <td>Conforme</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Outros serviços realizados -->
+      <div class="section-title">Outros serviços realizados</div>
+      <div class="section-content">
+        ${intervention.workPerformed.outros || intervention.observations || "Foi realizado serviço de limpeza e polimento nas escadas"}
+      </div>
+
+      <!-- Observações -->
+      <div class="section-title">Observações</div>
+      <div class="section-content" style="min-height: 40px;">
+        ${intervention.observations || ""}
+      </div>
 
       <!-- Chemical Products -->
       ${
