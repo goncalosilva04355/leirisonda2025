@@ -359,7 +359,7 @@ export function MaintenanceReport({
           ? `
       <div class="section">
         <div class="section-header">
-          <div class="section-title">📝 Observações</div>
+          <div class="section-title">Observações</div>
         </div>
         <div class="section-content">
           <div style="background: #fffbeb; padding: 12px; border-left: 4px solid #f59e0b; border-radius: 4px;">
@@ -394,7 +394,7 @@ export function MaintenanceReport({
               <div class="value">${intervention.photos ? intervention.photos.length : 0} fotos</div>
             </div>
             <div class="info-card">
-              <div class="label">Relat��rio Gerado</div>
+              <div class="label">Relatório Gerado</div>
               <div class="value">${format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: pt })}</div>
             </div>
             <div class="info-card">
