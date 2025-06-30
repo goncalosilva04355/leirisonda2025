@@ -61,218 +61,246 @@ export function Login() {
   };
 
   return (
-    <>
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg, rgb(97, 165, 214) 0%, rgb(0, 119, 132) 100%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "20px",
+        fontFamily: "Open Sans, sans-serif",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "400px",
+          background: "white",
+          borderRadius: "16px",
+          boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            background: "linear-gradient(135deg, #2563eb, #0891b2)",
+            padding: "32px",
+            textAlign: "center",
+            color: "white",
+          }}
+        >
+          <div
+            style={{
+              width: "120px",
+              height: "120px",
+              background: "white",
+              borderRadius: "20px",
+              margin: "0 auto 20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "16px",
+            }}
+          >
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fb4eb4a9e6feb44b09201dbb824b8737c?format=webp&width=800"
+              alt="Leirisonda Logo"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+              }}
+            />
+          </div>
+          <h1
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              margin: "0 0 8px 0",
+            }}
+          >
+            Leirisonda
+          </h1>
+          <p
+            style={{
+              margin: 0,
+              opacity: 0.9,
+            }}
+          >
+            Sistema de Gestão de Obras
+          </p>
+        </div>
+
+        {/* Form */}
+        <div style={{ padding: "32px" }}>
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  color: "#374151",
+                  marginBottom: "6px",
+                }}
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="seu@email.com"
+                disabled={isSubmitting}
+                style={{
+                  width: "100%",
+                  height: "48px",
+                  padding: "12px 16px",
+                  fontSize: "16px",
+                  border: "1px solid #d1d5db",
+                  borderRadius: "8px",
+                  outline: "none",
+                  boxSizing: "border-box",
+                  background: isSubmitting ? "#f9fafb" : "white",
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  color: "#374151",
+                  marginBottom: "6px",
+                }}
+              >
+                Palavra-passe
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  disabled={isSubmitting}
+                  style={{
+                    width: "100%",
+                    height: "48px",
+                    padding: "12px 48px 12px 16px",
+                    fontSize: "16px",
+                    border: "1px solid #d1d5db",
+                    borderRadius: "8px",
+                    outline: "none",
+                    boxSizing: "border-box",
+                    background: isSubmitting ? "#f9fafb" : "white",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: "absolute",
+                    right: "16px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#6b7280",
+                    fontSize: "18px",
+                  }}
+                >
+                  {showPassword ? "👁️" : "👁️‍🗨️"}
+                </button>
+              </div>
+            </div>
+
+            {error && (
+              <div
+                style={{
+                  background: "#fef2f2",
+                  border: "1px solid #fecaca",
+                  borderRadius: "8px",
+                  padding: "12px",
+                  marginBottom: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  color: "#dc2626",
+                  fontSize: "14px",
+                }}
+              >
+                <span>⚠️</span>
+                <span>{error}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              style={{
+                width: "100%",
+                height: "48px",
+                background: isSubmitting ? "#9ca3af" : "#2563eb",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: "16px",
+                fontWeight: "500",
+                cursor: isSubmitting ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              {isSubmitting ? (
+                <>
+                  <div
+                    style={{
+                      width: "16px",
+                      height: "16px",
+                      border: "2px solid transparent",
+                      borderTop: "2px solid white",
+                      borderRadius: "50%",
+                      animation: "spin 1s linear infinite",
+                    }}
+                  />
+                  A entrar...
+                </>
+              ) : (
+                "Entrar"
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: "20px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          textAlign: "center",
+          color: "rgba(255, 255, 255, 0.8)",
+          fontSize: "14px",
+        }}
+      >
+        © 2024 Leirisonda - Sistema Profissional de Gestão
+      </div>
+
       <style>{`
-        .login-container {
-          min-height: 100vh;
-          background: linear-gradient(135deg, rgb(97, 165, 214) 0%, rgb(0, 119, 132) 100%);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 20px;
-          font-family: 'Open Sans', sans-serif;
-        }
-        .login-card {
-          width: 100%;
-          max-width: 400px;
-          background: white;
-          border-radius: 16px;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-          overflow: hidden;
-        }
-        .login-header {
-          background: linear-gradient(135deg, #2563eb, #0891b2);
-          padding: 32px;
-          text-align: center;
-          color: white;
-        }
-        .logo-container {
-          width: 120px;
-          height: 120px;
-          background: white;
-          border-radius: 20px;
-          margin: 0 auto 20px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 16px;
-        }
-        .logo-image {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-        .login-title {
-          font-size: 24px;
-          font-weight: bold;
-          margin: 0 0 8px 0;
-        }
-        .login-subtitle {
-          margin: 0;
-          opacity: 0.9;
-        }
-        .login-form {
-          padding: 32px;
-        }
-        .form-group {
-          margin-bottom: 20px;
-        }
-        .form-label {
-          display: block;
-          font-size: 14px;
-          font-weight: 500;
-          color: #374151;
-          margin-bottom: 6px;
-        }
-        .form-input {
-          width: 100%;
-          height: 48px;
-          padding: 12px 16px;
-          font-size: 16px;
-          border: 1px solid #d1d5db;
-          border-radius: 8px;
-          outline: none;
-          box-sizing: border-box;
-        }
-        .password-container {
-          position: relative;
-        }
-        .password-input {
-          padding-right: 48px;
-        }
-        .password-toggle {
-          position: absolute;
-          right: 16px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: none;
-          border: none;
-          cursor: pointer;
-          color: #6b7280;
-        }
-        .error-message {
-          background: #fef2f2;
-          border: 1px solid #fecaca;
-          border-radius: 8px;
-          padding: 12px;
-          margin-bottom: 20px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: #dc2626;
-          font-size: 14px;
-        }
-        .submit-button {
-          width: 100%;
-          height: 48px;
-          background: #2563eb;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-size: 16px;
-          font-weight: 500;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-        }
-        .submit-button:disabled {
-          background: #9ca3af;
-          cursor: not-allowed;
-        }
-        .spinner {
-          width: 16px;
-          height: 16px;
-          border: 2px solid transparent;
-          border-top: 2px solid white;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-        }
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-        .login-footer {
-          text-align: center;
-          margin-top: 24px;
-          color: rgba(255, 255, 255, 0.8);
-          font-size: 14px;
-        }
       `}</style>
-
-      <div className="login-container">
-        <div className="login-card">
-          <div className="login-header">
-            <div className="logo-container">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fb4eb4a9e6feb44b09201dbb824b8737c?format=webp&width=800"
-                alt="Leirisonda Logo"
-                className="logo-image"
-              />
-            </div>
-            <h1 className="login-title">Leirisonda</h1>
-            <p className="login-subtitle">Sistema de Gestão de Obras</p>
-          </div>
-
-          <div className="login-form">
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label className="form-label">Email</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu@email.com"
-                  disabled={isSubmitting}
-                  className="form-input"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Palavra-passe</label>
-                <div className="password-container">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    disabled={isSubmitting}
-                    className="form-input password-input"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="password-toggle"
-                  >
-                    {showPassword ? "👁️" : "👁️‍🗨️"}
-                  </button>
-                </div>
-              </div>
-
-              {error && <div className="error-message">⚠️ {error}</div>}
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="submit-button"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="spinner" />A entrar...
-                  </>
-                ) : (
-                  "Entrar"
-                )}
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <div className="login-footer">
-          © 2024 Leirisonda - Sistema Profissional de Gestão
-        </div>
-      </div>
-    </>
+    </div>
   );
 }
