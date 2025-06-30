@@ -79,84 +79,42 @@ export function WorkDetail() {
       return;
     }
 
+    console.log(`🗑️ ELIMINAÇÃO ULTRA ROBUSTA INICIADA: ${work.clientName}`);
+
+    // Marcar operação para ErrorBoundary não forçar logout
+    sessionStorage.setItem("deleting_work", "true");
+
+    let eliminationSuccess = false;
+
     try {
-      console.log(`🗑️ Iniciando eliminação da obra: ${work.clientName}`);
+      // ESTRATÉGIA SUPER ROBUSTA: Não usar Promise.race que pode causar problemas
+      console.log("🔄 Chamando deleteWork sem timeout agressivo...");
 
-      // Marcar que estamos numa operação de delete
-      sessionStorage.setItem("deleting_work", "true");
+      // Executar delete com tratamento robusto
+      await deleteWork(work.id);
 
-      // Eliminar a obra usando o hook Firebase com timeout
-      const deletePromise = deleteWork(work.id);
-
-      // Timeout de segurança (30 segundos)
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Timeout na eliminação")), 30000),
+      eliminationSuccess = true;
+      console.log("✅ DeleteWork retornou com sucesso");
+    } catch (deleteError) {
+      console.warn(
+        "⚠️ Erro no deleteWork, verificando eliminação local...",
+        deleteError,
       );
 
-      // Executar com timeout de segurança
-      await Promise.race([deletePromise, timeoutPromise]);
+      // Verificar se obra foi eliminada localmente mesmo com erro
+      const currentWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const stillExists = currentWorks.find((w: any) => w.id === work.id);
 
-      console.log("✅ Obra eliminada com sucesso");
+      if (!stillExists) {
+        console.log("✅ Obra foi eliminada localmente apesar do erro");
+        eliminationSuccess = true;
+      } else {
+        console.log(
+          "🔧 Obra ainda existe, tentando eliminação de emergência...",
+        );
 
-      // Verificar se obra foi realmente eliminada
-      setTimeout(() => {
-        const currentWorks = JSON.parse(localStorage.getItem("works") || "[]");
-        const stillExists = currentWorks.find((w: any) => w.id === work.id);
-
-        if (stillExists) {
-          console.warn(
-            "⚠️ Obra ainda existe localmente, forçando eliminação...",
-          );
-          const filteredWorks = currentWorks.filter(
-            (w: any) => w.id !== work.id,
-          );
-          localStorage.setItem("works", JSON.stringify(filteredWorks));
-          localStorage.setItem(
-            "leirisonda_works",
-            JSON.stringify(filteredWorks),
-          );
-        }
-
-        // Limpar flag e mostrar sucesso
-        sessionStorage.removeItem("deleting_work");
-        alert(`Obra "${work.clientName}" eliminada com sucesso!`);
-
-        // Navegação robusta usando navigate
+        // Eliminação de emergência
         try {
-          navigate("/works", { replace: true });
-        } catch (navError) {
-          console.warn(
-            "⚠️ Erro na navegação normal, usando fallback:",
-            navError,
-          );
-          // Fallback para window.location em caso de erro no navigate
-          window.location.href = "/works";
-        }
-      }, 1000);
-    } catch (error) {
-      console.error("❌ Erro ao eliminar obra:", error);
-      sessionStorage.removeItem("deleting_work");
-
-      // Para timeouts, verificar se obra foi eliminada mesmo assim
-      if (error instanceof Error && error.message.includes("Timeout")) {
-        console.log("⏰ Timeout detectado, verificando eliminação manual...");
-
-        const currentWorks = JSON.parse(localStorage.getItem("works") || "[]");
-        const stillExists = currentWorks.find((w: any) => w.id === work.id);
-
-        if (!stillExists) {
-          console.log("✅ Obra foi eliminada apesar do timeout");
-          alert(`Obra "${work.clientName}" eliminada com sucesso!`);
-
-          try {
-            navigate("/works", { replace: true });
-          } catch (navError) {
-            window.location.href = "/works";
-          }
-          return;
-        } else {
-          // Forçar eliminação local em caso de timeout
-          console.log("🔧 Forçando eliminação local após timeout...");
           const filteredWorks = currentWorks.filter(
             (w: any) => w.id !== work.id,
           );
@@ -166,29 +124,43 @@ export function WorkDetail() {
             JSON.stringify(filteredWorks),
           );
 
-          alert(`Obra "${work.clientName}" eliminada localmente!`);
+          // Verificar novamente
+          const recheckWorks = JSON.parse(
+            localStorage.getItem("works") || "[]",
+          );
+          const recheckExists = recheckWorks.find((w: any) => w.id === work.id);
 
-          try {
-            navigate("/works", { replace: true });
-          } catch (navError) {
-            window.location.href = "/works";
+          if (!recheckExists) {
+            console.log("✅ Eliminação de emergência bem sucedida");
+            eliminationSuccess = true;
           }
-          return;
+        } catch (emergencyError) {
+          console.error("❌ Eliminação de emergência falhou:", emergencyError);
         }
       }
+    }
 
-      // Mostrar erro apenas se não conseguiu eliminar
-      alert(
-        "Erro ao eliminar obra. A obra pode ter sido eliminada. Verifique a lista de obras.",
-      );
+    // Processar resultado final
+    setTimeout(() => {
+      // Limpar flag de operação
+      sessionStorage.removeItem("deleting_work");
 
-      // Navegar mesmo com erro para o utilizador verificar
+      if (eliminationSuccess) {
+        alert(`Obra "${work.clientName}" eliminada com sucesso!`);
+        console.log("🎉 ELIMINAÇÃO COMPLETA COM SUCESSO");
+      } else {
+        alert("Erro ao eliminar obra. Por favor, verifique a lista de obras.");
+        console.warn("⚠️ Eliminação não conseguiu ser confirmada");
+      }
+
+      // Navegação robusta SEMPRE (mesmo com erro, para utilizador verificar)
       try {
         navigate("/works", { replace: true });
       } catch (navError) {
+        console.warn("⚠️ Erro na navegação, usando window.location:", navError);
         window.location.href = "/works";
       }
-    }
+    }, 500);
   };
 
   const getStatusInfo = (status: string) => {
@@ -234,6 +206,8 @@ export function WorkDetail() {
         return "Avaria";
       case "montagem":
         return "Montagem";
+      case "furo_agua":
+        return "Furo de Água";
       default:
         return type;
     }
@@ -459,6 +433,77 @@ export function WorkDetail() {
               </div>
             )}
           </div>
+
+          {/* Furo de Água Details - Show only when type is furo_agua */}
+          {work.type === "furo_agua" && work.furoAgua && (
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Detalhes do Furo de Água
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Profundidade</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.profundidade} metros
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Nível da Água</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.nivelAgua} metros
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">
+                      Profundidade da Bomba
+                    </p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.profundidadeBomba} metros
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Caudal do Furo</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.caudalFuro} m³
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Tipo de Coluna</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.tipoColuna}
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Diâmetro da Coluna</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.diametroColuna} mm
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Modelo da Bomba</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.bombaModelo || "Não especificado"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Potência do Motor</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.potenciaMotor} HP
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Voltagem da Bomba</p>
+                    <p className="font-medium text-gray-900">
+                      {work.furoAgua.voltagem}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Photos */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">

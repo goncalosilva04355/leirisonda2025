@@ -12,6 +12,7 @@ import {
   Wifi,
   WifiOff,
   Users,
+  FileText,
 } from "lucide-react";
 import { Work } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -222,6 +223,7 @@ export function EditWork() {
         observations: formData.observations.trim(),
         workPerformed: formData.workPerformed.trim(),
         workSheetCompleted: formData.workSheetCompleted,
+        furoAgua: work.type === "furo_agua" ? work.furoAgua : undefined,
         updatedAt: new Date().toISOString(),
       };
 
@@ -631,6 +633,247 @@ export function EditWork() {
               </div>
             </div>
           </div>
+
+          {/* Furo de Água Details - Show only when type is furo_agua */}
+          {work.type === "furo_agua" && (
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <MapPin className="w-5 h-5 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Detalhes do Furo de Água
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div>
+                  <Label htmlFor="profundidade">Profundidade (metros) *</Label>
+                  <Input
+                    id="profundidade"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    value={work.furoAgua?.profundidade || 0}
+                    onChange={(e) => {
+                      const updatedWork = {
+                        ...work,
+                        furoAgua: {
+                          ...work.furoAgua,
+                          profundidade: parseFloat(e.target.value) || 0,
+                        },
+                      };
+                      // Note: This will be saved when form is submitted
+                      setWork(updatedWork);
+                    }}
+                    placeholder="Ex: 150.5"
+                    className="mt-1"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="nivelAgua">Nível da Água (metros) *</Label>
+                  <Input
+                    id="nivelAgua"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    value={work.furoAgua?.nivelAgua || 0}
+                    onChange={(e) => {
+                      const updatedWork = {
+                        ...work,
+                        furoAgua: {
+                          ...work.furoAgua,
+                          nivelAgua: parseFloat(e.target.value) || 0,
+                        },
+                      };
+                      setWork(updatedWork);
+                    }}
+                    placeholder="Ex: 25.0"
+                    className="mt-1"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="profundidadeBomba">
+                    Profundidade da Bomba (metros) *
+                  </Label>
+                  <Input
+                    id="profundidadeBomba"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    value={work.furoAgua?.profundidadeBomba || 0}
+                    onChange={(e) => {
+                      const updatedWork = {
+                        ...work,
+                        furoAgua: {
+                          ...work.furoAgua,
+                          profundidadeBomba: parseFloat(e.target.value) || 0,
+                        },
+                      };
+                      setWork(updatedWork);
+                    }}
+                    placeholder="Ex: 120.0"
+                    className="mt-1"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="caudalFuro">Caudal do Furo (m³) *</Label>
+                  <Input
+                    id="caudalFuro"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    value={work.furoAgua?.caudalFuro || 0}
+                    onChange={(e) => {
+                      const updatedWork = {
+                        ...work,
+                        furoAgua: {
+                          ...work.furoAgua,
+                          caudalFuro: parseFloat(e.target.value) || 0,
+                        },
+                      };
+                      setWork(updatedWork);
+                    }}
+                    placeholder="Ex: 8.5"
+                    className="mt-1"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="tipoColuna">Tipo de Coluna *</Label>
+                  <Select
+                    value={work.furoAgua?.tipoColuna || "PEAD"}
+                    onValueChange={(value: "PEAD" | "HIDROROSCADO") => {
+                      const updatedWork = {
+                        ...work,
+                        furoAgua: {
+                          ...work.furoAgua,
+                          tipoColuna: value,
+                        },
+                      };
+                      setWork(updatedWork);
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="PEAD">PEAD</SelectItem>
+                      <SelectItem value="HIDROROSCADO">HIDROROSCADO</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="diametroColuna">
+                    Diâmetro da Coluna (mm) *
+                  </Label>
+                  <Input
+                    id="diametroColuna"
+                    type="number"
+                    min="0"
+                    value={work.furoAgua?.diametroColuna || 0}
+                    onChange={(e) => {
+                      const updatedWork = {
+                        ...work,
+                        furoAgua: {
+                          ...work.furoAgua,
+                          diametroColuna: parseInt(e.target.value) || 0,
+                        },
+                      };
+                      setWork(updatedWork);
+                    }}
+                    placeholder="Ex: 110"
+                    className="mt-1"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="bombaModelo">
+                    Modelo da Bomba Instalada *
+                  </Label>
+                  <Input
+                    id="bombaModelo"
+                    value={work.furoAgua?.bombaModelo || ""}
+                    onChange={(e) => {
+                      const updatedWork = {
+                        ...work,
+                        furoAgua: {
+                          ...work.furoAgua,
+                          bombaModelo: e.target.value,
+                        },
+                      };
+                      setWork(updatedWork);
+                    }}
+                    placeholder="Ex: Grundfos SQ 3-65"
+                    className="mt-1"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="potenciaMotor">
+                    Potência do Motor (HP) *
+                  </Label>
+                  <Input
+                    id="potenciaMotor"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    value={work.furoAgua?.potenciaMotor || 0}
+                    onChange={(e) => {
+                      const updatedWork = {
+                        ...work,
+                        furoAgua: {
+                          ...work.furoAgua,
+                          potenciaMotor: parseFloat(e.target.value) || 0,
+                        },
+                      };
+                      setWork(updatedWork);
+                    }}
+                    placeholder="Ex: 2.5"
+                    className="mt-1"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="voltagem">Voltagem da Bomba *</Label>
+                  <Select
+                    value={work.furoAgua?.voltagem || "230v"}
+                    onValueChange={(value: "230v" | "400v") => {
+                      const updatedWork = {
+                        ...work,
+                        furoAgua: {
+                          ...work.furoAgua,
+                          voltagem: value,
+                        },
+                      };
+                      setWork(updatedWork);
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="230v">230V</SelectItem>
+                      <SelectItem value="400v">400V</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Observations and Work Performed */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">

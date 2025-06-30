@@ -16,25 +16,34 @@ export interface NotificationPayload {
 
 class NotificationServiceClass {
   private messaging = getMessaging(app);
-  private isSupported = false;
-  private isInitialized = false;
+  private _isSupported = false;
+  private _isInitialized = false;
 
   constructor() {
     this.checkSupport();
   }
 
+  // Getters públicos para acessar propriedades privadas
+  get isSupported(): boolean {
+    return this._isSupported;
+  }
+
+  get isInitialized(): boolean {
+    return this._isInitialized;
+  }
+
   private checkSupport() {
     // Verificar se notificações são suportadas
-    this.isSupported =
+    this._isSupported =
       "Notification" in window &&
       "serviceWorker" in navigator &&
       "PushManager" in window;
 
-    console.log("🔔 Notificações suportadas:", this.isSupported);
+    console.log("🔔 Notificações suportadas:", this._isSupported);
   }
 
   async initialize(): Promise<boolean> {
-    if (this.isInitialized) return true;
+    if (this._isInitialized) return true;
 
     try {
       console.log("🚀 Inicializando serviço de notificações...");
@@ -49,7 +58,7 @@ class NotificationServiceClass {
       // Inicializar listener de eventos de broadcast
       this.initializeNotificationListener();
 
-      this.isInitialized = true;
+      this._isInitialized = true;
       console.log("✅ Serviço de notificações inicializado com sucesso");
       return true;
     } catch (error) {
@@ -99,213 +108,298 @@ class NotificationServiceClass {
             console.log("💡 Continuando apenas com notificações locais");
           }
         } catch (tokenError) {
-          console.warn("⚠️ Erro ao obter token FCM:", tokenError);
-
-          // Verificar se é erro de VAPID key ou outro problema
-          if (tokenError instanceof Error) {
-            if (
-              tokenError.message.includes("messaging/invalid-vapid-key") ||
-              tokenError.message.includes(
-                "string did not match the expected pattern",
-              )
-            ) {
-              console.error("❌ VAPID key inválida detectada");
-              console.log(
-                "💡 SOLUÇÃO: Configurar VAPID key correta no Firebase Console",
-              );
-            } else if (
-              tokenError.message.includes("messaging/unsupported-browser")
-            ) {
-              console.warn("⚠️ Browser não suportado para FCM");
-            } else {
-              console.error("❌ Erro desconhecido no FCM:", tokenError.message);
-            }
-          }
-
-          console.log("💡 Continuando com notificações locais apenas");
-          // Não tentar VAPID key alternativa que pode estar incorreta
+          console.warn(
+            "⚠️ Erro ao obter token FCM (continuando apenas local):",
+            tokenError,
+          );
+          token = null;
         }
 
         if (token) {
-          console.log("🔑 Token FCM final:", token.substring(0, 20) + "...");
-          // Salvar token do usuário
-          await this.saveUserToken(token);
+          console.log("🔑 Token FCM obtido com sucesso");
+          this.saveUserToken(token);
+
+          // Configurar listener para mensagens em foreground
+          onMessage(this.messaging, (payload) => {
+            console.log("📨 Mensagem recebida em foreground:", payload);
+            this.handleForegroundMessage(payload);
+          });
         } else {
-          console.warn(
-            "⚠️ Nenhum token FCM obtido - continuando apenas com notificações locais",
-          );
+          console.log("📱 Funcionando apenas com notificações locais");
         }
-      } catch (error) {
-        console.error("❌ Erro geral ao obter token FCM:", error);
-        console.log("💡 Continuando com notificações locais apenas");
+      } catch (fcmError) {
+        console.warn(
+          "⚠️ Erro ao configurar FCM (continuando apenas local):",
+          fcmError,
+        );
+        // Continuar funcionando apenas com notificações locais
       }
     } else {
-      console.warn("⚠️ Permissão para notificações negada");
-      throw new Error(`Notification permission denied: ${permission}`);
+      console.warn(
+        "⚠️ Permissão para notificações negada - funcionando sem notificações",
+      );
     }
-
-    // Configurar listener para mensagens em primeiro plano
-    onMessage(this.messaging, (payload) => {
-      console.log("📨 Mensagem recebida em primeiro plano:", payload);
-      this.handleForegroundMessage(payload);
-    });
   }
 
   private async initializeNativeNotifications() {
-    console.log("📱 Inicializando notificações nativas...");
+    console.log("📱 Inicializando notificações nativas (Capacitor)...");
 
-    // Pedir permissão para notificações push
-    let permStatus = await PushNotifications.checkPermissions();
+    try {
+      // Pedir permissões para notificações locais
+      const localPermission = await LocalNotifications.requestPermissions();
+      console.log("📱 Permissão para notificações locais:", localPermission);
 
-    if (permStatus.receive === "prompt") {
-      permStatus = await PushNotifications.requestPermissions();
+      // Pedir permissões para push notifications
+      const pushPermission = await PushNotifications.requestPermissions();
+      console.log("📱 Permissão para push notifications:", pushPermission);
+
+      if (pushPermission.receive === "granted") {
+        // Registrar para push notifications
+        await PushNotifications.register();
+
+        // Listener para quando o registro é bem-sucedido
+        await PushNotifications.addListener("registration", (token) => {
+          console.log("📱 Token de push recebido:", token.value);
+          this.saveUserToken(token.value);
+        });
+
+        // Listener para notificações recebidas
+        await PushNotifications.addListener(
+          "pushNotificationReceived",
+          (notification) => {
+            console.log("📱 Push notification recebida:", notification);
+            this.handleForegroundMessage(notification);
+          },
+        );
+      }
+    } catch (error) {
+      console.error("❌ Erro ao inicializar notificações nativas:", error);
     }
-
-    if (permStatus.receive !== "granted") {
-      console.warn("⚠️ Permissões para notificações push não concedidas");
-      return;
-    }
-
-    // Registrar para notificações push
-    await PushNotifications.register();
-
-    // Listeners para notificações nativas
-    PushNotifications.addListener("registration", (token) => {
-      console.log("📱 Token de registro push:", token.value);
-      this.saveUserToken(token.value);
-    });
-
-    PushNotifications.addListener("registrationError", (error) => {
-      console.error("❌ Erro no registro push:", error);
-    });
-
-    PushNotifications.addListener(
-      "pushNotificationReceived",
-      (notification) => {
-        console.log("📨 Notificação push recebida:", notification);
-      },
-    );
-
-    PushNotifications.addListener(
-      "pushNotificationActionPerformed",
-      (notification) => {
-        console.log("👆 Ação na notificação push:", notification);
-        this.handleNotificationClick(notification.notification.data);
-      },
-    );
-
-    // Pedir permissão para notificações locais
-    await LocalNotifications.requestPermissions();
   }
 
-  private async saveUserToken(token: string) {
+  private saveUserToken(token: string) {
     try {
-      // Buscar usuário atual da chave correta
+      console.log("💾 Salvando token do usuário:", token);
+
+      // Buscar usuário atual
       const currentUser = JSON.parse(
         localStorage.getItem("leirisonda_user") || "{}",
       );
 
-      console.log("💾 Tentando salvar token para usuário:", {
-        hasUser: !!currentUser,
-        userId: currentUser.id,
-        userEmail: currentUser.email,
-        userName: currentUser.name,
-        token: token.substring(0, 20) + "...",
-      });
+      if (currentUser && currentUser.id) {
+        // Salvar token com múltiplas chaves para melhor compatibilidade
+        const tokenKeys = [
+          `fcm_token_${currentUser.id}`,
+          `fcm_token_${currentUser.email}`,
+          `fcm_token_${currentUser.email?.toLowerCase()}`,
+          `fcm_token_current_user`,
+        ];
 
-      if (currentUser.id) {
-        // Salvar token no localStorage (pode ser expandido para Firebase)
-        const userTokens = JSON.parse(
-          localStorage.getItem("userNotificationTokens") || "{}",
-        );
-        userTokens[currentUser.id] = token;
-        localStorage.setItem(
-          "userNotificationTokens",
-          JSON.stringify(userTokens),
-        );
+        tokenKeys.forEach((key) => {
+          localStorage.setItem(key, token);
+        });
 
-        console.log(
-          "✅ Token salvo para usuário:",
-          currentUser.id,
-          currentUser.name,
-        );
-        console.log("📋 Tokens atuais:", Object.keys(userTokens));
+        console.log(`✅ Token salvo para usuário: ${currentUser.name}`);
       } else {
-        console.warn("⚠️ Usuário atual não encontrado no localStorage");
+        console.warn(
+          "⚠️ Usuário atual não encontrado, salvando token genérico",
+        );
+        localStorage.setItem("fcm_token_current", token);
       }
     } catch (error) {
-      console.error("❌ Erro ao salvar token do usuário:", error);
+      console.error("❌ Erro ao salvar token:", error);
     }
   }
 
   private handleForegroundMessage(payload: any) {
-    console.log("🎯 Processando mensagem em primeiro plano:", payload);
+    console.log("📨 Processando mensagem em foreground:", payload);
 
-    // Mostrar notificação no browser se a página estiver ativa
-    if (payload.notification) {
+    try {
+      const title =
+        payload.notification?.title || payload.title || "Nova Notificação";
+      const body =
+        payload.notification?.body ||
+        payload.body ||
+        "Você tem uma nova notificação";
+      const icon =
+        payload.notification?.icon || payload.icon || "/leirisonda-icon.svg";
+
+      // Mostrar notificação local
       this.showLocalNotification({
-        title: payload.notification.title,
-        body: payload.notification.body,
+        title,
+        body,
+        icon,
         data: payload.data,
-        icon: payload.notification.icon || "/leirisonda-icon.svg",
       });
+    } catch (error) {
+      console.error("❌ Erro ao processar mensagem foreground:", error);
     }
   }
 
-  private handleNotificationClick(data: any) {
-    console.log("🎯 Clique na notificação:", data);
+  private initializeNotificationListener() {
+    console.log("🎧 Inicializando listener de notificações...");
 
-    // Navegar para a obra específica se fornecido
-    if (data.workId) {
-      window.location.href = `/work/${data.workId}`;
-    } else if (data.type === "work_assigned") {
-      window.location.href = "/dashboard";
-    } else if (data.type === "pending_works_summary") {
-      // Redirecionar para dashboard com foco nas obras atribuídas
-      window.location.href = "/dashboard#assigned-works";
-    } else if (data.type === "work_status_change") {
-      // Redirecionar para a obra específica ou dashboard
-      if (data.workId) {
-        window.location.href = `/work/${data.workId}`;
-      } else {
-        window.location.href = "/dashboard";
+    // Listener para eventos de storage (cross-tab)
+    window.addEventListener("storage", (event) => {
+      if (event.key === "lastNotificationBroadcast" && event.newValue) {
+        try {
+          const broadcastData = JSON.parse(event.newValue);
+          console.log("📡 Evento de broadcast recebido:", broadcastData);
+
+          if (broadcastData.type === "LEIRISONDA_WORK_ASSIGNED") {
+            // Verificar se usuário atual está nos atribuídos
+            const currentUser = JSON.parse(
+              localStorage.getItem("leirisonda_user") || "{}",
+            );
+
+            if (
+              currentUser.id &&
+              broadcastData.assignedUsers?.includes(currentUser.id)
+            ) {
+              console.log(
+                "🔔 Usuário atual está atribuído, processando notificação...",
+              );
+              this.showLocalNotification(broadcastData.payload);
+            }
+          }
+        } catch (error) {
+          console.error("❌ Erro ao processar broadcast:", error);
+        }
       }
+    });
+
+    // Listener customizado para notificações diretas
+    window.addEventListener("leirisonda_notification", (event: any) => {
+      console.log("🔔 Notificação customizada recebida:", event.detail);
+      if (event.detail?.payload) {
+        this.showLocalNotification(event.detail.payload);
+      }
+    });
+  }
+
+  async sendPushNotification(
+    userId: string,
+    payload: NotificationPayload,
+  ): Promise<boolean> {
+    console.log(`📤 Tentando enviar push para usuário ${userId}:`, payload);
+
+    try {
+      // Buscar token do usuário
+      const userToken = this.getUserToken(userId);
+
+      if (!userToken) {
+        console.warn(`⚠️ Token não encontrado para usuário ${userId}`);
+        return false;
+      }
+
+      // Tentar enviar via servidor (se disponível)
+      try {
+        const response = await fetch("/api/send-notification", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: userToken,
+            notification: {
+              title: payload.title,
+              body: payload.body,
+              icon: payload.icon,
+            },
+            data: payload.data || {},
+          }),
+        });
+
+        if (response.ok) {
+          console.log(`✅ Push enviado via servidor para ${userId}`);
+          return true;
+        } else {
+          console.warn(`⚠️ Resposta do servidor não ok: ${response.status}`);
+        }
+      } catch (serverError) {
+        console.warn("⚠️ Servidor não disponível:", serverError);
+      }
+
+      // Fallback: notificação via storage event para cross-tab
+      console.log(`💡 Usando fallback cross-tab para ${userId}`);
+      return false;
+    } catch (error) {
+      console.error(`❌ Erro ao enviar push para ${userId}:`, error);
+      return false;
+    }
+  }
+
+  private getUserToken(userId: string): string | null {
+    try {
+      // Buscar token com múltiplas chaves
+      const tokenKeys = [
+        `fcm_token_${userId}`,
+        `fcm_token_current_user`,
+        `fcm_token_current`,
+      ];
+
+      for (const key of tokenKeys) {
+        const token = localStorage.getItem(key);
+        if (token) {
+          console.log(`🔑 Token encontrado para ${userId} com chave ${key}`);
+          return token;
+        }
+      }
+
+      console.warn(`⚠️ Nenhum token encontrado para ${userId}`);
+      return null;
+    } catch (error) {
+      console.error(`❌ Erro ao buscar token para ${userId}:`, error);
+      return null;
     }
   }
 
   async showLocalNotification(payload: NotificationPayload) {
+    console.log("🔔 Mostrando notificação local:", payload);
+
     try {
       if (Capacitor.isNativePlatform()) {
-        // Notificação local nativa
+        // Usar notificações nativas no mobile
         await LocalNotifications.schedule({
           notifications: [
             {
               title: payload.title,
               body: payload.body,
               id: Date.now(),
-              extra: payload.data,
-              iconColor: "#007784",
+              schedule: { at: new Date(Date.now() + 1000) },
               sound: "default",
-              largeIcon: payload.icon || "/leirisonda-icon.svg",
+              attachments: payload.icon
+                ? [{ id: "icon", url: payload.icon }]
+                : undefined,
+              extra: payload.data,
             },
           ],
         });
+        console.log("📱 Notificação nativa agendada");
       } else {
-        // Notificação web
-        if (this.isSupported && Notification.permission === "granted") {
+        // Usar notificações web no browser
+        if ("Notification" in window && Notification.permission === "granted") {
           const notification = new Notification(payload.title, {
             body: payload.body,
             icon: payload.icon || "/leirisonda-icon.svg",
-            badge: payload.badge || "/leirisonda-icon.svg",
+            badge: payload.badge,
             image: payload.image,
             data: payload.data,
-            tag: "leirisonda-notification",
             requireInteraction: true,
           });
 
+          // Adicionar listener para clique
           notification.onclick = () => {
-            this.handleNotificationClick(payload.data || {});
+            console.log("🖱️ Notificação clicada");
+            window.focus();
             notification.close();
+
+            // Se há dados específicos da obra, navegar para ela
+            if (payload.data?.workId) {
+              window.location.href = `/work/${payload.data.workId}`;
+            } else {
+              window.location.href = "/dashboard";
+            }
           };
 
           // Auto-fechar após 10 segundos
@@ -318,7 +412,7 @@ class NotificationServiceClass {
   }
 
   async notifyWorkAssigned(work: any, assignedUsers: string[]) {
-    console.log("🎯 Enviando notificação de obra atribuída:", {
+    console.log("🎯 NOTIFICAÇÃO DE OBRA ATRIBUÍDA - SISTEMA MELHORADO:", {
       work: work.workSheetNumber,
       users: assignedUsers,
     });
@@ -340,7 +434,7 @@ class NotificationServiceClass {
         icon: "/leirisonda-icon.svg",
       };
 
-      console.log("👤 Usuário atual:", {
+      console.log("👤 Usuário criador:", {
         currentUserId: currentUser.id,
         currentUserName: currentUser.name,
         assignedUsers: assignedUsers,
@@ -365,9 +459,9 @@ class NotificationServiceClass {
 
       const allUsers = [...storedUsers, ...globalUsers];
 
-      // SALVAR NOTIFICAÇÃO PENDENTE PARA CADA USUÁRIO ATRIBUÍDO
+      // ===== ETAPA 1: SALVAR NOTIFICAÇÕES PENDENTES PARA REENTREGA =====
       console.log(
-        "💾 Salvando notificações pendentes para sincronização cross-device...",
+        "💾 SALVANDO NOTIFICAÇÕES PENDENTES para reentrega cross-device...",
       );
 
       const pendingNotifications = JSON.parse(
@@ -396,80 +490,54 @@ class NotificationServiceClass {
           };
 
           pendingNotifications.push(pendingNotification);
-          console.log(`📋 Notificação pendente salva para ${user.name}`);
+          console.log(
+            `📋 Notificação PENDENTE salva para ${user.name} (${user.email})`,
+          );
+        } else {
+          console.warn(`⚠️ Usuário não encontrado para ID: ${userId}`);
         }
       });
 
-      // Salvar lista atualizada de notificações pendentes
+      // Salvar lista atualizada
       localStorage.setItem(
         "pendingNotifications",
         JSON.stringify(pendingNotifications),
       );
 
-      // TENTAR ENTREGAR NOTIFICAÇÕES PUSH IMEDIATAMENTE
-      console.log("📤 Tentando entregar notificações push imediatamente...");
+      // ===== ETAPA 2: TENTAR ENTREGA IMEDIATA VIA PUSH =====
+      console.log("📤 TENTANDO ENTREGA IMEDIATA via push...");
 
       const pushPromises = assignedUsers.map(async (userId) => {
         const user = allUsers.find((u: User) => u.id === userId);
 
         if (user) {
-          console.log(`📱 Tentando push para ${user.name} (${user.email})...`);
+          console.log(`📱 Push para ${user.name} (${user.email})...`);
 
           try {
             const pushSent = await this.sendPushNotification(userId, payload);
 
             if (pushSent) {
-              console.log(`✅ Push enviado com sucesso para ${user.name}`);
-              // Marcar notificação como entregue
+              console.log(`✅ Push SUCESSO para ${user.name}`);
               this.markNotificationAsDelivered(
                 userId,
                 work.id,
                 "work_assigned",
               );
             } else {
-              console.warn(
-                `⚠️ Push falhou para ${user.name} - será reentregue quando usuário fizer login`,
+              console.log(
+                `⚠️ Push FALHOU para ${user.name} - ficará pendente para reentrega`,
               );
-
-              // Fallback: mostrar notificação local apenas se for o usuário atual
-              if (currentUser.id === userId) {
-                await this.showLocalNotification(payload);
-                console.log(
-                  `💡 Notificação local mostrada para usuário atual: ${user.name}`,
-                );
-                this.markNotificationAsDelivered(
-                  userId,
-                  work.id,
-                  "work_assigned",
-                );
-              }
             }
           } catch (pushError) {
-            console.error(`❌ Erro no push para ${user.name}:`, pushError);
-
-            // Fallback: mostrar notificação local apenas se for o usuário atual
-            if (currentUser.id === userId) {
-              await this.showLocalNotification(payload);
-              console.log(`💡 Fallback local para usuário atual: ${user.name}`);
-              this.markNotificationAsDelivered(
-                userId,
-                work.id,
-                "work_assigned",
-              );
-            }
+            console.warn(`❌ Erro no push para ${user.name}:`, pushError);
           }
-        } else {
-          console.warn(`⚠️ Usuário não encontrado: ${userId}`);
         }
       });
 
-      // Aguardar todos os envios de push
       await Promise.allSettled(pushPromises);
 
-      // BROADCAST VIA LOCALSTORAGE PARA COMUNICAÇÃO CROSS-TAB/DEVICE
-      console.log(
-        "📡 Broadcasting notificação via localStorage para outros dispositivos...",
-      );
+      // ===== ETAPA 3: BROADCAST CROSS-DEVICE/TAB =====
+      console.log("📡 BROADCASTING para comunicação cross-device...");
 
       const broadcastEvent = {
         type: "LEIRISONDA_WORK_ASSIGNED",
@@ -487,7 +555,7 @@ class NotificationServiceClass {
         JSON.stringify(broadcastEvent),
       );
 
-      // Tentar disparar evento storage para outros dispositivos/tabs
+      // Disparar evento para outros tabs/dispositivos
       try {
         window.dispatchEvent(
           new StorageEvent("storage", {
@@ -496,539 +564,25 @@ class NotificationServiceClass {
             storageArea: localStorage,
           }),
         );
-        console.log("📡 Evento de broadcast disparado com sucesso");
+        console.log("📡 Evento de broadcast DISPARADO");
       } catch (broadcastError) {
-        console.warn("⚠️ Erro no broadcast de evento:", broadcastError);
+        console.error("❌ Erro no broadcast:", broadcastError);
       }
 
-      console.log(
-        "✅ Processo de notificações concluído para todos os usuários atribuídos (com backup para reentrega)",
-      );
-    } catch (error) {
-      console.error("❌ Erro ao enviar notificações de obra atribuída:", error);
-    }
-  }
-
-  async notifyWorkStatusChange(
-    work: any,
-    newStatus: string,
-    assignedUsers: string[],
-  ) {
-    console.log("🔄 Enviando notificação de mudança de status:", {
-      work: work.workSheetNumber,
-      status: newStatus,
-      assignedUsers: assignedUsers,
-    });
-
-    try {
-      const currentUser = JSON.parse(
-        localStorage.getItem("leirisonda_user") || "{}",
-      );
-
-      const statusLabels = {
-        pendente: "Pendente",
-        em_progresso: "Em Progresso",
-        concluida: "Concluída",
-      };
-
-      const payload: NotificationPayload = {
-        title: "📋 Status da Obra Atualizado",
-        body: `Obra ${work.workSheetNumber} agora está: ${statusLabels[newStatus as keyof typeof statusLabels]}`,
-        data: {
-          type: "work_status_change",
-          workId: work.id,
-          workSheetNumber: work.workSheetNumber,
-          newStatus,
-        },
-        icon: "/leirisonda-icon.svg",
-      };
-
-      console.log("👤 Usuário atual para status change:", {
-        currentUserId: currentUser.id,
-        currentUserName: currentUser.name,
-        assignedUsers: assignedUsers,
-      });
-
-      // Buscar informações dos usuários
-      const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
-      const globalUsers = [
-        {
-          id: "admin_goncalo",
-          email: "gongonsilva@gmail.com",
-          name: "Gonçalo Fonseca",
-          role: "admin" as const,
-        },
-        {
-          id: "user_alexandre",
-          email: "alexkamaryta@gmail.com",
-          name: "Alexandre Fernandes",
-          role: "user" as const,
-        },
-      ];
-
-      const allUsers = [...storedUsers, ...globalUsers];
-
-      // SALVAR NOTIFICAÇÕES PENDENTES PARA CADA USUÁRIO ATRIBUÍDO
-      console.log(
-        "💾 Salvando notificações pendentes de status para sincronização cross-device...",
-      );
-
-      const pendingNotifications = JSON.parse(
-        localStorage.getItem("pendingNotifications") || "[]",
-      );
-
-      assignedUsers.forEach((userId) => {
-        const user = allUsers.find((u: User) => u.id === userId);
-        if (user) {
-          const pendingNotification = {
-            id: `work_status_change_${work.id}_${userId}_${Date.now()}`,
-            userId: userId,
-            userName: user.name,
-            userEmail: user.email,
-            type: "work_status_change",
-            title: payload.title,
-            body: payload.body,
-            data: payload.data,
-            icon: payload.icon,
-            timestamp: new Date().toISOString(),
-            workId: work.id,
-            workSheetNumber: work.workSheetNumber,
-            newStatus: newStatus,
-            delivered: false,
-            attempts: 0,
-          };
-
-          pendingNotifications.push(pendingNotification);
-          console.log(
-            `📋 Notificação de status pendente salva para ${user.name}`,
-          );
-        }
-      });
-
-      // Salvar lista atualizada de notificações pendentes
+      // ===== ETAPA 4: MARCAR TIMESTAMP PARA SINCRONIZAÇÃO =====
       localStorage.setItem(
-        "pendingNotifications",
-        JSON.stringify(pendingNotifications),
+        "lastWorkAssignmentNotification",
+        new Date().toISOString(),
       );
+      localStorage.setItem("lastNotificationUpdate", new Date().toISOString());
 
-      // TENTAR ENTREGAR NOTIFICAÇÕES PUSH IMEDIATAMENTE
-      console.log(
-        "📤 Tentando entregar notificações push de status imediatamente...",
-      );
-
-      const pushPromises = assignedUsers.map(async (userId) => {
-        const user = allUsers.find((u: User) => u.id === userId);
-
-        if (user) {
-          console.log(
-            `📱 Enviando push de status para ${user.name} (${user.email})...`,
-          );
-
-          try {
-            const pushSent = await this.sendPushNotification(userId, payload);
-
-            if (pushSent) {
-              console.log(
-                `✅ Push de status enviado com sucesso para ${user.name}`,
-              );
-              // Marcar notificação como entregue
-              this.markNotificationAsDelivered(
-                userId,
-                work.id,
-                "work_status_change",
-              );
-            } else {
-              console.warn(
-                `⚠️ Push de status falhou para ${user.name} - será reentregue quando usuário fizer login`,
-              );
-
-              // Fallback: mostrar notificação local apenas se for o usuário atual
-              if (currentUser.id === userId) {
-                await this.showLocalNotification(payload);
-                console.log(
-                  `💡 Notificação local de status mostrada para usuário atual: ${user.name}`,
-                );
-                this.markNotificationAsDelivered(
-                  userId,
-                  work.id,
-                  "work_status_change",
-                );
-              }
-            }
-          } catch (pushError) {
-            console.error(
-              `❌ Erro no push de status para ${user.name}:`,
-              pushError,
-            );
-
-            // Fallback: mostrar notificação local apenas se for o usuário atual
-            if (currentUser.id === userId) {
-              await this.showLocalNotification(payload);
-              console.log(
-                `💡 Fallback local de status para usuário atual: ${user.name}`,
-              );
-              this.markNotificationAsDelivered(
-                userId,
-                work.id,
-                "work_status_change",
-              );
-            }
-          }
-        } else {
-          console.warn(`⚠️ Usuário não encontrado: ${userId}`);
-        }
-      });
-
-      // Aguardar todos os envios de push
-      await Promise.allSettled(pushPromises);
-
-      // BROADCAST VIA LOCALSTORAGE PARA COMUNICAÇÃO CROSS-TAB/DEVICE
-      console.log(
-        "📡 Broadcasting mudança de status via localStorage para outros dispositivos...",
-      );
-
-      const broadcastEvent = {
-        type: "LEIRISONDA_WORK_STATUS_CHANGE",
-        timestamp: new Date().toISOString(),
-        workId: work.id,
-        workSheetNumber: work.workSheetNumber,
-        newStatus: newStatus,
-        assignedUsers: assignedUsers,
-        payload: payload,
-      };
-
-      // Salvar evento de broadcast
-      localStorage.setItem(
-        "lastStatusBroadcast",
-        JSON.stringify(broadcastEvent),
-      );
-
-      // Tentar disparar evento storage para outros dispositivos/tabs
-      try {
-        window.dispatchEvent(
-          new StorageEvent("storage", {
-            key: "lastStatusBroadcast",
-            newValue: JSON.stringify(broadcastEvent),
-            storageArea: localStorage,
-          }),
-        );
-        console.log("📡 Evento de broadcast de status disparado com sucesso");
-      } catch (broadcastError) {
-        console.warn(
-          "⚠️ Erro no broadcast de evento de status:",
-          broadcastError,
-        );
-      }
-
-      console.log(
-        "✅ Processo de notificações de status concluído para todos os usuários atribuídos (com backup para reentrega)",
-      );
+      console.log("🎉 NOTIFICAÇÃO DE OBRA ATRIBUÍDA PROCESSADA COMPLETAMENTE");
     } catch (error) {
-      console.error(
-        "❌ Erro ao enviar notificações de mudança de status:",
-        error,
-      );
+      console.error("❌ ERRO CRÍTICO na notificação de obra atribuída:", error);
+      throw error;
     }
   }
 
-  async checkPendingAssignedWorks(userId: string) {
-    console.log(
-      "🔍 Verificando obras pendentes atribuídas ao usuário:",
-      userId,
-    );
-
-    try {
-      // PRIMEIRO: Verificar e processar notificações pendentes não entregues
-      await this.processPendingNotifications(userId);
-
-      // Buscar obras do localStorage e Firebase
-      const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
-      const leirisondaWorks = JSON.parse(
-        localStorage.getItem("leirisonda_works") || "[]",
-      );
-
-      // Combinar todas as obras e remover duplicatas baseado no ID
-      const allWorksMap = new Map();
-
-      [...localWorks, ...leirisondaWorks].forEach((work: any) => {
-        if (work.id) {
-          allWorksMap.set(work.id, work);
-        }
-      });
-
-      const allWorks = Array.from(allWorksMap.values());
-
-      // Filtrar obras atribuídas ao usuário atual que est��o pendentes ou em progresso
-      const pendingAssignedWorks = allWorks.filter((work: any) => {
-        const isAssigned =
-          work.assignedUsers &&
-          Array.isArray(work.assignedUsers) &&
-          work.assignedUsers.includes(userId);
-        const isPending =
-          work.status === "pendente" || work.status === "em_progresso";
-        return isAssigned && isPending;
-      });
-
-      console.log(
-        `📋 Encontradas ${pendingAssignedWorks.length} obras pendentes para ${userId}:`,
-        pendingAssignedWorks.map(
-          (w: any) => `${w.workSheetNumber} - ${w.clientName} (${w.status})`,
-        ),
-      );
-
-      // Se há obras pendentes, mostrar notificação de resumo
-      if (pendingAssignedWorks.length > 0) {
-        const mostRecentWork = pendingAssignedWorks[0]; // Primeira obra encontrada
-
-        const payload: NotificationPayload = {
-          title: "🏗️ Obras Atribuídas",
-          body:
-            pendingAssignedWorks.length === 1
-              ? `Nova obra atribuída: ${mostRecentWork.workSheetNumber} - ${mostRecentWork.clientName}`
-              : `Tem ${pendingAssignedWorks.length} obras atribuídas (${pendingAssignedWorks.filter((w) => w.status === "pendente").length} pendentes)`,
-          data: {
-            type: "pending_works_summary",
-            count: pendingAssignedWorks.length,
-            works: pendingAssignedWorks.map((w: any) => ({
-              id: w.id,
-              workSheetNumber: w.workSheetNumber,
-              clientName: w.clientName,
-              status: w.status,
-            })),
-          },
-          icon: "/leirisonda-icon.svg",
-        };
-
-        console.log("📨 Mostrando notificação de obras atribuídas...");
-        await this.showLocalNotification(payload);
-        console.log(
-          `✅ Notificação de ${pendingAssignedWorks.length} obras atribuídas exibida`,
-        );
-
-        return pendingAssignedWorks;
-      } else {
-        console.log("ℹ️ Nenhuma obra pendente atribuída ao usuário");
-        return [];
-      }
-    } catch (error) {
-      console.error("❌ Erro ao verificar obras pendentes:", error);
-      return [];
-    }
-  }
-
-  // Método para enviar notificação push real via Firebase Cloud Messaging
-  private async sendPushNotification(
-    userId: string,
-    payload: NotificationPayload,
-  ) {
-    try {
-      console.log(
-        `📤 Enviando notificação push para usuário ${userId}:`,
-        payload,
-      );
-
-      // Obter token do usuário de destino
-      const userTokens = JSON.parse(
-        localStorage.getItem("userNotificationTokens") || "{}",
-      );
-      const targetToken = userTokens[userId];
-
-      if (!targetToken) {
-        console.warn(`⚠️ Token não encontrado para usuário ${userId}`);
-        return false;
-      }
-
-      // Usar Firebase Admin via endpoint da aplicação
-      const response = await fetch("/api/send-notification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: targetToken,
-          title: payload.title,
-          body: payload.body,
-          data: payload.data || {},
-          icon: payload.icon || "/leirisonda-icon.svg",
-        }),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log(`✅ Notificação push enviada com sucesso:`, result);
-        return true;
-      } else {
-        const error = await response.text();
-        console.error(`❌ Erro no servidor ao enviar push:`, error);
-        return false;
-      }
-    } catch (error) {
-      console.error("❌ Erro ao enviar notificação push:", error);
-      return false;
-    }
-  }
-
-  getIsSupported(): boolean {
-    return this.isSupported;
-  }
-
-  getIsInitialized(): boolean {
-    return this.isInitialized;
-  }
-
-  // Método de diagnóstico completo para debug
-  async runDiagnostics(): Promise<{
-    environment: string;
-    isSupported: boolean;
-    isInitialized: boolean;
-    permission: NotificationPermission | null;
-    serviceWorkerStatus: string;
-    fcmTokenStatus: string;
-    firebaseStatus: string;
-    userTokens: Record<string, string>;
-    recommendations: string[];
-  }> {
-    const diagnostics = {
-      environment: Capacitor.isNativePlatform()
-        ? "Native (Capacitor)"
-        : "Web Browser",
-      isSupported: this.isSupported,
-      isInitialized: this.isInitialized,
-      permission: "Notification" in window ? Notification.permission : null,
-      serviceWorkerStatus: "Unknown",
-      fcmTokenStatus: "Unknown",
-      firebaseStatus: "Unknown",
-      userTokens: {},
-      recommendations: [] as string[],
-    };
-
-    try {
-      // Verificar Service Worker
-      if ("serviceWorker" in navigator) {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        const fcmSW = registrations.find(
-          (reg) =>
-            reg.scope.includes("firebase-messaging-sw") ||
-            reg.active?.scriptURL.includes("firebase-messaging-sw"),
-        );
-
-        if (fcmSW) {
-          diagnostics.serviceWorkerStatus = fcmSW.active
-            ? "Active"
-            : "Inactive";
-        } else {
-          diagnostics.serviceWorkerStatus = "Not Registered";
-          diagnostics.recommendations.push(
-            "Service Worker para Firebase não está registrado",
-          );
-        }
-      } else {
-        diagnostics.serviceWorkerStatus = "Not Supported";
-        diagnostics.recommendations.push(
-          "Service Workers não são suportados neste browser",
-        );
-      }
-
-      // Verificar Firebase status
-      try {
-        if (this.messaging) {
-          diagnostics.firebaseStatus = "Initialized";
-
-          // Tentar obter token com melhor tratamento de erros
-          try {
-            const token = await getToken(this.messaging);
-            diagnostics.fcmTokenStatus = token
-              ? "Success"
-              : "Failed - No Token";
-            if (!token) {
-              diagnostics.recommendations.push(
-                "Não foi possível obter token FCM - verificar configuração Firebase",
-              );
-            }
-          } catch (tokenError) {
-            if (tokenError instanceof Error) {
-              if (
-                tokenError.message.includes("messaging/invalid-vapid-key") ||
-                tokenError.message.includes(
-                  "string did not match the expected pattern",
-                )
-              ) {
-                diagnostics.fcmTokenStatus = "Error: Invalid VAPID Key";
-                diagnostics.recommendations.push(
-                  "VAPID key inválida - configurar chave correta no Firebase Console",
-                );
-              } else if (
-                tokenError.message.includes("messaging/unsupported-browser")
-              ) {
-                diagnostics.fcmTokenStatus = "Error: Unsupported Browser";
-                diagnostics.recommendations.push(
-                  "Browser não suporta notificações push FCM",
-                );
-              } else {
-                diagnostics.fcmTokenStatus = `Error: ${tokenError.message}`;
-                diagnostics.recommendations.push(
-                  `Erro FCM: ${tokenError.message}`,
-                );
-              }
-            } else {
-              diagnostics.fcmTokenStatus = "Error: Unknown";
-              diagnostics.recommendations.push(
-                "Erro desconhecido ao obter token FCM",
-              );
-            }
-          }
-        } else {
-          diagnostics.firebaseStatus = "Not Initialized";
-          diagnostics.recommendations.push(
-            "Firebase Messaging não foi inicializado",
-          );
-        }
-      } catch (firebaseError) {
-        diagnostics.firebaseStatus = `Error: ${firebaseError}`;
-        diagnostics.recommendations.push("Erro na inicialização do Firebase");
-      }
-
-      // Carregar tokens salvos
-      try {
-        diagnostics.userTokens = JSON.parse(
-          localStorage.getItem("userNotificationTokens") || "{}",
-        );
-      } catch (error) {
-        diagnostics.recommendations.push(
-          "Erro ao carregar tokens de usuários salvos",
-        );
-      }
-
-      // Verificar permissões
-      if (diagnostics.permission !== "granted") {
-        diagnostics.recommendations.push(
-          "Permissão para notificações não foi concedida",
-        );
-      }
-
-      // Verificar suporte geral
-      if (!diagnostics.isSupported) {
-        diagnostics.recommendations.push(
-          "Notificações não são suportadas neste dispositivo/browser",
-        );
-      }
-
-      // Recomendações específicas
-      if (diagnostics.recommendations.length === 0) {
-        diagnostics.recommendations.push(
-          "Sistema aparenta estar funcionando corretamente",
-        );
-      }
-    } catch (error) {
-      console.error("❌ Erro durante diagnóstico:", error);
-      diagnostics.recommendations.push(`Erro durante diagnóstico: ${error}`);
-    }
-
-    console.log("🔍 Diagnóstico completo:", diagnostics);
-    return diagnostics;
-  }
-
-  // Marcar notificação como entregue
   private markNotificationAsDelivered(
     userId: string,
     workId: string,
@@ -1039,294 +593,377 @@ class NotificationServiceClass {
         localStorage.getItem("pendingNotifications") || "[]",
       );
 
-      const updatedNotifications = pendingNotifications.map(
-        (notification: any) => {
-          if (
-            notification.userId === userId &&
-            notification.workId === workId &&
-            notification.type === type
-          ) {
-            return {
-              ...notification,
-              delivered: true,
-              deliveredAt: new Date().toISOString(),
-            };
-          }
-          return notification;
-        },
-      );
+      // Marcar como entregue
+      const updatedNotifications = pendingNotifications.map((notif: any) => {
+        if (
+          notif.userId === userId &&
+          notif.workId === workId &&
+          notif.type === type
+        ) {
+          return {
+            ...notif,
+            delivered: true,
+            deliveredAt: new Date().toISOString(),
+          };
+        }
+        return notif;
+      });
 
       localStorage.setItem(
         "pendingNotifications",
         JSON.stringify(updatedNotifications),
       );
-      console.log(
-        `✅ Notificação marcada como entregue para ${userId} - obra ${workId}`,
-      );
+      console.log(`✅ Notificação marcada como entregue para ${userId}`);
     } catch (error) {
       console.error("❌ Erro ao marcar notificação como entregue:", error);
     }
   }
 
-  // Processar notificações pendentes para um usuário específico
-  private async processPendingNotifications(userId: string) {
-    try {
-      console.log(`🔄 Processando notificações pendentes para ${userId}...`);
+  async processPendingNotifications(userId: string) {
+    console.log(`🔄 PROCESSANDO NOTIFICAÇÕES PENDENTES para ${userId}...`);
 
+    try {
       const pendingNotifications = JSON.parse(
         localStorage.getItem("pendingNotifications") || "[]",
       );
 
-      // Filtrar notificações não entregues para este usuário
+      // Filtrar notificações do usuário que não foram entregues
       const userPendingNotifications = pendingNotifications.filter(
-        (notification: any) =>
-          notification.userId === userId &&
-          !notification.delivered &&
-          notification.attempts < 3, // Máximo 3 tentativas
+        (notif: any) => notif.userId === userId && !notif.delivered,
       );
 
       console.log(
-        `📋 Encontradas ${userPendingNotifications.length} notificações pendentes para ${userId}`,
+        `📋 ${userPendingNotifications.length} notificações pendentes para ${userId}`,
       );
 
-      if (userPendingNotifications.length === 0) {
-        return;
-      }
-
-      // Processar cada notificação pendente
-      for (const notification of userPendingNotifications) {
-        try {
+      if (userPendingNotifications.length > 0) {
+        console.log("📋 NOTIFICAÇÕES PENDENTES:");
+        userPendingNotifications.forEach((notif: any, index: number) => {
           console.log(
-            `📨 Reentregando notificação: ${notification.title} para ${notification.userName}`,
+            `   ${index + 1}. ${notif.title} - ${notif.body} (${notif.timestamp})`,
           );
+        });
 
-          // Mostrar notificação local
-          await this.showLocalNotification({
-            title: notification.title,
-            body: notification.body,
-            data: notification.data,
-            icon: notification.icon,
-          });
+        // Mostrar cada notificação pendente
+        for (const notification of userPendingNotifications) {
+          try {
+            await this.showLocalNotification({
+              title: notification.title,
+              body: notification.body,
+              icon: notification.icon,
+              data: notification.data,
+            });
 
-          // Marcar como entregue
-          this.markNotificationAsDelivered(
-            notification.userId,
-            notification.workId,
-            notification.type,
-          );
+            // Marcar como entregue
+            this.markNotificationAsDelivered(
+              notification.userId,
+              notification.workId,
+              notification.type,
+            );
 
-          console.log(
-            `✅ Notificação reentregue com sucesso: ${notification.title}`,
-          );
-        } catch (redeliveryError) {
-          console.error(
-            `❌ Erro na reentrega de notificação ${notification.id}:`,
-            redeliveryError,
-          );
+            console.log(
+              `✅ Notificação pendente entregue: ${notification.title}`,
+            );
 
-          // Incrementar tentativas
-          notification.attempts = (notification.attempts || 0) + 1;
-          notification.lastAttempt = new Date().toISOString();
+            // Pequeno delay entre notificações para não sobrecarregar
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          } catch (error) {
+            console.error("❌ Erro ao entregar notificação pendente:", error);
+          }
         }
+
+        console.log(
+          `🎉 TODAS as ${userPendingNotifications.length} notificações pendentes foram entregues`,
+        );
+      } else {
+        console.log("✅ Nenhuma notificação pendente para entregar");
       }
 
-      // Salvar notificações atualizadas
-      localStorage.setItem(
-        "pendingNotifications",
-        JSON.stringify(pendingNotifications),
+      // Limpeza: remover notificações muito antigas (mais de 7 dias)
+      const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const filteredNotifications = pendingNotifications.filter(
+        (notif: any) => {
+          const notifDate = new Date(notif.timestamp);
+          return notifDate > oneWeekAgo;
+        },
       );
 
-      // Limpar notificações muito antigas (mais de 7 dias) ou com muitas tentativas
-      this.cleanupOldNotifications();
+      if (filteredNotifications.length !== pendingNotifications.length) {
+        localStorage.setItem(
+          "pendingNotifications",
+          JSON.stringify(filteredNotifications),
+        );
+        console.log(
+          `🧹 Limpeza: ${pendingNotifications.length - filteredNotifications.length} notificações antigas removidas`,
+        );
+      }
     } catch (error) {
       console.error("❌ Erro ao processar notificações pendentes:", error);
     }
   }
 
-  // Limpar notificações antigas
-  private cleanupOldNotifications() {
+  async checkPendingAssignedWorks(userId: string) {
+    console.log("🔍 VERIFICAÇÃO COMPLETA DE OBRAS ATRIBUÍDAS para:", userId);
+
     try {
-      const pendingNotifications = JSON.parse(
-        localStorage.getItem("pendingNotifications") || "[]",
+      // PRIMEIRO: Processar notificações pendentes não entregues
+      await this.processPendingNotifications(userId);
+
+      // SEGUNDO: Buscar obras de TODAS as fontes possíveis
+      const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const leirisondaWorks = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      const tempWorks = JSON.parse(
+        sessionStorage.getItem("temp_works") || "[]",
       );
 
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-      const cleanedNotifications = pendingNotifications.filter(
-        (notification: any) => {
-          const notificationDate = new Date(notification.timestamp);
-          const isRecent = notificationDate > oneWeekAgo;
-          const hasAttemptsLeft = notification.attempts < 3;
-          const isDelivered = notification.delivered;
-
-          // Manter se: recente E (tem tentativas OU já foi entregue)
-          return isRecent && (hasAttemptsLeft || isDelivered);
-        },
-      );
-
-      if (cleanedNotifications.length !== pendingNotifications.length) {
-        localStorage.setItem(
-          "pendingNotifications",
-          JSON.stringify(cleanedNotifications),
-        );
-        console.log(
-          `🧹 Limpeza de notificações: removidas ${pendingNotifications.length - cleanedNotifications.length} notificações antigas`,
-        );
-      }
-    } catch (error) {
-      console.error("❌ Erro na limpeza de notificações:", error);
-    }
-  }
-
-  // Inicializar listener para eventos de broadcast de notificações
-  initializeNotificationListener() {
-    if (typeof window !== "undefined") {
-      console.log("📡 Inicializando listener de eventos de notificações...");
-
-      // Listener para eventos de storage (cross-tab/device communication)
-      window.addEventListener("storage", (event) => {
-        if (event.key === "lastNotificationBroadcast" && event.newValue) {
+      // Buscar também obras de emergência
+      const emergencyWorks = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("emergency_work_")) {
           try {
-            const broadcastEvent = JSON.parse(event.newValue);
-            console.log("📡 Recebido evento de broadcast:", broadcastEvent);
-
-            // Verificar se é um evento de obra atribuída
-            if (broadcastEvent.type === "LEIRISONDA_WORK_ASSIGNED") {
-              this.handleBroadcastWorkAssigned(broadcastEvent);
+            const emergencyWork = JSON.parse(localStorage.getItem(key) || "{}");
+            if (emergencyWork.id) {
+              emergencyWorks.push(emergencyWork);
             }
-          } catch (error) {
-            console.error("❌ Erro ao processar evento de broadcast:", error);
+          } catch (e) {
+            console.warn(`Erro ao carregar obra de emergência ${key}:`, e);
           }
         }
+      }
 
-        if (event.key === "lastStatusBroadcast" && event.newValue) {
-          try {
-            const broadcastEvent = JSON.parse(event.newValue);
-            console.log(
-              "📡 Recebido evento de broadcast de status:",
-              broadcastEvent,
-            );
-
-            // Verificar se é um evento de mudança de status
-            if (broadcastEvent.type === "LEIRISONDA_WORK_STATUS_CHANGE") {
-              this.handleBroadcastStatusChange(broadcastEvent);
-            }
-          } catch (error) {
-            console.error(
-              "❌ Erro ao processar evento de broadcast de status:",
-              error,
-            );
-          }
+      // Combinar todas as obras e remover duplicatas baseado no ID
+      const allWorksMap = new Map();
+      [
+        ...localWorks,
+        ...leirisondaWorks,
+        ...tempWorks,
+        ...emergencyWorks,
+      ].forEach((work: any) => {
+        if (work.id) {
+          allWorksMap.set(work.id, work);
         }
       });
 
-      console.log("✅ Listener de notificações inicializado");
-    }
-  }
+      const allWorks = Array.from(allWorksMap.values());
 
-  // Manipular evento de obra atribuída via broadcast
-  private async handleBroadcastWorkAssigned(broadcastEvent: any) {
-    try {
-      const currentUser = JSON.parse(
-        localStorage.getItem("leirisonda_user") || "{}",
+      console.log(`📊 TOTAL DE OBRAS ENCONTRADAS: ${allWorks.length}`);
+      console.log(
+        `📂 FONTES: works(${localWorks.length}) + leirisonda(${leirisondaWorks.length}) + temp(${tempWorks.length}) + emergency(${emergencyWorks.length})`,
       );
 
-      // Verificar se o usuário atual está na lista de usuários atribuídos
-      if (
-        currentUser.id &&
-        broadcastEvent.assignedUsers.includes(currentUser.id)
-      ) {
-        console.log(
-          `📨 Processando notificação de broadcast para ${currentUser.name}...`,
-        );
+      // Filtrar obras atribuídas ao usuário atual
+      const assignedWorks = allWorks.filter((work: any) => {
+        const isAssigned =
+          work.assignedUsers &&
+          Array.isArray(work.assignedUsers) &&
+          work.assignedUsers.includes(userId);
+        return isAssigned;
+      });
 
-        // Mostrar notificação local se ainda não foi entregue
-        const pendingNotifications = JSON.parse(
-          localStorage.getItem("pendingNotifications") || "[]",
-        );
-
-        const alreadyDelivered = pendingNotifications.some(
-          (notification: any) =>
-            notification.userId === currentUser.id &&
-            notification.workId === broadcastEvent.workId &&
-            notification.type === "work_assigned" &&
-            notification.delivered,
-        );
-
-        if (!alreadyDelivered) {
-          await this.showLocalNotification(broadcastEvent.payload);
-
-          // Marcar como entregue
-          this.markNotificationAsDelivered(
-            currentUser.id,
-            broadcastEvent.workId,
-            "work_assigned",
-          );
-
-          console.log("✅ Notificação de broadcast entregue com sucesso");
-        } else {
-          console.log("ℹ️ Notificação já foi entregue anteriormente");
-        }
-      }
-    } catch (error) {
-      console.error("❌ Erro ao processar broadcast de obra atribuída:", error);
-    }
-  }
-
-  // Manipular evento de mudança de status via broadcast
-  private async handleBroadcastStatusChange(broadcastEvent: any) {
-    try {
-      const currentUser = JSON.parse(
-        localStorage.getItem("leirisonda_user") || "{}",
+      console.log(
+        `🎯 TOTAL OBRAS ATRIBUÍDAS AO USUÁRIO ${userId}: ${assignedWorks.length}`,
       );
 
-      // Verificar se o usuário atual está na lista de usuários atribuídos
-      if (
-        currentUser.id &&
-        broadcastEvent.assignedUsers.includes(currentUser.id)
-      ) {
-        console.log(
-          `📨 Processando notificação de mudança de status via broadcast para ${currentUser.name}...`,
-        );
-
-        // Mostrar notificação local se ainda não foi entregue
-        const pendingNotifications = JSON.parse(
-          localStorage.getItem("pendingNotifications") || "[]",
-        );
-
-        const alreadyDelivered = pendingNotifications.some(
-          (notification: any) =>
-            notification.userId === currentUser.id &&
-            notification.workId === broadcastEvent.workId &&
-            notification.type === "work_status_change" &&
-            notification.delivered,
-        );
-
-        if (!alreadyDelivered) {
-          await this.showLocalNotification(broadcastEvent.payload);
-
-          // Marcar como entregue
-          this.markNotificationAsDelivered(
-            currentUser.id,
-            broadcastEvent.workId,
-            "work_status_change",
-          );
-
+      if (assignedWorks.length > 0) {
+        console.log("📋 LISTA COMPLETA DE OBRAS ATRIBUÍDAS:");
+        assignedWorks.forEach((work, index) => {
           console.log(
-            "✅ Notificação de status via broadcast entregue com sucesso",
+            `   ${index + 1}. ${work.workSheetNumber} - ${work.clientName} (Status: ${work.status})`,
           );
-        } else {
-          console.log("ℹ️ Notificação de status já foi entregue anteriormente");
-        }
+        });
+      } else {
+        console.log("❌ NENHUMA OBRA ENCONTRADA ATRIBUÍDA A ESTE USUÁRIO");
+        console.log("🔍 DEBUGGING - VERIFICANDO TODAS AS OBRAS:");
+        allWorks.slice(0, 5).forEach((work, index) => {
+          console.log(
+            `   ${index + 1}. ${work.workSheetNumber} - Atribuído a: [${work.assignedUsers ? work.assignedUsers.join(", ") : "NENHUM"}]`,
+          );
+        });
       }
-    } catch (error) {
-      console.error(
-        "❌ Erro ao processar broadcast de mudança de status:",
-        error,
+
+      // Filtrar apenas obras pendentes ou em progresso
+      const pendingAssignedWorks = assignedWorks.filter((work: any) => {
+        const isPending =
+          work.status === "pendente" || work.status === "em_progresso";
+        return isPending;
+      });
+
+      console.log(
+        `⏳ OBRAS PENDENTES/EM PROGRESSO: ${pendingAssignedWorks.length}`,
       );
+
+      // VERIFICAR SE USUÁRIO JÁ VIU ESSAS OBRAS (para evitar notificações repetidas)
+      const seenWorksKey = `seen_works_${userId}`;
+      const seenWorks = JSON.parse(localStorage.getItem(seenWorksKey) || "[]");
+
+      const newPendingWorks = pendingAssignedWorks.filter((work: any) => {
+        return !seenWorks.includes(work.id);
+      });
+
+      console.log(
+        `🆕 NOVAS OBRAS PENDENTES (não vistas): ${newPendingWorks.length}`,
+      );
+
+      // Se há obras pendentes NOVAS, mostrar notificação
+      if (newPendingWorks.length > 0) {
+        const mostRecentWork = newPendingWorks[0];
+
+        const payload: NotificationPayload = {
+          title: "🏗️ Nova(s) Obra(s) Atribuída(s)",
+          body:
+            newPendingWorks.length === 1
+              ? `Nova obra atribuída: ${mostRecentWork.workSheetNumber} - ${mostRecentWork.clientName}`
+              : `${newPendingWorks.length} novas obras foram atribuídas a si`,
+          data: {
+            type: "pending_works_summary",
+            count: newPendingWorks.length,
+            works: newPendingWorks.map((w: any) => ({
+              id: w.id,
+              workSheetNumber: w.workSheetNumber,
+              clientName: w.clientName,
+              status: w.status,
+            })),
+          },
+          icon: "/leirisonda-icon.svg",
+        };
+
+        console.log(
+          `🔔 MOSTRANDO NOTIFICAÇÃO para ${newPendingWorks.length} novas obras`,
+        );
+        await this.showLocalNotification(payload);
+
+        // Marcar obras como vistas para evitar notificações repetidas
+        const updatedSeenWorks = [
+          ...seenWorks,
+          ...newPendingWorks.map((w) => w.id),
+        ];
+        localStorage.setItem(seenWorksKey, JSON.stringify(updatedSeenWorks));
+        console.log(`✅ ${newPendingWorks.length} obras marcadas como vistas`);
+      } else {
+        console.log("✅ Nenhuma obra nova para notificar");
+      }
+
+      return pendingAssignedWorks;
+    } catch (error) {
+      console.error("❌ Erro ao verificar obras pendentes atribuídas:", error);
+      return [];
+    }
+  }
+
+  async notifyWorkStatusChange(
+    work: any,
+    oldStatus: string,
+    newStatus: string,
+  ) {
+    console.log("📊 Notificação de mudança de status:", {
+      work: work.workSheetNumber,
+      from: oldStatus,
+      to: newStatus,
+    });
+
+    try {
+      if (!work.assignedUsers || work.assignedUsers.length === 0) {
+        console.log(
+          "⚠️ Obra sem usuários atribuídos, não enviando notificação",
+        );
+        return;
+      }
+
+      const statusLabels: Record<string, string> = {
+        pendente: "Pendente",
+        em_progresso: "Em Progresso",
+        concluida: "Concluída",
+      };
+
+      const payload: NotificationPayload = {
+        title: "📊 Status da Obra Atualizado",
+        body: `Obra ${work.workSheetNumber} - Status alterado para ${statusLabels[newStatus] || newStatus}`,
+        data: {
+          type: "work_status_changed",
+          workId: work.id,
+          workSheetNumber: work.workSheetNumber,
+          clientName: work.clientName,
+          oldStatus,
+          newStatus,
+        },
+        icon: "/leirisonda-icon.svg",
+      };
+
+      // Enviar para todos os usuários atribuídos
+      await this.notifyWorkAssigned(work, work.assignedUsers);
+
+      console.log("✅ Notificação de mudança de status enviada");
+    } catch (error) {
+      console.error("❌ Erro ao notificar mudança de status:", error);
+    }
+  }
+
+  // Função para diagnóstico completo do sistema
+  async runDiagnostics(): Promise<any> {
+    console.log("🔧 INICIANDO DIAGNÓSTICO COMPLETO DO SISTEMA DE NOTIFICAÇÕES");
+
+    const diagnostics = {
+      timestamp: new Date().toISOString(),
+      isSupported: this._isSupported,
+      isInitialized: this._isInitialized,
+      permissions: {},
+      tokens: {},
+      pendingNotifications: 0,
+      recentActivity: {},
+    };
+
+    try {
+      // Verificar permissões
+      if ("Notification" in window) {
+        diagnostics.permissions = {
+          notification: Notification.permission,
+          serviceWorker: "serviceWorker" in navigator,
+          pushManager: "PushManager" in window,
+        };
+      }
+
+      // Verificar tokens salvos
+      const currentUser = JSON.parse(
+        localStorage.getItem("leirisonda_user") || "{}",
+      );
+      if (currentUser.id) {
+        diagnostics.tokens = {
+          userId: currentUser.id,
+          userName: currentUser.name,
+          hasToken: !!this.getUserToken(currentUser.id),
+        };
+      }
+
+      // Verificar notificações pendentes
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+      diagnostics.pendingNotifications = pendingNotifications.length;
+
+      // Verificar atividade recente
+      diagnostics.recentActivity = {
+        lastWorkAssignment: localStorage.getItem(
+          "lastWorkAssignmentNotification",
+        ),
+        lastNotificationUpdate: localStorage.getItem("lastNotificationUpdate"),
+        lastBroadcast: localStorage.getItem("lastNotificationBroadcast")
+          ? "Sim"
+          : "Não",
+      };
+
+      console.log("📋 RESULTADO DO DIAGNÓSTICO:", diagnostics);
+      return diagnostics;
+    } catch (error) {
+      console.error("❌ Erro no diagnóstico:", error);
+      diagnostics.error = error.message;
+      return diagnostics;
     }
   }
 }
 
-export const notificationService = new NotificationServiceClass();
+// Singleton instance
+export const NotificationService = new NotificationServiceClass();
+export default NotificationService;

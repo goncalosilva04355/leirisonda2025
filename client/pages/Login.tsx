@@ -190,7 +190,7 @@ export function Login() {
 
         {/* Form */}
         <div style={{ padding: "32px" }}>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} autoComplete="off">
             <div style={{ marginBottom: "20px" }}>
               <label
                 style={{
@@ -209,6 +209,10 @@ export function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email de acesso"
                 disabled={isSubmitting}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
                 style={{
                   width: "100%",
                   height: "48px",
@@ -242,6 +246,10 @@ export function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Palavra-passe"
                   disabled={isSubmitting}
+                  autoComplete="new-password"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
                   style={{
                     width: "100%",
                     height: "48px",

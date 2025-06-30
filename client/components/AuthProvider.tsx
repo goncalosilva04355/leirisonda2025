@@ -274,22 +274,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           try {
             console.log(`🔔 INICIANDO NOTIFICAÇÕES para ${globalUser.name}...`);
 
-            const { notificationService } = await import(
+            const { NotificationService } = await import(
               "@/services/NotificationService"
             );
 
             // Verificar status antes de inicializar
             console.log("📊 Status antes da inicialização:");
+            console.log(`  • Suportado: ${NotificationService.isSupported}`);
             console.log(
-              `  • Suportado: ${notificationService.getIsSupported()}`,
-            );
-            console.log(
-              `  • Inicializado: ${notificationService.getIsInitialized()}`,
+              `  • Inicializado: ${NotificationService.isInitialized}`,
             );
             console.log(`  • Permissão atual: ${Notification.permission}`);
 
             // Tentar inicializar
-            const initSuccess = await notificationService.initialize();
+            const initSuccess = await NotificationService.initialize();
             console.log(
               `🔔 Inicialização: ${initSuccess ? "✅ SUCESSO" : "❌ FALHA"}`,
             );
@@ -297,13 +295,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (initSuccess) {
               console.log("📊 Status após inicialização:");
               console.log(
-                `  • Inicializado: ${notificationService.getIsInitialized()}`,
+                `  • Inicializado: ${NotificationService.isInitialized}`,
               );
               console.log(`  • Permissão final: ${Notification.permission}`);
 
               // Executar diagnóstico completo para debug
               try {
-                const diagnostics = await notificationService.runDiagnostics();
+                const diagnostics = await NotificationService.runDiagnostics();
                 console.log("🔍 DIAGNÓSTICO COMPLETO:", diagnostics);
 
                 if (diagnostics.recommendations.length > 0) {
@@ -323,7 +321,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     `🔍 Verificando obras pendentes para ${globalUser.name}...`,
                   );
                   const pendingWorks =
-                    await notificationService.checkPendingAssignedWorks(
+                    await NotificationService.checkPendingAssignedWorks(
                       globalUser.id,
                     );
 
@@ -394,7 +392,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   `🔔 INICIANDO NOTIFICAÇÕES para ${dynamicUser.name} (dinâmico)...`,
                 );
 
-                const { notificationService } = await import(
+                const { NotificationService } = await import(
                   "@/services/NotificationService"
                 );
 
@@ -403,15 +401,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   "📊 Status antes da inicialização (usuário dinâmico):",
                 );
                 console.log(
-                  `  • Suportado: ${notificationService.getIsSupported()}`,
+                  `  • Suportado: ${NotificationService.isSupported}`,
                 );
                 console.log(
-                  `  • Inicializado: ${notificationService.getIsInitialized()}`,
+                  `  • Inicializado: ${NotificationService.isInitialized}`,
                 );
                 console.log(`  • Permissão atual: ${Notification.permission}`);
 
                 // Tentar inicializar
-                const initSuccess = await notificationService.initialize();
+                const initSuccess = await NotificationService.initialize();
                 console.log(
                   `🔔 Inicialização (dinâmico): ${initSuccess ? "✅ SUCESSO" : "❌ FALHA"}`,
                 );
@@ -419,7 +417,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 if (initSuccess) {
                   console.log("📊 Status após inicialização (dinâmico):");
                   console.log(
-                    `  • Inicializado: ${notificationService.getIsInitialized()}`,
+                    `  • Inicializado: ${NotificationService.isInitialized}`,
                   );
                   console.log(
                     `  • Permissão final: ${Notification.permission}`,
@@ -432,7 +430,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         `🔍 Verificando obras pendentes para ${dynamicUser.name} (dinâmico)...`,
                       );
                       const pendingWorks =
-                        await notificationService.checkPendingAssignedWorks(
+                        await NotificationService.checkPendingAssignedWorks(
                           dynamicUser.id,
                         );
 

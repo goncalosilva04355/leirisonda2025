@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/components/AuthProvider";
 import { useNotifications } from "@/hooks/use-notifications";
-import { notificationService } from "@/services/NotificationService";
+import { NotificationService } from "@/services/NotificationService";
 
 interface DiagnosticResult {
   environment: string;
@@ -63,7 +63,7 @@ export default function NotificationTest() {
   const runDiagnostics = async () => {
     try {
       console.log("🔍 Executando diagnóstico completo...");
-      const result = await notificationService.runDiagnostics();
+      const result = await NotificationService.runDiagnostics();
       setDiagnostics(result);
       addTestResult(
         "Diagnóstico",
@@ -118,7 +118,7 @@ export default function NotificationTest() {
   const testLocalNotification = async () => {
     try {
       console.log("📱 Testando notificação local...");
-      await notificationService.showLocalNotification({
+      await NotificationService.showLocalNotification({
         title: "🧪 Teste Local",
         body: "Esta é uma notificação de teste local",
         data: { type: "test" },
@@ -195,7 +195,7 @@ export default function NotificationTest() {
       // Atribuir ao Alexandre e Gonçalo
       const assignedUsers = ["admin_goncalo", "user_alexandre"];
 
-      await notificationService.notifyWorkAssigned(testWork, assignedUsers);
+      await NotificationService.notifyWorkAssigned(testWork, assignedUsers);
 
       addTestResult(
         "Atribuição Obra",
@@ -214,7 +214,7 @@ export default function NotificationTest() {
 
     try {
       console.log("📋 Verificando obras pendentes...");
-      const pendingWorks = await notificationService.checkPendingAssignedWorks(
+      const pendingWorks = await NotificationService.checkPendingAssignedWorks(
         user.id,
       );
 

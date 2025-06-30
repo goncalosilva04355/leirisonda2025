@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { notificationService } from "@/services/NotificationService";
+import { NotificationService } from "@/services/NotificationService";
 import { useAuth } from "@/components/AuthProvider";
 
 export interface NotificationStatus {
@@ -25,11 +25,11 @@ export function useNotifications() {
   // Verificar status das notificações
   const checkNotificationStatus = useCallback(async () => {
     try {
-      const isSupported = notificationService.getIsSupported();
+      const isSupported = NotificationService.isSupported;
       const permission =
         "Notification" in window ? Notification.permission : null;
       const isEnabled = permission === "granted";
-      const isInitialized = notificationService.getIsInitialized();
+      const isInitialized = NotificationService.isInitialized;
 
       // Verificar se há token salvo para o usuário atual
       const userTokens = JSON.parse(
@@ -61,7 +61,7 @@ export function useNotifications() {
 
   // Inicializar notificações
   const initializeNotifications = useCallback(async (): Promise<boolean> => {
-    if (!notificationService.getIsSupported()) {
+    if (!NotificationService.isSupported) {
       console.warn("⚠️ Notificações não são suportadas neste dispositivo");
       return false;
     }
@@ -70,7 +70,7 @@ export function useNotifications() {
       setIsLoading(true);
       console.log("🚀 Inicializando notificações...");
 
-      const success = await notificationService.initialize();
+      const success = await NotificationService.initialize();
 
       if (success) {
         console.log("✅ Notificações inicializadas com sucesso");
@@ -122,7 +122,7 @@ export function useNotifications() {
       }
 
       try {
-        await notificationService.notifyWorkAssigned(work, assignedUsers);
+        await NotificationService.notifyWorkAssigned(work, assignedUsers);
       } catch (error) {
         console.error(
           "❌ Erro ao enviar notificação de obra atribuída:",
@@ -142,10 +142,10 @@ export function useNotifications() {
       }
 
       try {
-        await notificationService.notifyWorkStatusChange(
+        await NotificationService.notifyWorkStatusChange(
           work,
+          work.status,
           newStatus,
-          assignedUsers,
         );
       } catch (error) {
         console.error(
@@ -166,7 +166,7 @@ export function useNotifications() {
       }
 
       try {
-        await notificationService.showLocalNotification({
+        await NotificationService.showLocalNotification({
           title,
           body,
           data,
@@ -187,7 +187,7 @@ export function useNotifications() {
     }
 
     try {
-      return await notificationService.checkPendingAssignedWorks(user.id);
+      return await NotificationService.checkPendingAssignedWorks(user.id);
     } catch (error) {
       console.error("❌ Erro ao verificar obras pendentes:", error);
       return [];

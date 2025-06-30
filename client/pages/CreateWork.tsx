@@ -40,6 +40,7 @@ const workTypes = [
   { value: "manutencao", label: "Manutenção" },
   { value: "avaria", label: "Avaria" },
   { value: "montagem", label: "Montagem" },
+  { value: "furo_agua", label: "Furo de Água" },
 ];
 
 const statusOptions = [
@@ -174,6 +175,17 @@ export function CreateWork() {
       observations: "",
       workPerformed: "",
       workSheetCompleted: false,
+      furoAgua: {
+        profundidade: 0,
+        nivelAgua: 0,
+        profundidadeBomba: 0,
+        caudalFuro: 0,
+        tipoColuna: "PEAD",
+        diametroColuna: 0,
+        bombaModelo: "",
+        potenciaMotor: 0,
+        voltagem: "230v",
+      },
     });
 
     const [vehicleInput, setVehicleInput] = useState("");
@@ -353,12 +365,23 @@ export function CreateWork() {
             observations: "",
             workPerformed: "",
             workSheetCompleted: false,
+            furoAgua: {
+              profundidade: 0,
+              nivelAgua: 0,
+              profundidadeBomba: 0,
+              caudalFuro: 0,
+              tipoColuna: "PEAD",
+              diametroColuna: 0,
+              bombaModelo: "",
+              potenciaMotor: 0,
+              voltagem: "230v",
+            },
           });
 
           setIsSubmitting(false);
           setError(""); // Garantir que não há erros visíveis
 
-          console.log("✅ PROCESSO CONCLUÍDO - REDIRECIONANDO...");
+          console.log("�� PROCESSO CONCLUÍDO - REDIRECIONANDO...");
 
           // Navegação DEFINITIVA para Dashboard após guardar obra
           setTimeout(() => {
@@ -733,6 +756,214 @@ export function CreateWork() {
                 </div>
               </div>
             </div>
+
+            {/* Furo de Água Details - Show only when type is furo_agua */}
+            {formData.type === "furo_agua" && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Detalhes do Furo de Água
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div>
+                    <Label htmlFor="profundidade">
+                      Profundidade (metros) *
+                    </Label>
+                    <Input
+                      id="profundidade"
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      value={formData.furoAgua?.profundidade || 0}
+                      onChange={(e) =>
+                        updateFormData("furoAgua", {
+                          ...formData.furoAgua,
+                          profundidade: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                      placeholder="Ex: 150.5"
+                      className="mt-1"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="nivelAgua">Nível da Água (metros) *</Label>
+                    <Input
+                      id="nivelAgua"
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      value={formData.furoAgua?.nivelAgua || 0}
+                      onChange={(e) =>
+                        updateFormData("furoAgua", {
+                          ...formData.furoAgua,
+                          nivelAgua: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                      placeholder="Ex: 25.0"
+                      className="mt-1"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="profundidadeBomba">
+                      Profundidade da Bomba (metros) *
+                    </Label>
+                    <Input
+                      id="profundidadeBomba"
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      value={formData.furoAgua?.profundidadeBomba || 0}
+                      onChange={(e) =>
+                        updateFormData("furoAgua", {
+                          ...formData.furoAgua,
+                          profundidadeBomba: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                      placeholder="Ex: 120.0"
+                      className="mt-1"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="caudalFuro">Caudal do Furo (m³) *</Label>
+                    <Input
+                      id="caudalFuro"
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      value={formData.furoAgua?.caudalFuro || 0}
+                      onChange={(e) =>
+                        updateFormData("furoAgua", {
+                          ...formData.furoAgua,
+                          caudalFuro: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                      placeholder="Ex: 8.5"
+                      className="mt-1"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="tipoColuna">Tipo de Coluna *</Label>
+                    <Select
+                      value={formData.furoAgua?.tipoColuna || "PEAD"}
+                      onValueChange={(value: "PEAD" | "HIDROROSCADO") =>
+                        updateFormData("furoAgua", {
+                          ...formData.furoAgua,
+                          tipoColuna: value,
+                        })
+                      }
+                      disabled={isSubmitting}
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="PEAD">PEAD</SelectItem>
+                        <SelectItem value="HIDROROSCADO">
+                          HIDROROSCADO
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="diametroColuna">
+                      Diâmetro da Coluna (mm) *
+                    </Label>
+                    <Input
+                      id="diametroColuna"
+                      type="number"
+                      min="0"
+                      value={formData.furoAgua?.diametroColuna || 0}
+                      onChange={(e) =>
+                        updateFormData("furoAgua", {
+                          ...formData.furoAgua,
+                          diametroColuna: parseInt(e.target.value) || 0,
+                        })
+                      }
+                      placeholder="Ex: 110"
+                      className="mt-1"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="bombaModelo">
+                      Modelo da Bomba Instalada *
+                    </Label>
+                    <Input
+                      id="bombaModelo"
+                      value={formData.furoAgua?.bombaModelo || ""}
+                      onChange={(e) =>
+                        updateFormData("furoAgua", {
+                          ...formData.furoAgua,
+                          bombaModelo: e.target.value,
+                        })
+                      }
+                      placeholder="Ex: Grundfos SQ 3-65"
+                      className="mt-1"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="potenciaMotor">
+                      Potência do Motor (HP) *
+                    </Label>
+                    <Input
+                      id="potenciaMotor"
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      value={formData.furoAgua?.potenciaMotor || 0}
+                      onChange={(e) =>
+                        updateFormData("furoAgua", {
+                          ...formData.furoAgua,
+                          potenciaMotor: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                      placeholder="Ex: 2.5"
+                      className="mt-1"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="voltagem">Voltagem da Bomba *</Label>
+                    <Select
+                      value={formData.furoAgua?.voltagem || "230v"}
+                      onValueChange={(value: "230v" | "400v") =>
+                        updateFormData("furoAgua", {
+                          ...formData.furoAgua,
+                          voltagem: value,
+                        })
+                      }
+                      disabled={isSubmitting}
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="230v">230V</SelectItem>
+                        <SelectItem value="400v">400V</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Vehicles and Technicians */}
             <div className="bg-white rounded-xl border border-gray-200 p-6">
