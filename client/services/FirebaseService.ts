@@ -165,7 +165,7 @@ export class FirebaseService {
     try {
       const userRef = doc(db, "users", userId);
       await deleteDoc(userRef);
-      console.log("🔥 User deleted from Firebase:", userId);
+      console.log("��� User deleted from Firebase:", userId);
     } catch (error) {
       console.error(
         "Error deleting user from Firebase, falling back to local:",
@@ -604,27 +604,44 @@ export class FirebaseService {
       const maintenancesRef = collection(db, "maintenances");
       const q = query(maintenancesRef, orderBy("createdAt", "desc"));
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const maintenances = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          createdAt:
-            doc.data().createdAt?.toDate?.()?.toISOString() ||
-            doc.data().createdAt,
-          updatedAt:
-            doc.data().updatedAt?.toDate?.()?.toISOString() ||
-            doc.data().updatedAt,
-        })) as PoolMaintenance[];
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const maintenances = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt:
+              doc.data().createdAt?.toDate?.()?.toISOString() ||
+              doc.data().createdAt,
+            updatedAt:
+              doc.data().updatedAt?.toDate?.()?.toISOString() ||
+              doc.data().updatedAt,
+          })) as PoolMaintenance[];
 
-        // Update localStorage backup
-        localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
-        callback(maintenances);
-      });
+          console.log(
+            `🏊 Real-time update: ${maintenances.length} manutenções recebidas`,
+          );
+
+          // Update localStorage backup instantaneously
+          localStorage.setItem(
+            "pool_maintenances",
+            JSON.stringify(maintenances),
+          );
+
+          // Trigger callback with fresh data
+          callback(maintenances);
+        },
+        (error) => {
+          console.error("❌ Erro no listener de manutenções:", error);
+          // Em caso de erro, usar dados locais
+          callback(this.getLocalMaintenances());
+        },
+      );
 
       this.unsubscribes.push(unsubscribe);
       return unsubscribe;
     } catch (error) {
-      console.error("Error listening to maintenances:", error);
+      console.error("Error setting up maintenances listener:", error);
       callback(this.getLocalMaintenances());
       return () => {};
     }
