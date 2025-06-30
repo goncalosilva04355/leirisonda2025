@@ -3,6 +3,9 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
+// Carregar utilitário de limpeza de piscinas
+import "./utils/executeClearMaintenance";
+
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AuthProvider } from "./components/AuthProvider";
