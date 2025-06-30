@@ -917,19 +917,6 @@ export function Dashboard() {
                   </Button>
                 </>
               )}
-              {/* Botão de diagnóstico de notificações (apenas para Gonçalo) */}
-              {user?.email === "gongonsilva@gmail.com" && (
-                <Button
-                  variant="outline"
-                  className="w-full justify-start hover-leirisonda h-auto py-3 border-orange-200 bg-orange-50 hover:bg-orange-100"
-                  onClick={() => navigate("/notification-test")}
-                >
-                  <Bell className="w-4 h-4 mr-3 text-orange-600" />
-                  <span className="text-orange-700">
-                    🧪 Diagnóstico de Notificações
-                  </span>
-                </Button>
-              )}
             </div>
           </div>
 
