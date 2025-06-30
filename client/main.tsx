@@ -37,10 +37,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             {/* Public routes */}
-            <Route path="/emergency" element={<Emergency />} />
             <Route path="/login" element={<Login />} />
             <Route path="/system-status" element={<SystemStatus />} />
-            <Route path="/debug" element={<QuickDiagnostic />} />
 
             {/* Protected routes */}
             <Route
