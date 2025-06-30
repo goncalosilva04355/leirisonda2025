@@ -45,6 +45,16 @@ export class FirebaseService {
     }
   }
 
+  // Método para verificar status detalhado do Firebase
+  getFirebaseStatus() {
+    return {
+      isAvailable: this.isFirebaseAvailable,
+      dbConnection: db !== null && db !== undefined,
+      hasActiveListeners: this.unsubscribes.length > 0,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
   // Users Collection
   async getUsers(): Promise<User[]> {
     if (!this.isFirebaseAvailable) {
