@@ -433,13 +433,29 @@ export class FirebaseService {
         (m) => m.id === maintenanceId,
       );
       if (maintenanceIndex !== -1) {
-        maintenances[maintenanceIndex] = {
-          ...maintenances[maintenanceIndex],
-          ...updates,
-          updatedAt: new Date().toISOString(),
-        };
+        // Se as atualizações incluem intervenções, substitui completamente
+        if (updates.interventions) {
+          maintenances[maintenanceIndex] = {
+            ...maintenances[maintenanceIndex],
+            ...updates,
+            updatedAt: new Date().toISOString(),
+          };
+        } else {
+          // Para outras atualizações, usa spread normal
+          maintenances[maintenanceIndex] = {
+            ...maintenances[maintenanceIndex],
+            ...updates,
+            updatedAt: new Date().toISOString(),
+          };
+        }
         localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
         console.log("📱 Maintenance updated locally:", maintenanceId);
+        console.log(
+          "📱 Total interventions after update:",
+          maintenances[maintenanceIndex].interventions?.length || 0,
+        );
+      } else {
+        console.error("❌ Maintenance not found for update:", maintenanceId);
       }
     } catch (error) {
       console.error("Error updating local maintenance:", error);
