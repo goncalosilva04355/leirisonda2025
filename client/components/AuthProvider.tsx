@@ -296,9 +296,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return false;
           } catch (firebaseError: any) {
             console.log(
-              "⚠️ Firebase Auth failed, trying legacy login...",
+              "⚠️ Firebase Auth failed:",
+              firebaseError.code,
               firebaseError.message,
             );
+
+            // If user doesn't exist, try to create it
+            if (
+              firebaseError.code === "auth/user-not-found" ||
+              firebaseError.code === "auth/wrong-password"
+            ) {
+              console.log("👤 Trying to create user in Firebase...");
+              try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                console.log(
+                  "✅ User created in Firebase, trying login again...",
+                );
+
+                // Try login again after creating user
+                const retryCredential = await signInWithEmailAndPassword(
+                  auth,
+                  email,
+                  password,
+                );
+                const retryUser = retryCredential.user;
+                const userData = await getUserFromFirestore(retryUser);
+
+                if (userData) {
+                  setUser(userData);
+                  localStorage.setItem(
+                    "leirisonda_user",
+                    JSON.stringify(userData),
+                  );
+                  return true;
+                }
+              } catch (createError: any) {
+                console.log(
+                  "⚠️ Failed to create user in Firebase:",
+                  createError.code,
+                  createError.message,
+                );
+              }
+            }
+
+            console.log("🔄 Falling back to legacy login...");
           }
         } else {
           console.log("📱 Firebase not available, using local authentication");
