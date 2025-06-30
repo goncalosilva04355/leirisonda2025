@@ -54,6 +54,19 @@ export function LoginInfo() {
               localStorage.setItem(key, existingPassword);
               console.log(`🔧 Set password for key: ${key}`);
             });
+          } else {
+            // For users without password, create a default one
+            const defaultPassword =
+              user.name.toLowerCase().replace(/\s+/g, "") + "123";
+            passwordKeys.forEach((key) => {
+              localStorage.setItem(key, defaultPassword);
+              console.log(
+                `🔧 Created default password "${defaultPassword}" for key: ${key}`,
+              );
+            });
+            console.log(
+              `⚠️ Created default password for ${user.name}: ${defaultPassword}`,
+            );
           }
         });
 
@@ -63,6 +76,50 @@ export function LoginInfo() {
       }
     } catch (error) {
       console.error("❌ Error in manual fix:", error);
+    }
+  };
+
+  const fixSpecificUser = (userEmail: string) => {
+    try {
+      console.log(`🔧 Fixing specific user: ${userEmail}`);
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        const parsedUsers = JSON.parse(storedUsers);
+        const user = parsedUsers.find((u: any) => u.email === userEmail);
+
+        if (user) {
+          // Create a simple password based on name
+          const newPassword =
+            user.name.toLowerCase().replace(/\s+/g, "") + "123";
+
+          const passwordKeys = [
+            `password_${user.id}`,
+            `password_${user.email}`,
+            `password_${user.email?.trim().toLowerCase()}`,
+          ];
+
+          passwordKeys.forEach((key) => {
+            localStorage.setItem(key, newPassword);
+            console.log(`🔧 Fixed password for key: ${key} = ${newPassword}`);
+          });
+
+          alert(
+            `✅ Password atualizada para ${user.name}!\nEmail: ${user.email}\nPassword: ${newPassword}\n\nPode agora fazer login.`,
+          );
+
+          // Reload debug info
+          setTimeout(() => {
+            setUsers([]); // Clear current state
+            setShowDebug(false);
+            setShowDebug(true);
+          }, 100);
+        } else {
+          alert(`❌ Utilizador ${userEmail} não encontrado.`);
+        }
+      }
+    } catch (error) {
+      console.error("❌ Error fixing specific user:", error);
+      alert(`❌ Erro ao corrigir utilizador: ${error}`);
     }
   };
 
@@ -115,35 +172,7 @@ export function LoginInfo() {
   }, [showDebug]);
 
   if (!showDebug) {
-    return (
-      <div
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          zIndex: 1000,
-        }}
-      >
-        <button
-          onClick={() => setShowDebug(true)}
-          style={{
-            background: "rgba(0, 0, 0, 0.1)",
-            border: "1px solid rgba(0, 0, 0, 0.2)",
-            borderRadius: "20px",
-            padding: "8px 12px",
-            fontSize: "12px",
-            color: "#666",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "5px",
-          }}
-        >
-          <Eye size={14} />
-          Debug Info
-        </button>
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -246,6 +275,7 @@ export function LoginInfo() {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    marginBottom: "4px",
                   }}
                 >
                   <span
@@ -286,6 +316,23 @@ export function LoginInfo() {
                       </div>
                     )}
                   </div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <button
+                    onClick={() => fixSpecificUser(user.email)}
+                    style={{
+                      background: user.hasPassword ? "#17a2b8" : "#dc3545",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "3px",
+                      padding: "3px 8px",
+                      fontSize: "9px",
+                      cursor: "pointer",
+                      width: "100%",
+                    }}
+                  >
+                    {user.hasPassword ? "🔧 Recriar Pass" : "🔑 Criar Pass"}
+                  </button>
                 </div>
               </div>
             ))}
