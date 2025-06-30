@@ -907,8 +907,8 @@ class NotificationServiceClass {
 
     const diagnostics = {
       timestamp: new Date().toISOString(),
-      isSupported: this.isSupported,
-      isInitialized: this.isInitialized,
+      isSupported: this._isSupported,
+      isInitialized: this._isInitialized,
       permissions: {},
       tokens: {},
       pendingNotifications: 0,
