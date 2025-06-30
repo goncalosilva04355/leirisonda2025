@@ -282,23 +282,24 @@ export class FirebaseService {
   }
 
   async updateWork(workId: string, updates: Partial<Work>): Promise<void> {
-    if (!this.isFirebaseAvailable) {
-      return this.updateLocalWork(workId, updates);
-    }
+    // SEMPRE atualizar localmente primeiro (sync instantâneo local)
+    this.updateLocalWork(workId, updates);
 
-    try {
-      const workRef = doc(db, "works", workId);
-      await updateDoc(workRef, {
-        ...updates,
-        updatedAt: serverTimestamp(),
-      });
-      console.log("🔥 Work updated in Firebase:", workId);
-    } catch (error) {
-      console.error(
-        "Error updating work in Firebase, falling back to local:",
-        error,
-      );
-      this.updateLocalWork(workId, updates);
+    // Tentar Firebase em paralelo se disponível
+    if (this.isFirebaseAvailable) {
+      try {
+        const workRef = doc(db, "works", workId);
+        await updateDoc(workRef, {
+          ...updates,
+          updatedAt: serverTimestamp(),
+        });
+        console.log("🔥 Work updated in Firebase:", workId);
+      } catch (error) {
+        console.error(
+          "⚠️ Firebase update failed, work updated locally:",
+          error,
+        );
+      }
     }
   }
 
