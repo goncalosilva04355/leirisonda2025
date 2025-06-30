@@ -29,6 +29,7 @@ import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
 import { MobileDeploy } from "./pages/MobileDeploy";
 import { SystemStatus } from "./pages/SystemStatus";
 import { QuickDiagnostic } from "./pages/QuickDiagnostic";
+import { Emergency } from "./pages/Emergency";
 import { NotFound } from "./pages/NotFound";
 
 function App() {
@@ -97,7 +98,7 @@ const initializeApp = async () => {
     console.log("🚀 Starting Leirisonda initialization...");
 
     // Pre-flight checks
-    console.log("🔍 Running pre-flight checks...");
+    console.log("��� Running pre-flight checks...");
 
     // Check if DOM is ready
     if (document.readyState === "loading") {
