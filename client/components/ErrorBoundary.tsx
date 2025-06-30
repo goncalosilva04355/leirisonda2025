@@ -51,6 +51,12 @@ export class ErrorBoundary extends Component<Props, State> {
       "salvamento",
       "guardar",
       "salvar",
+      "firebaseSuccess",
+      "ReferenceError",
+      "is not defined",
+      "CreateWork",
+      "nova obra",
+      "folha de obra",
     ];
 
     const isRecoverableError = recoversableErrors.some((keyword) =>

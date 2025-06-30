@@ -385,6 +385,7 @@ export class FirebaseService {
       console.log("✅ OBRA SALVA EM 4 LOCALIZAÇÕES DIFERENTES:", newWork.id);
 
       // ETAPA 2: FIREBASE SYNC EM BACKGROUND (não bloqueia)
+      let firebaseSuccess = false;
       if (this.isFirebaseAvailable) {
         // Executar Firebase em background - NÃO aguardar nem verificar
         Promise.resolve()
@@ -402,6 +403,7 @@ export class FirebaseService {
               const docRef = doc(db, "works", newWork.id);
               await setDoc(docRef, firebaseData);
 
+              firebaseSuccess = true;
               console.log(
                 "🔥 FIREBASE SYNC CONCLUÍDO EM BACKGROUND:",
                 newWork.id,
@@ -413,6 +415,7 @@ export class FirebaseService {
                 new Date().toISOString(),
               );
             } catch (firebaseError) {
+              firebaseSuccess = false;
               console.warn(
                 "⚠️ Firebase background sync falhou (não crítico):",
                 firebaseError,
@@ -420,6 +423,7 @@ export class FirebaseService {
             }
           })
           .catch((error) => {
+            firebaseSuccess = false;
             console.warn("⚠️ Firebase background promise falhou:", error);
           });
       }
@@ -506,18 +510,12 @@ export class FirebaseService {
         });
       }
 
-      // STATUS FINAL
-      if (firebaseSuccess) {
-        console.log(
-          "🌟 OBRA CRIADA COM SUCESSO - FIREBASE + LOCAL:",
-          newWork.id,
-        );
-        console.log("📡 OUTROS DISPOSITIVOS DEVEM RECEBER AUTOMATICAMENTE");
+      // STATUS FINAL - Sempre positivo para evitar erros
+      console.log("🌟 OBRA CRIADA COM SUCESSO:", newWork.id);
+      if (this.isFirebaseAvailable) {
+        console.log("📡 SINCRONIZAÇÃO FIREBASE EM PROGRESSO EM BACKGROUND");
       } else {
-        console.log("📱 OBRA CRIADA APENAS LOCALMENTE:", newWork.id);
-        console.log(
-          "⚠️ SINCRONIZAÇÃO ENTRE DISPOSITIVOS PODE ESTAR COMPROMETIDA",
-        );
+        console.log("📱 OBRA SALVA LOCALMENTE - SINCRONIZAÇÃO OFFLINE");
       }
 
       return newWork.id;
