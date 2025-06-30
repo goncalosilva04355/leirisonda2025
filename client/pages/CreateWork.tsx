@@ -154,7 +154,14 @@ export function CreateWork() {
 
   const [vehicleInput, setVehicleInput] = useState("");
   const [technicianInput, setTechnicianInput] = useState("");
-  const [availableUsers] = useState(() => getAllUsers());
+  const [availableUsers] = useState(() => {
+    try {
+      return getAllUsers ? getAllUsers() : [];
+    } catch (error) {
+      console.error("❌ Erro ao obter usuários:", error);
+      return [];
+    }
+  });
 
   function generateWorkSheetNumber(): string {
     const year = new Date().getFullYear();
