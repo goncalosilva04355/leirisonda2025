@@ -1,169 +1,260 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, CheckCircle, AlertTriangle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 import { useAuth } from "@/components/AuthProvider";
+import { firebaseService } from "@/services/FirebaseService";
+import {
+  RefreshCw,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  Wifi,
+  WifiOff,
+  Database,
+  Activity,
+} from "lucide-react";
+
+interface SyncTestResult {
+  type: "success" | "warning" | "error";
+  message: string;
+  details?: any;
+}
 
 export function SyncTestButton() {
   const { user } = useAuth();
-  const { createWork, works, isOnline, syncData } = useFirebaseSync();
-  const [isRunning, setIsRunning] = useState(false);
-  const [testResult, setTestResult] = useState<string | null>(null);
+  const {
+    works,
+    maintenances,
+    isOnline,
+    isSyncing,
+    isFirebaseAvailable,
+    syncData,
+  } = useFirebaseSync();
 
-  // Só mostrar para o Gonçalo
-  if (!user || user.email !== "gongonsilva@gmail.com") {
-    return null;
-  }
+  const [isTestingSync, setIsTestingSync] = useState(false);
+  const [testResults, setTestResults] = useState<SyncTestResult[]>([]);
 
   const runSyncTest = async () => {
-    setIsRunning(true);
-    setTestResult(null);
+    if (!user) return;
+
+    setIsTestingSync(true);
+    setTestResults([]);
+    const results: SyncTestResult[] = [];
 
     try {
-      console.log("🧪 INICIANDO TESTE COMPLETO DE SINCRONIZAÇÃO...");
+      // Test 1: Conectividade
+      results.push({
+        type: isOnline ? "success" : "error",
+        message: `Conectividade: ${isOnline ? "Online" : "Offline"}`,
+        details: { navigator_online: navigator.onLine },
+      });
 
-      const startTime = Date.now();
-      const timestamp = new Date().toISOString();
+      // Test 2: Firebase disponibilidade
+      results.push({
+        type: isFirebaseAvailable ? "success" : "error",
+        message: `Firebase: ${isFirebaseAvailable ? "Disponível" : "Indisponível"}`,
+        details: firebaseService.getFirebaseStatus(),
+      });
 
-      // 1. Criar obra teste
-      const testWork = {
-        workSheetNumber: `SYNC-TEST-${startTime}`,
-        type: "piscina" as const,
-        clientName: `🧪 TESTE SYNC ${timestamp}`,
-        address: "Endereço de teste",
-        contact: "123456789",
-        entryTime: new Date().toISOString(),
-        status: "pendente" as const,
-        vehicles: ["Viatura Teste"],
-        technicians: ["Técnico Teste"],
-        assignedUsers: ["user_alexandre"],
-        photos: [],
-        observations: `Obra de teste criada em ${timestamp}`,
-        workPerformed: "Teste de sincronização",
-        workSheetCompleted: false,
-      };
-
-      console.log("📤 Criando obra teste...");
-      const workId = await createWork(testWork);
-      console.log(`✅ Obra teste criada: ${workId}`);
-
-      // 2. Aguardar um pouco para propagação
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      // 3. Forçar sincronização
-      console.log("🔄 Forçando sincronização...");
-      await syncData();
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // 4. Verificar múltiplas fontes
-      const localStorage1 = JSON.parse(localStorage.getItem("works") || "[]");
-      const localStorage2 = JSON.parse(
-        localStorage.getItem("leirisonda_works") || "[]",
-      );
-      const sessionStorage1 = JSON.parse(
-        sessionStorage.getItem("temp_works") || "[]",
+      // Test 3: Dados locais
+      const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const localMaintenances = JSON.parse(
+        localStorage.getItem("pool_maintenances") || "[]",
       );
 
-      const foundInLS1 = localStorage1.find((w: any) => w.id === workId);
-      const foundInLS2 = localStorage2.find((w: any) => w.id === workId);
-      const foundInSS = sessionStorage1.find((w: any) => w.id === workId);
-      const foundInSync = works.find((w) => w.id === workId);
-
-      const endTime = Date.now();
-      const duration = endTime - startTime;
-
-      const result = {
-        workId,
-        duration: `${duration}ms`,
-        success: !!(foundInLS1 && foundInLS2 && foundInSS && foundInSync),
-        storageStatus: {
-          localStorage1: !!foundInLS1,
-          localStorage2: !!foundInLS2,
-          sessionStorage: !!foundInSS,
-          syncedWorks: !!foundInSync,
+      results.push({
+        type: localWorks.length > 0 ? "success" : "warning",
+        message: `Dados Locais: ${localWorks.length} obras, ${localMaintenances.length} manutenções`,
+        details: {
+          localWorks: localWorks.length,
+          localMaintenances: localMaintenances.length,
         },
-        isOnline,
-        timestamp,
-        assignedToAlexandre:
-          foundInSync?.assignedUsers?.includes("user_alexandre") || false,
-      };
+      });
 
-      console.log("🧪 RESULTADO DO TESTE:", result);
-
-      if (result.success) {
-        setTestResult(`✅ TESTE APROVADO
-Obra criada e sincronizada com sucesso!
-ID: ${workId}
-Duração: ${duration}ms
-Atribuída ao Alexandre: ${result.assignedToAlexandre ? "Sim" : "Não"}
-
-AGORA TESTE NO DISPOSITIVO DO ALEXANDRE:
-- Abra a app no dispositivo dele
-- Vá ao Dashboard
-- Procure por: "${testWork.clientName}"
-- Deve aparecer na seção "Suas Obras Atribuídas"`);
+      // Test 4: Sync manual
+      if (isFirebaseAvailable && isOnline) {
+        try {
+          await syncData();
+          results.push({
+            type: "success",
+            message: "Sincronização manual: Sucesso",
+            details: { timestamp: new Date().toISOString() },
+          });
+        } catch (error) {
+          results.push({
+            type: "error",
+            message: `Sincronização manual: Erro - ${error.message}`,
+            details: { error: error.message },
+          });
+        }
       } else {
-        setTestResult(`❌ TESTE FALHADO
-Problema na sincronização detectado!
-ID: ${workId}
-Duração: ${duration}ms
-
-Status dos storages:
-- localStorage 'works': ${result.storageStatus.localStorage1 ? "✅" : "❌"}
-- localStorage 'leirisonda_works': ${result.storageStatus.localStorage2 ? "✅" : "❌"}
-- sessionStorage 'temp_works': ${result.storageStatus.sessionStorage ? "✅" : "❌"}
-- useFirebaseSync: ${result.storageStatus.syncedWorks ? "✅" : "❌"}
-- Online: ${isOnline ? "✅" : "❌"}
-
-AÇÃO NECESSÁRIA: Verificar configuração Firebase`);
+        results.push({
+          type: "warning",
+          message:
+            "Sincronização manual: Não disponível (offline ou Firebase indisponível)",
+          details: { isOnline, isFirebaseAvailable },
+        });
       }
-    } catch (error) {
-      console.error("❌ Erro no teste:", error);
-      setTestResult(`❌ ERRO NO TESTE
-${error instanceof Error ? error.message : String(error)}
 
-Verifique:
-1. Conexão com internet
-2. Configuração Firebase
-3. Permissões do navegador`);
+      // Test 5: Verificar atribuições
+      const worksWithAssignments = works.filter(
+        (w) => w.assignedUsers && w.assignedUsers.length > 0,
+      );
+      const alexandreWorks = works.filter(
+        (w) => w.assignedUsers && w.assignedUsers.includes("user_alexandre"),
+      );
+
+      results.push({
+        type: worksWithAssignments.length > 0 ? "success" : "warning",
+        message: `Atribuições: ${worksWithAssignments.length} obras atribuídas (${alexandreWorks.length} para Alexandre)`,
+        details: {
+          totalWithAssignments: worksWithAssignments.length,
+          alexandreWorks: alexandreWorks.length,
+          assignedWorks: worksWithAssignments.map((w) => ({
+            id: w.id,
+            client: w.clientName,
+            assigned: w.assignedUsers,
+          })),
+        },
+      });
+
+      // Test 6: Consolidação de backups
+      const consolidated = firebaseService.consolidateWorksFromAllBackups();
+      results.push({
+        type: consolidated.length === works.length ? "success" : "warning",
+        message: `Backups: ${consolidated.length} obras consolidadas vs ${works.length} ativas`,
+        details: { consolidated: consolidated.length, active: works.length },
+      });
+    } catch (error) {
+      results.push({
+        type: "error",
+        message: `Erro no teste: ${error.message}`,
+        details: { error: error.message },
+      });
     } finally {
-      setIsRunning(false);
+      setTestResults(results);
+      setIsTestingSync(false);
     }
   };
 
+  const getResultIcon = (type: string) => {
+    switch (type) {
+      case "success":
+        return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case "warning":
+        return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+      case "error":
+        return <XCircle className="w-4 h-4 text-red-500" />;
+      default:
+        return <Activity className="w-4 h-4 text-blue-500" />;
+    }
+  };
+
+  const getBadgeVariant = (type: string) => {
+    switch (type) {
+      case "success":
+        return "default";
+      case "warning":
+        return "secondary";
+      case "error":
+        return "destructive";
+      default:
+        return "outline";
+    }
+  };
+
+  if (!user) return null;
+
   return (
     <div className="space-y-4">
+      {/* Status rápido */}
+      <div className="flex items-center gap-2 mb-4">
+        <Badge
+          variant={isOnline ? "default" : "destructive"}
+          className="flex items-center gap-1"
+        >
+          {isOnline ? (
+            <Wifi className="w-3 h-3" />
+          ) : (
+            <WifiOff className="w-3 h-3" />
+          )}
+          {isOnline ? "Online" : "Offline"}
+        </Badge>
+        <Badge
+          variant={isFirebaseAvailable ? "default" : "destructive"}
+          className="flex items-center gap-1"
+        >
+          <Database className="w-3 h-3" />
+          Firebase {isFirebaseAvailable ? "OK" : "Erro"}
+        </Badge>
+        <Badge
+          variant={isSyncing ? "secondary" : "outline"}
+          className="flex items-center gap-1"
+        >
+          <RefreshCw className={`w-3 h-3 ${isSyncing ? "animate-spin" : ""}`} />
+          {isSyncing ? "Sincronizando..." : "Inativo"}
+        </Badge>
+      </div>
+
+      {/* Botão de teste */}
       <Button
         onClick={runSyncTest}
-        disabled={isRunning}
-        className="bg-purple-600 hover:bg-purple-700"
+        disabled={isTestingSync}
+        className="w-full"
+        size="sm"
       >
         <RefreshCw
-          className={`w-4 h-4 mr-2 ${isRunning ? "animate-spin" : ""}`}
+          className={`w-4 h-4 mr-2 ${isTestingSync ? "animate-spin" : ""}`}
         />
-        {isRunning ? "Testando..." : "🧪 Teste Completo de Sync"}
+        {isTestingSync ? "Testando Sincronização..." : "Testar Sincronização"}
       </Button>
 
-      {testResult && (
-        <div
-          className={`p-4 rounded-lg border ${
-            testResult.includes("APROVADO")
-              ? "bg-green-50 border-green-200"
-              : "bg-red-50 border-red-200"
-          }`}
-        >
-          <div className="flex items-start space-x-2">
-            {testResult.includes("APROVADO") ? (
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-            ) : (
-              <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-            )}
-            <pre className="text-sm font-mono whitespace-pre-wrap text-gray-900">
-              {testResult}
-            </pre>
-          </div>
+      {/* Resultados dos testes */}
+      {testResults.length > 0 && (
+        <div className="space-y-2">
+          {testResults.map((result, index) => (
+            <Alert key={index}>
+              <div className="flex items-start gap-2">
+                {getResultIcon(result.type)}
+                <div className="flex-1">
+                  <AlertDescription className="text-sm">
+                    <div className="flex items-center justify-between">
+                      <span>{result.message}</span>
+                      <Badge variant={getBadgeVariant(result.type)} size="sm">
+                        {result.type}
+                      </Badge>
+                    </div>
+                    {result.details && (
+                      <details className="mt-2">
+                        <summary className="cursor-pointer text-xs text-gray-500 hover:text-gray-700">
+                          Ver detalhes
+                        </summary>
+                        <pre className="text-xs bg-gray-50 p-2 rounded mt-1 overflow-auto">
+                          {JSON.stringify(result.details, null, 2)}
+                        </pre>
+                      </details>
+                    )}
+                  </AlertDescription>
+                </div>
+              </div>
+            </Alert>
+          ))}
         </div>
       )}
+
+      {/* Resumo rápido */}
+      <div className="text-xs text-gray-600 p-2 bg-gray-50 rounded">
+        <div className="flex justify-between">
+          <span>Obras: {works.length}</span>
+          <span>Manutenções: {maintenances.length}</span>
+          <span>
+            Atribuídas:{" "}
+            {works.filter((w) => w.assignedUsers?.length > 0).length}
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
