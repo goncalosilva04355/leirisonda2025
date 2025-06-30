@@ -208,6 +208,16 @@ class NotificationServiceClass {
       window.location.href = `/work/${data.workId}`;
     } else if (data.type === "work_assigned") {
       window.location.href = "/dashboard";
+    } else if (data.type === "pending_works_summary") {
+      // Redirecionar para dashboard com foco nas obras atribuídas
+      window.location.href = "/dashboard#assigned-works";
+    } else if (data.type === "work_status_change") {
+      // Redirecionar para a obra específica ou dashboard
+      if (data.workId) {
+        window.location.href = `/work/${data.workId}`;
+      } else {
+        window.location.href = "/dashboard";
+      }
     }
   }
 
@@ -387,7 +397,7 @@ class NotificationServiceClass {
         );
       } else {
         console.log(
-          `ℹ️ Usuário atual (${currentUser.name || "Desconhecido"}) não está entre os atribuídos - não mostrar notificação de status`,
+          `���️ Usuário atual (${currentUser.name || "Desconhecido"}) não está entre os atribuídos - não mostrar notificação de status`,
         );
       }
 
