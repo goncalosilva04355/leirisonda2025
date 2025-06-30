@@ -373,23 +373,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 foundUser.id,
               );
 
-              // Check password
-              const storedPassword = localStorage.getItem(
+              // Check password - try multiple storage keys for compatibility
+              let storedPassword = localStorage.getItem(
                 `password_${foundUser.id}`,
               );
+
+              // If not found with ID, try with email (fallback)
+              if (!storedPassword) {
+                storedPassword = localStorage.getItem(
+                  `password_${foundUser.email}`,
+                );
+              }
+
+              // Try with just the email as key
+              if (!storedPassword) {
+                storedPassword = localStorage.getItem(`password_${email}`);
+              }
+
               console.log("🔐 Password check:", {
+                userId: foundUser.id,
+                userEmail: foundUser.email,
                 hasStoredPassword: !!storedPassword,
                 passwordsMatch: storedPassword === password,
                 inputPassword: password ? "***provided***" : "empty",
                 storedPassword: storedPassword ? "***stored***" : "not found",
+                testedKeys: [
+                  `password_${foundUser.id}`,
+                  `password_${foundUser.email}`,
+                  `password_${email}`,
+                ],
               });
 
               if (storedPassword === password) {
                 console.log("✅ Dynamic user authenticated:", foundUser.name);
-                setUser(foundUser);
+
+                // Ensure user has complete data structure
+                const completeUser = {
+                  ...foundUser,
+                  permissions:
+                    foundUser.permissions ||
+                    (foundUser.role === "admin"
+                      ? defaultAdminPermissions
+                      : defaultUserPermissions),
+                  createdAt: foundUser.createdAt || new Date().toISOString(),
+                  updatedAt: foundUser.updatedAt || new Date().toISOString(),
+                };
+
+                setUser(completeUser);
                 localStorage.setItem(
                   "leirisonda_user",
-                  JSON.stringify(foundUser),
+                  JSON.stringify(completeUser),
                 );
 
                 // Try Firebase in background for future sync
@@ -429,9 +462,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 return true;
               } else {
                 console.log("❌ Invalid password for dynamic user");
+                console.log("🔍 Debugging password mismatch:", {
+                  provided: password,
+                  stored: storedPassword,
+                  match: storedPassword === password,
+                  providedLength: password?.length,
+                  storedLength: storedPassword?.length,
+                });
               }
             } else {
               console.log("❌ Dynamic user not found for email:", email);
+              console.log(
+                "🔍 Available users:",
+                users.map((u: User) => ({
+                  id: u.id,
+                  email: u.email,
+                  name: u.name,
+                })),
+              );
             }
           } else {
             console.log("📂 No stored users found in localStorage");
