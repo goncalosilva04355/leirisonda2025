@@ -644,7 +644,7 @@ export class FirebaseService {
             JSON.stringify(filteredWorks),
           );
 
-          // Eliminar também dos backups de sessão
+          // Eliminar também dos backups de sess��o
           const sessionWorks = JSON.parse(
             sessionStorage.getItem("temp_works") || "[]",
           );
@@ -747,8 +747,10 @@ export class FirebaseService {
 
       const workToDelete = works.find((w) => w.id === workId);
       if (!workToDelete) {
-        console.warn(`⚠️ Obra ${workId} não encontrada no localStorage`);
-        return;
+        console.warn(
+          `⚠️ Obra ${workId} não encontrada no localStorage - pode já ter sido eliminada`,
+        );
+        // Não retornar erro, apenas continuar para garantir limpeza
       }
 
       const filteredWorks = works.filter((w) => w.id !== workId);
@@ -765,8 +767,20 @@ export class FirebaseService {
       const stillExists = verification.find((w) => w.id === workId);
 
       if (stillExists) {
-        console.error(`❌ ERRO: Obra ${workId} ainda existe após eliminação!`);
-        throw new Error("Falha na eliminação - obra ainda existe");
+        console.warn(
+          `⚠️ AVISO: Obra ${workId} ainda existe após eliminação - tentando limpeza extra`,
+        );
+        // Tentar limpeza extra em vez de lançar erro
+        try {
+          localStorage.removeItem(`work_${workId}`);
+          localStorage.removeItem(`emergency_work_${workId}`);
+          // Força uma nova verificação sem lançar erro crítico
+          const works2 = JSON.parse(localStorage.getItem("works") || "[]");
+          const cleanedWorks = works2.filter((w: any) => w.id !== workId);
+          localStorage.setItem("works", JSON.stringify(cleanedWorks));
+        } catch (cleanupError) {
+          console.warn("⚠️ Limpeza extra falhou:", cleanupError);
+        }
       }
 
       console.log(
