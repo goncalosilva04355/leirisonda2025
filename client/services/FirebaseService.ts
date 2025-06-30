@@ -766,6 +766,73 @@ export class FirebaseService {
     this.unsubscribes = [];
   }
 
+  // Force sync global users from Firebase to localStorage (para resolver problemas de sincronização)
+  async syncGlobalUsersFromFirebase(): Promise<void> {
+    if (!this.isFirebaseAvailable) {
+      console.log("📱 Firebase not available, skipping global users sync");
+      return;
+    }
+
+    try {
+      console.log("🔄 Sincronizando utilizadores globais do Firebase...");
+
+      // Buscar todos os utilizadores do Firebase
+      const firebaseUsers = await this.getUsers();
+
+      // Utilizadores globais que devem existir
+      const requiredGlobalUsers = [
+        "gongonsilva@gmail.com",
+        "alexkamaryta@gmail.com",
+      ];
+
+      let localUsers = this.getLocalUsers();
+      let modified = false;
+
+      // Verificar se os utilizadores globais estão no localStorage
+      for (const requiredEmail of requiredGlobalUsers) {
+        const localUser = localUsers.find((u) => u.email === requiredEmail);
+        const firebaseUser = firebaseUsers.find(
+          (u) => u.email === requiredEmail,
+        );
+
+        if (!localUser && firebaseUser) {
+          console.log(
+            `➕ Sincronizando utilizador global do Firebase: ${firebaseUser.name}`,
+          );
+          localUsers.push(firebaseUser);
+          modified = true;
+
+          // Restaurar passwords para utilizadores globais
+          const password =
+            requiredEmail === "gongonsilva@gmail.com"
+              ? "19867gsf"
+              : "69alexandre";
+          const passwordKeys = [
+            `password_${firebaseUser.id}`,
+            `password_${firebaseUser.email}`,
+            `password_${firebaseUser.email.toLowerCase()}`,
+            `password_${firebaseUser.email.trim().toLowerCase()}`,
+          ];
+
+          passwordKeys.forEach((key) => {
+            localStorage.setItem(key, password);
+          });
+
+          console.log(
+            `✅ Utilizador ${firebaseUser.name} sincronizado com password: ${password}`,
+          );
+        }
+      }
+
+      if (modified) {
+        localStorage.setItem("users", JSON.stringify(localUsers));
+        console.log("✅ Utilizadores globais sincronizados do Firebase");
+      }
+    } catch (error) {
+      console.error("❌ Erro ao sincronizar utilizadores globais:", error);
+    }
+  }
+
   // Get Firebase availability status
   getFirebaseStatus(): { isAvailable: boolean; message: string } {
     return {
