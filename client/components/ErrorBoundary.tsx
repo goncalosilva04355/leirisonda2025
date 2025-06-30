@@ -22,6 +22,32 @@ export class ErrorBoundary extends Component<Props, State> {
     console.log("🚨 ErrorBoundary caught error:", error.message);
     console.log("🚨 Error stack:", error.stack);
 
+    // Verificar se é um erro recorrente
+    const errorKey = `error_${error.message?.slice(0, 50)}`;
+    const errorCount = parseInt(localStorage.getItem(errorKey) || "0");
+    localStorage.setItem(errorKey, String(errorCount + 1));
+
+    // Se for erro recorrente (>= 3 vezes), forçar reload completo
+    if (errorCount >= 2) {
+      console.warn(
+        `⚠️ Erro recorrente detectado (${errorCount + 1}x): ${error.message}`,
+      );
+      localStorage.removeItem(errorKey);
+
+      // Limpar possíveis dados corrompidos
+      try {
+        localStorage.removeItem("leirisonda_user");
+        sessionStorage.clear();
+      } catch (clearError) {
+        console.error("Erro ao limpar dados:", clearError);
+      }
+
+      setTimeout(() => {
+        console.log("🔄 Auto-reloading devido a erro recorrente...");
+        window.location.href = "/login";
+      }, 1000);
+    }
+
     // Handle common development errors
     if (
       error.message?.includes("useAuth must be used within") ||
