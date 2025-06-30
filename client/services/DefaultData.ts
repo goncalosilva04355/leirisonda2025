@@ -116,6 +116,9 @@ export class DefaultDataService {
           case "user@leirisonda.pt":
             password = "user123";
             break;
+          case "alexkamaryta@gmail.com":
+            password = "69alexandre";
+            break;
         }
 
         if (password) {
