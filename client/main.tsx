@@ -102,6 +102,10 @@ function App() {
                 element={<NotificationSettingsPage />}
               />
               <Route path="notification-test" element={<NotificationTest />} />
+              <Route
+                path="notification-diagnostic"
+                element={<NotificationDiagnostic />}
+              />
             </Route>
 
             {/* Catch-all route */}
