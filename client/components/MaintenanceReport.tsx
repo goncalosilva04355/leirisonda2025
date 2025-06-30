@@ -143,10 +143,10 @@ export function MaintenanceReport({
     const timestamp = new Date().toISOString();
 
     return `
-      <!-- Pool Information - Updated ${timestamp} -->
+      <!-- Pool Information -->
       <div class="section">
         <div class="section-header">
-          <div class="section-title">🏊‍♂️ Informações Completas da Piscina</div>
+          <div class="section-title">Informações da Piscina</div>
         </div>
         <div class="section-content">
           <div class="info-grid">
