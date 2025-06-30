@@ -347,6 +347,73 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return true;
         }
 
+        // Check for dynamically created users
+        console.log("🔍 Checking dynamically created users...");
+        try {
+          const storedUsers = localStorage.getItem("users");
+          if (storedUsers) {
+            const users = JSON.parse(storedUsers);
+            const foundUser = users.find((u: User) => u.email === email);
+
+            if (foundUser) {
+              // Check password
+              const storedPassword = localStorage.getItem(
+                `password_${foundUser.id}`,
+              );
+              if (storedPassword === password) {
+                console.log("✅ Dynamic user authenticated:", foundUser.name);
+                setUser(foundUser);
+                localStorage.setItem(
+                  "leirisonda_user",
+                  JSON.stringify(foundUser),
+                );
+
+                // Try Firebase in background for future sync
+                if (auth && auth !== null) {
+                  setTimeout(async () => {
+                    try {
+                      console.log(
+                        "🔄 Attempting Firebase login in background for dynamic user...",
+                      );
+                      await signInWithEmailAndPassword(auth, email, password);
+                      console.log("✅ Firebase auth successful");
+                      await firebaseService.syncLocalDataToFirebase();
+                    } catch (bgError: any) {
+                      if (bgError.code === "auth/user-not-found") {
+                        try {
+                          await createUserWithEmailAndPassword(
+                            auth,
+                            email,
+                            password,
+                          );
+                          console.log("✅ User created in Firebase");
+                        } catch (createError) {
+                          console.log(
+                            "ℹ️ Firebase user creation failed:",
+                            createError,
+                          );
+                        }
+                      }
+                      console.log(
+                        "ℹ️ Firebase background auth failed:",
+                        bgError.code,
+                      );
+                    }
+                  }, 100);
+                }
+
+                return true;
+              } else {
+                console.log("❌ Invalid password for dynamic user");
+              }
+            } else {
+              console.log("❌ Dynamic user not found");
+            }
+          }
+        } catch (error) {
+          console.error("❌ Error checking dynamic users:", error);
+        }
+
         console.log("❌ Local credentials invalid, trying Firebase...");
 
         // Check if Firebase is available
