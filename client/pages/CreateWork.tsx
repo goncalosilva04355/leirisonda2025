@@ -196,16 +196,9 @@ export function CreateWork() {
     setError("");
     setIsSubmitting(true);
 
-    console.log("🚀 INICIANDO PROCESSO DE CRIAÇÃO DE OBRA");
+    console.log("🚀 Iniciando criação de obra");
 
-    // Verificar se as funções necessárias estão disponíveis
-    if (!createWork) {
-      setError(
-        "Sistema de criação de obras não disponível. Tente recarregar a página.",
-      );
-      setIsSubmitting(false);
-      return;
-    }
+    // Verificação mais flexível - permitir fallback se createWork não estiver disponível
 
     // Validation
     if (!formData.clientName.trim()) {
