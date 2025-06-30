@@ -26,8 +26,16 @@ export function Login() {
 
   const { user, login, isLoading } = authContext;
 
+  console.log("🔍 Login component state:", {
+    user: user?.email || "No user",
+    isLoading,
+    authReady,
+    authContextAvailable: !!authContext,
+  });
+
   useEffect(() => {
     const timer = setTimeout(() => {
+      console.log("✅ Auth ready state set to true");
       setAuthReady(true);
     }, 100);
     return () => clearTimeout(timer);
