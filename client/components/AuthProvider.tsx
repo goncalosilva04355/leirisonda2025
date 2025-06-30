@@ -323,91 +323,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(true);
         setInitError(null);
 
-        console.log("🔐 Starting login process for:", email);
+        console.log("🔐 SIMPLE LOGIN for:", email);
 
-        // Run user data correction first
-        fixUserData();
-
-        // Check hardcoded users first
-        const globalUsers = [
-          {
+        // DIRECT LOGIN CHECK - No complexity
+        if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
+          const user = {
+            id: "admin_goncalo",
             email: "gongonsilva@gmail.com",
-            password: "19867gsf",
-            user: {
-              id: "admin_goncalo",
-              email: "gongonsilva@gmail.com",
-              name: "Gonçalo Fonseca",
-              role: "admin" as const,
-              permissions: defaultAdminPermissions,
-              createdAt: new Date().toISOString(),
-            },
-          },
-          {
+            name: "Gonçalo Fonseca",
+            role: "admin" as const,
+            permissions: defaultAdminPermissions,
+            createdAt: new Date().toISOString(),
+          };
+          setUser(user);
+          localStorage.setItem("leirisonda_user", JSON.stringify(user));
+          console.log("✅ GONÇALO LOGIN SUCCESS");
+          return true;
+        }
+
+        if (email === "alexkamaryta@gmail.com" && password === "69alexandre") {
+          const user = {
+            id: "user_alexandre",
             email: "alexkamaryta@gmail.com",
-            password: "69alexandre",
-            user: {
-              id: "user_alexandre",
-              email: "alexkamaryta@gmail.com",
-              name: "Alexandre Fernandes",
-              role: "user" as const,
-              permissions: {
-                ...defaultUserPermissions,
-                canEditWorks: true,
-                canEditMaintenance: true,
-                canViewReports: true,
-              },
-              createdAt: new Date().toISOString(),
+            name: "Alexandre Fernandes",
+            role: "user" as const,
+            permissions: {
+              ...defaultUserPermissions,
+              canEditWorks: true,
+              canEditMaintenance: true,
+              canViewReports: true,
             },
-          },
-        ];
-
-        console.log("🔍 Checking hardcoded credentials...");
-        console.log(
-          "Available users:",
-          globalUsers.map((u) => `${u.email} / ${u.password}`),
-        );
-        console.log("Login attempt:", `${email} / ${password}`);
-
-        const localUser = globalUsers.find(
-          (u) => u.email === email && u.password === password,
-        );
-
-        if (localUser) {
-          console.log("✅ Local user authenticated:", localUser.user.name);
-          setUser(localUser.user);
-          localStorage.setItem(
-            "leirisonda_user",
-            JSON.stringify(localUser.user),
-          );
-
-          // Try Firebase in background for future sync
-          if (auth && auth !== null) {
-            setTimeout(async () => {
-              try {
-                console.log("🔄 Attempting Firebase login in background...");
-                await signInWithEmailAndPassword(auth, email, password);
-                console.log("✅ Firebase auth successful");
-                await firebaseService.syncLocalDataToFirebase();
-              } catch (bgError: any) {
-                if (bgError.code === "auth/user-not-found") {
-                  try {
-                    await createUserWithEmailAndPassword(auth, email, password);
-                    console.log("✅ User created in Firebase");
-                  } catch (createError) {
-                    console.log(
-                      "ℹ️ Firebase user creation failed:",
-                      createError,
-                    );
-                  }
-                }
-                console.log(
-                  "ℹ️ Firebase background auth failed:",
-                  bgError.code,
-                );
-              }
-            }, 100);
-          }
-
+            createdAt: new Date().toISOString(),
+          };
+          setUser(user);
+          localStorage.setItem("leirisonda_user", JSON.stringify(user));
+          console.log("✅ ALEXANDRE LOGIN SUCCESS");
           return true;
         }
 
