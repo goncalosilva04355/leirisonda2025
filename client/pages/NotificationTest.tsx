@@ -417,6 +417,30 @@ export default function NotificationTest() {
               📋 Obras Pendentes
             </Button>
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+            <Button
+              onClick={checkPendingNotifications}
+              variant="outline"
+              className="w-full"
+            >
+              📨 Notificações Pendentes
+            </Button>
+            <Button
+              onClick={() => {
+                localStorage.removeItem("pendingNotifications");
+                addTestResult(
+                  "Limpeza",
+                  true,
+                  "Notificações pendentes limpas",
+                  {},
+                );
+              }}
+              variant="destructive"
+              className="w-full"
+            >
+              🗑️ Limpar Pendentes
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
