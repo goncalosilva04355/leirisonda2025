@@ -19,33 +19,57 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(error: Error): State {
+    console.log("🚨 ErrorBoundary caught error:", error.message);
+
     // Handle common development errors
     if (error.message?.includes("useAuth must be used within")) {
-      console.warn(
-        "AuthProvider context error caught, ignoring during development",
-      );
-      return { hasError: false, retryCount: 0 };
+      console.warn("AuthProvider context error caught, will try to recover...");
+      // Mark for retry instead of ignoring
+      return { hasError: true, error, retryCount: 0 };
     }
 
     // Handle Firebase initialization errors
     if (
       error.message?.includes("Firebase") ||
-      error.message?.includes("firebase")
+      error.message?.includes("firebase") ||
+      error.message?.includes("auth/") ||
+      error.message?.includes("firestore/")
     ) {
-      console.warn("Firebase error caught:", error.message);
-      // Try to continue without breaking the app
-      return { hasError: false, retryCount: 0 };
+      console.warn(
+        "Firebase error caught, will show recovery options:",
+        error.message,
+      );
+      return { hasError: true, error, retryCount: 0 };
     }
 
     // Handle module loading errors
     if (
       error.message?.includes("Loading chunk") ||
-      error.message?.includes("ChunkLoadError")
+      error.message?.includes("ChunkLoadError") ||
+      error.message?.includes("Failed to fetch")
     ) {
-      console.warn("Chunk loading error, will reload");
-      // Auto-reload for chunk errors
-      setTimeout(() => window.location.reload(), 1000);
-      return { hasError: false, retryCount: 0 };
+      console.warn("Chunk loading error, will show reload options");
+      return { hasError: true, error, retryCount: 0 };
+    }
+
+    // Handle network/connectivity errors
+    if (
+      error.message?.includes("NetworkError") ||
+      error.message?.includes("Failed to fetch") ||
+      error.message?.includes("fetch")
+    ) {
+      console.warn("Network error caught:", error.message);
+      return { hasError: true, error, retryCount: 0 };
+    }
+
+    // Handle import/module errors
+    if (
+      error.message?.includes("Cannot resolve module") ||
+      error.message?.includes("Module not found") ||
+      error.message?.includes("import")
+    ) {
+      console.warn("Module import error:", error.message);
+      return { hasError: true, error, retryCount: 0 };
     }
 
     return { hasError: true, error, retryCount: 0 };
