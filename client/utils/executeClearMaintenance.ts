@@ -37,11 +37,6 @@ if (typeof window !== "undefined") {
     "🔧 Utilitário de limpeza carregado. Digite 'clearAllPools()' no console para executar a limpeza.",
   );
 
-  // Executar limpeza manual conforme solicitado
-  setTimeout(() => {
-    console.log(
-      "🧹 LIMPEZA MANUAL: Removendo todas as piscinas conforme solicitado...",
-    );
-    executeClearMaintenanceNow();
-  }, 1000);
+  // Limpeza manual desabilitada para evitar interferir com a página
+  // Para limpar pools: digite clearAllPools() no console do navegador
 }
