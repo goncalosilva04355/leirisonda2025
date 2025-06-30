@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { notificationService } from "@/services/NotificationService";
+import { NotificationService } from "@/services/NotificationService";
 import { useAuth } from "@/components/AuthProvider";
 
 export interface NotificationStatus {
