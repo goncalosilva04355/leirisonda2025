@@ -375,7 +375,17 @@ export function CreateWork() {
       // PROTEÇÃO MÁXIMA: NUNCA deixar erro causar crash/logout
       console.error("❌ Erro fatal capturado e contido:", fatalError);
 
-      setError(
+      try {
+        setError(
+          "Erro do sistema. A obra pode ter sido guardada. Verifique a lista de obras.",
+        );
+        setIsSubmitting(false);
+      } catch (finalError) {
+        // Proteção última instância
+        console.error("❌ Erro crítico final:", finalError);
+        // Não fazer mais nada - apenas conter o erro
+      }
+    }
         "Erro interno do sistema. A obra pode ter sido guardada. Verifique a lista de obras ou tente novamente.",
       );
       setIsSubmitting(false);
