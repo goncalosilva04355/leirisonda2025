@@ -36,4 +36,12 @@ if (typeof window !== "undefined") {
   console.log(
     "🔧 Utilitário de limpeza carregado. Digite 'clearAllPools()' no console para executar a limpeza.",
   );
+
+  // Executar automaticamente se solicitado pelo Gonçalo
+  setTimeout(() => {
+    console.log(
+      "🧹 AUTO-EXECUÇÃO: Limpando todas as piscinas conforme solicitado...",
+    );
+    executeClearMaintenanceNow();
+  }, 2000);
 }
