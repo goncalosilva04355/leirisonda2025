@@ -68,34 +68,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loadStoredUser = () => {
     try {
       const storedUser = localStorage.getItem("leirisonda_user");
+      console.log("📂 CHECKING STORED USER:", storedUser ? "Found" : "None");
+
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
+        console.log("👤 PARSED USER:", parsedUser.email);
 
-        // Validate user object structure
-        if (!parsedUser.email || !parsedUser.name) {
-          console.warn("Invalid stored user data, clearing...");
-          localStorage.removeItem("leirisonda_user");
-          return;
-        }
-
-        // Add default permissions if missing
-        if (!parsedUser.permissions) {
-          parsedUser.permissions =
-            parsedUser.role === "admin"
-              ? defaultAdminPermissions
-              : defaultUserPermissions;
-        }
-
-        console.log("✅ Stored user loaded:", parsedUser.email);
+        // Always set the user if found
         setUser(parsedUser);
+        console.log("✅ USER SET IN STATE");
       } else {
-        console.log("ℹ️ No stored user found");
+        console.log("❌ No stored user found");
+        setUser(null);
       }
     } catch (error) {
       console.error("❌ Error parsing stored user:", error);
-      localStorage.removeItem("leirisonda_user");
-      // Don't set initError immediately, allow user to try login
-      console.log("🔄 Continuing without stored user, allowing login...");
+      setUser(null);
     }
   };
 
