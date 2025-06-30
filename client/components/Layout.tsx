@@ -21,6 +21,9 @@ export function Layout() {
           </div>
         </main>
       </div>
+
+      {/* Notificações de sincronização */}
+      <SyncNotification />
     </div>
   );
 }
