@@ -32,6 +32,29 @@ interface UserDebugInfo {
 export function LoginInfo() {
   const [showDebug, setShowDebug] = useState(false);
   const [users, setUsers] = useState<UserDebugInfo[]>([]);
+  const [isGoncaloSession, setIsGoncaloSession] = useState(false);
+
+  // Verificar se é uma sessão do Gonçalo
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem("leirisonda_user");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setIsGoncaloSession(parsedUser.email === "gongonsilva@gmail.com");
+      } else {
+        // Se não há utilizador logado, verificar se Gonçalo foi o último a usar
+        const lastUser = localStorage.getItem("leirisonda_last_user");
+        setIsGoncaloSession(lastUser === "gongonsilva@gmail.com");
+      }
+    } catch (error) {
+      setIsGoncaloSession(false);
+    }
+  }, []);
+
+  // Se não é sessão do Gonçalo, não mostrar nada
+  if (!isGoncaloSession) {
+    return null;
+  }
 
   const fixUserPasswords = () => {
     try {
