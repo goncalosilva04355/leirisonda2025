@@ -303,6 +303,7 @@ export function LoginInfo() {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    marginBottom: "4px",
                   }}
                 >
                   <span
@@ -343,6 +344,23 @@ export function LoginInfo() {
                       </div>
                     )}
                   </div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <button
+                    onClick={() => fixSpecificUser(user.email)}
+                    style={{
+                      background: user.hasPassword ? "#17a2b8" : "#dc3545",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "3px",
+                      padding: "3px 8px",
+                      fontSize: "9px",
+                      cursor: "pointer",
+                      width: "100%",
+                    }}
+                  >
+                    {user.hasPassword ? "🔧 Recriar Pass" : "🔑 Criar Pass"}
+                  </button>
                 </div>
               </div>
             ))}
