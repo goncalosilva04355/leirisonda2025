@@ -6,7 +6,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, Refresh, Database, Users } from "lucide-react";
 
 export function WorksDebug() {
-  const { works, syncData, isOnline, isSyncing } = useFirebaseSync();
+  const { works, syncData, createWork, isOnline, isSyncing } =
+    useFirebaseSync();
   const { user, getAllUsers } = useAuth();
   const [showLocalStorage, setShowLocalStorage] = useState(false);
   const [debugInfo, setDebugInfo] = useState<any>(null);
