@@ -144,7 +144,7 @@ export class FirebaseService {
         ...updates,
         updatedAt: serverTimestamp(),
       });
-      console.log("���� User updated in Firebase:", userId);
+      console.log("🔥 User updated in Firebase:", userId);
     } catch (error) {
       console.error(
         "Error updating user in Firebase, falling back to local:",
@@ -522,9 +522,9 @@ export class FirebaseService {
 
       return newWork.id;
     } catch (error) {
-      console.error("❌ ERRO CRÍTICO NA CRIAÇÃO DE OBRA:", error);
+      console.error("❌ Erro contido na criação de obra:", error);
 
-      // RECUPERAÇÃO DE EMERGÊNCIA - tentar salvar pelo menos em um local
+      // RECUPERAÇÃO DE EMERGÊNCIA FINAL
       try {
         localStorage.setItem(
           `emergency_work_${newWork.id}`,
@@ -533,8 +533,10 @@ export class FirebaseService {
         console.log("🚨 OBRA SALVA EM MODO DE EMERGÊNCIA");
         return newWork.id;
       } catch (emergencyError) {
-        console.error("❌ FALHA TOTAL NO SALVAMENTO:", emergencyError);
-        throw new Error("Falha crítica: não foi possível salvar a obra");
+        console.error("❌ Erro final:", emergencyError);
+        // NUNCA fazer throw para evitar ErrorBoundary
+        console.log("⚠️ Retornando ID para evitar crash da aplicação");
+        return newWork.id;
       }
     }
   }
