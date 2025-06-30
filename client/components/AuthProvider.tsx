@@ -257,6 +257,98 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(true);
         setInitError(null);
 
+        console.log("🔐 Starting login process for:", email);
+
+        // First try legacy login for immediate access, then Firebase in background
+        const globalUsers = [
+          {
+            email: "gongonsilva@gmail.com",
+            password: "19867gsf",
+            user: {
+              id: "admin",
+              email: "gongonsilva@gmail.com",
+              name: "Gonçalo Silva",
+              role: "admin" as const,
+              permissions: defaultAdminPermissions,
+              createdAt: new Date().toISOString(),
+            },
+          },
+          {
+            email: "tecnico@leirisonda.pt",
+            password: "tecnico123",
+            user: {
+              id: "tecnico1",
+              email: "tecnico@leirisonda.pt",
+              name: "Técnico Leirisonda",
+              role: "user" as const,
+              permissions: defaultUserPermissions,
+              createdAt: new Date().toISOString(),
+            },
+          },
+          {
+            email: "supervisor@leirisonda.pt",
+            password: "supervisor123",
+            user: {
+              id: "supervisor1",
+              email: "supervisor@leirisonda.pt",
+              name: "Supervisor",
+              role: "admin" as const,
+              permissions: {
+                ...defaultAdminPermissions,
+                canDeleteUsers: false,
+                canDeleteWorks: false,
+              },
+              createdAt: new Date().toISOString(),
+            },
+          },
+        ];
+
+        console.log("🔍 Checking local credentials first...");
+        const localUser = globalUsers.find(
+          (u) => u.email === email && u.password === password,
+        );
+
+        if (localUser) {
+          console.log("✅ Local user authenticated:", localUser.user.name);
+          setUser(localUser.user);
+          localStorage.setItem(
+            "leirisonda_user",
+            JSON.stringify(localUser.user),
+          );
+
+          // Try Firebase in background for future sync
+          if (auth && auth !== null) {
+            setTimeout(async () => {
+              try {
+                console.log("🔄 Attempting Firebase login in background...");
+                await signInWithEmailAndPassword(auth, email, password);
+                console.log("✅ Firebase auth successful");
+                await firebaseService.syncLocalDataToFirebase();
+              } catch (bgError: any) {
+                if (bgError.code === "auth/user-not-found") {
+                  try {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    console.log("✅ User created in Firebase");
+                  } catch (createError) {
+                    console.log(
+                      "ℹ️ Firebase user creation failed:",
+                      createError,
+                    );
+                  }
+                }
+                console.log(
+                  "ℹ️ Firebase background auth failed:",
+                  bgError.code,
+                );
+              }
+            }, 100);
+          }
+
+          return true;
+        }
+
+        console.log("❌ Local credentials invalid, trying Firebase...");
+
         // Check if Firebase is available
         if (auth && auth !== null) {
           console.log("🔐 Attempting Firebase login for:", email);
@@ -296,80 +388,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return false;
           } catch (firebaseError: any) {
             console.log(
-              "⚠️ Firebase Auth failed, trying legacy login...",
+              "⚠️ Firebase Auth failed:",
+              firebaseError.code,
               firebaseError.message,
             );
+
+            // If user doesn't exist, try to create it
+            if (
+              firebaseError.code === "auth/user-not-found" ||
+              firebaseError.code === "auth/wrong-password"
+            ) {
+              console.log("👤 Trying to create user in Firebase...");
+              try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                console.log(
+                  "✅ User created in Firebase, trying login again...",
+                );
+
+                // Try login again after creating user
+                const retryCredential = await signInWithEmailAndPassword(
+                  auth,
+                  email,
+                  password,
+                );
+                const retryUser = retryCredential.user;
+                const userData = await getUserFromFirestore(retryUser);
+
+                if (userData) {
+                  setUser(userData);
+                  localStorage.setItem(
+                    "leirisonda_user",
+                    JSON.stringify(userData),
+                  );
+                  return true;
+                }
+              } catch (createError: any) {
+                console.log(
+                  "⚠️ Failed to create user in Firebase:",
+                  createError.code,
+                  createError.message,
+                );
+              }
+            }
+
+            console.log("🔄 Falling back to legacy login...");
           }
         } else {
           console.log("📱 Firebase not available, using local authentication");
-        }
-
-        // Fallback to legacy local login
-        const globalUsers = [
-          {
-            email: "gongonsilva@gmail.com",
-            password: "19867gsf",
-            user: {
-              id: "admin",
-              email: "gongonsilva@gmail.com",
-              name: "Gonçalo Silva",
-              role: "admin" as const,
-              permissions: defaultAdminPermissions,
-              createdAt: new Date().toISOString(),
-            },
-          },
-
-          {
-            email: "tecnico@leirisonda.pt",
-            password: "tecnico123",
-            user: {
-              id: "tecnico1",
-              email: "tecnico@leirisonda.pt",
-              name: "Técnico Leirisonda",
-              role: "user" as const,
-              permissions: defaultUserPermissions,
-              createdAt: new Date().toISOString(),
-            },
-          },
-          {
-            email: "supervisor@leirisonda.pt",
-            password: "supervisor123",
-            user: {
-              id: "supervisor1",
-              email: "supervisor@leirisonda.pt",
-              name: "Supervisor",
-              role: "admin" as const,
-              permissions: {
-                ...defaultAdminPermissions,
-                canDeleteUsers: false,
-                canDeleteWorks: false,
-              },
-              createdAt: new Date().toISOString(),
-            },
-          },
-        ];
-
-        const globalUser = globalUsers.find(
-          (u) => u.email === email && u.password === password,
-        );
-
-        if (globalUser) {
-          console.log("✅ Legacy user found:", globalUser.user.name);
-          setUser(globalUser.user);
-          localStorage.setItem(
-            "leirisonda_user",
-            JSON.stringify(globalUser.user),
-          );
-
-          // Try to create user in Firebase for next time
-          try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            await createGlobalUsersInFirebase();
-          } catch (createError) {
-            console.log("ℹ️ User might already exist in Firebase");
-          }
-
-          return true;
         }
 
         console.error("❌ Login failed");
