@@ -30,10 +30,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function CreateUser() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { createUser: createUserWithSync, users } = useFirebaseSync();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -124,19 +126,14 @@ export function CreateUser() {
 
     try {
       // Check if user already exists
-      const storedUsers = localStorage.getItem("users");
-      const users: UserType[] = storedUsers ? JSON.parse(storedUsers) : [];
-
       if (users.find((u) => u.email === formData.email)) {
         setError("Já existe um utilizador com este email.");
         setIsSubmitting(false);
         return;
       }
 
-      // Create new user with unique ID
-      const newUserId = crypto.randomUUID();
-      const newUser: UserType = {
-        id: newUserId,
+      // Create new user data
+      const userData = {
         name: formData.name.trim(),
         email: formData.email.trim().toLowerCase(), // Normalize email
         role: formData.role,
@@ -161,20 +158,18 @@ export function CreateUser() {
                 canViewStats: true,
               }
             : permissions,
-        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
 
-      // Save user
-      users.push(newUser);
-      localStorage.setItem("users", JSON.stringify(users));
-      console.log("💾 Saved users to localStorage. Total users:", users.length);
+      // Create user with Firebase sync
+      console.log("🔄 Creating user with Firebase sync:", userData.name);
+      const newUserId = await createUserWithSync(userData);
 
-      // Save password with multiple keys for maximum compatibility
+      // Save password with multiple keys for maximum compatibility (local authentication)
       const passwordKeys = [
-        `password_${newUser.id}`,
-        `password_${newUser.email}`,
-        `password_${newUser.email.trim().toLowerCase()}`,
+        `password_${newUserId}`,
+        `password_${userData.email}`,
+        `password_${userData.email.trim().toLowerCase()}`,
         `password_${formData.email.trim().toLowerCase()}`,
       ];
 
@@ -185,65 +180,16 @@ export function CreateUser() {
         console.log(`🔐 Saved password to key: ${key}`);
       });
 
-      console.log(
-        "✅ Password saved with keys:",
-        uniqueKeys,
-        "for user:",
-        newUser.name,
-        "Email:",
-        newUser.email,
-        "Password length:",
-        formData.password.length,
-      );
-
-      // Comprehensive verification
-      const savedUsers = JSON.parse(localStorage.getItem("users") || "[]");
-      const foundUser = savedUsers.find(
-        (u: UserType) => u.email === newUser.email,
-      );
-
-      const verification = {
-        userSaved: !!foundUser,
-        userDetails: foundUser
-          ? {
-              id: foundUser.id,
-              email: foundUser.email,
-              name: foundUser.name,
-              role: foundUser.role,
-            }
-          : null,
-        totalUsers: savedUsers.length,
-        passwordKeys: uniqueKeys.map((key) => ({
-          key,
-          exists: !!localStorage.getItem(key),
-          value: localStorage.getItem(key),
-        })),
-      };
-      console.log("✅ Complete user creation verification:", verification);
-
-      // Test all possible login scenarios
-      const loginTests = uniqueKeys.map((key) => ({
-        key,
-        storedPassword: localStorage.getItem(key),
-        matches: localStorage.getItem(key) === formData.password,
-      }));
-
-      console.log("🧪 Login capability tests:", loginTests);
-
-      // Test email normalization scenario
-      const normalizedTest = {
-        originalEmail: newUser.email,
-        normalizedEmail: newUser.email.trim().toLowerCase(),
-        inputEmail: formData.email,
-        normalizedInput: formData.email.trim().toLowerCase(),
-        match:
-          newUser.email.trim().toLowerCase() ===
-          formData.email.trim().toLowerCase(),
-      };
-      console.log("📧 Email normalization test:", normalizedTest);
+      console.log("✅ User created successfully with Firebase sync:", {
+        id: newUserId,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        passwordKeysCreated: uniqueKeys,
+      });
 
       setSuccess(
-        `Utilizador criado com sucesso! Email: ${newUser.email} - Pode agora fazer login.`,
+        `Utilizador criado com sucesso! Email: ${userData.email} - Pode agora fazer login. Dados sincronizados automaticamente.`,
       );
 
       // Reset form

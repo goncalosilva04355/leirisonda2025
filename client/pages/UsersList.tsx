@@ -1,30 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function UsersList() {
   const { user: currentUser } = useAuth();
   const navigate = useNavigate();
-  const [users, setUsers] = useState<any[]>([]);
+  const { users, deleteUser: deleteUserWithSync, isOnline } = useFirebaseSync();
 
-  useEffect(() => {
-    const storedUsers = localStorage.getItem("users");
-    if (storedUsers) {
-      try {
-        setUsers(JSON.parse(storedUsers));
-      } catch (error) {
-        console.error("Error loading users:", error);
-        setUsers([]);
-      }
-    }
-  }, []);
-
-  const deleteUser = (userId: string) => {
+  const deleteUser = async (userId: string) => {
     if (window.confirm("Tem a certeza que quer eliminar este utilizador?")) {
-      const updatedUsers = users.filter((user) => user.id !== userId);
-      setUsers(updatedUsers);
-      localStorage.setItem("users", JSON.stringify(updatedUsers));
-      localStorage.removeItem(`password_${userId}`);
+      try {
+        console.log("🗑️ Deleting user with Firebase sync:", userId);
+        await deleteUserWithSync(userId);
+
+        // Remove local password keys
+        const user = users.find((u) => u.id === userId);
+        if (user) {
+          const passwordKeys = [
+            `password_${user.id}`,
+            `password_${user.email}`,
+            `password_${user.email?.trim().toLowerCase()}`,
+          ];
+          passwordKeys.forEach((key) => localStorage.removeItem(key));
+          console.log("🔐 Removed password keys for user:", user.email);
+        }
+
+        console.log("✅ User deleted successfully");
+      } catch (error) {
+        console.error("❌ Error deleting user:", error);
+        alert("Erro ao eliminar utilizador. Tente novamente.");
+      }
     }
   };
 
@@ -64,8 +70,25 @@ export function UsersList() {
         <div>
           <h1 style={{ fontSize: "28px", marginBottom: "10px" }}>
             Utilizadores
+            <span
+              style={{
+                marginLeft: "10px",
+                fontSize: "14px",
+                padding: "4px 8px",
+                borderRadius: "12px",
+                backgroundColor: isOnline ? "#d4edda" : "#f8d7da",
+                color: isOnline ? "#155724" : "#721c24",
+              }}
+            >
+              {isOnline ? "🔄 Sincronizado" : "📱 Local"}
+            </span>
           </h1>
-          <p style={{ color: "#666" }}>Gerir utilizadores e suas permissões</p>
+          <p style={{ color: "#666" }}>
+            Gerir utilizadores e suas permissões
+            {isOnline
+              ? " (dados sincronizados automaticamente)"
+              : " (modo offline)"}
+          </p>
         </div>
         <button
           onClick={() => navigate("/create-user")}
