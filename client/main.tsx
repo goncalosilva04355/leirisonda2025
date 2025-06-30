@@ -242,6 +242,18 @@ const createErrorHTML = (error: any) => {
           </button>
 
           <button
+            onclick="window.location.href='/emergency-diagnostic'"
+            style="width: 100%; display: flex; align-items: center; justify-content: center; padding: 0.75rem 1rem; background-color: #ea580c; color: white; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 500; text-decoration: none; transition: background-color 0.2s; margin-bottom: 0.75rem;"
+            onmouseover="this.style.backgroundColor='#c2410c'"
+            onmouseout="this.style.backgroundColor='#ea580c'"
+          >
+            <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 14.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+            Diagnóstico de Emergência
+          </button>
+
+          <button
             onclick="clearAppData()"
             style="width: 100%; display: flex; align-items: center; justify-content: center; padding: 0.75rem 1rem; background-color: #dc2626; color: white; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 500; text-decoration: none; transition: background-color 0.2s;"
             onmouseover="this.style.backgroundColor='#b91c1c'"
