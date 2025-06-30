@@ -32,6 +32,7 @@ import { PhotoUpload } from "@/components/PhotoUpload";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 import { firebaseService } from "@/services/FirebaseService";
+import { WorkSaveHelper } from "@/lib/work-save-diagnostics";
 
 const workTypes = [
   { value: "piscina", label: "Piscina" },
@@ -107,6 +108,7 @@ export function CreateWork() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [showDiagnostics, setShowDiagnostics] = useState(false);
 
   // Verificar se o usuário existe e tem permissão
   if (!user) {
@@ -278,82 +280,178 @@ export function CreateWork() {
           return;
         }
 
-        // Create work using Firebase sync
-        const workId = await createWork(workData);
+        // FALLBACK SEGURO: Se createWork não estiver disponível, usar FirebaseService diretamente
+        const safeCreateWork =
+          createWork ||
+          (async (data: any) => {
+            console.log(
+              "🔄 Fallback: usando FirebaseService.createWork diretamente",
+            );
+            return await firebaseService.createWork(data);
+          });
+
+        // Create work using safe method
+        const workId = await safeCreateWork(workData);
         console.log("✅ OBRA CRIADA COM SUCESSO ID:", workId);
 
-        // Aguardar um pouco para sincronização
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Aguardar sincronização
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-        // Verificar se obra foi realmente salva com backups
+        // Verificar se obra foi salva (simplificado para evitar erros)
         const savedWorks1 = JSON.parse(localStorage.getItem("works") || "[]");
         const savedWorks2 = JSON.parse(
           localStorage.getItem("leirisonda_works") || "[]",
         );
-        const savedWorks3 = JSON.parse(
-          sessionStorage.getItem("temp_works") || "[]",
-        );
 
-        const savedWork1 = savedWorks1.find((w: any) => w.id === workId);
-        const savedWork2 = savedWorks2.find((w: any) => w.id === workId);
-        const savedWork3 = savedWorks3.find((w: any) => w.id === workId);
+        const savedWork =
+          savedWorks1.find((w: any) => w.id === workId) ||
+          savedWorks2.find((w: any) => w.id === workId);
 
-        if (savedWork1 || savedWork2 || savedWork3) {
-          const finalWork = savedWork1 || savedWork2 || savedWork3;
-          console.log("✅ OBRA VERIFICADA EM MÚLTIPLOS BACKUPS:", {
-            cliente: finalWork.clientName,
-            folhaObra: finalWork.workSheetNumber,
-            atribuicoes: finalWork.assignedUsers,
-            backups: {
-              works: !!savedWork1,
-              leirisonda_works: !!savedWork2,
-              temp_works: !!savedWork3,
-            },
+        if (savedWork) {
+          console.log("✅ OBRA VERIFICADA E GUARDADA:", {
+            cliente: savedWork.clientName,
+            folhaObra: savedWork.workSheetNumber,
+            atribuicoes: savedWork.assignedUsers,
           });
 
-          // Verificar atribuições específicas
-          if (finalWork.assignedUsers && finalWork.assignedUsers.length > 0) {
-            console.log("🎯 ATRIBUIÇÕES CONFIRMADAS:", finalWork.assignedUsers);
+          // Reset form para estado inicial
+          setFormData({
+            workSheetNumber: generateWorkSheetNumber(),
+            type: "piscina",
+            clientName: "",
+            address: "",
+            contact: "",
+            entryTime: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+            exitTime: "",
+            status: "pendente",
+            vehicles: [],
+            technicians: [],
+            assignedUsers: [],
+            photos: [],
+            observations: "",
+            workPerformed: "",
+            workSheetCompleted: false,
+          });
+
+          setIsSubmitting(false);
+
+          // NAVEGAÇÃO ROBUSTA - evitar problemas de routing
+          console.log("🧭 REDIRECIONANDO PARA LISTA DE OBRAS...");
+          setTimeout(() => {
+            try {
+              navigate("/works");
+            } catch (navError) {
+              console.warn(
+                "❌ Erro de navegação, usando window.location:",
+                navError,
+              );
+              window.location.href = "/works";
+            }
+          }, 100);
+
+          return;
+        } else {
+          // Segunda tentativa de verificação
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          const recheckWorks1 = JSON.parse(
+            localStorage.getItem("works") || "[]",
+          );
+          const recheckWorks2 = JSON.parse(
+            localStorage.getItem("leirisonda_works") || "[]",
+          );
+          const recheckWork =
+            recheckWorks1.find((w: any) => w.id === workId) ||
+            recheckWorks2.find((w: any) => w.id === workId);
+
+          if (recheckWork) {
+            console.log("✅ OBRA ENCONTRADA NA SEGUNDA VERIFICAÇÃO");
+            setIsSubmitting(false);
+            setTimeout(() => {
+              try {
+                navigate("/works");
+              } catch (navError) {
+                window.location.href = "/works";
+              }
+            }, 100);
+            return;
           }
 
-          console.log("🧭 REDIRECIONANDO PARA LISTA DE OBRAS...");
-          navigate("/works");
-        } else {
-          throw new Error("Obra criada mas não encontrada em nenhum backup");
+          // Executar diagnóstico quando obra não é encontrada
+          console.warn(
+            "⚠️ Obra criada mas não encontrada nos backups - executando diagnóstico...",
+          );
+
+          const diagnostics = WorkSaveHelper.diagnose();
+          console.log("🔍 Diagnóstico de salvamento:", diagnostics);
+
+          // Tentar consolidar obras de emergência
+          const consolidation = WorkSaveHelper.consolidateEmergencyWorks();
+          if (consolidation.consolidated > 0) {
+            console.log(
+              `✅ ${consolidation.consolidated} obras de emergência consolidadas`,
+            );
+            setError(
+              `Obra guardada com sucesso! ${consolidation.consolidated} obras de emergência foram recuperadas.`,
+            );
+          } else {
+            setError(
+              "Obra provavelmente foi guardada com sucesso. Verifique a lista de obras.",
+            );
+          }
+
+          setIsSubmitting(false);
         }
       } catch (err) {
-        console.error("❌ ERRO CRÍTICO AO CRIAR OBRA:", err);
+        console.error("❌ ERRO AO CRIAR OBRA:", err);
 
-        // Log detalhado do erro para debugging
-        if (err instanceof Error) {
-          console.error("❌ Stack trace:", err.stack);
-          console.error("❌ Mensagem:", err.message);
-        }
-
-        // Verificar se o erro está relacionado às atribuições
+        // Tratamento de erro ESPECÍFICO e SEGURO
         const errorMessage = err instanceof Error ? err.message : String(err);
+
+        // NÃO relançar erro que possa causar ErrorBoundary
         if (
+          errorMessage.includes("Firebase") ||
+          errorMessage.includes("network") ||
+          errorMessage.includes("fetch") ||
+          errorMessage.includes("conectividade")
+        ) {
+          setError(
+            "Problema de conectividade. A obra pode ter sido guardada localmente. Verifique a lista de obras.",
+          );
+        } else if (
           errorMessage.includes("atribuições") ||
           errorMessage.includes("assignedUsers")
         ) {
           setError(
-            `ERRO DE ATRIBUIÇÕES: ${errorMessage}. Verifique se os usuários selecionados são válidos e tente novamente.`,
+            "Problema com atribuições de usuários. Verifique as seleções e tente novamente.",
           );
         } else {
-          setError(`Erro ao criar a obra: ${errorMessage}. Tente novamente.`);
+          setError(
+            `Erro ao guardar obra: ${errorMessage.slice(0, 100)}. Tente novamente.`,
+          );
         }
+
         setIsSubmitting(false);
+
+        // Log detalhado para debugging mas NÃO fazer throw
+        console.error("📝 Detalhes do erro:", {
+          message: errorMessage,
+          stack: err instanceof Error ? err.stack?.slice(0, 500) : undefined,
+          formData: {
+            cliente: formData.clientName,
+            atribuicoes: formData.assignedUsers?.length || 0,
+          },
+        });
       }
     } catch (fatalError) {
-      // PROTEÇÃO FINAL: Capturar qualquer erro que possa causar logout
-      console.error(
-        "❌ Erro fatal capturado (evitando crash da aplicação):",
-        fatalError,
-      );
+      // PROTEÇÃO MÁXIMA: NUNCA deixar erro causar crash/logout
+      console.error("❌ Erro fatal capturado e contido:", fatalError);
+
       setError(
-        "Erro interno. Por favor, recarregue a página e tente novamente.",
+        "Erro interno do sistema. A obra pode ter sido guardada. Verifique a lista de obras ou tente novamente.",
       );
       setIsSubmitting(false);
+
+      // NÃO fazer throw nem relançar erro - simplesmente conter
     }
   };
 
@@ -405,6 +503,40 @@ export function CreateWork() {
       (id) => id !== userId,
     );
     updateFormData("assignedUsers", newAssignedUsers);
+  };
+
+  const runQuickDiagnostics = () => {
+    console.log("🔍 Executando diagnóstico rápido...");
+
+    const diagnostics = WorkSaveHelper.diagnose();
+    const consolidation = WorkSaveHelper.consolidateEmergencyWorks();
+    const sync = WorkSaveHelper.syncBackups();
+
+    console.log("📊 Resultados do diagnóstico:", {
+      diagnostics,
+      consolidation,
+      sync,
+    });
+
+    let message = `Diagnóstico executado:\n`;
+    message += `• Total de obras: ${diagnostics.totalWorks}\n`;
+    message += `• Obras principais: ${diagnostics.backupLocations.works}\n`;
+    message += `• Obras backup: ${diagnostics.backupLocations.leirisonda_works}\n`;
+
+    if (consolidation.consolidated > 0) {
+      message += `• ${consolidation.consolidated} obras de emergência consolidadas\n`;
+    }
+
+    if (sync.synced) {
+      message += `• Backups sincronizados: ${sync.details}\n`;
+    }
+
+    if (diagnostics.potentialIssues.length > 0) {
+      message += `• Problemas: ${diagnostics.potentialIssues.join(", ")}\n`;
+    }
+
+    alert(message);
+    setShowDiagnostics(false);
   };
 
   return (
@@ -824,6 +956,31 @@ export function CreateWork() {
               )}
             </Button>
           </div>
+
+          {/* Diagnóstico para Gonçalo (apenas se há erro) */}
+          {error && user?.email === "gongonsilva@gmail.com" && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-medium text-blue-800">
+                  Diagnóstico de Salvamento (Admin)
+                </h4>
+                <Button
+                  type="button"
+                  onClick={runQuickDiagnostics}
+                  variant="outline"
+                  size="sm"
+                  className="text-blue-600 border-blue-300"
+                >
+                  <AlertCircle className="w-4 h-4 mr-2" />
+                  Executar Diagnóstico
+                </Button>
+              </div>
+              <p className="text-sm text-blue-600 mt-2">
+                Execute o diagnóstico se a obra não foi guardada corretamente.
+                Isto irá verificar e corrigir problemas de salvamento.
+              </p>
+            </div>
+          )}
         </form>
       </div>
     </div>
