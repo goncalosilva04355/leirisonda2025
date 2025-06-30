@@ -386,12 +386,6 @@ export function CreateWork() {
         // Não fazer mais nada - apenas conter o erro
       }
     }
-        "Erro interno do sistema. A obra pode ter sido guardada. Verifique a lista de obras ou tente novamente.",
-      );
-      setIsSubmitting(false);
-
-      // NÃO fazer throw nem relançar erro - simplesmente conter
-    }
   };
 
   const updateFormData = (field: keyof CreateWorkData, value: any) => {
