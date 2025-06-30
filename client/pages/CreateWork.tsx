@@ -296,6 +296,31 @@ export function CreateWork() {
             </>
           )}
         </div>
+
+        {/* Debug button para Gonçalo */}
+        {user?.email === "gongonsilva@gmail.com" && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const works = JSON.parse(localStorage.getItem("works") || "[]");
+              console.log("🔍 DEBUG OBRAS SALVAS:", {
+                total: works.length,
+                ultimasObras: works.slice(-3).map((w: any) => ({
+                  id: w.id,
+                  cliente: w.clientName,
+                  folhaObra: w.workSheetNumber,
+                  criada: w.createdAt,
+                })),
+              });
+              alert(
+                `DEBUG: ${works.length} obras salvas no localStorage. Ver console para detalhes.`,
+              );
+            }}
+          >
+            🔍 Debug
+          </Button>
+        )}
       </div>
 
       {/* Offline Warning */}
