@@ -470,7 +470,7 @@ export function CreateWork() {
     };
 
     const runQuickDiagnostics = () => {
-      console.log("🔍 Executando diagn��stico rápido...");
+      console.log("🔍 Executando diagnóstico rápido...");
 
       try {
         const diagnostics = WorkSaveHelper.diagnose();
