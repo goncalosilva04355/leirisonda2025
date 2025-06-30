@@ -277,6 +277,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             );
             await notificationService.initialize();
             console.log("🔔 Notificações inicializadas após login");
+
+            // Verificar obras pendentes atribuídas ao usuário após inicializar notificações
+            setTimeout(async () => {
+              try {
+                const pendingWorks =
+                  await notificationService.checkPendingAssignedWorks(
+                    globalUser.id,
+                  );
+                console.log(
+                  `🔍 Verificação de obras pendentes concluída: ${pendingWorks.length} encontradas`,
+                );
+              } catch (error) {
+                console.warn("⚠️ Erro ao verificar obras pendentes:", error);
+              }
+            }, 2000);
           } catch (notificationError) {
             console.warn(
               "⚠️ Erro ao inicializar notificações:",
