@@ -1,344 +1,81 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
-import { AlertTriangle } from "lucide-react";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  User as FirebaseUser,
-} from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { User, AuthContextType, UserPermissions } from "@shared/types";
-import { auth, db } from "@/lib/firebase";
-import { firebaseService } from "@/services/FirebaseService";
-import { dataSyncService } from "@/services/DataSync";
-import "@/services/DefaultData"; // Initialize default data
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { User } from "@shared/types";
+
+interface AuthContextType {
+  user: User | null;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => void;
+  isLoading: boolean;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const defaultAdminPermissions: UserPermissions = {
-  canViewWorks: true,
-  canCreateWorks: true,
-  canEditWorks: true,
-  canDeleteWorks: true,
-  canViewMaintenance: true,
-  canCreateMaintenance: true,
-  canEditMaintenance: true,
-  canDeleteMaintenance: true,
-  canViewUsers: true,
-  canCreateUsers: true,
-  canEditUsers: true,
-  canDeleteUsers: true,
-  canViewReports: true,
-  canExportData: true,
-  canViewDashboard: true,
-  canViewStats: true,
-};
-
-const defaultUserPermissions: UserPermissions = {
-  canViewWorks: true,
-  canCreateWorks: false,
-  canEditWorks: false,
-  canDeleteWorks: false,
-  canViewMaintenance: true,
-  canCreateMaintenance: false,
-  canEditMaintenance: false,
-  canDeleteMaintenance: false,
-  canViewUsers: false,
-  canCreateUsers: false,
-  canEditUsers: false,
-  canDeleteUsers: false,
-  canViewReports: false,
-  canExportData: false,
-  canViewDashboard: true,
-  canViewStats: true,
-};
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [initError, setInitError] = useState<string | null>(null);
 
-  const loadStoredUser = () => {
+  // Carrega utilizador do localStorage na inicialização
+  useEffect(() => {
+    console.log("🚀 AUTH INIT");
     try {
-      const storedUser = localStorage.getItem("leirisonda_user");
-      console.log("📂 CHECKING STORED USER:", storedUser ? "Found" : "None");
-
-      if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        console.log("👤 PARSED USER:", parsedUser.email);
-
-        // Always set the user if found
-        setUser(parsedUser);
-        console.log("✅ USER SET IN STATE");
-      } else {
-        console.log("❌ No stored user found");
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("❌ Error parsing stored user:", error);
-      setUser(null);
-    }
-  };
-
-  useEffect(() => {
-    console.log("🚀 AUTH PROVIDER INIT");
-    loadStoredUser();
-  }, []);
-
-  // Check localStorage on every render
-  useEffect(() => {
-    const checkUser = () => {
       const stored = localStorage.getItem("leirisonda_user");
-      if (stored && !user) {
-        console.log("🔄 RESTORING USER FROM STORAGE");
-        try {
-          const parsedUser = JSON.parse(stored);
-          setUser(parsedUser);
-        } catch (error) {
-          console.error("❌ Failed to parse stored user");
-        }
-      }
-    };
-
-    checkUser();
-
-    // Check every 1 second to ensure user persists
-    const interval = setInterval(checkUser, 1000);
-    return () => clearInterval(interval);
-  }, [user]);
-
-  const createGlobalUsersInFirebase = async () => {
-    try {
-      // Only try to create users if Firestore is available
-      if (!db) {
-        console.log(
-          "📱 Firestore not available - skipping global user creation",
-        );
-        return;
+      if (stored) {
+        const parsedUser = JSON.parse(stored);
+        console.log("👤 UTILIZADOR CARREGADO:", parsedUser.email);
+        setUser(parsedUser);
       }
     } catch (error) {
-      console.log("⚠️ Error checking Firestore availability:", error);
-      return;
-    }
-
-    const globalUsers = [
-      {
-        email: "gongonsilva@gmail.com",
-        userData: {
-          email: "gongonsilva@gmail.com",
-          name: "Gonçalo Fonseca",
-          role: "admin" as const,
-          permissions: defaultAdminPermissions,
-          createdAt: new Date().toISOString(),
-        },
-      },
-      {
-        email: "alexkamaryta@gmail.com",
-        userData: {
-          email: "alexkamaryta@gmail.com",
-          name: "Alexandre Fernandes",
-          role: "user" as const,
-          permissions: {
-            ...defaultUserPermissions,
-            canEditWorks: true,
-            canEditMaintenance: true,
-            canViewReports: true,
-          },
-          createdAt: new Date().toISOString(),
-        },
-      },
-    ];
-
-    for (const globalUser of globalUsers) {
-      try {
-        const userRef = doc(db, "users", globalUser.email);
-        const userSnap = await getDoc(userRef);
-
-        if (!userSnap.exists()) {
-          await setDoc(userRef, {
-            id: globalUser.email,
-            ...globalUser.userData,
-          });
-          console.log(`✅ Created global user: ${globalUser.userData.name}`);
-        }
-      } catch (error) {
-        console.error(
-          `❌ Error creating global user ${globalUser.email}:`,
-          error,
-        );
-      }
-    }
-  };
-
-  const getUserFromFirestore = async (
-    firebaseUser: FirebaseUser,
-  ): Promise<User | null> => {
-    try {
-      // Check if Firestore is available
-      if (!db) {
-        console.log("�� Firestore not available - creating local user");
-        // Create a local user
-        const defaultUser: User = {
-          id: firebaseUser.uid,
-          email: firebaseUser.email || "",
-          name:
-            firebaseUser.displayName ||
-            firebaseUser.email?.split("@")[0] ||
-            "Utilizador",
-          role: "user",
-          permissions: defaultUserPermissions,
-          createdAt: new Date().toISOString(),
-        };
-        return defaultUser;
-      }
-
-      const userRef = doc(db, "users", firebaseUser.email || firebaseUser.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        const userData = userSnap.data() as User;
-        return {
-          ...userData,
-          id: userSnap.id,
-        };
-      }
-
-      // If user doesn't exist in Firestore, create default user
-      const defaultUser: User = {
-        id: firebaseUser.uid,
-        email: firebaseUser.email || "",
-        name:
-          firebaseUser.displayName ||
-          firebaseUser.email?.split("@")[0] ||
-          "Utilizador",
-        role: "user",
-        permissions: defaultUserPermissions,
-        createdAt: new Date().toISOString(),
-      };
-
-      await setDoc(userRef, defaultUser);
-      return defaultUser;
-    } catch (error) {
-      console.error("Error getting user from Firestore:", error);
-      return null;
-    }
-  };
-
-  const fixUserData = useCallback(() => {
-    try {
-      console.log("🔧 Running comprehensive user data correction...");
-      const storedUsers = localStorage.getItem("users");
-      if (storedUsers) {
-        const users = JSON.parse(storedUsers);
-        let needsUpdate = false;
-
-        users.forEach((user: User) => {
-          // Ensure user has complete structure
-          if (!user.permissions) {
-            user.permissions =
-              user.role === "admin"
-                ? defaultAdminPermissions
-                : defaultUserPermissions;
-            needsUpdate = true;
-            console.log(`🔧 Added permissions to user ${user.email}`);
-          }
-
-          if (!user.updatedAt) {
-            user.updatedAt = user.createdAt || new Date().toISOString();
-            needsUpdate = true;
-            console.log(`🔧 Added updatedAt to user ${user.email}`);
-          }
-
-          // Comprehensive password key management
-          const passwordKeys = [
-            `password_${user.id}`,
-            `password_${user.email}`,
-            `password_${user.email.trim().toLowerCase()}`,
-          ];
-
-          // Find any existing password
-          let existingPassword = null;
-          let sourceKey = null;
-          for (const key of passwordKeys) {
-            const pwd = localStorage.getItem(key);
-            if (pwd) {
-              existingPassword = pwd;
-              sourceKey = key;
-              break;
-            }
-          }
-
-          if (existingPassword) {
-            // Ensure password is stored with all variations for maximum compatibility
-            passwordKeys.forEach((key) => {
-              const current = localStorage.getItem(key);
-              if (!current) {
-                localStorage.setItem(key, existingPassword);
-                console.log(
-                  `🔧 Duplicated password to key: ${key} from ${sourceKey}`,
-                );
-              }
-            });
-          } else {
-            console.log(
-              `⚠️ No password found for user ${user.email} (${user.id})`,
-            );
-          }
-        });
-
-        if (needsUpdate) {
-          localStorage.setItem("users", JSON.stringify(users));
-          console.log("🔧 User data structure updated");
-        }
-
-        console.log(`🔧 Fixed data for ${users.length} users`);
-      } else {
-        console.log("🔧 No users found to fix");
-      }
-    } catch (error) {
-      console.error("❌ Error fixing user data:", error);
+      console.error("❌ Erro ao carregar utilizador:", error);
     }
   }, []);
 
-  const login = useCallback(
-    async (email: string, password: string): Promise<boolean> => {
-      console.log("🚀 ULTRA SIMPLE LOGIN");
-      console.log("Input:", email, "/", password);
+  const login = async (email: string, password: string): Promise<boolean> => {
+    console.log("🔐 TENTATIVA LOGIN:", { email, password });
+    setIsLoading(true);
 
-      setIsLoading(true);
-
-      // FORCED SUCCESS for Gonçalo
+    try {
+      // Gonçalo
       if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
-        const goncaloUser = {
+        const goncaloUser: User = {
           id: "admin_goncalo",
           email: "gongonsilva@gmail.com",
           name: "Gonçalo Fonseca",
-          role: "admin" as const,
-          permissions: defaultAdminPermissions,
+          role: "admin",
+          permissions: {
+            canViewWorks: true,
+            canCreateWorks: true,
+            canEditWorks: true,
+            canDeleteWorks: true,
+            canViewMaintenance: true,
+            canCreateMaintenance: true,
+            canEditMaintenance: true,
+            canDeleteMaintenance: true,
+            canViewUsers: true,
+            canCreateUsers: true,
+            canEditUsers: true,
+            canDeleteUsers: true,
+            canViewReports: true,
+            canExportData: true,
+            canViewDashboard: true,
+            canViewStats: true,
+          },
           createdAt: new Date().toISOString(),
         };
 
-        console.log("🎉 GONÇALO FORCE LOGIN SUCCESS");
-        setUser(goncaloUser);
         localStorage.setItem("leirisonda_user", JSON.stringify(goncaloUser));
+        setUser(goncaloUser);
+        console.log("✅ GONÇALO LOGIN SUCESSO");
         setIsLoading(false);
         return true;
       }
 
-      // FORCED SUCCESS for Alexandre
+      // Alexandre
       if (email === "alexkamaryta@gmail.com" && password === "69alexandre") {
-        const alexandreUser = {
+        const alexandreUser: User = {
           id: "user_alexandre",
           email: "alexkamaryta@gmail.com",
           name: "Alexandre Fernandes",
-          role: "user" as const,
+          role: "user",
           permissions: {
             canViewWorks: true,
             canCreateWorks: false,
@@ -360,104 +97,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           createdAt: new Date().toISOString(),
         };
 
-        console.log("🎉 ALEXANDRE FORCE LOGIN SUCCESS");
-        setUser(alexandreUser);
         localStorage.setItem("leirisonda_user", JSON.stringify(alexandreUser));
+        setUser(alexandreUser);
+        console.log("✅ ALEXANDRE LOGIN SUCESSO");
         setIsLoading(false);
         return true;
       }
 
-      console.log("❌ INVALID CREDENTIALS");
+      console.log("❌ CREDENCIAIS INVÁLIDAS");
       setIsLoading(false);
       return false;
-    },
-    [],
-  );
-
-  const logout = useCallback(async () => {
-    try {
-      // Only try Firebase signOut if auth is available
-      if (auth) {
-        await signOut(auth);
-      }
-      setUser(null);
-      localStorage.removeItem("leirisonda_user");
-      firebaseService.cleanup();
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error("❌ ERRO LOGIN:", error);
+      setIsLoading(false);
+      return false;
     }
-  }, []);
+  };
 
-  // Listen to Firebase Auth state changes
-  useEffect(() => {
-    // Only setup auth listener if Firebase auth is available
-    if (!auth) {
-      console.log(
-        "📱 Firebase Auth not available - skipping auth state listener",
-      );
-      return;
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser && !user) {
-        // User is signed in with Firebase
-        const userData = await getUserFromFirestore(firebaseUser);
-        if (userData) {
-          setUser(userData);
-          localStorage.setItem("leirisonda_user", JSON.stringify(userData));
-
-          // Initialize Firebase sync
-          await firebaseService.syncLocalDataToFirebase();
-        }
-      } else if (!firebaseUser && user) {
-        // User is signed out
-        setUser(null);
-        localStorage.removeItem("leirisonda_user");
-        firebaseService.cleanup();
-      }
-    });
-
-    return () => unsubscribe();
-  }, [user]);
-
-  // Initialize global users in Firebase on first load
-  useEffect(() => {
-    const initializeFirebase = async () => {
-      try {
-        await createGlobalUsersInFirebase();
-      } catch (error) {
-        console.error("Error initializing Firebase:", error);
-      }
-    };
-
-    initializeFirebase();
-  }, []);
-
-  // Show error state if there's an initialization error
-  if (initError) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertTriangle className="w-8 h-8 text-yellow-600" />
-          </div>
-          <h1 className="text-xl font-bold text-gray-900 mb-2">
-            Erro de Inicialização
-          </h1>
-          <p className="text-gray-600 mb-6">{initError}</p>
-          <button
-            onClick={() => {
-              setInitError(null);
-              loadStoredUser();
-            }}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Tentar Novamente
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const logout = () => {
+    localStorage.removeItem("leirisonda_user");
+    setUser(null);
+    console.log("👋 LOGOUT");
+  };
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isLoading }}>
@@ -468,23 +129,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    console.error("❌ useAuth called outside of AuthProvider context");
-
-    // Provide a more robust fallback
-    const fallbackContext: AuthContextType = {
-      user: null,
-      login: async (email: string, password: string) => {
-        console.warn("Fallback login called - AuthProvider not available");
-        return false;
-      },
-      logout: () => {
-        console.warn("Fallback logout called - AuthProvider not available");
-      },
-      isLoading: false,
-    };
-
-    return fallbackContext;
+  if (!context) {
+    throw new Error("useAuth deve ser usado dentro de AuthProvider");
   }
   return context;
 }
