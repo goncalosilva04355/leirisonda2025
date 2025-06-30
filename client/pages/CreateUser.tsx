@@ -180,7 +180,17 @@ export function CreateUser() {
         formData.password,
       );
 
-      setSuccess("Utilizador criado com sucesso!");
+      // Verify user was created correctly
+      const verification = {
+        userSaved: localStorage.getItem("users")?.includes(newUser.id) || false,
+        passwordSaved: !!localStorage.getItem(`password_${newUser.id}`),
+        totalUsers: JSON.parse(localStorage.getItem("users") || "[]").length,
+      };
+      console.log("✅ User creation verification:", verification);
+
+      setSuccess(
+        `Utilizador criado com sucesso! Email: ${newUser.email} - Pode agora fazer login.`,
+      );
 
       // Reset form
       setFormData({
