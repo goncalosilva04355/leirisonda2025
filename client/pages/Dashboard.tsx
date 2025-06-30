@@ -153,9 +153,7 @@ export function Dashboard() {
       const filtered = worksList.filter(
         (work) =>
           work.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          work.workSheetNumber
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
+          work.workSheetNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           work.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           work.contact?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
@@ -168,19 +166,21 @@ export function Dashboard() {
   };
 
   const loadDashboardData = () => {
-    // Use Firebase synced data instead of localStorage directly
-    const worksList = works || [];
+    try {
+      console.log("📊 Processando dados para dashboard...");
+      // Use Firebase synced data instead of localStorage directly
+      const worksList = works || [];
 
-    // Calculate stats
-    const totalWorks = worksList.length;
-    const pendingWorks = worksList.filter(
-      (w) => w.status === "pendente",
-    ).length;
-    const inProgressWorks = worksList.filter(
-      (w) => w.status === "em_progresso",
-    ).length;
-    const completedWorks = worksList.filter(
-      (w) => w.status === "concluida",
+      // Calculate stats with error protection
+      const totalWorks = worksList.length || 0;
+      const pendingWorks = worksList.filter(
+        (w) => w?.status === "pendente",
+      ).length || 0;
+      const inProgressWorks = worksList.filter(
+        (w) => w?.status === "em_progresso",
+      ).length || 0;
+      const completedWorks = worksList.filter(
+        (w) => w?.status === "concluida",
     ).length;
 
     // Calculate work sheets pending (not completed)
