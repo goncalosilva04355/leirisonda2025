@@ -175,6 +175,17 @@ export function CreateWork() {
       observations: "",
       workPerformed: "",
       workSheetCompleted: false,
+      furoAgua: {
+        profundidade: 0,
+        nivelAgua: 0,
+        profundidadeBomba: 0,
+        caudalFuro: 0,
+        tipoColuna: "PEAD",
+        diametroColuna: 0,
+        bombaModelo: "",
+        potenciaMotor: 0,
+        voltagem: "230v",
+      },
     });
 
     const [vehicleInput, setVehicleInput] = useState("");
