@@ -19,10 +19,10 @@
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc",
-    "send-pr": "node send-pr.js",
-    "deploy": "node send-pr.js",
-    "builder:sync": "node send-pr.js",
-    "builder:force-push": "node send-pr.js"
+    "send-pr": "node send-pr.cjs",
+    "deploy": "node send-pr.cjs",
+    "builder:sync": "node send-pr.cjs",
+    "builder:force-push": "node send-pr.cjs"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.0",
