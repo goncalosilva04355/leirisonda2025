@@ -198,15 +198,21 @@ export class FirebaseService {
 
   // Works Collection
   async getWorks(): Promise<Work[]> {
+    // SEMPRE consolidar backups primeiro
+    const consolidatedWorks = this.consolidateWorksFromAllBackups();
+
     if (!this.isFirebaseAvailable) {
-      return this.getLocalWorks();
+      console.log(
+        "📱 FIREBASE INDISPONÍVEL: Retornando obras consolidadas localmente",
+      );
+      return consolidatedWorks;
     }
 
     try {
       const worksRef = collection(db, "works");
       const q = query(worksRef, orderBy("createdAt", "desc"));
       const snapshot = await getDocs(q);
-      const works = snapshot.docs.map((doc) => ({
+      const firebaseWorks = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
         createdAt:
@@ -217,15 +223,32 @@ export class FirebaseService {
           doc.data().updatedAt,
       })) as Work[];
 
-      // Sync to localStorage as backup
-      localStorage.setItem("works", JSON.stringify(works));
-      return works;
+      // Mesclar obras do Firebase com obras locais consolidadas
+      const allWorks = [...firebaseWorks, ...consolidatedWorks];
+      const uniqueWorks = allWorks.filter(
+        (work, index, self) =>
+          index === self.findIndex((w) => w.id === work.id),
+      );
+
+      // Ordenar por data de criação
+      uniqueWorks.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+
+      console.log(
+        `🔥 FIREBASE + LOCAL: ${firebaseWorks.length} Firebase + ${consolidatedWorks.length} local = ${uniqueWorks.length} total`,
+      );
+
+      // Salvar versão mesclada como backup
+      localStorage.setItem("works", JSON.stringify(uniqueWorks));
+      return uniqueWorks;
     } catch (error) {
       console.error(
-        "Error fetching works from Firebase, falling back to local:",
+        "❌ ERRO FIREBASE: Retornando obras consolidadas localmente:",
         error,
       );
-      return this.getLocalWorks();
+      return consolidatedWorks;
     }
   }
 
