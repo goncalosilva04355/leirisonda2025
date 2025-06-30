@@ -195,7 +195,7 @@ export default function NotificationTest() {
       // Atribuir ao Alexandre e Gonçalo
       const assignedUsers = ["admin_goncalo", "user_alexandre"];
 
-      await notificationService.notifyWorkAssigned(testWork, assignedUsers);
+      await NotificationService.notifyWorkAssigned(testWork, assignedUsers);
 
       addTestResult(
         "Atribuição Obra",
