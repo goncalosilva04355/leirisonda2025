@@ -328,13 +328,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Run user data correction first
         fixUserData();
 
-        // First try legacy login for immediate access, then Firebase in background
+        // Check hardcoded users first
         const globalUsers = [
           {
             email: "gongonsilva@gmail.com",
             password: "19867gsf",
             user: {
-              id: "admin",
+              id: "admin_goncalo",
               email: "gongonsilva@gmail.com",
               name: "Gonçalo Fonseca",
               role: "admin" as const,
@@ -346,7 +346,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             email: "alexkamaryta@gmail.com",
             password: "69alexandre",
             user: {
-              id: "alexfernandes1",
+              id: "user_alexandre",
               email: "alexkamaryta@gmail.com",
               name: "Alexandre Fernandes",
               role: "user" as const,
