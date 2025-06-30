@@ -94,7 +94,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error("❌ Error parsing stored user:", error);
       localStorage.removeItem("leirisonda_user");
-      setInitError("Erro ao carregar dados do utilizador");
+      // Don't set initError immediately, allow user to try login
+      console.log("🔄 Continuing without stored user, allowing login...");
     }
   };
 
