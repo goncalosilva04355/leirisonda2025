@@ -103,17 +103,33 @@ const initializeApp = () => {
   try {
     console.log("🚀 Starting Leirisonda...");
 
+    // Verify DOM is ready
+    if (document.readyState === "loading") {
+      console.log("⏳ DOM still loading, waiting...");
+      document.addEventListener("DOMContentLoaded", initializeApp);
+      return;
+    }
+
     const rootElement = document.getElementById("root");
     if (!rootElement) {
       throw new Error("Root element not found");
     }
 
+    // Check for React availability
+    if (!React || !ReactDOM) {
+      throw new Error("React or ReactDOM not available");
+    }
+
     // Clear any previous content
     rootElement.innerHTML = "";
 
-    // Create React root and render immediately
+    // Create React root and render with strict mode
     const root = ReactDOM.createRoot(rootElement);
-    root.render(<App />);
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>,
+    );
 
     console.log("✅ Leirisonda loaded successfully!");
   } catch (error) {
