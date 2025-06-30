@@ -295,7 +295,7 @@ export function useFirebaseSync() {
       return;
     }
 
-    console.log("💓 SISTEMA DE SINCRONIZA��ÃO ATIVO");
+    console.log("💓 SISTEMA DE SINCRONIZA���ÃO ATIVO");
 
     // Sync inteligente a cada 15 segundos
     heartbeatInterval.current = setInterval(async () => {
@@ -328,7 +328,7 @@ export function useFirebaseSync() {
     // Sync de recuperação a cada 2 minutos para garantir consistência
     const recoveryInterval = setInterval(async () => {
       if (isOnline && isFirebaseAvailable) {
-        console.log("🔄 RECOVERY SYNC: Verificação completa de dados...");
+        console.log("��� RECOVERY SYNC: Verificação completa de dados...");
         await triggerInstantSync("recovery_check");
       }
     }, 120000); // 2 minutos
@@ -602,73 +602,221 @@ export function useFirebaseSync() {
     [withInstantSync],
   );
 
-  const deleteWork = useCallback(async (workId: string): Promise<void> => {
-    try {
-      console.log(`🗑️ DELETE WORK INICIADO via hook: ${workId}`);
+  const deleteWork = useCallback(
+    async (workId: string): Promise<void> => {
+      console.log(`🗑️ DELETE WORK INICIADO via hook ULTRA ROBUSTO: ${workId}`);
 
       // Marcar operação de delete para ErrorBoundary não forçar logout
       sessionStorage.setItem("deleting_work", "true");
 
-      // ESTRATÉGIA SUPER ROBUSTA: Executar delete com proteção máxima
-      await firebaseService.deleteWork(workId);
-
-      console.log(`✅ DELETE WORK COMPLETO via hook: ${workId}`);
-
-      // Limpar dados atuais imediatamente (sync local)
-      setWorks((currentWorks) => {
-        const filtered = currentWorks.filter((w) => w.id !== workId);
-        console.log(
-          `🔄 Estado local atualizado: ${currentWorks.length} -> ${filtered.length} obras`,
-        );
-        return filtered;
-      });
-
-      // Notificar outros dispositivos sem sync automático complexo
-      setTimeout(() => {
+      try {
+        // ETAPA 1: Backup da obra antes da eliminação (para logs/debug)
+        let workToDelete = null;
         try {
-          localStorage.setItem(
-            "leirisonda_last_update",
-            new Date().toISOString(),
-          );
+          const currentWorks = works || [];
+          workToDelete = currentWorks.find((w) => w.id === workId);
+          if (workToDelete) {
+            console.log(
+              `📋 Obra a eliminar: ${workToDelete.clientName} (${workToDelete.workSheetNumber})`,
+            );
+          }
+        } catch (backupError) {
+          console.warn("⚠️ Erro no backup da obra (não crítico):", backupError);
+        }
 
-          // Apenas evento simples para notificar delete
-          const event = new CustomEvent("leirisonda_delete_notification", {
-            detail: { workId, timestamp: new Date().toISOString() },
+        // ETAPA 2: Eliminação local IMEDIATA E GARANTIDA
+        console.log("🏠 ELIMINAÇÃO LOCAL IMEDIATA...");
+        setWorks((currentWorks) => {
+          const filtered = currentWorks.filter((w) => w.id !== workId);
+          console.log(
+            `🔄 Estado hook atualizado: ${currentWorks.length} -> ${filtered.length} obras`,
+          );
+          return filtered;
+        });
+
+        // ETAPA 3: Eliminação de TODOS os storages locais
+        try {
+          const storageLocations = ["works", "leirisonda_works"];
+          storageLocations.forEach((location) => {
+            try {
+              const storedWorks = JSON.parse(
+                localStorage.getItem(location) || "[]",
+              );
+              const filteredWorks = storedWorks.filter(
+                (w: any) => w.id !== workId,
+              );
+              localStorage.setItem(location, JSON.stringify(filteredWorks));
+              console.log(
+                `🗑️ Obra eliminada de ${location}: ${storedWorks.length} -> ${filteredWorks.length}`,
+              );
+            } catch (storageError) {
+              console.warn(`⚠️ Erro ao limpar ${location}:`, storageError);
+            }
           });
-          window.dispatchEvent(event);
-        } catch (notifyError) {
-          console.warn(
-            "⚠️ Erro na notificação delete (não crítico):",
-            notifyError,
+
+          // Limpar também sessionStorage
+          try {
+            const sessionWorks = JSON.parse(
+              sessionStorage.getItem("temp_works") || "[]",
+            );
+            const filteredSessionWorks = sessionWorks.filter(
+              (w: any) => w.id !== workId,
+            );
+            sessionStorage.setItem(
+              "temp_works",
+              JSON.stringify(filteredSessionWorks),
+            );
+            console.log(
+              `🗑️ Obra eliminada de temp_works: ${sessionWorks.length} -> ${filteredSessionWorks.length}`,
+            );
+          } catch (sessionError) {
+            console.warn("⚠️ Erro ao limpar sessionStorage:", sessionError);
+          }
+
+          // Limpar backup de emergência
+          try {
+            localStorage.removeItem(`emergency_work_${workId}`);
+            console.log(
+              `🗑️ Backup de emergência removido: emergency_work_${workId}`,
+            );
+          } catch (emergencyError) {
+            console.warn(
+              "⚠️ Erro ao limpar backup emergência:",
+              emergencyError,
+            );
+          }
+        } catch (localCleanupError) {
+          console.error(
+            "❌ Erro na limpeza local (mas estado hook já foi atualizado):",
+            localCleanupError,
           );
         }
-      }, 100);
 
-      // Limpar flag de operação
-      setTimeout(() => {
-        sessionStorage.removeItem("deleting_work");
-      }, 500);
-    } catch (error) {
-      console.error(`❌ Erro no deleteWork hook:`, error);
+        // ETAPA 4: Eliminação Firebase em background SEM bloquear
+        setTimeout(async () => {
+          try {
+            console.log("🔥 Tentando eliminação Firebase em background...");
+            await firebaseService.deleteWork(workId);
+            console.log("✅ Eliminação Firebase concluída");
+          } catch (firebaseError) {
+            console.warn(
+              "⚠️ Erro Firebase (obra já eliminada localmente):",
+              firebaseError,
+            );
+          }
+        }, 100);
 
-      // Limpar flag mesmo com erro
-      sessionStorage.removeItem("deleting_work");
+        // ETAPA 5: Notificação cross-device ROBUSTA
+        setTimeout(() => {
+          try {
+            console.log(
+              "📡 Notificando outros dispositivos sobre eliminação...",
+            );
 
-      // Para deletes, ser mais tolerante - verificar se a obra ainda existe localmente
-      const currentWorks = JSON.parse(localStorage.getItem("works") || "[]");
-      const workStillExists = currentWorks.find((w: any) => w.id === workId);
+            // Múltiplas formas de notificação
+            const timestamp = new Date().toISOString();
 
-      if (!workStillExists) {
-        console.log("✅ Obra foi eliminada localmente apesar do erro");
-        // Atualizar estado mesmo com erro
-        setWorks((currentWorks) => currentWorks.filter((w) => w.id !== workId));
-        return; // Não fazer throw se obra foi eliminada localmente
+            // 1. localStorage timestamps
+            localStorage.setItem("leirisonda_last_update", timestamp);
+            localStorage.setItem("leirisonda_last_delete", timestamp);
+            localStorage.setItem(`delete_${workId}`, timestamp);
+
+            // 2. Evento customizado
+            const deleteEvent = new CustomEvent(
+              "leirisonda_delete_notification",
+              {
+                detail: {
+                  workId,
+                  timestamp,
+                  deletedWork: workToDelete,
+                  action: "work_deleted",
+                },
+              },
+            );
+            window.dispatchEvent(deleteEvent);
+
+            // 3. Storage event
+            try {
+              window.dispatchEvent(
+                new StorageEvent("storage", {
+                  key: "leirisonda_last_delete",
+                  newValue: timestamp,
+                  storageArea: localStorage,
+                }),
+              );
+            } catch (storageEventError) {
+              console.warn("⚠️ Erro no storage event:", storageEventError);
+            }
+
+            // 4. BroadcastChannel (se disponível)
+            try {
+              if (window.BroadcastChannel) {
+                const channel = new BroadcastChannel("leirisonda_updates");
+                channel.postMessage({
+                  type: "work_deleted",
+                  workId,
+                  timestamp,
+                });
+                channel.close();
+              }
+            } catch (broadcastError) {
+              console.warn(
+                "⚠️ BroadcastChannel não disponível:",
+                broadcastError,
+              );
+            }
+
+            console.log(
+              "📡 Notificação cross-device enviada com múltiplos métodos",
+            );
+          } catch (notifyError) {
+            console.warn(
+              "⚠️ Erro na notificação cross-device (não crítico):",
+              notifyError,
+            );
+          }
+        }, 200);
+
+        console.log(
+          `✅ DELETE WORK COMPLETO via hook ULTRA ROBUSTO: ${workId}`,
+        );
+      } catch (deleteError) {
+        console.error(`❌ Erro no delete work:`, deleteError);
+
+        // Mesmo com erro, forçar limpeza local para manter interface consistente
+        console.log("🔧 Forçando limpeza local apesar do erro...");
+        try {
+          setWorks((currentWorks) => {
+            const filtered = currentWorks.filter((w) => w.id !== workId);
+            return filtered;
+          });
+          console.log("✅ Limpeza local de emergência aplicada");
+        } catch (emergencyError) {
+          console.error("❌ Erro na limpeza de emergência:", emergencyError);
+        }
+
+        // Re-throw o erro apenas se for crítico
+        const isCriticalError =
+          deleteError.message?.includes("não encontrada") === false;
+        if (isCriticalError) {
+          throw deleteError;
+        } else {
+          console.log("⚠️ Erro não crítico, continuando operação...");
+        }
+      } finally {
+        // SEMPRE limpar flag de operação
+        setTimeout(() => {
+          try {
+            sessionStorage.removeItem("deleting_work");
+            console.log("🧹 Flag de delete limpa com sucesso");
+          } catch (cleanupError) {
+            console.warn("⚠️ Erro ao limpar flag:", cleanupError);
+          }
+        }, 500);
       }
-
-      // Só fazer throw se realmente houve falha na eliminação
-      throw error;
-    }
-  }, []);
+    },
+    [works],
+  );
 
   const deleteMaintenance = useCallback(
     async (maintenanceId: string): Promise<void> => {

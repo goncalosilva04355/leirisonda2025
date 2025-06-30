@@ -36,6 +36,7 @@ import { NotFound } from "./pages/NotFound";
 import { EmergencyDiagnostic } from "./pages/EmergencyDiagnostic";
 import { NotificationSettingsPage } from "./pages/NotificationSettingsPage";
 import NotificationTest from "./pages/NotificationTest";
+import { NotificationDiagnostic } from "./pages/NotificationDiagnostic";
 
 function App() {
   return (
@@ -101,6 +102,10 @@ function App() {
                 element={<NotificationSettingsPage />}
               />
               <Route path="notification-test" element={<NotificationTest />} />
+              <Route
+                path="notification-diagnostic"
+                element={<NotificationDiagnostic />}
+              />
             </Route>
 
             {/* Catch-all route */}
