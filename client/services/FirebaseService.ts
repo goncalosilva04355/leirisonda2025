@@ -1000,6 +1000,27 @@ export class FirebaseService {
                 detail: { works: uniqueWorks, timestamp: currentTime },
               }),
             );
+
+            // Cross-device notification via localStorage
+            localStorage.setItem(
+              "leirisonda_last_update",
+              JSON.stringify({
+                type: "works_updated",
+                timestamp: currentTime,
+                worksCount: uniqueWorks.length,
+                device: navigator.userAgent.substring(0, 50),
+              }),
+            );
+
+            // Trigger sync notification across devices
+            window.dispatchEvent(
+              new CustomEvent("leirisonda_sync_trigger", {
+                detail: {
+                  source: "firebase_listener",
+                  works: uniqueWorks.length,
+                },
+              }),
+            );
           } catch (e) {
             console.log("Não foi possível disparar evento customizado");
           }
