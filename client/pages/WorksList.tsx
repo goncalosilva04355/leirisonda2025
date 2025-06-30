@@ -76,7 +76,14 @@ export function WorksList() {
   useEffect(() => {
     filterWorks();
     updateURL();
-  }, [works, searchTerm, statusFilter, typeFilter, worksheetFilter]);
+  }, [
+    works,
+    searchTerm,
+    statusFilter,
+    typeFilter,
+    worksheetFilter,
+    assignedToFilter,
+  ]);
 
   const updateURL = () => {
     const params = new URLSearchParams();
