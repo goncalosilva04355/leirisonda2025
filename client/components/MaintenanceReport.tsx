@@ -187,53 +187,39 @@ export function MaintenanceReport({
         </div>
       </div>
 
-      <!-- Intervention Details -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">Detalhes da Intervenção</div>
-        </div>
-        <div class="section-content">
-          <div class="info-grid">
-            <div class="info-card">
-              <div class="label">Data da Intervenção</div>
-              <div class="value">${format(new Date(intervention.date), "dd 'de' MMMM 'de' yyyy", { locale: pt })}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Horário de Trabalho</div>
-              <div class="value">${intervention.timeStart} - ${intervention.timeEnd}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Duração Total</div>
-              <div class="value">${calculateDuration(intervention.timeStart, intervention.timeEnd)}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Técnicos Responsáveis</div>
-              <div class="value">${intervention.technicians.join(", ")}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Número de Técnicos</div>
-              <div class="value">${intervention.technicians.length} técnico${intervention.technicians.length > 1 ? "s" : ""}</div>
-            </div>
-            ${
-              intervention.vehicles && intervention.vehicles.length > 0
-                ? `
-            <div class="info-card">
-              <div class="label">Viaturas Utilizadas</div>
-              <div class="value">${intervention.vehicles.join(", ")}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Número de Viaturas</div>
-              <div class="value">${intervention.vehicles.length} viatura${intervention.vehicles.length > 1 ? "s" : ""}</div>
-            </div>`
-                : `
-            <div class="info-card">
-              <div class="label">Viaturas</div>
-              <div class="value">Nenhuma viatura registada</div>
-            </div>`
-            }
-          </div>
-        </div>
-      </div>
+      <!-- Checklist -->
+      <div class="section-title">Checklist</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 40%;">Item</th>
+            <th style="width: 30%;">Estado</th>
+            <th style="width: 30%;">Observações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Estado geral do equipamento</td>
+            <td>Conforme</td>
+            <td>Piscina apresenta boas condições de uso</td>
+          </tr>
+          <tr>
+            <td>Sistema de circulação</td>
+            <td>${intervention.workPerformed.filtros ? "Conforme" : "Verificado"}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Filtros</td>
+            <td>${intervention.workPerformed.limpezaFiltros ? "Conforme" : "Verificado"}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Bombas</td>
+            <td>Conforme</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
 
       <!-- Water Analysis -->
       <div class="section">
