@@ -177,12 +177,14 @@ export function WorksList() {
             Visualizar e gerir todas as obras
           </p>
         </div>
-        <Button asChild>
-          <Link to="/create-work">
-            <Plus className="w-4 h-4 mr-2" />
-            Nova Obra
-          </Link>
-        </Button>
+        {user?.permissions.canCreateWorks && (
+          <Button asChild>
+            <Link to="/create-work">
+              <Plus className="w-4 h-4 mr-2" />
+              Nova Obra
+            </Link>
+          </Button>
+        )}
       </div>
 
       {/* Filters */}
