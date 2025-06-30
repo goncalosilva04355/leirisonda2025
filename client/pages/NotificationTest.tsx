@@ -229,6 +229,41 @@ export default function NotificationTest() {
     }
   };
 
+  const checkPendingNotifications = async () => {
+    try {
+      console.log("📋 Verificando notificações pendentes...");
+
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      const userPendingNotifications = pendingNotifications.filter(
+        (notification: any) => notification.userId === user?.id,
+      );
+
+      const undeliveredNotifications = userPendingNotifications.filter(
+        (notification: any) => !notification.delivered,
+      );
+
+      addTestResult(
+        "Notificações Pendentes",
+        true,
+        `${userPendingNotifications.length} notificações salvas, ${undeliveredNotifications.length} não entregues`,
+        {
+          all: userPendingNotifications,
+          undelivered: undeliveredNotifications,
+          summary: {
+            total: pendingNotifications.length,
+            forUser: userPendingNotifications.length,
+            undelivered: undeliveredNotifications.length,
+          },
+        },
+      );
+    } catch (error) {
+      addTestResult("Notificações Pendentes", false, `Erro: ${error}`, error);
+    }
+  };
+
   const clearTests = () => {
     setTestResults([]);
     addTestResult("Sistema", true, "Resultados de teste limpos");
