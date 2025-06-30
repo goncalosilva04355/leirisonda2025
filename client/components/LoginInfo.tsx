@@ -350,8 +350,7 @@ export function LoginInfo() {
       >
         <div>📍 Credenciais pré-definidas:</div>
         <div>• gongonsilva@gmail.com / 19867gsf</div>
-        <div>• tecnico@leirisonda.pt / tecnico123</div>
-        <div>• supervisor@leirisonda.pt / supervisor123</div>
+        <div>• alexkamaryta@gmail.com / 69alexandre</div>
       </div>
     </div>
   );
