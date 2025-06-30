@@ -256,14 +256,18 @@ export function WorksList() {
               Nenhuma obra encontrada
             </h3>
             <p className="text-gray-600 mb-4">
-              Tente ajustar os filtros de pesquisa ou criar uma nova obra.
+              {user?.permissions.canCreateWorks
+                ? "Tente ajustar os filtros de pesquisa ou criar uma nova obra."
+                : "Tente ajustar os filtros de pesquisa."}
             </p>
-            <Button asChild>
-              <Link to="/create-work">
-                <Plus className="w-4 h-4 mr-2" />
-                Criar Nova Obra
-              </Link>
-            </Button>
+            {user?.permissions.canCreateWorks && (
+              <Button asChild>
+                <Link to="/create-work">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Criar Nova Obra
+                </Link>
+              </Button>
+            )}
           </div>
         ) : (
           <div className="divide-y divide-gray-200">
