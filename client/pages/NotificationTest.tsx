@@ -77,17 +77,42 @@ export function NotificationTest() {
     setTestResults([]);
 
     try {
-      addTestResult("Iniciando teste completo de notificações...");
+      addTestResult("🔍 Iniciando diagnóstico completo de notificações...");
 
-      // 1. Verificar suporte
-      addTestResult(`Suporte: ${status.isSupported ? "✅ Sim" : "❌ Não"}`);
+      // 1. Executar diagnóstico completo
+      const diagnostics = await notificationService.runDiagnostics();
 
-      // 2. Verificar permissões
-      const permission = Notification.permission;
-      addTestResult(`Permissão: ${permission}`);
+      addTestResult(`📱 Ambiente: ${diagnostics.environment}`);
+      addTestResult(
+        `🔧 Suporte: ${diagnostics.isSupported ? "✅ Sim" : "❌ Não"}`,
+      );
+      addTestResult(
+        `⚡ Inicializado: ${diagnostics.isInitialized ? "✅ Sim" : "❌ Não"}`,
+      );
+      addTestResult(
+        `🔐 Permissão: ${diagnostics.permission || "Não solicitada"}`,
+      );
+      addTestResult(`🛠️ Service Worker: ${diagnostics.serviceWorkerStatus}`);
+      addTestResult(`🔑 Token FCM: ${diagnostics.fcmTokenStatus}`);
+      addTestResult(`🔥 Firebase: ${diagnostics.firebaseStatus}`);
+      addTestResult(
+        `👥 Tokens salvos: ${Object.keys(diagnostics.userTokens).length}`,
+      );
 
-      if (permission !== "granted") {
-        addTestResult("Solicitando permissão...");
+      // Mostrar recomendações
+      if (diagnostics.recommendations.length > 0) {
+        addTestResult("📋 Recomendações:");
+        diagnostics.recommendations.forEach((rec) => {
+          addTestResult(
+            `  • ${rec}`,
+            rec.includes("funcionando") ? "success" : "error",
+          );
+        });
+      }
+
+      // 2. Verificar permissões se necessário
+      if (diagnostics.permission !== "granted") {
+        addTestResult("🔐 Solicitando permissão...");
         const granted = await requestPermission();
         addTestResult(
           `Permissão ${granted ? "concedida" : "negada"}`,
@@ -95,9 +120,9 @@ export function NotificationTest() {
         );
       }
 
-      // 3. Verificar inicialização
-      if (!status.isInitialized) {
-        addTestResult("Inicializando serviço...");
+      // 3. Verificar inicialização se necessário
+      if (!diagnostics.isInitialized) {
+        addTestResult("⚡ Inicializando serviço...");
         const initialized = await initializeNotifications();
         addTestResult(
           `Inicialização ${initialized ? "sucesso" : "falha"}`,
@@ -106,22 +131,22 @@ export function NotificationTest() {
       }
 
       // 4. Teste de notificação simples
-      addTestResult("Testando notificação básica...");
+      addTestResult("🔔 Testando notificação básica...");
       await showNotification(
         "🧪 Teste de Notificação",
-        `Olá ${user.name}! Este é um teste de notificação.`,
+        `Olá ${user.name}! Este é um teste de notificação da Leirisonda.`,
         { type: "test", timestamp: Date.now() },
       );
       addTestResult("Notificação básica enviada", "success");
 
       // 5. Verificar obras pendentes
-      addTestResult("Verificando obras pendentes...");
+      addTestResult("📋 Verificando obras pendentes...");
       const pending = await checkPendingWorks();
       setPendingWorks(pending);
       addTestResult(`Encontradas ${pending.length} obras pendentes`, "info");
 
       // 6. Teste específico para obra atribuída
-      addTestResult("Testando notificação de obra atribuída...");
+      addTestResult("🏗️ Testando notificação de obra atribuída...");
       await notificationService.notifyWorkAssigned(
         {
           id: `test_${Date.now()}`,
@@ -135,7 +160,7 @@ export function NotificationTest() {
       addTestResult("Notificação de obra atribuída enviada", "success");
 
       // 7. Teste de mudança de status
-      addTestResult("Testando notificação de mudança de status...");
+      addTestResult("🔄 Testando notificação de mudança de status...");
       await notificationService.notifyWorkStatusChange(
         {
           id: `test_status_${Date.now()}`,
