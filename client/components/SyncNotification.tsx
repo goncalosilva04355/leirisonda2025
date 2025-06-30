@@ -1,42 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
-import {
-  CheckCircle,
-  RefreshCw,
-  Wifi,
-  WifiOff,
-  Cloud,
-  CloudOff,
-  Bell,
-  X,
-  Activity,
-  AlertTriangle,
-} from "lucide-react";
-
-interface SyncNotification {
-  id: string;
-  type: "success" | "info" | "warning" | "error";
-  title: string;
-  message: string;
-  timestamp: Date;
-  autoHide?: boolean;
-}
+import { RefreshCw, Wifi, WifiOff, Cloud } from "lucide-react";
 
 export function SyncNotification() {
-  const {
-    isOnline,
-    isSyncing,
-    lastSync,
-    isFirebaseAvailable,
-    works,
-    maintenances,
-  } = useFirebaseSync();
-
-  const [notifications, setNotifications] = useState<SyncNotification[]>([]);
-  const [isVisible, setIsVisible] = useState(true);
+  const { isOnline, isSyncing, isFirebaseAvailable } = useFirebaseSync();
 
   // Monitorar mudanças de estado e criar notificações
   useEffect(() => {
