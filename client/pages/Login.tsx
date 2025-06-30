@@ -35,15 +35,18 @@ export function Login() {
   });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log("✅ Auth ready state set to true");
-      setAuthReady(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+    console.log("🔍 LOGIN PAGE - User check:", { user: user?.email || "none" });
+    if (user) {
+      console.log("🔄 User found, redirecting to dashboard");
+      window.location.href = "/dashboard";
+    }
+  }, [user]);
 
-  if (user && authReady) {
-    return <Navigate to="/dashboard" replace />;
+  // Simple redirect check
+  if (user) {
+    console.log("🔄 IMMEDIATE REDIRECT");
+    window.location.href = "/dashboard";
+    return <div>Redirecting...</div>;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
