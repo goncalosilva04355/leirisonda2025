@@ -351,15 +351,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log("🔍 Checking dynamically created users...");
         try {
           const storedUsers = localStorage.getItem("users");
+          console.log(
+            "📂 Found stored users:",
+            storedUsers ? JSON.parse(storedUsers).length : 0,
+          );
+
           if (storedUsers) {
             const users = JSON.parse(storedUsers);
+            console.log(
+              "👥 Available emails:",
+              users.map((u: User) => u.email),
+            );
+
             const foundUser = users.find((u: User) => u.email === email);
 
             if (foundUser) {
+              console.log(
+                "👤 Found user:",
+                foundUser.name,
+                "ID:",
+                foundUser.id,
+              );
+
               // Check password
               const storedPassword = localStorage.getItem(
                 `password_${foundUser.id}`,
               );
+              console.log("🔐 Password check:", {
+                hasStoredPassword: !!storedPassword,
+                passwordsMatch: storedPassword === password,
+                inputPassword: password ? "***provided***" : "empty",
+                storedPassword: storedPassword ? "***stored***" : "not found",
+              });
+
               if (storedPassword === password) {
                 console.log("✅ Dynamic user authenticated:", foundUser.name);
                 setUser(foundUser);
@@ -407,8 +431,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.log("❌ Invalid password for dynamic user");
               }
             } else {
-              console.log("❌ Dynamic user not found");
+              console.log("❌ Dynamic user not found for email:", email);
             }
+          } else {
+            console.log("📂 No stored users found in localStorage");
           }
         } catch (error) {
           console.error("❌ Error checking dynamic users:", error);
