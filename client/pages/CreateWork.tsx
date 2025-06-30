@@ -342,6 +342,11 @@ export function CreateWork() {
         setError(`Erro ao criar a obra: ${errorMessage}. Tente novamente.`);
       }
       setIsSubmitting(false);
+    } catch (fatalError) {
+      // PROTEÇÃO FINAL: Capturar qualquer erro que possa causar logout
+      console.error("❌ Erro fatal capturado (evitando logout):", fatalError);
+      setError("Erro interno. Por favor, recarregue a página e tente novamente.");
+      setIsSubmitting(false);
     }
   };
 
