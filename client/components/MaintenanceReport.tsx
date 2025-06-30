@@ -753,7 +753,7 @@ export function MaintenanceReport({
           className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 border-0"
         >
           <FileText className="mr-2 h-4 w-4" />
-          🆕 RELATÓRIO PDF NOVO (V2.0)
+          Relatório PDF Completo
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
