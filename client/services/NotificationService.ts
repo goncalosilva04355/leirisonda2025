@@ -148,9 +148,19 @@ class NotificationServiceClass {
 
   private async saveUserToken(token: string) {
     try {
+      // Buscar usuário atual da chave correta
       const currentUser = JSON.parse(
-        localStorage.getItem("currentUser") || "{}",
+        localStorage.getItem("leirisonda_user") || "{}",
       );
+
+      console.log("💾 Tentando salvar token para usuário:", {
+        hasUser: !!currentUser,
+        userId: currentUser.id,
+        userEmail: currentUser.email,
+        userName: currentUser.name,
+        token: token.substring(0, 20) + "...",
+      });
+
       if (currentUser.id) {
         // Salvar token no localStorage (pode ser expandido para Firebase)
         const userTokens = JSON.parse(
@@ -162,7 +172,14 @@ class NotificationServiceClass {
           JSON.stringify(userTokens),
         );
 
-        console.log("💾 Token salvo para usuário:", currentUser.id);
+        console.log(
+          "✅ Token salvo para usuário:",
+          currentUser.id,
+          currentUser.name,
+        );
+        console.log("📋 Tokens atuais:", Object.keys(userTokens));
+      } else {
+        console.warn("⚠️ Usuário atual não encontrado no localStorage");
       }
     } catch (error) {
       console.error("❌ Erro ao salvar token do usuário:", error);
