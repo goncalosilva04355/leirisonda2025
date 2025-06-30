@@ -374,6 +374,37 @@ export function WorksList() {
                         {work.address}
                       </p>
 
+                      {work.assignedUsers && work.assignedUsers.length > 0 && (
+                        <p className="text-sm text-gray-600 mt-2">
+                          <span className="font-medium">Atribuída a:</span>{" "}
+                          {work.assignedUsers
+                            .map((userId) => {
+                              // Buscar nome do usuário pelos IDs
+                              const assignedUser =
+                                user?.role === "admin"
+                                  ? [
+                                      {
+                                        id: "1",
+                                        name: "Gonçalo Fonseca",
+                                        email: "gongonsilva@gmail.com",
+                                      },
+                                      {
+                                        id: "2",
+                                        name: "Alexandre Fernandes",
+                                        email: "alexkamaryta@gmail.com",
+                                      },
+                                    ].find(
+                                      (u) =>
+                                        u.id === userId ||
+                                        userId.includes(u.email),
+                                    )
+                                  : null;
+                              return assignedUser ? assignedUser.name : userId;
+                            })
+                            .join(", ")}
+                        </p>
+                      )}
+
                       {work.observations && (
                         <p className="text-sm text-gray-600 mt-2">
                           <span className="font-medium">Observações:</span>{" "}
