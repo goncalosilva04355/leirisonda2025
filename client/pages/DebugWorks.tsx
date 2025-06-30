@@ -12,6 +12,7 @@ import {
   Wifi,
   WifiOff,
   Trash2,
+  Activity,
 } from "lucide-react";
 import { Work, User } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
