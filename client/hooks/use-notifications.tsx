@@ -245,6 +245,7 @@ export function useNotifications() {
     notifyWorkAssigned,
     notifyWorkStatusChange,
     showNotification,
+    checkPendingWorks,
     disableNotifications,
     checkStatus: checkNotificationStatus,
   };
