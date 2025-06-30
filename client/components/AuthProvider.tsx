@@ -88,29 +88,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        console.log("🔐 Initializing AuthProvider...");
+    console.log("🚀 AUTH PROVIDER INIT");
+    loadStoredUser();
+  }, []);
 
-        // Load stored user on mount
-        loadStoredUser();
-        setInitError(null);
-
-        console.log("✅ AuthProvider initialized successfully");
-      } catch (error) {
-        console.error("❌ Error during AuthProvider initialization:", error);
-        // Only set init error for critical failures
-        if (error instanceof Error && error.message.includes("localStorage")) {
-          setInitError("Sistema de armazenamento não disponível");
-        } else {
-          console.log("🔄 Non-critical error, continuing...");
-          setInitError(null);
+  // Check localStorage on every render
+  useEffect(() => {
+    const checkUser = () => {
+      const stored = localStorage.getItem("leirisonda_user");
+      if (stored && !user) {
+        console.log("🔄 RESTORING USER FROM STORAGE");
+        try {
+          const parsedUser = JSON.parse(stored);
+          setUser(parsedUser);
+        } catch (error) {
+          console.error("❌ Failed to parse stored user");
         }
       }
     };
 
-    initializeAuth();
-  }, []);
+    checkUser();
+
+    // Check every 1 second to ensure user persists
+    const interval = setInterval(checkUser, 1000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   const createGlobalUsersInFirebase = async () => {
     try {
