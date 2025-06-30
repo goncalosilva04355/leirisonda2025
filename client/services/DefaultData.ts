@@ -80,15 +80,6 @@ export class DefaultDataService {
           case "gongonsilva@gmail.com":
             password = "19867gsf";
             break;
-          case "tecnico@leirisonda.pt":
-            password = "tecnico123";
-            break;
-          case "supervisor@leirisonda.pt":
-            password = "supervisor123";
-            break;
-          case "user@leirisonda.pt":
-            password = "user123";
-            break;
           case "alexkamaryta@gmail.com":
             password = "69alexandre";
             break;
