@@ -32,6 +32,7 @@ import { UserSyncDiagnostic } from "./pages/UserSyncDiagnostic";
 import { DebugWorks } from "./pages/DebugWorks";
 import { SyncMonitor } from "./pages/SyncMonitor";
 import { NotFound } from "./pages/NotFound";
+import { EmergencyDiagnostic } from "./pages/EmergencyDiagnostic";
 
 function App() {
   return (
