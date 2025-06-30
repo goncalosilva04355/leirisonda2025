@@ -322,61 +322,23 @@ export function CreateWork() {
           )}
         </div>
 
-        {/* Debug buttons para Gonçalo */}
-        {user?.email === "gongonsilva@gmail.com" && (
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const works1 = JSON.parse(
-                  localStorage.getItem("works") || "[]",
-                );
-                const works2 = JSON.parse(
-                  localStorage.getItem("leirisonda_works") || "[]",
-                );
-                const works3 = JSON.parse(
-                  sessionStorage.getItem("temp_works") || "[]",
-                );
-                const consolidated =
-                  firebaseService.consolidateWorksFromAllBackups();
-                const firebaseStatus = firebaseService.getFirebaseStatus();
+        <div className="text-xs text-gray-500 text-right">
+          <div className="flex items-center justify-end space-x-2">
+            <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+            <span>
+              {isSyncing ? (
+                <>
+                  <span className="text-sm text-blue-600">Sincronizando...</span>
+                </>
+              ) : (
+                <span className="text-sm text-orange-600">Offline</span>
+              )}
+            </span>
+          </div>
+        </div>
 
-                // Contar obras de emergência
-                let emergencyCount = 0;
-                for (let i = 0; i < localStorage.length; i++) {
-                  const key = localStorage.key(i);
-                  if (key && key.startsWith("emergency_work_"))
-                    emergencyCount++;
-                }
-
-                console.log("🔍 DEBUG SISTEMA BACKUP TRIPLO:", {
-                  backups: {
-                    works: works1.length,
-                    leirisonda_works: works2.length,
-                    temp_works: works3.length,
-                    emergency: emergencyCount,
-                    consolidado: consolidated.length,
-                  },
-                  ultimasObras: consolidated.slice(0, 3).map((w: any) => ({
-                    id: w.id,
-                    cliente: w.clientName,
-                    folhaObra: w.workSheetNumber,
-                    criada: w.createdAt,
-                  })),
-                  firebase: firebaseStatus,
-                  sync: { isOnline, isSyncing },
-                });
-
-                alert(
-                  `🔍 DEBUG BACKUP TRIPLO:\n📦 Works: ${works1.length}\n🗂️ Leirisonda: ${works2.length}\n⚡ Temp: ${works3.length}\n🚨 Emergency: ${emergencyCount}\n✅ Consolidado: ${consolidated.length}\n🔥 Firebase: ${firebaseStatus.isAvailable ? "OK" : "OFF"}`,
-                );
-              }}
-            >
-              🔍 Debug
-            </Button>
-
-            <Button
+        <div className="hidden">
+          <Button
               variant="outline"
               size="sm"
               onClick={async () => {
