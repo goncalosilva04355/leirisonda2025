@@ -1240,6 +1240,60 @@ class NotificationServiceClass {
       console.error("❌ Erro ao processar broadcast de obra atribuída:", error);
     }
   }
+
+  // Manipular evento de mudança de status via broadcast
+  private async handleBroadcastStatusChange(broadcastEvent: any) {
+    try {
+      const currentUser = JSON.parse(
+        localStorage.getItem("leirisonda_user") || "{}",
+      );
+
+      // Verificar se o usuário atual está na lista de usuários atribuídos
+      if (
+        currentUser.id &&
+        broadcastEvent.assignedUsers.includes(currentUser.id)
+      ) {
+        console.log(
+          `📨 Processando notificação de mudança de status via broadcast para ${currentUser.name}...`,
+        );
+
+        // Mostrar notificação local se ainda não foi entregue
+        const pendingNotifications = JSON.parse(
+          localStorage.getItem("pendingNotifications") || "[]",
+        );
+
+        const alreadyDelivered = pendingNotifications.some(
+          (notification: any) =>
+            notification.userId === currentUser.id &&
+            notification.workId === broadcastEvent.workId &&
+            notification.type === "work_status_change" &&
+            notification.delivered,
+        );
+
+        if (!alreadyDelivered) {
+          await this.showLocalNotification(broadcastEvent.payload);
+
+          // Marcar como entregue
+          this.markNotificationAsDelivered(
+            currentUser.id,
+            broadcastEvent.workId,
+            "work_status_change",
+          );
+
+          console.log(
+            "✅ Notificação de status via broadcast entregue com sucesso",
+          );
+        } else {
+          console.log("ℹ️ Notificação de status já foi entregue anteriormente");
+        }
+      }
+    } catch (error) {
+      console.error(
+        "❌ Erro ao processar broadcast de mudança de status:",
+        error,
+      );
+    }
+  }
 }
 
 export const notificationService = new NotificationServiceClass();
