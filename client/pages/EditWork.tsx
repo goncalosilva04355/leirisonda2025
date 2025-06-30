@@ -30,6 +30,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { WorkReport } from "@/components/WorkReport";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 import { useAuth } from "@/components/AuthProvider";
+import { useNotifications } from "@/hooks/use-notifications";
 
 const statusOptions = [
   { value: "pendente", label: "Pendente" },
