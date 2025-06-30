@@ -251,6 +251,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const fixUserData = useCallback(() => {
+    try {
+      console.log("🔧 Running user data correction...");
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        const users = JSON.parse(storedUsers);
+        let needsUpdate = false;
+
+        users.forEach((user: User) => {
+          // Ensure user has complete structure
+          if (!user.permissions) {
+            user.permissions =
+              user.role === "admin"
+                ? defaultAdminPermissions
+                : defaultUserPermissions;
+            needsUpdate = true;
+          }
+
+          if (!user.updatedAt) {
+            user.updatedAt = user.createdAt || new Date().toISOString();
+            needsUpdate = true;
+          }
+
+          // Check if password exists for this user
+          const passwordById = localStorage.getItem(`password_${user.id}`);
+          const passwordByEmail = localStorage.getItem(
+            `password_${user.email}`,
+          );
+
+          // If password only exists by ID, also store by email for compatibility
+          if (passwordById && !passwordByEmail) {
+            localStorage.setItem(`password_${user.email}`, passwordById);
+            console.log(`🔧 Fixed password storage for ${user.email}`);
+          }
+
+          // If password only exists by email, also store by ID for compatibility
+          if (passwordByEmail && !passwordById) {
+            localStorage.setItem(`password_${user.id}`, passwordByEmail);
+            console.log(`🔧 Fixed password storage for ${user.id}`);
+          }
+        });
+
+        if (needsUpdate) {
+          localStorage.setItem("users", JSON.stringify(users));
+          console.log("🔧 User data structure updated");
+        }
+      }
+    } catch (error) {
+      console.error("❌ Error fixing user data:", error);
+    }
+  }, []);
+
   const login = useCallback(
     async (email: string, password: string): Promise<boolean> => {
       try {
@@ -258,6 +310,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setInitError(null);
 
         console.log("🔐 Starting login process for:", email);
+
+        // Run user data correction first
+        fixUserData();
 
         // First try legacy login for immediate access, then Firebase in background
         const globalUsers = [
@@ -373,23 +428,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 foundUser.id,
               );
 
-              // Check password
-              const storedPassword = localStorage.getItem(
+              // Check password - try multiple storage keys for compatibility
+              let storedPassword = localStorage.getItem(
                 `password_${foundUser.id}`,
               );
+
+              // If not found with ID, try with email (fallback)
+              if (!storedPassword) {
+                storedPassword = localStorage.getItem(
+                  `password_${foundUser.email}`,
+                );
+              }
+
+              // Try with just the email as key
+              if (!storedPassword) {
+                storedPassword = localStorage.getItem(`password_${email}`);
+              }
+
               console.log("🔐 Password check:", {
+                userId: foundUser.id,
+                userEmail: foundUser.email,
                 hasStoredPassword: !!storedPassword,
                 passwordsMatch: storedPassword === password,
                 inputPassword: password ? "***provided***" : "empty",
                 storedPassword: storedPassword ? "***stored***" : "not found",
+                testedKeys: [
+                  `password_${foundUser.id}`,
+                  `password_${foundUser.email}`,
+                  `password_${email}`,
+                ],
               });
 
               if (storedPassword === password) {
                 console.log("✅ Dynamic user authenticated:", foundUser.name);
-                setUser(foundUser);
+
+                // Ensure user has complete data structure
+                const completeUser = {
+                  ...foundUser,
+                  permissions:
+                    foundUser.permissions ||
+                    (foundUser.role === "admin"
+                      ? defaultAdminPermissions
+                      : defaultUserPermissions),
+                  createdAt: foundUser.createdAt || new Date().toISOString(),
+                  updatedAt: foundUser.updatedAt || new Date().toISOString(),
+                };
+
+                setUser(completeUser);
                 localStorage.setItem(
                   "leirisonda_user",
-                  JSON.stringify(foundUser),
+                  JSON.stringify(completeUser),
                 );
 
                 // Try Firebase in background for future sync
@@ -429,9 +517,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 return true;
               } else {
                 console.log("❌ Invalid password for dynamic user");
+                console.log("🔍 Debugging password mismatch:", {
+                  provided: password,
+                  stored: storedPassword,
+                  match: storedPassword === password,
+                  providedLength: password?.length,
+                  storedLength: storedPassword?.length,
+                });
               }
             } else {
               console.log("❌ Dynamic user not found for email:", email);
+              console.log(
+                "🔍 Available users:",
+                users.map((u: User) => ({
+                  id: u.id,
+                  email: u.email,
+                  name: u.name,
+                })),
+              );
             }
           } else {
             console.log("📂 No stored users found in localStorage");

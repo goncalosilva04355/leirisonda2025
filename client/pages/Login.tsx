@@ -4,8 +4,8 @@ import { useAuth } from "@/components/AuthProvider";
 import { LoginInfo } from "@/components/LoginInfo";
 
 export function Login() {
-  const [email, setEmail] = useState("gongonsilva@gmail.com");
-  const [password, setPassword] = useState("19867gsf");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -173,7 +173,7 @@ export function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
+                placeholder="Email de acesso"
                 disabled={isSubmitting}
                 style={{
                   width: "100%",
@@ -206,7 +206,7 @@ export function Login() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Palavra-passe"
                   disabled={isSubmitting}
                   style={{
                     width: "100%",
@@ -235,7 +235,7 @@ export function Login() {
                     fontSize: "18px",
                   }}
                 >
-                  {showPassword ? "👁️" : "👁️‍🗨️"}
+                  {showPassword ? "🙈" : "👁️"}
                 </button>
               </div>
             </div>
@@ -322,7 +322,7 @@ export function Login() {
         }
       `}</style>
 
-      <LoginInfo />
+      {/* Debug info removed for security - credentials should not be visible */}
     </div>
   );
 }

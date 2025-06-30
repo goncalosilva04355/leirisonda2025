@@ -7,6 +7,11 @@ interface UserDebugInfo {
   email: string;
   role: string;
   hasPassword: boolean;
+  passwordStorageDetails: {
+    byId: boolean;
+    byEmail: boolean;
+    actualPassword: string;
+  };
 }
 
 export function LoginInfo() {
@@ -19,13 +24,25 @@ export function LoginInfo() {
         const storedUsers = localStorage.getItem("users");
         if (storedUsers) {
           const parsedUsers = JSON.parse(storedUsers);
-          const debugInfo = parsedUsers.map((user: any) => ({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            hasPassword: !!localStorage.getItem(`password_${user.id}`),
-          }));
+          const debugInfo = parsedUsers.map((user: any) => {
+            const passwordById = localStorage.getItem(`password_${user.id}`);
+            const passwordByEmail = localStorage.getItem(
+              `password_${user.email}`,
+            );
+
+            return {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user.role,
+              hasPassword: !!(passwordById || passwordByEmail),
+              passwordStorageDetails: {
+                byId: !!passwordById,
+                byEmail: !!passwordByEmail,
+                actualPassword: passwordById || passwordByEmail || "none",
+              },
+            };
+          });
           setUsers(debugInfo);
         }
       } catch (error) {
@@ -163,14 +180,26 @@ export function LoginInfo() {
                   >
                     {user.role === "admin" ? "Admin" : "User"}
                   </span>
-                  <span
-                    style={{
-                      color: user.hasPassword ? "#28a745" : "#dc3545",
-                      fontSize: "10px",
-                    }}
-                  >
-                    {user.hasPassword ? "✓ Password OK" : "❌ No Password"}
-                  </span>
+                  <div style={{ fontSize: "10px" }}>
+                    <span
+                      style={{
+                        color: user.hasPassword ? "#28a745" : "#dc3545",
+                      }}
+                    >
+                      {user.hasPassword ? "✓ Password OK" : "❌ No Password"}
+                    </span>
+                    {user.hasPassword && (
+                      <div
+                        style={{
+                          fontSize: "9px",
+                          color: "#666",
+                          marginTop: "2px",
+                        }}
+                      >
+                        Pass: {user.passwordStorageDetails.actualPassword}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

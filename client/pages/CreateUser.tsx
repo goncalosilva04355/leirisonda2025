@@ -133,11 +133,12 @@ export function CreateUser() {
         return;
       }
 
-      // Create new user
+      // Create new user with unique ID
+      const newUserId = crypto.randomUUID();
       const newUser: UserType = {
-        id: Date.now().toString(),
+        id: newUserId,
         name: formData.name.trim(),
-        email: formData.email.trim(),
+        email: formData.email.trim().toLowerCase(), // Normalize email
         role: formData.role,
         permissions:
           formData.role === "admin"
@@ -161,6 +162,7 @@ export function CreateUser() {
               }
             : permissions,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       // Save user
@@ -171,22 +173,41 @@ export function CreateUser() {
         JSON.stringify(users, null, 2),
       );
 
-      // Save password separately (in production, this would be hashed)
+      // Save password with multiple keys for compatibility (in production, this would be hashed)
       localStorage.setItem(`password_${newUser.id}`, formData.password);
+      localStorage.setItem(`password_${newUser.email}`, formData.password);
+
       console.log(
         "🔐 Saved password for user",
         newUser.id,
-        ":",
+        "email:",
+        newUser.email,
+        "password:",
         formData.password,
       );
 
       // Verify user was created correctly
       const verification = {
         userSaved: localStorage.getItem("users")?.includes(newUser.id) || false,
-        passwordSaved: !!localStorage.getItem(`password_${newUser.id}`),
+        passwordSavedById: !!localStorage.getItem(`password_${newUser.id}`),
+        passwordSavedByEmail: !!localStorage.getItem(
+          `password_${newUser.email}`,
+        ),
         totalUsers: JSON.parse(localStorage.getItem("users") || "[]").length,
+        userCanBeFound: JSON.parse(localStorage.getItem("users") || "[]").find(
+          (u: UserType) => u.email === newUser.email,
+        ),
       };
       console.log("✅ User creation verification:", verification);
+
+      // Test immediate login capability
+      const testLogin = {
+        email: newUser.email,
+        storedPassword: localStorage.getItem(`password_${newUser.id}`),
+        canLogin:
+          localStorage.getItem(`password_${newUser.id}`) === formData.password,
+      };
+      console.log("🧪 Login test:", testLogin);
 
       setSuccess(
         `Utilizador criado com sucesso! Email: ${newUser.email} - Pode agora fazer login.`,
