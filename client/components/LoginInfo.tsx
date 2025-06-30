@@ -276,20 +276,37 @@ export function LoginInfo() {
               Utilizadores Registados: {users.length}
             </span>
           </div>
-          <button
-            onClick={fixUserPasswords}
-            style={{
-              background: "#28a745",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              padding: "4px 8px",
-              fontSize: "10px",
-              cursor: "pointer",
-            }}
-          >
-            🔧 Corrigir
-          </button>
+          <div style={{ display: "flex", gap: "4px" }}>
+            <button
+              onClick={fixUserPasswords}
+              style={{
+                background: "#28a745",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "4px 8px",
+                fontSize: "10px",
+                cursor: "pointer",
+              }}
+            >
+              🔧 Corrigir
+            </button>
+            <button
+              onClick={cleanUserSystem}
+              style={{
+                background: "#dc3545",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "4px 8px",
+                fontSize: "10px",
+                cursor: "pointer",
+              }}
+              title="Limpar sistema e recriar apenas 2 utilizadores corretos"
+            >
+              🧹 Limpar
+            </button>
+          </div>
         </div>
 
         {users.length === 0 ? (
