@@ -232,6 +232,46 @@ export function EditWork() {
         work.id,
       );
 
+      // ENVIAR NOTIFICAÇÕES QUANDO RELEVANTE
+      try {
+        // Verificar se o status mudou
+        if (
+          work.status !== formData.status &&
+          updatedWork.assignedUsers.length > 0
+        ) {
+          console.log("🔔 Status mudou, enviando notificações:", {
+            statusAnterior: work.status,
+            novoStatus: formData.status,
+            usuariosAtribuidos: updatedWork.assignedUsers,
+          });
+          await notifyWorkStatusChange(
+            updatedWork,
+            formData.status,
+            updatedWork.assignedUsers,
+          );
+        }
+
+        // Verificar se novos usuários foram atribuídos
+        const novosUsuarios = updatedWork.assignedUsers.filter(
+          (userId) => !work.assignedUsers.includes(userId),
+        );
+        if (novosUsuarios.length > 0) {
+          console.log(
+            "🔔 Novos usuários atribuídos, enviando notificações:",
+            novosUsuarios,
+          );
+          await notifyWorkAssigned(updatedWork, novosUsuarios);
+        }
+
+        console.log("✅ Notificações processadas com sucesso");
+      } catch (notificationError) {
+        console.warn(
+          "⚠️ Erro ao enviar notificações (não crítico):",
+          notificationError,
+        );
+        // Não interromper o fluxo se notificações falharem
+      }
+
       // Navigate back to work detail
       navigate(`/works/${work.id}`);
     } catch (err) {
