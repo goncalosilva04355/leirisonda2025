@@ -47,7 +47,7 @@ export class DefaultDataService {
 
       const defaultUsers: User[] = [
         {
-          id: crypto.randomUUID(),
+          id: "admin_goncalo",
           email: "gongonsilva@gmail.com",
           name: "Gonçalo Fonseca",
           role: "admin",
@@ -56,7 +56,7 @@ export class DefaultDataService {
           updatedAt: new Date().toISOString(),
         },
         {
-          id: crypto.randomUUID(),
+          id: "user_alexandre",
           email: "alexkamaryta@gmail.com",
           name: "Alexandre Fernandes",
           role: "user",
