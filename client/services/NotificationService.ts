@@ -182,7 +182,7 @@ class NotificationServiceClass {
     PushNotifications.addListener(
       "pushNotificationActionPerformed",
       (notification) => {
-        console.log("��� Ação na notificação push:", notification);
+        console.log("👆 Ação na notificação push:", notification);
         this.handleNotificationClick(notification.notification.data);
       },
     );
@@ -1164,6 +1164,26 @@ class NotificationServiceClass {
             }
           } catch (error) {
             console.error("❌ Erro ao processar evento de broadcast:", error);
+          }
+        }
+
+        if (event.key === "lastStatusBroadcast" && event.newValue) {
+          try {
+            const broadcastEvent = JSON.parse(event.newValue);
+            console.log(
+              "📡 Recebido evento de broadcast de status:",
+              broadcastEvent,
+            );
+
+            // Verificar se é um evento de mudança de status
+            if (broadcastEvent.type === "LEIRISONDA_WORK_STATUS_CHANGE") {
+              this.handleBroadcastStatusChange(broadcastEvent);
+            }
+          } catch (error) {
+            console.error(
+              "❌ Erro ao processar evento de broadcast de status:",
+              error,
+            );
           }
         }
       });
