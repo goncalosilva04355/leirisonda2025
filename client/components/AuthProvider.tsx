@@ -398,7 +398,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               email: "alexkamaryta@gmail.com",
               name: "Alexandre Fernandes",
               role: "user" as const,
-              permissions: defaultUserPermissions,
+              permissions: {
+                ...defaultUserPermissions,
+                canEditWorks: true,
+                canEditMaintenance: true,
+                canViewReports: true,
+              },
               createdAt: new Date().toISOString(),
             },
           },
@@ -638,7 +643,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     storedPassword.trim() === password.trim() ||
                     storedPassword.toLowerCase() === password.toLowerCase()
                   ) {
-                    console.log("🔧 Auto-fixing password mismatch...");
+                    console.log("��� Auto-fixing password mismatch...");
                     uniquePasswordKeys.forEach((key) => {
                       localStorage.setItem(key, password);
                     });
