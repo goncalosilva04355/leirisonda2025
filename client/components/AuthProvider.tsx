@@ -321,7 +321,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     `🔍 Verificando obras pendentes para ${globalUser.name}...`,
                   );
                   const pendingWorks =
-                    await notificationService.checkPendingAssignedWorks(
+                    await NotificationService.checkPendingAssignedWorks(
                       globalUser.id,
                     );
 
