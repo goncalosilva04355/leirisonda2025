@@ -563,9 +563,6 @@ export class PDFGenerator {
             <div class="header-top">
               <div class="logo-section">
                 <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Leirisonda Logo" class="logo" />
-                <div class="company-info">
-                  <div class="company-name">Leirisonda</div>
-                </div>
               </div>
 
               <div class="report-title">
@@ -575,8 +572,12 @@ export class PDFGenerator {
 
               <div class="header-meta">
                 <div class="page-number">1</div>
-                <div class="date-time">Em: ${reportDate} ${new Date().toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" })}</div>
               </div>
+            </div>
+
+            <div class="sub-header">
+              <div class="sub-left">Por: Leirisonda (info@leirisonda.pt)</div>
+              <div class="sub-right">Em: ${reportDate} ${new Date().toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" })}</div>
             </div>
           </div>
 
