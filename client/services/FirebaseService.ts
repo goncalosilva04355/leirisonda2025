@@ -598,31 +598,95 @@ export class FirebaseService {
   }
 
   async deleteWork(workId: string): Promise<void> {
+    console.log(`🗑️ INICIANDO ELIMINAÇÃO: ${workId}`);
+
+    // Verificar se a obra existe antes de tentar eliminar
+    const works = this.getLocalWorks();
+    const workToDelete = works.find((w) => w.id === workId);
+
+    if (!workToDelete) {
+      console.error(`❌ ERRO: Obra ${workId} não encontrada para eliminação`);
+      throw new Error(`Obra ${workId} não encontrada`);
+    }
+
+    console.log(
+      `📋 Obra encontrada: ${workToDelete.clientName} (${workToDelete.workSheetNumber})`,
+    );
+
+    // Sempre eliminar localmente primeiro (garante que funciona)
+    console.log("📱 Eliminando obra localmente...");
+    this.deleteLocalWork(workId);
+
+    // Verificar se eliminação local funcionou
+    const worksAfterLocal = this.getLocalWorks();
+    const stillExistsLocal = worksAfterLocal.find((w) => w.id === workId);
+
+    if (stillExistsLocal) {
+      console.error(`❌ FALHA na eliminação local da obra ${workId}`);
+      throw new Error("Falha na eliminação local da obra");
+    }
+
+    console.log("✅ Obra eliminada localmente com sucesso");
+
+    // Tentar eliminar do Firebase se disponível
     if (!this.isFirebaseAvailable) {
-      return this.deleteLocalWork(workId);
+      console.log("📵 Firebase indisponível - eliminação apenas local");
+      return;
     }
 
     try {
+      console.log("🔥 Eliminando obra do Firebase...");
       const workRef = doc(db, "works", workId);
       await deleteDoc(workRef);
-      console.log("🔥 Work deleted from Firebase:", workId);
+      console.log("✅ Obra eliminada do Firebase com sucesso:", workId);
     } catch (error) {
-      console.error(
-        "Error deleting work from Firebase, falling back to local:",
+      console.warn(
+        "⚠️ Erro ao eliminar do Firebase (obra já eliminada localmente):",
         error,
       );
-      this.deleteLocalWork(workId);
+      // Não fazer throw aqui porque a eliminação local já funcionou
     }
+
+    console.log(`🎉 ELIMINAÇÃO COMPLETA da obra ${workId}`);
   }
 
   private deleteLocalWork(workId: string): void {
     try {
+      console.log(`📱 Eliminando obra ${workId} do localStorage...`);
+
       const works = this.getLocalWorks();
+      console.log(`📊 Total de obras antes da eliminação: ${works.length}`);
+
+      const workToDelete = works.find((w) => w.id === workId);
+      if (!workToDelete) {
+        console.warn(`⚠️ Obra ${workId} não encontrada no localStorage`);
+        return;
+      }
+
       const filteredWorks = works.filter((w) => w.id !== workId);
+      console.log(`📊 Total de obras após filtrar: ${filteredWorks.length}`);
+
+      // Salvar em múltiplas localizações para backup
       localStorage.setItem("works", JSON.stringify(filteredWorks));
-      console.log("📱 Work deleted locally:", workId);
+      localStorage.setItem("leirisonda_works", JSON.stringify(filteredWorks));
+
+      console.log(`✅ Obra ${workId} eliminada do localStorage`);
+
+      // Verificação dupla
+      const verification = this.getLocalWorks();
+      const stillExists = verification.find((w) => w.id === workId);
+
+      if (stillExists) {
+        console.error(`❌ ERRO: Obra ${workId} ainda existe após eliminação!`);
+        throw new Error("Falha na eliminação - obra ainda existe");
+      }
+
+      console.log(
+        `✅ Verificação confirmada: obra ${workId} eliminada com sucesso`,
+      );
     } catch (error) {
-      console.error("Error deleting local work:", error);
+      console.error(`❌ Erro crítico ao eliminar obra ${workId}:`, error);
+      throw error;
     }
   }
 
@@ -818,7 +882,7 @@ export class FirebaseService {
         "pool_maintenances",
         JSON.stringify(filteredMaintenances),
       );
-      console.log("📱 Maintenance deleted locally:", maintenanceId);
+      console.log("��� Maintenance deleted locally:", maintenanceId);
     } catch (error) {
       console.error("Error deleting local maintenance:", error);
     }
