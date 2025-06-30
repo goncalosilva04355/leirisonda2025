@@ -441,7 +441,7 @@ export function Dashboard() {
                   <Activity className="w-4 h-4 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Obras Recentes
+                  Todas as Obras Recentes
                 </h3>
               </div>
               <Button variant="outline" asChild className="hover-leirisonda">
