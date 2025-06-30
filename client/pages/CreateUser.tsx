@@ -168,46 +168,79 @@ export function CreateUser() {
       // Save user
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
-      console.log(
-        "💾 Saved users to localStorage:",
-        JSON.stringify(users, null, 2),
-      );
+      console.log("💾 Saved users to localStorage. Total users:", users.length);
 
-      // Save password with multiple keys for compatibility (in production, this would be hashed)
-      localStorage.setItem(`password_${newUser.id}`, formData.password);
-      localStorage.setItem(`password_${newUser.email}`, formData.password);
+      // Save password with multiple keys for maximum compatibility
+      const passwordKeys = [
+        `password_${newUser.id}`,
+        `password_${newUser.email}`,
+        `password_${newUser.email.trim().toLowerCase()}`,
+        `password_${formData.email.trim().toLowerCase()}`,
+      ];
+
+      // Remove duplicates and save to all keys
+      const uniqueKeys = [...new Set(passwordKeys)];
+      uniqueKeys.forEach((key) => {
+        localStorage.setItem(key, formData.password);
+        console.log(`🔐 Saved password to key: ${key}`);
+      });
 
       console.log(
-        "🔐 Saved password for user",
-        newUser.id,
-        "email:",
+        "✅ Password saved with keys:",
+        uniqueKeys,
+        "for user:",
+        newUser.name,
+        "Email:",
         newUser.email,
-        "password:",
-        formData.password,
+        "Password length:",
+        formData.password.length,
       );
 
-      // Verify user was created correctly
-      const verification = {
-        userSaved: localStorage.getItem("users")?.includes(newUser.id) || false,
-        passwordSavedById: !!localStorage.getItem(`password_${newUser.id}`),
-        passwordSavedByEmail: !!localStorage.getItem(
-          `password_${newUser.email}`,
-        ),
-        totalUsers: JSON.parse(localStorage.getItem("users") || "[]").length,
-        userCanBeFound: JSON.parse(localStorage.getItem("users") || "[]").find(
-          (u: UserType) => u.email === newUser.email,
-        ),
-      };
-      console.log("✅ User creation verification:", verification);
+      // Comprehensive verification
+      const savedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+      const foundUser = savedUsers.find(
+        (u: UserType) => u.email === newUser.email,
+      );
 
-      // Test immediate login capability
-      const testLogin = {
-        email: newUser.email,
-        storedPassword: localStorage.getItem(`password_${newUser.id}`),
-        canLogin:
-          localStorage.getItem(`password_${newUser.id}`) === formData.password,
+      const verification = {
+        userSaved: !!foundUser,
+        userDetails: foundUser
+          ? {
+              id: foundUser.id,
+              email: foundUser.email,
+              name: foundUser.name,
+              role: foundUser.role,
+            }
+          : null,
+        totalUsers: savedUsers.length,
+        passwordKeys: uniqueKeys.map((key) => ({
+          key,
+          exists: !!localStorage.getItem(key),
+          value: localStorage.getItem(key),
+        })),
       };
-      console.log("🧪 Login test:", testLogin);
+      console.log("✅ Complete user creation verification:", verification);
+
+      // Test all possible login scenarios
+      const loginTests = uniqueKeys.map((key) => ({
+        key,
+        storedPassword: localStorage.getItem(key),
+        matches: localStorage.getItem(key) === formData.password,
+      }));
+
+      console.log("🧪 Login capability tests:", loginTests);
+
+      // Test email normalization scenario
+      const normalizedTest = {
+        originalEmail: newUser.email,
+        normalizedEmail: newUser.email.trim().toLowerCase(),
+        inputEmail: formData.email,
+        normalizedInput: formData.email.trim().toLowerCase(),
+        match:
+          newUser.email.trim().toLowerCase() ===
+          formData.email.trim().toLowerCase(),
+      };
+      console.log("📧 Email normalization test:", normalizedTest);
 
       setSuccess(
         `Utilizador criado com sucesso! Email: ${newUser.email} - Pode agora fazer login.`,

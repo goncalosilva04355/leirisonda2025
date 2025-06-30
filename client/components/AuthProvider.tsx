@@ -253,7 +253,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fixUserData = useCallback(() => {
     try {
-      console.log("🔧 Running user data correction...");
+      console.log("🔧 Running comprehensive user data correction...");
       const storedUsers = localStorage.getItem("users");
       if (storedUsers) {
         const users = JSON.parse(storedUsers);
@@ -267,29 +267,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 ? defaultAdminPermissions
                 : defaultUserPermissions;
             needsUpdate = true;
+            console.log(`🔧 Added permissions to user ${user.email}`);
           }
 
           if (!user.updatedAt) {
             user.updatedAt = user.createdAt || new Date().toISOString();
             needsUpdate = true;
+            console.log(`🔧 Added updatedAt to user ${user.email}`);
           }
 
-          // Check if password exists for this user
-          const passwordById = localStorage.getItem(`password_${user.id}`);
-          const passwordByEmail = localStorage.getItem(
+          // Comprehensive password key management
+          const passwordKeys = [
+            `password_${user.id}`,
             `password_${user.email}`,
-          );
+            `password_${user.email.trim().toLowerCase()}`,
+          ];
 
-          // If password only exists by ID, also store by email for compatibility
-          if (passwordById && !passwordByEmail) {
-            localStorage.setItem(`password_${user.email}`, passwordById);
-            console.log(`🔧 Fixed password storage for ${user.email}`);
+          // Find any existing password
+          let existingPassword = null;
+          let sourceKey = null;
+          for (const key of passwordKeys) {
+            const pwd = localStorage.getItem(key);
+            if (pwd) {
+              existingPassword = pwd;
+              sourceKey = key;
+              break;
+            }
           }
 
-          // If password only exists by email, also store by ID for compatibility
-          if (passwordByEmail && !passwordById) {
-            localStorage.setItem(`password_${user.id}`, passwordByEmail);
-            console.log(`🔧 Fixed password storage for ${user.id}`);
+          if (existingPassword) {
+            // Ensure password is stored with all variations for maximum compatibility
+            passwordKeys.forEach((key) => {
+              const current = localStorage.getItem(key);
+              if (!current) {
+                localStorage.setItem(key, existingPassword);
+                console.log(
+                  `🔧 Duplicated password to key: ${key} from ${sourceKey}`,
+                );
+              }
+            });
+          } else {
+            console.log(
+              `⚠️ No password found for user ${user.email} (${user.id})`,
+            );
           }
         });
 
@@ -297,6 +317,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           localStorage.setItem("users", JSON.stringify(users));
           console.log("🔧 User data structure updated");
         }
+
+        console.log(`🔧 Fixed data for ${users.length} users`);
+      } else {
+        console.log("🔧 No users found to fix");
       }
     } catch (error) {
       console.error("❌ Error fixing user data:", error);
@@ -407,18 +431,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           const storedUsers = localStorage.getItem("users");
           console.log(
-            "📂 Found stored users:",
-            storedUsers ? JSON.parse(storedUsers).length : 0,
+            "📂 Raw stored users:",
+            storedUsers ? storedUsers.substring(0, 200) + "..." : "null",
           );
 
           if (storedUsers) {
             const users = JSON.parse(storedUsers);
             console.log(
-              "👥 Available emails:",
+              "👥 Parsed users count:",
+              users.length,
+              "Available emails:",
               users.map((u: User) => u.email),
             );
 
-            const foundUser = users.find((u: User) => u.email === email);
+            // Normalize email for comparison
+            const normalizedEmail = email.trim().toLowerCase();
+            const foundUser = users.find(
+              (u: User) =>
+                u.email && u.email.trim().toLowerCase() === normalizedEmail,
+            );
 
             if (foundUser) {
               console.log(
@@ -426,40 +457,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 foundUser.name,
                 "ID:",
                 foundUser.id,
+                "Email:",
+                foundUser.email,
               );
 
-              // Check password - try multiple storage keys for compatibility
-              let storedPassword = localStorage.getItem(
+              // Check password with multiple keys for maximum compatibility
+              const passwordKeys = [
                 `password_${foundUser.id}`,
-              );
+                `password_${foundUser.email}`,
+                `password_${normalizedEmail}`,
+                `password_${email}`,
+              ];
 
-              // If not found with ID, try with email (fallback)
-              if (!storedPassword) {
-                storedPassword = localStorage.getItem(
-                  `password_${foundUser.email}`,
-                );
+              let storedPassword = null;
+              let usedKey = null;
+
+              for (const key of passwordKeys) {
+                const pwd = localStorage.getItem(key);
+                if (pwd) {
+                  storedPassword = pwd;
+                  usedKey = key;
+                  break;
+                }
               }
 
-              // Try with just the email as key
-              if (!storedPassword) {
-                storedPassword = localStorage.getItem(`password_${email}`);
-              }
-
-              console.log("🔐 Password check:", {
+              console.log("🔐 Password search results:", {
                 userId: foundUser.id,
                 userEmail: foundUser.email,
-                hasStoredPassword: !!storedPassword,
+                inputEmail: email,
+                normalizedEmail,
+                searchedKeys: passwordKeys,
+                foundPassword: !!storedPassword,
+                usedKey,
                 passwordsMatch: storedPassword === password,
-                inputPassword: password ? "***provided***" : "empty",
-                storedPassword: storedPassword ? "***stored***" : "not found",
-                testedKeys: [
-                  `password_${foundUser.id}`,
-                  `password_${foundUser.email}`,
-                  `password_${email}`,
-                ],
+                inputPassword: password
+                  ? `***${password.length} chars***`
+                  : "empty",
+                storedPassword: storedPassword
+                  ? `***${storedPassword.length} chars***`
+                  : "not found",
               });
 
-              if (storedPassword === password) {
+              if (storedPassword && storedPassword === password) {
                 console.log("✅ Dynamic user authenticated:", foundUser.name);
 
                 // Ensure user has complete data structure
@@ -517,24 +556,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 return true;
               } else {
                 console.log("❌ Invalid password for dynamic user");
-                console.log("🔍 Debugging password mismatch:", {
-                  provided: password,
-                  stored: storedPassword,
-                  match: storedPassword === password,
-                  providedLength: password?.length,
-                  storedLength: storedPassword?.length,
-                });
+                if (storedPassword) {
+                  console.log("🔍 Password mismatch details:", {
+                    provided: password,
+                    providedType: typeof password,
+                    providedLength: password?.length,
+                    stored: storedPassword,
+                    storedType: typeof storedPassword,
+                    storedLength: storedPassword?.length,
+                    exactMatch: storedPassword === password,
+                    trimmedMatch: storedPassword.trim() === password.trim(),
+                  });
+                } else {
+                  console.log("🔍 No password found for user");
+                }
               }
             } else {
               console.log("❌ Dynamic user not found for email:", email);
-              console.log(
-                "🔍 Available users:",
-                users.map((u: User) => ({
+              console.log("🔍 Email comparison debug:", {
+                searchEmail: email,
+                normalizedSearch: normalizedEmail,
+                availableUsers: users.map((u: User) => ({
                   id: u.id,
                   email: u.email,
+                  normalizedEmail: u.email?.trim().toLowerCase(),
                   name: u.name,
                 })),
-              );
+              });
             }
           } else {
             console.log("📂 No stored users found in localStorage");

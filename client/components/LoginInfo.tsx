@@ -10,13 +10,61 @@ interface UserDebugInfo {
   passwordStorageDetails: {
     byId: boolean;
     byEmail: boolean;
+    byNormalizedEmail: boolean;
     actualPassword: string;
+    allKeys: Array<{
+      key: string;
+      value: string | null;
+      exists: boolean;
+    }>;
   };
 }
 
 export function LoginInfo() {
   const [showDebug, setShowDebug] = useState(false);
   const [users, setUsers] = useState<UserDebugInfo[]>([]);
+
+  const fixUserPasswords = () => {
+    try {
+      console.log("🔧 Manual password fix initiated...");
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        const parsedUsers = JSON.parse(storedUsers);
+
+        parsedUsers.forEach((user: any) => {
+          const passwordKeys = [
+            `password_${user.id}`,
+            `password_${user.email}`,
+            `password_${user.email?.trim().toLowerCase()}`,
+          ];
+
+          // Find any existing password
+          let existingPassword = null;
+          for (const key of passwordKeys) {
+            const pwd = localStorage.getItem(key);
+            if (pwd) {
+              existingPassword = pwd;
+              break;
+            }
+          }
+
+          if (existingPassword) {
+            // Ensure password is stored with all variations
+            passwordKeys.forEach((key) => {
+              localStorage.setItem(key, existingPassword);
+              console.log(`🔧 Set password for key: ${key}`);
+            });
+          }
+        });
+
+        console.log("✅ Manual password fix completed");
+        // Reload debug info
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("❌ Error in manual fix:", error);
+    }
+  };
 
   useEffect(() => {
     if (showDebug) {
@@ -25,21 +73,35 @@ export function LoginInfo() {
         if (storedUsers) {
           const parsedUsers = JSON.parse(storedUsers);
           const debugInfo = parsedUsers.map((user: any) => {
-            const passwordById = localStorage.getItem(`password_${user.id}`);
-            const passwordByEmail = localStorage.getItem(
+            // Check all possible password keys
+            const passwordKeys = [
+              `password_${user.id}`,
               `password_${user.email}`,
-            );
+              `password_${user.email?.trim().toLowerCase()}`,
+            ];
+
+            const passwordDetails = passwordKeys.map((key) => ({
+              key,
+              value: localStorage.getItem(key),
+              exists: !!localStorage.getItem(key),
+            }));
+
+            const firstPassword = passwordDetails.find((p) => p.exists)?.value;
 
             return {
               id: user.id,
               name: user.name,
               email: user.email,
               role: user.role,
-              hasPassword: !!(passwordById || passwordByEmail),
+              hasPassword: !!firstPassword,
               passwordStorageDetails: {
-                byId: !!passwordById,
-                byEmail: !!passwordByEmail,
-                actualPassword: passwordById || passwordByEmail || "none",
+                byId: !!localStorage.getItem(`password_${user.id}`),
+                byEmail: !!localStorage.getItem(`password_${user.email}`),
+                byNormalizedEmail: !!localStorage.getItem(
+                  `password_${user.email?.trim().toLowerCase()}`,
+                ),
+                actualPassword: firstPassword || "none",
+                allKeys: passwordDetails,
               },
             };
           });
@@ -47,6 +109,7 @@ export function LoginInfo() {
         }
       } catch (error) {
         console.error("Error loading debug info:", error);
+        setUsers([]);
       }
     }
   }, [showDebug]);
@@ -128,15 +191,31 @@ export function LoginInfo() {
         <div
           style={{
             display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: "8px",
             marginBottom: "8px",
           }}
         >
-          <Users size={14} color="#007bff" />
-          <span style={{ fontWeight: "500" }}>
-            Utilizadores Registados: {users.length}
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Users size={14} color="#007bff" />
+            <span style={{ fontWeight: "500" }}>
+              Utilizadores Registados: {users.length}
+            </span>
+          </div>
+          <button
+            onClick={fixUserPasswords}
+            style={{
+              background: "#28a745",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              padding: "4px 8px",
+              fontSize: "10px",
+              cursor: "pointer",
+            }}
+          >
+            🔧 Corrigir
+          </button>
         </div>
 
         {users.length === 0 ? (
@@ -197,6 +276,13 @@ export function LoginInfo() {
                         }}
                       >
                         Pass: {user.passwordStorageDetails.actualPassword}
+                        <br />
+                        Keys: ID:{user.passwordStorageDetails.byId ? "✓" : "❌"}
+                        Email:{user.passwordStorageDetails.byEmail ? "✓" : "❌"}
+                        Norm:
+                        {user.passwordStorageDetails.byNormalizedEmail
+                          ? "✓"
+                          : "❌"}
                       </div>
                     )}
                   </div>
