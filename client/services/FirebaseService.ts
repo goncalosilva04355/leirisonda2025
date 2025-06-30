@@ -385,6 +385,7 @@ export class FirebaseService {
       console.log("✅ OBRA SALVA EM 4 LOCALIZAÇÕES DIFERENTES:", newWork.id);
 
       // ETAPA 2: FIREBASE SYNC EM BACKGROUND (não bloqueia)
+      let firebaseSuccess = false;
       if (this.isFirebaseAvailable) {
         // Executar Firebase em background - NÃO aguardar nem verificar
         Promise.resolve()
@@ -402,8 +403,9 @@ export class FirebaseService {
               const docRef = doc(db, "works", newWork.id);
               await setDoc(docRef, firebaseData);
 
+              firebaseSuccess = true;
               console.log(
-                "🔥 FIREBASE SYNC CONCLUÍDO EM BACKGROUND:",
+                "�� FIREBASE SYNC CONCLUÍDO EM BACKGROUND:",
                 newWork.id,
               );
 
@@ -413,6 +415,7 @@ export class FirebaseService {
                 new Date().toISOString(),
               );
             } catch (firebaseError) {
+              firebaseSuccess = false;
               console.warn(
                 "⚠️ Firebase background sync falhou (não crítico):",
                 firebaseError,
@@ -420,6 +423,7 @@ export class FirebaseService {
             }
           })
           .catch((error) => {
+            firebaseSuccess = false;
             console.warn("⚠️ Firebase background promise falhou:", error);
           });
       }
@@ -1104,7 +1108,7 @@ export class FirebaseService {
   // Sync local data to Firebase
   async syncLocalDataToFirebase(): Promise<void> {
     if (!this.isFirebaseAvailable) {
-      console.log("���� Firebase not available, skipping sync");
+      console.log("������ Firebase not available, skipping sync");
       return;
     }
 
