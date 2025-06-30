@@ -18,7 +18,7 @@ export function EditUser() {
       return;
     }
 
-    const storedUsers = localStorage.getItem("leirisonda_users");
+    const storedUsers = localStorage.getItem("users");
     if (storedUsers && id) {
       const users = JSON.parse(storedUsers);
       const foundUser = users.find((u: any) => u.id === id);
@@ -45,7 +45,7 @@ export function EditUser() {
     setIsSubmitting(true);
 
     try {
-      const storedUsers = localStorage.getItem("leirisonda_users");
+      const storedUsers = localStorage.getItem("users");
       if (storedUsers && user) {
         const users = JSON.parse(storedUsers);
         const userIndex = users.findIndex((u: any) => u.id === user.id);
@@ -56,7 +56,7 @@ export function EditUser() {
             permissions: permissions,
           };
 
-          localStorage.setItem("leirisonda_users", JSON.stringify(users));
+          localStorage.setItem("users", JSON.stringify(users));
           setSuccess("Utilizador atualizado com sucesso!");
 
           setTimeout(() => {
