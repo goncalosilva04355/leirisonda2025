@@ -956,6 +956,31 @@ export function CreateWork() {
               )}
             </Button>
           </div>
+
+          {/* Diagnóstico para Gonçalo (apenas se há erro) */}
+          {error && user?.email === "gongonsilva@gmail.com" && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-medium text-blue-800">
+                  Diagnóstico de Salvamento (Admin)
+                </h4>
+                <Button
+                  type="button"
+                  onClick={runQuickDiagnostics}
+                  variant="outline"
+                  size="sm"
+                  className="text-blue-600 border-blue-300"
+                >
+                  <AlertCircle className="w-4 h-4 mr-2" />
+                  Executar Diagnóstico
+                </Button>
+              </div>
+              <p className="text-sm text-blue-600 mt-2">
+                Execute o diagnóstico se a obra não foi guardada corretamente.
+                Isto irá verificar e corrigir problemas de salvamento.
+              </p>
+            </div>
+          )}
         </form>
       </div>
     </div>
