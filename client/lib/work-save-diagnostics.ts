@@ -1,11 +1,10 @@
 /**
- * Utilitário de diagnóstico para problemas de salvamento de obras
- * Usado para diagnosticar e corrigir problemas quando obras não são guardadas corretamente
+ * WorkSaveHelper - Sistema de diagnóstico e recuperação para salvamento de obras
  */
 
 import { Work } from "@shared/types";
 
-export interface WorkSaveDiagnostics {
+export interface SaveDiagnostics {
   totalWorks: number;
   backupLocations: {
     works: number;
@@ -13,50 +12,40 @@ export interface WorkSaveDiagnostics {
     temp_works: number;
     emergency_works: number;
   };
-  lastWorkSaved?: Work;
   potentialIssues: string[];
+  lastUpdate: string | null;
   recommendations: string[];
+}
+
+export interface ConsolidationResult {
+  consolidated: number;
+  duplicatesRemoved: number;
+  emergencyWorksFound: number;
+  details: string;
+}
+
+export interface SyncResult {
+  synced: boolean;
+  backupsUpdated: number;
+  details: string;
 }
 
 export class WorkSaveHelper {
   /**
-   * Executa diagnóstico completo dos backups de obras
+   * Diagnóstico completo do sistema de salvamento
    */
-  static diagnose(): WorkSaveDiagnostics {
-    const diagnostics: WorkSaveDiagnostics = {
-      totalWorks: 0,
-      backupLocations: {
-        works: 0,
-        leirisonda_works: 0,
-        temp_works: 0,
-        emergency_works: 0,
-      },
-      potentialIssues: [],
-      recommendations: [],
-    };
-
+  static diagnose(): SaveDiagnostics {
     try {
-      // Verificar localStorage - works
-      const works1 = JSON.parse(localStorage.getItem("works") || "[]");
-      diagnostics.backupLocations.works = Array.isArray(works1)
-        ? works1.length
-        : 0;
+      console.log("🔍 Executando diagnóstico de salvamento...");
 
-      // Verificar localStorage - leirisonda_works
+      // Verificar todas as localizações de backup
+      const works1 = JSON.parse(localStorage.getItem("works") || "[]");
       const works2 = JSON.parse(
         localStorage.getItem("leirisonda_works") || "[]",
       );
-      diagnostics.backupLocations.leirisonda_works = Array.isArray(works2)
-        ? works2.length
-        : 0;
-
-      // Verificar sessionStorage - temp_works
       const works3 = JSON.parse(sessionStorage.getItem("temp_works") || "[]");
-      diagnostics.backupLocations.temp_works = Array.isArray(works3)
-        ? works3.length
-        : 0;
 
-      // Verificar obras de emergência
+      // Contar obras de emergência
       let emergencyCount = 0;
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
@@ -64,252 +53,321 @@ export class WorkSaveHelper {
           emergencyCount++;
         }
       }
-      diagnostics.backupLocations.emergency_works = emergencyCount;
 
-      // Calcular total
+      // Calcular total único
       const allWorks = [...works1, ...works2, ...works3];
-      const uniqueWorks = this.removeDuplicateWorks(allWorks);
-      diagnostics.totalWorks = uniqueWorks.length;
-
-      // Encontrar última obra
-      if (uniqueWorks.length > 0) {
-        const sortedWorks = uniqueWorks.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        );
-        diagnostics.lastWorkSaved = sortedWorks[0];
-      }
+      const uniqueWorks = allWorks.filter(
+        (work, index, self) =>
+          index === self.findIndex((w) => w.id === work.id),
+      );
 
       // Identificar problemas potenciais
-      if (diagnostics.backupLocations.works === 0) {
-        diagnostics.potentialIssues.push("Backup principal 'works' vazio");
+      const issues: string[] = [];
+      if (works1.length === 0 && works2.length === 0) {
+        issues.push("Nenhuma obra encontrada nos backups principais");
+      }
+      if (works1.length !== works2.length) {
+        issues.push("Backups desincronizados");
+      }
+      if (emergencyCount > 0) {
+        issues.push(`${emergencyCount} obras de emergência encontradas`);
       }
 
-      if (diagnostics.backupLocations.leirisonda_works === 0) {
-        diagnostics.potentialIssues.push(
-          "Backup secundário 'leirisonda_works' vazio",
-        );
-      }
-
-      if (diagnostics.backupLocations.emergency_works > 0) {
-        diagnostics.potentialIssues.push(
-          `${diagnostics.backupLocations.emergency_works} obras em modo de emergência encontradas`,
-        );
-      }
-
-      const inconsistentBackups = Math.abs(
-        diagnostics.backupLocations.works -
-          diagnostics.backupLocations.leirisonda_works,
-      );
-      if (inconsistentBackups > 2) {
-        diagnostics.potentialIssues.push(
-          "Backups inconsistentes entre localizações",
-        );
-      }
+      // Verificar última atualização
+      const lastUpdate = localStorage.getItem("leirisonda_last_update");
 
       // Gerar recomendações
-      if (diagnostics.potentialIssues.length === 0) {
-        diagnostics.recommendations.push(
-          "Sistema de backup funcionando corretamente",
-        );
-      } else {
-        if (diagnostics.backupLocations.emergency_works > 0) {
-          diagnostics.recommendations.push(
-            "Executar consolidação de obras de emergência",
-          );
-        }
-        if (inconsistentBackups > 2) {
-          diagnostics.recommendations.push("Executar sincronização de backups");
-        }
-        diagnostics.recommendations.push("Verificar conectividade Firebase");
-        diagnostics.recommendations.push(
-          "Considerar limpeza de dados corrompidos",
-        );
+      const recommendations: string[] = [];
+      if (issues.length > 0) {
+        recommendations.push("Executar consolidação de obras");
       }
-    } catch (error) {
-      diagnostics.potentialIssues.push(
-        `Erro ao executar diagnóstico: ${error}`,
-      );
-      diagnostics.recommendations.push("Recarregar página e tentar novamente");
-    }
+      if (emergencyCount > 0) {
+        recommendations.push("Recuperar obras de emergência");
+      }
+      if (works1.length !== works2.length) {
+        recommendations.push("Sincronizar backups");
+      }
 
-    return diagnostics;
+      const diagnostics: SaveDiagnostics = {
+        totalWorks: uniqueWorks.length,
+        backupLocations: {
+          works: works1.length,
+          leirisonda_works: works2.length,
+          temp_works: works3.length,
+          emergency_works: emergencyCount,
+        },
+        potentialIssues: issues,
+        lastUpdate,
+        recommendations,
+      };
+
+      console.log("✅ Diagnóstico concluído:", diagnostics);
+      return diagnostics;
+    } catch (error) {
+      console.error("❌ Erro no diagnóstico:", error);
+      return {
+        totalWorks: 0,
+        backupLocations: {
+          works: 0,
+          leirisonda_works: 0,
+          temp_works: 0,
+          emergency_works: 0,
+        },
+        potentialIssues: ["Erro no diagnóstico"],
+        lastUpdate: null,
+        recommendations: ["Recarregar aplicação"],
+      };
+    }
   }
 
   /**
-   * Consolida obras de emergência para os backups principais
+   * Consolidar obras de emergência no sistema principal
    */
-  static consolidateEmergencyWorks(): {
-    consolidated: number;
-    errors: string[];
-  } {
-    const result = { consolidated: 0, errors: [] };
-
+  static consolidateEmergencyWorks(): ConsolidationResult {
     try {
-      const emergencyWorks: Work[] = [];
+      console.log("🔄 Consolidando obras de emergência...");
 
-      // Encontrar todas as obras de emergência
+      // Buscar obras de emergência
+      const emergencyWorks: Work[] = [];
+      const keysToRemove: string[] = [];
+
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key && key.startsWith("emergency_work_")) {
           try {
-            const workData = JSON.parse(localStorage.getItem(key) || "{}");
-            if (workData.id) {
-              emergencyWorks.push(workData);
+            const emergencyWork = JSON.parse(localStorage.getItem(key) || "{}");
+            if (emergencyWork.id) {
+              emergencyWorks.push(emergencyWork);
+              keysToRemove.push(key);
             }
-          } catch (error) {
-            result.errors.push(`Erro ao recuperar obra de emergência ${key}`);
+          } catch (parseError) {
+            console.warn(`Obra de emergência corrompida: ${key}`);
+            keysToRemove.push(key); // Remove even if corrupted
           }
         }
       }
 
       if (emergencyWorks.length === 0) {
-        return result;
+        return {
+          consolidated: 0,
+          duplicatesRemoved: 0,
+          emergencyWorksFound: 0,
+          details: "Nenhuma obra de emergência encontrada",
+        };
       }
 
-      // Consolidar nos backups principais
+      // Obter obras principais
       const mainWorks = JSON.parse(localStorage.getItem("works") || "[]");
       const backupWorks = JSON.parse(
         localStorage.getItem("leirisonda_works") || "[]",
       );
 
-      for (const emergencyWork of emergencyWorks) {
-        // Verificar se já existe
-        const existsInMain = mainWorks.find(
-          (w: Work) => w.id === emergencyWork.id,
-        );
-        const existsInBackup = backupWorks.find(
-          (w: Work) => w.id === emergencyWork.id,
-        );
+      // Consolidar sem duplicatas
+      const allWorks = [...mainWorks, ...backupWorks, ...emergencyWorks];
+      const uniqueWorks = allWorks.filter(
+        (work, index, self) =>
+          index === self.findIndex((w) => w.id === work.id),
+      );
 
-        if (!existsInMain) {
-          mainWorks.push(emergencyWork);
-        }
-        if (!existsInBackup) {
-          backupWorks.push(emergencyWork);
-        }
+      // Salvar versão consolidada
+      localStorage.setItem("works", JSON.stringify(uniqueWorks));
+      localStorage.setItem("leirisonda_works", JSON.stringify(uniqueWorks));
+      sessionStorage.setItem("temp_works", JSON.stringify(uniqueWorks));
 
-        // Remover da emergência
-        localStorage.removeItem(`emergency_work_${emergencyWork.id}`);
-        result.consolidated++;
-      }
+      // Remover obras de emergência já consolidadas
+      keysToRemove.forEach((key) => {
+        localStorage.removeItem(key);
+      });
 
-      // Salvar backups atualizados
-      localStorage.setItem("works", JSON.stringify(mainWorks));
-      localStorage.setItem("leirisonda_works", JSON.stringify(backupWorks));
+      const result: ConsolidationResult = {
+        consolidated: emergencyWorks.length,
+        duplicatesRemoved: allWorks.length - uniqueWorks.length,
+        emergencyWorksFound: emergencyWorks.length,
+        details: `${emergencyWorks.length} obras de emergência consolidadas em ${uniqueWorks.length} obras totais`,
+      };
+
+      console.log("✅ Consolidação concluída:", result);
+      return result;
     } catch (error) {
-      result.errors.push(`Erro na consolidação: ${error}`);
+      console.error("❌ Erro na consolidação:", error);
+      return {
+        consolidated: 0,
+        duplicatesRemoved: 0,
+        emergencyWorksFound: 0,
+        details: `Erro na consolidação: ${error}`,
+      };
     }
-
-    return result;
   }
 
   /**
-   * Sincroniza backups inconsistentes
+   * Sincronizar todos os backups
    */
-  static syncBackups(): { synced: boolean; details: string } {
+  static syncBackups(): SyncResult {
     try {
+      console.log("🔄 Sincronizando backups...");
+
+      // Obter obras de todas as fontes
       const works1 = JSON.parse(localStorage.getItem("works") || "[]");
       const works2 = JSON.parse(
         localStorage.getItem("leirisonda_works") || "[]",
       );
       const works3 = JSON.parse(sessionStorage.getItem("temp_works") || "[]");
 
-      // Combinar todas as obras e remover duplicatas
+      // Usar a maior coleção como base
+      let masterWorks = works1;
+      if (works2.length > masterWorks.length) masterWorks = works2;
+      if (works3.length > masterWorks.length) masterWorks = works3;
+
+      // Consolidar e remover duplicatas
       const allWorks = [...works1, ...works2, ...works3];
-      const uniqueWorks = this.removeDuplicateWorks(allWorks);
+      const uniqueWorks = allWorks.filter(
+        (work, index, self) =>
+          index === self.findIndex((w) => w.id === work.id),
+      );
 
-      // Atualizar todos os backups
-      localStorage.setItem("works", JSON.stringify(uniqueWorks));
-      localStorage.setItem("leirisonda_works", JSON.stringify(uniqueWorks));
-      sessionStorage.setItem("temp_works", JSON.stringify(uniqueWorks));
+      // Se consolidação encontrou mais obras, usar essa versão
+      if (uniqueWorks.length > masterWorks.length) {
+        masterWorks = uniqueWorks;
+      }
 
-      return {
+      // Sincronizar todos os backups com a versão master
+      localStorage.setItem("works", JSON.stringify(masterWorks));
+      localStorage.setItem("leirisonda_works", JSON.stringify(masterWorks));
+      sessionStorage.setItem("temp_works", JSON.stringify(masterWorks));
+
+      // Atualizar timestamp
+      localStorage.setItem("leirisonda_last_update", new Date().toISOString());
+
+      const result: SyncResult = {
         synced: true,
-        details: `${uniqueWorks.length} obras sincronizadas em todos os backups`,
+        backupsUpdated: 3,
+        details: `${masterWorks.length} obras sincronizadas em 3 localizações`,
       };
+
+      console.log("✅ Sincronização concluída:", result);
+      return result;
     } catch (error) {
+      console.error("❌ Erro na sincronização:", error);
       return {
         synced: false,
+        backupsUpdated: 0,
         details: `Erro na sincronização: ${error}`,
       };
     }
   }
 
   /**
-   * Remove obras duplicadas baseado no ID
+   * Executar recuperação completa do sistema
    */
-  private static removeDuplicateWorks(works: Work[]): Work[] {
-    const seen = new Set();
-    return works.filter((work) => {
-      if (seen.has(work.id)) {
-        return false;
-      }
-      seen.add(work.id);
-      return true;
-    });
-  }
-
-  /**
-   * Verificação rápida se uma obra específica foi salva
-   */
-  static isWorkSaved(workId: string): boolean {
+  static emergencyRecovery(): {
+    success: boolean;
+    message: string;
+    actions: string[];
+  } {
     try {
-      const works1 = JSON.parse(localStorage.getItem("works") || "[]");
-      const works2 = JSON.parse(
-        localStorage.getItem("leirisonda_works") || "[]",
-      );
-      const works3 = JSON.parse(sessionStorage.getItem("temp_works") || "[]");
+      console.log("🚨 Executando recuperação de emergência...");
 
-      const foundInWorks1 = works1.find((w: Work) => w.id === workId);
-      const foundInWorks2 = works2.find((w: Work) => w.id === workId);
-      const foundInWorks3 = works3.find((w: Work) => w.id === workId);
+      const actions: string[] = [];
 
-      return !!(foundInWorks1 || foundInWorks2 || foundInWorks3);
+      // 1. Consolidar obras de emergência
+      const consolidation = this.consolidateEmergencyWorks();
+      if (consolidation.consolidated > 0) {
+        actions.push(
+          `Recuperadas ${consolidation.consolidated} obras de emergência`,
+        );
+      }
+
+      // 2. Sincronizar backups
+      const sync = this.syncBackups();
+      if (sync.synced) {
+        actions.push(sync.details);
+      }
+
+      // 3. Verificar integridade final
+      const diagnostics = this.diagnose();
+      actions.push(`Sistema agora tem ${diagnostics.totalWorks} obras`);
+
+      if (diagnostics.potentialIssues.length === 0) {
+        return {
+          success: true,
+          message: "Recuperação de emergência concluída com sucesso",
+          actions,
+        };
+      } else {
+        return {
+          success: false,
+          message: `Recuperação parcial. Problemas restantes: ${diagnostics.potentialIssues.join(", ")}`,
+          actions,
+        };
+      }
     } catch (error) {
-      console.error("Erro ao verificar se obra foi salva:", error);
-      return false;
+      console.error("❌ Erro na recuperação de emergência:", error);
+      return {
+        success: false,
+        message: `Erro na recuperação: ${error}`,
+        actions: [],
+      };
     }
   }
 
   /**
-   * Limpa dados corrompidos que podem estar causando problemas
+   * Verificar se uma obra específica foi salva
    */
-  static cleanCorruptedData(): { cleaned: boolean; details: string } {
+  static verifyWorkSaved(workId: string): {
+    found: boolean;
+    locations: string[];
+    work?: Work;
+  } {
     try {
-      const corruptedKeys: string[] = [];
+      const locations: string[] = [];
+      let foundWork: Work | undefined;
 
-      // Verificar localStorage
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key) {
-          try {
-            const value = localStorage.getItem(key);
-            if (value) {
-              JSON.parse(value); // Tentar parse para detectar JSON corrompido
+      // Verificar em todas as localizações
+      const storageKeys = [
+        "works",
+        "leirisonda_works",
+        "temp_works",
+        `emergency_work_${workId}`,
+      ];
+
+      for (const key of storageKeys) {
+        try {
+          let works: Work[] = [];
+
+          if (key.startsWith("emergency_work_")) {
+            const emergencyWork = localStorage.getItem(key);
+            if (emergencyWork) {
+              const work = JSON.parse(emergencyWork);
+              if (work.id === workId) {
+                works = [work];
+              }
             }
-          } catch (error) {
-            corruptedKeys.push(key);
+          } else if (key === "temp_works") {
+            works = JSON.parse(sessionStorage.getItem(key) || "[]");
+          } else {
+            works = JSON.parse(localStorage.getItem(key) || "[]");
           }
+
+          const work = works.find((w) => w.id === workId);
+          if (work) {
+            locations.push(key);
+            if (!foundWork) foundWork = work;
+          }
+        } catch (error) {
+          console.warn(`Erro ao verificar ${key}:`, error);
         }
       }
 
-      // Remover chaves corrompidas
-      corruptedKeys.forEach((key) => {
-        localStorage.removeItem(key);
-      });
-
       return {
-        cleaned: true,
-        details:
-          corruptedKeys.length > 0
-            ? `${corruptedKeys.length} itens corrompidos removidos`
-            : "Nenhum dado corrompido encontrado",
+        found: locations.length > 0,
+        locations,
+        work: foundWork,
       };
     } catch (error) {
+      console.error("❌ Erro na verificação:", error);
       return {
-        cleaned: false,
-        details: `Erro na limpeza: ${error}`,
+        found: false,
+        locations: [],
       };
     }
   }
