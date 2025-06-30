@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuth } from "@/components/AuthProvider";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 import {
   cleanAllMaintenanceStorages,
   detectDuplicateMaintenances,
@@ -35,13 +36,9 @@ import {
 
 export function MaintenanceList() {
   const { user } = useAuth();
-  const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
+  const { maintenances } = useFirebaseSync();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-
-  useEffect(() => {
-    loadMaintenances();
-  }, []);
 
   const loadMaintenances = () => {
     try {
