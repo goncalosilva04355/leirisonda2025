@@ -67,6 +67,15 @@ export function useFirebaseSync() {
       }
     };
 
+    // Listener específico para notificações de delete (sem full sync)
+    const handleDeleteNotification = (event: CustomEvent) => {
+      console.log("🗑️ Delete notification received:", event.detail);
+      // Apenas recarregar dados locais sem fazer sync completo do Firebase
+      if (user) {
+        loadAllData();
+      }
+    };
+
     // Listen for visibility changes to trigger sync when tab becomes active
     const handleVisibilityChange = () => {
       if (!document.hidden && user && isFirebaseAvailable && isOnline) {
@@ -81,6 +90,10 @@ export function useFirebaseSync() {
       "leirisonda_sync_trigger",
       handleCrossTabSync as EventListener,
     );
+    window.addEventListener(
+      "leirisonda_delete_notification",
+      handleDeleteNotification as EventListener,
+    );
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
@@ -89,6 +102,10 @@ export function useFirebaseSync() {
       window.removeEventListener(
         "leirisonda_sync_trigger",
         handleCrossTabSync as EventListener,
+      );
+      window.removeEventListener(
+        "leirisonda_delete_notification",
+        handleDeleteNotification as EventListener,
       );
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
@@ -444,17 +461,21 @@ export function useFirebaseSync() {
       operationType: string,
     ): Promise<T> => {
       try {
-        // Executar operação
+        console.log(`🔄 Iniciando operação: ${operationType}`);
+
+        // Executar operação principal
         const result = await operation();
+        console.log(`✅ Operação ${operationType} concluída com sucesso`);
 
         // Marcar mudança pendente
         pendingChanges.current.add(operationType);
 
-        // Sync instantâneo automático (se disponível)
-        if (isFirebaseAvailable && isOnline) {
-          // Para operações de delete, usar timeout mais longo e tratamento especial
-          const delay = operationType.includes("delete") ? 500 : 100;
-
+        // Sync instantâneo automático (se disponível) - apenas para operações que não são delete
+        if (
+          isFirebaseAvailable &&
+          isOnline &&
+          !operationType.includes("delete")
+        ) {
           setTimeout(() => {
             try {
               triggerInstantSync(`after_${operationType}`);
@@ -465,12 +486,59 @@ export function useFirebaseSync() {
               );
               // Não fazer throw aqui - a operação principal já funcionou
             }
-          }, delay);
+          }, 100);
+        }
+
+        // Para operações de delete, usar estratégia diferente sem sync automático
+        if (operationType.includes("delete")) {
+          console.log(
+            `🗑️ Operação de delete - sync manual será executado posteriormente`,
+          );
+
+          // Apenas notificar outros dispositivos sem fazer sync completo
+          setTimeout(() => {
+            try {
+              // Apenas atualizar timestamp para notificar outros dispositivos
+              localStorage.setItem(
+                "leirisonda_last_update",
+                new Date().toISOString(),
+              );
+
+              // Disparar evento customizado para cross-tab sync (sem triggering completo)
+              const event = new CustomEvent("leirisonda_delete_notification", {
+                detail: { operationType, timestamp: new Date().toISOString() },
+              });
+              window.dispatchEvent(event);
+            } catch (notifyError) {
+              console.warn(`⚠️ Erro na notificação de delete:`, notifyError);
+              // Não fazer throw - operação delete já funcionou
+            }
+          }, 200);
         }
 
         return result;
       } catch (error) {
         console.error(`❌ Erro em ${operationType}:`, error);
+
+        // Para operações de delete, ser mais tolerante a erros
+        if (operationType.includes("delete")) {
+          console.warn(
+            `⚠️ Erro em operação de delete - verificando se operação local funcionou`,
+          );
+
+          // Se é erro de timeout ou rede, verificar se operação local funcionou
+          if (
+            error instanceof Error &&
+            (error.message.includes("Timeout") ||
+              error.message.includes("NetworkError") ||
+              error.message.includes("Failed to fetch"))
+          ) {
+            console.log(
+              "⚠️ Erro de rede/timeout em delete - operação local pode ter funcionado",
+            );
+          }
+        }
+
         throw error;
       }
     },

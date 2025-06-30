@@ -37,6 +37,16 @@ export class ErrorBoundary extends Component<Props, State> {
       return { hasError: true, error, retryCount: 0 };
     }
 
+    // VERIFICAÇÃO ESPECIAL: Se estamos numa operação de eliminação
+    const isDeletingWork = sessionStorage.getItem("deleting_work") === "true";
+    if (isDeletingWork) {
+      console.log(
+        "🗑️ Erro detectado durante eliminação de obra - EVITANDO logout forçado",
+      );
+      sessionStorage.removeItem("deleting_work");
+      return { hasError: true, error, retryCount: 0 };
+    }
+
     // EVITAR logout desnecessário em erros de operações CRUD ou Firebase
     const recoversableErrors = [
       "Não foi possível salvar a obra",

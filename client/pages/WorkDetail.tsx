@@ -80,18 +80,114 @@ export function WorkDetail() {
     }
 
     try {
-      // Eliminar a obra usando o hook Firebase
-      await deleteWork(work.id);
+      console.log(`🗑️ Iniciando eliminação da obra: ${work.clientName}`);
 
-      // Mostrar sucesso
-      alert(`Obra "${work.clientName}" eliminada com sucesso!`);
+      // Marcar que estamos numa operação de delete
+      sessionStorage.setItem("deleting_work", "true");
 
-      // Navegação simples
-      window.location.href = "/works";
+      // Eliminar a obra usando o hook Firebase com timeout
+      const deletePromise = deleteWork(work.id);
+
+      // Timeout de segurança (30 segundos)
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Timeout na eliminação")), 30000),
+      );
+
+      // Executar com timeout de segurança
+      await Promise.race([deletePromise, timeoutPromise]);
+
+      console.log("✅ Obra eliminada com sucesso");
+
+      // Verificar se obra foi realmente eliminada
+      setTimeout(() => {
+        const currentWorks = JSON.parse(localStorage.getItem("works") || "[]");
+        const stillExists = currentWorks.find((w: any) => w.id === work.id);
+
+        if (stillExists) {
+          console.warn(
+            "⚠️ Obra ainda existe localmente, forçando eliminação...",
+          );
+          const filteredWorks = currentWorks.filter(
+            (w: any) => w.id !== work.id,
+          );
+          localStorage.setItem("works", JSON.stringify(filteredWorks));
+          localStorage.setItem(
+            "leirisonda_works",
+            JSON.stringify(filteredWorks),
+          );
+        }
+
+        // Limpar flag e mostrar sucesso
+        sessionStorage.removeItem("deleting_work");
+        alert(`Obra "${work.clientName}" eliminada com sucesso!`);
+
+        // Navegação robusta usando navigate
+        try {
+          navigate("/works", { replace: true });
+        } catch (navError) {
+          console.warn(
+            "⚠️ Erro na navegação normal, usando fallback:",
+            navError,
+          );
+          // Fallback para window.location em caso de erro no navigate
+          window.location.href = "/works";
+        }
+      }, 1000);
     } catch (error) {
-      // Erro simples
-      console.error("Erro ao eliminar obra:", error);
-      alert("Erro ao eliminar obra. Tente novamente.");
+      console.error("❌ Erro ao eliminar obra:", error);
+      sessionStorage.removeItem("deleting_work");
+
+      // Para timeouts, verificar se obra foi eliminada mesmo assim
+      if (error instanceof Error && error.message.includes("Timeout")) {
+        console.log("⏰ Timeout detectado, verificando eliminação manual...");
+
+        const currentWorks = JSON.parse(localStorage.getItem("works") || "[]");
+        const stillExists = currentWorks.find((w: any) => w.id === work.id);
+
+        if (!stillExists) {
+          console.log("✅ Obra foi eliminada apesar do timeout");
+          alert(`Obra "${work.clientName}" eliminada com sucesso!`);
+
+          try {
+            navigate("/works", { replace: true });
+          } catch (navError) {
+            window.location.href = "/works";
+          }
+          return;
+        } else {
+          // Forçar eliminação local em caso de timeout
+          console.log("🔧 Forçando eliminação local após timeout...");
+          const filteredWorks = currentWorks.filter(
+            (w: any) => w.id !== work.id,
+          );
+          localStorage.setItem("works", JSON.stringify(filteredWorks));
+          localStorage.setItem(
+            "leirisonda_works",
+            JSON.stringify(filteredWorks),
+          );
+
+          alert(`Obra "${work.clientName}" eliminada localmente!`);
+
+          try {
+            navigate("/works", { replace: true });
+          } catch (navError) {
+            window.location.href = "/works";
+          }
+          return;
+        }
+      }
+
+      // Mostrar erro apenas se não conseguiu eliminar
+      alert(
+        "Erro ao eliminar obra. A obra pode ter sido eliminada. Verifique a lista de obras.",
+      );
+
+      // Navegar mesmo com erro para o utilizador verificar
+      try {
+        navigate("/works", { replace: true });
+      } catch (navError) {
+        window.location.href = "/works";
+      }
     }
   };
 
