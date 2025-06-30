@@ -275,7 +275,7 @@ export function Login() {
           fontSize: "14px",
         }}
       >
-        © 2025 Leirisonda - Sistema Profissional de Gestão
+        © 2025 Leirisonda - Sistema Avançado de Gestão de Obras
       </div>
 
       <style>{`
