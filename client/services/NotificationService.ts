@@ -631,6 +631,9 @@ class NotificationServiceClass {
     );
 
     try {
+      // PRIMEIRO: Verificar e processar notificações pendentes não entregues
+      await this.processPendingNotifications(userId);
+
       // Buscar obras do localStorage e Firebase
       const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
       const leirisondaWorks = JSON.parse(
