@@ -195,13 +195,14 @@ export function CreateWork() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsSubmitting(true);
+    try {
+      e.preventDefault();
+      setError("");
+      setIsSubmitting(true);
 
-    console.log("🚀 Iniciando criação de obra");
+      console.log("🚀 Iniciando criação de obra");
 
-    // Verificação mais flexível - permitir fallback se createWork não estiver disponível
+      // Verificação mais flexível - permitir fallback se createWork não estiver disponível
 
     // Validation
     if (!formData.clientName.trim()) {
