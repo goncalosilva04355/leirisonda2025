@@ -1200,7 +1200,7 @@ export class FirebaseService {
           const workSnap = await getDoc(workRef);
 
           if (!workSnap.exists()) {
-            await updateDoc(workRef, {
+            await setDoc(workRef, {
               ...work,
               createdAt: work.createdAt
                 ? new Date(work.createdAt)
@@ -1223,7 +1223,7 @@ export class FirebaseService {
           const maintenanceSnap = await getDoc(maintenanceRef);
 
           if (!maintenanceSnap.exists()) {
-            await updateDoc(maintenanceRef, {
+            await setDoc(maintenanceRef, {
               ...maintenance,
               createdAt: maintenance.createdAt
                 ? new Date(maintenance.createdAt)

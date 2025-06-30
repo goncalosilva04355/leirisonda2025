@@ -19,8 +19,10 @@
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc",
-    "builder:sync": "echo 'Builder.io sync trigger - Leirisonda ready'",
-    "builder:force-push": "echo 'Force pushing 80 commits to GitHub...'"
+    "send-pr": "node send-pr.cjs",
+    "deploy": "node send-pr.cjs",
+    "builder:sync": "node send-pr.cjs",
+    "builder:force-push": "node send-pr.cjs"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.0",

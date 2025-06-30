@@ -85,21 +85,16 @@ export function useFirebaseSync() {
     };
   }, [user, isFirebaseAvailable]);
 
-  // Sincronização instantânea robusta
+  // Sincronização instantânea com retry automático
   const triggerInstantSync = useCallback(
-    async (reason: string = "manual") => {
-      if (
-        !user ||
-        !isFirebaseAvailable ||
-        !isOnline ||
-        syncInProgress.current
-      ) {
-        console.log(`🚫 Sync cancelado (${reason}):`, {
-          hasUser: !!user,
-          firebaseAvailable: isFirebaseAvailable,
-          isOnline,
-          syncInProgress: syncInProgress.current,
-        });
+    async (reason: string = "manual", retryCount: number = 0) => {
+      if (!user) {
+        console.log(`🚫 Sync cancelado (${reason}): usuário não logado`);
+        return;
+      }
+
+      if (syncInProgress.current && retryCount === 0) {
+        console.log(`⏳ Sync já em progresso (${reason}), aguardando...`);
         return;
       }
 
@@ -107,49 +102,74 @@ export function useFirebaseSync() {
       setIsSyncing(true);
 
       try {
-        console.log(`🔄 Sync instantâneo iniciado (${reason})...`);
+        console.log(
+          `🔄 SYNC ROBUSTO INICIADO (${reason}) - retry: ${retryCount}`,
+        );
 
-        // 1. Sincronizar utilizadores globais primeiro
-        await firebaseService.syncGlobalUsersFromFirebase();
+        // 1. Verificar conectividade
+        if (!isOnline) {
+          throw new Error("Dispositivo offline");
+        }
 
-        // 2. Sincronizar dados locais para Firebase (upload prioritário)
-        console.log("📤 Enviando dados locais para Firebase...");
-        await firebaseService.syncLocalDataToFirebase();
+        if (!isFirebaseAvailable) {
+          throw new Error("Firebase indisponível");
+        }
 
-        // 3. Forçar refresh COMPLETO de dados do Firebase (download)
-        console.log("📥 Baixando dados mais recentes do Firebase...");
-        const [latestWorks, latestMaintenances, latestUsers] =
-          await Promise.all([
-            firebaseService.getWorks(),
-            firebaseService.getMaintenances(),
-            firebaseService.getUsers(),
+        // 2. Sincronização em etapas com timeout
+        const syncTimeout = (promise: Promise<any>, timeout: number) => {
+          return Promise.race([
+            promise,
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error("Timeout")), timeout),
+            ),
           ]);
+        };
 
-        // 4. Verificar se houve novas obras desde a última sincronização
+        // 3. Sync de utilizadores globais
+        console.log("👥 Sincronizando utilizadores...");
+        await syncTimeout(firebaseService.syncGlobalUsersFromFirebase(), 10000);
+
+        // 4. Upload dados locais
+        console.log("📤 Enviando dados locais...");
+        await syncTimeout(firebaseService.syncLocalDataToFirebase(), 15000);
+
+        // 5. Download dados mais recentes
+        console.log("📥 Baixando dados do Firebase...");
+        const [latestWorks, latestMaintenances, latestUsers] =
+          await syncTimeout(
+            Promise.all([
+              firebaseService.getWorks(),
+              firebaseService.getMaintenances(),
+              firebaseService.getUsers(),
+            ]),
+            20000,
+          );
+
+        // 6. Verificar novos dados
         const currentWorksCount = works.length;
         const newWorksCount = latestWorks.length;
 
-        if (newWorksCount > currentWorksCount) {
+        if (newWorksCount !== currentWorksCount) {
           console.log(
-            `🆕 NOVAS OBRAS DETECTADAS: ${currentWorksCount} -> ${newWorksCount}`,
+            `📊 DIFERENÇA DETECTADA: ${currentWorksCount} -> ${newWorksCount} obras`,
           );
 
-          // Identificar obras específicas que são novas
-          const currentWorkIds = new Set(works.map((w) => w.id));
-          const newWorks = latestWorks.filter((w) => !currentWorkIds.has(w.id));
-
-          newWorks.forEach((work) => {
-            console.log(
-              `✨ NOVA OBRA ENCONTRADA: ${work.clientName} (${work.workSheetNumber})`,
-              {
-                criadaEm: work.createdAt,
-                atribuicoes: work.assignedUsers,
-              },
+          if (newWorksCount > currentWorksCount) {
+            const currentWorkIds = new Set(works.map((w) => w.id));
+            const newWorks = latestWorks.filter(
+              (w) => !currentWorkIds.has(w.id),
             );
-          });
+
+            newWorks.forEach((work) => {
+              console.log(
+                `✨ NOVA OBRA: ${work.clientName} (${work.workSheetNumber})`,
+                { atribuições: work.assignedUsers },
+              );
+            });
+          }
         }
 
-        // 5. Atualizar estado local com dados mais recentes
+        // 7. Atualizar estado com dados sincronizados
         setWorks(latestWorks);
         setMaintenances(latestMaintenances);
         setUsers(latestUsers);
@@ -157,20 +177,37 @@ export function useFirebaseSync() {
         setLastSync(new Date());
         pendingChanges.current.clear();
 
-        console.log(
-          `✅ Sync instantâneo completo (${reason}): ${latestWorks.length} obras, ${latestMaintenances.length} manutenções`,
+        // 8. Backup em múltiplas localizações
+        localStorage.setItem("works", JSON.stringify(latestWorks));
+        localStorage.setItem("leirisonda_works", JSON.stringify(latestWorks));
+        localStorage.setItem(
+          "pool_maintenances",
+          JSON.stringify(latestMaintenances),
         );
 
-        // Log específico para atribuições (debug para o problema relatado)
+        console.log(
+          `✅ SYNC CONCLUÍDO (${reason}): ${latestWorks.length} obras, ${latestMaintenances.length} manutenções`,
+        );
+
+        // Debug de atribuições
         const worksWithAssignments = latestWorks.filter(
           (w) => w.assignedUsers && w.assignedUsers.length > 0,
         );
-        console.log(
-          `🎯 Obras com atribuições após sync: ${worksWithAssignments.length}`,
-        );
+        console.log(`🎯 Obras com atribuições: ${worksWithAssignments.length}`);
       } catch (error) {
-        console.error(`❌ Erro no sync instantâneo (${reason}):`, error);
-        // Fallback para dados locais
+        console.error(`❌ ERRO SYNC (${reason}):`, error);
+
+        // Sistema de retry automático
+        if (retryCount < 2) {
+          console.log(`🔄 Retry ${retryCount + 1}/2 em 3 segundos...`);
+          setTimeout(() => {
+            triggerInstantSync(reason, retryCount + 1);
+          }, 3000);
+          return;
+        }
+
+        // Fallback para dados locais após tentativas
+        console.log("📱 Fallback para dados locais após falhas");
         loadLocalDataAsFallback();
       } finally {
         syncInProgress.current = false;
@@ -204,49 +241,64 @@ export function useFirebaseSync() {
     }
   }, []);
 
-  // Heartbeat para garantir sincronização contínua
+  // Sistema de sincronização contínua melhorado
   useEffect(() => {
-    if (!user || !isFirebaseAvailable || !isOnline) {
+    if (!user) {
       if (heartbeatInterval.current) {
         clearInterval(heartbeatInterval.current);
         heartbeatInterval.current = null;
       }
-      console.log("💔 Heartbeat pausado - user/firebase/online indisponível");
+      console.log("💔 Sincronização pausada - usuário não logado");
       return;
     }
 
-    console.log(
-      "💓 Heartbeat iniciado - sync a cada 10 segundos (MAIS AGRESSIVO)",
-    );
+    console.log("💓 SISTEMA DE SINCRONIZAÇÃO ATIVO");
 
-    // Sync a cada 10 segundos quando online (AINDA MAIS AGRESSIVO para resolver o problema)
-    heartbeatInterval.current = setInterval(() => {
-      // Sync mais frequente se houver mudanças pendentes OU 50% chance de sync preventivo
-      const shouldSync = pendingChanges.current.size > 0 || Math.random() < 0.5;
-
-      if (shouldSync) {
-        console.log("💓 Heartbeat: iniciando sync automático agressivo...");
-        triggerInstantSync("heartbeat_aggressive");
-      } else {
-        console.log("💓 Heartbeat: standby - próximo check em 10s");
+    // Sync inteligente a cada 15 segundos
+    heartbeatInterval.current = setInterval(async () => {
+      // Se offline, apenas logs
+      if (!isOnline) {
+        console.log("📱 Offline - heartbeat em standby");
+        return;
       }
-    }, 10000); // 10 segundos para sync mais frequente
 
-    // Trigger de sync extra agressivo a cada 30 segundos independente das condições
-    const aggressiveInterval = setInterval(() => {
-      console.log("🔥 SUPER SYNC: Forçando sincronização completa...");
-      triggerInstantSync("super_sync_forced");
-    }, 30000); // A cada 30 segundos sync forçado
+      // Se Firebase indisponível, tentar reconectar
+      if (!isFirebaseAvailable) {
+        console.log("�� Firebase indisponível - tentando reconectar...");
+        return;
+      }
+
+      // Sincronização inteligente
+      const hasPendingChanges = pendingChanges.current.size > 0;
+      const shouldForceSync = Math.random() < 0.3; // 30% chance de sync preventivo
+
+      if (hasPendingChanges || shouldForceSync) {
+        console.log(
+          `💓 HEARTBEAT SYNC: pending=${hasPendingChanges}, force=${shouldForceSync}`,
+        );
+        await triggerInstantSync("heartbeat_smart");
+      } else {
+        console.log("💓 Heartbeat standby - tudo sincronizado");
+      }
+    }, 15000); // 15 segundos
+
+    // Sync de recuperação a cada 2 minutos para garantir consistência
+    const recoveryInterval = setInterval(async () => {
+      if (isOnline && isFirebaseAvailable) {
+        console.log("🔄 RECOVERY SYNC: Verificação completa de dados...");
+        await triggerInstantSync("recovery_check");
+      }
+    }, 120000); // 2 minutos
 
     return () => {
       if (heartbeatInterval.current) {
         clearInterval(heartbeatInterval.current);
         heartbeatInterval.current = null;
       }
-      clearInterval(aggressiveInterval);
-      console.log("💔 Heartbeat e sync agressivo limpos");
+      clearInterval(recoveryInterval);
+      console.log("💔 Sistema de sincronização limpo");
     };
-  }, [user, isFirebaseAvailable, isOnline, triggerInstantSync]);
+  }, [user, isFirebaseAvailable, isOnline]);
 
   // Setup real-time listeners para atualizações instantâneas
   useEffect(() => {
@@ -255,87 +307,109 @@ export function useFirebaseSync() {
       return;
     }
 
-    console.log("🔄 Configurando listeners real-time...");
+    console.log("🔄 CONFIGURANDO SISTEMA DE SINCRONIZAÇÃO ROBUSTO...");
 
-    // Listener para obras com atualizações instantâneas e consolidação
-    const unsubscribeWorks = firebaseService.listenToWorks((updatedWorks) => {
-      console.log(`📦 Obras atualizadas via real-time: ${updatedWorks.length}`);
-
-      // Consolidar com dados locais existentes para não perder dados
-      const localWorks = firebaseService.consolidateWorksFromAllBackups();
-
-      // Mesclar obras do Firebase com obras locais
-      const allWorks = [...updatedWorks, ...localWorks];
-      const uniqueWorks = allWorks.filter(
-        (work, index, self) =>
-          index === self.findIndex((w) => w.id === work.id),
-      );
-
-      // Ordenar por data de criação
-      uniqueWorks.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      );
-
-      console.log(
-        `✅ Obras consolidadas: Firebase(${updatedWorks.length}) + Local(${localWorks.length}) = Total(${uniqueWorks.length})`,
-      );
-
-      setWorks(uniqueWorks);
-      setLastSync(new Date());
-
-      // Sincronizar para localStorage com backup triplo
-      localStorage.setItem("works", JSON.stringify(uniqueWorks));
-      localStorage.setItem("leirisonda_works", JSON.stringify(uniqueWorks));
-      sessionStorage.setItem("temp_works", JSON.stringify(uniqueWorks));
-    });
-
-    // Listener para manutenções com atualizações instantâneas
-    const unsubscribeMaintenances = firebaseService.listenToMaintenances(
-      (updatedMaintenances) => {
-        console.log(
-          `🏊 Manutenções atualizadas via real-time: ${updatedMaintenances.length}`,
-        );
-        setMaintenances(updatedMaintenances);
-        setLastSync(new Date());
-
-        // Sincronizar para localStorage imediatamente
-        localStorage.setItem(
-          "pool_maintenances",
-          JSON.stringify(updatedMaintenances),
-        );
-      },
-    );
-
-    // Listener para utilizadores (admin only)
+    let unsubscribeWorks: (() => void) | undefined;
+    let unsubscribeMaintenances: (() => void) | undefined;
     let unsubscribeUsers: (() => void) | undefined;
-    if (user.permissions.canViewUsers) {
-      unsubscribeUsers = firebaseService.listenToUsers((updatedUsers) => {
-        console.log(
-          `👥 Utilizadores atualizados via real-time: ${updatedUsers.length}`,
-        );
-        setUsers(updatedUsers);
-        localStorage.setItem("users", JSON.stringify(updatedUsers));
-      });
-    }
 
-    // Sync inicial imediato com logs detalhados
-    if (isFirebaseAvailable && isOnline) {
-      console.log("🚀 Iniciando sync inicial com Firebase...");
-      triggerInstantSync("initial_setup");
-    } else {
-      console.log("📱 Modo offline: carregando dados locais consolidados...");
-      loadLocalDataAsFallback();
-    }
+    const setupRealTimeSync = async () => {
+      try {
+        // 1. SYNC INICIAL FORÇADO antes dos listeners
+        if (isFirebaseAvailable && isOnline) {
+          console.log("🚀 SYNC INICIAL: Carregando dados mais recentes...");
+          await triggerInstantSync("initial_full_sync");
+        }
+
+        // 2. Setup listeners real-time APÓS sync inicial
+        console.log("📡 Configurando listeners real-time...");
+
+        // Listener para obras com consolidação robusta
+        unsubscribeWorks = firebaseService.listenToWorks((firebaseWorks) => {
+          console.log(
+            `📦 REAL-TIME: ${firebaseWorks.length} obras do Firebase`,
+          );
+
+          // Mesclar com dados locais de forma inteligente
+          const localWorks = firebaseService.consolidateWorksFromAllBackups();
+          const allWorksMap = new Map();
+
+          // Primeiro adicionar obras do Firebase (prioridade)
+          firebaseWorks.forEach((work) => allWorksMap.set(work.id, work));
+
+          // Depois adicionar obras locais que não existem no Firebase
+          localWorks.forEach((work) => {
+            if (!allWorksMap.has(work.id)) {
+              allWorksMap.set(work.id, work);
+            }
+          });
+
+          const consolidatedWorks = Array.from(allWorksMap.values()).sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          );
+
+          console.log(
+            `✅ REAL-TIME CONSOLIDADO: Firebase(${firebaseWorks.length}) + Local(${localWorks.length}) = Total(${consolidatedWorks.length})`,
+          );
+
+          setWorks(consolidatedWorks);
+          setLastSync(new Date());
+
+          // Backup em m��ltiplas localização
+          localStorage.setItem("works", JSON.stringify(consolidatedWorks));
+          localStorage.setItem(
+            "leirisonda_works",
+            JSON.stringify(consolidatedWorks),
+          );
+          sessionStorage.setItem(
+            "temp_works",
+            JSON.stringify(consolidatedWorks),
+          );
+        });
+
+        // Listener para manutenções
+        unsubscribeMaintenances = firebaseService.listenToMaintenances(
+          (updatedMaintenances) => {
+            console.log(
+              `🏊 REAL-TIME: ${updatedMaintenances.length} manutenções`,
+            );
+            setMaintenances(updatedMaintenances);
+            setLastSync(new Date());
+            localStorage.setItem(
+              "pool_maintenances",
+              JSON.stringify(updatedMaintenances),
+            );
+          },
+        );
+
+        // Listener para utilizadores (admins)
+        if (user.permissions?.canViewUsers) {
+          unsubscribeUsers = firebaseService.listenToUsers((updatedUsers) => {
+            console.log(`👥 REAL-TIME: ${updatedUsers.length} utilizadores`);
+            setUsers(updatedUsers);
+            localStorage.setItem("users", JSON.stringify(updatedUsers));
+          });
+        }
+
+        console.log("✅ SISTEMA DE SINCRONIZAÇÃO CONFIGURADO COM SUCESSO");
+      } catch (error) {
+        console.error("❌ ERRO na configuração de sincronização:", error);
+        // Fallback para dados locais
+        loadLocalDataAsFallback();
+      }
+    };
+
+    setupRealTimeSync();
 
     // Cleanup listeners
     return () => {
       console.log("🔄 Limpando listeners real-time");
-      unsubscribeWorks();
-      unsubscribeMaintenances();
-      if (unsubscribeUsers) unsubscribeUsers();
+      unsubscribeWorks?.();
+      unsubscribeMaintenances?.();
+      unsubscribeUsers?.();
     };
-  }, [user, isFirebaseAvailable, isOnline, triggerInstantSync]);
+  }, [user, isFirebaseAvailable, isOnline]);
 
   // Wrapper para operações CRUD com sync instantâneo automático
   const withInstantSync = useCallback(
