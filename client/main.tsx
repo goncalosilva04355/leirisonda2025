@@ -60,6 +60,10 @@ function App() {
               <Route path="create-user" element={<CreateUser />} />
               <Route path="edit-user/:id" element={<EditUser />} />
               <Route path="user-data" element={<UserDataManager />} />
+              <Route
+                path="user-sync-diagnostic"
+                element={<UserSyncDiagnostic />}
+              />
               <Route path="pool-maintenance" element={<MaintenanceList />} />
               <Route
                 path="create-maintenance"
