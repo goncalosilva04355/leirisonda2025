@@ -323,32 +323,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(true);
         setInitError(null);
 
-        console.log("🔐 SIMPLE LOGIN for:", email);
-        console.log("🔐 Password received:", password);
-        console.log("🔐 Email exact match check:");
-        console.log("  - Input email:", `"${email}"`);
-        console.log("  - Expected Gonçalo:", `"gongonsilva@gmail.com"`);
-        console.log("  - Expected Alexandre:", `"alexkamaryta@gmail.com"`);
-        console.log(
-          "  - Email matches Gonçalo:",
-          email === "gongonsilva@gmail.com",
-        );
-        console.log(
-          "  - Email matches Alexandre:",
-          email === "alexkamaryta@gmail.com",
-        );
-        console.log("🔐 Password exact match check:");
-        console.log("  - Input password:", `"${password}"`);
-        console.log("  - Expected Gonçalo pass:", `"19867gsf"`);
-        console.log("  - Expected Alexandre pass:", `"69alexandre"`);
-        console.log("  - Password matches Gonçalo:", password === "19867gsf");
-        console.log(
-          "  - Password matches Alexandre:",
-          password === "69alexandre",
-        );
+        console.log("🔐 LOGIN ATTEMPT:", { email, password });
 
-        // DIRECT LOGIN CHECK - No complexity
-        if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
+        // Clean inputs
+        const cleanEmail = email.trim().toLowerCase();
+        const cleanPassword = password.trim();
+
+        console.log("🧹 CLEANED:", { cleanEmail, cleanPassword });
+
+        // Check Gonçalo
+        if (
+          cleanEmail === "gongonsilva@gmail.com" &&
+          cleanPassword === "19867gsf"
+        ) {
           const user = {
             id: "admin_goncalo",
             email: "gongonsilva@gmail.com",
@@ -357,13 +344,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             permissions: defaultAdminPermissions,
             createdAt: new Date().toISOString(),
           };
+          console.log("✅ GONÇALO LOGIN SUCCESS");
           setUser(user);
           localStorage.setItem("leirisonda_user", JSON.stringify(user));
-          console.log("✅ GONÇALO LOGIN SUCCESS");
+          setIsLoading(false);
           return true;
         }
 
-        if (email === "alexkamaryta@gmail.com" && password === "69alexandre") {
+        // Check Alexandre
+        if (
+          cleanEmail === "alexkamaryta@gmail.com" &&
+          cleanPassword === "69alexandre"
+        ) {
           const user = {
             id: "user_alexandre",
             email: "alexkamaryta@gmail.com",
@@ -377,26 +369,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             },
             createdAt: new Date().toISOString(),
           };
+          console.log("✅ ALEXANDRE LOGIN SUCCESS");
           setUser(user);
           localStorage.setItem("leirisonda_user", JSON.stringify(user));
-          console.log("✅ ALEXANDRE LOGIN SUCCESS");
+          setIsLoading(false);
           return true;
         }
 
-        console.error("❌ LOGIN FAILED - Invalid credentials");
-        console.log(
-          "Expected: alexkamaryta@gmail.com / 69alexandre or gongonsilva@gmail.com / 19867gsf",
-        );
-        return false;
-      } catch (loginError: any) {
-        console.error("❌ Login error:", loginError);
-        setInitError("Erro durante o login");
-        return false;
-      } finally {
+        console.error("❌ LOGIN FAILED");
+        console.log("Valid credentials:");
+        console.log("• gongonsilva@gmail.com / 19867gsf");
+        console.log("• alexkamaryta@gmail.com / 69alexandre");
         setIsLoading(false);
+        return false;
+      } catch (error) {
+        console.error("❌ Login error:", error);
+        setIsLoading(false);
+        return false;
       }
     },
-    [],
+    [setUser, setIsLoading, setInitError],
   );
 
   const logout = useCallback(async () => {
