@@ -352,9 +352,9 @@ export class FirebaseService {
             workId: newWork.id,
           });
 
-          // Usar doc() com ID específico para garantir consistência
+          // Usar setDoc() com ID específico para criar documento novo
           const docRef = doc(db, "works", newWork.id);
-          await updateDoc(docRef, firebaseData);
+          await setDoc(docRef, firebaseData);
 
           console.log(
             "✅ OBRA CRIADA NO FIREBASE COM SUCESSO:",
