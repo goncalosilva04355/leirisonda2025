@@ -881,7 +881,7 @@ export function Dashboard() {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Cliente, folha obra, morada..."
+                  placeholder="Cliente, folha de obra, morada..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="input-leirisonda text-sm"
