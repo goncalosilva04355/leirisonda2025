@@ -70,7 +70,7 @@ export function useNotifications() {
       setIsLoading(true);
       console.log("🚀 Inicializando notificações...");
 
-      const success = await notificationService.initialize();
+      const success = await NotificationService.initialize();
 
       if (success) {
         console.log("✅ Notificações inicializadas com sucesso");
@@ -91,7 +91,7 @@ export function useNotifications() {
   // Pedir permissão para notificações
   const requestPermission = useCallback(async (): Promise<boolean> => {
     if (!("Notification" in window)) {
-      console.warn("⚠��� Notificações não são suportadas");
+      console.warn("⚠️ Notificações não são suportadas");
       return false;
     }
 
