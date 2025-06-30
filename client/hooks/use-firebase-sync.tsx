@@ -74,7 +74,7 @@ export function useFirebaseSync() {
       if (user) {
         console.log("🔄 Recarregando dados após delete notification");
         // Forçar reload dos dados locais
-        loadLocalData();
+        loadLocalDataAsFallback();
       }
     };
 
