@@ -28,6 +28,7 @@ import { CreateIntervention } from "./pages/CreateIntervention";
 import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
 import { MobileDeploy } from "./pages/MobileDeploy";
 import { SystemStatus } from "./pages/SystemStatus";
+import { QuickDiagnostic } from "./pages/QuickDiagnostic";
 import { NotFound } from "./pages/NotFound";
 
 function App() {
