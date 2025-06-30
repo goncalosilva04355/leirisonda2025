@@ -18,6 +18,7 @@ import {
   WifiOff,
 } from "lucide-react";
 import { Work, CreateWorkData } from "@shared/types";
+import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
