@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
+import { AlertTriangle } from "lucide-react";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -61,13 +62,21 @@ const defaultUserPermissions: UserPermissions = {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false); // Start with false
+  const [isLoading, setIsLoading] = useState(false);
+  const [initError, setInitError] = useState<string | null>(null);
 
   const loadStoredUser = () => {
     try {
       const storedUser = localStorage.getItem("leirisonda_user");
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
+
+        // Validate user object structure
+        if (!parsedUser.email || !parsedUser.name) {
+          console.warn("Invalid stored user data, clearing...");
+          localStorage.removeItem("leirisonda_user");
+          return;
+        }
 
         // Add default permissions if missing
         if (!parsedUser.permissions) {
@@ -77,26 +86,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               : defaultUserPermissions;
         }
 
-        console.log("Stored user loaded:", parsedUser.email);
+        console.log("✅ Stored user loaded:", parsedUser.email);
         setUser(parsedUser);
       } else {
-        console.log("No stored user found");
+        console.log("ℹ️ No stored user found");
       }
     } catch (error) {
-      console.error("Error parsing stored user:", error);
+      console.error("❌ Error parsing stored user:", error);
       localStorage.removeItem("leirisonda_user");
+      setInitError("Erro ao carregar dados do utilizador");
     }
   };
 
   useEffect(() => {
-    // Load stored user on mount
-    loadStoredUser();
+    try {
+      // Load stored user on mount
+      loadStoredUser();
+      setInitError(null);
+    } catch (error) {
+      console.error("❌ Error during AuthProvider initialization:", error);
+      setInitError("Erro na inicialização do sistema de autenticação");
+    }
   }, []);
 
   const createGlobalUsersInFirebase = async () => {
-    // Only try to create users if Firestore is available
-    if (!db) {
-      console.log("📱 Firestore not available - skipping global user creation");
+    try {
+      // Only try to create users if Firestore is available
+      if (!db) {
+        console.log(
+          "📱 Firestore not available - skipping global user creation",
+        );
+        return;
+      }
+    } catch (error) {
+      console.log("⚠️ Error checking Firestore availability:", error);
       return;
     }
 
@@ -217,6 +240,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (email: string, password: string): Promise<boolean> => {
       try {
         setIsLoading(true);
+        setInitError(null);
 
         // Check if Firebase is available
         if (auth && auth !== null) {
@@ -240,16 +264,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               setUser(userData);
               localStorage.setItem("leirisonda_user", JSON.stringify(userData));
 
-              // Start real-time data sync
-              console.log("🔄 Starting Firebase real-time sync...");
-              await firebaseService.syncLocalDataToFirebase();
+              // Start real-time data sync (with error handling)
+              try {
+                console.log("🔄 Starting Firebase real-time sync...");
+                await firebaseService.syncLocalDataToFirebase();
+              } catch (syncError) {
+                console.warn(
+                  "⚠️ Firebase sync failed, continuing with local data:",
+                  syncError,
+                );
+              }
 
               return true;
             }
 
             return false;
           } catch (firebaseError: any) {
-            console.log("⚠️ Firebase Auth failed, trying legacy login...");
+            console.log(
+              "⚠️ Firebase Auth failed, trying legacy login...",
+              firebaseError.message,
+            );
           }
         } else {
           console.log("📱 Firebase not available, using local authentication");
@@ -323,7 +357,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return true;
         }
 
-        console.error("❌ Login failed:", firebaseError.message);
+        console.error("❌ Login failed");
+        setInitError("Credenciais inválidas");
+        return false;
+      } catch (loginError: any) {
+        console.error("❌ Login error:", loginError);
+        setInitError("Erro durante o login");
         return false;
       } finally {
         setIsLoading(false);
@@ -391,6 +430,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initializeFirebase();
   }, []);
 
+  // Show error state if there's an initialization error
+  if (initError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
+          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertTriangle className="w-8 h-8 text-yellow-600" />
+          </div>
+          <h1 className="text-xl font-bold text-gray-900 mb-2">
+            Erro de Inicialização
+          </h1>
+          <p className="text-gray-600 mb-6">{initError}</p>
+          <button
+            onClick={() => {
+              setInitError(null);
+              loadStoredUser();
+            }}
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Tentar Novamente
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
@@ -401,14 +466,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    console.error("useAuth called outside of AuthProvider context");
-    // Return a default context instead of throwing during development
-    return {
+    console.error("❌ useAuth called outside of AuthProvider context");
+
+    // Provide a more robust fallback
+    const fallbackContext: AuthContextType = {
       user: null,
-      login: async () => false,
-      logout: () => {},
+      login: async (email: string, password: string) => {
+        console.warn("Fallback login called - AuthProvider not available");
+        return false;
+      },
+      logout: () => {
+        console.warn("Fallback logout called - AuthProvider not available");
+      },
       isLoading: false,
     };
+
+    return fallbackContext;
   }
   return context;
 }
