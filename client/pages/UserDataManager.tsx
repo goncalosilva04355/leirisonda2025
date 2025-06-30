@@ -10,9 +10,11 @@ import {
   CheckCircle,
   Users,
 } from "lucide-react";
+import { useAuth } from "@/components/AuthProvider";
 
 export function UserDataManager() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
 
