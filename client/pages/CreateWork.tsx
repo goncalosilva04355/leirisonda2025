@@ -380,39 +380,47 @@ export function CreateWork() {
         </div>
 
         {/* Connection Status */}
-        <div className="flex items-center space-x-2">
-          {isOnline ? (
-            <>
-              <Wifi className="w-4 h-4 text-green-600" />
-              <span className="text-sm text-green-600">Online</span>
-              {isSyncing && (
-                <span className="text-xs text-gray-500">Sincronizando...</span>
-              )}
-            </>
-          ) : (
-            <>
-              <WifiOff className="w-4 h-4 text-orange-600" />
-              <span className="text-sm text-orange-600">Offline</span>
-            </>
-          )}
-        </div>
-
-        <div className="text-xs text-gray-500 text-right">
-          <div className="flex items-center justify-end space-x-2">
-            <div
-              className={`w-2 h-2 rounded-full ${isOnline ? "bg-green-500" : "bg-gray-400"}`}
-            ></div>
-            <span>
-              {isSyncing ? (
-                <span className="text-sm text-blue-600">Sincronizando...</span>
-              ) : isOnline ? (
+        {typeof isOnline !== "undefined" && (
+          <div className="flex items-center space-x-2">
+            {isOnline ? (
+              <>
+                <Wifi className="w-4 h-4 text-green-600" />
                 <span className="text-sm text-green-600">Online</span>
-              ) : (
+                {isSyncing && (
+                  <span className="text-xs text-gray-500">
+                    Sincronizando...
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                <WifiOff className="w-4 h-4 text-orange-600" />
                 <span className="text-sm text-orange-600">Offline</span>
-              )}
-            </span>
+              </>
+            )}
           </div>
-        </div>
+        )}
+
+        {typeof isOnline !== "undefined" && (
+          <div className="text-xs text-gray-500 text-right">
+            <div className="flex items-center justify-end space-x-2">
+              <div
+                className={`w-2 h-2 rounded-full ${isOnline ? "bg-green-500" : "bg-gray-400"}`}
+              ></div>
+              <span>
+                {isSyncing ? (
+                  <span className="text-sm text-blue-600">
+                    Sincronizando...
+                  </span>
+                ) : isOnline ? (
+                  <span className="text-sm text-green-600">Online</span>
+                ) : (
+                  <span className="text-sm text-orange-600">Offline</span>
+                )}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Offline Warning */}
