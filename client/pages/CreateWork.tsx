@@ -50,13 +50,72 @@ const statusOptions = [
 
 export function CreateWork() {
   const navigate = useNavigate();
-  const { user, getAllUsers } = useAuth();
-  const { createWork, isOnline, isSyncing } = useFirebaseSync();
+
+  // Use try-catch para capturar erros de contexto
+  let user, getAllUsers, createWork, isOnline, isSyncing;
+
+  try {
+    const authContext = useAuth();
+    const firebaseContext = useFirebaseSync();
+
+    user = authContext.user;
+    getAllUsers = authContext.getAllUsers;
+    createWork = firebaseContext.createWork;
+    isOnline = firebaseContext.isOnline;
+    isSyncing = firebaseContext.isSyncing;
+  } catch (error) {
+    console.error("❌ Erro ao acessar contextos:", error);
+    return (
+      <div className="p-6 max-w-md mx-auto mt-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-red-800 mb-2">
+            Erro de Contexto
+          </h2>
+          <p className="text-red-600 mb-4">
+            Erro ao carregar contextos da aplicação. Tente recarregar a página.
+          </p>
+          <div className="space-y-2">
+            <Button onClick={() => window.location.reload()} className="w-full">
+              Recarregar Página
+            </Button>
+            <Button
+              onClick={() => navigate("/dashboard")}
+              variant="outline"
+              className="w-full"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar ao Dashboard
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  // Verificar se o usuário existe e tem permissão
+  if (!user) {
+    return (
+      <div className="p-6 max-w-md mx-auto mt-8">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-yellow-800 mb-2">
+            Utilizador não encontrado
+          </h2>
+          <p className="text-yellow-600 mb-4">
+            Por favor, faça login novamente.
+          </p>
+          <Button onClick={() => navigate("/login")} variant="outline">
+            Ir para Login
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   // Verificar se o usuário tem permissão para criar obras
-  if (!user?.permissions.canCreateWorks) {
+  if (!user?.permissions?.canCreateWorks) {
     return (
       <div className="p-6 max-w-md mx-auto mt-8">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
