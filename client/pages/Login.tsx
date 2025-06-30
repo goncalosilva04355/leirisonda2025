@@ -26,11 +26,9 @@ export const Login = React.memo(function Login() {
       }
 
       try {
-        if (authContext?.login) {
-          const success = await authContext.login(email, password);
-          if (!success) {
-            setError("Email ou palavra-passe incorretos.");
-          }
+        const success = await login(email, password);
+        if (!success) {
+          setError("Email ou palavra-passe incorretos.");
         }
       } catch (err) {
         setError("Erro ao iniciar sessão. Tente novamente.");
