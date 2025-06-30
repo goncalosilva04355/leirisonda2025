@@ -54,6 +54,19 @@ export function LoginInfo() {
               localStorage.setItem(key, existingPassword);
               console.log(`🔧 Set password for key: ${key}`);
             });
+          } else {
+            // For users without password, create a default one
+            const defaultPassword =
+              user.name.toLowerCase().replace(/\s+/g, "") + "123";
+            passwordKeys.forEach((key) => {
+              localStorage.setItem(key, defaultPassword);
+              console.log(
+                `🔧 Created default password "${defaultPassword}" for key: ${key}`,
+              );
+            });
+            console.log(
+              `⚠️ Created default password for ${user.name}: ${defaultPassword}`,
+            );
           }
         });
 
@@ -63,6 +76,50 @@ export function LoginInfo() {
       }
     } catch (error) {
       console.error("❌ Error in manual fix:", error);
+    }
+  };
+
+  const fixSpecificUser = (userEmail: string) => {
+    try {
+      console.log(`🔧 Fixing specific user: ${userEmail}`);
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        const parsedUsers = JSON.parse(storedUsers);
+        const user = parsedUsers.find((u: any) => u.email === userEmail);
+
+        if (user) {
+          // Create a simple password based on name
+          const newPassword =
+            user.name.toLowerCase().replace(/\s+/g, "") + "123";
+
+          const passwordKeys = [
+            `password_${user.id}`,
+            `password_${user.email}`,
+            `password_${user.email?.trim().toLowerCase()}`,
+          ];
+
+          passwordKeys.forEach((key) => {
+            localStorage.setItem(key, newPassword);
+            console.log(`🔧 Fixed password for key: ${key} = ${newPassword}`);
+          });
+
+          alert(
+            `✅ Password atualizada para ${user.name}!\nEmail: ${user.email}\nPassword: ${newPassword}\n\nPode agora fazer login.`,
+          );
+
+          // Reload debug info
+          setTimeout(() => {
+            setUsers([]); // Clear current state
+            setShowDebug(false);
+            setShowDebug(true);
+          }, 100);
+        } else {
+          alert(`❌ Utilizador ${userEmail} não encontrado.`);
+        }
+      }
+    } catch (error) {
+      console.error("❌ Error fixing specific user:", error);
+      alert(`❌ Erro ao corrigir utilizador: ${error}`);
     }
   };
 
