@@ -232,6 +232,8 @@ export class FirebaseService {
   async createWork(
     workData: Omit<Work, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
+    console.log("🔄 INICIANDO CRIAÇÃO DE OBRA:", workData.clientName);
+
     const newWork: Work = {
       ...workData,
       id: crypto.randomUUID(),
@@ -239,28 +241,51 @@ export class FirebaseService {
       updatedAt: new Date().toISOString(),
     };
 
-    // SEMPRE criar localmente primeiro (sync instantâneo local)
-    const works = this.getLocalWorks();
-    works.push(newWork);
-    localStorage.setItem("works", JSON.stringify(works));
-    console.log("📱 Work created locally first:", newWork.id);
+    try {
+      // SEMPRE criar localmente primeiro (sync instantâneo local)
+      const works = this.getLocalWorks();
+      const worksCountBefore = works.length;
+      works.push(newWork);
+      localStorage.setItem("works", JSON.stringify(works));
 
-    // Tentar Firebase em paralelo se disponível
-    if (this.isFirebaseAvailable) {
-      try {
-        const worksRef = collection(db, "works");
-        await addDoc(worksRef, {
-          ...newWork,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        });
-        console.log("🔥 Work synced to Firebase:", newWork.id);
-      } catch (error) {
-        console.error("⚠️ Firebase sync failed, work saved locally:", error);
+      // Verificar se foi salvo corretamente
+      const verificationWorks = this.getLocalWorks();
+      const savedWork = verificationWorks.find((w) => w.id === newWork.id);
+
+      if (savedWork) {
+        console.log(
+          `✅ OBRA CRIADA LOCALMENTE: ${newWork.id} (${worksCountBefore} -> ${verificationWorks.length} obras)`,
+        );
+      } else {
+        throw new Error("Obra não foi salva no localStorage");
       }
-    }
 
-    return newWork.id;
+      // Tentar Firebase em paralelo se disponível
+      if (this.isFirebaseAvailable) {
+        try {
+          const worksRef = collection(db, "works");
+          const docRef = await addDoc(worksRef, {
+            ...newWork,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
+          console.log("🔥 OBRA SINCRONIZADA COM FIREBASE:", docRef.id);
+        } catch (error) {
+          console.error(
+            "⚠️ FIREBASE SYNC FALHOU, obra salva localmente:",
+            error,
+          );
+        }
+      } else {
+        console.log("📱 FIREBASE INDISPONÍVEL, obra salva apenas localmente");
+      }
+
+      console.log("✅ CRIAÇÃO DE OBRA CONCLUÍDA COM SUCESSO:", newWork.id);
+      return newWork.id;
+    } catch (error) {
+      console.error("❌ ERRO CRÍTICO NA CRIAÇÃO DE OBRA:", error);
+      throw error;
+    }
   }
 
   private createLocalWork(
