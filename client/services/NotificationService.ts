@@ -561,14 +561,56 @@ class NotificationServiceClass {
     }
   }
 
-  // Método para enviar notificação via servidor FCM (implementar conforme necessário)
+  // Método para enviar notificação push real via Firebase Cloud Messaging
   private async sendPushNotification(
-    token: string,
+    userId: string,
     payload: NotificationPayload,
   ) {
-    // Implementar envio via servidor FCM
-    // Esta funcionalidade requer um servidor backend para enviar as notificações
-    console.log("📤 Enviaria notificação push para token:", token, payload);
+    try {
+      console.log(
+        `📤 Enviando notificação push para usuário ${userId}:`,
+        payload,
+      );
+
+      // Obter token do usuário de destino
+      const userTokens = JSON.parse(
+        localStorage.getItem("userNotificationTokens") || "{}",
+      );
+      const targetToken = userTokens[userId];
+
+      if (!targetToken) {
+        console.warn(`⚠️ Token não encontrado para usuário ${userId}`);
+        return false;
+      }
+
+      // Usar Firebase Admin via endpoint da aplicação
+      const response = await fetch("/api/send-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: targetToken,
+          title: payload.title,
+          body: payload.body,
+          data: payload.data || {},
+          icon: payload.icon || "/leirisonda-icon.svg",
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(`✅ Notificação push enviada com sucesso:`, result);
+        return true;
+      } else {
+        const error = await response.text();
+        console.error(`❌ Erro no servidor ao enviar push:`, error);
+        return false;
+      }
+    } catch (error) {
+      console.error("❌ Erro ao enviar notificação push:", error);
+      return false;
+    }
   }
 
   getIsSupported(): boolean {
@@ -622,7 +664,7 @@ class NotificationServiceClass {
         } else {
           diagnostics.serviceWorkerStatus = "Not Registered";
           diagnostics.recommendations.push(
-            "Service Worker para Firebase não está registrado",
+            "Service Worker para Firebase n��o está registrado",
           );
         }
       } else {
