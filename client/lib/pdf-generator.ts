@@ -442,17 +442,19 @@ export class PDFGenerator {
           }
 
           .report-title h2 {
-            font-size: 22px;
-            font-weight: bold;
-            border-top: 2px solid rgba(255,255,255,0.4);
-            padding-top: 18px;
-            margin-top: 10px;
+            font-size: 24px;
+            font-weight: 600;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            padding-top: 20px;
+            margin-top: 15px;
+            line-height: 1.3;
           }
 
           .report-title .subtitle {
             font-size: 16px;
-            margin-top: 8px;
-            opacity: 0.95;
+            margin-top: 10px;
+            opacity: 0.9;
+            font-weight: 400;
           }
 
           /* Content */
