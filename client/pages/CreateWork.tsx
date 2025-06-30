@@ -155,6 +155,7 @@ export function CreateWork() {
         status: formData.status,
         vehicles: formData.vehicles,
         technicians: formData.technicians,
+        assignedUsers: formData.assignedUsers,
         photos: formData.photos.map((photo, index) => ({
           id: `${Date.now()}-${index}`,
           url: URL.createObjectURL(photo),
