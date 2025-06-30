@@ -337,7 +337,7 @@ Se NÃO aparecer, há problema de sincronização Firebase!
       </div>
 
       {/* Ações Rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Button
           onClick={createTestWork}
           disabled={isCreatingTest}
@@ -345,6 +345,15 @@ Se NÃO aparecer, há problema de sincronização Firebase!
         >
           <Plus className="w-4 h-4 mr-2" />
           {isCreatingTest ? "Criando..." : "Criar Obra Teste"}
+        </Button>
+
+        <Button
+          onClick={testSyncBetweenDevices}
+          disabled={isTestingSync}
+          className="h-auto py-4 bg-purple-600 hover:bg-purple-700"
+        >
+          <RefreshCw className="w-4 h-4 mr-2" />
+          {isTestingSync ? "Testando..." : "Testar Sync Dispositivos"}
         </Button>
 
         <Button onClick={forceSync} variant="outline" className="h-auto py-4">
