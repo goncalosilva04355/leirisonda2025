@@ -54,6 +54,9 @@ export function WorksList() {
   const [worksheetFilter, setWorksheetFilter] = useState<string>(
     searchParams.get("worksheet") || "all",
   );
+  const [assignedToFilter, setAssignedToFilter] = useState<string>(
+    searchParams.get("assignedTo") || "",
+  );
 
   // React to URL parameter changes
   useEffect(() => {
@@ -61,17 +64,26 @@ export function WorksList() {
     const type = searchParams.get("type") || "all";
     const worksheet = searchParams.get("worksheet") || "all";
     const search = searchParams.get("search") || "";
+    const assignedTo = searchParams.get("assignedTo") || "";
 
     setStatusFilter(status);
     setTypeFilter(type);
     setWorksheetFilter(worksheet);
     setSearchTerm(search);
+    setAssignedToFilter(assignedTo);
   }, [searchParams]);
 
   useEffect(() => {
     filterWorks();
     updateURL();
-  }, [works, searchTerm, statusFilter, typeFilter, worksheetFilter]);
+  }, [
+    works,
+    searchTerm,
+    statusFilter,
+    typeFilter,
+    worksheetFilter,
+    assignedToFilter,
+  ]);
 
   const updateURL = () => {
     const params = new URLSearchParams();
@@ -86,6 +98,9 @@ export function WorksList() {
     }
     if (searchTerm) {
       params.set("search", searchTerm);
+    }
+    if (assignedToFilter) {
+      params.set("assignedTo", assignedToFilter);
     }
     setSearchParams(params);
   };
@@ -122,6 +137,14 @@ export function WorksList() {
       } else if (worksheetFilter === "completed") {
         filtered = filtered.filter((work) => work.workSheetCompleted);
       }
+    }
+
+    // Filter by assigned user
+    if (assignedToFilter) {
+      filtered = filtered.filter(
+        (work) =>
+          work.assignedUsers && work.assignedUsers.includes(assignedToFilter),
+      );
     }
 
     // Sort by most recent first
@@ -176,7 +199,9 @@ export function WorksList() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Gestão de Obras</h1>
           <p className="mt-2 text-gray-600">
-            Visualizar e gerir todas as obras
+            {assignedToFilter
+              ? "Obras atribuídas ao usuário selecionado"
+              : "Visualizar e gerir todas as obras"}
           </p>
         </div>
         {user?.permissions.canCreateWorks && (
@@ -348,6 +373,37 @@ export function WorksList() {
                         <span className="font-medium">Morada:</span>{" "}
                         {work.address}
                       </p>
+
+                      {work.assignedUsers && work.assignedUsers.length > 0 && (
+                        <p className="text-sm text-gray-600 mt-2">
+                          <span className="font-medium">Atribuída a:</span>{" "}
+                          {work.assignedUsers
+                            .map((userId) => {
+                              // Buscar nome do usuário pelos IDs
+                              const assignedUser =
+                                user?.role === "admin"
+                                  ? [
+                                      {
+                                        id: "1",
+                                        name: "Gonçalo Fonseca",
+                                        email: "gongonsilva@gmail.com",
+                                      },
+                                      {
+                                        id: "2",
+                                        name: "Alexandre Fernandes",
+                                        email: "alexkamaryta@gmail.com",
+                                      },
+                                    ].find(
+                                      (u) =>
+                                        u.id === userId ||
+                                        userId.includes(u.email),
+                                    )
+                                  : null;
+                              return assignedUser ? assignedUser.name : userId;
+                            })
+                            .join(", ")}
+                        </p>
+                      )}
 
                       {work.observations && (
                         <p className="text-sm text-gray-600 mt-2">
