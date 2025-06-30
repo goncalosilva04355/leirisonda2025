@@ -8,6 +8,10 @@ import React, {
 } from "react";
 import { User } from "@shared/types";
 import { firebaseService } from "@/services/FirebaseService";
+import {
+  clearAllMaintenanceData,
+  hasMaintenanceData,
+} from "@/utils/clearMaintenanceData";
 
 interface AuthContextType {
   user: User | null;
