@@ -211,7 +211,7 @@ export function useFirebaseSync() {
               );
             });
 
-            // Se é uma operação de delete, forçar atualização imediata do estado
+            // Se é uma opera��ão de delete, forçar atualização imediata do estado
             if (reason.includes("after_delete_work")) {
               console.log(
                 "🔄 Sync após DELETE - Atualizando estado imediatamente",
@@ -222,7 +222,9 @@ export function useFirebaseSync() {
 
         // 7. Atualizar estado com dados sincronizados
         setWorks(latestWorks);
-        setMaintenances(latestMaintenances);
+        // FORÇA LIMPEZA: Sempre definir maintenances como array vazio
+        console.log("🧹 BLOQUEANDO CARREGAMENTO DE MAINTENANCES");
+        setMaintenances([]);
         setUsers(latestUsers);
 
         setLastSync(new Date());
@@ -275,13 +277,12 @@ export function useFirebaseSync() {
       const consolidatedWorks =
         firebaseService.consolidateWorksFromAllBackups();
 
-      const localMaintenances = JSON.parse(
-        localStorage.getItem("pool_maintenances") || "[]",
-      );
       const localUsers = JSON.parse(localStorage.getItem("users") || "[]");
 
       setWorks(consolidatedWorks);
-      setMaintenances(localMaintenances);
+      // FORÇA LIMPEZA: Ignorar dados locais de maintenances
+      console.log("🧹 FALLBACK: Forçando maintenances vazio");
+      setMaintenances([]);
       setUsers(localUsers);
 
       console.log(
