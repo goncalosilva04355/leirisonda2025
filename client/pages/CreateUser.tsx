@@ -124,7 +124,7 @@ export function CreateUser() {
 
     try {
       // Check if user already exists
-      const storedUsers = localStorage.getItem("leirisonda_users");
+      const storedUsers = localStorage.getItem("users");
       const users: UserType[] = storedUsers ? JSON.parse(storedUsers) : [];
 
       if (users.find((u) => u.email === formData.email)) {
@@ -165,7 +165,7 @@ export function CreateUser() {
 
       // Save user
       users.push(newUser);
-      localStorage.setItem("leirisonda_users", JSON.stringify(users));
+      localStorage.setItem("users", JSON.stringify(users));
       console.log(
         "💾 Saved users to localStorage:",
         JSON.stringify(users, null, 2),
@@ -180,7 +180,17 @@ export function CreateUser() {
         formData.password,
       );
 
-      setSuccess("Utilizador criado com sucesso!");
+      // Verify user was created correctly
+      const verification = {
+        userSaved: localStorage.getItem("users")?.includes(newUser.id) || false,
+        passwordSaved: !!localStorage.getItem(`password_${newUser.id}`),
+        totalUsers: JSON.parse(localStorage.getItem("users") || "[]").length,
+      };
+      console.log("✅ User creation verification:", verification);
+
+      setSuccess(
+        `Utilizador criado com sucesso! Email: ${newUser.email} - Pode agora fazer login.`,
+      );
 
       // Reset form
       setFormData({

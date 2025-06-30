@@ -8,7 +8,7 @@ export function UsersList() {
   const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {
-    const storedUsers = localStorage.getItem("leirisonda_users");
+    const storedUsers = localStorage.getItem("users");
     if (storedUsers) {
       try {
         setUsers(JSON.parse(storedUsers));
@@ -23,7 +23,7 @@ export function UsersList() {
     if (window.confirm("Tem a certeza que quer eliminar este utilizador?")) {
       const updatedUsers = users.filter((user) => user.id !== userId);
       setUsers(updatedUsers);
-      localStorage.setItem("leirisonda_users", JSON.stringify(updatedUsers));
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
       localStorage.removeItem(`password_${userId}`);
     }
   };
