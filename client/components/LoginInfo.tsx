@@ -107,6 +107,35 @@ export function LoginInfo() {
     }
   };
 
+  const syncGlobalUsers = async () => {
+    try {
+      console.log("🔄 Sincronizando utilizadores globais...");
+
+      // Primeiro força a criação dos utilizadores globais localmente
+      DefaultDataService.forceCleanUserSystem();
+
+      // Se Firebase disponível, tenta sincronizar
+      if (firebaseService.getFirebaseStatus().isAvailable && navigator.onLine) {
+        await firebaseService.syncGlobalUsersFromFirebase();
+        console.log("✅ Sincronização global completada");
+        alert(
+          "✅ Utilizadores globais sincronizados!\n\nTodos os dispositivos devem agora ter acesso aos utilizadores:\n• Gonçalo (gongonsilva@gmail.com)\n• Alexandre (alexkamaryta@gmail.com)",
+        );
+      } else {
+        console.log("📱 Firebase indisponível, apenas sincronização local");
+        alert(
+          "✅ Utilizadores globais criados localmente!\n\nPara sincronizar com outros dispositivos, certifique-se que tem internet e Firebase ativo.",
+        );
+      }
+
+      // Reload para mostrar dados atualizados
+      setTimeout(() => window.location.reload(), 1000);
+    } catch (error) {
+      console.error("❌ Erro na sincronização global:", error);
+      alert("❌ Erro na sincronização: " + error);
+    }
+  };
+
   const fixSpecificUser = (userEmail: string) => {
     try {
       console.log(`🔧 Fixing specific user: ${userEmail}`);
