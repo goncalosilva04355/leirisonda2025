@@ -36,6 +36,7 @@ import { NotFound } from "./pages/NotFound";
 import { EmergencyDiagnostic } from "./pages/EmergencyDiagnostic";
 import { NotificationSettingsPage } from "./pages/NotificationSettingsPage";
 import NotificationTest from "./pages/NotificationTest";
+import { NotificationDiagnostic } from "./pages/NotificationDiagnostic";
 
 function App() {
   return (
