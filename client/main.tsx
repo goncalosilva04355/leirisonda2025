@@ -31,7 +31,7 @@ import { SystemStatus } from "./pages/SystemStatus";
 import { UserSyncDiagnostic } from "./pages/UserSyncDiagnostic";
 import { DebugWorks } from "./pages/DebugWorks";
 import { SyncMonitor } from "./pages/SyncMonitor";
-import { SyncDiagnostic } from "./pages/SyncDiagnostic";
+import SyncDiagnostic from "./pages/SyncDiagnostic";
 import { NotFound } from "./pages/NotFound";
 import { EmergencyDiagnostic } from "./pages/EmergencyDiagnostic";
 
