@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// Utilitário de limpeza removido para evitar interferência com login
-// import "./utils/executeClearMaintenance";
+// Limpeza imediata de piscinas conforme solicitado
+import "./utils/immediateCleanup";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
