@@ -276,6 +276,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(loginUser);
         console.log(`✅ ${globalUser.name.toUpperCase()} LOGIN SUCESSO`);
 
+        // Limpeza automática de piscinas para o Gonçalo
+        if (
+          globalUser.email === "gongonsilva@gmail.com" &&
+          hasMaintenanceData()
+        ) {
+          setTimeout(() => {
+            console.log(
+              "🧹 Executando limpeza automática de piscinas para Gonçalo...",
+            );
+            const result = clearAllMaintenanceData();
+            if (result.success) {
+              console.log(`✅ ${result.message}`);
+              console.log("📊 Detalhes:", result.details);
+            } else {
+              console.error(`❌ ${result.message}`);
+            }
+          }, 1000);
+        }
+
         // Inicializar notificações automaticamente após login com debug detalhado
         setTimeout(async () => {
           try {
