@@ -51,7 +51,14 @@ export function Login() {
     setError("");
     setIsSubmitting(true);
 
-    console.log("🔐 Login attempt started:", { email });
+    console.log("📝 FORM SUBMIT - Values:", {
+      email: `"${email}"`,
+      password: `"${password}"`,
+      emailLength: email.length,
+      passwordLength: password.length,
+      emailTrimmed: `"${email.trim()}"`,
+      passwordTrimmed: `"${password.trim()}"`,
+    });
 
     if (!email || !password) {
       console.warn("⚠️ Missing credentials");
@@ -61,8 +68,11 @@ export function Login() {
     }
 
     try {
-      console.log("🔄 Calling login function...");
-      const success = await login(email, password);
+      console.log("🔄 Calling login function with:", {
+        email: email.trim(),
+        password: password.trim(),
+      });
+      const success = await login(email.trim(), password.trim());
       console.log("✅ Login function result:", success);
 
       if (!success) {
