@@ -384,38 +384,56 @@ export function CreateWork() {
           setIsSubmitting(false);
         }
       } catch (err) {
-        console.error("❌ ERRO CRÍTICO AO CRIAR OBRA:", err);
+        console.error("❌ ERRO AO CRIAR OBRA:", err);
 
-        // Log detalhado do erro para debugging
-        if (err instanceof Error) {
-          console.error("❌ Stack trace:", err.stack);
-          console.error("❌ Mensagem:", err.message);
-        }
-
-        // Verificar se o erro está relacionado às atribuições
+        // Tratamento de erro ESPECÍFICO e SEGURO
         const errorMessage = err instanceof Error ? err.message : String(err);
+
+        // NÃO relançar erro que possa causar ErrorBoundary
         if (
+          errorMessage.includes("Firebase") ||
+          errorMessage.includes("network") ||
+          errorMessage.includes("fetch") ||
+          errorMessage.includes("conectividade")
+        ) {
+          setError(
+            "Problema de conectividade. A obra pode ter sido guardada localmente. Verifique a lista de obras.",
+          );
+        } else if (
           errorMessage.includes("atribuições") ||
           errorMessage.includes("assignedUsers")
         ) {
           setError(
-            `ERRO DE ATRIBUIÇÕES: ${errorMessage}. Verifique se os usuários selecionados são válidos e tente novamente.`,
+            "Problema com atribuições de usuários. Verifique as seleções e tente novamente.",
           );
         } else {
-          setError(`Erro ao criar a obra: ${errorMessage}. Tente novamente.`);
+          setError(
+            `Erro ao guardar obra: ${errorMessage.slice(0, 100)}. Tente novamente.`,
+          );
         }
+
         setIsSubmitting(false);
+
+        // Log detalhado para debugging mas NÃO fazer throw
+        console.error("📝 Detalhes do erro:", {
+          message: errorMessage,
+          stack: err instanceof Error ? err.stack?.slice(0, 500) : undefined,
+          formData: {
+            cliente: formData.clientName,
+            atribuicoes: formData.assignedUsers?.length || 0,
+          },
+        });
       }
     } catch (fatalError) {
-      // PROTEÇÃO FINAL: Capturar qualquer erro que possa causar logout
-      console.error(
-        "❌ Erro fatal capturado (evitando crash da aplicação):",
-        fatalError,
-      );
+      // PROTEÇÃO MÁXIMA: NUNCA deixar erro causar crash/logout
+      console.error("❌ Erro fatal capturado e contido:", fatalError);
+
       setError(
-        "Erro interno. Por favor, recarregue a página e tente novamente.",
+        "Erro interno do sistema. A obra pode ter sido guardada. Verifique a lista de obras ou tente novamente.",
       );
       setIsSubmitting(false);
+
+      // NÃO fazer throw nem relançar erro - simplesmente conter
     }
   };
 
