@@ -587,7 +587,7 @@ export class PDFGenerator {
             </div>
 
             <div class="sub-header">
-              <div class="sub-left">Por: Leirisonda (info@leirisonda.pt)</div>
+              <div class="sub-left">Por: Leirisonda (leirisonda@leirisonda.pt)</div>
               <div class="sub-right">Em: ${reportDate} ${new Date().toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" })}</div>
             </div>
           </div>
