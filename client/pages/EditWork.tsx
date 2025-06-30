@@ -78,6 +78,7 @@ export function EditWork() {
 
   const { works, updateWork, isOnline, isSyncing } = firebaseContext;
   const { getAllUsers } = authContext;
+  const { notifyWorkStatusChange, notifyWorkAssigned } = useNotifications();
 
   const [work, setWork] = useState<Work | null>(null);
   const [loading, setLoading] = useState(true);
