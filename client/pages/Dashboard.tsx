@@ -282,6 +282,27 @@ export function Dashboard() {
               </div>
             </div>
           </div>
+
+          {/* Debug button for Gonçalo */}
+          {user?.email === "gongonsilva@gmail.com" && (
+            <div className="flex items-center space-x-3">
+              <div className="text-xs text-gray-500">
+                <div>
+                  Sync:{" "}
+                  {isSyncing ? "Em curso..." : isOnline ? "Online" : "Offline"}
+                </div>
+                {lastSync && <div>Último: {format(lastSync, "HH:mm:ss")}</div>}
+              </div>
+              <Button
+                onClick={() => navigate("/debug-works")}
+                variant="outline"
+                size="sm"
+                className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+              >
+                🔍 Debug Obras
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
