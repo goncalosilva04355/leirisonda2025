@@ -33,12 +33,23 @@ import {
   cleanAllMaintenanceStorages,
   detectDuplicateMaintenances,
 } from "@/utils/cleanDuplicates";
+import { clearAllMaintenanceData } from "@/utils/clearMaintenanceData";
 
 export function MaintenanceList() {
   const { user } = useAuth();
   const { maintenances } = useFirebaseSync();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+
+  const handleClearAllPools = () => {
+    if (user?.email === "gongonsilva@gmail.com") {
+      const result = clearAllMaintenanceData();
+      if (result.success) {
+        console.log("✅ Todas as piscinas foram apagadas");
+        window.location.reload();
+      }
+    }
+  };
 
   // Auto-limpeza de duplicados quando maintenances mudam
   useEffect(() => {
