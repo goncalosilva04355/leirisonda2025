@@ -586,16 +586,18 @@ export function Dashboard() {
               </h3>
             </div>
             <div className="space-y-3">
-              <Button
-                variant="outline"
-                className="w-full justify-start hover-leirisonda h-auto py-3"
-                asChild
-              >
-                <Link to="/create-work">
-                  <Plus className="w-4 h-4 mr-3" />
-                  Nova Obra
-                </Link>
-              </Button>
+              {user?.permissions.canCreateWorks && (
+                <Button
+                  variant="outline"
+                  className="w-full justify-start hover-leirisonda h-auto py-3"
+                  asChild
+                >
+                  <Link to="/create-work">
+                    <Plus className="w-4 h-4 mr-3" />
+                    Nova Obra
+                  </Link>
+                </Button>
+              )}
               <Button
                 variant="outline"
                 className="w-full justify-start hover-leirisonda h-auto py-3"
