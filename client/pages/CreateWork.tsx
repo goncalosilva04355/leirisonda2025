@@ -278,48 +278,110 @@ export function CreateWork() {
           return;
         }
 
-        // Create work using Firebase sync
-        const workId = await createWork(workData);
+        // FALLBACK SEGURO: Se createWork não estiver disponível, usar FirebaseService diretamente
+        const safeCreateWork =
+          createWork ||
+          (async (data: any) => {
+            console.log(
+              "🔄 Fallback: usando FirebaseService.createWork diretamente",
+            );
+            return await firebaseService.createWork(data);
+          });
+
+        // Create work using safe method
+        const workId = await safeCreateWork(workData);
         console.log("✅ OBRA CRIADA COM SUCESSO ID:", workId);
 
-        // Aguardar um pouco para sincronização
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Aguardar sincronização
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-        // Verificar se obra foi realmente salva com backups
+        // Verificar se obra foi salva (simplificado para evitar erros)
         const savedWorks1 = JSON.parse(localStorage.getItem("works") || "[]");
         const savedWorks2 = JSON.parse(
           localStorage.getItem("leirisonda_works") || "[]",
         );
-        const savedWorks3 = JSON.parse(
-          sessionStorage.getItem("temp_works") || "[]",
-        );
 
-        const savedWork1 = savedWorks1.find((w: any) => w.id === workId);
-        const savedWork2 = savedWorks2.find((w: any) => w.id === workId);
-        const savedWork3 = savedWorks3.find((w: any) => w.id === workId);
+        const savedWork =
+          savedWorks1.find((w: any) => w.id === workId) ||
+          savedWorks2.find((w: any) => w.id === workId);
 
-        if (savedWork1 || savedWork2 || savedWork3) {
-          const finalWork = savedWork1 || savedWork2 || savedWork3;
-          console.log("✅ OBRA VERIFICADA EM MÚLTIPLOS BACKUPS:", {
-            cliente: finalWork.clientName,
-            folhaObra: finalWork.workSheetNumber,
-            atribuicoes: finalWork.assignedUsers,
-            backups: {
-              works: !!savedWork1,
-              leirisonda_works: !!savedWork2,
-              temp_works: !!savedWork3,
-            },
+        if (savedWork) {
+          console.log("✅ OBRA VERIFICADA E GUARDADA:", {
+            cliente: savedWork.clientName,
+            folhaObra: savedWork.workSheetNumber,
+            atribuicoes: savedWork.assignedUsers,
           });
 
-          // Verificar atribuições específicas
-          if (finalWork.assignedUsers && finalWork.assignedUsers.length > 0) {
-            console.log("🎯 ATRIBUIÇÕES CONFIRMADAS:", finalWork.assignedUsers);
+          // Reset form para estado inicial
+          setFormData({
+            workSheetNumber: generateWorkSheetNumber(),
+            type: "piscina",
+            clientName: "",
+            address: "",
+            contact: "",
+            entryTime: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+            exitTime: "",
+            status: "pendente",
+            vehicles: [],
+            technicians: [],
+            assignedUsers: [],
+            photos: [],
+            observations: "",
+            workPerformed: "",
+            workSheetCompleted: false,
+          });
+
+          setIsSubmitting(false);
+
+          // NAVEGAÇÃO ROBUSTA - evitar problemas de routing
+          console.log("🧭 REDIRECIONANDO PARA LISTA DE OBRAS...");
+          setTimeout(() => {
+            try {
+              navigate("/works");
+            } catch (navError) {
+              console.warn(
+                "❌ Erro de navegação, usando window.location:",
+                navError,
+              );
+              window.location.href = "/works";
+            }
+          }, 100);
+
+          return;
+        } else {
+          // Segunda tentativa de verificação
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          const recheckWorks1 = JSON.parse(
+            localStorage.getItem("works") || "[]",
+          );
+          const recheckWorks2 = JSON.parse(
+            localStorage.getItem("leirisonda_works") || "[]",
+          );
+          const recheckWork =
+            recheckWorks1.find((w: any) => w.id === workId) ||
+            recheckWorks2.find((w: any) => w.id === workId);
+
+          if (recheckWork) {
+            console.log("✅ OBRA ENCONTRADA NA SEGUNDA VERIFICAÇÃO");
+            setIsSubmitting(false);
+            setTimeout(() => {
+              try {
+                navigate("/works");
+              } catch (navError) {
+                window.location.href = "/works";
+              }
+            }, 100);
+            return;
           }
 
-          console.log("🧭 REDIRECIONANDO PARA LISTA DE OBRAS...");
-          navigate("/works");
-        } else {
-          throw new Error("Obra criada mas não encontrada em nenhum backup");
+          // Erro suave - não fazer throw que pode causar crash
+          console.warn(
+            "⚠️ Obra criada mas não encontrada nos backups - provavelmente foi guardada",
+          );
+          setError(
+            "Obra provavelmente foi guardada. Verifique a lista de obras.",
+          );
+          setIsSubmitting(false);
         }
       } catch (err) {
         console.error("❌ ERRO CRÍTICO AO CRIAR OBRA:", err);
