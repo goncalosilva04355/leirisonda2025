@@ -30,33 +30,44 @@ console.log("🔥 Firebase Messaging Service Worker inicializado");
 messaging.onBackgroundMessage(function (payload) {
   console.log("📨 Mensagem recebida em background:", payload);
 
-  const notificationTitle = payload.notification?.title || "Leirisonda";
-  const notificationOptions = {
-    body: payload.notification?.body || "Nova notificação",
-    icon: "/leirisonda-icon.svg",
-    badge: "/leirisonda-icon.svg",
-    image: payload.notification?.image,
-    data: payload.data || {},
-    tag: "leirisonda-notification",
-    requireInteraction: true,
-    actions: [
-      {
-        action: "view",
-        title: "Ver Detalhes",
-        icon: "/leirisonda-icon.svg",
-      },
-      {
-        action: "dismiss",
-        title: "Dispensar",
-        icon: "/leirisonda-icon.svg",
-      },
-    ],
-  };
+  try {
+    const notificationTitle = payload.notification?.title || "Leirisonda";
+    const notificationOptions = {
+      body: payload.notification?.body || "Nova notificação",
+      icon: "/leirisonda-icon.svg",
+      badge: "/leirisonda-icon.svg",
+      image: payload.notification?.image,
+      data: payload.data || {},
+      tag: "leirisonda-notification",
+      requireInteraction: true,
+      actions: [
+        {
+          action: "view",
+          title: "Ver Detalhes",
+          icon: "/leirisonda-icon.svg",
+        },
+        {
+          action: "dismiss",
+          title: "Dispensar",
+          icon: "/leirisonda-icon.svg",
+        },
+      ],
+    };
 
-  return self.registration.showNotification(
-    notificationTitle,
-    notificationOptions,
-  );
+    return self.registration.showNotification(
+      notificationTitle,
+      notificationOptions,
+    );
+  } catch (error) {
+    console.error("❌ Erro ao processar mensagem em background:", error);
+
+    // Fallback: mostrar notificação básica
+    return self.registration.showNotification("Leirisonda", {
+      body: "Nova notificação disponível",
+      icon: "/leirisonda-icon.svg",
+      tag: "leirisonda-fallback",
+    });
+  }
 });
 
 // Handle notification click
@@ -109,25 +120,49 @@ self.addEventListener("notificationclick", function (event) {
 self.addEventListener("push", function (event) {
   console.log("📨 Push event recebido:", event);
 
-  if (event.data) {
-    const data = event.data.json();
-    console.log("📄 Dados do push:", data);
+  try {
+    if (event.data) {
+      const data = event.data.json();
+      console.log("📄 Dados do push:", data);
 
-    const notificationTitle = data.notification?.title || "Leirisonda";
-    const notificationOptions = {
-      body: data.notification?.body || "Nova notificação",
-      icon: "/leirisonda-icon.svg",
-      badge: "/leirisonda-icon.svg",
-      data: data.data || {},
-      tag: "leirisonda-notification",
-      requireInteraction: true,
-    };
+      const notificationTitle = data.notification?.title || "Leirisonda";
+      const notificationOptions = {
+        body: data.notification?.body || "Nova notificação",
+        icon: "/leirisonda-icon.svg",
+        badge: "/leirisonda-icon.svg",
+        data: data.data || {},
+        tag: "leirisonda-notification",
+        requireInteraction: true,
+      };
 
+      event.waitUntil(
+        self.registration.showNotification(
+          notificationTitle,
+          notificationOptions,
+        ),
+      );
+    } else {
+      console.warn("⚠️ Push event sem dados");
+
+      // Mostrar notificação genérica
+      event.waitUntil(
+        self.registration.showNotification("Leirisonda", {
+          body: "Nova atualização disponível",
+          icon: "/leirisonda-icon.svg",
+          tag: "leirisonda-generic",
+        }),
+      );
+    }
+  } catch (error) {
+    console.error("❌ Erro ao processar push event:", error);
+
+    // Fallback: notificação básica
     event.waitUntil(
-      self.registration.showNotification(
-        notificationTitle,
-        notificationOptions,
-      ),
+      self.registration.showNotification("Leirisonda", {
+        body: "Erro ao processar notificação",
+        icon: "/leirisonda-icon.svg",
+        tag: "leirisonda-error",
+      }),
     );
   }
 });
