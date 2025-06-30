@@ -174,6 +174,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           createdAt: new Date().toISOString(),
         },
       },
+      {
+        email: "alexkamaryta@gmail.com",
+        userData: {
+          email: "alexkamaryta@gmail.com",
+          name: "Alexandre Fernandes",
+          role: "user" as const,
+          permissions: defaultUserPermissions,
+          createdAt: new Date().toISOString(),
+        },
+      },
     ];
 
     for (const globalUser of globalUsers) {
