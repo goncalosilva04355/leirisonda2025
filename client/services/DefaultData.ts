@@ -49,7 +49,7 @@ export class DefaultDataService {
         {
           id: crypto.randomUUID(),
           email: "gongonsilva@gmail.com",
-          name: "Gonçalo Silva",
+          name: "Gonçalo Fonseca",
           role: "admin",
           permissions: defaultAdminPermissions,
           createdAt: new Date().toISOString(),
@@ -57,33 +57,15 @@ export class DefaultDataService {
         },
         {
           id: crypto.randomUUID(),
-          email: "tecnico@leirisonda.pt",
-          name: "Técnico Leirisonda",
+          email: "alexkamaryta@gmail.com",
+          name: "Alexandre Fernandes",
           role: "user",
-          permissions: defaultUserPermissions,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-        {
-          id: crypto.randomUUID(),
-          email: "supervisor@leirisonda.pt",
-          name: "Supervisor",
-          role: "admin",
           permissions: {
-            ...defaultAdminPermissions,
-            canDeleteWorks: false,
-            canDeleteMaintenance: false,
-            canDeleteUsers: false,
+            ...defaultUserPermissions,
+            canEditWorks: true,
+            canEditMaintenance: true,
+            canViewReports: true,
           },
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-        {
-          id: crypto.randomUUID(),
-          email: "user@leirisonda.pt",
-          name: "Utilizador",
-          role: "user",
-          permissions: defaultUserPermissions,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
@@ -98,14 +80,8 @@ export class DefaultDataService {
           case "gongonsilva@gmail.com":
             password = "19867gsf";
             break;
-          case "tecnico@leirisonda.pt":
-            password = "tecnico123";
-            break;
-          case "supervisor@leirisonda.pt":
-            password = "supervisor123";
-            break;
-          case "user@leirisonda.pt":
-            password = "user123";
+          case "alexkamaryta@gmail.com":
+            password = "69alexandre";
             break;
         }
 
