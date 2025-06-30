@@ -130,6 +130,12 @@ export function Dashboard() {
     try {
       console.log("📊 Carregando dados do dashboard...");
       loadDashboardData();
+
+      // Limpar marcação de obra criada quando Dashboard carrega
+      if (sessionStorage.getItem("just_created_work") === "true") {
+        console.log("🧹 Limpando marcação de obra criada");
+        sessionStorage.removeItem("just_created_work");
+      }
     } catch (error) {
       console.error("❌ Erro ao carregar dados do dashboard:", error);
       // Não fazer throw - continuar sem quebrar
