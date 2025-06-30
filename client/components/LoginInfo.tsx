@@ -10,7 +10,13 @@ interface UserDebugInfo {
   passwordStorageDetails: {
     byId: boolean;
     byEmail: boolean;
+    byNormalizedEmail: boolean;
     actualPassword: string;
+    allKeys: Array<{
+      key: string;
+      value: string | null;
+      exists: boolean;
+    }>;
   };
 }
 
