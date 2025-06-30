@@ -14,8 +14,6 @@ import {
   Flag,
   Camera,
   AlertCircle,
-  Wifi,
-  WifiOff,
 } from "lucide-react";
 import { Work, CreateWorkData } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
