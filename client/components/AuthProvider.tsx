@@ -100,14 +100,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    try {
-      // Load stored user on mount
-      loadStoredUser();
-      setInitError(null);
-    } catch (error) {
-      console.error("❌ Error during AuthProvider initialization:", error);
-      setInitError("Erro na inicialização do sistema de autenticação");
-    }
+    const initializeAuth = async () => {
+      try {
+        console.log("🔐 Initializing AuthProvider...");
+
+        // Load stored user on mount
+        loadStoredUser();
+        setInitError(null);
+
+        console.log("✅ AuthProvider initialized successfully");
+      } catch (error) {
+        console.error("❌ Error during AuthProvider initialization:", error);
+        // Only set init error for critical failures
+        if (error instanceof Error && error.message.includes("localStorage")) {
+          setInitError("Sistema de armazenamento não disponível");
+        } else {
+          console.log("🔄 Non-critical error, continuing...");
+          setInitError(null);
+        }
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   const createGlobalUsersInFirebase = async () => {
