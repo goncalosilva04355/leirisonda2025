@@ -48,7 +48,12 @@ export function useFirebaseSync() {
   // Sincronização instantânea robusta
   const triggerInstantSync = useCallback(
     async (reason: string = "manual") => {
-      if (!user || !isFirebaseAvailable || !isOnline || syncInProgress.current) {
+      if (
+        !user ||
+        !isFirebaseAvailable ||
+        !isOnline ||
+        syncInProgress.current
+      ) {
         return;
       }
 
@@ -150,26 +155,29 @@ export function useFirebaseSync() {
     console.log("🔄 Configurando listeners real-time...");
 
     // Listener para obras com atualizações instantâneas
-    const unsubscribeWorks = firebaseService.listenToWorks(
-      (updatedWorks) => {
-        console.log(`📦 Obras atualizadas via real-time: ${updatedWorks.length}`);
-        setWorks(updatedWorks);
-        setLastSync(new Date());
-        
-        // Sincronizar para localStorage imediatamente
-        localStorage.setItem("works", JSON.stringify(updatedWorks));
-      },
-    );
+    const unsubscribeWorks = firebaseService.listenToWorks((updatedWorks) => {
+      console.log(`📦 Obras atualizadas via real-time: ${updatedWorks.length}`);
+      setWorks(updatedWorks);
+      setLastSync(new Date());
+
+      // Sincronizar para localStorage imediatamente
+      localStorage.setItem("works", JSON.stringify(updatedWorks));
+    });
 
     // Listener para manutenções com atualizações instantâneas
     const unsubscribeMaintenances = firebaseService.listenToMaintenances(
       (updatedMaintenances) => {
-        console.log(`🏊 Manutenções atualizadas via real-time: ${updatedMaintenances.length}`);
+        console.log(
+          `🏊 Manutenções atualizadas via real-time: ${updatedMaintenances.length}`,
+        );
         setMaintenances(updatedMaintenances);
         setLastSync(new Date());
-        
+
         // Sincronizar para localStorage imediatamente
-        localStorage.setItem("pool_maintenances", JSON.stringify(updatedMaintenances));
+        localStorage.setItem(
+          "pool_maintenances",
+          JSON.stringify(updatedMaintenances),
+        );
       },
     );
 
@@ -177,7 +185,9 @@ export function useFirebaseSync() {
     let unsubscribeUsers: (() => void) | undefined;
     if (user.permissions.canViewUsers) {
       unsubscribeUsers = firebaseService.listenToUsers((updatedUsers) => {
-        console.log(`👥 Utilizadores atualizados via real-time: ${updatedUsers.length}`);
+        console.log(
+          `👥 Utilizadores atualizados via real-time: ${updatedUsers.length}`,
+        );
         setUsers(updatedUsers);
         localStorage.setItem("users", JSON.stringify(updatedUsers));
       });
@@ -201,7 +211,7 @@ export function useFirebaseSync() {
 
   // Wrapper para operações CRUD com sync instantâneo automático
   const withInstantSync = useCallback(
-    async <T>(
+    async <T,>(
       operation: () => Promise<T>,
       operationType: string,
     ): Promise<T> => {
