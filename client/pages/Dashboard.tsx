@@ -145,18 +145,26 @@ export function Dashboard() {
   }, [searchTerm]);
 
   const performSearch = () => {
-    // Use Firebase synced data instead of localStorage directly
-    const worksList = works || [];
+    try {
+      console.log("🔍 Realizando pesquisa:", searchTerm);
+      // Use Firebase synced data instead of localStorage directly
+      const worksList = works || [];
 
-    const filtered = worksList.filter(
-      (work) =>
-        work.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        work.workSheetNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        work.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        work.contact.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
+      const filtered = worksList.filter(
+        (work) =>
+          work.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          work.workSheetNumber
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          work.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          work.contact?.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
 
-    setSearchResults(filtered.slice(0, 5)); // Limit to 5 results
+      setSearchResults(filtered.slice(0, 5)); // Limit to 5 results
+    } catch (error) {
+      console.error("❌ Erro na pesquisa:", error);
+      setSearchResults([]);
+    }
   };
 
   const loadDashboardData = () => {
