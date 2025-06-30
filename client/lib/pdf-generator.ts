@@ -544,44 +544,26 @@ export class PDFGenerator {
           <div class="header">
             <div class="header-top">
               <div class="logo-section">
-                <div class="logo">
-                  <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Leirisonda Logo" />
-                </div>
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Leirisonda Logo" class="logo" />
                 <div class="company-info">
-                  <h1>LEIRISONDA</h1>
-                  <div class="tagline">Construção e Obras Públicas</div>
+                  <div class="company-name">Leirisonda</div>
                 </div>
               </div>
-              <div class="header-meta">
-                <div><strong>Data:</strong> ${reportDate}</div>
-                <div><strong>Ref:</strong> ${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}</div>
-                <div><strong>Hora:</strong> ${new Date().toLocaleTimeString("pt-PT")}</div>
-              </div>
-            </div>
 
-            <div class="report-title">
-              <h2>${data.title}</h2>
-              ${data.subtitle ? `<div class="subtitle">${data.subtitle}</div>` : ""}
+              <div class="report-title">
+                <h1>${data.title}</h1>
+                ${data.subtitle ? `<div class="subtitle">${data.subtitle}</div>` : ""}
+              </div>
+
+              <div class="header-meta">
+                <div class="page-number">1</div>
+                <div class="date-time">Em: ${reportDate} ${new Date().toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" })}</div>
+              </div>
             </div>
           </div>
 
           <div class="content">
-            <div class="info-header">
-              <div class="info-card">
-                <div class="label">Data do Relatório</div>
-                <div class="value">${reportDate}</div>
-              </div>
-              <div class="info-card">
-                <div class="label">Data de Referência</div>
-                <div class="value">${data.date}</div>
-              </div>
-              <div class="info-card">
-                <div class="label">Estado</div>
-                <div class="value">${data.additionalInfo || "Concluído"}</div>
-              </div>
-            </div>
-
-            <div>${data.content}</div>
+            ${data.content}
           </div>
 
           <div class="footer">
