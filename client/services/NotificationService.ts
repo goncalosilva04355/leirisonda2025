@@ -34,12 +34,12 @@ class NotificationServiceClass {
 
   private checkSupport() {
     // Verificar se notificações são suportadas
-    this.isSupported =
+    this._isSupported =
       "Notification" in window &&
       "serviceWorker" in navigator &&
       "PushManager" in window;
 
-    console.log("🔔 Notificações suportadas:", this.isSupported);
+    console.log("🔔 Notificações suportadas:", this._isSupported);
   }
 
   async initialize(): Promise<boolean> {
@@ -232,7 +232,7 @@ class NotificationServiceClass {
         data: payload.data,
       });
     } catch (error) {
-      console.error("❌ Erro ao processar mensagem foreground:", error);
+      console.error("�� Erro ao processar mensagem foreground:", error);
     }
   }
 
