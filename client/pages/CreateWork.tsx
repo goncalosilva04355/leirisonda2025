@@ -229,7 +229,7 @@ export function CreateWork() {
     }
 
     try {
-      console.log("📝 PREPARANDO DADOS DA OBRA...");
+      console.log("��� PREPARANDO DADOS DA OBRA...");
 
       // Prepare work data - GARANTIR que assignedUsers seja preservado
       const workData = {
@@ -328,9 +328,25 @@ export function CreateWork() {
       }
     } catch (err) {
       console.error("❌ ERRO CRÍTICO AO CRIAR OBRA:", err);
-      setError(
-        `Erro ao criar a obra: ${err instanceof Error ? err.message : "Erro desconhecido"}. Tente novamente.`,
-      );
+
+      // Log detalhado do erro para debugging
+      if (err instanceof Error) {
+        console.error("❌ Stack trace:", err.stack);
+        console.error("❌ Mensagem:", err.message);
+      }
+
+      // Verificar se o erro está relacionado às atribuições
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      if (
+        errorMessage.includes("atribuições") ||
+        errorMessage.includes("assignedUsers")
+      ) {
+        setError(
+          `ERRO DE ATRIBUIÇÕES: ${errorMessage}. Verifique se os usuários selecionados são válidos e tente novamente.`,
+        );
+      } else {
+        setError(`Erro ao criar a obra: ${errorMessage}. Tente novamente.`);
+      }
       setIsSubmitting(false);
     }
   };
