@@ -54,6 +54,9 @@ export function WorksList() {
   const [worksheetFilter, setWorksheetFilter] = useState<string>(
     searchParams.get("worksheet") || "all",
   );
+  const [assignedToFilter, setAssignedToFilter] = useState<string>(
+    searchParams.get("assignedTo") || "",
+  );
 
   // React to URL parameter changes
   useEffect(() => {
@@ -61,11 +64,13 @@ export function WorksList() {
     const type = searchParams.get("type") || "all";
     const worksheet = searchParams.get("worksheet") || "all";
     const search = searchParams.get("search") || "";
+    const assignedTo = searchParams.get("assignedTo") || "";
 
     setStatusFilter(status);
     setTypeFilter(type);
     setWorksheetFilter(worksheet);
     setSearchTerm(search);
+    setAssignedToFilter(assignedTo);
   }, [searchParams]);
 
   useEffect(() => {
