@@ -221,6 +221,14 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                     </p>
                   </div>
                 </div>
+
+                {/* Status das Notificações */}
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-600">Notificações:</span>
+                    <NotificationIndicator />
+                  </div>
+                </div>
               </div>
             )}
 
