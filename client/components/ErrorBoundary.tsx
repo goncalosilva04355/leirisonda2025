@@ -22,29 +22,61 @@ export class ErrorBoundary extends Component<Props, State> {
     console.log("🚨 ErrorBoundary caught error:", error.message);
     console.log("🚨 Error stack:", error.stack);
 
-    // Verificar se é um erro recorrente
+    // EVITAR logout desnecessário em erros de operações CRUD ou Firebase
+    const recoversableErrors = [
+      "Não foi possível salvar a obra",
+      "Firebase",
+      "firestore",
+      "Failed to fetch",
+      "NetworkError",
+      "Sync",
+      "createWork",
+      "updateWork",
+      "não foi possível salvar",
+      "Por favor, tente novamente",
+    ];
+
+    const isRecoverableError = recoversableErrors.some((keyword) =>
+      error.message?.toLowerCase().includes(keyword.toLowerCase()),
+    );
+
+    if (isRecoverableError) {
+      console.log(
+        "⚠️ Erro recuperável detectado - NÃO forçar logout:",
+        error.message,
+      );
+      return { hasError: true, error, retryCount: 0 };
+    }
+
+    // Verificar se é um erro recorrente APENAS para erros críticos
     const errorKey = `error_${error.message?.slice(0, 50)}`;
     const errorCount = parseInt(localStorage.getItem(errorKey) || "0");
     localStorage.setItem(errorKey, String(errorCount + 1));
 
-    // Se for erro recorrente (>= 3 vezes), forçar reload completo
+    // Se for erro recorrente crítico (>= 3 vezes), forçar reload
     if (errorCount >= 2) {
       console.warn(
-        `⚠️ Erro recorrente detectado (${errorCount + 1}x): ${error.message}`,
+        `⚠️ Erro crítico recorrente detectado (${errorCount + 1}x): ${error.message}`,
       );
       localStorage.removeItem(errorKey);
 
-      // Limpar possíveis dados corrompidos
+      // Para erros críticos, limpar dados corrompidos
       try {
-        localStorage.removeItem("leirisonda_user");
         sessionStorage.clear();
+        // NÃO remover leirisonda_user a menos que seja um erro de autenticação
+        if (
+          error.message?.includes("useAuth") ||
+          error.message?.includes("AuthProvider")
+        ) {
+          localStorage.removeItem("leirisonda_user");
+        }
       } catch (clearError) {
         console.error("Erro ao limpar dados:", clearError);
       }
 
       setTimeout(() => {
-        console.log("🔄 Auto-reloading devido a erro recorrente...");
-        window.location.href = "/login";
+        console.log("🔄 Auto-reloading devido a erro crítico recorrente...");
+        window.location.reload(); // Reload em vez de redirect para login
       }, 1000);
     }
 
