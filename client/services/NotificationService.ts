@@ -262,15 +262,47 @@ class NotificationServiceClass {
     });
 
     try {
-      // Obter tokens dos usuários atribuídos
-      const userTokens = JSON.parse(
-        localStorage.getItem("userNotificationTokens") || "{}",
+      // Verificar usuário atual para mostrar notificação apenas se estiver atribuído
+      const currentUser = JSON.parse(
+        localStorage.getItem("leirisonda_user") || "{}",
       );
 
-      // Buscar usuários de múltiplas fontes
-      const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+      console.log("👤 Usuário atual:", {
+        currentUserId: currentUser.id,
+        currentUserName: currentUser.name,
+        assignedUsers: assignedUsers,
+        shouldReceiveNotification: assignedUsers.includes(currentUser.id),
+      });
 
-      // Usuários globais predefinidos
+      // Só mostrar notificação LOCAL se o usuário atual estiver entre os atribuídos
+      if (currentUser.id && assignedUsers.includes(currentUser.id)) {
+        const payload: NotificationPayload = {
+          title: "🏗️ Nova Obra Atribuída",
+          body: `Foi-lhe atribuída a obra ${work.workSheetNumber} - ${work.clientName}`,
+          data: {
+            type: "work_assigned",
+            workId: work.id,
+            workSheetNumber: work.workSheetNumber,
+            clientName: work.clientName,
+          },
+          icon: "/leirisonda-icon.svg",
+        };
+
+        console.log(
+          `📨 Mostrando notificação local para ${currentUser.name}...`,
+        );
+        await this.showLocalNotification(payload);
+        console.log(
+          `✅ Notificação exibida para ${currentUser.name} (${currentUser.email})`,
+        );
+      } else {
+        console.log(
+          `ℹ️ Usuário atual (${currentUser.name || "Desconhecido"}) não está entre os atribuídos - não mostrar notificação local`,
+        );
+      }
+
+      // Log para todos os usuários atribuídos (para debug/auditoria)
+      const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
       const globalUsers = [
         {
           id: "admin_goncalo",
@@ -286,57 +318,14 @@ class NotificationServiceClass {
         },
       ];
 
-      // Combinar ambas as listas
       const allUsers = [...storedUsers, ...globalUsers];
 
-      console.log("👥 Usuários disponíveis para notificação:", {
-        stored: storedUsers.length,
-        global: globalUsers.length,
-        total: allUsers.length,
-        tokens: Object.keys(userTokens),
-        assignedUsers,
-      });
-
+      console.log("📋 Auditoria de notificações:");
       for (const userId of assignedUsers) {
         const user = allUsers.find((u: User) => u.id === userId);
-        const token = userTokens[userId];
-
-        console.log(`🔍 Verificando usuário ${userId}:`, {
-          userFound: !!user,
-          userName: user?.name,
-          userEmail: user?.email,
-          hasToken: !!token,
-        });
-
         if (user) {
-          const payload: NotificationPayload = {
-            title: "🏗️ Nova Obra Atribuída",
-            body: `Foi-lhe atribuída a obra ${work.workSheetNumber} - ${work.clientName}`,
-            data: {
-              type: "work_assigned",
-              workId: work.id,
-              workSheetNumber: work.workSheetNumber,
-              clientName: work.clientName,
-            },
-            icon: "/leirisonda-icon.svg",
-          };
-
-          // Mostrar notificação local SEMPRE, mesmo sem token FCM
-          console.log(`📨 Enviando notificação local para ${user.name}...`);
-          await this.showLocalNotification(payload);
-
-          // Se tem token FCM, poderia enviar via servidor
-          if (token) {
-            // await this.sendPushNotification(token, payload);
-            console.log(`🔑 Token FCM disponível para ${user.name}`);
-          } else {
-            console.log(
-              `⚠️ Sem token FCM para ${user.name}, apenas notificação local`,
-            );
-          }
-
           console.log(
-            `✅ Notificação enviada para ${user.name} (${user.email})`,
+            `👤 ${user.name} (${user.email}) - deve receber notificação quando acessar o sistema`,
           );
         }
       }
@@ -430,7 +419,7 @@ class NotificationServiceClass {
     payload: NotificationPayload,
   ) {
     // Implementar envio via servidor FCM
-    // Esta funcionalidade requer um servidor backend para enviar as notificações
+    // Esta funcionalidade requer um servidor backend para enviar as notificaç��es
     console.log("📤 Enviaria notificação push para token:", token, payload);
   }
 
