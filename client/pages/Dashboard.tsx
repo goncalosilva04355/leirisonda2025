@@ -127,7 +127,13 @@ export function Dashboard() {
   };
 
   useEffect(() => {
-    loadDashboardData();
+    try {
+      console.log("📊 Carregando dados do dashboard...");
+      loadDashboardData();
+    } catch (error) {
+      console.error("❌ Erro ao carregar dados do dashboard:", error);
+      // Não fazer throw - continuar sem quebrar
+    }
   }, [works, maintenances]); // React to Firebase data changes
 
   useEffect(() => {
