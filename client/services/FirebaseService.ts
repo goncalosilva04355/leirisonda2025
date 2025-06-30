@@ -384,64 +384,44 @@ export class FirebaseService {
 
       console.log("✅ OBRA SALVA EM 4 LOCALIZAÇÕES DIFERENTES:", newWork.id);
 
-      // PRIORIDADE 2: FIREBASE SYNC (em paralelo, sem bloquear)
-      let firebaseSuccess = false;
+      // ETAPA 2: FIREBASE SYNC EM BACKGROUND (não bloqueia)
       if (this.isFirebaseAvailable) {
-        try {
-          const worksRef = collection(db, "works");
+        // Executar Firebase em background - NÃO aguardar nem verificar
+        Promise.resolve()
+          .then(async () => {
+            try {
+              const firebaseData = {
+                ...newWork,
+                assignedUsers: Array.isArray(newWork.assignedUsers)
+                  ? newWork.assignedUsers
+                  : [],
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+              };
 
-          // GARANTIR que assignedUsers seja SEMPRE preservado durante sync Firebase
-          const firebaseData = {
-            ...newWork,
-            assignedUsers: Array.isArray(newWork.assignedUsers)
-              ? newWork.assignedUsers
-              : [], // VERIFICAÇÃO EXTRA
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          };
+              const docRef = doc(db, "works", newWork.id);
+              await setDoc(docRef, firebaseData);
 
-          console.log("🔥 SINCRONIZANDO COM FIREBASE:", {
-            cliente: firebaseData.clientName,
-            atribuicoes: firebaseData.assignedUsers,
-            workId: newWork.id,
-          });
+              console.log(
+                "🔥 FIREBASE SYNC CONCLUÍDO EM BACKGROUND:",
+                newWork.id,
+              );
 
-          // Usar setDoc() com ID específico para criar documento novo
-          const docRef = doc(db, "works", newWork.id);
-          await setDoc(docRef, firebaseData);
-
-          console.log("✅ OBRA SINCRONIZADA NO FIREBASE:", newWork.id);
-          firebaseSuccess = true;
-
-          // Verificação silenciosa sem throw de erros críticos
-          try {
-            const verifyDoc = await getDoc(docRef);
-            if (verifyDoc.exists()) {
-              console.log("✅ VERIFICAÇÃO: Obra confirmada no Firebase");
+              // Notificar outros dispositivos
+              localStorage.setItem(
+                "leirisonda_last_update",
+                new Date().toISOString(),
+              );
+            } catch (firebaseError) {
+              console.warn(
+                "⚠️ Firebase background sync falhou (não crítico):",
+                firebaseError,
+              );
             }
-          } catch (verifyError) {
-            console.warn(
-              "⚠️ Verificação Firebase falhou (não crítico):",
-              verifyError,
-            );
-          }
-
-          // Notificação simples para outros dispositivos
-          try {
-            localStorage.setItem(
-              "leirisonda_last_update",
-              new Date().toISOString(),
-            );
-          } catch (notifyError) {
-            console.warn("⚠️ Notificação falhou (não crítico):", notifyError);
-          }
-        } catch (firebaseError) {
-          console.warn(
-            "⚠️ Sync Firebase falhou, dados mantidos localmente:",
-            firebaseError,
-          );
-          // NÃO fazer throw do erro - dados já estão salvos localmente
-        }
+          })
+          .catch((error) => {
+            console.warn("⚠️ Firebase background promise falhou:", error);
+          });
       }
 
       // VERIFICAÇÃO FINAL DOS BACKUPS LOCAIS (já salvos anteriormente)
@@ -820,7 +800,7 @@ export class FirebaseService {
     try {
       const maintenanceRef = doc(db, "maintenances", maintenanceId);
       await deleteDoc(maintenanceRef);
-      console.log("🔥 Maintenance deleted from Firebase:", maintenanceId);
+      console.log("�� Maintenance deleted from Firebase:", maintenanceId);
     } catch (error) {
       console.error(
         "Error deleting maintenance from Firebase, falling back to local:",
