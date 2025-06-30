@@ -117,48 +117,20 @@ function App() {
   );
 }
 
-// Optimized and fast initialization
+// Simple and reliable initialization
 const initializeApp = () => {
   try {
-    // Performance: Start timing
-    const startTime = performance.now();
-
-    // Check for problematic URLs and redirect to safe route (fast check)
-    const currentPath = window.location.pathname + window.location.search;
-    if (
-      currentPath.includes("status=pendente") ||
-      currentPath.includes("/works?")
-    ) {
-      window.history.replaceState({}, "", "/login");
-    }
-
-    // Fast DOM check
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initializeApp, {
-        once: true,
-      });
-      return;
-    }
-
     const rootElement = document.getElementById("root");
     if (!rootElement) {
       throw new Error("Root element not found");
     }
 
-    // Clear any previous content (fast)
-    rootElement.innerHTML = "";
-
-    // Create React root and render (optimized for performance)
     const root = ReactDOM.createRoot(rootElement);
-
-    // Use concurrent features for better performance
     root.render(<App />);
 
-    // Performance: Log timing
-    const endTime = performance.now();
-    console.log(`🚀 Leirisonda loaded in ${Math.round(endTime - startTime)}ms`);
+    console.log("✅ Leirisonda carregada com sucesso!");
   } catch (error) {
-    console.error("❌ Error loading app:", error);
+    console.error("❌ Erro ao carregar aplicação:", error);
     showFallbackError(error);
   }
 };
