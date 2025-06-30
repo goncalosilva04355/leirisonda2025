@@ -1,42 +1,115 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// Components
+// Core Components (não lazy - necessários imediatamente)
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AuthProvider } from "./components/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Layout } from "./components/Layout";
+import { LoadingPage } from "./components/LoadingPage";
 
-// Pages
+// Critical Pages (não lazy)
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
-import { WorksList } from "./pages/WorksList";
-import { WorkDetail } from "./pages/WorkDetail";
-import { CreateWork } from "./pages/CreateWork";
-import { EditWork } from "./pages/EditWork";
-import { CreateUser } from "./pages/CreateUser";
-import { UsersList } from "./pages/UsersList";
-import { EditUser } from "./pages/EditUser";
-import { UserDataManager } from "./pages/UserDataManager";
-import { PoolMaintenancePage } from "./pages/PoolMaintenance";
-import { MaintenanceList } from "./pages/MaintenanceList";
-import { CreateMaintenance } from "./pages/CreateMaintenance";
-import { MaintenanceDetail } from "./pages/MaintenanceDetail";
-import { CreateIntervention } from "./pages/CreateIntervention";
-import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
-import { MobileDeploy } from "./pages/MobileDeploy";
-import { SystemStatus } from "./pages/SystemStatus";
-import { UserSyncDiagnostic } from "./pages/UserSyncDiagnostic";
-import { DebugWorks } from "./pages/DebugWorks";
-import { SyncMonitor } from "./pages/SyncMonitor";
-import SyncDiagnostic from "./pages/SyncDiagnostic";
 import { NotFound } from "./pages/NotFound";
-import { EmergencyDiagnostic } from "./pages/EmergencyDiagnostic";
-import { NotificationSettingsPage } from "./pages/NotificationSettingsPage";
-import NotificationTest from "./pages/NotificationTest";
-import { NotificationDiagnostic } from "./pages/NotificationDiagnostic";
+
+// Lazy loaded Pages (carregadas quando necessário)
+const WorksList = React.lazy(() =>
+  import("./pages/WorksList").then((m) => ({ default: m.WorksList })),
+);
+const WorkDetail = React.lazy(() =>
+  import("./pages/WorkDetail").then((m) => ({ default: m.WorkDetail })),
+);
+const CreateWork = React.lazy(() =>
+  import("./pages/CreateWork").then((m) => ({ default: m.CreateWork })),
+);
+const EditWork = React.lazy(() =>
+  import("./pages/EditWork").then((m) => ({ default: m.EditWork })),
+);
+const CreateUser = React.lazy(() =>
+  import("./pages/CreateUser").then((m) => ({ default: m.CreateUser })),
+);
+const UsersList = React.lazy(() =>
+  import("./pages/UsersList").then((m) => ({ default: m.UsersList })),
+);
+const EditUser = React.lazy(() =>
+  import("./pages/EditUser").then((m) => ({ default: m.EditUser })),
+);
+const UserDataManager = React.lazy(() =>
+  import("./pages/UserDataManager").then((m) => ({
+    default: m.UserDataManager,
+  })),
+);
+const PoolMaintenancePage = React.lazy(() =>
+  import("./pages/PoolMaintenance").then((m) => ({
+    default: m.PoolMaintenancePage,
+  })),
+);
+const MaintenanceList = React.lazy(() =>
+  import("./pages/MaintenanceList").then((m) => ({
+    default: m.MaintenanceList,
+  })),
+);
+const CreateMaintenance = React.lazy(() =>
+  import("./pages/CreateMaintenance").then((m) => ({
+    default: m.CreateMaintenance,
+  })),
+);
+const MaintenanceDetail = React.lazy(() =>
+  import("./pages/MaintenanceDetail").then((m) => ({
+    default: m.MaintenanceDetail,
+  })),
+);
+const CreateIntervention = React.lazy(() =>
+  import("./pages/CreateIntervention").then((m) => ({
+    default: m.CreateIntervention,
+  })),
+);
+const NewMaintenanceSelector = React.lazy(() =>
+  import("./pages/NewMaintenanceSelector").then((m) => ({
+    default: m.NewMaintenanceSelector,
+  })),
+);
+const MobileDeploy = React.lazy(() =>
+  import("./pages/MobileDeploy").then((m) => ({ default: m.MobileDeploy })),
+);
+const SystemStatus = React.lazy(() =>
+  import("./pages/SystemStatus").then((m) => ({ default: m.SystemStatus })),
+);
+const UserSyncDiagnostic = React.lazy(() =>
+  import("./pages/UserSyncDiagnostic").then((m) => ({
+    default: m.UserSyncDiagnostic,
+  })),
+);
+const DebugWorks = React.lazy(() =>
+  import("./pages/DebugWorks").then((m) => ({ default: m.DebugWorks })),
+);
+const SyncMonitor = React.lazy(() =>
+  import("./pages/SyncMonitor").then((m) => ({ default: m.SyncMonitor })),
+);
+const SyncDiagnostic = React.lazy(() =>
+  import("./pages/SyncDiagnostic").then((m) => ({ default: m.default })),
+);
+const EmergencyDiagnostic = React.lazy(() =>
+  import("./pages/EmergencyDiagnostic").then((m) => ({
+    default: m.EmergencyDiagnostic,
+  })),
+);
+const NotificationSettingsPage = React.lazy(() =>
+  import("./pages/NotificationSettingsPage").then((m) => ({
+    default: m.NotificationSettingsPage,
+  })),
+);
+const NotificationTest = React.lazy(() =>
+  import("./pages/NotificationTest").then((m) => ({ default: m.default })),
+);
+const NotificationDiagnostic = React.lazy(() =>
+  import("./pages/NotificationDiagnostic").then((m) => ({
+    default: m.NotificationDiagnostic,
+  })),
+);
 
 function App() {
   return (
