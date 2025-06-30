@@ -433,10 +433,12 @@ export class PDFGenerator {
 
           .header-meta {
             text-align: right;
-            font-size: 13px;
-            background: rgba(255,255,255,0.1);
-            padding: 10px;
-            border-radius: 8px;
+            font-size: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
           }
 
           .report-title h2 {
