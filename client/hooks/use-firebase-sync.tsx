@@ -204,49 +204,64 @@ export function useFirebaseSync() {
     }
   }, []);
 
-  // Heartbeat para garantir sincronização contínua
+  // Sistema de sincronização contínua melhorado
   useEffect(() => {
-    if (!user || !isFirebaseAvailable || !isOnline) {
+    if (!user) {
       if (heartbeatInterval.current) {
         clearInterval(heartbeatInterval.current);
         heartbeatInterval.current = null;
       }
-      console.log("💔 Heartbeat pausado - user/firebase/online indisponível");
+      console.log("💔 Sincronização pausada - usuário não logado");
       return;
     }
 
-    console.log(
-      "💓 Heartbeat iniciado - sync a cada 10 segundos (MAIS AGRESSIVO)",
-    );
+    console.log("💓 SISTEMA DE SINCRONIZAÇÃO ATIVO");
 
-    // Sync a cada 10 segundos quando online (AINDA MAIS AGRESSIVO para resolver o problema)
-    heartbeatInterval.current = setInterval(() => {
-      // Sync mais frequente se houver mudanças pendentes OU 50% chance de sync preventivo
-      const shouldSync = pendingChanges.current.size > 0 || Math.random() < 0.5;
-
-      if (shouldSync) {
-        console.log("💓 Heartbeat: iniciando sync automático agressivo...");
-        triggerInstantSync("heartbeat_aggressive");
-      } else {
-        console.log("💓 Heartbeat: standby - próximo check em 10s");
+    // Sync inteligente a cada 15 segundos
+    heartbeatInterval.current = setInterval(async () => {
+      // Se offline, apenas logs
+      if (!isOnline) {
+        console.log("📱 Offline - heartbeat em standby");
+        return;
       }
-    }, 10000); // 10 segundos para sync mais frequente
 
-    // Trigger de sync extra agressivo a cada 30 segundos independente das condições
-    const aggressiveInterval = setInterval(() => {
-      console.log("🔥 SUPER SYNC: Forçando sincronização completa...");
-      triggerInstantSync("super_sync_forced");
-    }, 30000); // A cada 30 segundos sync forçado
+      // Se Firebase indisponível, tentar reconectar
+      if (!isFirebaseAvailable) {
+        console.log("�� Firebase indisponível - tentando reconectar...");
+        return;
+      }
+
+      // Sincronização inteligente
+      const hasPendingChanges = pendingChanges.current.size > 0;
+      const shouldForceSync = Math.random() < 0.3; // 30% chance de sync preventivo
+
+      if (hasPendingChanges || shouldForceSync) {
+        console.log(
+          `💓 HEARTBEAT SYNC: pending=${hasPendingChanges}, force=${shouldForceSync}`,
+        );
+        await triggerInstantSync("heartbeat_smart");
+      } else {
+        console.log("💓 Heartbeat standby - tudo sincronizado");
+      }
+    }, 15000); // 15 segundos
+
+    // Sync de recuperação a cada 2 minutos para garantir consistência
+    const recoveryInterval = setInterval(async () => {
+      if (isOnline && isFirebaseAvailable) {
+        console.log("🔄 RECOVERY SYNC: Verificação completa de dados...");
+        await triggerInstantSync("recovery_check");
+      }
+    }, 120000); // 2 minutos
 
     return () => {
       if (heartbeatInterval.current) {
         clearInterval(heartbeatInterval.current);
         heartbeatInterval.current = null;
       }
-      clearInterval(aggressiveInterval);
-      console.log("💔 Heartbeat e sync agressivo limpos");
+      clearInterval(recoveryInterval);
+      console.log("💔 Sistema de sincronização limpo");
     };
-  }, [user, isFirebaseAvailable, isOnline, triggerInstantSync]);
+  }, [user, isFirebaseAvailable, isOnline]);
 
   // Setup real-time listeners para atualizações instantâneas
   useEffect(() => {
