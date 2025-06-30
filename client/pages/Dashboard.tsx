@@ -22,7 +22,6 @@ import { Work, DashboardStats } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
-import { WorksDebug } from "@/components/WorksDebug";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
