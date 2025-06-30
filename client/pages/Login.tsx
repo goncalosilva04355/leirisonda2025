@@ -68,120 +68,231 @@ export function Login() {
     }
   };
 
-  // Force no loading state - show login immediately
-  // if (isLoading) removed to prevent infinite loading
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center p-4">
-      <div className="w-full max-w-lg">
-        {/* Modern Card Container */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
-          {/* Header Section */}
-          <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-8 text-white text-center relative">
-            <div className="absolute inset-0 bg-black/10"></div>
-            <div className="relative z-10">
-              <div className="mx-auto w-32 h-32 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-xl p-4">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fb4eb4a9e6feb44b09201dbb824b8737c?format=webp&width=800"
-                  alt="Leirisonda Logo"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <h1 className="text-2xl font-bold mb-2 text-white">Leirisonda</h1>
-              <p className="text-blue-100 opacity-90">
-                Sistema de Gestão de Obras
-              </p>
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg, rgb(97, 165, 214) 0%, rgb(0, 119, 132) 100%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "20px",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: "400px" }}>
+        <div
+          style={{
+            backgroundColor: "white",
+            borderRadius: "16px",
+            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
+            overflow: "hidden",
+          }}
+        >
+          {/* Header */}
+          <div
+            style={{
+              background: "linear-gradient(135deg, #2563eb, #0891b2)",
+              padding: "32px",
+              textAlign: "center",
+              color: "white",
+            }}
+          >
+            <div
+              style={{
+                width: "120px",
+                height: "120px",
+                backgroundColor: "white",
+                borderRadius: "20px",
+                margin: "0 auto 20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "16px",
+              }}
+            >
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fb4eb4a9e6feb44b09201dbb824b8737c?format=webp&width=800"
+                alt="Leirisonda Logo"
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              />
             </div>
+            <h1
+              style={{
+                fontSize: "24px",
+                fontWeight: "bold",
+                margin: "0 0 8px 0",
+              }}
+            >
+              Leirisonda
+            </h1>
+            <p style={{ margin: 0, opacity: 0.9 }}>
+              Sistema de Gestão de Obras
+            </p>
           </div>
 
-          {/* Login Form */}
-          <div className="p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <Label
-                  htmlFor="email"
-                  className="text-sm font-medium text-gray-700"
+          {/* Form */}
+          <div style={{ padding: "32px" }}>
+            <form onSubmit={handleSubmit}>
+              <div style={{ marginBottom: "20px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    color: "#374151",
+                    marginBottom: "6px",
+                  }}
                 >
                   Email
-                </Label>
-                <Input
-                  id="email"
+                </label>
+                <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="mt-1 h-12"
                   disabled={isSubmitting}
-                  style={{ height: "48px", fontSize: "16px" }}
+                  style={{
+                    width: "100%",
+                    height: "48px",
+                    padding: "12px 16px",
+                    fontSize: "16px",
+                    border: "1px solid #d1d5db",
+                    borderRadius: "8px",
+                    outline: "none",
+                    boxSizing: "border-box",
+                  }}
                 />
               </div>
 
-              <div>
-                <Label
-                  htmlFor="password"
-                  className="text-sm font-medium text-gray-700"
+              <div style={{ marginBottom: "20px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    color: "#374151",
+                    marginBottom: "6px",
+                  }}
                 >
                   Palavra-passe
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="password"
+                </label>
+                <div style={{ position: "relative" }}>
+                  <input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="mt-1 pr-12 h-12"
                     disabled={isSubmitting}
-                    style={{ height: "48px", fontSize: "16px" }}
+                    style={{
+                      width: "100%",
+                      height: "48px",
+                      padding: "12px 48px 12px 16px",
+                      fontSize: "16px",
+                      border: "1px solid #d1d5db",
+                      borderRadius: "8px",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    style={{
+                      position: "absolute",
+                      right: "16px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "#6b7280",
+                    }}
                   >
-                    {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
               </div>
 
               {error && (
-                <Alert className="border-red-200 bg-red-50">
-                  <AlertCircle className="h-4 w-4 text-red-600" />
-                  <AlertDescription className="text-red-800">
+                <div
+                  style={{
+                    backgroundColor: "#fef2f2",
+                    border: "1px solid #fecaca",
+                    borderRadius: "8px",
+                    padding: "12px",
+                    marginBottom: "20px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <AlertCircle size={16} style={{ color: "#dc2626" }} />
+                  <span style={{ color: "#dc2626", fontSize: "14px" }}>
                     {error}
-                  </AlertDescription>
-                </Alert>
+                  </span>
+                </div>
               )}
 
-              <Button
+              <button
                 type="submit"
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium"
                 disabled={isSubmitting}
+                style={{
+                  width: "100%",
+                  height: "48px",
+                  backgroundColor: isSubmitting ? "#9ca3af" : "#2563eb",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  fontWeight: "500",
+                  cursor: isSubmitting ? "not-allowed" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                }}
               >
                 {isSubmitting ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>A entrar...</span>
-                  </div>
+                  <>
+                    <div
+                      style={{
+                        width: "16px",
+                        height: "16px",
+                        border: "2px solid transparent",
+                        borderTop: "2px solid white",
+                        borderRadius: "50%",
+                        animation: "spin 1s linear infinite",
+                      }}
+                    />
+                    A entrar...
+                  </>
                 ) : (
                   "Entrar"
                 )}
-              </Button>
+              </button>
             </form>
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="text-center mt-6">
-          <p className="text-white/80 text-sm font-medium">
-            © 2024 Leirisonda - Sistema Profissional de Gestão
-          </p>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "24px",
+            color: "rgba(255, 255, 255, 0.8)",
+            fontSize: "14px",
+          }}
+        >
+          © 2024 Leirisonda - Sistema Profissional de Gestão
         </div>
       </div>
+
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }
