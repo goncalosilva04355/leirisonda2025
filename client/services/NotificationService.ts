@@ -110,7 +110,7 @@ class NotificationServiceClass {
           } catch (vapidError) {
             console.error("❌ Erro com VAPID key personalizada:", vapidError);
             console.log(
-              "⚠️ PROBLEMA: VAPID key pode estar incorreta ou expirada",
+              "���️ PROBLEMA: VAPID key pode estar incorreta ou expirada",
             );
             console.log(
               "💡 SOLUÇÃO: Notificações funcionarão apenas localmente, sem FCM push",
@@ -145,7 +145,7 @@ class NotificationServiceClass {
   }
 
   private async initializeNativeNotifications() {
-    console.log("📱 Inicializando notificações nativas...");
+    console.log("📱 Inicializando notifica��ões nativas...");
 
     // Pedir permissão para notificações push
     let permStatus = await PushNotifications.checkPermissions();
@@ -452,7 +452,7 @@ class NotificationServiceClass {
             }
           }
         } else {
-          console.warn(`⚠️ Usuário não encontrado: ${userId}`);
+          console.warn(`⚠️ Usuário n��o encontrado: ${userId}`);
         }
       });
 
@@ -561,9 +561,52 @@ class NotificationServiceClass {
 
       const allUsers = [...storedUsers, ...globalUsers];
 
-      // ENVIAR NOTIFICAÇÕES PUSH PARA TODOS OS USUÁRIOS ATRIBUÍDOS
+      // SALVAR NOTIFICAÇÕES PENDENTES PARA CADA USUÁRIO ATRIBUÍDO
       console.log(
-        "📤 Enviando notificações push de status para usuários atribuídos...",
+        "💾 Salvando notificações pendentes de status para sincronização cross-device...",
+      );
+
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      assignedUsers.forEach((userId) => {
+        const user = allUsers.find((u: User) => u.id === userId);
+        if (user) {
+          const pendingNotification = {
+            id: `work_status_change_${work.id}_${userId}_${Date.now()}`,
+            userId: userId,
+            userName: user.name,
+            userEmail: user.email,
+            type: "work_status_change",
+            title: payload.title,
+            body: payload.body,
+            data: payload.data,
+            icon: payload.icon,
+            timestamp: new Date().toISOString(),
+            workId: work.id,
+            workSheetNumber: work.workSheetNumber,
+            newStatus: newStatus,
+            delivered: false,
+            attempts: 0,
+          };
+
+          pendingNotifications.push(pendingNotification);
+          console.log(
+            `📋 Notificação de status pendente salva para ${user.name}`,
+          );
+        }
+      });
+
+      // Salvar lista atualizada de notificações pendentes
+      localStorage.setItem(
+        "pendingNotifications",
+        JSON.stringify(pendingNotifications),
+      );
+
+      // TENTAR ENTREGAR NOTIFICAÇÕES PUSH IMEDIATAMENTE
+      console.log(
+        "📤 Tentando entregar notificações push de status imediatamente...",
       );
 
       const pushPromises = assignedUsers.map(async (userId) => {
