@@ -15,7 +15,7 @@ export function EditUser() {
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    if (!currentUser || currentUser.role !== "admin") {
+    if (!currentUser || currentUser.email !== "gongonsilva@gmail.com") {
       navigate("/dashboard");
       return;
     }

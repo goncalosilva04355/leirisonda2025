@@ -28,6 +28,7 @@ import { CreateIntervention } from "./pages/CreateIntervention";
 import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
 import { MobileDeploy } from "./pages/MobileDeploy";
 import { SystemStatus } from "./pages/SystemStatus";
+import { UserSyncDiagnostic } from "./pages/UserSyncDiagnostic";
 import { NotFound } from "./pages/NotFound";
 
 function App() {
@@ -59,6 +60,10 @@ function App() {
               <Route path="create-user" element={<CreateUser />} />
               <Route path="edit-user/:id" element={<EditUser />} />
               <Route path="user-data" element={<UserDataManager />} />
+              <Route
+                path="user-sync-diagnostic"
+                element={<UserSyncDiagnostic />}
+              />
               <Route path="pool-maintenance" element={<MaintenanceList />} />
               <Route
                 path="create-maintenance"

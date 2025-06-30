@@ -274,7 +274,7 @@ export function Login() {
           fontSize: "14px",
         }}
       >
-        © 2024 Leirisonda - Sistema Profissional de Gestão
+        © 2025 Leirisonda - Sistema Profissional de Gestão
       </div>
 
       <style>{`

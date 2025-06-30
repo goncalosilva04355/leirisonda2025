@@ -34,12 +34,12 @@ export function UsersList() {
     }
   };
 
-  // Check if admin
-  if (!currentUser || currentUser.role !== "admin") {
+  // Check if admin and specifically Gonçalo
+  if (!currentUser || currentUser.email !== "gongonsilva@gmail.com") {
     return (
       <div style={{ padding: "20px", textAlign: "center" }}>
         <h2>Acesso Negado</h2>
-        <p>Não tem permissões para aceder a esta página.</p>
+        <p>Esta página é exclusiva para o administrador principal.</p>
         <button
           onClick={() => navigate("/dashboard")}
           style={{
@@ -90,19 +90,35 @@ export function UsersList() {
               : " (modo offline)"}
           </p>
         </div>
-        <button
-          onClick={() => navigate("/create-user")}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#28a745",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          + Novo Utilizador
-        </button>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            onClick={() => navigate("/user-sync-diagnostic")}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#17a2b8",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontSize: "14px",
+            }}
+          >
+            🔍 Diagnóstico
+          </button>
+          <button
+            onClick={() => navigate("/create-user")}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#28a745",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            + Novo Utilizador
+          </button>
+        </div>
       </div>
 
       {users.length === 0 ? (

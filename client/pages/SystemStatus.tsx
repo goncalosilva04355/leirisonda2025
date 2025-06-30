@@ -1,7 +1,16 @@
 import React from "react";
-import { CheckCircle, XCircle, AlertCircle, RefreshCw } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  RefreshCw,
+  ArrowLeft,
+} from "lucide-react";
+import { useAuth } from "@/components/AuthProvider";
+import { Link } from "react-router-dom";
 
 export function SystemStatus() {
+  const { user } = useAuth();
   const [checks, setChecks] = React.useState({
     localStorage: false,
     firebase: false,
@@ -67,6 +76,32 @@ export function SystemStatus() {
   };
 
   const allSystemsOk = Object.values(checks).every(Boolean) && !loading;
+
+  // Only admin Gonçalo can access this page
+  if (!user || user.email !== "gongonsilva@gmail.com") {
+    return (
+      <div className="min-h-screen bg-gray-50 p-4">
+        <div className="max-w-md mx-auto mt-20">
+          <div className="bg-white rounded-lg shadow p-6 text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="w-8 h-8 text-red-600" />
+            </div>
+            <h2 className="text-xl font-semibold mb-2">Acesso Restrito</h2>
+            <p className="text-gray-600 mb-4">
+              Esta página é exclusiva para o administrador principal.
+            </p>
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <ArrowLeft size={16} />
+              Voltar ao Login
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
