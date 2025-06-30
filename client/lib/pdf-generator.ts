@@ -598,10 +598,7 @@ export class PDFGenerator {
 
           <div class="footer">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Logo" style="width: 30px; height: 30px;" />
-                <div class="footer-logo">Leirisonda</div>
-              </div>
+              <div class="footer-logo">Leirisonda</div>
               <div class="footer-info">
                 Relatório gerado no Sistema de Gestão
               </div>
