@@ -3,8 +3,8 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 
 export const Login = React.memo(function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("gongonsilva@gmail.com");
+  const [password, setPassword] = useState("19867gsf");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
