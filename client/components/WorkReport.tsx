@@ -257,7 +257,7 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
               <div class="value">${format(new Date(work.createdAt), "dd/MM/yyyy", { locale: pt })}</div>
             </div>
             <div class="info-card">
-              <div class="label">Folha Obra</div>
+              <div class="label">Folha de Obra</div>
               <div class="value">${work.workSheetCompleted ? "✅ Concluída" : "❌ Pendente"}</div>
             </div>
           </div>
@@ -1053,7 +1053,7 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
               </div>
               <div className="text-center p-4 bg-orange-50 rounded-lg">
                 <CheckCircle className="h-8 w-8 text-orange-600 mx-auto mb-2" />
-                <div className="text-sm text-gray-600">Folha Obra</div>
+                <div className="text-sm text-gray-600">Folha de Obra</div>
                 <div
                   className={`font-bold text-sm ${work.workSheetCompleted ? "text-green-600" : "text-red-600"}`}
                 >
