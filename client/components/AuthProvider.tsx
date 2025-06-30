@@ -430,7 +430,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         `🔍 Verificando obras pendentes para ${dynamicUser.name} (dinâmico)...`,
                       );
                       const pendingWorks =
-                        await notificationService.checkPendingAssignedWorks(
+                        await NotificationService.checkPendingAssignedWorks(
                           dynamicUser.id,
                         );
 
