@@ -169,7 +169,7 @@ export function useFirebaseSync() {
           }
         }
 
-        // 5. Atualizar estado local com dados mais recentes
+        // 7. Atualizar estado com dados sincronizados
         setWorks(latestWorks);
         setMaintenances(latestMaintenances);
         setUsers(latestUsers);
@@ -177,20 +177,37 @@ export function useFirebaseSync() {
         setLastSync(new Date());
         pendingChanges.current.clear();
 
-        console.log(
-          `✅ Sync instantâneo completo (${reason}): ${latestWorks.length} obras, ${latestMaintenances.length} manutenções`,
+        // 8. Backup em múltiplas localizações
+        localStorage.setItem("works", JSON.stringify(latestWorks));
+        localStorage.setItem("leirisonda_works", JSON.stringify(latestWorks));
+        localStorage.setItem(
+          "pool_maintenances",
+          JSON.stringify(latestMaintenances),
         );
 
-        // Log específico para atribuições (debug para o problema relatado)
+        console.log(
+          `✅ SYNC CONCLUÍDO (${reason}): ${latestWorks.length} obras, ${latestMaintenances.length} manutenções`,
+        );
+
+        // Debug de atribuições
         const worksWithAssignments = latestWorks.filter(
           (w) => w.assignedUsers && w.assignedUsers.length > 0,
         );
-        console.log(
-          `🎯 Obras com atribuições após sync: ${worksWithAssignments.length}`,
-        );
+        console.log(`🎯 Obras com atribuições: ${worksWithAssignments.length}`);
       } catch (error) {
-        console.error(`❌ Erro no sync instantâneo (${reason}):`, error);
-        // Fallback para dados locais
+        console.error(`❌ ERRO SYNC (${reason}):`, error);
+
+        // Sistema de retry automático
+        if (retryCount < 2) {
+          console.log(`🔄 Retry ${retryCount + 1}/2 em 3 segundos...`);
+          setTimeout(() => {
+            triggerInstantSync(reason, retryCount + 1);
+          }, 3000);
+          return;
+        }
+
+        // Fallback para dados locais após tentativas
+        console.log("📱 Fallback para dados locais após falhas");
         loadLocalDataAsFallback();
       } finally {
         syncInProgress.current = false;
