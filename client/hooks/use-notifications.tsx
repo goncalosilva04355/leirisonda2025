@@ -166,7 +166,7 @@ export function useNotifications() {
       }
 
       try {
-        await notificationService.showLocalNotification({
+        await NotificationService.showLocalNotification({
           title,
           body,
           data,
