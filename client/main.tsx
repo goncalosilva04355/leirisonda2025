@@ -95,6 +95,10 @@ function App() {
                 path="old-pool-maintenance"
                 element={<PoolMaintenancePage />}
               />
+              <Route
+                path="notification-settings"
+                element={<NotificationSettingsPage />}
+              />
             </Route>
 
             {/* Catch-all route */}
