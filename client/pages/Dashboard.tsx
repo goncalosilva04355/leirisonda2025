@@ -33,50 +33,9 @@ export function Dashboard() {
 
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { works, maintenances, isOnline, isSyncing, lastSync, syncData } = useFirebaseSync();
-    user = null;
-  }
-
-  try {
-    navigate = useNavigate();
-    console.log("✅ Navigate hook carregado");
-  } catch (navError) {
-    console.error("❌ Erro no navigate hook:", navError);
-    navigate = () => console.warn("Navigate não disponível");
-  }
-
-  try {
-    const firebaseContext = useFirebaseSync();
-    works = firebaseContext.works || [];
-    maintenances = firebaseContext.maintenances || [];
-    isOnline = firebaseContext.isOnline ?? true;
-    isSyncing = firebaseContext.isSyncing ?? false;
-    lastSync = firebaseContext.lastSync;
-    syncData = firebaseContext.syncData || (() => Promise.resolve());
-    console.log("✅ Firebase context carregado:", {
-      worksCount: works.length,
-      maintenancesCount: maintenances.length,
-    });
-  } catch (firebaseError) {
-    console.error("❌ Erro no firebase context:", firebaseError);
-    works = [];
-    maintenances = [];
-    isOnline = false;
-    isSyncing = false;
-    lastSync = undefined;
-    syncData = () => Promise.resolve();
-  }
-
-  // Hook de notificações
-  let checkPendingWorks;
-  try {
-    const notificationsContext = useNotifications();
-    checkPendingWorks = notificationsContext.checkPendingWorks;
-    console.log("✅ Notifications context carregado");
-  } catch (notificationsError) {
-    console.error("❌ Erro no notifications context:", notificationsError);
-    checkPendingWorks = () => Promise.resolve([]);
-  }
+  const { works, maintenances, isOnline, isSyncing, lastSync, syncData } =
+    useFirebaseSync();
+  const { checkPendingWorks } = useNotifications();
 
   const [stats, setStats] = useState<DashboardStats>({
     totalWorks: 0,
