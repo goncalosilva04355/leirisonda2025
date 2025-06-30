@@ -29,6 +29,7 @@ const typeOptions = [
   { value: "manutencao", label: "Manutenção" },
   { value: "avaria", label: "Avaria" },
   { value: "montagem", label: "Montagem" },
+  { value: "furo_agua", label: "Furo de Água" },
 ];
 
 const worksheetOptions = [
