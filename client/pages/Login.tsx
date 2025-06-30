@@ -12,14 +12,34 @@ export function Login() {
   let authContext;
   try {
     authContext = useAuth();
+
+    // Verificar se o contexto foi inicializado corretamente
+    if (!authContext || typeof authContext.login !== "function") {
+      throw new Error("AuthContext not properly initialized");
+    }
   } catch (error) {
     console.error("❌ Erro ao acessar AuthContext:", error);
-    // Fallback para evitar crash
+
+    // Se falhar múltiplas vezes, tentar recarregar a página
+    const errorCount = parseInt(
+      sessionStorage.getItem("login_auth_errors") || "0",
+    );
+    sessionStorage.setItem("login_auth_errors", String(errorCount + 1));
+
+    if (errorCount >= 3) {
+      console.warn("⚠️ Múltiplos erros de AuthContext, a recarregar...");
+      sessionStorage.removeItem("login_auth_errors");
+      setTimeout(() => window.location.reload(), 1000);
+    }
+
+    // Fallback seguro para evitar crash
     authContext = {
       user: null,
       login: async () => false,
+      logout: () => {},
       isLoading: false,
       isInitialized: false,
+      getAllUsers: () => [],
     };
   }
 
