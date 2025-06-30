@@ -27,10 +27,56 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
 export function Dashboard() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const { works, maintenances, isOnline, isSyncing, lastSync, syncData } =
-    useFirebaseSync();
+  console.log("🏠 Dashboard component iniciando...");
+
+  // PROTEÇÃO MÁXIMA: Try-catch para contextos
+  let user,
+    navigate,
+    works,
+    maintenances,
+    isOnline,
+    isSyncing,
+    lastSync,
+    syncData;
+
+  try {
+    const authContext = useAuth();
+    user = authContext.user;
+    console.log("✅ Auth context carregado:", { hasUser: !!user });
+  } catch (authError) {
+    console.error("❌ Erro no auth context:", authError);
+    user = null;
+  }
+
+  try {
+    navigate = useNavigate();
+    console.log("✅ Navigate hook carregado");
+  } catch (navError) {
+    console.error("❌ Erro no navigate hook:", navError);
+    navigate = () => console.warn("Navigate não disponível");
+  }
+
+  try {
+    const firebaseContext = useFirebaseSync();
+    works = firebaseContext.works || [];
+    maintenances = firebaseContext.maintenances || [];
+    isOnline = firebaseContext.isOnline ?? true;
+    isSyncing = firebaseContext.isSyncing ?? false;
+    lastSync = firebaseContext.lastSync;
+    syncData = firebaseContext.syncData || (() => Promise.resolve());
+    console.log("✅ Firebase context carregado:", {
+      worksCount: works.length,
+      maintenancesCount: maintenances.length,
+    });
+  } catch (firebaseError) {
+    console.error("❌ Erro no firebase context:", firebaseError);
+    works = [];
+    maintenances = [];
+    isOnline = false;
+    isSyncing = false;
+    lastSync = undefined;
+    syncData = () => Promise.resolve();
+  }
   const [stats, setStats] = useState<DashboardStats>({
     totalWorks: 0,
     pendingWorks: 0,
