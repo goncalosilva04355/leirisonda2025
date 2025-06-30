@@ -10,38 +10,12 @@ export const Login = React.memo(function Login() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  let authContext;
-  try {
-    authContext = useAuth();
+  // Usar useAuth normalmente sem try-catch problemático
+  const authContext = useAuth();
 
-    // Verificar se o contexto foi inicializado corretamente
-    if (!authContext || typeof authContext.login !== "function") {
-      throw new Error("AuthContext not properly initialized");
-    }
-  } catch (error) {
-    console.error("❌ Erro ao acessar AuthContext:", error);
-
-    // Se falhar múltiplas vezes, tentar recarregar a página
-    const errorCount = parseInt(
-      sessionStorage.getItem("login_auth_errors") || "0",
-    );
-    sessionStorage.setItem("login_auth_errors", String(errorCount + 1));
-
-    if (errorCount >= 3) {
-      console.warn("⚠️ Múltiplos erros de AuthContext, a recarregar...");
-      sessionStorage.removeItem("login_auth_errors");
-      setTimeout(() => window.location.reload(), 1000);
-    }
-
-    // Fallback seguro para evitar crash
-    authContext = {
-      user: null,
-      login: async () => false,
-      logout: () => {},
-      isLoading: false,
-      isInitialized: false,
-      getAllUsers: () => [],
-    };
+  // Se não há contexto, usar fallback simples
+  if (!authContext) {
+    return <LoadingPage message="A inicializar autenticação..." />;
   }
 
   const { user, login, isLoading, isInitialized } = authContext;
