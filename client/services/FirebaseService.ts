@@ -774,11 +774,36 @@ export class FirebaseService {
           })) as Work[];
 
           console.log(
-            `🔥 Real-time Firebase update: ${firebaseWorks.length} obras recebidas do servidor`,
+            `🔥 REAL-TIME UPDATE: ${firebaseWorks.length} obras recebidas do Firebase`,
           );
+
+          // Log detalhado das mudanças para debug
+          const currentTime = new Date().toISOString();
+          console.log(`📡 Timestamp do listener: ${currentTime}`);
 
           // CRÍTICO: Consolidar com dados locais para não perder obras
           const localWorks = this.consolidateWorksFromAllBackups();
+
+          // Verificar se há NOVAS obras do Firebase
+          const localWorkIds = new Set(localWorks.map((w) => w.id));
+          const newFirebaseWorks = firebaseWorks.filter(
+            (w) => !localWorkIds.has(w.id),
+          );
+
+          if (newFirebaseWorks.length > 0) {
+            console.log(
+              `🆕 NOVAS OBRAS DETECTADAS DO FIREBASE: ${newFirebaseWorks.length}`,
+            );
+            newFirebaseWorks.forEach((work) => {
+              console.log(`✨ NOVA OBRA FIREBASE:`, {
+                id: work.id,
+                cliente: work.clientName,
+                folhaObra: work.workSheetNumber,
+                atribuicoes: work.assignedUsers,
+                criadaEm: work.createdAt,
+              });
+            });
+          }
 
           // Combinar Firebase + Local (remover duplicatas)
           const allWorks = [...firebaseWorks, ...localWorks];
@@ -802,28 +827,68 @@ export class FirebaseService {
             (work) => work.assignedUsers && work.assignedUsers.length > 0,
           );
           console.log(
-            `🎯 Obras com atribuições: ${worksWithAssignments.length}`,
-            worksWithAssignments.map((w) => ({
-              id: w.id,
-              cliente: w.clientName,
-              atribuidas: w.assignedUsers,
-            })),
+            `🎯 Obras com atribuições detectadas: ${worksWithAssignments.length}`,
           );
 
-          // Update all backup storages instantaneously
+          // Log específico para Alexandre (para debug do problema)
+          const alexandreWorks = uniqueWorks.filter(
+            (work) =>
+              work.assignedUsers &&
+              work.assignedUsers.includes("user_alexandre"),
+          );
+          if (alexandreWorks.length > 0) {
+            console.log(
+              `🎯 OBRAS PARA ALEXANDRE DETECTADAS: ${alexandreWorks.length}`,
+              alexandreWorks.map((w) => ({
+                id: w.id,
+                cliente: w.clientName,
+                folhaObra: w.workSheetNumber,
+                criadaEm: w.createdAt,
+              })),
+            );
+          }
+
+          // Update all backup storages instantaneously com timestamp
+          const storageData = {
+            works: uniqueWorks,
+            lastUpdate: currentTime,
+            source: "firebase_realtime_listener",
+          };
+
           localStorage.setItem("works", JSON.stringify(uniqueWorks));
           localStorage.setItem("leirisonda_works", JSON.stringify(uniqueWorks));
           sessionStorage.setItem("temp_works", JSON.stringify(uniqueWorks));
+          localStorage.setItem("works_metadata", JSON.stringify(storageData));
+
+          // Dispará evento customizado para notificar outras abas/janelas
+          try {
+            window.dispatchEvent(
+              new CustomEvent("leirisonda_works_updated", {
+                detail: { works: uniqueWorks, timestamp: currentTime },
+              }),
+            );
+          } catch (e) {
+            console.log("Não foi possível disparar evento customizado");
+          }
 
           // Trigger callback with consolidated data
           callback(uniqueWorks);
         },
         (error) => {
-          console.error("❌ Erro no listener de obras Firebase:", error);
+          console.error(
+            "❌ ERRO CRÍTICO no listener de obras Firebase:",
+            error,
+          );
+          console.error("❌ Detalhes do erro:", {
+            code: error.code,
+            message: error.message,
+            name: error.name,
+          });
+
           // Em caso de erro, usar dados locais consolidados
           const fallbackWorks = this.consolidateWorksFromAllBackups();
           console.log(
-            `📱 Fallback: usando ${fallbackWorks.length} obras locais`,
+            `📱 FALLBACK ATIVADO: usando ${fallbackWorks.length} obras locais`,
           );
           callback(fallbackWorks);
         },
