@@ -23,6 +23,7 @@ import { UserDataManager } from "./pages/UserDataManager";
 import { PoolMaintenancePage } from "./pages/PoolMaintenance";
 import { MaintenanceList } from "./pages/MaintenanceList";
 import { CreateMaintenance } from "./pages/CreateMaintenance";
+import { EditMaintenance } from "./pages/EditMaintenance";
 import { MaintenanceDetail } from "./pages/MaintenanceDetail";
 import { CreateIntervention } from "./pages/CreateIntervention";
 import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
@@ -82,6 +83,10 @@ function App() {
               <Route
                 path="create-maintenance"
                 element={<CreateMaintenance />}
+              />
+              <Route
+                path="edit-maintenance/:id"
+                element={<EditMaintenance />}
               />
               <Route path="maintenance/:id" element={<MaintenanceDetail />} />
               <Route
