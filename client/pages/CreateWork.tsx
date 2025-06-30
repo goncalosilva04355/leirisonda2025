@@ -116,6 +116,9 @@ export function CreateWork() {
     const [error, setError] = useState("");
     const [showDiagnostics, setShowDiagnostics] = useState(false);
 
+    // Hook de notificações
+    const { notifyWorkAssigned } = useNotifications();
+
     // Verificar se o usuário existe e tem permissão
     if (!user) {
       return (
