@@ -73,19 +73,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Carrega utilizador do localStorage na inicialização
   useEffect(() => {
-    console.log("🚀 AUTH INIT - Garantindo utilizadores globais...");
-    ensureGlobalUsers();
+    let mounted = true;
 
-    try {
-      const stored = localStorage.getItem("leirisonda_user");
-      if (stored) {
-        const parsedUser = JSON.parse(stored);
-        console.log("👤 UTILIZADOR CARREGADO:", parsedUser.email);
-        setUser(parsedUser);
+    const initializeAuth = async () => {
+      try {
+        if (!mounted) return;
+
+        console.log("🚀 AUTH INIT - Garantindo utilizadores globais...");
+        ensureGlobalUsers();
+
+        if (!mounted) return;
+
+        const stored = localStorage.getItem("leirisonda_user");
+        if (stored && mounted) {
+          const parsedUser = JSON.parse(stored);
+          console.log("👤 UTILIZADOR CARREGADO:", parsedUser.email);
+          setUser(parsedUser);
+        }
+      } catch (error) {
+        console.error("❌ Erro ao carregar utilizador:", error);
+        // Não quebrar, continuar com user = null
+      } finally {
+        if (mounted) {
+          setIsInitialized(true);
+        }
       }
-    } catch (error) {
-      console.error("❌ Erro ao carregar utilizador:", error);
-    }
+    };
+
+    initializeAuth();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Garante que utilizadores globais estão presentes em todos os dispositivos
