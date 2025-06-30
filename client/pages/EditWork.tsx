@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Wifi,
   WifiOff,
+  Users,
 } from "lucide-react";
 import { Work } from "@shared/types";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ import { PhotoUpload } from "@/components/PhotoUpload";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { WorkReport } from "@/components/WorkReport";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
+import { useAuth } from "@/components/AuthProvider";
 
 const statusOptions = [
   { value: "pendente", label: "Pendente" },
@@ -38,7 +40,44 @@ const statusOptions = [
 export function EditWork() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { works, updateWork, isOnline, isSyncing } = useFirebaseSync();
+
+  // Use try-catch para capturar erros de contexto
+  let firebaseContext, authContext;
+  try {
+    firebaseContext = useFirebaseSync();
+    authContext = useAuth();
+  } catch (error) {
+    console.error("❌ Erro ao acessar contextos:", error);
+    return (
+      <div className="p-6 max-w-md mx-auto mt-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-red-800 mb-2">
+            Erro de Contexto
+          </h2>
+          <p className="text-red-600 mb-4">
+            Erro ao carregar contextos da aplicação. Tente recarregar a página.
+          </p>
+          <div className="space-y-2">
+            <Button onClick={() => window.location.reload()} className="w-full">
+              Recarregar Página
+            </Button>
+            <Button
+              onClick={() => navigate("/dashboard")}
+              variant="outline"
+              className="w-full"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar ao Dashboard
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { works, updateWork, isOnline, isSyncing } = firebaseContext;
+  const { getAllUsers } = authContext;
+
   const [work, setWork] = useState<Work | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,12 +94,16 @@ export function EditWork() {
     observations: "",
     workPerformed: "",
     workSheetCompleted: false,
+    assignedUsers: [] as string[], // Add assigned users
   });
 
   const [vehicleInput, setVehicleInput] = useState("");
   const [technicianInput, setTechnicianInput] = useState("");
   const [vehicles, setVehicles] = useState<string[]>([]);
   const [technicians, setTechnicians] = useState<string[]>([]);
+
+  // Get available users for assignment
+  const availableUsers = getAllUsers ? getAllUsers() : [];
 
   useEffect(() => {
     loadWork();
@@ -85,6 +128,7 @@ export function EditWork() {
         observations: foundWork.observations,
         workPerformed: foundWork.workPerformed,
         workSheetCompleted: foundWork.workSheetCompleted || false,
+        assignedUsers: foundWork.assignedUsers || [], // Include assigned users
       });
       setVehicles(foundWork.vehicles);
       setTechnicians(foundWork.technicians);
@@ -111,6 +155,7 @@ export function EditWork() {
             observations: localWork.observations,
             workPerformed: localWork.workPerformed,
             workSheetCompleted: localWork.workSheetCompleted || false,
+            assignedUsers: localWork.assignedUsers || [], // Include assigned users
           });
           setVehicles(localWork.vehicles);
           setTechnicians(localWork.technicians);
@@ -162,6 +207,7 @@ export function EditWork() {
         status: formData.status,
         vehicles: vehicles,
         technicians: technicians,
+        assignedUsers: formData.assignedUsers, // Include assigned users
         photos: [
           ...work.photos,
           ...newPhotos.map((photo, index) => ({
@@ -192,7 +238,7 @@ export function EditWork() {
     }
   };
 
-  const updateFormData = (field: keyof typeof formData, value: string) => {
+  const updateFormData = (field: keyof typeof formData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -219,6 +265,20 @@ export function EditWork() {
 
   const removeTechnician = (index: number) => {
     setTechnicians(technicians.filter((_, i) => i !== index));
+  };
+
+  // User assignment functions
+  const addAssignedUser = (userId: string) => {
+    if (!formData.assignedUsers.includes(userId)) {
+      updateFormData("assignedUsers", [...formData.assignedUsers, userId]);
+    }
+  };
+
+  const removeAssignedUser = (userId: string) => {
+    const newAssignedUsers = formData.assignedUsers.filter(
+      (id) => id !== userId,
+    );
+    updateFormData("assignedUsers", newAssignedUsers);
   };
 
   if (loading) {
@@ -388,14 +448,14 @@ export function EditWork() {
             </div>
           </div>
 
-          {/* Vehicles and Technicians */}
+          {/* Vehicles, Technicians, and User Assignment */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <User className="w-5 h-5 text-blue-600" />
+                <Users className="w-5 h-5 text-blue-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900">
-                Viaturas e Técnicos
+                Viaturas, Técnicos e Atribuições
               </h3>
             </div>
 
@@ -476,6 +536,55 @@ export function EditWork() {
                       </Button>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              <div className="md:col-span-2">
+                <Label>Usuários Atribuídos</Label>
+                <p className="text-sm text-gray-600 mt-1">
+                  Selecione os usuários responsáveis por esta obra
+                </p>
+                <div className="mt-2 space-y-2">
+                  <Select onValueChange={addAssignedUser}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecionar usuário..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableUsers
+                        .filter(
+                          (user) => !formData.assignedUsers.includes(user.id),
+                        )
+                        .map((user) => (
+                          <SelectItem key={user.id} value={user.id}>
+                            {user.name} ({user.email})
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  {formData.assignedUsers.map((userId) => {
+                    const assignedUser = availableUsers.find(
+                      (u) => u.id === userId,
+                    );
+                    return assignedUser ? (
+                      <div
+                        key={userId}
+                        className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded border border-blue-200"
+                      >
+                        <span className="text-blue-800">
+                          {assignedUser.name} ({assignedUser.email})
+                        </span>
+                        <Button
+                          type="button"
+                          onClick={() => removeAssignedUser(userId)}
+                          variant="ghost"
+                          size="sm"
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          Remover
+                        </Button>
+                      </div>
+                    ) : null;
+                  })}
                 </div>
               </div>
             </div>
