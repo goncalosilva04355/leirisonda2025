@@ -348,8 +348,23 @@ const createErrorHTML = (error: any) => {
     </div>
 
     <script>
+      function tryAgain() {
+        console.log('🔄 User clicked try again');
+        // Clear error flags first
+        sessionStorage.removeItem('leirisonda_error');
+        localStorage.removeItem('leirisonda_error_state');
+
+        // Try to reinitialize the app
+        if (window.initializeApp) {
+          window.initializeApp();
+        } else {
+          window.location.reload();
+        }
+      }
+
       function clearAppData() {
         try {
+          console.log('🧹 Clearing app data...');
           // Clear localStorage
           localStorage.clear();
           // Clear sessionStorage
@@ -366,7 +381,8 @@ const createErrorHTML = (error: any) => {
           window.location.reload();
         } catch (error) {
           console.error('Error clearing data:', error);
-          alert('Erro ao limpar dados. Por favor, tente manualmente limpar o cache do navegador.');
+          alert('Erro ao limpar dados. A recarregar página...');
+          window.location.reload();
         }
       }
     </script>
