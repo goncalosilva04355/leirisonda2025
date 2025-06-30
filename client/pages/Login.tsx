@@ -42,18 +42,28 @@ export function Login() {
     setError("");
     setIsSubmitting(true);
 
+    console.log("🔐 Login attempt started:", { email });
+
     if (!email || !password) {
+      console.warn("⚠️ Missing credentials");
       setError("Por favor, preencha todos os campos.");
       setIsSubmitting(false);
       return;
     }
 
     try {
+      console.log("🔄 Calling login function...");
       const success = await login(email, password);
+      console.log("✅ Login function result:", success);
+
       if (!success) {
+        console.error("❌ Login failed - invalid credentials");
         setError("Email ou palavra-passe incorretos.");
+      } else {
+        console.log("🎉 Login successful!");
       }
     } catch (err) {
+      console.error("💥 Login error:", err);
       setError("Erro ao iniciar sessão. Tente novamente.");
     } finally {
       setIsSubmitting(false);
