@@ -597,15 +597,14 @@ export class PDFGenerator {
           </div>
 
           <div class="footer">
-            <div class="footer-content">
-              <div class="footer-logo">Leirisonda</div>
-              <div class="footer-contact">
-                <div>info@leirisonda.pt</div>
-                <div>www.leirisonda.pt</div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=200" alt="Logo" style="width: 30px; height: 30px;" />
+                <div class="footer-logo">Leirisonda</div>
               </div>
-            </div>
-            <div class="footer-bottom">
-              © ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+              <div class="footer-info">
+                Relatório gerado no Sistema de Gestão
+              </div>
             </div>
           </div>
         </div>
