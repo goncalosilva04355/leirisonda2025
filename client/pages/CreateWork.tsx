@@ -375,13 +375,29 @@ export function CreateWork() {
             return;
           }
 
-          // Erro suave - não fazer throw que pode causar crash
+          // Executar diagnóstico quando obra não é encontrada
           console.warn(
-            "⚠️ Obra criada mas não encontrada nos backups - provavelmente foi guardada",
+            "⚠️ Obra criada mas não encontrada nos backups - executando diagnóstico...",
           );
-          setError(
-            "Obra provavelmente foi guardada. Verifique a lista de obras.",
-          );
+
+          const diagnostics = WorkSaveHelper.diagnose();
+          console.log("🔍 Diagnóstico de salvamento:", diagnostics);
+
+          // Tentar consolidar obras de emergência
+          const consolidation = WorkSaveHelper.consolidateEmergencyWorks();
+          if (consolidation.consolidated > 0) {
+            console.log(
+              `✅ ${consolidation.consolidated} obras de emergência consolidadas`,
+            );
+            setError(
+              `Obra guardada com sucesso! ${consolidation.consolidated} obras de emergência foram recuperadas.`,
+            );
+          } else {
+            setError(
+              "Obra provavelmente foi guardada com sucesso. Verifique a lista de obras.",
+            );
+          }
+
           setIsSubmitting(false);
         }
       } catch (err) {
@@ -577,7 +593,7 @@ export function CreateWork() {
                   id="clientName"
                   value={formData.clientName}
                   onChange={(e) => updateFormData("clientName", e.target.value)}
-                  placeholder="Ex: João Silva"
+                  placeholder="Ex: Jo��o Silva"
                   className="mt-1"
                   disabled={isSubmitting}
                 />
