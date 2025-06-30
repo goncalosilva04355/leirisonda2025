@@ -20,11 +20,20 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public static getDerivedStateFromError(error: Error): State {
     console.log("🚨 ErrorBoundary caught error:", error.message);
+    console.log("🚨 Error stack:", error.stack);
 
     // Handle common development errors
-    if (error.message?.includes("useAuth must be used within")) {
+    if (
+      error.message?.includes("useAuth must be used within") ||
+      error.message?.includes("AuthProvider") ||
+      error.message?.includes("useContext")
+    ) {
       console.warn("AuthProvider context error caught, will try to recover...");
-      // Mark for retry instead of ignoring
+      // Try to reload the page to reinitialize context
+      setTimeout(() => {
+        console.log("🔄 Auto-reloading due to context error...");
+        window.location.reload();
+      }, 1000);
       return { hasError: true, error, retryCount: 0 };
     }
 
@@ -162,6 +171,11 @@ export class ErrorBoundary extends Component<Props, State> {
     window.location.href = "/system-status";
   };
 
+  private handleEmergencyDiagnostic = () => {
+    console.log("🚨 User requested emergency diagnostic");
+    window.location.href = "/emergency-diagnostic";
+  };
+
   public render() {
     if (this.state.hasError) {
       return (
@@ -209,6 +223,14 @@ export class ErrorBoundary extends Component<Props, State> {
               >
                 <AlertTriangle className="w-4 h-4 mr-2" />
                 Diagnóstico do Sistema
+              </button>
+
+              <button
+                onClick={this.handleEmergencyDiagnostic}
+                className="w-full inline-flex items-center justify-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+              >
+                <AlertTriangle className="w-4 h-4 mr-2" />
+                Diagnóstico de Emergência
               </button>
 
               <button

@@ -7,6 +7,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
+  isInitialized: boolean;
   getAllUsers: () => User[];
 }
 
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Utilizadores globais predefinidos que devem estar em todos os dispositivos
   const globalUsers = {
@@ -72,19 +74,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Carrega utilizador do localStorage na inicialização
   useEffect(() => {
-    console.log("🚀 AUTH INIT - Garantindo utilizadores globais...");
-    ensureGlobalUsers();
+    let mounted = true;
 
-    try {
-      const stored = localStorage.getItem("leirisonda_user");
-      if (stored) {
-        const parsedUser = JSON.parse(stored);
-        console.log("👤 UTILIZADOR CARREGADO:", parsedUser.email);
-        setUser(parsedUser);
+    const initializeAuth = async () => {
+      try {
+        if (!mounted) return;
+
+        console.log("🚀 AUTH INIT - Garantindo utilizadores globais...");
+        ensureGlobalUsers();
+
+        if (!mounted) return;
+
+        const stored = localStorage.getItem("leirisonda_user");
+        if (stored && mounted) {
+          const parsedUser = JSON.parse(stored);
+          console.log("👤 UTILIZADOR CARREGADO:", parsedUser.email);
+          setUser(parsedUser);
+        }
+      } catch (error) {
+        console.error("❌ Erro ao carregar utilizador:", error);
+        // Não quebrar, continuar com user = null
+      } finally {
+        if (mounted) {
+          setIsInitialized(true);
+        }
       }
-    } catch (error) {
-      console.error("❌ Erro ao carregar utilizador:", error);
-    }
+    };
+
+    initializeAuth();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Garante que utilizadores globais estão presentes em todos os dispositivos
@@ -92,8 +113,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("🔄 Verificando utilizadores globais...");
 
-      // Busca utilizadores existentes
-      const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
+      // Verificar se localStorage está disponível
+      if (typeof Storage === "undefined") {
+        console.warn("⚠️ localStorage não disponível");
+        return;
+      }
+
+      // Busca utilizadores existentes com fallback seguro
+      let existingUsers = [];
+      try {
+        const storedUsers = localStorage.getItem("users");
+        existingUsers = storedUsers ? JSON.parse(storedUsers) : [];
+        if (!Array.isArray(existingUsers)) {
+          existingUsers = [];
+        }
+      } catch (parseError) {
+        console.warn("⚠️ Erro ao parse de users, reinicializando:", parseError);
+        existingUsers = [];
+      }
+
       let modified = false;
 
       // Verifica cada utilizador global
@@ -280,7 +318,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, isLoading, getAllUsers }}
+      value={{ user, login, logout, isLoading, isInitialized, getAllUsers }}
     >
       {children}
     </AuthContext.Provider>
@@ -288,9 +326,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth deve ser usado dentro de AuthProvider");
+  try {
+    const context = useContext(AuthContext);
+    if (!context) {
+      console.warn("⚠️ useAuth called outside AuthProvider - using fallback");
+      // Return fallback context to prevent crashes
+      return {
+        user: null,
+        login: async () => false,
+        logout: () => {},
+        isLoading: false,
+        isInitialized: false,
+        getAllUsers: () => [],
+      };
+    }
+    return context;
+  } catch (error) {
+    console.error("❌ Error in useAuth:", error);
+    // Return safe fallback
+    return {
+      user: null,
+      login: async () => false,
+      logout: () => {},
+      isLoading: false,
+      isInitialized: false,
+      getAllUsers: () => [],
+    };
   }
-  return context;
 }
