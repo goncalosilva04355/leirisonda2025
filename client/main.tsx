@@ -39,6 +39,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             {/* Public routes */}
+            <Route path="/emergency" element={<Emergency />} />
             <Route path="/login" element={<Login />} />
             <Route path="/system-status" element={<SystemStatus />} />
             <Route path="/debug" element={<QuickDiagnostic />} />
@@ -98,7 +99,7 @@ const initializeApp = async () => {
     console.log("🚀 Starting Leirisonda initialization...");
 
     // Pre-flight checks
-    console.log("��� Running pre-flight checks...");
+    console.log("🔍 Running pre-flight checks...");
 
     // Check if DOM is ready
     if (document.readyState === "loading") {
