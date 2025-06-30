@@ -188,6 +188,15 @@ export function CreateWork() {
 
     console.log("🚀 INICIANDO PROCESSO DE CRIAÇÃO DE OBRA");
 
+    // Verificar se as funções necessárias estão disponíveis
+    if (!createWork) {
+      setError(
+        "Sistema de criação de obras não disponível. Tente recarregar a página.",
+      );
+      setIsSubmitting(false);
+      return;
+    }
+
     // Validation
     if (!formData.clientName.trim()) {
       setError("Por favor, introduza o nome do cliente.");
