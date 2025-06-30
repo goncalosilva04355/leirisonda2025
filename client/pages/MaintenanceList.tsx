@@ -189,45 +189,24 @@ export function MaintenanceList() {
       </div>
 
       {/* Filters */}
-      <div className="glass-card p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Search className="inline mr-2 h-4 w-4" />
-              Pesquisar
-            </label>
-            <Input
-              type="text"
-              placeholder="Nome da piscina, cliente ou localização..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full"
-            />
-          </div>
-
-          <div>
+      <div className="glass-card p-4">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Filter className="inline mr-2 h-4 w-4" />
-              Estado
+              Filtrar por Estado
             </label>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Filtrar por estado" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="active">Ativas</SelectItem>
-                <SelectItem value="inactive">Inativas</SelectItem>
-                <SelectItem value="seasonal">Sazonais</SelectItem>
+                <SelectItem value="all">📋 Todas as Piscinas</SelectItem>
+                <SelectItem value="active">✅ Piscinas Ativas</SelectItem>
+                <SelectItem value="inactive">❌ Piscinas Inativas</SelectItem>
+                <SelectItem value="seasonal">🌤️ Piscinas Sazonais</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-
-          <div className="flex items-end">
-            <div className="text-sm text-gray-600">
-              <strong>{filteredMaintenances.length}</strong> de{" "}
-              <strong>{maintenances.length}</strong> piscinas
-            </div>
           </div>
         </div>
       </div>
