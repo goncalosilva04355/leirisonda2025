@@ -313,7 +313,7 @@ export function LoginInfo() {
               Utilizadores Registados: {users.length}
             </span>
           </div>
-          <div style={{ display: "flex", gap: "4px" }}>
+          <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
             <button
               onClick={fixUserPasswords}
               style={{
@@ -327,6 +327,21 @@ export function LoginInfo() {
               }}
             >
               🔧 Corrigir
+            </button>
+            <button
+              onClick={syncGlobalUsers}
+              style={{
+                background: "#007bff",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "4px 8px",
+                fontSize: "10px",
+                cursor: "pointer",
+              }}
+              title="Sincronizar utilizadores globais entre dispositivos"
+            >
+              🔄 Sync
             </button>
             <button
               onClick={cleanUserSystem}
