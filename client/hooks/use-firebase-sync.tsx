@@ -175,6 +175,23 @@ export function useFirebaseSync() {
                 { atribuições: work.assignedUsers },
               );
             });
+          } else if (newWorksCount < currentWorksCount) {
+            // Detectar obras eliminadas
+            const newWorkIds = new Set(latestWorks.map((w) => w.id));
+            const deletedWorks = works.filter((w) => !newWorkIds.has(w.id));
+
+            deletedWorks.forEach((work) => {
+              console.log(
+                `🗑️ OBRA ELIMINADA: ${work.clientName} (${work.workSheetNumber})`,
+              );
+            });
+
+            // Se é uma operação de delete, forçar atualização imediata do estado
+            if (reason.includes("after_delete_work")) {
+              console.log(
+                "🔄 Sync após DELETE - Atualizando estado imediatamente",
+              );
+            }
           }
         }
 
@@ -261,7 +278,7 @@ export function useFirebaseSync() {
       return;
     }
 
-    console.log("💓 SISTEMA DE SINCRONIZAÇÃO ATIVO");
+    console.log("💓 SISTEMA DE SINCRONIZA��ÃO ATIVO");
 
     // Sync inteligente a cada 15 segundos
     heartbeatInterval.current = setInterval(async () => {

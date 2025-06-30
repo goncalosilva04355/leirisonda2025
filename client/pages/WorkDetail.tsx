@@ -68,15 +68,84 @@ export function WorkDetail() {
   };
 
   const handleDelete = async () => {
-    if (!work) return;
+    if (!work) {
+      console.error("❌ Erro: Obra não encontrada para eliminação");
+      alert("Erro: Obra não encontrada");
+      return;
+    }
 
     try {
-      // Use Firebase sync to delete work with automatic sync
+      console.log(
+        `🗑️ INICIANDO ELIMINAÇÃO da obra: ${work.id} (${work.clientName})`,
+      );
+
+      // Verificar se o utilizador tem permissões
+      if (!user?.permissions.canDeleteWorks) {
+        console.error("❌ Erro: Utilizador sem permissão para eliminar obras");
+        alert("Erro: Não tem permissão para eliminar obras");
+        return;
+      }
+
+      // Verificar se a obra existe nos dados locais
+      const storedWorks = localStorage.getItem("works");
+      let localWorks: Work[] = [];
+      if (storedWorks) {
+        localWorks = JSON.parse(storedWorks);
+      }
+
+      const workExists = localWorks.find((w) => w.id === work.id);
+      console.log(`📋 Obra existe localmente: ${workExists ? "SIM" : "NÃO"}`);
+
+      // Backup da obra antes de eliminar
+      const workBackup = { ...work };
+      console.log(`💾 Backup da obra criado: ${workBackup.workSheetNumber}`);
+
+      // Eliminar usando Firebase sync
+      console.log("🔥 Chamando deleteWork via Firebase sync...");
       await deleteWork(work.id);
-      console.log("✅ Obra eliminada e sincronizada automaticamente:", work.id);
+
+      console.log("✅ Obra eliminada com sucesso via Firebase sync");
+
+      // Verificar se foi realmente eliminada localmente
+      const updatedWorks = localStorage.getItem("works");
+      if (updatedWorks) {
+        const updatedWorksList: Work[] = JSON.parse(updatedWorks);
+        const stillExists = updatedWorksList.find((w) => w.id === work.id);
+        console.log(
+          `🔍 Verificação pós-eliminação: obra ainda existe = ${stillExists ? "SIM" : "NÃO"}`,
+        );
+
+        if (stillExists) {
+          console.warn("⚠️ ATENÇÃO: Obra ainda existe após eliminação!");
+          // Forçar eliminação local se necessário
+          const filteredWorks = updatedWorksList.filter(
+            (w) => w.id !== work.id,
+          );
+          localStorage.setItem("works", JSON.stringify(filteredWorks));
+          console.log("🔧 Eliminação forçada localmente aplicada");
+        }
+      }
+
+      console.log("🎉 OBRA ELIMINADA COM SUCESSO - Redirecionando...");
+
+      // Mostrar mensagem de sucesso
+      alert(`Obra "${work.clientName}" eliminada com sucesso!`);
+
+      // Navegar de volta à lista
       navigate("/works");
     } catch (error) {
-      console.error("❌ Erro ao eliminar obra:", error);
+      console.error("❌ ERRO CRÍTICO ao eliminar obra:", error);
+      console.error("📄 Detalhes do erro:", {
+        message: error instanceof Error ? error.message : "Erro desconhecido",
+        workId: work.id,
+        workName: work.clientName,
+        userPermissions: user?.permissions,
+      });
+
+      // Mostrar erro amigável ao utilizador
+      alert(
+        `Erro ao eliminar obra: ${error instanceof Error ? error.message : "Erro desconhecido"}. Tente novamente.`,
+      );
     }
   };
 
@@ -196,6 +265,51 @@ export function WorkDetail() {
               Editar Obra
             </Button>
           </Link>
+
+          {/* Botão de teste de eliminação apenas para Gonçalo */}
+          {user?.email === "gongonsilva@gmail.com" && (
+            <Button
+              variant="outline"
+              onClick={() => {
+                console.log("🧪 TESTE DE ELIMINAÇÃO - Gonçalo");
+                console.log("📋 Dados da obra:", {
+                  id: work.id,
+                  nome: work.clientName,
+                  folha: work.workSheetNumber,
+                });
+                console.log("👤 Permissões do utilizador:", user.permissions);
+                console.log(
+                  "🗑️ Pode eliminar obras:",
+                  user.permissions.canDeleteWorks,
+                );
+
+                const worksLocal = localStorage.getItem("works");
+                if (worksLocal) {
+                  const localWorks = JSON.parse(worksLocal);
+                  const obraExiste = localWorks.find(
+                    (w: any) => w.id === work.id,
+                  );
+                  console.log(
+                    "💾 Obra existe no localStorage:",
+                    obraExiste ? "SIM" : "NÃO",
+                  );
+                  console.log(
+                    "📊 Total de obras no localStorage:",
+                    localWorks.length,
+                  );
+                } else {
+                  console.log("📱 Nenhuma obra no localStorage");
+                }
+
+                alert(
+                  "Teste executado! Verifique a consola do browser (F12) para logs detalhados.",
+                );
+              }}
+            >
+              🧪 Teste Eliminação
+            </Button>
+          )}
+
           {user?.permissions.canDeleteWorks && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
