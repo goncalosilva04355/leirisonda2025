@@ -33,6 +33,7 @@ import {
 import { PhotoUpload } from "@/components/PhotoUpload";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
+import { firebaseService } from "@/services/FirebaseService";
 
 const workTypes = [
   { value: "piscina", label: "Piscina" },
@@ -119,6 +120,8 @@ export function CreateWork() {
     setError("");
     setIsSubmitting(true);
 
+    console.log("🚀 INICIANDO PROCESSO DE CRIAÇÃO DE OBRA");
+
     // Validation
     if (!formData.clientName.trim()) {
       setError("Por favor, introduza o nome do cliente.");
@@ -139,6 +142,8 @@ export function CreateWork() {
     }
 
     try {
+      console.log("📝 PREPARANDO DADOS DA OBRA...");
+
       // Prepare work data
       const workData = {
         workSheetNumber: formData.workSheetNumber,
@@ -167,15 +172,37 @@ export function CreateWork() {
         workSheetCompleted: formData.workSheetCompleted,
       };
 
+      console.log("📤 ENVIANDO OBRA PARA CRIAR:", {
+        cliente: workData.clientName,
+        folhaObra: workData.workSheetNumber,
+        tipo: workData.type,
+      });
+
       // Create work using Firebase sync
       const workId = await createWork(workData);
-      console.log("✅ Obra criada com sucesso:", workId);
+      console.log("✅ OBRA CRIADA COM SUCESSO ID:", workId);
 
-      // Navigate to works list
-      navigate("/works");
+      // Verificar se obra foi realmente salva
+      const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const savedWork = savedWorks.find((w: any) => w.id === workId);
+
+      if (savedWork) {
+        console.log(
+          "✅ OBRA VERIFICADA NO LOCALSTORAGE:",
+          savedWork.clientName,
+        );
+        console.log("🧭 REDIRECIONANDO PARA LISTA DE OBRAS...");
+
+        // Navigate to works list
+        navigate("/works");
+      } else {
+        throw new Error("Obra criada mas não encontrada no localStorage");
+      }
     } catch (err) {
-      console.error("❌ Erro ao criar obra:", err);
-      setError("Erro ao criar a obra. Tente novamente.");
+      console.error("❌ ERRO CRÍTICO AO CRIAR OBRA:", err);
+      setError(
+        `Erro ao criar a obra: ${err instanceof Error ? err.message : "Erro desconhecido"}. Tente novamente.`,
+      );
       setIsSubmitting(false);
     }
   };
@@ -270,6 +297,128 @@ export function CreateWork() {
             </>
           )}
         </div>
+
+        {/* Debug buttons para Gonçalo */}
+        {user?.email === "gongonsilva@gmail.com" && (
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const works1 = JSON.parse(
+                  localStorage.getItem("works") || "[]",
+                );
+                const works2 = JSON.parse(
+                  localStorage.getItem("leirisonda_works") || "[]",
+                );
+                const works3 = JSON.parse(
+                  sessionStorage.getItem("temp_works") || "[]",
+                );
+                const consolidated =
+                  firebaseService.consolidateWorksFromAllBackups();
+                const firebaseStatus = firebaseService.getFirebaseStatus();
+
+                // Contar obras de emergência
+                let emergencyCount = 0;
+                for (let i = 0; i < localStorage.length; i++) {
+                  const key = localStorage.key(i);
+                  if (key && key.startsWith("emergency_work_"))
+                    emergencyCount++;
+                }
+
+                console.log("🔍 DEBUG SISTEMA BACKUP TRIPLO:", {
+                  backups: {
+                    works: works1.length,
+                    leirisonda_works: works2.length,
+                    temp_works: works3.length,
+                    emergency: emergencyCount,
+                    consolidado: consolidated.length,
+                  },
+                  ultimasObras: consolidated.slice(0, 3).map((w: any) => ({
+                    id: w.id,
+                    cliente: w.clientName,
+                    folhaObra: w.workSheetNumber,
+                    criada: w.createdAt,
+                  })),
+                  firebase: firebaseStatus,
+                  sync: { isOnline, isSyncing },
+                });
+
+                alert(
+                  `🔍 DEBUG BACKUP TRIPLO:\n📦 Works: ${works1.length}\n🗂️ Leirisonda: ${works2.length}\n⚡ Temp: ${works3.length}\n🚨 Emergency: ${emergencyCount}\n✅ Consolidado: ${consolidated.length}\n🔥 Firebase: ${firebaseStatus.isAvailable ? "OK" : "OFF"}`,
+                );
+              }}
+            >
+              🔍 Debug
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                console.log("🧪 TESTE: Criando obra simples...");
+                try {
+                  const testWork = {
+                    workSheetNumber: `TEST-${Date.now()}`,
+                    type: "piscina" as const,
+                    clientName: "TESTE Cliente",
+                    address: "TESTE Morada",
+                    contact: "123456789",
+                    entryTime: new Date().toISOString(),
+                    status: "pendente" as const,
+                    vehicles: [],
+                    technicians: [],
+                    assignedUsers: [],
+                    photos: [],
+                    observations: "",
+                    workPerformed: "",
+                    workSheetCompleted: false,
+                  };
+
+                  const workId = await createWork(testWork);
+                  console.log("✅ TESTE: Obra criada:", workId);
+                  alert(`TESTE: Obra criada com ID ${workId}`);
+                } catch (error) {
+                  console.error("❌ TESTE: Erro:", error);
+                  alert(`TESTE FALHOU: ${error}`);
+                }
+              }}
+            >
+              🧪 Teste
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                console.log(
+                  "🔧 CONSOLIDAÇÃO: Forçando consolidação de todas as obras...",
+                );
+                const consolidated =
+                  firebaseService.consolidateWorksFromAllBackups();
+
+                // Limpar obras de emergência após consolidação
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                  const key = localStorage.key(i);
+                  if (key && key.startsWith("emergency_work_")) {
+                    keysToRemove.push(key);
+                  }
+                }
+                keysToRemove.forEach((key) => localStorage.removeItem(key));
+
+                console.log(
+                  `✅ CONSOLIDAÇÃO COMPLETA: ${consolidated.length} obras consolidadas, ${keysToRemove.length} emergências limpas`,
+                );
+                alert(
+                  `🔧 CONSOLIDAÇÃO:\n✅ ${consolidated.length} obras consolidadas\n🧹 ${keysToRemove.length} emergências limpas\n\nRecarregue a página para ver as obras atualizadas.`,
+                );
+              }}
+            >
+              🔧 Consolidar
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Offline Warning */}

@@ -45,6 +45,16 @@ export class FirebaseService {
     }
   }
 
+  // Método para verificar status detalhado do Firebase
+  getFirebaseStatus() {
+    return {
+      isAvailable: this.isFirebaseAvailable,
+      dbConnection: db !== null && db !== undefined,
+      hasActiveListeners: this.unsubscribes.length > 0,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
   // Users Collection
   async getUsers(): Promise<User[]> {
     if (!this.isFirebaseAvailable) {
@@ -188,15 +198,21 @@ export class FirebaseService {
 
   // Works Collection
   async getWorks(): Promise<Work[]> {
+    // SEMPRE consolidar backups primeiro
+    const consolidatedWorks = this.consolidateWorksFromAllBackups();
+
     if (!this.isFirebaseAvailable) {
-      return this.getLocalWorks();
+      console.log(
+        "📱 FIREBASE INDISPONÍVEL: Retornando obras consolidadas localmente",
+      );
+      return consolidatedWorks;
     }
 
     try {
       const worksRef = collection(db, "works");
       const q = query(worksRef, orderBy("createdAt", "desc"));
       const snapshot = await getDocs(q);
-      const works = snapshot.docs.map((doc) => ({
+      const firebaseWorks = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
         createdAt:
@@ -207,15 +223,32 @@ export class FirebaseService {
           doc.data().updatedAt,
       })) as Work[];
 
-      // Sync to localStorage as backup
-      localStorage.setItem("works", JSON.stringify(works));
-      return works;
+      // Mesclar obras do Firebase com obras locais consolidadas
+      const allWorks = [...firebaseWorks, ...consolidatedWorks];
+      const uniqueWorks = allWorks.filter(
+        (work, index, self) =>
+          index === self.findIndex((w) => w.id === work.id),
+      );
+
+      // Ordenar por data de criação
+      uniqueWorks.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+
+      console.log(
+        `🔥 FIREBASE + LOCAL: ${firebaseWorks.length} Firebase + ${consolidatedWorks.length} local = ${uniqueWorks.length} total`,
+      );
+
+      // Salvar versão mesclada como backup
+      localStorage.setItem("works", JSON.stringify(uniqueWorks));
+      return uniqueWorks;
     } catch (error) {
       console.error(
-        "Error fetching works from Firebase, falling back to local:",
+        "❌ ERRO FIREBASE: Retornando obras consolidadas localmente:",
         error,
       );
-      return this.getLocalWorks();
+      return consolidatedWorks;
     }
   }
 
@@ -229,9 +262,67 @@ export class FirebaseService {
     }
   }
 
+  // Função para consolidar obras de todos os backups
+  consolidateWorksFromAllBackups(): Work[] {
+    try {
+      console.log("🔄 CONSOLIDANDO OBRAS DE TODOS OS BACKUPS...");
+
+      // Coletar de todas as fontes
+      const works1 = JSON.parse(localStorage.getItem("works") || "[]");
+      const works2 = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      const works3 = JSON.parse(sessionStorage.getItem("temp_works") || "[]");
+
+      // Coletar obras de emergência
+      const emergencyWorks: Work[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("emergency_work_")) {
+          try {
+            const emergencyWork = JSON.parse(localStorage.getItem(key) || "");
+            emergencyWorks.push(emergencyWork);
+          } catch (error) {
+            console.error("Erro ao recuperar obra de emergência:", key);
+          }
+        }
+      }
+
+      // Consolidar tudo em um array único (sem duplicatas)
+      const allWorks = [...works1, ...works2, ...works3, ...emergencyWorks];
+      const uniqueWorks = allWorks.filter(
+        (work, index, self) =>
+          index === self.findIndex((w) => w.id === work.id),
+      );
+
+      // Ordenar por data de criação (mais recentes primeiro)
+      uniqueWorks.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+
+      console.log(
+        `✅ CONSOLIDAÇÃO COMPLETA: ${uniqueWorks.length} obras únicas consolidadas`,
+      );
+      console.log(
+        `📊 FONTES: works(${works1.length}) + leirisonda_works(${works2.length}) + temp_works(${works3.length}) + emergency(${emergencyWorks.length})`,
+      );
+
+      // Salvar versão consolidada como principal
+      localStorage.setItem("works", JSON.stringify(uniqueWorks));
+
+      return uniqueWorks;
+    } catch (error) {
+      console.error("❌ ERRO NA CONSOLIDAÇÃO:", error);
+      return this.getLocalWorks();
+    }
+  }
+
   async createWork(
     workData: Omit<Work, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
+    console.log("🔄 INICIANDO CRIAÇÃO DE OBRA:", workData.clientName);
+
     const newWork: Work = {
       ...workData,
       id: crypto.randomUUID(),
@@ -239,28 +330,93 @@ export class FirebaseService {
       updatedAt: new Date().toISOString(),
     };
 
-    // SEMPRE criar localmente primeiro (sync instantâneo local)
-    const works = this.getLocalWorks();
-    works.push(newWork);
-    localStorage.setItem("works", JSON.stringify(works));
-    console.log("📱 Work created locally first:", newWork.id);
+    try {
+      // SISTEMA DE BACKUP TRIPLO PARA GARANTIR SALVAMENTO
 
-    // Tentar Firebase em paralelo se disponível
-    if (this.isFirebaseAvailable) {
-      try {
-        const worksRef = collection(db, "works");
-        await addDoc(worksRef, {
-          ...newWork,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
+      // 1. BACKUP PRINCIPAL - localStorage "works"
+      const works = this.getLocalWorks();
+      const worksCountBefore = works.length;
+      works.push(newWork);
+      localStorage.setItem("works", JSON.stringify(works));
+
+      // 2. BACKUP SECUNDÁRIO - localStorage "leirisonda_works"
+      const backupWorks = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      backupWorks.push(newWork);
+      localStorage.setItem("leirisonda_works", JSON.stringify(backupWorks));
+
+      // 3. BACKUP TERCIÁRIO - sessionStorage
+      const sessionWorks = JSON.parse(
+        sessionStorage.getItem("temp_works") || "[]",
+      );
+      sessionWorks.push(newWork);
+      sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
+
+      // VERIFICAÇÃO TRIPLA
+      const verification1 = this.getLocalWorks();
+      const verification2 = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      const verification3 = JSON.parse(
+        sessionStorage.getItem("temp_works") || "[]",
+      );
+
+      const savedWork1 = verification1.find((w) => w.id === newWork.id);
+      const savedWork2 = verification2.find((w: any) => w.id === newWork.id);
+      const savedWork3 = verification3.find((w: any) => w.id === newWork.id);
+
+      if (savedWork1 && savedWork2 && savedWork3) {
+        console.log(
+          `✅ OBRA SALVA COM BACKUP TRIPLO: ${newWork.id} (${worksCountBefore} -> ${verification1.length} obras)`,
+        );
+      } else {
+        console.error("⚠️ BACKUP TRIPLO FALHOU:", {
+          backup1: !!savedWork1,
+          backup2: !!savedWork2,
+          backup3: !!savedWork3,
         });
-        console.log("🔥 Work synced to Firebase:", newWork.id);
-      } catch (error) {
-        console.error("⚠️ Firebase sync failed, work saved locally:", error);
+        throw new Error("Falha no sistema de backup triplo");
+      }
+
+      // TENTATIVA FIREBASE (em paralelo, não bloqueia)
+      if (this.isFirebaseAvailable) {
+        try {
+          const worksRef = collection(db, "works");
+          const docRef = await addDoc(worksRef, {
+            ...newWork,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
+          console.log("🔥 OBRA SINCRONIZADA COM FIREBASE:", docRef.id);
+        } catch (error) {
+          console.error(
+            "⚠️ FIREBASE SYNC FALHOU, obra salva localmente:",
+            error,
+          );
+        }
+      } else {
+        console.log("📱 FIREBASE INDISPONÍVEL, obra salva com backup triplo");
+      }
+
+      console.log("✅ CRIAÇÃO DE OBRA CONCLUÍDA COM SUCESSO:", newWork.id);
+      return newWork.id;
+    } catch (error) {
+      console.error("❌ ERRO CRÍTICO NA CRIAÇÃO DE OBRA:", error);
+
+      // RECUPERAÇÃO DE EMERGÊNCIA - tentar salvar pelo menos em um local
+      try {
+        localStorage.setItem(
+          `emergency_work_${newWork.id}`,
+          JSON.stringify(newWork),
+        );
+        console.log("🚨 OBRA SALVA EM MODO DE EMERGÊNCIA");
+        return newWork.id;
+      } catch (emergencyError) {
+        console.error("❌ FALHA TOTAL NO SALVAMENTO:", emergencyError);
+        throw new Error("Falha crítica: não foi possível salvar a obra");
       }
     }
-
-    return newWork.id;
   }
 
   private createLocalWork(

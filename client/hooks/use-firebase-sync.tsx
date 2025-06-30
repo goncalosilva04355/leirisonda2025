@@ -100,20 +100,25 @@ export function useFirebaseSync() {
     [user, isFirebaseAvailable, isOnline],
   );
 
-  // Carregar dados locais como fallback
+  // Carregar dados locais como fallback com consolidação automática
   const loadLocalDataAsFallback = useCallback(() => {
     try {
-      const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      // Usar consolidação automática para obras
+      const consolidatedWorks =
+        firebaseService.consolidateWorksFromAllBackups();
+
       const localMaintenances = JSON.parse(
         localStorage.getItem("pool_maintenances") || "[]",
       );
       const localUsers = JSON.parse(localStorage.getItem("users") || "[]");
 
-      setWorks(localWorks);
+      setWorks(consolidatedWorks);
       setMaintenances(localMaintenances);
       setUsers(localUsers);
 
-      console.log("📱 Dados locais carregados como fallback");
+      console.log(
+        `📱 Dados locais carregados com consolidação: ${consolidatedWorks.length} obras`,
+      );
     } catch (error) {
       console.error("❌ Erro ao carregar dados locais:", error);
     }
