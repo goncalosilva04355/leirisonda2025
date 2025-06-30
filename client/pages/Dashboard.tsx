@@ -852,6 +852,21 @@ export function Dashboard() {
               )}
             </div>
           </div>
+
+          {/* Sync Test (apenas para administradores) */}
+          {user?.role === "admin" && (
+            <div className="card-leirisonda">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <RefreshCw className="w-4 h-4 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Teste de Sincronização
+                </h3>
+              </div>
+              <SyncTestButton />
+            </div>
+          )}
         </div>
       </div>
     </div>
