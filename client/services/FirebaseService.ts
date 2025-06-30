@@ -144,7 +144,7 @@ export class FirebaseService {
         ...updates,
         updatedAt: serverTimestamp(),
       });
-      console.log("🔥 User updated in Firebase:", userId);
+      console.log("���� User updated in Firebase:", userId);
     } catch (error) {
       console.error(
         "Error updating user in Firebase, falling back to local:",
@@ -438,9 +438,7 @@ export class FirebaseService {
       const savedWork3 = verification3.find((w: any) => w.id === newWork.id);
 
       if (savedWork1 && savedWork2 && savedWork3) {
-        console.log(
-          `✅ OBRA SALVA COM BACKUP TRIPLO LOCAL: ${newWork.id} (${worksCountBefore} -> ${verification1.length} obras)`,
-        );
+        console.log(`✅ OBRA SALVA COM BACKUP TRIPLO LOCAL: ${newWork.id}`);
 
         // VERIFICAÇÃO CRÍTICA DAS ATRIBUIÇÕES NOS BACKUPS
         if (newWork.assignedUsers && newWork.assignedUsers.length > 0) {
