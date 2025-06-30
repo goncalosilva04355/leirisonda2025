@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
+import { AlertTriangle } from "lucide-react";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
