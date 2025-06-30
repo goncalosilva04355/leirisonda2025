@@ -28,6 +28,7 @@ export function DebugWorks() {
     useFirebaseSync();
   const [debugInfo, setDebugInfo] = useState<any>({});
   const [isCreatingTest, setIsCreatingTest] = useState(false);
+  const [isTestingSync, setIsTestingSync] = useState(false);
 
   // Restringir acesso apenas ao Gonçalo
   if (!user || user.email !== "gongonsilva@gmail.com") {
