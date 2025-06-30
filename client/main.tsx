@@ -108,6 +108,23 @@ const initializeApp = () => {
   try {
     console.log("🚀 Starting Leirisonda...");
 
+    // Check for problematic URLs and redirect to safe route
+    const currentUrl = window.location.href;
+    const currentPath = window.location.pathname + window.location.search;
+
+    console.log("📍 Current URL:", currentUrl);
+    console.log("📍 Current path:", currentPath);
+
+    // Se estiver numa URL problemática que causa loop, redirecionar para login/dashboard
+    if (
+      currentPath.includes("/works?status=pendente") ||
+      currentPath.includes("/works?") ||
+      currentPath.includes("status=pendente")
+    ) {
+      console.log("⚠️ Detected problematic URL, redirecting to safe route...");
+      window.history.replaceState({}, "", "/login");
+    }
+
     // Verify DOM is ready
     if (document.readyState === "loading") {
       console.log("⏳ DOM still loading, waiting...");
