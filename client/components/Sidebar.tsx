@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import { Button } from "./ui/button";
+import { NotificationIndicator } from "./NotificationIndicator";
 
 interface SidebarProps {
   isOpen: boolean;
