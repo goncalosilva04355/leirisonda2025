@@ -176,27 +176,51 @@ export function CreateWork() {
         cliente: workData.clientName,
         folhaObra: workData.workSheetNumber,
         tipo: workData.type,
+        atribuicoes: workData.assignedUsers,
       });
 
       // Create work using Firebase sync
       const workId = await createWork(workData);
       console.log("✅ OBRA CRIADA COM SUCESSO ID:", workId);
 
-      // Verificar se obra foi realmente salva
-      const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
-      const savedWork = savedWorks.find((w: any) => w.id === workId);
+      // Aguardar um pouco para sincronização
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (savedWork) {
-        console.log(
-          "✅ OBRA VERIFICADA NO LOCALSTORAGE:",
-          savedWork.clientName,
-        );
+      // Verificar se obra foi realmente salva com backups
+      const savedWorks1 = JSON.parse(localStorage.getItem("works") || "[]");
+      const savedWorks2 = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      const savedWorks3 = JSON.parse(
+        sessionStorage.getItem("temp_works") || "[]",
+      );
+
+      const savedWork1 = savedWorks1.find((w: any) => w.id === workId);
+      const savedWork2 = savedWorks2.find((w: any) => w.id === workId);
+      const savedWork3 = savedWorks3.find((w: any) => w.id === workId);
+
+      if (savedWork1 || savedWork2 || savedWork3) {
+        const finalWork = savedWork1 || savedWork2 || savedWork3;
+        console.log("✅ OBRA VERIFICADA EM MÚLTIPLOS BACKUPS:", {
+          cliente: finalWork.clientName,
+          folhaObra: finalWork.workSheetNumber,
+          atribuicoes: finalWork.assignedUsers,
+          backups: {
+            works: !!savedWork1,
+            leirisonda_works: !!savedWork2,
+            temp_works: !!savedWork3,
+          },
+        });
+
+        // Verificar atribuições específicas
+        if (finalWork.assignedUsers && finalWork.assignedUsers.length > 0) {
+          console.log("🎯 ATRIBUIÇÕES CONFIRMADAS:", finalWork.assignedUsers);
+        }
+
         console.log("🧭 REDIRECIONANDO PARA LISTA DE OBRAS...");
-
-        // Navigate to works list
         navigate("/works");
       } else {
-        throw new Error("Obra criada mas não encontrada no localStorage");
+        throw new Error("Obra criada mas não encontrada em nenhum backup");
       }
     } catch (err) {
       console.error("❌ ERRO CRÍTICO AO CRIAR OBRA:", err);
