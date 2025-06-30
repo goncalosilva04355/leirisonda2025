@@ -47,6 +47,7 @@ export interface Work {
   status: "pendente" | "em_progresso" | "concluida";
   vehicles: string[]; // Viaturas utilizadas
   technicians: string[]; // Técnicos que efetuaram o trabalho
+  assignedUsers: string[]; // IDs dos usuários a quem a obra foi atribuída
   photos: WorkPhoto[];
   observations: string;
   workPerformed: string; // Trabalho realizado
