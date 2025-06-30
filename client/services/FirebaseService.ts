@@ -157,6 +157,35 @@ export class FirebaseService {
     }
   }
 
+  async deleteUser(userId: string): Promise<void> {
+    if (!this.isFirebaseAvailable) {
+      return this.deleteLocalUser(userId);
+    }
+
+    try {
+      const userRef = doc(db, "users", userId);
+      await deleteDoc(userRef);
+      console.log("🔥 User deleted from Firebase:", userId);
+    } catch (error) {
+      console.error(
+        "Error deleting user from Firebase, falling back to local:",
+        error,
+      );
+      this.deleteLocalUser(userId);
+    }
+  }
+
+  private deleteLocalUser(userId: string): void {
+    try {
+      const users = this.getLocalUsers();
+      const filteredUsers = users.filter((u) => u.id !== userId);
+      localStorage.setItem("users", JSON.stringify(filteredUsers));
+      console.log("📱 User deleted locally:", userId);
+    } catch (error) {
+      console.error("Error deleting local user:", error);
+    }
+  }
+
   // Works Collection
   async getWorks(): Promise<Work[]> {
     if (!this.isFirebaseAvailable) {
