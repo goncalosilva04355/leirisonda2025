@@ -10,8 +10,6 @@ import {
   Mail,
   Droplets,
   Camera,
-  Wifi,
-  WifiOff,
   AlertCircle,
 } from "lucide-react";
 import { PoolMaintenance } from "@shared/types";
