@@ -206,7 +206,7 @@ export function Login() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Palavra-passe"
                   disabled={isSubmitting}
                   style={{
                     width: "100%",
