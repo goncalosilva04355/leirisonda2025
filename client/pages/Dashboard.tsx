@@ -283,26 +283,45 @@ export function Dashboard() {
             </div>
           </div>
 
-          {/* Debug button for Gonçalo */}
-          {user?.email === "gongonsilva@gmail.com" && (
-            <div className="flex items-center space-x-3">
-              <div className="text-xs text-gray-500">
-                <div>
-                  Sync:{" "}
-                  {isSyncing ? "Em curso..." : isOnline ? "Online" : "Offline"}
-                </div>
-                {lastSync && <div>Último: {format(lastSync, "HH:mm:ss")}</div>}
+          {/* Sync controls */}
+          <div className="flex items-center space-x-3">
+            <div className="text-xs text-gray-500 text-right">
+              <div>
+                Sync:{" "}
+                {isSyncing ? "Em curso..." : isOnline ? "Online" : "Offline"}
               </div>
+              {lastSync && <div>Último: {format(lastSync, "HH:mm:ss")}</div>}
+            </div>
+
+            {/* Manual sync button for all users */}
+            <Button
+              onClick={async () => {
+                console.log("🔄 Sincronização manual iniciada pelo usuário");
+                await syncData();
+              }}
+              variant="outline"
+              size="sm"
+              disabled={isSyncing}
+              className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+            >
+              <RefreshCw
+                className={`w-3 h-3 mr-1 ${isSyncing ? "animate-spin" : ""}`}
+              />
+              {isSyncing ? "Sync..." : "Sync"}
+            </Button>
+
+            {/* Debug button for Gonçalo only */}
+            {user?.email === "gongonsilva@gmail.com" && (
               <Button
                 onClick={() => navigate("/debug-works")}
                 variant="outline"
                 size="sm"
                 className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
               >
-                🔍 Debug Obras
+                🔍 Debug
               </Button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
