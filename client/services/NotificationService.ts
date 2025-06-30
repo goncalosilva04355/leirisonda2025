@@ -934,7 +934,7 @@ class NotificationServiceClass {
         if (this.messaging) {
           diagnostics.firebaseStatus = "Initialized";
 
-          // Tentar obter token
+          // Tentar obter token com melhor tratamento de erros
           try {
             const token = await getToken(this.messaging);
             diagnostics.fcmTokenStatus = token
@@ -942,14 +942,40 @@ class NotificationServiceClass {
               : "Failed - No Token";
             if (!token) {
               diagnostics.recommendations.push(
-                "Não foi possível obter token FCM - verifique VAPID key",
+                "Não foi possível obter token FCM - verificar configuração Firebase",
               );
             }
           } catch (tokenError) {
-            diagnostics.fcmTokenStatus = `Error: ${tokenError}`;
-            diagnostics.recommendations.push(
-              "Erro ao obter token FCM - possível problema com VAPID key",
-            );
+            if (tokenError instanceof Error) {
+              if (
+                tokenError.message.includes("messaging/invalid-vapid-key") ||
+                tokenError.message.includes(
+                  "string did not match the expected pattern",
+                )
+              ) {
+                diagnostics.fcmTokenStatus = "Error: Invalid VAPID Key";
+                diagnostics.recommendations.push(
+                  "VAPID key inválida - configurar chave correta no Firebase Console",
+                );
+              } else if (
+                tokenError.message.includes("messaging/unsupported-browser")
+              ) {
+                diagnostics.fcmTokenStatus = "Error: Unsupported Browser";
+                diagnostics.recommendations.push(
+                  "Browser não suporta notificações push FCM",
+                );
+              } else {
+                diagnostics.fcmTokenStatus = `Error: ${tokenError.message}`;
+                diagnostics.recommendations.push(
+                  `Erro FCM: ${tokenError.message}`,
+                );
+              }
+            } else {
+              diagnostics.fcmTokenStatus = "Error: Unknown";
+              diagnostics.recommendations.push(
+                "Erro desconhecido ao obter token FCM",
+              );
+            }
           }
         } else {
           diagnostics.firebaseStatus = "Not Initialized";
