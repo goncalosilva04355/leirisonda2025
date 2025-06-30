@@ -89,99 +89,26 @@ function App() {
   );
 }
 
-// Enhanced error handling and diagnostics system
-const initializeApp = async () => {
+// Simple and robust initialization
+const initializeApp = () => {
   try {
-    console.log("🚀 Starting Leirisonda initialization...");
+    console.log("🚀 Starting Leirisonda...");
 
-    // Pre-flight checks
-    console.log("🔍 Running pre-flight checks...");
-
-    // Check if DOM is ready
-    if (document.readyState === "loading") {
-      console.log("⏳ Waiting for DOM to load...");
-      await new Promise((resolve) => {
-        document.addEventListener("DOMContentLoaded", resolve);
-      });
-    }
-
-    // Check root element
     const rootElement = document.getElementById("root");
     if (!rootElement) {
-      throw new Error("Root element (#root) not found in DOM");
-    }
-    console.log("✅ Root element found");
-
-    // Check React is available
-    if (!React || !ReactDOM) {
-      throw new Error("React or ReactDOM not loaded");
-    }
-    console.log("✅ React libraries loaded");
-
-    // Check if already initialized
-    if ((rootElement as any)._reactRoot) {
-      console.log("ℹ️ App already initialized, skipping...");
-      return;
+      throw new Error("Root element not found");
     }
 
     // Clear any previous content
     rootElement.innerHTML = "";
 
-    // Create React root
-    console.log("📦 Creating React root...");
+    // Create React root and render immediately
     const root = ReactDOM.createRoot(rootElement);
-    (rootElement as any)._reactRoot = root;
-    console.log("✅ React root created");
+    root.render(<App />);
 
-    // Render app with timeout protection
-    console.log("🎨 Rendering Leirisonda app...");
-
-    // Set loading indicator first
-    rootElement.innerHTML = `
-      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgb(97, 165, 214) 0%, rgb(0, 119, 132) 100%);">
-        <div style="text-align: center; color: white;">
-          <div style="width: 60px; height: 60px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; margin: 0 auto 20px; animation: spin 1s linear infinite;"></div>
-          <h2 style="margin: 0; font-size: 24px; font-weight: 600;">Leirisonda</h2>
-          <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">A carregar aplicação...</p>
-        </div>
-      </div>
-      <style>
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      </style>
-    `;
-
-    // Render with timeout
-    const renderPromise = new Promise<void>((resolve, reject) => {
-      try {
-        root.render(<App />);
-        // Give React time to render
-        setTimeout(() => {
-          console.log("✅ App render completed");
-          resolve();
-        }, 100);
-      } catch (error) {
-        reject(error);
-      }
-    });
-
-    // Timeout protection
-    const timeoutPromise = new Promise<void>((_, reject) => {
-      setTimeout(() => {
-        reject(new Error("App render timeout after 10 seconds"));
-      }, 10000);
-    });
-
-    await Promise.race([renderPromise, timeoutPromise]);
-
-    console.log("🎉 Leirisonda app initialized successfully!");
-
-    // Store successful initialization
-    sessionStorage.setItem("leirisonda_init_success", Date.now().toString());
+    console.log("✅ Leirisonda loaded successfully!");
   } catch (error) {
-    console.error("🚨 Fatal error during app initialization:", error);
+    console.error("❌ Error loading app:", error);
     showFallbackError(error);
   }
 };
@@ -237,6 +164,18 @@ const createErrorHTML = (error: any) => {
         <!-- Action Buttons -->
         <div style="space-y: 0.75rem;">
           <button
+            onclick="tryAgain()"
+            style="width: 100%; display: flex; align-items: center; justify-content: center; padding: 0.75rem 1rem; background-color: #16a34a; color: white; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 500; text-decoration: none; transition: background-color 0.2s; margin-bottom: 0.75rem;"
+            onmouseover="this.style.backgroundColor='#15803d'"
+            onmouseout="this.style.backgroundColor='#16a34a'"
+          >
+            <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Tentar Novamente
+          </button>
+
+          <button
             onclick="window.location.reload()"
             style="width: 100%; display: flex; align-items: center; justify-content: center; padding: 0.75rem 1rem; background-color: #2563eb; color: white; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 500; text-decoration: none; transition: background-color 0.2s; margin-bottom: 0.75rem;"
             onmouseover="this.style.backgroundColor='#1d4ed8'"
@@ -246,6 +185,18 @@ const createErrorHTML = (error: any) => {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
             </svg>
             Recarregar Página
+          </button>
+
+          <button
+            onclick="window.location.href='/login'"
+            style="width: 100%; display: flex; align-items: center; justify-content: center; padding: 0.75rem 1rem; background-color: #0891b2; color: white; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 500; text-decoration: none; transition: background-color 0.2s; margin-bottom: 0.75rem;"
+            onmouseover="this.style.backgroundColor='#0e7490'"
+            onmouseout="this.style.backgroundColor='#0891b2'"
+          >
+            <svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+            Ir para Login
           </button>
 
           <button
@@ -298,8 +249,23 @@ const createErrorHTML = (error: any) => {
     </div>
 
     <script>
+      function tryAgain() {
+        console.log('🔄 User clicked try again');
+        // Clear error flags first
+        sessionStorage.removeItem('leirisonda_error');
+        localStorage.removeItem('leirisonda_error_state');
+
+        // Try to reinitialize the app
+        if (window.initializeApp) {
+          window.initializeApp();
+        } else {
+          window.location.reload();
+        }
+      }
+
       function clearAppData() {
         try {
+          console.log('🧹 Clearing app data...');
           // Clear localStorage
           localStorage.clear();
           // Clear sessionStorage
@@ -316,12 +282,16 @@ const createErrorHTML = (error: any) => {
           window.location.reload();
         } catch (error) {
           console.error('Error clearing data:', error);
-          alert('Erro ao limpar dados. Por favor, tente manualmente limpar o cache do navegador.');
+          alert('Erro ao limpar dados. A recarregar página...');
+          window.location.reload();
         }
       }
     </script>
   `;
 };
+
+// Expose initializeApp globally for error recovery
+(window as any).initializeApp = initializeApp;
 
 // Handle different loading states
 if (document.readyState === "loading") {

@@ -19,33 +19,57 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(error: Error): State {
+    console.log("🚨 ErrorBoundary caught error:", error.message);
+
     // Handle common development errors
     if (error.message?.includes("useAuth must be used within")) {
-      console.warn(
-        "AuthProvider context error caught, ignoring during development",
-      );
-      return { hasError: false, retryCount: 0 };
+      console.warn("AuthProvider context error caught, will try to recover...");
+      // Mark for retry instead of ignoring
+      return { hasError: true, error, retryCount: 0 };
     }
 
     // Handle Firebase initialization errors
     if (
       error.message?.includes("Firebase") ||
-      error.message?.includes("firebase")
+      error.message?.includes("firebase") ||
+      error.message?.includes("auth/") ||
+      error.message?.includes("firestore/")
     ) {
-      console.warn("Firebase error caught:", error.message);
-      // Try to continue without breaking the app
-      return { hasError: false, retryCount: 0 };
+      console.warn(
+        "Firebase error caught, will show recovery options:",
+        error.message,
+      );
+      return { hasError: true, error, retryCount: 0 };
     }
 
     // Handle module loading errors
     if (
       error.message?.includes("Loading chunk") ||
-      error.message?.includes("ChunkLoadError")
+      error.message?.includes("ChunkLoadError") ||
+      error.message?.includes("Failed to fetch")
     ) {
-      console.warn("Chunk loading error, will reload");
-      // Auto-reload for chunk errors
-      setTimeout(() => window.location.reload(), 1000);
-      return { hasError: false, retryCount: 0 };
+      console.warn("Chunk loading error, will show reload options");
+      return { hasError: true, error, retryCount: 0 };
+    }
+
+    // Handle network/connectivity errors
+    if (
+      error.message?.includes("NetworkError") ||
+      error.message?.includes("Failed to fetch") ||
+      error.message?.includes("fetch")
+    ) {
+      console.warn("Network error caught:", error.message);
+      return { hasError: true, error, retryCount: 0 };
+    }
+
+    // Handle import/module errors
+    if (
+      error.message?.includes("Cannot resolve module") ||
+      error.message?.includes("Module not found") ||
+      error.message?.includes("import")
+    ) {
+      console.warn("Module import error:", error.message);
+      return { hasError: true, error, retryCount: 0 };
     }
 
     return { hasError: true, error, retryCount: 0 };
@@ -78,6 +102,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   private handleReset = () => {
+    console.log("🔄 User requested error reset");
     this.setState({
       hasError: false,
       error: undefined,
@@ -87,12 +112,16 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   private handleReload = () => {
+    console.log("🔄 User requested page reload");
     // Clear any stored error state
     localStorage.removeItem("app_error_state");
+    localStorage.removeItem("leirisonda_error_state");
+    sessionStorage.clear();
     window.location.reload();
   };
 
   private handleGoHome = () => {
+    console.log("🏠 User requested navigation to home");
     // Clear error state and navigate to home
     this.setState({
       hasError: false,
@@ -101,6 +130,36 @@ export class ErrorBoundary extends Component<Props, State> {
       retryCount: 0,
     });
     window.location.href = "/dashboard";
+  };
+
+  private handleClearData = () => {
+    console.log("🧹 User requested data clearing");
+    try {
+      // Clear all storage
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Clear any caches if available
+      if ("caches" in window) {
+        caches.keys().then((names) => {
+          names.forEach((name) => {
+            caches.delete(name);
+          });
+        });
+      }
+
+      alert("Dados limpos! A recarregar página...");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error clearing data:", error);
+      alert("Erro ao limpar dados. A recarregar página...");
+      window.location.reload();
+    }
+  };
+
+  private handleSystemStatus = () => {
+    console.log("🔍 User requested system diagnosis");
+    window.location.href = "/system-status";
   };
 
   public render() {
@@ -142,6 +201,22 @@ export class ErrorBoundary extends Component<Props, State> {
               >
                 <Home className="w-4 h-4 mr-2" />
                 Ir para Início
+              </button>
+
+              <button
+                onClick={this.handleSystemStatus}
+                className="w-full inline-flex items-center justify-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
+                <AlertTriangle className="w-4 h-4 mr-2" />
+                Diagnóstico do Sistema
+              </button>
+
+              <button
+                onClick={this.handleClearData}
+                className="w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                <AlertTriangle className="w-4 h-4 mr-2" />
+                Limpar Dados e Reiniciar
               </button>
             </div>
 
