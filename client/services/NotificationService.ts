@@ -110,7 +110,7 @@ class NotificationServiceClass {
           } catch (vapidError) {
             console.error("❌ Erro com VAPID key personalizada:", vapidError);
             console.log(
-              "���️ PROBLEMA: VAPID key pode estar incorreta ou expirada",
+              "⚠️ PROBLEMA: VAPID key pode estar incorreta ou expirada",
             );
             console.log(
               "💡 SOLUÇÃO: Notificações funcionarão apenas localmente, sem FCM push",
@@ -145,7 +145,7 @@ class NotificationServiceClass {
   }
 
   private async initializeNativeNotifications() {
-    console.log("📱 Inicializando notifica��ões nativas...");
+    console.log("📱 Inicializando notificações nativas...");
 
     // Pedir permissão para notificações push
     let permStatus = await PushNotifications.checkPermissions();
@@ -452,7 +452,7 @@ class NotificationServiceClass {
             }
           }
         } else {
-          console.warn(`⚠️ Usuário n��o encontrado: ${userId}`);
+          console.warn(`⚠️ Usuário não encontrado: ${userId}`);
         }
       });
 
@@ -624,9 +624,15 @@ class NotificationServiceClass {
               console.log(
                 `✅ Push de status enviado com sucesso para ${user.name}`,
               );
+              // Marcar notificação como entregue
+              this.markNotificationAsDelivered(
+                userId,
+                work.id,
+                "work_status_change",
+              );
             } else {
               console.warn(
-                `⚠️ Falha no push de status para ${user.name} - mostrando local se for usuário atual`,
+                `⚠️ Push de status falhou para ${user.name} - será reentregue quando usuário fizer login`,
               );
 
               // Fallback: mostrar notificação local apenas se for o usuário atual
@@ -634,6 +640,11 @@ class NotificationServiceClass {
                 await this.showLocalNotification(payload);
                 console.log(
                   `💡 Notificação local de status mostrada para usuário atual: ${user.name}`,
+                );
+                this.markNotificationAsDelivered(
+                  userId,
+                  work.id,
+                  "work_status_change",
                 );
               }
             }
@@ -648,6 +659,11 @@ class NotificationServiceClass {
               await this.showLocalNotification(payload);
               console.log(
                 `💡 Fallback local de status para usuário atual: ${user.name}`,
+              );
+              this.markNotificationAsDelivered(
+                userId,
+                work.id,
+                "work_status_change",
               );
             }
           }
