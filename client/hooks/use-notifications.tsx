@@ -142,10 +142,10 @@ export function useNotifications() {
       }
 
       try {
-        await notificationService.notifyWorkStatusChange(
+        await NotificationService.notifyWorkStatusChange(
           work,
+          work.status,
           newStatus,
-          assignedUsers,
         );
       } catch (error) {
         console.error(
