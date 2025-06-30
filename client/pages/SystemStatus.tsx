@@ -1,5 +1,13 @@
 import React from "react";
-import { CheckCircle, XCircle, AlertCircle, RefreshCw } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  RefreshCw,
+  ArrowLeft,
+} from "lucide-react";
+import { useAuth } from "@/components/AuthProvider";
+import { Link } from "react-router-dom";
 
 export function SystemStatus() {
   const [checks, setChecks] = React.useState({
