@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { AlertCircle, Users, Eye, EyeOff } from "lucide-react";
+import { AlertCircle, Users, Eye, EyeOff, Trash2 } from "lucide-react";
+import { DefaultDataService } from "@/services/DefaultData";
 
 interface UserDebugInfo {
   id: string;
