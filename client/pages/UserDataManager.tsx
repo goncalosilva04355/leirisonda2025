@@ -18,7 +18,7 @@ export function UserDataManager() {
 
   const exportUsers = () => {
     try {
-      const users = localStorage.getItem("leirisonda_users");
+      const users = localStorage.getItem("users");
       const passwords: { [key: string]: string } = {};
 
       if (users) {
@@ -73,10 +73,7 @@ export function UserDataManager() {
 
         if (importData.users && importData.passwords) {
           // Import users
-          localStorage.setItem(
-            "leirisonda_users",
-            JSON.stringify(importData.users),
-          );
+          localStorage.setItem("users", JSON.stringify(importData.users));
 
           // Import passwords
           Object.entries(importData.passwords).forEach(([userId, password]) => {
@@ -105,14 +102,14 @@ export function UserDataManager() {
         "Tem a certeza que quer apagar todos os dados dos utilizadores? Esta ação não pode ser desfeita.",
       )
     ) {
-      const users = localStorage.getItem("leirisonda_users");
+      const users = localStorage.getItem("users");
       if (users) {
         const parsedUsers = JSON.parse(users);
         parsedUsers.forEach((user: any) => {
           localStorage.removeItem(`password_${user.id}`);
         });
       }
-      localStorage.removeItem("leirisonda_users");
+      localStorage.removeItem("users");
 
       setMessage("Todos os dados dos utilizadores foram apagados.");
       setMessageType("success");
@@ -120,7 +117,7 @@ export function UserDataManager() {
   };
 
   const getCurrentStats = () => {
-    const users = localStorage.getItem("leirisonda_users");
+    const users = localStorage.getItem("users");
     return users ? JSON.parse(users).length : 0;
   };
 
