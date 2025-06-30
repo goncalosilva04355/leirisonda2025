@@ -342,7 +342,28 @@ class NotificationServiceClass {
       const userTokens = JSON.parse(
         localStorage.getItem("userNotificationTokens") || "{}",
       );
-      const allUsers = JSON.parse(localStorage.getItem("users") || "[]");
+
+      // Buscar usuários de múltiplas fontes
+      const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+
+      // Usuários globais predefinidos
+      const globalUsers = [
+        {
+          id: "admin_goncalo",
+          email: "gongonsilva@gmail.com",
+          name: "Gonçalo Fonseca",
+          role: "admin" as const,
+        },
+        {
+          id: "user_alexandre",
+          email: "alexkamaryta@gmail.com",
+          name: "Alexandre Fernandes",
+          role: "user" as const,
+        },
+      ];
+
+      // Combinar ambas as listas
+      const allUsers = [...storedUsers, ...globalUsers];
 
       const statusLabels = {
         pendente: "Pendente",
