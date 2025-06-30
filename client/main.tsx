@@ -89,125 +89,26 @@ function App() {
   );
 }
 
-// Enhanced error handling and diagnostics system
-const initializeApp = async () => {
+// Simple and robust initialization
+const initializeApp = () => {
   try {
-    console.log("🚀 Starting Leirisonda initialization...");
+    console.log("🚀 Starting Leirisonda...");
 
-    // Pre-flight checks
-    console.log("🔍 Running pre-flight checks...");
-
-    // Check if DOM is ready
-    if (document.readyState === "loading") {
-      console.log("⏳ Waiting for DOM to load...");
-      await new Promise((resolve) => {
-        document.addEventListener("DOMContentLoaded", resolve);
-      });
-    }
-
-    // Check root element
     const rootElement = document.getElementById("root");
     if (!rootElement) {
-      throw new Error("Root element (#root) not found in DOM");
-    }
-    console.log("✅ Root element found");
-
-    // Check React is available
-    if (!React || !ReactDOM) {
-      throw new Error("React or ReactDOM not loaded");
-    }
-    console.log("✅ React libraries loaded");
-
-    // Check if already initialized
-    if ((rootElement as any)._reactRoot) {
-      console.log("ℹ️ App already initialized, skipping...");
-      return;
+      throw new Error("Root element not found");
     }
 
     // Clear any previous content
     rootElement.innerHTML = "";
 
-    // Check for previous errors and clear them
-    const hasError = sessionStorage.getItem("leirisonda_error");
-    if (hasError) {
-      console.log("🧹 Clearing previous error state...");
-      sessionStorage.removeItem("leirisonda_error");
-      localStorage.removeItem("leirisonda_error_state");
-    }
-
-    // Create React root
-    console.log("📦 Creating React root...");
+    // Create React root and render immediately
     const root = ReactDOM.createRoot(rootElement);
-    (rootElement as any)._reactRoot = root;
-    console.log("✅ React root created");
+    root.render(<App />);
 
-    // Render app with timeout protection
-    console.log("🎨 Rendering Leirisonda app...");
-
-    // Set loading indicator first
-    rootElement.innerHTML = `
-      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgb(97, 165, 214) 0%, rgb(0, 119, 132) 100%);">
-        <div style="text-align: center; color: white;">
-          <div style="width: 60px; height: 60px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; margin: 0 auto 20px; animation: spin 1s linear infinite;"></div>
-          <h2 style="margin: 0; font-size: 24px; font-weight: 600;">Leirisonda</h2>
-          <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">A carregar aplicação...</p>
-        </div>
-      </div>
-      <style>
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      </style>
-    `;
-
-    // Render with robust error handling
-    const renderPromise = new Promise<void>((resolve, reject) => {
-      try {
-        // Wrap App in additional error boundary
-        const AppWithRecovery = () => {
-          return (
-            <React.StrictMode>
-              <App />
-            </React.StrictMode>
-          );
-        };
-
-        root.render(<AppWithRecovery />);
-
-        // Give React time to render and catch initial errors
-        setTimeout(() => {
-          console.log("✅ App render completed");
-          resolve();
-        }, 200);
-      } catch (error) {
-        console.error("🚨 Error during React render:", error);
-        reject(error);
-      }
-    });
-
-    // Timeout protection
-    const timeoutPromise = new Promise<void>((_, reject) => {
-      setTimeout(() => {
-        reject(new Error("App render timeout after 15 seconds"));
-      }, 15000);
-    });
-
-    await Promise.race([renderPromise, timeoutPromise]);
-
-    console.log("🎉 Leirisonda app initialized successfully!");
-
-    // Store successful initialization
-    sessionStorage.setItem("leirisonda_init_success", Date.now().toString());
-
-    // Clear any error flags
-    sessionStorage.removeItem("leirisonda_error");
+    console.log("✅ Leirisonda loaded successfully!");
   } catch (error) {
-    console.error("🚨 Fatal error during app initialization:", error);
-
-    // Mark that we had an error
-    sessionStorage.setItem("leirisonda_error", "true");
-
+    console.error("❌ Error loading app:", error);
     showFallbackError(error);
   }
 };
