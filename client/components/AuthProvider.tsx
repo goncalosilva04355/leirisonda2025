@@ -239,6 +239,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (email: string, password: string): Promise<boolean> => {
       try {
         setIsLoading(true);
+        setInitError(null);
 
         // Check if Firebase is available
         if (auth && auth !== null) {
@@ -262,16 +263,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               setUser(userData);
               localStorage.setItem("leirisonda_user", JSON.stringify(userData));
 
-              // Start real-time data sync
-              console.log("🔄 Starting Firebase real-time sync...");
-              await firebaseService.syncLocalDataToFirebase();
+              // Start real-time data sync (with error handling)
+              try {
+                console.log("🔄 Starting Firebase real-time sync...");
+                await firebaseService.syncLocalDataToFirebase();
+              } catch (syncError) {
+                console.warn(
+                  "⚠️ Firebase sync failed, continuing with local data:",
+                  syncError,
+                );
+              }
 
               return true;
             }
 
             return false;
           } catch (firebaseError: any) {
-            console.log("⚠️ Firebase Auth failed, trying legacy login...");
+            console.log(
+              "⚠️ Firebase Auth failed, trying legacy login...",
+              firebaseError.message,
+            );
           }
         } else {
           console.log("📱 Firebase not available, using local authentication");
