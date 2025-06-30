@@ -624,6 +624,18 @@ export function Dashboard() {
                   </Link>
                 </Button>
               )}
+              {user?.email === "gongonsilva@gmail.com" && (
+                <Button
+                  variant="outline"
+                  className="w-full justify-start hover-leirisonda h-auto py-3 border-blue-200 text-blue-700 hover:bg-blue-50"
+                  asChild
+                >
+                  <Link to="/data-sync-diagnostic">
+                    <Activity className="w-4 h-4 mr-3" />
+                    Diagnóstico de Sincronização
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
 
