@@ -33,7 +33,7 @@ export function Login() {
   const { user, login, isLoading } = authContext;
 
   // Wait for auth to be ready
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       setAuthReady(true);
     }, 100);
