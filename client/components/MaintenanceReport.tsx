@@ -189,7 +189,7 @@ export function MaintenanceReport({
       <!-- Intervention Details -->
       <div class="section">
         <div class="section-header">
-          <div class="section-title">📋 Detalhes Completos da Intervenção</div>
+          <div class="section-title">Detalhes da Intervenção</div>
         </div>
         <div class="section-content">
           <div class="info-grid">
