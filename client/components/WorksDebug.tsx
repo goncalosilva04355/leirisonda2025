@@ -22,12 +22,27 @@ export function WorksDebug() {
     const alexandreUser = allUsers.find(
       (u) => u.email === "alexkamaryta@gmail.com",
     );
+    console.log("🔍 Usuário Alexandre encontrado:", alexandreUser);
+    console.log("🔍 Total obras:", works?.length);
+    console.log(
+      "🔍 Obras com assignedUsers:",
+      works?.filter((w) => w.assignedUsers && w.assignedUsers.length > 0),
+    );
+
     const worksAssignedToAlexandre =
-      works?.filter(
-        (work) =>
+      works?.filter((work) => {
+        const isAssigned =
           work.assignedUsers &&
-          work.assignedUsers.includes(alexandreUser?.id || ""),
-      ) || [];
+          work.assignedUsers.includes(alexandreUser?.id || "");
+        if (isAssigned) {
+          console.log(
+            "✅ Obra atribuída ao Alexandre:",
+            work.workSheetNumber,
+            work.assignedUsers,
+          );
+        }
+        return isAssigned;
+      }) || [];
 
     setDebugInfo({
       currentUser: user,
