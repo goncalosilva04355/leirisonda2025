@@ -1075,7 +1075,7 @@ export function WorkReport({ work, onClose }: WorkReportProps) {
           className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 border-0"
         >
           <FileText className="mr-2 h-4 w-4" />
-          🆕 RELATÓRIO PDF NOVO (V2.0)
+          Relatório PDF Completo
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
