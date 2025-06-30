@@ -9,7 +9,20 @@ export function Login() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { user, login, isLoading } = useAuth();
+  let authContext;
+  try {
+    authContext = useAuth();
+  } catch (error) {
+    console.error("❌ Erro ao acessar AuthContext:", error);
+    // Fallback para evitar crash
+    authContext = {
+      user: null,
+      login: async () => false,
+      isLoading: false,
+    };
+  }
+
+  const { user, login, isLoading } = authContext;
 
   // Se já está logado, redireciona
   if (user) {
