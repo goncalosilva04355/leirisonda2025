@@ -454,23 +454,24 @@ export class FirebaseService {
     maintenanceId: string,
     updates: Partial<PoolMaintenance>,
   ): Promise<void> {
-    if (!this.isFirebaseAvailable) {
-      return this.updateLocalMaintenance(maintenanceId, updates);
-    }
+    // SEMPRE atualizar localmente primeiro (sync instantâneo local)
+    this.updateLocalMaintenance(maintenanceId, updates);
 
-    try {
-      const maintenanceRef = doc(db, "maintenances", maintenanceId);
-      await updateDoc(maintenanceRef, {
-        ...updates,
-        updatedAt: serverTimestamp(),
-      });
-      console.log("🔥 Maintenance updated in Firebase:", maintenanceId);
-    } catch (error) {
-      console.error(
-        "Error updating maintenance in Firebase, falling back to local:",
-        error,
-      );
-      this.updateLocalMaintenance(maintenanceId, updates);
+    // Tentar Firebase em paralelo se disponível
+    if (this.isFirebaseAvailable) {
+      try {
+        const maintenanceRef = doc(db, "maintenances", maintenanceId);
+        await updateDoc(maintenanceRef, {
+          ...updates,
+          updatedAt: serverTimestamp(),
+        });
+        console.log("🔥 Maintenance updated in Firebase:", maintenanceId);
+      } catch (error) {
+        console.error(
+          "⚠️ Firebase update failed, maintenance updated locally:",
+          error,
+        );
+      }
     }
   }
 
