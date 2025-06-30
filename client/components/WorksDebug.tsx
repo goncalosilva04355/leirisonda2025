@@ -55,6 +55,48 @@ export function WorksDebug() {
     }
   };
 
+  const handleCreateTestWork = async () => {
+    try {
+      const allUsers = getAllUsers();
+      const alexandreUser = allUsers.find(
+        (u) => u.email === "alexkamaryta@gmail.com",
+      );
+
+      if (!alexandreUser) {
+        console.error("Usuário Alexandre não encontrado");
+        return;
+      }
+
+      const testWork = {
+        workSheetNumber: `TEST-${Date.now()}`,
+        type: "piscina" as const,
+        clientName: "Cliente Teste para Alexandre",
+        address: "Rua Teste, 123, Leiria",
+        contact: "244 123 456",
+        entryTime: new Date().toISOString(),
+        status: "pendente" as const,
+        vehicles: ["Carrinha Teste"],
+        technicians: ["Técnico Teste"],
+        assignedUsers: [alexandreUser.id], // Atribuir ao Alexandre
+        photos: [],
+        observations: "Obra de teste criada pelo debug",
+        workPerformed: "Teste de atribuição",
+        workSheetCompleted: false,
+      };
+
+      console.log("Criando obra teste para Alexandre:", testWork);
+      const workId = await createWork(testWork);
+      console.log("Obra teste criada com ID:", workId);
+
+      // Verificar dados após criação
+      setTimeout(() => {
+        handleDebugCheck();
+      }, 1000);
+    } catch (error) {
+      console.error("Erro ao criar obra teste:", error);
+    }
+  };
+
   if (!user || user.email !== "gongonsilva@gmail.com") {
     return null; // Só mostrar para Gonçalo
   }
