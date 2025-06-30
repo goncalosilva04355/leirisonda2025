@@ -148,9 +148,19 @@ class NotificationServiceClass {
 
   private async saveUserToken(token: string) {
     try {
+      // Buscar usuário atual da chave correta
       const currentUser = JSON.parse(
-        localStorage.getItem("currentUser") || "{}",
+        localStorage.getItem("leirisonda_user") || "{}",
       );
+
+      console.log("💾 Tentando salvar token para usuário:", {
+        hasUser: !!currentUser,
+        userId: currentUser.id,
+        userEmail: currentUser.email,
+        userName: currentUser.name,
+        token: token.substring(0, 20) + "...",
+      });
+
       if (currentUser.id) {
         // Salvar token no localStorage (pode ser expandido para Firebase)
         const userTokens = JSON.parse(
@@ -162,7 +172,14 @@ class NotificationServiceClass {
           JSON.stringify(userTokens),
         );
 
-        console.log("💾 Token salvo para usuário:", currentUser.id);
+        console.log(
+          "✅ Token salvo para usuário:",
+          currentUser.id,
+          currentUser.name,
+        );
+        console.log("📋 Tokens atuais:", Object.keys(userTokens));
+      } else {
+        console.warn("⚠️ Usuário atual não encontrado no localStorage");
       }
     } catch (error) {
       console.error("❌ Erro ao salvar token do usuário:", error);
@@ -249,13 +266,49 @@ class NotificationServiceClass {
       const userTokens = JSON.parse(
         localStorage.getItem("userNotificationTokens") || "{}",
       );
-      const allUsers = JSON.parse(localStorage.getItem("users") || "[]");
+
+      // Buscar usuários de múltiplas fontes
+      const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+
+      // Usuários globais predefinidos
+      const globalUsers = [
+        {
+          id: "admin_goncalo",
+          email: "gongonsilva@gmail.com",
+          name: "Gonçalo Fonseca",
+          role: "admin" as const,
+        },
+        {
+          id: "user_alexandre",
+          email: "alexkamaryta@gmail.com",
+          name: "Alexandre Fernandes",
+          role: "user" as const,
+        },
+      ];
+
+      // Combinar ambas as listas
+      const allUsers = [...storedUsers, ...globalUsers];
+
+      console.log("👥 Usuários disponíveis para notificação:", {
+        stored: storedUsers.length,
+        global: globalUsers.length,
+        total: allUsers.length,
+        tokens: Object.keys(userTokens),
+        assignedUsers,
+      });
 
       for (const userId of assignedUsers) {
         const user = allUsers.find((u: User) => u.id === userId);
         const token = userTokens[userId];
 
-        if (user && token) {
+        console.log(`🔍 Verificando usuário ${userId}:`, {
+          userFound: !!user,
+          userName: user?.name,
+          userEmail: user?.email,
+          hasToken: !!token,
+        });
+
+        if (user) {
           const payload: NotificationPayload = {
             title: "🏗️ Nova Obra Atribuída",
             body: `Foi-lhe atribuída a obra ${work.workSheetNumber} - ${work.clientName}`,
@@ -268,11 +321,19 @@ class NotificationServiceClass {
             icon: "/leirisonda-icon.svg",
           };
 
-          // Mostrar notificação local imediatamente
+          // Mostrar notificação local SEMPRE, mesmo sem token FCM
+          console.log(`📨 Enviando notificação local para ${user.name}...`);
           await this.showLocalNotification(payload);
 
-          // Aqui poderia enviar via FCM server para outros dispositivos
-          // await this.sendPushNotification(token, payload);
+          // Se tem token FCM, poderia enviar via servidor
+          if (token) {
+            // await this.sendPushNotification(token, payload);
+            console.log(`🔑 Token FCM disponível para ${user.name}`);
+          } else {
+            console.log(
+              `⚠️ Sem token FCM para ${user.name}, apenas notificação local`,
+            );
+          }
 
           console.log(
             `✅ Notificação enviada para ${user.name} (${user.email})`,
@@ -298,7 +359,28 @@ class NotificationServiceClass {
       const userTokens = JSON.parse(
         localStorage.getItem("userNotificationTokens") || "{}",
       );
-      const allUsers = JSON.parse(localStorage.getItem("users") || "[]");
+
+      // Buscar usuários de múltiplas fontes
+      const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+
+      // Usuários globais predefinidos
+      const globalUsers = [
+        {
+          id: "admin_goncalo",
+          email: "gongonsilva@gmail.com",
+          name: "Gonçalo Fonseca",
+          role: "admin" as const,
+        },
+        {
+          id: "user_alexandre",
+          email: "alexkamaryta@gmail.com",
+          name: "Alexandre Fernandes",
+          role: "user" as const,
+        },
+      ];
+
+      // Combinar ambas as listas
+      const allUsers = [...storedUsers, ...globalUsers];
 
       const statusLabels = {
         pendente: "Pendente",
@@ -310,7 +392,13 @@ class NotificationServiceClass {
         const user = allUsers.find((u: User) => u.id === userId);
         const token = userTokens[userId];
 
-        if (user && token) {
+        console.log(`🔍 Verificando usuário ${userId} para status change:`, {
+          userFound: !!user,
+          userName: user?.name,
+          hasToken: !!token,
+        });
+
+        if (user) {
           const payload: NotificationPayload = {
             title: "📋 Status da Obra Atualizado",
             body: `Obra ${work.workSheetNumber} agora está: ${statusLabels[newStatus as keyof typeof statusLabels]}`,
@@ -323,6 +411,7 @@ class NotificationServiceClass {
             icon: "/leirisonda-icon.svg",
           };
 
+          // Mostrar notificação local SEMPRE, mesmo sem token FCM
           await this.showLocalNotification(payload);
           console.log(`✅ Notificação de status enviada para ${user.name}`);
         }
