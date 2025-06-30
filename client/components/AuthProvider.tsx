@@ -387,36 +387,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               `✅ UTILIZADOR DINÂMICO ${dynamicUser.name.toUpperCase()} LOGIN SUCESSO`,
             );
 
-            // Inicializar notificações automaticamente após login
+            // Inicializar notificações automaticamente após login com debug detalhado
             setTimeout(async () => {
               try {
+                console.log(`🔔 INICIANDO NOTIFICAÇÕES para ${dynamicUser.name} (dinâmico)...`);
+
                 const { notificationService } = await import(
                   "@/services/NotificationService"
                 );
-                await notificationService.initialize();
-                console.log(
-                  "🔔 Notificações inicializadas após login (usuário dinâmico)",
-                );
 
-                // Verificar obras pendentes atribuídas ao usuário após inicializar notificações
-                setTimeout(async () => {
-                  try {
-                    const pendingWorks =
-                      await notificationService.checkPendingAssignedWorks(
-                        dynamicUser.id,
-                      );
-                    console.log(
-                      `🔍 Verificação de obras pendentes (usuário dinâmico) concluída: ${pendingWorks.length} encontradas`,
-                    );
-                  } catch (error) {
-                    console.warn(
-                      "⚠️ Erro ao verificar obras pendentes:",
-                      error,
-                    );
-                  }
-                }, 2000);
+                // Verificar status antes de inicializar
+                console.log("📊 Status antes da inicialização (usuário dinâmico):");
+                console.log(`  • Suportado: ${notificationService.getIsSupported()}`);
+                console.log(`  • Inicializado: ${notificationService.getIsInitialized()}`);
+                console.log(`  • Permissão atual: ${Notification.permission}`);
+
+                // Tentar inicializar
+                const initSuccess = await notificationService.initialize();
+                console.log(`🔔 Inicialização (dinâmico): ${initSuccess ? "✅ SUCESSO" : "❌ FALHA"}`);
+
+                if (initSuccess) {
+                  console.log("📊 Status após inicialização (dinâmico):");
+                  console.log(`  • Inicializado: ${notificationService.getIsInitialized()}`);
+                  console.log(`  • Permissão final: ${Notification.permission}`);
+
+                  // Verificar obras pendentes após delay
+                  setTimeout(async () => {
+                    try {
+                      console.log(`🔍 Verificando obras pendentes para ${dynamicUser.name} (dinâmico)...`);
+                      const pendingWorks = await notificationService.checkPendingAssignedWorks(dynamicUser.id);
+
+                      console.log(`📋 RESULTADO (dinâmico): ${pendingWorks.length} obras pendentes encontradas`);
+                      if (pendingWorks.length > 0) {
+                        console.log("🏗️ Obras pendentes:", pendingWorks.map(w => `${w.workSheetNumber} - ${w.clientName}`));
+                      }
+                    } catch (error) {
+                      console.warn("⚠️ Erro ao verificar obras pendentes (dinâmico):", error);
+                    }
+                  }, 2000);
+
+                } else {
+                  console.error("❌ FALHA NA INICIALIZAÇÃO (dinâmico) - Notificações não funcionarão");
+                }
+
               } catch (notificationError) {
-                console.warn(
+                console.error("❌ ERRO CRÍTICO nas notificações (dinâmico):", notificationError);
                   "⚠️ Erro ao inicializar notificações:",
                   notificationError,
                 );
