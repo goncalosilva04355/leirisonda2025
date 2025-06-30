@@ -294,6 +294,7 @@ export function CreateIntervention() {
       );
 
       // Use Firebase sync to update maintenance with automatic sync
+      // Passa a manutenção completa para garantir que todas as intervenções sejam salvas
       await updateMaintenance(maintenance.id, updatedMaintenance);
       console.log(
         "✅ Intervenção criada e sincronizada automaticamente:",
