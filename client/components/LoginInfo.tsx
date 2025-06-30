@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { AlertCircle, Users, Eye, EyeOff, Trash2 } from "lucide-react";
+import {
+  AlertCircle,
+  Users,
+  Eye,
+  EyeOff,
+  Trash2,
+  RefreshCw,
+} from "lucide-react";
 import { DefaultDataService } from "@/services/DefaultData";
+import { firebaseService } from "@/services/FirebaseService";
 
 interface UserDebugInfo {
   id: string;
