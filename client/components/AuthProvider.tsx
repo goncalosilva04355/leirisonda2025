@@ -253,7 +253,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fixUserData = useCallback(() => {
     try {
-      console.log("🔧 Running user data correction...");
+      console.log("🔧 Running comprehensive user data correction...");
       const storedUsers = localStorage.getItem("users");
       if (storedUsers) {
         const users = JSON.parse(storedUsers);
@@ -267,29 +267,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 ? defaultAdminPermissions
                 : defaultUserPermissions;
             needsUpdate = true;
+            console.log(`🔧 Added permissions to user ${user.email}`);
           }
 
           if (!user.updatedAt) {
             user.updatedAt = user.createdAt || new Date().toISOString();
             needsUpdate = true;
+            console.log(`🔧 Added updatedAt to user ${user.email}`);
           }
 
-          // Check if password exists for this user
-          const passwordById = localStorage.getItem(`password_${user.id}`);
-          const passwordByEmail = localStorage.getItem(
+          // Comprehensive password key management
+          const passwordKeys = [
+            `password_${user.id}`,
             `password_${user.email}`,
-          );
+            `password_${user.email.trim().toLowerCase()}`,
+          ];
 
-          // If password only exists by ID, also store by email for compatibility
-          if (passwordById && !passwordByEmail) {
-            localStorage.setItem(`password_${user.email}`, passwordById);
-            console.log(`🔧 Fixed password storage for ${user.email}`);
+          // Find any existing password
+          let existingPassword = null;
+          let sourceKey = null;
+          for (const key of passwordKeys) {
+            const pwd = localStorage.getItem(key);
+            if (pwd) {
+              existingPassword = pwd;
+              sourceKey = key;
+              break;
+            }
           }
 
-          // If password only exists by email, also store by ID for compatibility
-          if (passwordByEmail && !passwordById) {
-            localStorage.setItem(`password_${user.id}`, passwordByEmail);
-            console.log(`🔧 Fixed password storage for ${user.id}`);
+          if (existingPassword) {
+            // Ensure password is stored with all variations for maximum compatibility
+            passwordKeys.forEach((key) => {
+              const current = localStorage.getItem(key);
+              if (!current) {
+                localStorage.setItem(key, existingPassword);
+                console.log(
+                  `🔧 Duplicated password to key: ${key} from ${sourceKey}`,
+                );
+              }
+            });
+          } else {
+            console.log(
+              `⚠️ No password found for user ${user.email} (${user.id})`,
+            );
           }
         });
 
@@ -297,6 +317,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           localStorage.setItem("users", JSON.stringify(users));
           console.log("🔧 User data structure updated");
         }
+
+        console.log(`🔧 Fixed data for ${users.length} users`);
+      } else {
+        console.log("🔧 No users found to fix");
       }
     } catch (error) {
       console.error("❌ Error fixing user data:", error);
