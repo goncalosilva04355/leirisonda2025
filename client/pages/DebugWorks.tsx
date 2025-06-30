@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Database, Refresh, Users, Eye } from "lucide-react";
+import { ArrowLeft, Database, RefreshCw, Users, Eye } from "lucide-react";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
