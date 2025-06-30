@@ -22,7 +22,37 @@ export const Login = React.memo(function Login() {
 
   // Aguardar inicialização se necessário
   if (!isInitialized && isLoading !== false) {
-    return <LoadingPage message="A inicializar sistema..." />;
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background:
+            "linear-gradient(135deg, rgb(97, 165, 214) 0%, rgb(0, 119, 132) 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "20px",
+          color: "white",
+          fontSize: "18px",
+          fontFamily: "Open Sans, sans-serif",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div
+            style={{
+              width: "40px",
+              height: "40px",
+              border: "4px solid rgba(255, 255, 255, 0.3)",
+              borderTop: "4px solid white",
+              borderRadius: "50%",
+              margin: "0 auto 20px",
+              animation: "spin 1s linear infinite",
+            }}
+          />
+          A inicializar sistema...
+        </div>
+      </div>
+    );
   }
 
   // Se já está logado, redireciona
