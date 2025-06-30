@@ -123,6 +123,10 @@ export function WorksDebug() {
           <Refresh className="w-4 h-4 mr-2" />
           {isSyncing ? "Sincronizando..." : "Forçar Sync"}
         </Button>
+        <Button onClick={handleCreateTestWork} variant="outline">
+          <Users className="w-4 h-4 mr-2" />
+          Criar Obra Teste Alexandre
+        </Button>
       </div>
 
       {debugInfo && (
