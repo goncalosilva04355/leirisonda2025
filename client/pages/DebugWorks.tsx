@@ -399,7 +399,6 @@ Se NÃO aparecer, há problema de sincronização Firebase!
           Este teste cria uma obra, verifica se é salva corretamente em todas as
           fontes e confirma se aparecerá no dispositivo do Alexandre.
         </p>
-        <SyncTestButton />
       </div>
 
       {/* Informações de Armazenamento */}
