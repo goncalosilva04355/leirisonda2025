@@ -299,6 +299,9 @@ export function CreateWork() {
           const workId = await safeCreateWork(workData);
           console.log("✅ OBRA CRIADA COM SUCESSO ID:", workId);
 
+          // MARCAR que obra foi criada para ErrorBoundary saber
+          sessionStorage.setItem("just_created_work", "true");
+
           // SUCESSO GARANTIDO - eliminar verificações complexas que podem falhar
           console.log("🎉 OBRA CRIADA COM SUCESSO - FINALIZANDO PROCESSO");
 
