@@ -321,15 +321,29 @@ export function CreateWork() {
 
         console.log("✅ PROCESSO CONCLUÍDO - REDIRECIONANDO...");
 
-        // Navegação imediata e segura
+        // Navegação super segura com múltiplos fallbacks
         setTimeout(() => {
           try {
+            // Tentativa 1: React Router navigate
             navigate("/works");
           } catch (navError) {
-            console.warn("Usando window.location como fallback");
-            window.location.href = "/works";
+            console.warn("Navigate falhou, usando window.location");
+            try {
+              // Tentativa 2: window.location
+              window.location.href = "/works";
+            } catch (locationError) {
+              console.warn("window.location falhou, usando replace");
+              try {
+                // Tentativa 3: window.location.replace
+                window.location.replace("/works");
+              } catch (replaceError) {
+                console.error("Todas as tentativas de navegação falharam");
+                // Última tentativa: Recarregar página
+                window.location.reload();
+              }
+            }
           }
-        }, 100);
+        }, 200);
       } catch (err) {
         console.error("❌ ERRO AO CRIAR OBRA:", err);
 
