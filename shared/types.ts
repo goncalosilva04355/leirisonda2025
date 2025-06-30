@@ -175,6 +175,7 @@ export interface CreateWorkData {
   status: "pendente" | "em_progresso" | "concluida";
   vehicles: string[];
   technicians: string[];
+  assignedUsers: string[];
   photos: File[];
   observations: string;
   workPerformed: string;
