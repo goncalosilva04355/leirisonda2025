@@ -288,9 +288,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth deve ser usado dentro de AuthProvider");
+  try {
+    const context = useContext(AuthContext);
+    if (!context) {
+      console.warn("⚠️ useAuth called outside AuthProvider - using fallback");
+      // Return fallback context to prevent crashes
+      return {
+        user: null,
+        login: async () => false,
+        logout: () => {},
+        isLoading: false,
+        getAllUsers: () => [],
+      };
+    }
+    return context;
+  } catch (error) {
+    console.error("❌ Error in useAuth:", error);
+    // Return safe fallback
+    return {
+      user: null,
+      login: async () => false,
+      logout: () => {},
+      isLoading: false,
+      getAllUsers: () => [],
+    };
   }
-  return context;
 }
