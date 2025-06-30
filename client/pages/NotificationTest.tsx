@@ -63,7 +63,7 @@ export default function NotificationTest() {
   const runDiagnostics = async () => {
     try {
       console.log("🔍 Executando diagnóstico completo...");
-      const result = await notificationService.runDiagnostics();
+      const result = await NotificationService.runDiagnostics();
       setDiagnostics(result);
       addTestResult(
         "Diagnóstico",
