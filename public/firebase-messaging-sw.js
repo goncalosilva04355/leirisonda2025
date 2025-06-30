@@ -120,25 +120,49 @@ self.addEventListener("notificationclick", function (event) {
 self.addEventListener("push", function (event) {
   console.log("📨 Push event recebido:", event);
 
-  if (event.data) {
-    const data = event.data.json();
-    console.log("📄 Dados do push:", data);
+  try {
+    if (event.data) {
+      const data = event.data.json();
+      console.log("📄 Dados do push:", data);
 
-    const notificationTitle = data.notification?.title || "Leirisonda";
-    const notificationOptions = {
-      body: data.notification?.body || "Nova notificação",
-      icon: "/leirisonda-icon.svg",
-      badge: "/leirisonda-icon.svg",
-      data: data.data || {},
-      tag: "leirisonda-notification",
-      requireInteraction: true,
-    };
+      const notificationTitle = data.notification?.title || "Leirisonda";
+      const notificationOptions = {
+        body: data.notification?.body || "Nova notificação",
+        icon: "/leirisonda-icon.svg",
+        badge: "/leirisonda-icon.svg",
+        data: data.data || {},
+        tag: "leirisonda-notification",
+        requireInteraction: true,
+      };
 
+      event.waitUntil(
+        self.registration.showNotification(
+          notificationTitle,
+          notificationOptions,
+        ),
+      );
+    } else {
+      console.warn("⚠️ Push event sem dados");
+
+      // Mostrar notificação genérica
+      event.waitUntil(
+        self.registration.showNotification("Leirisonda", {
+          body: "Nova atualização disponível",
+          icon: "/leirisonda-icon.svg",
+          tag: "leirisonda-generic",
+        }),
+      );
+    }
+  } catch (error) {
+    console.error("❌ Erro ao processar push event:", error);
+
+    // Fallback: notificação básica
     event.waitUntil(
-      self.registration.showNotification(
-        notificationTitle,
-        notificationOptions,
-      ),
+      self.registration.showNotification("Leirisonda", {
+        body: "Erro ao processar notificação",
+        icon: "/leirisonda-icon.svg",
+        tag: "leirisonda-error",
+      }),
     );
   }
 });
