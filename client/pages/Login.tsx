@@ -60,7 +60,8 @@ export function Login() {
           maxWidth: "400px",
           background: "white",
           borderRadius: "16px",
-          boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
+          boxShadow:
+            "0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 20px rgba(0, 0, 0, 0.1)",
           overflow: "hidden",
         }}
       >
