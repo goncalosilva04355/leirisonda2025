@@ -373,7 +373,7 @@ export function MaintenanceReport({
       <!-- Comprehensive Summary -->
       <div class="section">
         <div class="section-header">
-          <div class="section-title">📊 Resumo Completo da Intervenção</div>
+          <div class="section-title">Resumo da Intervenção</div>
         </div>
         <div class="section-content">
           <div class="info-grid">
