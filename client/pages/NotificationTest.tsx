@@ -118,7 +118,7 @@ export default function NotificationTest() {
   const testLocalNotification = async () => {
     try {
       console.log("📱 Testando notificação local...");
-      await notificationService.showLocalNotification({
+      await NotificationService.showLocalNotification({
         title: "🧪 Teste Local",
         body: "Esta é uma notificação de teste local",
         data: { type: "test" },
