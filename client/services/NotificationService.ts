@@ -894,6 +894,232 @@ class NotificationServiceClass {
     console.log("🔍 Diagnóstico completo:", diagnostics);
     return diagnostics;
   }
+
+  // Marcar notificação como entregue
+  private markNotificationAsDelivered(
+    userId: string,
+    workId: string,
+    type: string,
+  ) {
+    try {
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      const updatedNotifications = pendingNotifications.map(
+        (notification: any) => {
+          if (
+            notification.userId === userId &&
+            notification.workId === workId &&
+            notification.type === type
+          ) {
+            return {
+              ...notification,
+              delivered: true,
+              deliveredAt: new Date().toISOString(),
+            };
+          }
+          return notification;
+        },
+      );
+
+      localStorage.setItem(
+        "pendingNotifications",
+        JSON.stringify(updatedNotifications),
+      );
+      console.log(
+        `✅ Notificação marcada como entregue para ${userId} - obra ${workId}`,
+      );
+    } catch (error) {
+      console.error("❌ Erro ao marcar notificação como entregue:", error);
+    }
+  }
+
+  // Processar notificações pendentes para um usuário específico
+  private async processPendingNotifications(userId: string) {
+    try {
+      console.log(`🔄 Processando notificações pendentes para ${userId}...`);
+
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      // Filtrar notificações não entregues para este usuário
+      const userPendingNotifications = pendingNotifications.filter(
+        (notification: any) =>
+          notification.userId === userId &&
+          !notification.delivered &&
+          notification.attempts < 3, // Máximo 3 tentativas
+      );
+
+      console.log(
+        `📋 Encontradas ${userPendingNotifications.length} notificações pendentes para ${userId}`,
+      );
+
+      if (userPendingNotifications.length === 0) {
+        return;
+      }
+
+      // Processar cada notificação pendente
+      for (const notification of userPendingNotifications) {
+        try {
+          console.log(
+            `📨 Reentregando notificação: ${notification.title} para ${notification.userName}`,
+          );
+
+          // Mostrar notificação local
+          await this.showLocalNotification({
+            title: notification.title,
+            body: notification.body,
+            data: notification.data,
+            icon: notification.icon,
+          });
+
+          // Marcar como entregue
+          this.markNotificationAsDelivered(
+            notification.userId,
+            notification.workId,
+            notification.type,
+          );
+
+          console.log(
+            `✅ Notificação reentregue com sucesso: ${notification.title}`,
+          );
+        } catch (redeliveryError) {
+          console.error(
+            `❌ Erro na reentrega de notificação ${notification.id}:`,
+            redeliveryError,
+          );
+
+          // Incrementar tentativas
+          notification.attempts = (notification.attempts || 0) + 1;
+          notification.lastAttempt = new Date().toISOString();
+        }
+      }
+
+      // Salvar notificações atualizadas
+      localStorage.setItem(
+        "pendingNotifications",
+        JSON.stringify(pendingNotifications),
+      );
+
+      // Limpar notificações muito antigas (mais de 7 dias) ou com muitas tentativas
+      this.cleanupOldNotifications();
+    } catch (error) {
+      console.error("❌ Erro ao processar notificações pendentes:", error);
+    }
+  }
+
+  // Limpar notificações antigas
+  private cleanupOldNotifications() {
+    try {
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      const cleanedNotifications = pendingNotifications.filter(
+        (notification: any) => {
+          const notificationDate = new Date(notification.timestamp);
+          const isRecent = notificationDate > oneWeekAgo;
+          const hasAttemptsLeft = notification.attempts < 3;
+          const isDelivered = notification.delivered;
+
+          // Manter se: recente E (tem tentativas OU já foi entregue)
+          return isRecent && (hasAttemptsLeft || isDelivered);
+        },
+      );
+
+      if (cleanedNotifications.length !== pendingNotifications.length) {
+        localStorage.setItem(
+          "pendingNotifications",
+          JSON.stringify(cleanedNotifications),
+        );
+        console.log(
+          `🧹 Limpeza de notificações: removidas ${pendingNotifications.length - cleanedNotifications.length} notificações antigas`,
+        );
+      }
+    } catch (error) {
+      console.error("❌ Erro na limpeza de notificações:", error);
+    }
+  }
+
+  // Inicializar listener para eventos de broadcast de notificações
+  initializeNotificationListener() {
+    if (typeof window !== "undefined") {
+      console.log("📡 Inicializando listener de eventos de notificações...");
+
+      // Listener para eventos de storage (cross-tab/device communication)
+      window.addEventListener("storage", (event) => {
+        if (event.key === "lastNotificationBroadcast" && event.newValue) {
+          try {
+            const broadcastEvent = JSON.parse(event.newValue);
+            console.log("📡 Recebido evento de broadcast:", broadcastEvent);
+
+            // Verificar se é um evento de obra atribuída
+            if (broadcastEvent.type === "LEIRISONDA_WORK_ASSIGNED") {
+              this.handleBroadcastWorkAssigned(broadcastEvent);
+            }
+          } catch (error) {
+            console.error("❌ Erro ao processar evento de broadcast:", error);
+          }
+        }
+      });
+
+      console.log("✅ Listener de notificações inicializado");
+    }
+  }
+
+  // Manipular evento de obra atribuída via broadcast
+  private async handleBroadcastWorkAssigned(broadcastEvent: any) {
+    try {
+      const currentUser = JSON.parse(
+        localStorage.getItem("leirisonda_user") || "{}",
+      );
+
+      // Verificar se o usuário atual está na lista de usuários atribuídos
+      if (
+        currentUser.id &&
+        broadcastEvent.assignedUsers.includes(currentUser.id)
+      ) {
+        console.log(
+          `📨 Processando notificação de broadcast para ${currentUser.name}...`,
+        );
+
+        // Mostrar notificação local se ainda não foi entregue
+        const pendingNotifications = JSON.parse(
+          localStorage.getItem("pendingNotifications") || "[]",
+        );
+
+        const alreadyDelivered = pendingNotifications.some(
+          (notification: any) =>
+            notification.userId === currentUser.id &&
+            notification.workId === broadcastEvent.workId &&
+            notification.type === "work_assigned" &&
+            notification.delivered,
+        );
+
+        if (!alreadyDelivered) {
+          await this.showLocalNotification(broadcastEvent.payload);
+
+          // Marcar como entregue
+          this.markNotificationAsDelivered(
+            currentUser.id,
+            broadcastEvent.workId,
+            "work_assigned",
+          );
+
+          console.log("✅ Notificação de broadcast entregue com sucesso");
+        } else {
+          console.log("ℹ️ Notificação já foi entregue anteriormente");
+        }
+      }
+    } catch (error) {
+      console.error("❌ Erro ao processar broadcast de obra atribuída:", error);
+    }
+  }
 }
 
 export const notificationService = new NotificationServiceClass();
