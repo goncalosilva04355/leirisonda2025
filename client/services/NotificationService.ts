@@ -375,7 +375,13 @@ class NotificationServiceClass {
         const user = allUsers.find((u: User) => u.id === userId);
         const token = userTokens[userId];
 
-        if (user && token) {
+        console.log(`🔍 Verificando usuário ${userId} para status change:`, {
+          userFound: !!user,
+          userName: user?.name,
+          hasToken: !!token,
+        });
+
+        if (user) {
           const payload: NotificationPayload = {
             title: "📋 Status da Obra Atualizado",
             body: `Obra ${work.workSheetNumber} agora está: ${statusLabels[newStatus as keyof typeof statusLabels]}`,
@@ -388,6 +394,7 @@ class NotificationServiceClass {
             icon: "/leirisonda-icon.svg",
           };
 
+          // Mostrar notificação local SEMPRE, mesmo sem token FCM
           await this.showLocalNotification(payload);
           console.log(`✅ Notificação de status enviada para ${user.name}`);
         }
