@@ -75,18 +75,21 @@ export function CreateWork() {
     });
   } catch (error) {
     console.error("❌ Erro ao acessar contextos:", error);
+
+    // EVITAR qualquer erro que possa causar logout - retornar interface de recuperação
     return (
       <div className="p-6 max-w-md mx-auto mt-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">
-            Erro de Contexto
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-yellow-800 mb-2">
+            Sistema Temporariamente Indisponível
           </h2>
-          <p className="text-red-600 mb-4">
-            Erro ao carregar contextos da aplicação. Tente recarregar a página.
+          <p className="text-yellow-600 mb-4">
+            Serviços de criação de obras temporariamente indisponíveis. Por
+            favor tente novamente.
           </p>
           <div className="space-y-2">
             <Button onClick={() => window.location.reload()} className="w-full">
-              Recarregar Página
+              Tentar Novamente
             </Button>
             <Button
               onClick={() => navigate("/dashboard")}
