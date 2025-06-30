@@ -71,8 +71,8 @@
     <link rel="stylesheet" href="/pwa-style.css" />
 
     <title>Leirisonda - Gestão de Obras</title>
-    <script type="module" crossorigin src="/assets/index-DnEsHg1H.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DFdR-byQ.css">
+    <script type="module" crossorigin src="/assets/index--pYLUhX0.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DHqdXOzr.css">
   </head>
 
   <body>
@@ -104,6 +104,7 @@
 
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
+          // Registrar service worker principal
           navigator.serviceWorker
             .register("/sw.js")
             .then(function (registration) {
@@ -111,6 +112,22 @@
             })
             .catch(function (error) {
               console.log("❌ Leirisonda SW registration failed:", error);
+            });
+
+          // Registrar service worker para Firebase Cloud Messaging
+          navigator.serviceWorker
+            .register("/firebase-messaging-sw.js")
+            .then(function (registration) {
+              console.log(
+                "✅ Firebase Messaging SW registered:",
+                registration.scope,
+              );
+            })
+            .catch(function (error) {
+              console.log(
+                "❌ Firebase Messaging SW registration failed:",
+                error,
+              );
             });
         });
       }
