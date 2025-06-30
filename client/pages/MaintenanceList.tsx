@@ -47,7 +47,29 @@ export function MaintenanceList() {
     try {
       const stored = localStorage.getItem("pool_maintenances");
       if (stored) {
-        setMaintenances(JSON.parse(stored));
+        let loadedMaintenances = JSON.parse(stored);
+
+        // Auto-limpeza de duplicados silenciosa
+        const duplicates = detectDuplicateMaintenances(loadedMaintenances);
+        if (duplicates.length > 0) {
+          console.log(
+            `🧹 Auto-limpeza: ${duplicates.length} grupos de duplicados encontrados`,
+          );
+
+          const result = cleanAllMaintenanceStorages();
+          if (result.success) {
+            console.log(
+              `✅ Auto-limpeza concluída: ${result.details.duplicatesRemoved} duplicados removidos`,
+            );
+            // Recarregar dados limpos
+            const cleanedStored = localStorage.getItem("pool_maintenances");
+            if (cleanedStored) {
+              loadedMaintenances = JSON.parse(cleanedStored);
+            }
+          }
+        }
+
+        setMaintenances(loadedMaintenances);
       }
     } catch (error) {
       console.error("Error loading maintenances:", error);
@@ -191,23 +213,13 @@ export function MaintenanceList() {
             </div>
           </div>
 
-          <div className="w-full sm:w-auto shrink-0 flex flex-col sm:flex-row gap-2">
+          <div className="w-full sm:w-auto shrink-0">
             <Link to="/create-maintenance" className="block">
               <Button className="btn-primary w-full sm:w-auto">
                 <Plus className="mr-2 h-4 w-4" />
                 Nova Piscina
               </Button>
             </Link>
-
-            {user?.permissions?.canDeleteMaintenance && (
-              <Button
-                variant="outline"
-                onClick={handleCleanDuplicates}
-                className="w-full sm:w-auto text-orange-600 border-orange-300 hover:bg-orange-50"
-              >
-                🧹 Limpar Duplicados
-              </Button>
-            )}
           </div>
         </div>
 
