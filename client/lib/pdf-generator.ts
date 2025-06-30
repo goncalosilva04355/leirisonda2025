@@ -624,23 +624,17 @@ export class PDFGenerator {
           </div>
 
           <div class="content">
-            <!-- NOVO AVISO DE ATUALIZAÇÃO -->
-            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
-              <h3 style="margin: 0; font-size: 16px;">🆕 RELATÓRIO COMPLETAMENTE ATUALIZADO</h3>
-              <p style="margin: 5px 0 0 0; font-size: 12px;">Gerado em: ${new Date().toLocaleString("pt-PT")} • Versão: ${Date.now()}</p>
-            </div>
-
             <div class="info-header">
               <div class="info-card">
-                <div class="label">📅 Data Relatório</div>
+                <div class="label">Data do Relatório</div>
                 <div class="value">${reportDate}</div>
               </div>
               <div class="info-card">
-                <div class="label">📝 Data Referência</div>
+                <div class="label">Data de Referência</div>
                 <div class="value">${data.date}</div>
               </div>
               <div class="info-card">
-                <div class="label">📊 Estado</div>
+                <div class="label">Estado</div>
                 <div class="value">${data.additionalInfo || "Concluído"}</div>
               </div>
             </div>
