@@ -252,25 +252,55 @@ export class FirebaseService {
     };
 
     try {
-      // SEMPRE criar localmente primeiro (sync instantâneo local)
+      // SISTEMA DE BACKUP TRIPLO PARA GARANTIR SALVAMENTO
+
+      // 1. BACKUP PRINCIPAL - localStorage "works"
       const works = this.getLocalWorks();
       const worksCountBefore = works.length;
       works.push(newWork);
       localStorage.setItem("works", JSON.stringify(works));
 
-      // Verificar se foi salvo corretamente
-      const verificationWorks = this.getLocalWorks();
-      const savedWork = verificationWorks.find((w) => w.id === newWork.id);
+      // 2. BACKUP SECUNDÁRIO - localStorage "leirisonda_works"
+      const backupWorks = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      backupWorks.push(newWork);
+      localStorage.setItem("leirisonda_works", JSON.stringify(backupWorks));
 
-      if (savedWork) {
+      // 3. BACKUP TERCIÁRIO - sessionStorage
+      const sessionWorks = JSON.parse(
+        sessionStorage.getItem("temp_works") || "[]",
+      );
+      sessionWorks.push(newWork);
+      sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
+
+      // VERIFICAÇÃO TRIPLA
+      const verification1 = this.getLocalWorks();
+      const verification2 = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      const verification3 = JSON.parse(
+        sessionStorage.getItem("temp_works") || "[]",
+      );
+
+      const savedWork1 = verification1.find((w) => w.id === newWork.id);
+      const savedWork2 = verification2.find((w: any) => w.id === newWork.id);
+      const savedWork3 = verification3.find((w: any) => w.id === newWork.id);
+
+      if (savedWork1 && savedWork2 && savedWork3) {
         console.log(
-          `✅ OBRA CRIADA LOCALMENTE: ${newWork.id} (${worksCountBefore} -> ${verificationWorks.length} obras)`,
+          `✅ OBRA SALVA COM BACKUP TRIPLO: ${newWork.id} (${worksCountBefore} -> ${verification1.length} obras)`,
         );
       } else {
-        throw new Error("Obra não foi salva no localStorage");
+        console.error("⚠️ BACKUP TRIPLO FALHOU:", {
+          backup1: !!savedWork1,
+          backup2: !!savedWork2,
+          backup3: !!savedWork3,
+        });
+        throw new Error("Falha no sistema de backup triplo");
       }
 
-      // Tentar Firebase em paralelo se disponível
+      // TENTATIVA FIREBASE (em paralelo, não bloqueia)
       if (this.isFirebaseAvailable) {
         try {
           const worksRef = collection(db, "works");
@@ -287,14 +317,26 @@ export class FirebaseService {
           );
         }
       } else {
-        console.log("📱 FIREBASE INDISPONÍVEL, obra salva apenas localmente");
+        console.log("📱 FIREBASE INDISPONÍVEL, obra salva com backup triplo");
       }
 
       console.log("✅ CRIAÇÃO DE OBRA CONCLUÍDA COM SUCESSO:", newWork.id);
       return newWork.id;
     } catch (error) {
       console.error("❌ ERRO CRÍTICO NA CRIAÇÃO DE OBRA:", error);
-      throw error;
+
+      // RECUPERAÇÃO DE EMERGÊNCIA - tentar salvar pelo menos em um local
+      try {
+        localStorage.setItem(
+          `emergency_work_${newWork.id}`,
+          JSON.stringify(newWork),
+        );
+        console.log("🚨 OBRA SALVA EM MODO DE EMERGÊNCIA");
+        return newWork.id;
+      } catch (emergencyError) {
+        console.error("❌ FALHA TOTAL NO SALVAMENTO:", emergencyError);
+        throw new Error("Falha crítica: não foi possível salvar a obra");
+      }
     }
   }
 
