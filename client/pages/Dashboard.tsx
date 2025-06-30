@@ -111,14 +111,32 @@ export function Dashboard() {
       workSheetsPending,
     });
 
-    // Get recent works (last 5)
-    const sortedWorks = worksList
-      .sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      )
-      .slice(0, 5);
-    setRecentWorks(sortedWorks);
+    // Get recent works - priorizar obras atribuídas ao usuário logado
+    const assignedWorks = worksList.filter(
+      (work) =>
+        work.assignedUsers && work.assignedUsers.includes(user?.id || ""),
+    );
+    const otherWorks = worksList.filter(
+      (work) =>
+        !work.assignedUsers || !work.assignedUsers.includes(user?.id || ""),
+    );
+
+    // Ordenar por data (mais recentes primeiro)
+    const sortedAssignedWorks = assignedWorks.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    const sortedOtherWorks = otherWorks.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+    // Combinar: obras atribuídas primeiro, depois outras (máximo 5 total)
+    const recentWorksList = [...sortedAssignedWorks, ...sortedOtherWorks].slice(
+      0,
+      5,
+    );
+    setRecentWorks(recentWorksList);
   };
 
   const getStatusInfo = (status: string) => {
