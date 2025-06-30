@@ -27,10 +27,56 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
 export function Dashboard() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const { works, maintenances, isOnline, isSyncing, lastSync, syncData } =
-    useFirebaseSync();
+  console.log("🏠 Dashboard component iniciando...");
+
+  // PROTEÇÃO MÁXIMA: Try-catch para contextos
+  let user,
+    navigate,
+    works,
+    maintenances,
+    isOnline,
+    isSyncing,
+    lastSync,
+    syncData;
+
+  try {
+    const authContext = useAuth();
+    user = authContext.user;
+    console.log("✅ Auth context carregado:", { hasUser: !!user });
+  } catch (authError) {
+    console.error("❌ Erro no auth context:", authError);
+    user = null;
+  }
+
+  try {
+    navigate = useNavigate();
+    console.log("✅ Navigate hook carregado");
+  } catch (navError) {
+    console.error("❌ Erro no navigate hook:", navError);
+    navigate = () => console.warn("Navigate não disponível");
+  }
+
+  try {
+    const firebaseContext = useFirebaseSync();
+    works = firebaseContext.works || [];
+    maintenances = firebaseContext.maintenances || [];
+    isOnline = firebaseContext.isOnline ?? true;
+    isSyncing = firebaseContext.isSyncing ?? false;
+    lastSync = firebaseContext.lastSync;
+    syncData = firebaseContext.syncData || (() => Promise.resolve());
+    console.log("✅ Firebase context carregado:", {
+      worksCount: works.length,
+      maintenancesCount: maintenances.length,
+    });
+  } catch (firebaseError) {
+    console.error("❌ Erro no firebase context:", firebaseError);
+    works = [];
+    maintenances = [];
+    isOnline = false;
+    isSyncing = false;
+    lastSync = undefined;
+    syncData = () => Promise.resolve();
+  }
   const [stats, setStats] = useState<DashboardStats>({
     totalWorks: 0,
     pendingWorks: 0,
@@ -44,19 +90,56 @@ export function Dashboard() {
   const [searchResults, setSearchResults] = useState<Work[]>([]);
 
   const navigateToWorks = (status?: string) => {
-    if (status) {
-      navigate(`/works?status=${status}`);
-    } else {
-      navigate("/works");
+    try {
+      console.log("🔗 Navegando para works com status:", status);
+      if (status) {
+        navigate(`/works?status=${status}`);
+      } else {
+        navigate("/works");
+      }
+    } catch (navError) {
+      console.error("❌ Erro na navegação para works:", navError);
+      try {
+        // Fallback para window.location
+        const url = status ? `/works?status=${status}` : "/works";
+        window.location.href = url;
+      } catch (locationError) {
+        console.error("❌ Erro no fallback de navegação:", locationError);
+      }
     }
   };
 
   const navigateToWorksSheets = (type: "pending" | "completed") => {
-    navigate(`/works?worksheet=${type}`);
+    try {
+      console.log("📋 Navegando para worksheets:", type);
+      navigate(`/works?worksheet=${type}`);
+    } catch (navError) {
+      console.error("❌ Erro na navegação para worksheets:", navError);
+      try {
+        window.location.href = `/works?worksheet=${type}`;
+      } catch (locationError) {
+        console.error(
+          "❌ Erro no fallback de navegação para worksheets:",
+          locationError,
+        );
+      }
+    }
   };
 
   useEffect(() => {
-    loadDashboardData();
+    try {
+      console.log("📊 Carregando dados do dashboard...");
+      loadDashboardData();
+
+      // Limpar marcação de obra criada quando Dashboard carrega
+      if (sessionStorage.getItem("just_created_work") === "true") {
+        console.log("🧹 Limpando marcação de obra criada");
+        sessionStorage.removeItem("just_created_work");
+      }
+    } catch (error) {
+      console.error("❌ Erro ao carregar dados do dashboard:", error);
+      // Não fazer throw - continuar sem quebrar
+    }
   }, [works, maintenances]); // React to Firebase data changes
 
   useEffect(() => {
@@ -68,76 +151,104 @@ export function Dashboard() {
   }, [searchTerm]);
 
   const performSearch = () => {
-    // Use Firebase synced data instead of localStorage directly
-    const worksList = works || [];
+    try {
+      console.log("🔍 Realizando pesquisa:", searchTerm);
+      // Use Firebase synced data instead of localStorage directly
+      const worksList = works || [];
 
-    const filtered = worksList.filter(
-      (work) =>
-        work.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        work.workSheetNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        work.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        work.contact.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
+      const filtered = worksList.filter(
+        (work) =>
+          work.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          work.workSheetNumber
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          work.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          work.contact?.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
 
-    setSearchResults(filtered.slice(0, 5)); // Limit to 5 results
+      setSearchResults(filtered.slice(0, 5)); // Limit to 5 results
+    } catch (error) {
+      console.error("❌ Erro na pesquisa:", error);
+      setSearchResults([]);
+    }
   };
 
   const loadDashboardData = () => {
-    // Use Firebase synced data instead of localStorage directly
-    const worksList = works || [];
+    try {
+      console.log("📊 Processando dados para dashboard...");
+      // Use Firebase synced data instead of localStorage directly
+      const worksList = works || [];
 
-    // Calculate stats
-    const totalWorks = worksList.length;
-    const pendingWorks = worksList.filter(
-      (w) => w.status === "pendente",
-    ).length;
-    const inProgressWorks = worksList.filter(
-      (w) => w.status === "em_progresso",
-    ).length;
-    const completedWorks = worksList.filter(
-      (w) => w.status === "concluida",
-    ).length;
+      // Calculate stats with error protection
+      const totalWorks = worksList.length || 0;
+      const pendingWorks =
+        worksList.filter((w) => w?.status === "pendente").length || 0;
+      const inProgressWorks =
+        worksList.filter((w) => w?.status === "em_progresso").length || 0;
+      const completedWorks =
+        worksList.filter((w) => w?.status === "concluida").length || 0;
 
-    // Calculate work sheets pending (not completed)
-    const workSheetsPending = worksList.filter(
-      (w) => !w.workSheetCompleted,
-    ).length;
+      // Calculate work sheets pending (not completed)
+      const workSheetsPending =
+        worksList.filter((w) => !w?.workSheetCompleted).length || 0;
 
-    setStats({
-      totalWorks,
-      pendingWorks,
-      inProgressWorks,
-      completedWorks,
-      remainingWorkSheets: 0, // Not used anymore
-      workSheetsPending,
-    });
+      setStats({
+        totalWorks,
+        pendingWorks,
+        inProgressWorks,
+        completedWorks,
+        remainingWorkSheets: 0, // Not used anymore
+        workSheetsPending,
+      });
 
-    // Get recent works - priorizar obras atribuídas ao usuário logado
-    const assignedWorks = worksList.filter(
-      (work) =>
-        work.assignedUsers && work.assignedUsers.includes(user?.id || ""),
-    );
-    const otherWorks = worksList.filter(
-      (work) =>
-        !work.assignedUsers || !work.assignedUsers.includes(user?.id || ""),
-    );
+      // Get recent works - priorizar obras atribuídas ao usuário logado
+      const assignedWorks = worksList.filter(
+        (work) =>
+          work?.assignedUsers && work.assignedUsers.includes(user?.id || ""),
+      );
+      const otherWorks = worksList.filter(
+        (work) =>
+          !work?.assignedUsers || !work.assignedUsers.includes(user?.id || ""),
+      );
 
-    // Ordenar por data (mais recentes primeiro)
-    const sortedAssignedWorks = assignedWorks.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-    const sortedOtherWorks = otherWorks.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
+      // Ordenar por data (mais recentes primeiro)
+      const sortedAssignedWorks = assignedWorks.sort(
+        (a, b) =>
+          new Date(b?.createdAt || 0).getTime() -
+          new Date(a?.createdAt || 0).getTime(),
+      );
+      const sortedOtherWorks = otherWorks.sort(
+        (a, b) =>
+          new Date(b?.createdAt || 0).getTime() -
+          new Date(a?.createdAt || 0).getTime(),
+      );
 
-    // Combinar: obras atribuídas primeiro, depois outras (máximo 5 total)
-    const recentWorksList = [...sortedAssignedWorks, ...sortedOtherWorks].slice(
-      0,
-      5,
-    );
-    setRecentWorks(recentWorksList);
+      // Combinar: obras atribuídas primeiro, depois outras (máximo 5 total)
+      const recentWorksList = [
+        ...sortedAssignedWorks,
+        ...sortedOtherWorks,
+      ].slice(0, 5);
+      setRecentWorks(recentWorksList);
+
+      console.log("✅ Dashboard data carregado:", {
+        totalWorks,
+        pendingWorks,
+        inProgressWorks,
+        completedWorks,
+      });
+    } catch (error) {
+      console.error("❌ Erro ao processar dados do dashboard:", error);
+      // Set safe defaults in case of error
+      setStats({
+        totalWorks: 0,
+        pendingWorks: 0,
+        inProgressWorks: 0,
+        completedWorks: 0,
+        remainingWorkSheets: 0,
+        workSheetsPending: 0,
+      });
+      setRecentWorks([]);
+    }
   };
 
   const getStatusInfo = (status: string) => {

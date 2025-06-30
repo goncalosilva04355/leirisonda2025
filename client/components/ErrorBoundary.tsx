@@ -22,6 +22,21 @@ export class ErrorBoundary extends Component<Props, State> {
     console.log("🚨 ErrorBoundary caught error:", error.message);
     console.log("🚨 Error stack:", error.stack);
 
+    // VERIFICAÇÃO ESPECIAL: Se estamos vindo de uma criação de obra
+    const currentPath = window.location.pathname;
+    const fromCreateWork =
+      currentPath.includes("/create-work") ||
+      currentPath.includes("/dashboard") ||
+      sessionStorage.getItem("just_created_work") === "true";
+
+    if (fromCreateWork) {
+      console.log(
+        "🏗️ Erro detectado após criar obra - EVITANDO logout forçado",
+      );
+      sessionStorage.removeItem("just_created_work");
+      return { hasError: true, error, retryCount: 0 };
+    }
+
     // EVITAR logout desnecessário em erros de operações CRUD ou Firebase
     const recoversableErrors = [
       "Não foi possível salvar a obra",
@@ -57,6 +72,26 @@ export class ErrorBoundary extends Component<Props, State> {
       "CreateWork",
       "nova obra",
       "folha de obra",
+      "navigate",
+      "navigation",
+      "router",
+      "Dashboard",
+      "after creating",
+      "após criar",
+      "depois de guardar",
+      "após guardar",
+      "work created",
+      "obra criada",
+      "redirect",
+      "redirection",
+      "pathname",
+      "location",
+      "window.location",
+      "useNavigate",
+      "NavLink",
+      "Link",
+      "route",
+      "routing",
     ];
 
     const isRecoverableError = recoversableErrors.some((keyword) =>
