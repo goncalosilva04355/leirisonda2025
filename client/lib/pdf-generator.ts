@@ -385,8 +385,8 @@ export class PDFGenerator {
           }
 
           .logo {
-            width: 45px;
-            height: 45px;
+            width: 120px;
+            height: 60px;
             object-fit: contain;
           }
 
