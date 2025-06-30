@@ -99,6 +99,9 @@ export function WorksList() {
     if (searchTerm) {
       params.set("search", searchTerm);
     }
+    if (assignedToFilter) {
+      params.set("assignedTo", assignedToFilter);
+    }
     setSearchParams(params);
   };
 
