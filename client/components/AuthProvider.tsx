@@ -187,6 +187,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         };
 
         localStorage.setItem("leirisonda_user", JSON.stringify(loginUser));
+        localStorage.setItem("leirisonda_last_user", globalUser.email); // Guardar último utilizador
         setUser(loginUser);
         console.log(`✅ ${globalUser.name.toUpperCase()} LOGIN SUCESSO`);
         setIsLoading(false);
