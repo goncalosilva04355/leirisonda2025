@@ -222,6 +222,7 @@ export function EditWork() {
         observations: formData.observations.trim(),
         workPerformed: formData.workPerformed.trim(),
         workSheetCompleted: formData.workSheetCompleted,
+        furoAgua: work.type === "furo_agua" ? work.furoAgua : undefined,
         updatedAt: new Date().toISOString(),
       };
 
