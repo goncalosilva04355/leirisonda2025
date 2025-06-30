@@ -67,6 +67,15 @@ export function useFirebaseSync() {
       }
     };
 
+    // Listener específico para notificações de delete (sem full sync)
+    const handleDeleteNotification = (event: CustomEvent) => {
+      console.log("🗑️ Delete notification received:", event.detail);
+      // Apenas recarregar dados locais sem fazer sync completo do Firebase
+      if (user) {
+        loadAllData();
+      }
+    };
+
     // Listen for visibility changes to trigger sync when tab becomes active
     const handleVisibilityChange = () => {
       if (!document.hidden && user && isFirebaseAvailable && isOnline) {
