@@ -122,7 +122,7 @@ export function useNotifications() {
       }
 
       try {
-        await notificationService.notifyWorkAssigned(work, assignedUsers);
+        await NotificationService.notifyWorkAssigned(work, assignedUsers);
       } catch (error) {
         console.error(
           "❌ Erro ao enviar notificação de obra atribuída:",
