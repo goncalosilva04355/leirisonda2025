@@ -25,21 +25,35 @@ export function LoginInfo() {
         if (storedUsers) {
           const parsedUsers = JSON.parse(storedUsers);
           const debugInfo = parsedUsers.map((user: any) => {
-            const passwordById = localStorage.getItem(`password_${user.id}`);
-            const passwordByEmail = localStorage.getItem(
+            // Check all possible password keys
+            const passwordKeys = [
+              `password_${user.id}`,
               `password_${user.email}`,
-            );
+              `password_${user.email?.trim().toLowerCase()}`,
+            ];
+
+            const passwordDetails = passwordKeys.map((key) => ({
+              key,
+              value: localStorage.getItem(key),
+              exists: !!localStorage.getItem(key),
+            }));
+
+            const firstPassword = passwordDetails.find((p) => p.exists)?.value;
 
             return {
               id: user.id,
               name: user.name,
               email: user.email,
               role: user.role,
-              hasPassword: !!(passwordById || passwordByEmail),
+              hasPassword: !!firstPassword,
               passwordStorageDetails: {
-                byId: !!passwordById,
-                byEmail: !!passwordByEmail,
-                actualPassword: passwordById || passwordByEmail || "none",
+                byId: !!localStorage.getItem(`password_${user.id}`),
+                byEmail: !!localStorage.getItem(`password_${user.email}`),
+                byNormalizedEmail: !!localStorage.getItem(
+                  `password_${user.email?.trim().toLowerCase()}`,
+                ),
+                actualPassword: firstPassword || "none",
+                allKeys: passwordDetails,
               },
             };
           });
@@ -47,6 +61,7 @@ export function LoginInfo() {
         }
       } catch (error) {
         console.error("Error loading debug info:", error);
+        setUsers([]);
       }
     }
   }, [showDebug]);
