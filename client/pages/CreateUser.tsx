@@ -189,10 +189,25 @@ export function CreateUser() {
       // Verify user was created correctly
       const verification = {
         userSaved: localStorage.getItem("users")?.includes(newUser.id) || false,
-        passwordSaved: !!localStorage.getItem(`password_${newUser.id}`),
+        passwordSavedById: !!localStorage.getItem(`password_${newUser.id}`),
+        passwordSavedByEmail: !!localStorage.getItem(
+          `password_${newUser.email}`,
+        ),
         totalUsers: JSON.parse(localStorage.getItem("users") || "[]").length,
+        userCanBeFound: JSON.parse(localStorage.getItem("users") || "[]").find(
+          (u: UserType) => u.email === newUser.email,
+        ),
       };
       console.log("✅ User creation verification:", verification);
+
+      // Test immediate login capability
+      const testLogin = {
+        email: newUser.email,
+        storedPassword: localStorage.getItem(`password_${newUser.id}`),
+        canLogin:
+          localStorage.getItem(`password_${newUser.id}`) === formData.password,
+      };
+      console.log("🧪 Login test:", testLogin);
 
       setSuccess(
         `Utilizador criado com sucesso! Email: ${newUser.email} - Pode agora fazer login.`,
