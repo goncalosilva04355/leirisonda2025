@@ -1223,7 +1223,7 @@ export class FirebaseService {
           const maintenanceSnap = await getDoc(maintenanceRef);
 
           if (!maintenanceSnap.exists()) {
-            await updateDoc(maintenanceRef, {
+            await setDoc(maintenanceRef, {
               ...maintenance,
               createdAt: maintenance.createdAt
                 ? new Date(maintenance.createdAt)
