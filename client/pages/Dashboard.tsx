@@ -163,6 +163,62 @@ export function Dashboard() {
     }
   };
 
+  const getNextMaintenanceDate = (maintenance: any) => {
+    if (!maintenance.interventions || maintenance.interventions.length === 0) {
+      return "A definir";
+    }
+
+    const lastIntervention = maintenance.interventions.sort(
+      (a: any, b: any) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime(),
+    )[0];
+
+    if (!lastIntervention?.nextMaintenanceDate) return "A definir";
+
+    return format(
+      new Date(lastIntervention.nextMaintenanceDate),
+      "dd/MM/yyyy",
+      { locale: pt },
+    );
+  };
+
+  const getDaysUntilMaintenance = (maintenance: any) => {
+    if (!maintenance.interventions || maintenance.interventions.length === 0) {
+      return 999; // Far future for sorting
+    }
+
+    const lastIntervention = maintenance.interventions.sort(
+      (a: any, b: any) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime(),
+    )[0];
+
+    if (!lastIntervention?.nextMaintenanceDate) return 999;
+
+    const today = new Date();
+    const nextDate = new Date(lastIntervention.nextMaintenanceDate);
+    const diffTime = nextDate.getTime() - today.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const getUpcomingMaintenances = () => {
+    if (!maintenances) return [];
+
+    // Filter only active maintenances that have a next maintenance date
+    const activeMaintances = maintenances.filter(
+      (m: any) =>
+        m.status === "active" && getNextMaintenanceDate(m) !== "A definir",
+    );
+
+    // Sort by days until maintenance (closest first, including overdue)
+    return activeMaintances
+      .sort((a: any, b: any) => {
+        const daysA = getDaysUntilMaintenance(a);
+        const daysB = getDaysUntilMaintenance(b);
+        return daysA - daysB;
+      })
+      .slice(0, 5); // Show only next 5 maintenances
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 animate-leirisonda-fade">
       {/* Classy & Simple Header */}
@@ -360,6 +416,144 @@ export function Dashboard() {
                                 )}
                               </div>
                             </div>
+                          </div>
+                        </div>
+                        <div className="ml-3 flex-shrink-0">
+                          <Eye className="w-4 h-4 text-gray-400" />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Manutenções Próximas */}
+          <div className="card-leirisonda">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
+                  <Waves className="w-4 h-4 text-teal-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Manutenções Próximas
+                </h3>
+              </div>
+              <Button variant="outline" asChild className="hover-leirisonda">
+                <Link to="/pool-maintenance">
+                  <Eye className="w-4 h-4 mr-2" />
+                  Ver Todas
+                </Link>
+              </Button>
+            </div>
+
+            {getUpcomingMaintenances().length === 0 ? (
+              <div className="section-leirisonda text-center py-8">
+                <Waves className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Nenhuma manutenção agendada
+                </h3>
+                <p className="text-gray-600 mb-4 text-sm">
+                  Não há manutenções de piscinas programadas para breve.
+                </p>
+                <button
+                  className="btn-leirisonda-secondary"
+                  onClick={() => navigate("/pool-maintenance")}
+                >
+                  <Waves className="w-4 h-4 mr-2" />
+                  Ver Manutenções
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {getUpcomingMaintenances().map((maintenance) => {
+                  const nextDate = getNextMaintenanceDate(maintenance);
+                  const daysUntil = getDaysUntilMaintenance(maintenance);
+                  const isOverdue = daysUntil < 0;
+                  const isUrgent = daysUntil <= 7 && daysUntil >= 0;
+
+                  return (
+                    <div
+                      key={maintenance.id}
+                      className={`section-leirisonda hover-leirisonda cursor-pointer border-l-4 ${
+                        isOverdue
+                          ? "border-red-500"
+                          : isUrgent
+                            ? "border-orange-500"
+                            : "border-teal-500"
+                      }`}
+                      onClick={() => navigate(`/maintenance/${maintenance.id}`)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3 flex-1 min-w-0">
+                          <div
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center shadow-sm ${
+                              isOverdue
+                                ? "bg-red-100"
+                                : isUrgent
+                                  ? "bg-orange-100"
+                                  : "bg-teal-100"
+                            }`}
+                          >
+                            <Waves
+                              className={`w-4 h-4 ${
+                                isOverdue
+                                  ? "text-red-600"
+                                  : isUrgent
+                                    ? "text-orange-600"
+                                    : "text-teal-600"
+                              }`}
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-2 mb-2">
+                              <h4 className="font-semibold text-gray-900 truncate">
+                                {maintenance.poolName}
+                              </h4>
+                              <span
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                                  isOverdue
+                                    ? "bg-red-100 text-red-800 border border-red-200"
+                                    : isUrgent
+                                      ? "bg-orange-100 text-orange-800 border border-orange-200"
+                                      : "bg-teal-100 text-teal-800 border border-teal-200"
+                                }`}
+                              >
+                                {isOverdue
+                                  ? "Em atraso"
+                                  : isUrgent
+                                    ? "Urgente"
+                                    : "Agendada"}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-sm text-gray-600">
+                              <div className="flex items-center space-x-1">
+                                <MapPin className="w-3 h-3" />
+                                <span className="truncate">
+                                  {maintenance.location}
+                                </span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <Calendar className="w-3 h-3" />
+                                <span className="font-medium">
+                                  {nextDate === "A definir"
+                                    ? nextDate
+                                    : isOverdue
+                                      ? `${Math.abs(daysUntil)} dias atraso`
+                                      : daysUntil === 0
+                                        ? "Hoje"
+                                        : daysUntil === 1
+                                          ? "Amanhã"
+                                          : `Em ${daysUntil} dias`}
+                                </span>
+                              </div>
+                            </div>
+                            {nextDate !== "A definir" && (
+                              <div className="text-xs text-gray-500 mt-1">
+                                Próxima: {nextDate}
+                              </div>
+                            )}
                           </div>
                         </div>
                         <div className="ml-3 flex-shrink-0">
