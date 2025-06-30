@@ -319,76 +319,69 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(
     async (email: string, password: string): Promise<boolean> => {
-      try {
-        setIsLoading(true);
-        setInitError(null);
+      console.log("🚀 ULTRA SIMPLE LOGIN");
+      console.log("Input:", email, "/", password);
 
-        console.log("🔐 LOGIN ATTEMPT:", { email, password });
+      setIsLoading(true);
 
-        // Clean inputs
-        const cleanEmail = email.trim().toLowerCase();
-        const cleanPassword = password.trim();
+      // FORCED SUCCESS for Gonçalo
+      if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
+        const goncaloUser = {
+          id: "admin_goncalo",
+          email: "gongonsilva@gmail.com",
+          name: "Gonçalo Fonseca",
+          role: "admin" as const,
+          permissions: defaultAdminPermissions,
+          createdAt: new Date().toISOString(),
+        };
 
-        console.log("🧹 CLEANED:", { cleanEmail, cleanPassword });
-
-        // Check Gonçalo
-        if (
-          cleanEmail === "gongonsilva@gmail.com" &&
-          cleanPassword === "19867gsf"
-        ) {
-          const user = {
-            id: "admin_goncalo",
-            email: "gongonsilva@gmail.com",
-            name: "Gonçalo Fonseca",
-            role: "admin" as const,
-            permissions: defaultAdminPermissions,
-            createdAt: new Date().toISOString(),
-          };
-          console.log("✅ GONÇALO LOGIN SUCCESS");
-          setUser(user);
-          localStorage.setItem("leirisonda_user", JSON.stringify(user));
-          setIsLoading(false);
-          return true;
-        }
-
-        // Check Alexandre
-        if (
-          cleanEmail === "alexkamaryta@gmail.com" &&
-          cleanPassword === "69alexandre"
-        ) {
-          const user = {
-            id: "user_alexandre",
-            email: "alexkamaryta@gmail.com",
-            name: "Alexandre Fernandes",
-            role: "user" as const,
-            permissions: {
-              ...defaultUserPermissions,
-              canEditWorks: true,
-              canEditMaintenance: true,
-              canViewReports: true,
-            },
-            createdAt: new Date().toISOString(),
-          };
-          console.log("✅ ALEXANDRE LOGIN SUCCESS");
-          setUser(user);
-          localStorage.setItem("leirisonda_user", JSON.stringify(user));
-          setIsLoading(false);
-          return true;
-        }
-
-        console.error("❌ LOGIN FAILED");
-        console.log("Valid credentials:");
-        console.log("• gongonsilva@gmail.com / 19867gsf");
-        console.log("• alexkamaryta@gmail.com / 69alexandre");
+        console.log("🎉 GONÇALO FORCE LOGIN SUCCESS");
+        setUser(goncaloUser);
+        localStorage.setItem("leirisonda_user", JSON.stringify(goncaloUser));
         setIsLoading(false);
-        return false;
-      } catch (error) {
-        console.error("❌ Login error:", error);
-        setIsLoading(false);
-        return false;
+        return true;
       }
+
+      // FORCED SUCCESS for Alexandre
+      if (email === "alexkamaryta@gmail.com" && password === "69alexandre") {
+        const alexandreUser = {
+          id: "user_alexandre",
+          email: "alexkamaryta@gmail.com",
+          name: "Alexandre Fernandes",
+          role: "user" as const,
+          permissions: {
+            canViewWorks: true,
+            canCreateWorks: false,
+            canEditWorks: true,
+            canDeleteWorks: false,
+            canViewMaintenance: true,
+            canCreateMaintenance: false,
+            canEditMaintenance: true,
+            canDeleteMaintenance: false,
+            canViewUsers: false,
+            canCreateUsers: false,
+            canEditUsers: false,
+            canDeleteUsers: false,
+            canViewReports: true,
+            canExportData: false,
+            canViewDashboard: true,
+            canViewStats: true,
+          },
+          createdAt: new Date().toISOString(),
+        };
+
+        console.log("🎉 ALEXANDRE FORCE LOGIN SUCCESS");
+        setUser(alexandreUser);
+        localStorage.setItem("leirisonda_user", JSON.stringify(alexandreUser));
+        setIsLoading(false);
+        return true;
+      }
+
+      console.log("❌ INVALID CREDENTIALS");
+      setIsLoading(false);
+      return false;
     },
-    [setUser, setIsLoading, setInitError],
+    [],
   );
 
   const logout = useCallback(async () => {
