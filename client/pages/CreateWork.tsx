@@ -297,29 +297,66 @@ export function CreateWork() {
           )}
         </div>
 
-        {/* Debug button para Gonçalo */}
+        {/* Debug buttons para Gonçalo */}
         {user?.email === "gongonsilva@gmail.com" && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const works = JSON.parse(localStorage.getItem("works") || "[]");
-              console.log("🔍 DEBUG OBRAS SALVAS:", {
-                total: works.length,
-                ultimasObras: works.slice(-3).map((w: any) => ({
-                  id: w.id,
-                  cliente: w.clientName,
-                  folhaObra: w.workSheetNumber,
-                  criada: w.createdAt,
-                })),
-              });
-              alert(
-                `DEBUG: ${works.length} obras salvas no localStorage. Ver console para detalhes.`,
-              );
-            }}
-          >
-            🔍 Debug
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const works = JSON.parse(localStorage.getItem("works") || "[]");
+                console.log("🔍 DEBUG OBRAS SALVAS:", {
+                  total: works.length,
+                  ultimasObras: works.slice(-3).map((w: any) => ({
+                    id: w.id,
+                    cliente: w.clientName,
+                    folhaObra: w.workSheetNumber,
+                    criada: w.createdAt,
+                  })),
+                });
+                alert(
+                  `DEBUG: ${works.length} obras salvas no localStorage. Ver console para detalhes.`,
+                );
+              }}
+            >
+              🔍 Debug
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                console.log("🧪 TESTE: Criando obra simples...");
+                try {
+                  const testWork = {
+                    workSheetNumber: `TEST-${Date.now()}`,
+                    type: "piscina" as const,
+                    clientName: "TESTE Cliente",
+                    address: "TESTE Morada",
+                    contact: "123456789",
+                    entryTime: new Date().toISOString(),
+                    status: "pendente" as const,
+                    vehicles: [],
+                    technicians: [],
+                    assignedUsers: [],
+                    photos: [],
+                    observations: "",
+                    workPerformed: "",
+                    workSheetCompleted: false,
+                  };
+
+                  const workId = await createWork(testWork);
+                  console.log("✅ TESTE: Obra criada:", workId);
+                  alert(`TESTE: Obra criada com ID ${workId}`);
+                } catch (error) {
+                  console.error("❌ TESTE: Erro:", error);
+                  alert(`TESTE FALHOU: ${error}`);
+                }
+              }}
+            >
+              🧪 Teste
+            </Button>
+          </div>
         )}
       </div>
 
