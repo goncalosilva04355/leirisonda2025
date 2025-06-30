@@ -51,6 +51,23 @@ export function MaintenanceDetail() {
     loadMaintenance();
   }, [id, maintenances]);
 
+  const handleDeleteMaintenance = async () => {
+    if (!maintenance || !user?.permissions.canDeleteMaintenance) {
+      alert("Erro: Não tem permissão para eliminar piscinas");
+      return;
+    }
+
+    try {
+      console.log(`🗑️ Eliminando piscina: ${maintenance.poolName}`);
+      await deleteMaintenance(maintenance.id);
+      console.log("✅ Piscina eliminada com sucesso");
+      navigate("/pool-maintenance");
+    } catch (error) {
+      console.error("❌ Erro ao eliminar piscina:", error);
+      alert("Erro ao eliminar piscina. Tente novamente.");
+    }
+  };
+
   const loadMaintenance = () => {
     try {
       if (!id) return;
