@@ -4,8 +4,8 @@ import { useAuth } from "@/components/AuthProvider";
 import { LoginInfo } from "@/components/LoginInfo";
 
 export function Login() {
-  const [email, setEmail] = useState("alexkamaryta@gmail.com");
-  const [password, setPassword] = useState("69alexandre");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
