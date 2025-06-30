@@ -80,6 +80,25 @@ export function LoginInfo() {
     }
   };
 
+  const cleanUserSystem = () => {
+    if (
+      confirm(
+        "🧹 ATENÇÃO: Isto vai limpar COMPLETAMENTE o sistema de utilizadores e recriar apenas os 2 utilizadores corretos (Gonçalo e Alexandre). Continuar?",
+      )
+    ) {
+      try {
+        DefaultDataService.forceCleanUserSystem();
+        alert(
+          "✅ Sistema de utilizadores limpo e reconfigurado!\n\nUtilizadores disponíveis:\n• gongonsilva@gmail.com / 19867gsf\n• alexkamaryta@gmail.com / 69alexandre",
+        );
+        window.location.reload();
+      } catch (error) {
+        console.error("❌ Error cleaning user system:", error);
+        alert("❌ Erro ao limpar sistema: " + error);
+      }
+    }
+  };
+
   const fixSpecificUser = (userEmail: string) => {
     try {
       console.log(`🔧 Fixing specific user: ${userEmail}`);
