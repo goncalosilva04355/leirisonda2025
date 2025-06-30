@@ -119,10 +119,27 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
-            <Route path="/system-status" element={<SystemStatus />} />
+            <Route
+              path="/system-status"
+              element={
+                <Suspense
+                  fallback={<LoadingPage message="A carregar diagnóstico..." />}
+                >
+                  <SystemStatus />
+                </Suspense>
+              }
+            />
             <Route
               path="/emergency-diagnostic"
-              element={<EmergencyDiagnostic />}
+              element={
+                <Suspense
+                  fallback={
+                    <LoadingPage message="A carregar diagnóstico de emergência..." />
+                  }
+                >
+                  <EmergencyDiagnostic />
+                </Suspense>
+              }
             />
 
             {/* Protected routes */}
