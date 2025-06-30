@@ -191,13 +191,23 @@ export function MaintenanceList() {
             </div>
           </div>
 
-          <div className="w-full sm:w-auto shrink-0">
+          <div className="w-full sm:w-auto shrink-0 flex flex-col sm:flex-row gap-2">
             <Link to="/create-maintenance" className="block">
               <Button className="btn-primary w-full sm:w-auto">
                 <Plus className="mr-2 h-4 w-4" />
                 Nova Piscina
               </Button>
             </Link>
+
+            {user?.permissions?.canDeleteMaintenance && (
+              <Button
+                variant="outline"
+                onClick={handleCleanDuplicates}
+                className="w-full sm:w-auto text-orange-600 border-orange-300 hover:bg-orange-50"
+              >
+                🧹 Limpar Duplicados
+              </Button>
+            )}
           </div>
         </div>
 
