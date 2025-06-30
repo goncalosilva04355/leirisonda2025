@@ -153,7 +153,9 @@ export function Dashboard() {
       const filtered = worksList.filter(
         (work) =>
           work.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          work.workSheetNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          work.workSheetNumber
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
           work.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           work.contact?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
@@ -173,56 +175,74 @@ export function Dashboard() {
 
       // Calculate stats with error protection
       const totalWorks = worksList.length || 0;
-      const pendingWorks = worksList.filter(
-        (w) => w?.status === "pendente",
-      ).length || 0;
-      const inProgressWorks = worksList.filter(
-        (w) => w?.status === "em_progresso",
-      ).length || 0;
-      const completedWorks = worksList.filter(
-        (w) => w?.status === "concluida",
-    ).length;
+      const pendingWorks =
+        worksList.filter((w) => w?.status === "pendente").length || 0;
+      const inProgressWorks =
+        worksList.filter((w) => w?.status === "em_progresso").length || 0;
+      const completedWorks =
+        worksList.filter((w) => w?.status === "concluida").length || 0;
 
-    // Calculate work sheets pending (not completed)
-    const workSheetsPending = worksList.filter(
-      (w) => !w.workSheetCompleted,
-    ).length;
+      // Calculate work sheets pending (not completed)
+      const workSheetsPending =
+        worksList.filter((w) => !w?.workSheetCompleted).length || 0;
 
-    setStats({
-      totalWorks,
-      pendingWorks,
-      inProgressWorks,
-      completedWorks,
-      remainingWorkSheets: 0, // Not used anymore
-      workSheetsPending,
-    });
+      setStats({
+        totalWorks,
+        pendingWorks,
+        inProgressWorks,
+        completedWorks,
+        remainingWorkSheets: 0, // Not used anymore
+        workSheetsPending,
+      });
 
-    // Get recent works - priorizar obras atribuídas ao usuário logado
-    const assignedWorks = worksList.filter(
-      (work) =>
-        work.assignedUsers && work.assignedUsers.includes(user?.id || ""),
-    );
-    const otherWorks = worksList.filter(
-      (work) =>
-        !work.assignedUsers || !work.assignedUsers.includes(user?.id || ""),
-    );
+      // Get recent works - priorizar obras atribuídas ao usuário logado
+      const assignedWorks = worksList.filter(
+        (work) =>
+          work?.assignedUsers && work.assignedUsers.includes(user?.id || ""),
+      );
+      const otherWorks = worksList.filter(
+        (work) =>
+          !work?.assignedUsers || !work.assignedUsers.includes(user?.id || ""),
+      );
 
-    // Ordenar por data (mais recentes primeiro)
-    const sortedAssignedWorks = assignedWorks.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-    const sortedOtherWorks = otherWorks.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
+      // Ordenar por data (mais recentes primeiro)
+      const sortedAssignedWorks = assignedWorks.sort(
+        (a, b) =>
+          new Date(b?.createdAt || 0).getTime() -
+          new Date(a?.createdAt || 0).getTime(),
+      );
+      const sortedOtherWorks = otherWorks.sort(
+        (a, b) =>
+          new Date(b?.createdAt || 0).getTime() -
+          new Date(a?.createdAt || 0).getTime(),
+      );
 
-    // Combinar: obras atribuídas primeiro, depois outras (máximo 5 total)
-    const recentWorksList = [...sortedAssignedWorks, ...sortedOtherWorks].slice(
-      0,
-      5,
-    );
-    setRecentWorks(recentWorksList);
+      // Combinar: obras atribuídas primeiro, depois outras (máximo 5 total)
+      const recentWorksList = [
+        ...sortedAssignedWorks,
+        ...sortedOtherWorks,
+      ].slice(0, 5);
+      setRecentWorks(recentWorksList);
+
+      console.log("✅ Dashboard data carregado:", {
+        totalWorks,
+        pendingWorks,
+        inProgressWorks,
+        completedWorks,
+      });
+    } catch (error) {
+      console.error("❌ Erro ao processar dados do dashboard:", error);
+      // Set safe defaults in case of error
+      setStats({
+        totalWorks: 0,
+        pendingWorks: 0,
+        inProgressWorks: 0,
+        completedWorks: 0,
+        remainingWorkSheets: 0,
+        workSheetsPending: 0,
+      });
+      setRecentWorks([]);
+    }
   };
 
   const getStatusInfo = (status: string) => {
