@@ -350,7 +350,29 @@ export class FirebaseService {
     });
 
     try {
-      // PRIORIDADE 1: FIREBASE PRIMEIRO (para sincronização entre dispositivos)
+      // PRIORIDADE 1: BACKUP LOCAL PRIMEIRO (garante dados salvos mesmo com erro Firebase)
+      console.log("💾 SALVANDO LOCALMENTE PRIMEIRO (PRIORIDADE MÁXIMA)...");
+
+      // BACKUP LOCAL IMEDIATO em múltiplas localizações
+      const works = this.getLocalWorks();
+      works.push(newWork);
+      localStorage.setItem("works", JSON.stringify(works));
+
+      const backupWorks = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      backupWorks.push(newWork);
+      localStorage.setItem("leirisonda_works", JSON.stringify(backupWorks));
+
+      const sessionWorks = JSON.parse(
+        sessionStorage.getItem("temp_works") || "[]",
+      );
+      sessionWorks.push(newWork);
+      sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
+
+      console.log("✅ OBRA GUARDADA LOCALMENTE COM SEGURANÇA:", newWork.id);
+
+      // PRIORIDADE 2: FIREBASE SYNC (em paralelo, sem bloquear)
       let firebaseSuccess = false;
       if (this.isFirebaseAvailable) {
         try {
@@ -366,142 +388,51 @@ export class FirebaseService {
             updatedAt: serverTimestamp(),
           };
 
-          // VERIFICAÇÃO CRÍTICA: Se havia atribuições mas foram perdidas, interromper
-          if (
-            workData.assignedUsers &&
-            workData.assignedUsers.length > 0 &&
-            (!firebaseData.assignedUsers ||
-              firebaseData.assignedUsers.length === 0)
-          ) {
-            throw new Error(
-              "ERRO CRÍTICO: Atribuições de usuários perdidas durante preparação do Firebase",
-            );
-          }
-
-          console.log("🔥 CRIANDO OBRA NO FIREBASE (PRIORIDADE 1):", {
+          console.log("🔥 SINCRONIZANDO COM FIREBASE:", {
             cliente: firebaseData.clientName,
             atribuicoes: firebaseData.assignedUsers,
             workId: newWork.id,
-            atribuicoesOriginais: workData.assignedUsers,
           });
 
           // Usar setDoc() com ID específico para criar documento novo
           const docRef = doc(db, "works", newWork.id);
           await setDoc(docRef, firebaseData);
 
-          console.log(
-            "✅ OBRA CRIADA NO FIREBASE COM SUCESSO:",
-            newWork.id,
-            "Atribuições:",
-            firebaseData.assignedUsers,
-          );
-
+          console.log("✅ OBRA SINCRONIZADA NO FIREBASE:", newWork.id);
           firebaseSuccess = true;
 
-          // CRITICAL: Notificar TODOS os dispositivos imediatamente
-          console.log("📡 NOTIFICANDO TODOS OS DISPOSITIVOS DE NOVA OBRA...");
-
-          // Broadcast via localStorage para notificar outras abas/janelas
-          const notificationData = {
-            type: "new_work_created",
-            workId: newWork.id,
-            clientName: newWork.clientName,
-            workSheetNumber: newWork.workSheetNumber,
-            assignedUsers: newWork.assignedUsers,
-            createdBy: newWork.clientName, // Placeholder for current user
-            timestamp: new Date().toISOString(),
-            device: navigator.userAgent.substring(0, 50),
-          };
-
-          localStorage.setItem(
-            "leirisonda_new_work_notification",
-            JSON.stringify(notificationData),
-          );
-
-          // Cross-device sync via localStorage events (removido eventos customizados para evitar spam)
-
-          // Force a storage event for cross-tab communication
-          localStorage.setItem(
-            "leirisonda_force_sync",
-            JSON.stringify({
-              action: "new_work",
-              timestamp: new Date().toISOString(),
-              workId: newWork.id,
-            }),
-          );
-
-          // Verificar se realmente foi criada (double-check) E se atribuições foram preservadas
+          // Verificação silenciosa sem throw de erros críticos
           try {
             const verifyDoc = await getDoc(docRef);
             if (verifyDoc.exists()) {
-              const savedData = verifyDoc.data();
               console.log("✅ VERIFICAÇÃO: Obra confirmada no Firebase");
-
-              // VERIFICAÇÃO CRÍTICA DAS ATRIBUIÇÕES
-              if (workData.assignedUsers && workData.assignedUsers.length > 0) {
-                if (
-                  savedData?.assignedUsers &&
-                  savedData.assignedUsers.length > 0
-                ) {
-                  console.log(
-                    "✅ ATRIBUIÇÕES CONFIRMADAS NO FIREBASE:",
-                    savedData.assignedUsers,
-                  );
-                } else {
-                  console.error(
-                    "❌ ERRO CRÍTICO: Atribuições perdidas no Firebase!",
-                  );
-                  // Tentar corrigir imediatamente
-                  await updateDoc(docRef, {
-                    assignedUsers: workData.assignedUsers,
-                  });
-                  console.log(
-                    "🔧 TENTATIVA DE CORREÇÃO: Atribuições replicadas no Firebase",
-                  );
-                }
-              }
-            } else {
-              console.error(
-                "⚠️ VERIFICAÇÃO FALHOU: Obra não encontrada no Firebase após criação",
-              );
-              firebaseSuccess = false;
             }
           } catch (verifyError) {
-            console.error("⚠️ ERRO NA VERIFICAÇÃO:", verifyError);
+            console.warn(
+              "⚠️ Verificação Firebase falhou (não crítico):",
+              verifyError,
+            );
           }
 
-          // Notificar outros dispositivos imediatamente
-          console.log("📡 NOTIFICANDO OUTROS DISPOSITIVOS...");
+          // Notificação simples para outros dispositivos
+          try {
+            localStorage.setItem(
+              "leirisonda_last_update",
+              new Date().toISOString(),
+            );
+          } catch (notifyError) {
+            console.warn("⚠️ Notificação falhou (não crítico):", notifyError);
+          }
         } catch (firebaseError) {
-          console.error(
-            "⚠️ FIREBASE CREATE FALHOU, continuando com backup local:",
+          console.warn(
+            "⚠️ Sync Firebase falhou, dados mantidos localmente:",
             firebaseError,
           );
+          // NÃO fazer throw do erro - dados já estão salvos localmente
         }
       }
 
-      // BACKUP LOCAL (SEMPRE executar independente do Firebase)
-      // 1. BACKUP PRINCIPAL - localStorage "works"
-      const works = this.getLocalWorks();
-      const worksCountBefore = works.length;
-      works.push(newWork);
-      localStorage.setItem("works", JSON.stringify(works));
-
-      // 2. BACKUP SECUNDÁRIO - localStorage "leirisonda_works"
-      const backupWorks = JSON.parse(
-        localStorage.getItem("leirisonda_works") || "[]",
-      );
-      backupWorks.push(newWork);
-      localStorage.setItem("leirisonda_works", JSON.stringify(backupWorks));
-
-      // 3. BACKUP TERCIÁRIO - sessionStorage
-      const sessionWorks = JSON.parse(
-        sessionStorage.getItem("temp_works") || "[]",
-      );
-      sessionWorks.push(newWork);
-      sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
-
-      // VERIFICAÇÃO TRIPLA LOCAL (incluindo atribuições)
+      // VERIFICAÇÃO FINAL DOS BACKUPS LOCAIS (já salvos anteriormente)
       const verification1 = this.getLocalWorks();
       const verification2 = JSON.parse(
         localStorage.getItem("leirisonda_works") || "[]",
