@@ -209,6 +209,10 @@ export function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email de acesso"
                 disabled={isSubmitting}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
                 style={{
                   width: "100%",
                   height: "48px",
