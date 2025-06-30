@@ -265,6 +265,51 @@ export function WorkDetail() {
               Editar Obra
             </Button>
           </Link>
+
+          {/* Botão de teste de eliminação apenas para Gonçalo */}
+          {user?.email === "gongonsilva@gmail.com" && (
+            <Button
+              variant="outline"
+              onClick={() => {
+                console.log("🧪 TESTE DE ELIMINAÇÃO - Gonçalo");
+                console.log("📋 Dados da obra:", {
+                  id: work.id,
+                  nome: work.clientName,
+                  folha: work.workSheetNumber,
+                });
+                console.log("👤 Permissões do utilizador:", user.permissions);
+                console.log(
+                  "🗑️ Pode eliminar obras:",
+                  user.permissions.canDeleteWorks,
+                );
+
+                const worksLocal = localStorage.getItem("works");
+                if (worksLocal) {
+                  const localWorks = JSON.parse(worksLocal);
+                  const obraExiste = localWorks.find(
+                    (w: any) => w.id === work.id,
+                  );
+                  console.log(
+                    "💾 Obra existe no localStorage:",
+                    obraExiste ? "SIM" : "NÃO",
+                  );
+                  console.log(
+                    "📊 Total de obras no localStorage:",
+                    localWorks.length,
+                  );
+                } else {
+                  console.log("📱 Nenhuma obra no localStorage");
+                }
+
+                alert(
+                  "Teste executado! Verifique a consola do browser (F12) para logs detalhados.",
+                );
+              }}
+            >
+              🧪 Teste Eliminação
+            </Button>
+          )}
+
           {user?.permissions.canDeleteWorks && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
