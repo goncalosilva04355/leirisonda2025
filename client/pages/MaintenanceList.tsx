@@ -76,47 +76,6 @@ export function MaintenanceList() {
     }
   };
 
-  const handleCleanDuplicates = () => {
-    try {
-      console.log("🧹 Iniciando limpeza de duplicados...");
-
-      // Detectar duplicados primeiro
-      const duplicates = detectDuplicateMaintenances(maintenances);
-
-      if (duplicates.length === 0) {
-        alert("✅ Nenhum duplicado encontrado!");
-        return;
-      }
-
-      // Mostrar duplicados encontrados
-      const duplicatesList = duplicates
-        .map((dup) => `• ${dup.poolName}: ${dup.count} cópias`)
-        .join("\n");
-
-      const confirmed = confirm(
-        `🔍 Duplicados encontrados:\n\n${duplicatesList}\n\nDeseja remover os duplicados? Apenas a piscina mais antiga será mantida.`,
-      );
-
-      if (!confirmed) return;
-
-      // Executar limpeza
-      const result = cleanAllMaintenanceStorages();
-
-      if (result.success) {
-        alert(`✅ ${result.message}`);
-        // Recarregar a lista
-        loadMaintenances();
-      } else {
-        alert(`❌ ${result.message}`);
-      }
-
-      console.log("📊 Detalhes da limpeza:", result.details);
-    } catch (error) {
-      console.error("❌ Erro na limpeza:", error);
-      alert(`Erro na limpeza: ${error.message}`);
-    }
-  };
-
   const filteredMaintenances = maintenances.filter((maintenance) => {
     const matchesSearch =
       maintenance.poolName.toLowerCase().includes(searchTerm.toLowerCase()) ||
