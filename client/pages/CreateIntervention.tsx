@@ -284,12 +284,42 @@ export function CreateIntervention() {
         updatedAt: new Date().toISOString(),
       };
 
+      // Debug logs para verificar criação da intervenção
+      console.log("🔍 DEBUG: Dados da nova intervenção:", newIntervention);
+      console.log("🔍 DEBUG: Manutenção antes da atualização:", maintenance);
+      console.log("🔍 DEBUG: Manutenção atualizada:", updatedMaintenance);
+      console.log(
+        "🔍 DEBUG: Total de intervenções após adição:",
+        updatedMaintenance.interventions.length,
+      );
+
       // Use Firebase sync to update maintenance with automatic sync
+      // Passa a manutenção completa para garantir que todas as intervenções sejam salvas
       await updateMaintenance(maintenance.id, updatedMaintenance);
       console.log(
         "✅ Intervenção criada e sincronizada automaticamente:",
         newIntervention.id,
       );
+
+      // Verificar se foi realmente salva
+      setTimeout(() => {
+        const savedMaintenances = JSON.parse(
+          localStorage.getItem("pool_maintenances") || "[]",
+        );
+        const savedMaintenance = savedMaintenances.find(
+          (m: any) => m.id === maintenance.id,
+        );
+        console.log(
+          "🔍 DEBUG: Verificação localStorage após salvamento:",
+          savedMaintenance,
+        );
+        if (savedMaintenance) {
+          console.log(
+            "🔍 DEBUG: Intervenções salvas no localStorage:",
+            savedMaintenance.interventions.length,
+          );
+        }
+      }, 1000);
 
       navigate(`/maintenance/${maintenance.id}`);
     } catch (err) {
