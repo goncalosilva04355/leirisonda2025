@@ -139,6 +139,14 @@ export function WorksList() {
       }
     }
 
+    // Filter by assigned user
+    if (assignedToFilter) {
+      filtered = filtered.filter(
+        (work) =>
+          work.assignedUsers && work.assignedUsers.includes(assignedToFilter),
+      );
+    }
+
     // Sort by most recent first
     filtered.sort(
       (a, b) =>
