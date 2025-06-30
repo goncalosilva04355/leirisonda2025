@@ -217,6 +217,19 @@ export function CreateWork() {
     updateFormData("technicians", newTechnicians);
   };
 
+  const addAssignedUser = (userId: string) => {
+    if (!formData.assignedUsers.includes(userId)) {
+      updateFormData("assignedUsers", [...formData.assignedUsers, userId]);
+    }
+  };
+
+  const removeAssignedUser = (userId: string) => {
+    const newAssignedUsers = formData.assignedUsers.filter(
+      (id) => id !== userId,
+    );
+    updateFormData("assignedUsers", newAssignedUsers);
+  };
+
   return (
     <div className="space-y-8">
       {/* Header */}
