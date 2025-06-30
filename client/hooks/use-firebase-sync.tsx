@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { User, Work, PoolMaintenance } from "@shared/types";
 import { firebaseService } from "@/services/FirebaseService";
 import { useAuth } from "@/components/AuthProvider";
@@ -12,24 +12,28 @@ export function useFirebaseSync() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSync, setLastSync] = useState<Date | null>(null);
   const [isFirebaseAvailable] = useState(() => {
-    // Check if Firebase is properly initialized
     const status = firebaseService.getFirebaseStatus();
     return status.isAvailable;
   });
 
-  // Monitor online status and auto-sync when back online
+  // Refs para evitar loops infinitos
+  const syncInProgress = useRef(false);
+  const pendingChanges = useRef<Set<string>>(new Set());
+  const heartbeatInterval = useRef<NodeJS.Timeout | null>(null);
+
+  // Monitor online status e auto-sync quando volta online
   useEffect(() => {
     const handleOnline = () => {
+      console.log("🌐 Dispositivo voltou online - iniciando auto-sync...");
       setIsOnline(true);
-      console.log("🌐 App is online - triggering auto-sync...");
       if (user && isFirebaseAvailable) {
-        triggerAutoSync();
+        triggerInstantSync("network_restored");
       }
     };
 
     const handleOffline = () => {
+      console.log("📱 Dispositivo offline - modo local ativo");
       setIsOnline(false);
-      console.log("📱 App is offline - using local data only");
     };
 
     window.addEventListener("online", handleOnline);
@@ -41,69 +45,63 @@ export function useFirebaseSync() {
     };
   }, [user, isFirebaseAvailable]);
 
-  // Auto-sync function for when going back online
-  const triggerAutoSync = useCallback(async () => {
-    if (!user || !isFirebaseAvailable || !isOnline) return;
+  // Sincronização instantânea robusta
+  const triggerInstantSync = useCallback(
+    async (reason: string = "manual") => {
+      if (
+        !user ||
+        !isFirebaseAvailable ||
+        !isOnline ||
+        syncInProgress.current
+      ) {
+        return;
+      }
 
-    try {
+      syncInProgress.current = true;
       setIsSyncing(true);
-      console.log("🔄 Auto-sync triggered...");
 
-      // Primeiro sincronizar utilizadores globais para garantir que Alexandre está disponível
-      await firebaseService.syncGlobalUsersFromFirebase();
+      try {
+        console.log(`🔄 Sync instantâneo iniciado (${reason})...`);
 
-      // Depois sincronizar dados locais
-      await firebaseService.syncLocalDataToFirebase();
+        // 1. Sincronizar utilizadores globais primeiro
+        await firebaseService.syncGlobalUsersFromFirebase();
 
-      setLastSync(new Date());
-      console.log("✅ Auto-sync completed (including global users)");
-    } catch (error) {
-      console.error("❌ Auto-sync failed:", error);
-    } finally {
-      setIsSyncing(false);
-    }
-  }, [user, isFirebaseAvailable, isOnline]);
+        // 2. Sincronizar dados locais para Firebase (upload)
+        await firebaseService.syncLocalDataToFirebase();
 
-  // Manual sync function
-  const syncData = useCallback(async () => {
-    if (!user) return;
+        // 3. Forçar refresh de dados do Firebase (download)
+        const [latestWorks, latestMaintenances, latestUsers] =
+          await Promise.all([
+            firebaseService.getWorks(),
+            firebaseService.getMaintenances(),
+            firebaseService.getUsers(),
+          ]);
 
-    if (!isFirebaseAvailable) {
-      console.log("📱 Local mode - loading local data");
-      loadLocalData();
-      setLastSync(new Date());
-      return;
-    }
+        // 4. Atualizar estado local
+        setWorks(latestWorks);
+        setMaintenances(latestMaintenances);
+        setUsers(latestUsers);
 
-    if (!isOnline) {
-      console.log("📱 Offline - loading local data");
-      loadLocalData();
-      return;
-    }
+        setLastSync(new Date());
+        pendingChanges.current.clear();
 
-    try {
-      setIsSyncing(true);
-      console.log("🔄 Starting manual sync...");
+        console.log(
+          `✅ Sync instantâneo completo (${reason}): ${latestWorks.length} obras, ${latestMaintenances.length} manutenções`,
+        );
+      } catch (error) {
+        console.error(`❌ Erro no sync instantâneo (${reason}):`, error);
+        // Fallback para dados locais
+        loadLocalDataAsFallback();
+      } finally {
+        syncInProgress.current = false;
+        setIsSyncing(false);
+      }
+    },
+    [user, isFirebaseAvailable, isOnline],
+  );
 
-      // Primeiro sincronizar utilizadores globais
-      await firebaseService.syncGlobalUsersFromFirebase();
-
-      // Depois sincronizar dados locais
-      await firebaseService.syncLocalDataToFirebase();
-
-      setLastSync(new Date());
-      console.log("✅ Manual sync completed (including global users)");
-    } catch (error) {
-      console.error("❌ Manual sync failed:", error);
-      // Fallback to local data
-      loadLocalData();
-    } finally {
-      setIsSyncing(false);
-    }
-  }, [user, isFirebaseAvailable, isOnline]);
-
-  // Load data from localStorage (offline mode)
-  const loadLocalData = useCallback(() => {
+  // Carregar dados locais como fallback
+  const loadLocalDataAsFallback = useCallback(() => {
     try {
       const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
       const localMaintenances = JSON.parse(
@@ -115,256 +113,234 @@ export function useFirebaseSync() {
       setMaintenances(localMaintenances);
       setUsers(localUsers);
 
-      console.log("📱 Loaded data from localStorage");
+      console.log("📱 Dados locais carregados como fallback");
     } catch (error) {
-      console.error("❌ Error loading local data:", error);
+      console.error("❌ Erro ao carregar dados locais:", error);
     }
   }, []);
 
-  // Set up real-time listeners when user is authenticated
+  // Heartbeat para garantir sincronização contínua
   useEffect(() => {
-    if (!user) {
-      loadLocalData();
+    if (!user || !isFirebaseAvailable || !isOnline) {
+      if (heartbeatInterval.current) {
+        clearInterval(heartbeatInterval.current);
+        heartbeatInterval.current = null;
+      }
       return;
     }
 
-    console.log("🔄 Setting up real-time sync listeners...");
+    // Sync a cada 30 segundos quando online
+    heartbeatInterval.current = setInterval(() => {
+      if (pendingChanges.current.size > 0 || Math.random() < 0.1) {
+        // 10% chance de sync preventivo
+        triggerInstantSync("heartbeat");
+      }
+    }, 30000);
 
-    // Listen to works with instant updates
+    return () => {
+      if (heartbeatInterval.current) {
+        clearInterval(heartbeatInterval.current);
+        heartbeatInterval.current = null;
+      }
+    };
+  }, [user, isFirebaseAvailable, isOnline, triggerInstantSync]);
+
+  // Setup real-time listeners para atualizações instantâneas
+  useEffect(() => {
+    if (!user) {
+      loadLocalDataAsFallback();
+      return;
+    }
+
+    console.log("🔄 Configurando listeners real-time...");
+
+    // Listener para obras com atualizações instantâneas
     const unsubscribeWorks = firebaseService.listenToWorks((updatedWorks) => {
+      console.log(`📦 Obras atualizadas via real-time: ${updatedWorks.length}`);
       setWorks(updatedWorks);
       setLastSync(new Date());
+
+      // Sincronizar para localStorage imediatamente
+      localStorage.setItem("works", JSON.stringify(updatedWorks));
     });
 
-    // Listen to maintenances with instant updates
+    // Listener para manutenções com atualizações instantâneas
     const unsubscribeMaintenances = firebaseService.listenToMaintenances(
       (updatedMaintenances) => {
+        console.log(
+          `🏊 Manutenções atualizadas via real-time: ${updatedMaintenances.length}`,
+        );
         setMaintenances(updatedMaintenances);
         setLastSync(new Date());
+
+        // Sincronizar para localStorage imediatamente
+        localStorage.setItem(
+          "pool_maintenances",
+          JSON.stringify(updatedMaintenances),
+        );
       },
     );
 
-    // Listen to users (admin only)
+    // Listener para utilizadores (admin only)
     let unsubscribeUsers: (() => void) | undefined;
     if (user.permissions.canViewUsers) {
       unsubscribeUsers = firebaseService.listenToUsers((updatedUsers) => {
+        console.log(
+          `👥 Utilizadores atualizados via real-time: ${updatedUsers.length}`,
+        );
         setUsers(updatedUsers);
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
       });
     }
 
-    // Initial sync only if Firebase available and online
+    // Sync inicial imediato
     if (isFirebaseAvailable && isOnline) {
-      triggerAutoSync();
+      triggerInstantSync("initial_setup");
+    } else {
+      loadLocalDataAsFallback();
     }
 
     // Cleanup listeners
     return () => {
-      console.log("🔄 Cleaning up real-time listeners");
+      console.log("🔄 Limpando listeners real-time");
       unsubscribeWorks();
       unsubscribeMaintenances();
       if (unsubscribeUsers) unsubscribeUsers();
     };
-  }, [user, isFirebaseAvailable, isOnline, triggerAutoSync]);
+  }, [user, isFirebaseAvailable, isOnline, triggerInstantSync]);
 
-  // Create new work with instant sync
+  // Wrapper para operações CRUD com sync instantâneo automático
+  const withInstantSync = useCallback(
+    async <T,>(
+      operation: () => Promise<T>,
+      operationType: string,
+    ): Promise<T> => {
+      try {
+        // Executar operação
+        const result = await operation();
+
+        // Marcar mudança pendente
+        pendingChanges.current.add(operationType);
+
+        // Sync instantâneo automático (se disponível)
+        if (isFirebaseAvailable && isOnline) {
+          // Aguardar um tick para operação completar
+          setTimeout(() => {
+            triggerInstantSync(`after_${operationType}`);
+          }, 100);
+        }
+
+        return result;
+      } catch (error) {
+        console.error(`❌ Erro em ${operationType}:`, error);
+        throw error;
+      }
+    },
+    [isFirebaseAvailable, isOnline, triggerInstantSync],
+  );
+
+  // CRUD Operations com sync automático
   const createWork = useCallback(
     async (
       workData: Omit<Work, "id" | "createdAt" | "updatedAt">,
     ): Promise<string> => {
-      try {
-        // Create work (FirebaseService handles Firebase/local automatically)
-        const workId = await firebaseService.createWork(workData);
-
-        // Update sync timestamp
-        if (isFirebaseAvailable && isOnline) {
-          setLastSync(new Date());
-        }
-
-        return workId;
-      } catch (error) {
-        console.error("❌ Error creating work:", error);
-        throw error;
-      }
+      return withInstantSync(
+        () => firebaseService.createWork(workData),
+        "create_work",
+      );
     },
-    [isFirebaseAvailable, isOnline],
+    [withInstantSync],
   );
 
-  // Create new maintenance with instant sync
   const createMaintenance = useCallback(
     async (
       maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
     ): Promise<string> => {
-      try {
-        // Create maintenance (FirebaseService handles Firebase/local automatically)
-        const maintenanceId =
-          await firebaseService.createMaintenance(maintenanceData);
-
-        // Update sync timestamp
-        if (isFirebaseAvailable && isOnline) {
-          setLastSync(new Date());
-        }
-
-        return maintenanceId;
-      } catch (error) {
-        console.error("❌ Error creating maintenance:", error);
-        throw error;
-      }
+      return withInstantSync(
+        () => firebaseService.createMaintenance(maintenanceData),
+        "create_maintenance",
+      );
     },
-    [isFirebaseAvailable, isOnline],
+    [withInstantSync],
   );
 
-  // Create new user with instant sync
-  const createUser = useCallback(
-    async (userData: Omit<User, "id" | "createdAt">): Promise<string> => {
-      try {
-        // Create user (FirebaseService handles Firebase/local automatically)
-        const userId = await firebaseService.createUser(userData);
-
-        // Update sync timestamp
-        if (isFirebaseAvailable && isOnline) {
-          setLastSync(new Date());
-        }
-
-        return userId;
-      } catch (error) {
-        console.error("❌ Error creating user:", error);
-        throw error;
-      }
-    },
-    [isFirebaseAvailable, isOnline],
-  );
-
-  // Update user with instant sync
-  const updateUser = useCallback(
-    async (userId: string, updates: Partial<User>): Promise<void> => {
-      try {
-        // Update user (FirebaseService handles Firebase/local automatically)
-        await firebaseService.updateUser(userId, updates);
-
-        // Update sync timestamp
-        if (isFirebaseAvailable && isOnline) {
-          setLastSync(new Date());
-        }
-      } catch (error) {
-        console.error("❌ Error updating user:", error);
-        throw error;
-      }
-    },
-    [isFirebaseAvailable, isOnline],
-  );
-
-  // Update work with instant sync
   const updateWork = useCallback(
     async (workId: string, updates: Partial<Work>): Promise<void> => {
-      try {
-        // Update work (FirebaseService handles Firebase/local automatically)
-        await firebaseService.updateWork(workId, updates);
-
-        // Update sync timestamp
-        if (isFirebaseAvailable && isOnline) {
-          setLastSync(new Date());
-        }
-      } catch (error) {
-        console.error("❌ Error updating work:", error);
-        throw error;
-      }
+      return withInstantSync(
+        () => firebaseService.updateWork(workId, updates),
+        "update_work",
+      );
     },
-    [isFirebaseAvailable, isOnline],
+    [withInstantSync],
   );
 
-  // Update maintenance with instant sync
   const updateMaintenance = useCallback(
     async (
       maintenanceId: string,
       updates: Partial<PoolMaintenance>,
     ): Promise<void> => {
-      try {
-        // Update maintenance (FirebaseService handles Firebase/local automatically)
-        await firebaseService.updateMaintenance(maintenanceId, updates);
-
-        // Update sync timestamp
-        if (isFirebaseAvailable && isOnline) {
-          setLastSync(new Date());
-        }
-      } catch (error) {
-        console.error("❌ Error updating maintenance:", error);
-        throw error;
-      }
+      return withInstantSync(
+        () => firebaseService.updateMaintenance(maintenanceId, updates),
+        "update_maintenance",
+      );
     },
-    [isFirebaseAvailable, isOnline],
+    [withInstantSync],
   );
 
-  // Delete work with instant sync
   const deleteWork = useCallback(
     async (workId: string): Promise<void> => {
-      try {
-        console.log("🗑️ Deleting work with auto-sync:", workId);
-
-        // Delete work (FirebaseService handles Firebase/local automatically)
-        await firebaseService.deleteWork(workId);
-
-        // Auto-sync after deletion (if Firebase available and online)
-        if (isFirebaseAvailable && isOnline) {
-          setLastSync(new Date());
-          console.log("✅ Work deleted and auto-synced:", workId);
-        } else {
-          console.log("📱 Work deleted locally:", workId);
-        }
-      } catch (error) {
-        console.error("❌ Error deleting work:", error);
-        throw error;
-      }
+      return withInstantSync(
+        () => firebaseService.deleteWork(workId),
+        "delete_work",
+      );
     },
-    [isFirebaseAvailable, isOnline],
+    [withInstantSync],
   );
 
-  // Delete maintenance with instant sync
   const deleteMaintenance = useCallback(
     async (maintenanceId: string): Promise<void> => {
-      try {
-        console.log("🗑️ Deleting maintenance with auto-sync:", maintenanceId);
-
-        // Delete maintenance (FirebaseService handles Firebase/local automatically)
-        await firebaseService.deleteMaintenance(maintenanceId);
-
-        // Auto-sync after deletion (if Firebase available and online)
-        if (isFirebaseAvailable && isOnline) {
-          setLastSync(new Date());
-          console.log("✅ Maintenance deleted and auto-synced:", maintenanceId);
-        } else {
-          console.log("📱 Maintenance deleted locally:", maintenanceId);
-        }
-      } catch (error) {
-        console.error("❌ Error deleting maintenance:", error);
-        throw error;
-      }
+      return withInstantSync(
+        () => firebaseService.deleteMaintenance(maintenanceId),
+        "delete_maintenance",
+      );
     },
-    [isFirebaseAvailable, isOnline],
+    [withInstantSync],
   );
 
-  // Delete user with instant sync
+  const createUser = useCallback(
+    async (userData: Omit<User, "id" | "createdAt">): Promise<string> => {
+      return withInstantSync(
+        () => firebaseService.createUser(userData),
+        "create_user",
+      );
+    },
+    [withInstantSync],
+  );
+
+  const updateUser = useCallback(
+    async (userId: string, updates: Partial<User>): Promise<void> => {
+      return withInstantSync(
+        () => firebaseService.updateUser(userId, updates),
+        "update_user",
+      );
+    },
+    [withInstantSync],
+  );
+
   const deleteUser = useCallback(
     async (userId: string): Promise<void> => {
-      try {
-        console.log("🗑️ Deleting user with auto-sync:", userId);
-
-        // Delete user (FirebaseService handles Firebase/local automatically)
-        await firebaseService.deleteUser(userId);
-
-        // Auto-sync after deletion (if Firebase available and online)
-        if (isFirebaseAvailable && isOnline) {
-          setLastSync(new Date());
-          console.log("✅ User deleted and auto-synced:", userId);
-        } else {
-          console.log("📱 User deleted locally:", userId);
-        }
-      } catch (error) {
-        console.error("❌ Error deleting user:", error);
-        throw error;
-      }
+      return withInstantSync(
+        () => firebaseService.deleteUser(userId),
+        "delete_user",
+      );
     },
-    [isFirebaseAvailable, isOnline],
+    [withInstantSync],
   );
+
+  // Sync manual forçado (para casos especiais)
+  const syncData = useCallback(async () => {
+    await triggerInstantSync("manual_force");
+  }, [triggerInstantSync]);
 
   return {
     // Data
@@ -378,7 +354,7 @@ export function useFirebaseSync() {
     lastSync,
     isFirebaseAvailable,
 
-    // Actions with auto-sync
+    // CRUD Operations (com sync automático instantâneo)
     createWork,
     createMaintenance,
     updateWork,
@@ -386,12 +362,12 @@ export function useFirebaseSync() {
     deleteWork,
     deleteMaintenance,
 
-    // User actions with auto-sync
+    // User Operations (com sync automático instantâneo)
     createUser,
     updateUser,
     deleteUser,
 
-    // Manual sync
+    // Manual sync (raramente necessário)
     syncData,
   };
 }
