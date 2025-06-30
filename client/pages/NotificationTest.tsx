@@ -214,7 +214,7 @@ export default function NotificationTest() {
 
     try {
       console.log("📋 Verificando obras pendentes...");
-      const pendingWorks = await notificationService.checkPendingAssignedWorks(
+      const pendingWorks = await NotificationService.checkPendingAssignedWorks(
         user.id,
       );
 
