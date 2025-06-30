@@ -159,14 +159,37 @@ export function useFirebaseSync() {
 
     console.log("🔄 Configurando listeners real-time...");
 
-    // Listener para obras com atualizações instantâneas
+    // Listener para obras com atualizações instantâneas e consolidação
     const unsubscribeWorks = firebaseService.listenToWorks((updatedWorks) => {
       console.log(`📦 Obras atualizadas via real-time: ${updatedWorks.length}`);
-      setWorks(updatedWorks);
+
+      // Consolidar com dados locais existentes para não perder dados
+      const localWorks = firebaseService.consolidateWorksFromAllBackups();
+
+      // Mesclar obras do Firebase com obras locais
+      const allWorks = [...updatedWorks, ...localWorks];
+      const uniqueWorks = allWorks.filter(
+        (work, index, self) =>
+          index === self.findIndex((w) => w.id === work.id),
+      );
+
+      // Ordenar por data de criação
+      uniqueWorks.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+
+      console.log(
+        `✅ Obras consolidadas: Firebase(${updatedWorks.length}) + Local(${localWorks.length}) = Total(${uniqueWorks.length})`,
+      );
+
+      setWorks(uniqueWorks);
       setLastSync(new Date());
 
-      // Sincronizar para localStorage imediatamente
-      localStorage.setItem("works", JSON.stringify(updatedWorks));
+      // Sincronizar para localStorage com backup triplo
+      localStorage.setItem("works", JSON.stringify(uniqueWorks));
+      localStorage.setItem("leirisonda_works", JSON.stringify(uniqueWorks));
+      sessionStorage.setItem("temp_works", JSON.stringify(uniqueWorks));
     });
 
     // Listener para manutenções com atualizações instantâneas
@@ -198,10 +221,12 @@ export function useFirebaseSync() {
       });
     }
 
-    // Sync inicial imediato
+    // Sync inicial imediato com logs detalhados
     if (isFirebaseAvailable && isOnline) {
+      console.log("🚀 Iniciando sync inicial com Firebase...");
       triggerInstantSync("initial_setup");
     } else {
+      console.log("📱 Modo offline: carregando dados locais consolidados...");
       loadLocalDataAsFallback();
     }
 
