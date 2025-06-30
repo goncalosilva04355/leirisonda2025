@@ -206,6 +206,8 @@ export function WorkDetail() {
         return "Avaria";
       case "montagem":
         return "Montagem";
+      case "furo_agua":
+        return "Furo de Água";
       default:
         return type;
     }
