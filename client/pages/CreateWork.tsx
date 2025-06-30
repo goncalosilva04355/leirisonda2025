@@ -386,6 +386,37 @@ export function CreateWork() {
             >
               🧪 Teste
             </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                console.log(
+                  "🔧 CONSOLIDAÇÃO: Forçando consolidação de todas as obras...",
+                );
+                const consolidated =
+                  firebaseService.consolidateWorksFromAllBackups();
+
+                // Limpar obras de emergência após consolidação
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                  const key = localStorage.key(i);
+                  if (key && key.startsWith("emergency_work_")) {
+                    keysToRemove.push(key);
+                  }
+                }
+                keysToRemove.forEach((key) => localStorage.removeItem(key));
+
+                console.log(
+                  `✅ CONSOLIDAÇÃO COMPLETA: ${consolidated.length} obras consolidadas, ${keysToRemove.length} emergências limpas`,
+                );
+                alert(
+                  `🔧 CONSOLIDAÇÃO:\n✅ ${consolidated.length} obras consolidadas\n🧹 ${keysToRemove.length} emergências limpas\n\nRecarregue a página para ver as obras atualizadas.`,
+                );
+              }}
+            >
+              🔧 Consolidar
+            </Button>
           </div>
         )}
       </div>
