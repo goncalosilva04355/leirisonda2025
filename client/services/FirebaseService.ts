@@ -398,11 +398,36 @@ export class FirebaseService {
 
           firebaseSuccess = true;
 
-          // Verificar se realmente foi criada (double-check)
+          // Verificar se realmente foi criada (double-check) E se atribuições foram preservadas
           try {
             const verifyDoc = await getDoc(docRef);
             if (verifyDoc.exists()) {
+              const savedData = verifyDoc.data();
               console.log("✅ VERIFICAÇÃO: Obra confirmada no Firebase");
+
+              // VERIFICAÇÃO CRÍTICA DAS ATRIBUIÇÕES
+              if (workData.assignedUsers && workData.assignedUsers.length > 0) {
+                if (
+                  savedData?.assignedUsers &&
+                  savedData.assignedUsers.length > 0
+                ) {
+                  console.log(
+                    "✅ ATRIBUIÇÕES CONFIRMADAS NO FIREBASE:",
+                    savedData.assignedUsers,
+                  );
+                } else {
+                  console.error(
+                    "❌ ERRO CRÍTICO: Atribuições perdidas no Firebase!",
+                  );
+                  // Tentar corrigir imediatamente
+                  await updateDoc(docRef, {
+                    assignedUsers: workData.assignedUsers,
+                  });
+                  console.log(
+                    "🔧 TENTATIVA DE CORREÇÃO: Atribuições replicadas no Firebase",
+                  );
+                }
+              }
             } else {
               console.error(
                 "⚠️ VERIFICAÇÃO FALHOU: Obra não encontrada no Firebase após criação",
