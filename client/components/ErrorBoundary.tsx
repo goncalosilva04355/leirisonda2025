@@ -25,6 +25,7 @@ export class ErrorBoundary extends Component<Props, State> {
     // EVITAR logout desnecessário em erros de operações CRUD ou Firebase
     const recoversableErrors = [
       "Não foi possível salvar a obra",
+      "obra criada mas não encontrada",
       "Firebase",
       "firestore",
       "Failed to fetch",
@@ -34,6 +35,11 @@ export class ErrorBoundary extends Component<Props, State> {
       "updateWork",
       "não foi possível salvar",
       "Por favor, tente novamente",
+      "Problema de conectividade",
+      "Erro ao guardar obra",
+      "obra pode ter sido guardada",
+      "fallback",
+      "backup",
     ];
 
     const isRecoverableError = recoversableErrors.some((keyword) =>
