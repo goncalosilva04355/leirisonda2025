@@ -215,27 +215,36 @@ export function useFirebaseSync() {
       return;
     }
 
-    console.log("💓 Heartbeat iniciado - sync a cada 15 segundos");
+    console.log(
+      "💓 Heartbeat iniciado - sync a cada 10 segundos (MAIS AGRESSIVO)",
+    );
 
-    // Sync a cada 15 segundos quando online (mais agressivo para resolver o problema)
+    // Sync a cada 10 segundos quando online (AINDA MAIS AGRESSIVO para resolver o problema)
     heartbeatInterval.current = setInterval(() => {
-      // Sync mais frequente se houver mudanças pendentes OU 30% chance de sync preventivo
-      const shouldSync = pendingChanges.current.size > 0 || Math.random() < 0.3;
+      // Sync mais frequente se houver mudanças pendentes OU 50% chance de sync preventivo
+      const shouldSync = pendingChanges.current.size > 0 || Math.random() < 0.5;
 
       if (shouldSync) {
-        console.log("💓 Heartbeat: iniciando sync automático...");
-        triggerInstantSync("heartbeat");
+        console.log("💓 Heartbeat: iniciando sync automático agressivo...");
+        triggerInstantSync("heartbeat_aggressive");
       } else {
-        console.log("💓 Heartbeat: nenhuma ação necessária");
+        console.log("💓 Heartbeat: standby - próximo check em 10s");
       }
-    }, 15000); // 15 segundos em vez de 30
+    }, 10000); // 10 segundos para sync mais frequente
+
+    // Trigger de sync extra agressivo a cada 30 segundos independente das condições
+    const aggressiveInterval = setInterval(() => {
+      console.log("🔥 SUPER SYNC: Forçando sincronização completa...");
+      triggerInstantSync("super_sync_forced");
+    }, 30000); // A cada 30 segundos sync forçado
 
     return () => {
       if (heartbeatInterval.current) {
         clearInterval(heartbeatInterval.current);
         heartbeatInterval.current = null;
       }
-      console.log("💔 Heartbeat limpo");
+      clearInterval(aggressiveInterval);
+      console.log("💔 Heartbeat e sync agressivo limpos");
     };
   }, [user, isFirebaseAvailable, isOnline, triggerInstantSync]);
 
