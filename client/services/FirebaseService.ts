@@ -398,6 +398,48 @@ export class FirebaseService {
 
           firebaseSuccess = true;
 
+          // CRITICAL: Notificar TODOS os dispositivos imediatamente
+          console.log("📡 NOTIFICANDO TODOS OS DISPOSITIVOS DE NOVA OBRA...");
+
+          // Broadcast via localStorage para notificar outras abas/janelas
+          const notificationData = {
+            type: "new_work_created",
+            workId: newWork.id,
+            clientName: newWork.clientName,
+            workSheetNumber: newWork.workSheetNumber,
+            assignedUsers: newWork.assignedUsers,
+            createdBy: newWork.clientName, // Placeholder for current user
+            timestamp: new Date().toISOString(),
+            device: navigator.userAgent.substring(0, 50),
+          };
+
+          localStorage.setItem(
+            "leirisonda_new_work_notification",
+            JSON.stringify(notificationData),
+          );
+
+          // Trigger cross-device sync immediately
+          window.dispatchEvent(
+            new CustomEvent("leirisonda_sync_trigger", {
+              detail: {
+                source: "new_work_created",
+                workId: newWork.id,
+                urgent: true,
+                notificationData,
+              },
+            }),
+          );
+
+          // Force a storage event for cross-tab communication
+          localStorage.setItem(
+            "leirisonda_force_sync",
+            JSON.stringify({
+              action: "new_work",
+              timestamp: new Date().toISOString(),
+              workId: newWork.id,
+            }),
+          );
+
           // Verificar se realmente foi criada (double-check) E se atribuições foram preservadas
           try {
             const verifyDoc = await getDoc(docRef);
