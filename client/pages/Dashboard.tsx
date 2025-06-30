@@ -31,22 +31,9 @@ import { pt } from "date-fns/locale";
 export function Dashboard() {
   console.log("🏠 Dashboard component iniciando...");
 
-  // PROTEÇÃO MÁXIMA: Try-catch para contextos
-  let user,
-    navigate,
-    works,
-    maintenances,
-    isOnline,
-    isSyncing,
-    lastSync,
-    syncData;
-
-  try {
-    const authContext = useAuth();
-    user = authContext.user;
-    console.log("✅ Auth context carregado:", { hasUser: !!user });
-  } catch (authError) {
-    console.error("❌ Erro no auth context:", authError);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { works, maintenances, isOnline, isSyncing, lastSync, syncData } = useFirebaseSync();
     user = null;
   }
 
@@ -697,7 +684,7 @@ export function Dashboard() {
             )}
           </div>
 
-          {/* Manutenções Próximas */}
+          {/* Manutenç��es Próximas */}
           <div className="card-leirisonda">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
