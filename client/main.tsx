@@ -1,115 +1,42 @@
-import React, { Suspense } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// Core Components (não lazy - necessários imediatamente)
+// Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AuthProvider } from "./components/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Layout } from "./components/Layout";
-import { LoadingPage } from "./components/LoadingPage";
 
-// Critical Pages (não lazy)
+// Pages
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
+import { WorksList } from "./pages/WorksList";
+import { WorkDetail } from "./pages/WorkDetail";
+import { CreateWork } from "./pages/CreateWork";
+import { EditWork } from "./pages/EditWork";
+import { CreateUser } from "./pages/CreateUser";
+import { UsersList } from "./pages/UsersList";
+import { EditUser } from "./pages/EditUser";
+import { UserDataManager } from "./pages/UserDataManager";
+import { PoolMaintenancePage } from "./pages/PoolMaintenance";
+import { MaintenanceList } from "./pages/MaintenanceList";
+import { CreateMaintenance } from "./pages/CreateMaintenance";
+import { MaintenanceDetail } from "./pages/MaintenanceDetail";
+import { CreateIntervention } from "./pages/CreateIntervention";
+import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
+import { MobileDeploy } from "./pages/MobileDeploy";
+import { SystemStatus } from "./pages/SystemStatus";
+import { UserSyncDiagnostic } from "./pages/UserSyncDiagnostic";
+import { DebugWorks } from "./pages/DebugWorks";
+import { SyncMonitor } from "./pages/SyncMonitor";
+import SyncDiagnostic from "./pages/SyncDiagnostic";
 import { NotFound } from "./pages/NotFound";
-
-// Lazy loaded Pages (carregadas quando necessário)
-const WorksList = React.lazy(() =>
-  import("./pages/WorksList").then((m) => ({ default: m.WorksList })),
-);
-const WorkDetail = React.lazy(() =>
-  import("./pages/WorkDetail").then((m) => ({ default: m.WorkDetail })),
-);
-const CreateWork = React.lazy(() =>
-  import("./pages/CreateWork").then((m) => ({ default: m.CreateWork })),
-);
-const EditWork = React.lazy(() =>
-  import("./pages/EditWork").then((m) => ({ default: m.EditWork })),
-);
-const CreateUser = React.lazy(() =>
-  import("./pages/CreateUser").then((m) => ({ default: m.CreateUser })),
-);
-const UsersList = React.lazy(() =>
-  import("./pages/UsersList").then((m) => ({ default: m.UsersList })),
-);
-const EditUser = React.lazy(() =>
-  import("./pages/EditUser").then((m) => ({ default: m.EditUser })),
-);
-const UserDataManager = React.lazy(() =>
-  import("./pages/UserDataManager").then((m) => ({
-    default: m.UserDataManager,
-  })),
-);
-const PoolMaintenancePage = React.lazy(() =>
-  import("./pages/PoolMaintenance").then((m) => ({
-    default: m.PoolMaintenancePage,
-  })),
-);
-const MaintenanceList = React.lazy(() =>
-  import("./pages/MaintenanceList").then((m) => ({
-    default: m.MaintenanceList,
-  })),
-);
-const CreateMaintenance = React.lazy(() =>
-  import("./pages/CreateMaintenance").then((m) => ({
-    default: m.CreateMaintenance,
-  })),
-);
-const MaintenanceDetail = React.lazy(() =>
-  import("./pages/MaintenanceDetail").then((m) => ({
-    default: m.MaintenanceDetail,
-  })),
-);
-const CreateIntervention = React.lazy(() =>
-  import("./pages/CreateIntervention").then((m) => ({
-    default: m.CreateIntervention,
-  })),
-);
-const NewMaintenanceSelector = React.lazy(() =>
-  import("./pages/NewMaintenanceSelector").then((m) => ({
-    default: m.NewMaintenanceSelector,
-  })),
-);
-const MobileDeploy = React.lazy(() =>
-  import("./pages/MobileDeploy").then((m) => ({ default: m.MobileDeploy })),
-);
-const SystemStatus = React.lazy(() =>
-  import("./pages/SystemStatus").then((m) => ({ default: m.SystemStatus })),
-);
-const UserSyncDiagnostic = React.lazy(() =>
-  import("./pages/UserSyncDiagnostic").then((m) => ({
-    default: m.UserSyncDiagnostic,
-  })),
-);
-const DebugWorks = React.lazy(() =>
-  import("./pages/DebugWorks").then((m) => ({ default: m.DebugWorks })),
-);
-const SyncMonitor = React.lazy(() =>
-  import("./pages/SyncMonitor").then((m) => ({ default: m.SyncMonitor })),
-);
-const SyncDiagnostic = React.lazy(() =>
-  import("./pages/SyncDiagnostic").then((m) => ({ default: m.default })),
-);
-const EmergencyDiagnostic = React.lazy(() =>
-  import("./pages/EmergencyDiagnostic").then((m) => ({
-    default: m.EmergencyDiagnostic,
-  })),
-);
-const NotificationSettingsPage = React.lazy(() =>
-  import("./pages/NotificationSettingsPage").then((m) => ({
-    default: m.NotificationSettingsPage,
-  })),
-);
-const NotificationTest = React.lazy(() =>
-  import("./pages/NotificationTest").then((m) => ({ default: m.default })),
-);
-const NotificationDiagnostic = React.lazy(() =>
-  import("./pages/NotificationDiagnostic").then((m) => ({
-    default: m.NotificationDiagnostic,
-  })),
-);
+import { EmergencyDiagnostic } from "./pages/EmergencyDiagnostic";
+import { NotificationSettingsPage } from "./pages/NotificationSettingsPage";
+import NotificationTest from "./pages/NotificationTest";
+import { NotificationDiagnostic } from "./pages/NotificationDiagnostic";
 
 function App() {
   return (
@@ -119,27 +46,10 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
-            <Route
-              path="/system-status"
-              element={
-                <Suspense
-                  fallback={<LoadingPage message="A carregar diagnóstico..." />}
-                >
-                  <SystemStatus />
-                </Suspense>
-              }
-            />
+            <Route path="/system-status" element={<SystemStatus />} />
             <Route
               path="/emergency-diagnostic"
-              element={
-                <Suspense
-                  fallback={
-                    <LoadingPage message="A carregar diagnóstico de emergência..." />
-                  }
-                >
-                  <EmergencyDiagnostic />
-                </Suspense>
-              }
+              element={<EmergencyDiagnostic />}
             />
 
             {/* Protected routes */}
@@ -153,247 +63,48 @@ function App() {
             >
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
-              <Route
-                path="works"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar obras..." />}
-                  >
-                    <WorksList />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="works/:id"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar detalhes..." />}
-                  >
-                    <WorkDetail />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="create-work"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar formulário..." />
-                    }
-                  >
-                    <CreateWork />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="edit-work/:id"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar edição..." />}
-                  >
-                    <EditWork />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="users"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar utilizadores..." />
-                    }
-                  >
-                    <UsersList />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="create-user"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar formulário..." />
-                    }
-                  >
-                    <CreateUser />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="edit-user/:id"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar edição..." />}
-                  >
-                    <EditUser />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="user-data"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar dados..." />}
-                  >
-                    <UserDataManager />
-                  </Suspense>
-                }
-              />
+              <Route path="works" element={<WorksList />} />
+              <Route path="works/:id" element={<WorkDetail />} />
+              <Route path="create-work" element={<CreateWork />} />
+              <Route path="edit-work/:id" element={<EditWork />} />
+              <Route path="users" element={<UsersList />} />
+              <Route path="create-user" element={<CreateUser />} />
+              <Route path="edit-user/:id" element={<EditUser />} />
+              <Route path="user-data" element={<UserDataManager />} />
               <Route
                 path="user-sync-diagnostic"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar diagnóstico..." />
-                    }
-                  >
-                    <UserSyncDiagnostic />
-                  </Suspense>
-                }
+                element={<UserSyncDiagnostic />}
               />
-              <Route
-                path="debug-works"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar debug..." />}
-                  >
-                    <DebugWorks />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="sync-monitor"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar monitor..." />}
-                  >
-                    <SyncMonitor />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="sync-diagnostic"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar diagnóstico..." />
-                    }
-                  >
-                    <SyncDiagnostic />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="pool-maintenance"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar manutenções..." />
-                    }
-                  >
-                    <MaintenanceList />
-                  </Suspense>
-                }
-              />
+              <Route path="debug-works" element={<DebugWorks />} />
+              <Route path="sync-monitor" element={<SyncMonitor />} />
+              <Route path="sync-diagnostic" element={<SyncDiagnostic />} />
+              <Route path="pool-maintenance" element={<MaintenanceList />} />
               <Route
                 path="create-maintenance"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar formulário..." />
-                    }
-                  >
-                    <CreateMaintenance />
-                  </Suspense>
-                }
+                element={<CreateMaintenance />}
               />
-              <Route
-                path="maintenance/:id"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar detalhes..." />}
-                  >
-                    <MaintenanceDetail />
-                  </Suspense>
-                }
-              />
+              <Route path="maintenance/:id" element={<MaintenanceDetail />} />
               <Route
                 path="maintenance/:maintenanceId/new-intervention"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar intervenção..." />
-                    }
-                  >
-                    <CreateIntervention />
-                  </Suspense>
-                }
+                element={<CreateIntervention />}
               />
               <Route
                 path="maintenance/new-general"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar opções..." />}
-                  >
-                    <NewMaintenanceSelector />
-                  </Suspense>
-                }
+                element={<NewMaintenanceSelector />}
               />
-              <Route
-                path="mobile-deploy"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar deploy..." />}
-                  >
-                    <MobileDeploy />
-                  </Suspense>
-                }
-              />
+              <Route path="mobile-deploy" element={<MobileDeploy />} />
               <Route
                 path="old-pool-maintenance"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar manutenção..." />
-                    }
-                  >
-                    <PoolMaintenancePage />
-                  </Suspense>
-                }
+                element={<PoolMaintenancePage />}
               />
               <Route
                 path="notification-settings"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar configurações..." />
-                    }
-                  >
-                    <NotificationSettingsPage />
-                  </Suspense>
-                }
+                element={<NotificationSettingsPage />}
               />
-              <Route
-                path="notification-test"
-                element={
-                  <Suspense
-                    fallback={<LoadingPage message="A carregar teste..." />}
-                  >
-                    <NotificationTest />
-                  </Suspense>
-                }
-              />
+              <Route path="notification-test" element={<NotificationTest />} />
               <Route
                 path="notification-diagnostic"
-                element={
-                  <Suspense
-                    fallback={
-                      <LoadingPage message="A carregar diagnóstico..." />
-                    }
-                  >
-                    <NotificationDiagnostic />
-                  </Suspense>
-                }
+                element={<NotificationDiagnostic />}
               />
             </Route>
 
