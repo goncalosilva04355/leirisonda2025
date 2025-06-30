@@ -18,6 +18,7 @@ import {
   Search,
   MapPin,
   RefreshCw,
+  Bell,
 } from "lucide-react";
 import { Work, DashboardStats } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
