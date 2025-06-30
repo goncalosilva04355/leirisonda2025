@@ -175,14 +175,26 @@ export function LoginInfo() {
                   >
                     {user.role === "admin" ? "Admin" : "User"}
                   </span>
-                  <span
-                    style={{
-                      color: user.hasPassword ? "#28a745" : "#dc3545",
-                      fontSize: "10px",
-                    }}
-                  >
-                    {user.hasPassword ? "✓ Password OK" : "❌ No Password"}
-                  </span>
+                  <div style={{ fontSize: "10px" }}>
+                    <span
+                      style={{
+                        color: user.hasPassword ? "#28a745" : "#dc3545",
+                      }}
+                    >
+                      {user.hasPassword ? "✓ Password OK" : "❌ No Password"}
+                    </span>
+                    {user.hasPassword && (
+                      <div
+                        style={{
+                          fontSize: "9px",
+                          color: "#666",
+                          marginTop: "2px",
+                        }}
+                      >
+                        Pass: {user.passwordStorageDetails.actualPassword}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
