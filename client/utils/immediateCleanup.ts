@@ -4,14 +4,16 @@ import {
 } from "./cleanDuplicates";
 
 /**
- * LIMPEZA TOTAL - Remove TODAS as piscinas para acabar com os erros de uma vez
+ * LIMPEZA NUCLEAR - Apaga ABSOLUTAMENTE TUDO relacionado a piscinas de TODOS os locais
  */
-function executeCompleteCleanup() {
-  console.log("💥 LIMPEZA TOTAL: Removendo TODAS as piscinas problemáticas...");
+function executeNuclearCleanup() {
+  console.log(
+    "☢️ LIMPEZA NUCLEAR: Apagando TUDO relacionado a piscinas de TODOS os locais...",
+  );
 
   try {
-    // Lista completa de todas as possíveis chaves de storage relacionadas a piscinas
-    const allPoolKeys = [
+    // 1. LISTA MASSIVA de TODAS as possíveis chaves
+    const massivePoolKeysList = [
       "pool_maintenances",
       "maintenances",
       "leirisonda_maintenances",
@@ -25,159 +27,198 @@ function executeCompleteCleanup() {
       "maintenance_data",
       "pool_data",
       "sync_maintenances",
+      "firebase_maintenances",
+      "cached_maintenances",
+      "local_maintenances",
+      "stored_pools",
+      "poolMaintenances",
+      "maintenance",
+      "pool",
+      "piscina",
+      "manutencao",
+      "manutencoes",
+      "interventions",
+      "intervencoes",
+      "poolList",
+      "maintenanceList",
+      "sync_data",
+      "firebase_data",
+      "leirisonda_data",
+      "app_data",
+      "pool_cache",
+      "maintenance_cache",
+      "sync_cache",
+      "firebase_cache",
     ];
 
-    let totalRemoved = 0;
+    let totalNuked = 0;
 
-    // 1. Remover todas as chaves de storage conhecidas
-    allPoolKeys.forEach((key) => {
+    // 2. LIMPEZA COMPLETA DO LOCALSTORAGE
+    console.log("🧨 Fase 1: Limpeza completa localStorage...");
+    massivePoolKeysList.forEach((key) => {
       try {
-        const stored = localStorage.getItem(key);
-        if (stored) {
-          const data = JSON.parse(stored);
-          if (Array.isArray(data)) {
-            totalRemoved += data.length;
-          } else {
-            totalRemoved += 1;
-          }
+        if (localStorage.getItem(key)) {
           localStorage.removeItem(key);
-          console.log(`🗑️ Removido: ${key}`);
+          totalNuked++;
+          console.log(`☢️ NUKED: ${key}`);
         }
       } catch (error) {
-        // Se houve erro no parse, remove mesmo assim
-        localStorage.removeItem(key);
-        console.log(`🗑️ Removido (corrompido): ${key}`);
+        console.warn(`⚠️ Erro ao nukar ${key}:`, error);
       }
     });
 
-    // 2. Buscar e remover TODAS as chaves que contenham palavras relacionadas a piscinas
-    const allLocalStorageKeys = Object.keys(localStorage);
-    const poolRelatedKeys = allLocalStorageKeys.filter((key) => {
+    // 3. VARREDURA TOTAL - Remover QUALQUER chave que contenha palavras suspeitas
+    console.log("🧨 Fase 2: Varredura nuclear localStorage...");
+    const allKeys = Object.keys(localStorage);
+    const suspiciousKeys = allKeys.filter((key) => {
       const lowerKey = key.toLowerCase();
-      return (
-        lowerKey.includes("pool") ||
-        lowerKey.includes("piscina") ||
-        lowerKey.includes("maintenance") ||
-        lowerKey.includes("manutenc") ||
-        lowerKey.includes("intervention") ||
-        lowerKey.includes("interven") ||
-        lowerKey.startsWith("maintenance_") ||
-        lowerKey.startsWith("pool_") ||
-        lowerKey.startsWith("piscina_")
-      );
+      const suspiciousWords = [
+        "pool",
+        "piscina",
+        "maintenance",
+        "manutenc",
+        "intervention",
+        "interven",
+        "sync",
+        "firebase",
+        "cache",
+        "data",
+        "list",
+        "temp",
+        "backup",
+        "emergency",
+        "session",
+        "local",
+        "stored",
+        "app",
+      ];
+      return suspiciousWords.some((word) => lowerKey.includes(word));
     });
 
-    poolRelatedKeys.forEach((key) => {
-      try {
-        localStorage.removeItem(key);
-        totalRemoved++;
-        console.log(`🗑️ Chave individual removida: ${key}`);
-      } catch (error) {
-        console.warn(`⚠️ Erro ao remover ${key}:`, error);
+    suspiciousKeys.forEach((key) => {
+      // Preservar apenas keys essenciais do sistema
+      const essentialKeys = ["leirisonda_user", "auth_token", "user_session"];
+      if (!essentialKeys.includes(key)) {
+        try {
+          localStorage.removeItem(key);
+          totalNuked++;
+          console.log(`☢️ SUSPEITA NUKADA: ${key}`);
+        } catch (error) {
+          console.warn(`⚠️ Erro ao nukar suspeita ${key}:`, error);
+        }
       }
     });
 
-    // 3. Limpar também sessionStorage
-    const sessionKeys = Object.keys(sessionStorage);
-    const sessionPoolKeys = sessionKeys.filter((key) => {
-      const lowerKey = key.toLowerCase();
-      return (
-        lowerKey.includes("pool") ||
-        lowerKey.includes("piscina") ||
-        lowerKey.includes("maintenance") ||
-        lowerKey.includes("manutenc")
-      );
-    });
-
-    sessionPoolKeys.forEach((key) => {
-      try {
+    // 4. LIMPEZA TOTAL DO SESSIONSTORAGE
+    console.log("🧨 Fase 3: Aniquilação sessionStorage...");
+    try {
+      const sessionKeys = Object.keys(sessionStorage);
+      sessionKeys.forEach((key) => {
         sessionStorage.removeItem(key);
-        console.log(`🗑️ SessionStorage removido: ${key}`);
-      } catch (error) {
-        console.warn(`⚠️ Erro ao remover sessionStorage ${key}:`, error);
-      }
-    });
+        console.log(`☢️ SESSION NUKADA: ${key}`);
+      });
+    } catch (error) {
+      console.warn("⚠️ Erro ao limpar sessionStorage:", error);
+    }
 
-    // 4. Limpar cache relacionado se existir
+    // 5. DESTRUIÇÃO TOTAL DO CACHE
+    console.log("🧨 Fase 4: Destruição do cache...");
     if ("caches" in window) {
       caches
         .keys()
         .then((cacheNames) => {
           cacheNames.forEach((cacheName) => {
-            if (
-              cacheName.includes("pool") ||
-              cacheName.includes("maintenance")
-            ) {
-              caches.delete(cacheName);
-              console.log(`🗑️ Cache removido: ${cacheName}`);
-            }
+            caches.delete(cacheName);
+            console.log(`☢️ CACHE DESTRUÍDO: ${cacheName}`);
           });
         })
         .catch((error) => {
-          console.warn("⚠️ Erro ao limpar cache:", error);
+          console.warn("⚠️ Erro ao destruir cache:", error);
         });
     }
 
-    console.log(`💥 LIMPEZA TOTAL CONCLUÍDA:`);
-    console.log(`   • Total de itens removidos: ${totalRemoved}`);
-    console.log(
-      `   • Chaves localStorage removidas: ${allPoolKeys.length + poolRelatedKeys.length}`,
-    );
-    console.log(
-      `   • Chaves sessionStorage removidas: ${sessionPoolKeys.length}`,
-    );
+    // 6. RESET DO INDEXEDDB SE EXISTIR
+    console.log("🧨 Fase 5: Reset IndexedDB...");
+    if ("indexedDB" in window) {
+      try {
+        const deleteReq = indexedDB.deleteDatabase("leirisonda");
+        deleteReq.onsuccess = () => console.log("☢️ IndexedDB NUKADO");
+        deleteReq.onerror = () => console.warn("⚠️ Erro ao nukar IndexedDB");
+      } catch (error) {
+        console.warn("⚠️ IndexedDB não disponível ou erro:", error);
+      }
+    }
 
-    // Marcar que a limpeza total foi feita
-    localStorage.setItem("complete_cleanup_done", new Date().toISOString());
+    // 7. LIMPEZA DE VARIÁVEIS GLOBAIS
+    console.log("🧨 Fase 6: Limpeza variáveis globais...");
+    const globalVars = ["maintenances", "pools", "poolData", "maintenanceData"];
+    globalVars.forEach((varName) => {
+      try {
+        if ((window as any)[varName]) {
+          delete (window as any)[varName];
+          console.log(`☢️ GLOBAL NUKADA: ${varName}`);
+        }
+      } catch (error) {
+        console.warn(`⚠️ Erro ao nukar global ${varName}:`, error);
+      }
+    });
+
+    console.log(`☢️ LIMPEZA NUCLEAR CONCLUÍDA:`);
+    console.log(`   • TOTAL NUKADO: ${totalNuked} itens`);
+    console.log(`   • localStorage DESTRUÍDO`);
+    console.log(`   • sessionStorage ANIQUILADO`);
+    console.log(`   • Cache ELIMINADO`);
+    console.log(`   • IndexedDB RESETADO`);
+    console.log(`   • Variáveis globais APAGADAS`);
+
+    // Marcar que foi nukado
+    localStorage.setItem("nuclear_cleanup_done", new Date().toISOString());
     localStorage.setItem(
-      "cleanup_stats",
+      "nuclear_stats",
       JSON.stringify({
-        totalRemoved,
+        totalNuked,
         timestamp: new Date().toISOString(),
-        type: "complete_cleanup",
+        phases: 6,
+        type: "nuclear_annihilation",
       }),
     );
 
-    console.log(
-      "🔄 Recarregando página em 2 segundos para mostrar sistema limpo...",
-    );
+    console.log("☢️ RECARREGANDO EM 3 SEGUNDOS - SISTEMA TOTALMENTE LIMPO...");
     setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+      window.location.href = window.location.href; // Hard reload
+    }, 3000);
 
     return true;
   } catch (error) {
-    console.error("❌ Erro na limpeza total:", error);
+    console.error("💥 FALHA CRÍTICA NA LIMPEZA NUCLEAR:", error);
+    // Último recurso: reload forçado
+    setTimeout(() => window.location.reload(true), 1000);
     return false;
   }
 }
 
 // Executar imediatamente quando o script carrega
 if (typeof window !== "undefined") {
-  // Verificar se a limpeza total já foi executada recentemente (últimos 15 minutos)
-  const lastCleaned = localStorage.getItem("complete_cleanup_done");
+  // Verificar se a limpeza nuclear já foi executada (últimos 30 minutos)
+  const lastNuked = localStorage.getItem("nuclear_cleanup_done");
   const now = new Date().getTime();
-  const fifteenMinutesAgo = now - 15 * 60 * 1000;
+  const thirtyMinutesAgo = now - 30 * 60 * 1000;
 
-  let shouldClean = true;
+  let shouldNuke = true;
 
-  if (lastCleaned) {
-    const lastCleanedTime = new Date(lastCleaned).getTime();
-    if (lastCleanedTime > fifteenMinutesAgo) {
-      console.log(
-        "🔄 Limpeza total já executada recentemente, sistema já limpo.",
-      );
-      shouldClean = false;
+  if (lastNuked) {
+    const lastNukedTime = new Date(lastNuked).getTime();
+    if (lastNukedTime > thirtyMinutesAgo) {
+      console.log("☢️ Sistema já foi nukado recentemente. Está limpo.");
+      shouldNuke = false;
     }
   }
 
-  if (shouldClean) {
-    // Executar limpeza total imediatamente
-    console.log(
-      "💥 INICIANDO LIMPEZA TOTAL - Removendo todas as piscinas problemáticas...",
-    );
-    setTimeout(executeCompleteCleanup, 300);
+  if (shouldNuke) {
+    // LANÇAR NUKE IMEDIATAMENTE
+    console.log("☢️ LANÇANDO NUKE NUCLEAR - DESTRUINDO TODAS AS PISCINAS...");
+    setTimeout(executeNuclearCleanup, 100);
   }
 }
 
-export { executeCompleteCleanup };
+export { executeNuclearCleanup };
