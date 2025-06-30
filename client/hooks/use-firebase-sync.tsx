@@ -54,6 +54,12 @@ export function useFirebaseSync() {
         !isOnline ||
         syncInProgress.current
       ) {
+        console.log(`🚫 Sync cancelado (${reason}):`, {
+          hasUser: !!user,
+          firebaseAvailable: isFirebaseAvailable,
+          isOnline,
+          syncInProgress: syncInProgress.current,
+        });
         return;
       }
 
@@ -66,10 +72,12 @@ export function useFirebaseSync() {
         // 1. Sincronizar utilizadores globais primeiro
         await firebaseService.syncGlobalUsersFromFirebase();
 
-        // 2. Sincronizar dados locais para Firebase (upload)
+        // 2. Sincronizar dados locais para Firebase (upload prioritário)
+        console.log("📤 Enviando dados locais para Firebase...");
         await firebaseService.syncLocalDataToFirebase();
 
-        // 3. Forçar refresh de dados do Firebase (download)
+        // 3. Forçar refresh COMPLETO de dados do Firebase (download)
+        console.log("📥 Baixando dados mais recentes do Firebase...");
         const [latestWorks, latestMaintenances, latestUsers] =
           await Promise.all([
             firebaseService.getWorks(),
@@ -77,7 +85,31 @@ export function useFirebaseSync() {
             firebaseService.getUsers(),
           ]);
 
-        // 4. Atualizar estado local
+        // 4. Verificar se houve novas obras desde a última sincronização
+        const currentWorksCount = works.length;
+        const newWorksCount = latestWorks.length;
+
+        if (newWorksCount > currentWorksCount) {
+          console.log(
+            `🆕 NOVAS OBRAS DETECTADAS: ${currentWorksCount} -> ${newWorksCount}`,
+          );
+
+          // Identificar obras específicas que são novas
+          const currentWorkIds = new Set(works.map((w) => w.id));
+          const newWorks = latestWorks.filter((w) => !currentWorkIds.has(w.id));
+
+          newWorks.forEach((work) => {
+            console.log(
+              `✨ NOVA OBRA ENCONTRADA: ${work.clientName} (${work.workSheetNumber})`,
+              {
+                criadaEm: work.createdAt,
+                atribuicoes: work.assignedUsers,
+              },
+            );
+          });
+        }
+
+        // 5. Atualizar estado local com dados mais recentes
         setWorks(latestWorks);
         setMaintenances(latestMaintenances);
         setUsers(latestUsers);
@@ -88,6 +120,14 @@ export function useFirebaseSync() {
         console.log(
           `✅ Sync instantâneo completo (${reason}): ${latestWorks.length} obras, ${latestMaintenances.length} manutenções`,
         );
+
+        // Log específico para atribuições (debug para o problema relatado)
+        const worksWithAssignments = latestWorks.filter(
+          (w) => w.assignedUsers && w.assignedUsers.length > 0,
+        );
+        console.log(
+          `🎯 Obras com atribuições após sync: ${worksWithAssignments.length}`,
+        );
       } catch (error) {
         console.error(`❌ Erro no sync instantâneo (${reason}):`, error);
         // Fallback para dados locais
@@ -97,7 +137,7 @@ export function useFirebaseSync() {
         setIsSyncing(false);
       }
     },
-    [user, isFirebaseAvailable, isOnline],
+    [user, isFirebaseAvailable, isOnline, works],
   );
 
   // Carregar dados locais como fallback com consolidação automática
@@ -131,22 +171,31 @@ export function useFirebaseSync() {
         clearInterval(heartbeatInterval.current);
         heartbeatInterval.current = null;
       }
+      console.log("💔 Heartbeat pausado - user/firebase/online indisponível");
       return;
     }
 
-    // Sync a cada 30 segundos quando online
+    console.log("💓 Heartbeat iniciado - sync a cada 15 segundos");
+
+    // Sync a cada 15 segundos quando online (mais agressivo para resolver o problema)
     heartbeatInterval.current = setInterval(() => {
-      if (pendingChanges.current.size > 0 || Math.random() < 0.1) {
-        // 10% chance de sync preventivo
+      // Sync mais frequente se houver mudanças pendentes OU 30% chance de sync preventivo
+      const shouldSync = pendingChanges.current.size > 0 || Math.random() < 0.3;
+
+      if (shouldSync) {
+        console.log("💓 Heartbeat: iniciando sync automático...");
         triggerInstantSync("heartbeat");
+      } else {
+        console.log("💓 Heartbeat: nenhuma ação necessária");
       }
-    }, 30000);
+    }, 15000); // 15 segundos em vez de 30
 
     return () => {
       if (heartbeatInterval.current) {
         clearInterval(heartbeatInterval.current);
         heartbeatInterval.current = null;
       }
+      console.log("💔 Heartbeat limpo");
     };
   }, [user, isFirebaseAvailable, isOnline, triggerInstantSync]);
 

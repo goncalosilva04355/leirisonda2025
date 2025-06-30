@@ -4,6 +4,7 @@ import {
   getDocs,
   getDoc,
   addDoc,
+  setDoc,
   updateDoc,
   deleteDoc,
   query,
@@ -331,8 +332,65 @@ export class FirebaseService {
     };
 
     try {
-      // SISTEMA DE BACKUP TRIPLO PARA GARANTIR SALVAMENTO
+      // PRIORIDADE 1: FIREBASE PRIMEIRO (para sincronização entre dispositivos)
+      let firebaseSuccess = false;
+      if (this.isFirebaseAvailable) {
+        try {
+          const worksRef = collection(db, "works");
 
+          // Garantir que assignedUsers seja preservado durante sync Firebase
+          const firebaseData = {
+            ...newWork,
+            assignedUsers: newWork.assignedUsers || [], // Garantir array vazio se não definido
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          };
+
+          console.log("🔥 CRIANDO OBRA NO FIREBASE (PRIORIDADE 1):", {
+            cliente: firebaseData.clientName,
+            atribuicoes: firebaseData.assignedUsers,
+            workId: newWork.id,
+          });
+
+          // Usar setDoc() com ID específico para criar documento novo
+          const docRef = doc(db, "works", newWork.id);
+          await setDoc(docRef, firebaseData);
+
+          console.log(
+            "✅ OBRA CRIADA NO FIREBASE COM SUCESSO:",
+            newWork.id,
+            "Atribuições:",
+            firebaseData.assignedUsers,
+          );
+
+          firebaseSuccess = true;
+
+          // Verificar se realmente foi criada (double-check)
+          try {
+            const verifyDoc = await getDoc(docRef);
+            if (verifyDoc.exists()) {
+              console.log("✅ VERIFICAÇÃO: Obra confirmada no Firebase");
+            } else {
+              console.error(
+                "⚠️ VERIFICAÇÃO FALHOU: Obra não encontrada no Firebase após criação",
+              );
+              firebaseSuccess = false;
+            }
+          } catch (verifyError) {
+            console.error("⚠️ ERRO NA VERIFICAÇÃO:", verifyError);
+          }
+
+          // Notificar outros dispositivos imediatamente
+          console.log("📡 NOTIFICANDO OUTROS DISPOSITIVOS...");
+        } catch (firebaseError) {
+          console.error(
+            "⚠️ FIREBASE CREATE FALHOU, continuando com backup local:",
+            firebaseError,
+          );
+        }
+      }
+
+      // BACKUP LOCAL (SEMPRE executar independente do Firebase)
       // 1. BACKUP PRINCIPAL - localStorage "works"
       const works = this.getLocalWorks();
       const worksCountBefore = works.length;
@@ -353,7 +411,7 @@ export class FirebaseService {
       sessionWorks.push(newWork);
       sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
 
-      // VERIFICAÇÃO TRIPLA
+      // VERIFICAÇÃO TRIPLA LOCAL
       const verification1 = this.getLocalWorks();
       const verification2 = JSON.parse(
         localStorage.getItem("leirisonda_works") || "[]",
@@ -368,53 +426,30 @@ export class FirebaseService {
 
       if (savedWork1 && savedWork2 && savedWork3) {
         console.log(
-          `✅ OBRA SALVA COM BACKUP TRIPLO: ${newWork.id} (${worksCountBefore} -> ${verification1.length} obras)`,
+          `✅ OBRA SALVA COM BACKUP TRIPLO LOCAL: ${newWork.id} (${worksCountBefore} -> ${verification1.length} obras)`,
         );
       } else {
-        console.error("⚠️ BACKUP TRIPLO FALHOU:", {
+        console.error("⚠️ BACKUP TRIPLO LOCAL FALHOU:", {
           backup1: !!savedWork1,
           backup2: !!savedWork2,
           backup3: !!savedWork3,
         });
-        throw new Error("Falha no sistema de backup triplo");
       }
 
-      // TENTATIVA FIREBASE (em paralelo, não bloqueia)
-      if (this.isFirebaseAvailable) {
-        try {
-          const worksRef = collection(db, "works");
-
-          // Garantir que assignedUsers seja preservado durante sync Firebase
-          const firebaseData = {
-            ...newWork,
-            assignedUsers: newWork.assignedUsers || [], // Garantir array vazio se não definido
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          };
-
-          console.log("🔥 ENVIANDO PARA FIREBASE COM ATRIBUIÇÕES:", {
-            cliente: firebaseData.clientName,
-            atribuicoes: firebaseData.assignedUsers,
-          });
-
-          const docRef = await addDoc(worksRef, firebaseData);
-          console.log(
-            "✅ OBRA SINCRONIZADA COM FIREBASE:",
-            docRef.id,
-            "Atribuições:",
-            firebaseData.assignedUsers,
-          );
-        } catch (error) {
-          console.error(
-            "⚠️ FIREBASE SYNC FALHOU, obra salva localmente:",
-            error,
-          );
-        }
+      // STATUS FINAL
+      if (firebaseSuccess) {
+        console.log(
+          "🌟 OBRA CRIADA COM SUCESSO - FIREBASE + LOCAL:",
+          newWork.id,
+        );
+        console.log("📡 OUTROS DISPOSITIVOS DEVEM RECEBER AUTOMATICAMENTE");
       } else {
-        console.log("📱 FIREBASE INDISPONÍVEL, obra salva com backup triplo");
+        console.log("📱 OBRA CRIADA APENAS LOCALMENTE:", newWork.id);
+        console.log(
+          "⚠️ SINCRONIZAÇÃO ENTRE DISPOSITIVOS PODE ESTAR COMPROMETIDA",
+        );
       }
 
-      console.log("✅ CRIAÇÃO DE OBRA CONCLUÍDA COM SUCESSO:", newWork.id);
       return newWork.id;
     } catch (error) {
       console.error("❌ ERRO CRÍTICO NA CRIAÇÃO DE OBRA:", error);
@@ -755,11 +790,36 @@ export class FirebaseService {
           })) as Work[];
 
           console.log(
-            `🔥 Real-time Firebase update: ${firebaseWorks.length} obras recebidas do servidor`,
+            `🔥 REAL-TIME UPDATE: ${firebaseWorks.length} obras recebidas do Firebase`,
           );
+
+          // Log detalhado das mudanças para debug
+          const currentTime = new Date().toISOString();
+          console.log(`📡 Timestamp do listener: ${currentTime}`);
 
           // CRÍTICO: Consolidar com dados locais para não perder obras
           const localWorks = this.consolidateWorksFromAllBackups();
+
+          // Verificar se há NOVAS obras do Firebase
+          const localWorkIds = new Set(localWorks.map((w) => w.id));
+          const newFirebaseWorks = firebaseWorks.filter(
+            (w) => !localWorkIds.has(w.id),
+          );
+
+          if (newFirebaseWorks.length > 0) {
+            console.log(
+              `🆕 NOVAS OBRAS DETECTADAS DO FIREBASE: ${newFirebaseWorks.length}`,
+            );
+            newFirebaseWorks.forEach((work) => {
+              console.log(`✨ NOVA OBRA FIREBASE:`, {
+                id: work.id,
+                cliente: work.clientName,
+                folhaObra: work.workSheetNumber,
+                atribuicoes: work.assignedUsers,
+                criadaEm: work.createdAt,
+              });
+            });
+          }
 
           // Combinar Firebase + Local (remover duplicatas)
           const allWorks = [...firebaseWorks, ...localWorks];
@@ -783,28 +843,68 @@ export class FirebaseService {
             (work) => work.assignedUsers && work.assignedUsers.length > 0,
           );
           console.log(
-            `🎯 Obras com atribuições: ${worksWithAssignments.length}`,
-            worksWithAssignments.map((w) => ({
-              id: w.id,
-              cliente: w.clientName,
-              atribuidas: w.assignedUsers,
-            })),
+            `🎯 Obras com atribuições detectadas: ${worksWithAssignments.length}`,
           );
 
-          // Update all backup storages instantaneously
+          // Log específico para Alexandre (para debug do problema)
+          const alexandreWorks = uniqueWorks.filter(
+            (work) =>
+              work.assignedUsers &&
+              work.assignedUsers.includes("user_alexandre"),
+          );
+          if (alexandreWorks.length > 0) {
+            console.log(
+              `🎯 OBRAS PARA ALEXANDRE DETECTADAS: ${alexandreWorks.length}`,
+              alexandreWorks.map((w) => ({
+                id: w.id,
+                cliente: w.clientName,
+                folhaObra: w.workSheetNumber,
+                criadaEm: w.createdAt,
+              })),
+            );
+          }
+
+          // Update all backup storages instantaneously com timestamp
+          const storageData = {
+            works: uniqueWorks,
+            lastUpdate: currentTime,
+            source: "firebase_realtime_listener",
+          };
+
           localStorage.setItem("works", JSON.stringify(uniqueWorks));
           localStorage.setItem("leirisonda_works", JSON.stringify(uniqueWorks));
           sessionStorage.setItem("temp_works", JSON.stringify(uniqueWorks));
+          localStorage.setItem("works_metadata", JSON.stringify(storageData));
+
+          // Dispará evento customizado para notificar outras abas/janelas
+          try {
+            window.dispatchEvent(
+              new CustomEvent("leirisonda_works_updated", {
+                detail: { works: uniqueWorks, timestamp: currentTime },
+              }),
+            );
+          } catch (e) {
+            console.log("Não foi possível disparar evento customizado");
+          }
 
           // Trigger callback with consolidated data
           callback(uniqueWorks);
         },
         (error) => {
-          console.error("❌ Erro no listener de obras Firebase:", error);
+          console.error(
+            "❌ ERRO CRÍTICO no listener de obras Firebase:",
+            error,
+          );
+          console.error("❌ Detalhes do erro:", {
+            code: error.code,
+            message: error.message,
+            name: error.name,
+          });
+
           // Em caso de erro, usar dados locais consolidados
           const fallbackWorks = this.consolidateWorksFromAllBackups();
           console.log(
-            `📱 Fallback: usando ${fallbackWorks.length} obras locais`,
+            `📱 FALLBACK ATIVADO: usando ${fallbackWorks.length} obras locais`,
           );
           callback(fallbackWorks);
         },

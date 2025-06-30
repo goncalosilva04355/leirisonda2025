@@ -12,12 +12,14 @@ import {
   Wifi,
   WifiOff,
   Trash2,
+  Activity,
 } from "lucide-react";
 import { Work, User } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 import { firebaseService } from "@/services/FirebaseService";
+import { SyncTestButton } from "@/components/SyncTestButton";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
@@ -28,6 +30,7 @@ export function DebugWorks() {
     useFirebaseSync();
   const [debugInfo, setDebugInfo] = useState<any>({});
   const [isCreatingTest, setIsCreatingTest] = useState(false);
+  const [isTestingSync, setIsTestingSync] = useState(false);
 
   // Restringir acesso apenas ao Gonçalo
   if (!user || user.email !== "gongonsilva@gmail.com") {
@@ -181,6 +184,97 @@ export function DebugWorks() {
     loadDebugInfo();
   };
 
+  const testSyncBetweenDevices = async () => {
+    setIsTestingSync(true);
+    try {
+      console.log("🧪 TESTANDO SINCRONIZAÇÃO ENTRE DISPOSITIVOS...");
+
+      // 1. Criar obra teste com timestamp único
+      const timestamp = new Date().toISOString();
+      const testWorkData = {
+        workSheetNumber: `SYNC-TEST-${Date.now()}`,
+        type: "piscina" as const,
+        clientName: `🧪 TESTE SYNC - ${timestamp}`,
+        address: "Endereço para teste de sincronização",
+        contact: "123456789",
+        entryTime: new Date().toISOString(),
+        status: "pendente" as const,
+        vehicles: ["Viatura Teste Sync"],
+        technicians: ["Técnico Teste Sync"],
+        assignedUsers: ["user_alexandre"], // Atribuir ao Alexandre para teste
+        photos: [],
+        observations: `Obra criada para testar sincronização entre dispositivos em ${timestamp}`,
+        workPerformed: "Teste de propagação de dados entre dispositivos",
+        workSheetCompleted: false,
+      };
+
+      console.log("📤 Criando obra teste para sincronização...");
+      const workId = await createWork(testWorkData);
+      console.log(`✅ Obra teste criada: ${workId}`);
+
+      // 2. Aguardar um momento para propagação
+      console.log("⏱️ Aguardando 3 segundos para propagação...");
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // 3. Forçar sync múltiplo para garantir propagação
+      console.log("🔄 Forçando múltiplos syncs para garantir propagação...");
+      await syncData();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await syncData();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await syncData();
+
+      // 4. Verificar se obra aparece em diferentes storages
+      const worksMain = JSON.parse(localStorage.getItem("works") || "[]");
+      const worksLeirisonda = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+      const worksTemp = JSON.parse(
+        sessionStorage.getItem("temp_works") || "[]",
+      );
+
+      const foundInMain = worksMain.find((w: any) => w.id === workId);
+      const foundInLeirisonda = worksLeirisonda.find(
+        (w: any) => w.id === workId,
+      );
+      const foundInTemp = worksTemp.find((w: any) => w.id === workId);
+
+      console.log("🔍 RESULTADO DO TESTE DE SINCRONIZAÇÃO:", {
+        workId,
+        timestamp,
+        foundInMain: !!foundInMain,
+        foundInLeirisonda: !!foundInLeirisonda,
+        foundInTemp: !!foundInTemp,
+        assignedToAlexandre:
+          foundInMain?.assignedUsers?.includes("user_alexandre") || false,
+      });
+
+      // 5. Instruções para o utilizador
+      alert(`
+🧪 TESTE DE SINCRONIZAÇÃO COMPLETO
+
+Obra criada: ${testWorkData.clientName}
+ID: ${workId}
+Atribuída ao Alexandre: ${foundInMain?.assignedUsers?.includes("user_alexandre") ? "Sim" : "Não"}
+
+AGORA TESTE NO OUTRO DISPOSITIVO:
+1. Abra a aplicação no dispositivo do Alexandre
+2. Vá ao Dashboard
+3. Procure pela obra: "${testWorkData.clientName}"
+4. Verifique se aparece na seção "Suas Obras Atribuídas"
+
+Se NÃO aparecer, há problema de sincronização Firebase!
+      `);
+
+      loadDebugInfo();
+    } catch (error) {
+      console.error("❌ Erro no teste de sincronização:", error);
+      alert(`Erro no teste: ${error}`);
+    } finally {
+      setIsTestingSync(false);
+    }
+  };
+
   const addAlexandreToWork = async (workId: string) => {
     try {
       const work = works.find((w) => w.id === workId);
@@ -245,7 +339,7 @@ export function DebugWorks() {
       </div>
 
       {/* Ações Rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Button
           onClick={createTestWork}
           disabled={isCreatingTest}
@@ -253,6 +347,15 @@ export function DebugWorks() {
         >
           <Plus className="w-4 h-4 mr-2" />
           {isCreatingTest ? "Criando..." : "Criar Obra Teste"}
+        </Button>
+
+        <Button
+          onClick={testSyncBetweenDevices}
+          disabled={isTestingSync}
+          className="h-auto py-4 bg-purple-600 hover:bg-purple-700"
+        >
+          <RefreshCw className="w-4 h-4 mr-2" />
+          {isTestingSync ? "Testando..." : "Testar Sync Dispositivos"}
         </Button>
 
         <Button onClick={forceSync} variant="outline" className="h-auto py-4">
@@ -277,6 +380,27 @@ export function DebugWorks() {
           <Eye className="w-4 h-4 mr-2" />
           Recarregar Info
         </Button>
+
+        <Button
+          onClick={() => navigate("/sync-monitor")}
+          variant="outline"
+          className="h-auto py-4 bg-green-600 hover:bg-green-700 text-white"
+        >
+          <Activity className="w-4 h-4 mr-2" />
+          Monitor Tempo Real
+        </Button>
+      </div>
+
+      {/* Teste Completo de Sincronização */}
+      <div className="bg-purple-50 border border-purple-200 rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-purple-900 mb-4">
+          🧪 Teste Completo de Sincronização
+        </h3>
+        <p className="text-purple-700 mb-4">
+          Este teste cria uma obra, verifica se é salva corretamente em todas as
+          fontes e confirma se aparecerá no dispositivo do Alexandre.
+        </p>
+        <SyncTestButton />
       </div>
 
       {/* Informações de Armazenamento */}
