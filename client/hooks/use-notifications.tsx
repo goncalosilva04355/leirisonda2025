@@ -179,6 +179,21 @@ export function useNotifications() {
     [status],
   );
 
+  // Verificar obras pendentes atribuídas ao usuário
+  const checkPendingWorks = useCallback(async () => {
+    if (!user || !status.isInitialized) {
+      console.warn("⚠️ Usuário ou notificações não inicializadas");
+      return [];
+    }
+
+    try {
+      return await notificationService.checkPendingAssignedWorks(user.id);
+    } catch (error) {
+      console.error("❌ Erro ao verificar obras pendentes:", error);
+      return [];
+    }
+  }, [user, status.isInitialized]);
+
   // Desabilitar notificações
   const disableNotifications = useCallback(async () => {
     try {
@@ -230,6 +245,7 @@ export function useNotifications() {
     notifyWorkAssigned,
     notifyWorkStatusChange,
     showNotification,
+    checkPendingWorks,
     disableNotifications,
     checkStatus: checkNotificationStatus,
   };

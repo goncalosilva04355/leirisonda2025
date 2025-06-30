@@ -32,11 +32,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
+import { useAuth } from "@/components/AuthProvider";
 
 export function WorkDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { works, deleteWork } = useFirebaseSync();
+  const { user } = useAuth();
   const [work, setWork] = useState<Work | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -194,29 +196,31 @@ export function WorkDetail() {
               Editar Obra
             </Button>
           </Link>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">
-                <Trash2 className="mr-2 h-4 w-4" />
-                Eliminar
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Confirmar Eliminação</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Tem a certeza que deseja apagar esta obra? Esta ação não pode
-                  ser desfeita.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete}>
-                  Apagar Obra
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          {user?.permissions.canDeleteWorks && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Eliminar
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirmar Eliminação</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Tem a certeza que deseja apagar esta obra? Esta ação não
+                    pode ser desfeita.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>
+                    Apagar Obra
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </div>
       </div>
 

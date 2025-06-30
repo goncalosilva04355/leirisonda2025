@@ -24,6 +24,7 @@ import { Work, DashboardStats } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
+import { useNotifications } from "@/hooks/use-notifications";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
@@ -78,6 +79,18 @@ export function Dashboard() {
     lastSync = undefined;
     syncData = () => Promise.resolve();
   }
+
+  // Hook de notificações
+  let checkPendingWorks;
+  try {
+    const notificationsContext = useNotifications();
+    checkPendingWorks = notificationsContext.checkPendingWorks;
+    console.log("✅ Notifications context carregado");
+  } catch (notificationsError) {
+    console.error("❌ Erro no notifications context:", notificationsError);
+    checkPendingWorks = () => Promise.resolve([]);
+  }
+
   const [stats, setStats] = useState<DashboardStats>({
     totalWorks: 0,
     pendingWorks: 0,
@@ -692,7 +705,7 @@ export function Dashboard() {
                   <Waves className="w-4 h-4 text-teal-600" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Manutenç��es Próximas
+                  Manutenções Próximas
                 </h3>
               </div>
               <Button variant="outline" asChild className="hover-leirisonda">
@@ -903,6 +916,40 @@ export function Dashboard() {
                     </Link>
                   </Button>
                 </>
+              )}
+              {/* Botão de teste de notificações (apenas para Gonçalo) */}
+              {user?.email === "gongonsilva@gmail.com" && (
+                <Button
+                  variant="outline"
+                  className="w-full justify-start hover-leirisonda h-auto py-3 border-orange-200 bg-orange-50 hover:bg-orange-100"
+                  onClick={async () => {
+                    try {
+                      console.log("🧪 Teste de notificações iniciado...");
+                      const pendingWorks = await checkPendingWorks();
+                      console.log("🔔 Resultado do teste:", pendingWorks);
+
+                      if (pendingWorks.length === 0) {
+                        // Se não há obras pendentes, mostrar uma notificação de teste
+                        const { notificationService } = await import(
+                          "@/services/NotificationService"
+                        );
+                        await notificationService.showLocalNotification({
+                          title: "🧪 Teste de Notificações",
+                          body: "Sistema de notificações funcionando corretamente! Nenhuma obra pendente encontrada.",
+                          data: { type: "test_notification" },
+                          icon: "/leirisonda-icon.svg",
+                        });
+                      }
+                    } catch (error) {
+                      console.error("❌ Erro no teste de notificações:", error);
+                    }
+                  }}
+                >
+                  <Bell className="w-4 h-4 mr-3 text-orange-600" />
+                  <span className="text-orange-700">
+                    🧪 Testar Notificações
+                  </span>
+                </Button>
               )}
             </div>
           </div>

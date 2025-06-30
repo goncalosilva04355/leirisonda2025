@@ -208,6 +208,16 @@ class NotificationServiceClass {
       window.location.href = `/work/${data.workId}`;
     } else if (data.type === "work_assigned") {
       window.location.href = "/dashboard";
+    } else if (data.type === "pending_works_summary") {
+      // Redirecionar para dashboard com foco nas obras atribuídas
+      window.location.href = "/dashboard#assigned-works";
+    } else if (data.type === "work_status_change") {
+      // Redirecionar para a obra específica ou dashboard
+      if (data.workId) {
+        window.location.href = `/work/${data.workId}`;
+      } else {
+        window.location.href = "/dashboard";
+      }
     }
   }
 
@@ -424,6 +434,88 @@ class NotificationServiceClass {
         "❌ Erro ao enviar notificações de mudança de status:",
         error,
       );
+    }
+  }
+
+  async checkPendingAssignedWorks(userId: string) {
+    console.log(
+      "🔍 Verificando obras pendentes atribuídas ao usuário:",
+      userId,
+    );
+
+    try {
+      // Buscar obras do localStorage e Firebase
+      const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const leirisondaWorks = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+
+      // Combinar todas as obras e remover duplicatas baseado no ID
+      const allWorksMap = new Map();
+
+      [...localWorks, ...leirisondaWorks].forEach((work: any) => {
+        if (work.id) {
+          allWorksMap.set(work.id, work);
+        }
+      });
+
+      const allWorks = Array.from(allWorksMap.values());
+
+      // Filtrar obras atribuídas ao usuário atual que estão pendentes ou em progresso
+      const pendingAssignedWorks = allWorks.filter((work: any) => {
+        const isAssigned =
+          work.assignedUsers &&
+          Array.isArray(work.assignedUsers) &&
+          work.assignedUsers.includes(userId);
+        const isPending =
+          work.status === "pendente" || work.status === "em_progresso";
+        return isAssigned && isPending;
+      });
+
+      console.log(
+        `📋 Encontradas ${pendingAssignedWorks.length} obras pendentes para ${userId}:`,
+        pendingAssignedWorks.map(
+          (w: any) => `${w.workSheetNumber} - ${w.clientName} (${w.status})`,
+        ),
+      );
+
+      // Se há obras pendentes, mostrar notificação de resumo
+      if (pendingAssignedWorks.length > 0) {
+        const mostRecentWork = pendingAssignedWorks[0]; // Primeira obra encontrada
+
+        const payload: NotificationPayload = {
+          title: "🏗️ Obras Atribuídas",
+          body:
+            pendingAssignedWorks.length === 1
+              ? `Nova obra atribuída: ${mostRecentWork.workSheetNumber} - ${mostRecentWork.clientName}`
+              : `Tem ${pendingAssignedWorks.length} obras atribuídas (${pendingAssignedWorks.filter((w) => w.status === "pendente").length} pendentes)`,
+          data: {
+            type: "pending_works_summary",
+            count: pendingAssignedWorks.length,
+            works: pendingAssignedWorks.map((w: any) => ({
+              id: w.id,
+              workSheetNumber: w.workSheetNumber,
+              clientName: w.clientName,
+              status: w.status,
+            })),
+          },
+          icon: "/leirisonda-icon.svg",
+        };
+
+        console.log("📨 Mostrando notificação de obras atribuídas...");
+        await this.showLocalNotification(payload);
+        console.log(
+          `✅ Notificação de ${pendingAssignedWorks.length} obras atribuídas exibida`,
+        );
+
+        return pendingAssignedWorks;
+      } else {
+        console.log("ℹ️ Nenhuma obra pendente atribuída ao usuário");
+        return [];
+      }
+    } catch (error) {
+      console.error("❌ Erro ao verificar obras pendentes:", error);
+      return [];
     }
   }
 
