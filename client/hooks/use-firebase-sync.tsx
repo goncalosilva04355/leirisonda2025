@@ -48,9 +48,15 @@ export function useFirebaseSync() {
     try {
       setIsSyncing(true);
       console.log("🔄 Auto-sync triggered...");
+
+      // Primeiro sincronizar utilizadores globais para garantir que Alexandre está disponível
+      await firebaseService.syncGlobalUsersFromFirebase();
+
+      // Depois sincronizar dados locais
       await firebaseService.syncLocalDataToFirebase();
+
       setLastSync(new Date());
-      console.log("✅ Auto-sync completed");
+      console.log("✅ Auto-sync completed (including global users)");
     } catch (error) {
       console.error("❌ Auto-sync failed:", error);
     } finally {
