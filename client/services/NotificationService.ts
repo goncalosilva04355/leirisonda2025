@@ -314,46 +314,29 @@ class NotificationServiceClass {
     });
 
     try {
-      // Verificar usuário atual para mostrar notificação apenas se estiver atribuído
       const currentUser = JSON.parse(
         localStorage.getItem("leirisonda_user") || "{}",
       );
+
+      const payload: NotificationPayload = {
+        title: "🏗️ Nova Obra Atribuída",
+        body: `Foi-lhe atribuída a obra ${work.workSheetNumber} - ${work.clientName}`,
+        data: {
+          type: "work_assigned",
+          workId: work.id,
+          workSheetNumber: work.workSheetNumber,
+          clientName: work.clientName,
+        },
+        icon: "/leirisonda-icon.svg",
+      };
 
       console.log("👤 Usuário atual:", {
         currentUserId: currentUser.id,
         currentUserName: currentUser.name,
         assignedUsers: assignedUsers,
-        shouldReceiveNotification: assignedUsers.includes(currentUser.id),
       });
 
-      // Só mostrar notificação LOCAL se o usuário atual estiver entre os atribuídos
-      if (currentUser.id && assignedUsers.includes(currentUser.id)) {
-        const payload: NotificationPayload = {
-          title: "🏗️ Nova Obra Atribuída",
-          body: `Foi-lhe atribuída a obra ${work.workSheetNumber} - ${work.clientName}`,
-          data: {
-            type: "work_assigned",
-            workId: work.id,
-            workSheetNumber: work.workSheetNumber,
-            clientName: work.clientName,
-          },
-          icon: "/leirisonda-icon.svg",
-        };
-
-        console.log(
-          `📨 Mostrando notificação local para ${currentUser.name}...`,
-        );
-        await this.showLocalNotification(payload);
-        console.log(
-          `✅ Notificação exibida para ${currentUser.name} (${currentUser.email})`,
-        );
-      } else {
-        console.log(
-          `ℹ️ Usuário atual (${currentUser.name || "Desconhecido"}) não está entre os atribuídos - não mostrar notificação local`,
-        );
-      }
-
-      // Log para todos os usuários atribuídos (para debug/auditoria)
+      // Buscar informações dos usuários
       const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
       const globalUsers = [
         {
@@ -372,15 +355,53 @@ class NotificationServiceClass {
 
       const allUsers = [...storedUsers, ...globalUsers];
 
-      console.log("📋 Auditoria de notificações:");
-      for (const userId of assignedUsers) {
+      // ENVIAR NOTIFICAÇÕES PUSH PARA TODOS OS USUÁRIOS ATRIBUÍDOS
+      console.log("📤 Enviando notificações push para usuários atribuídos...");
+
+      const pushPromises = assignedUsers.map(async (userId) => {
         const user = allUsers.find((u: User) => u.id === userId);
+
         if (user) {
-          console.log(
-            `👤 ${user.name} (${user.email}) - deve receber notificação quando acessar o sistema`,
-          );
+          console.log(`📱 Enviando push para ${user.name} (${user.email})...`);
+
+          try {
+            const pushSent = await this.sendPushNotification(userId, payload);
+
+            if (pushSent) {
+              console.log(`✅ Push enviado com sucesso para ${user.name}`);
+            } else {
+              console.warn(
+                `��️ Falha no push para ${user.name} - mostrando local se for usuário atual`,
+              );
+
+              // Fallback: mostrar notificação local apenas se for o usuário atual
+              if (currentUser.id === userId) {
+                await this.showLocalNotification(payload);
+                console.log(
+                  `💡 Notificação local mostrada para usuário atual: ${user.name}`,
+                );
+              }
+            }
+          } catch (pushError) {
+            console.error(`❌ Erro no push para ${user.name}:`, pushError);
+
+            // Fallback: mostrar notificação local apenas se for o usuário atual
+            if (currentUser.id === userId) {
+              await this.showLocalNotification(payload);
+              console.log(`💡 Fallback local para usuário atual: ${user.name}`);
+            }
+          }
+        } else {
+          console.warn(`⚠️ Usuário não encontrado: ${userId}`);
         }
-      }
+      });
+
+      // Aguardar todos os envios de push
+      await Promise.allSettled(pushPromises);
+
+      console.log(
+        "✅ Processo de notificações concluído para todos os usuários atribuídos",
+      );
     } catch (error) {
       console.error("❌ Erro ao enviar notificações de obra atribuída:", error);
     }
@@ -600,7 +621,7 @@ class NotificationServiceClass {
 
       if (response.ok) {
         const result = await response.json();
-        console.log(`✅ Notificação push enviada com sucesso:`, result);
+        console.log(`��� Notificação push enviada com sucesso:`, result);
         return true;
       } else {
         const error = await response.text();
@@ -664,7 +685,7 @@ class NotificationServiceClass {
         } else {
           diagnostics.serviceWorkerStatus = "Not Registered";
           diagnostics.recommendations.push(
-            "Service Worker para Firebase n��o está registrado",
+            "Service Worker para Firebase não está registrado",
           );
         }
       } else {
