@@ -221,51 +221,39 @@ export function MaintenanceReport({
         </tbody>
       </table>
 
-      <!-- Water Analysis -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">Análise da Água</div>
-        </div>
-        <div class="section-content">
-          <div class="info-grid">
-            <div class="info-card">
-              <div class="label">pH</div>
-              <div class="value">${intervention.waterValues.ph || "N/A"}</div>
-              <div style="font-size: 10px; color: #666;">Ideal: 7.0 - 7.4</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Cloro</div>
-              <div class="value">${intervention.waterValues.chlorine || "N/A"} ppm</div>
-              <div style="font-size: 10px; color: #666;">Ideal: 1.0 - 2.5 ppm</div>
-            </div>
-            <div class="info-card">
-              <div class="label">ORP</div>
-              <div class="value">${intervention.waterValues.orp || "N/A"} mv</div>
-              <div style="font-size: 10px; color: #666;">Ideal: 650 - 750 mv</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Temperatura</div>
-              <div class="value">${intervention.waterValues.temperature || "N/A"}°C</div>
-              <div style="font-size: 10px; color: #666;">Ideal: 24 - 28°C</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Sal</div>
-              <div class="value">${intervention.waterValues.salt || "N/A"} gr/lt</div>
-              <div style="font-size: 10px; color: #666;">Ideal: 3.0 - 4.0 gr/lt</div>
-            </div>
-            ${
-              intervention.waterValues.alkalinity
-                ? `
-            <div class="info-card">
-              <div class="label">Alcalinidade</div>
-              <div class="value">${intervention.waterValues.alkalinity} ppm</div>
-              <div style="font-size: 10px; color: #666;">Ideal: 80 - 120 ppm</div>
-            </div>`
-                : ""
-            }
-          </div>
-        </div>
-      </div>
+      <!-- Produtos químicos -->
+      <div class="section-title">Produtos químicos</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 50%;">Produto</th>
+            <th style="width: 25%;">Estado</th>
+            <th style="width: 25%;">Observações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Nível de cloro</td>
+            <td>Conforme</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>pH</td>
+            <td>${intervention.waterValues.ph ? (intervention.waterValues.ph >= 7.0 && intervention.waterValues.ph <= 7.4 ? "Conforme" : "Não conforme") : "N/A"}</td>
+            <td>${intervention.waterValues.ph ? (intervention.waterValues.ph >= 7.0 && intervention.waterValues.ph <= 7.4 ? "" : `pH acima de 7.6`) : ""}</td>
+          </tr>
+          <tr>
+            <td>Alcalinidade total</td>
+            <td>Conforme</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Dureza cálcica</td>
+            <td>N/A</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
 
       <!-- Work Performed -->
       ${
