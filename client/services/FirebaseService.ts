@@ -544,27 +544,39 @@ export class FirebaseService {
       const worksRef = collection(db, "works");
       const q = query(worksRef, orderBy("createdAt", "desc"));
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const works = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          createdAt:
-            doc.data().createdAt?.toDate?.()?.toISOString() ||
-            doc.data().createdAt,
-          updatedAt:
-            doc.data().updatedAt?.toDate?.()?.toISOString() ||
-            doc.data().updatedAt,
-        })) as Work[];
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const works = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt:
+              doc.data().createdAt?.toDate?.()?.toISOString() ||
+              doc.data().createdAt,
+            updatedAt:
+              doc.data().updatedAt?.toDate?.()?.toISOString() ||
+              doc.data().updatedAt,
+          })) as Work[];
 
-        // Update localStorage backup
-        localStorage.setItem("works", JSON.stringify(works));
-        callback(works);
-      });
+          console.log(`🔥 Real-time update: ${works.length} obras recebidas`);
+
+          // Update localStorage backup instantaneously
+          localStorage.setItem("works", JSON.stringify(works));
+
+          // Trigger callback with fresh data
+          callback(works);
+        },
+        (error) => {
+          console.error("❌ Erro no listener de obras:", error);
+          // Em caso de erro, usar dados locais
+          callback(this.getLocalWorks());
+        },
+      );
 
       this.unsubscribes.push(unsubscribe);
       return unsubscribe;
     } catch (error) {
-      console.error("Error listening to works:", error);
+      console.error("Error setting up works listener:", error);
       // Fallback to local data
       callback(this.getLocalWorks());
       return () => {};
