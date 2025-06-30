@@ -1027,13 +1027,7 @@ export class FirebaseService {
 
           // Dispará evento customizado para notificar outras abas/janelas
           try {
-            window.dispatchEvent(
-              new CustomEvent("leirisonda_works_updated", {
-                detail: { works: uniqueWorks, timestamp: currentTime },
-              }),
-            );
-
-            // Cross-device notification via localStorage
+            // Apenas salvar no localStorage sem disparar eventos customizados
             localStorage.setItem(
               "leirisonda_last_update",
               JSON.stringify({
@@ -1041,16 +1035,6 @@ export class FirebaseService {
                 timestamp: currentTime,
                 worksCount: uniqueWorks.length,
                 device: navigator.userAgent.substring(0, 50),
-              }),
-            );
-
-            // Trigger sync notification across devices
-            window.dispatchEvent(
-              new CustomEvent("leirisonda_sync_trigger", {
-                detail: {
-                  source: "firebase_listener",
-                  works: uniqueWorks.length,
-                },
               }),
             );
           } catch (e) {
