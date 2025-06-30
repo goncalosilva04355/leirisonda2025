@@ -334,7 +334,7 @@ export function MaintenanceReport({
           ? `
       <div class="section">
         <div class="section-header">
-          <div class="section-title">📸 Fotos da Intervenção (${intervention.photos.length})</div>
+          <div class="section-title">Fotos da Intervenção (${intervention.photos.length})</div>
         </div>
         <div class="section-content">
           <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
@@ -394,7 +394,7 @@ export function MaintenanceReport({
               <div class="value">${intervention.photos ? intervention.photos.length : 0} fotos</div>
             </div>
             <div class="info-card">
-              <div class="label">Relatório Gerado</div>
+              <div class="label">Relat��rio Gerado</div>
               <div class="value">${format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: pt })}</div>
             </div>
             <div class="info-card">
