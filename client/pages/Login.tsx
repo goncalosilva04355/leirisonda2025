@@ -173,7 +173,7 @@ export function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
+                placeholder="Email de acesso"
                 disabled={isSubmitting}
                 style={{
                   width: "100%",
