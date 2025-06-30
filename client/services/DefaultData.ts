@@ -235,6 +235,87 @@ export class DefaultDataService {
     console.log("✅ All default data initialized successfully");
   }
 
+  static forceCleanUserSystem(): void {
+    console.log("🧹 Forçando limpeza completa do sistema de utilizadores...");
+
+    // Remove todos os dados de utilizadores
+    localStorage.removeItem("users");
+    localStorage.removeItem("leirisonda_user");
+
+    // Remove todas as passwords antigas
+    const allKeys = Object.keys(localStorage);
+    allKeys.forEach((key) => {
+      if (key.startsWith("password_")) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    // Força criação dos 2 utilizadores corretos
+    const correctUsers: User[] = [
+      {
+        id: "admin_goncalo",
+        email: "gongonsilva@gmail.com",
+        name: "Gonçalo Fonseca",
+        role: "admin",
+        permissions: defaultAdminPermissions,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: "user_alexandre",
+        email: "alexkamaryta@gmail.com",
+        name: "Alexandre Fernandes",
+        role: "user",
+        permissions: {
+          ...defaultUserPermissions,
+          canEditWorks: true,
+          canEditMaintenance: true,
+          canViewReports: true,
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    ];
+
+    localStorage.setItem("users", JSON.stringify(correctUsers));
+
+    // Armazenar passwords com todas as chaves possíveis
+    correctUsers.forEach((user) => {
+      let password = "";
+      switch (user.email) {
+        case "gongonsilva@gmail.com":
+          password = "19867gsf";
+          break;
+        case "alexkamaryta@gmail.com":
+          password = "69alexandre";
+          break;
+      }
+
+      if (password) {
+        // Múltiplas chaves para garantir compatibilidade
+        const passwordKeys = [
+          `password_${user.id}`,
+          `password_${user.email}`,
+          `password_${user.email.toLowerCase()}`,
+          `password_${user.email.trim().toLowerCase()}`,
+        ];
+
+        passwordKeys.forEach((key) => {
+          localStorage.setItem(key, password);
+        });
+
+        console.log(`✅ Password definida para ${user.name}: ${password}`);
+      }
+    });
+
+    console.log("✅ Sistema de utilizadores limpo e reconfigurado!");
+    console.log("📋 Utilizadores disponíveis:");
+    console.log("• gongonsilva@gmail.com / 19867gsf (Admin)");
+    console.log(
+      "• alexkamaryta@gmail.com / 69alexandre (User com permissões estendidas)",
+    );
+  }
+
   static resetAllData(): void {
     if (confirm("⚠️ ATENÇÃO: Isto vai apagar todos os dados! Continuar?")) {
       localStorage.removeItem("users");
