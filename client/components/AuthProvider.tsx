@@ -361,37 +361,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             user: {
               id: "admin",
               email: "gongonsilva@gmail.com",
-              name: "Gonçalo Silva",
+              name: "Gonçalo Fonseca",
               role: "admin" as const,
               permissions: defaultAdminPermissions,
-              createdAt: new Date().toISOString(),
-            },
-          },
-          {
-            email: "tecnico@leirisonda.pt",
-            password: "tecnico123",
-            user: {
-              id: "tecnico1",
-              email: "tecnico@leirisonda.pt",
-              name: "Técnico Leirisonda",
-              role: "user" as const,
-              permissions: defaultUserPermissions,
-              createdAt: new Date().toISOString(),
-            },
-          },
-          {
-            email: "supervisor@leirisonda.pt",
-            password: "supervisor123",
-            user: {
-              id: "supervisor1",
-              email: "supervisor@leirisonda.pt",
-              name: "Supervisor",
-              role: "admin" as const,
-              permissions: {
-                ...defaultAdminPermissions,
-                canDeleteUsers: false,
-                canDeleteWorks: false,
-              },
               createdAt: new Date().toISOString(),
             },
           },
