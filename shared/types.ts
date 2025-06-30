@@ -37,7 +37,7 @@ export interface User {
 
 export interface Work {
   id: string;
-  workSheetNumber: string; // Folha obra Leirisonda
+  workSheetNumber: string; // Folha de obra Leirisonda
   type: "piscina" | "manutencao" | "avaria" | "montagem" | "furo_agua";
   clientName: string;
   address: string;
