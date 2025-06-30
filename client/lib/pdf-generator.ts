@@ -416,15 +416,19 @@ export class PDFGenerator {
           }
 
           .company-info h1 {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
           }
 
           .company-info .tagline {
-            font-size: 16px;
-            opacity: 0.9;
+            font-size: 14px;
+            opacity: 0.85;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
           }
 
           .header-meta {
