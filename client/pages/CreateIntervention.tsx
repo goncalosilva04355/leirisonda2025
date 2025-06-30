@@ -14,8 +14,6 @@ import {
   Minus,
   AlertTriangle,
   Camera,
-  Wifi,
-  WifiOff,
   AlertCircle,
 } from "lucide-react";
 import { PoolMaintenance, MaintenanceIntervention } from "@shared/types";
