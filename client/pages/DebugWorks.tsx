@@ -391,6 +391,18 @@ Se NÃO aparecer, há problema de sincronização Firebase!
         </Button>
       </div>
 
+      {/* Teste Completo de Sincronização */}
+      <div className="bg-purple-50 border border-purple-200 rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-purple-900 mb-4">
+          🧪 Teste Completo de Sincronização
+        </h3>
+        <p className="text-purple-700 mb-4">
+          Este teste cria uma obra, verifica se é salva corretamente em todas as
+          fontes e confirma se aparecerá no dispositivo do Alexandre.
+        </p>
+        <SyncTestButton />
+      </div>
+
       {/* Informações de Armazenamento */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <div className="flex items-center space-x-3 mb-4">
