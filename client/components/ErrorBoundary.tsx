@@ -102,6 +102,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   private handleReset = () => {
+    console.log("🔄 User requested error reset");
     this.setState({
       hasError: false,
       error: undefined,
@@ -111,12 +112,16 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   private handleReload = () => {
+    console.log("🔄 User requested page reload");
     // Clear any stored error state
     localStorage.removeItem("app_error_state");
+    localStorage.removeItem("leirisonda_error_state");
+    sessionStorage.clear();
     window.location.reload();
   };
 
   private handleGoHome = () => {
+    console.log("🏠 User requested navigation to home");
     // Clear error state and navigate to home
     this.setState({
       hasError: false,
@@ -125,6 +130,36 @@ export class ErrorBoundary extends Component<Props, State> {
       retryCount: 0,
     });
     window.location.href = "/dashboard";
+  };
+
+  private handleClearData = () => {
+    console.log("🧹 User requested data clearing");
+    try {
+      // Clear all storage
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Clear any caches if available
+      if ("caches" in window) {
+        caches.keys().then((names) => {
+          names.forEach((name) => {
+            caches.delete(name);
+          });
+        });
+      }
+
+      alert("Dados limpos! A recarregar página...");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error clearing data:", error);
+      alert("Erro ao limpar dados. A recarregar página...");
+      window.location.reload();
+    }
+  };
+
+  private handleSystemStatus = () => {
+    console.log("🔍 User requested system diagnosis");
+    window.location.href = "/system-status";
   };
 
   public render() {
