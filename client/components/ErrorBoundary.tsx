@@ -171,6 +171,11 @@ export class ErrorBoundary extends Component<Props, State> {
     window.location.href = "/system-status";
   };
 
+  private handleEmergencyDiagnostic = () => {
+    console.log("🚨 User requested emergency diagnostic");
+    window.location.href = "/emergency-diagnostic";
+  };
+
   public render() {
     if (this.state.hasError) {
       return (
