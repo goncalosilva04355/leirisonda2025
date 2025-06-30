@@ -10,6 +10,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { Link } from "react-router-dom";
 
 export function SystemStatus() {
+  const { user } = useAuth();
   const [checks, setChecks] = React.useState({
     localStorage: false,
     firebase: false,
