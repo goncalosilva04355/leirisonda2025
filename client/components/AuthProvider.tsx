@@ -361,7 +361,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           },
         ];
 
-        console.log("🔍 Checking local credentials first...");
+        console.log("🔍 Checking hardcoded credentials...");
+        console.log(
+          "Available users:",
+          globalUsers.map((u) => `${u.email} / ${u.password}`),
+        );
+        console.log("Login attempt:", `${email} / ${password}`);
+
         const localUser = globalUsers.find(
           (u) => u.email === email && u.password === password,
         );
