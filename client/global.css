@@ -256,6 +256,9 @@
   text-decoration: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   min-height: 44px; /* Better touch target */
+  /* Performance optimizations */
+  will-change: transform, background-color;
+  transform: translateZ(0);
 }
 
 .btn-leirisonda:hover {
