@@ -38,6 +38,7 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
+            <Route path="/system-status" element={<SystemStatus />} />
 
             {/* Protected routes */}
             <Route
