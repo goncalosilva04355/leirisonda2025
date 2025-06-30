@@ -70,8 +70,25 @@ export function UsersList() {
         <div>
           <h1 style={{ fontSize: "28px", marginBottom: "10px" }}>
             Utilizadores
+            <span
+              style={{
+                marginLeft: "10px",
+                fontSize: "14px",
+                padding: "4px 8px",
+                borderRadius: "12px",
+                backgroundColor: isOnline ? "#d4edda" : "#f8d7da",
+                color: isOnline ? "#155724" : "#721c24",
+              }}
+            >
+              {isOnline ? "🔄 Sincronizado" : "📱 Local"}
+            </span>
           </h1>
-          <p style={{ color: "#666" }}>Gerir utilizadores e suas permissões</p>
+          <p style={{ color: "#666" }}>
+            Gerir utilizadores e suas permissões
+            {isOnline
+              ? " (dados sincronizados automaticamente)"
+              : " (modo offline)"}
+          </p>
         </div>
         <button
           onClick={() => navigate("/create-user")}
