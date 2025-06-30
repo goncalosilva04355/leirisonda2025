@@ -79,6 +79,18 @@ export function Dashboard() {
     lastSync = undefined;
     syncData = () => Promise.resolve();
   }
+
+  // Hook de notificações
+  let checkPendingWorks;
+  try {
+    const notificationsContext = useNotifications();
+    checkPendingWorks = notificationsContext.checkPendingWorks;
+    console.log("✅ Notifications context carregado");
+  } catch (notificationsError) {
+    console.error("❌ Erro no notifications context:", notificationsError);
+    checkPendingWorks = () => Promise.resolve([]);
+  }
+
   const [stats, setStats] = useState<DashboardStats>({
     totalWorks: 0,
     pendingWorks: 0,
