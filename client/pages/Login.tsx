@@ -291,7 +291,6 @@ export function Login() {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "8px",
-                marginBottom: "8px",
               }}
             >
               {isSubmitting ? (
@@ -312,107 +311,6 @@ export function Login() {
                 "Entrar"
               )}
             </button>
-
-            {/* BYPASS BUTTONS */}
-            <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
-              <button
-                type="button"
-                onClick={() => {
-                  console.log("🚀 BYPASS LOGIN GONÇALO");
-                  const goncaloUser = {
-                    id: "admin_goncalo",
-                    email: "gongonsilva@gmail.com",
-                    name: "Gonçalo Fonseca",
-                    role: "admin",
-                    permissions: {
-                      canViewWorks: true,
-                      canCreateWorks: true,
-                      canEditWorks: true,
-                      canDeleteWorks: true,
-                      canViewMaintenance: true,
-                      canCreateMaintenance: true,
-                      canEditMaintenance: true,
-                      canDeleteMaintenance: true,
-                      canViewUsers: true,
-                      canCreateUsers: true,
-                      canEditUsers: true,
-                      canDeleteUsers: true,
-                      canViewReports: true,
-                      canExportData: true,
-                      canViewDashboard: true,
-                      canViewStats: true,
-                    },
-                    createdAt: new Date().toISOString(),
-                  };
-                  localStorage.setItem(
-                    "leirisonda_user",
-                    JSON.stringify(goncaloUser),
-                  );
-                  window.location.href = "/dashboard";
-                }}
-                style={{
-                  flex: 1,
-                  height: "36px",
-                  background: "#dc3545",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  cursor: "pointer",
-                }}
-              >
-                🔧 Gonçalo
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  console.log("🚀 BYPASS LOGIN ALEXANDRE");
-                  const alexandreUser = {
-                    id: "user_alexandre",
-                    email: "alexkamaryta@gmail.com",
-                    name: "Alexandre Fernandes",
-                    role: "user",
-                    permissions: {
-                      canViewWorks: true,
-                      canCreateWorks: false,
-                      canEditWorks: true,
-                      canDeleteWorks: false,
-                      canViewMaintenance: true,
-                      canCreateMaintenance: false,
-                      canEditMaintenance: true,
-                      canDeleteMaintenance: false,
-                      canViewUsers: false,
-                      canCreateUsers: false,
-                      canEditUsers: false,
-                      canDeleteUsers: false,
-                      canViewReports: true,
-                      canExportData: false,
-                      canViewDashboard: true,
-                      canViewStats: true,
-                    },
-                    createdAt: new Date().toISOString(),
-                  };
-                  localStorage.setItem(
-                    "leirisonda_user",
-                    JSON.stringify(alexandreUser),
-                  );
-                  window.location.href = "/dashboard";
-                }}
-                style={{
-                  flex: 1,
-                  height: "36px",
-                  background: "#28a745",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  cursor: "pointer",
-                }}
-              >
-                🔧 Alexandre
-              </button>
-            </div>
           </form>
         </div>
       </div>
