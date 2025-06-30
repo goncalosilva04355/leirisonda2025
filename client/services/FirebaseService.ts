@@ -365,6 +365,21 @@ export class FirebaseService {
 
           firebaseSuccess = true;
 
+          // Verificar se realmente foi criada (double-check)
+          try {
+            const verifyDoc = await getDoc(docRef);
+            if (verifyDoc.exists()) {
+              console.log("✅ VERIFICAÇÃO: Obra confirmada no Firebase");
+            } else {
+              console.error(
+                "⚠️ VERIFICAÇÃO FALHOU: Obra não encontrada no Firebase após criação",
+              );
+              firebaseSuccess = false;
+            }
+          } catch (verifyError) {
+            console.error("⚠️ ERRO NA VERIFICAÇÃO:", verifyError);
+          }
+
           // Notificar outros dispositivos imediatamente
           console.log("📡 NOTIFICANDO OUTROS DISPOSITIVOS...");
         } catch (firebaseError) {
