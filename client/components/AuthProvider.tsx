@@ -7,6 +7,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
+  getAllUsers: () => User[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -243,8 +244,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log("👋 LOGOUT");
   };
 
+  const getAllUsers = (): User[] => {
+    try {
+      // Obter usuários globais predefinidos
+      const globalUsersList = Object.values(globalUsers).map((globalUser) => ({
+        id: globalUser.id,
+        email: globalUser.email,
+        name: globalUser.name,
+        role: globalUser.role,
+        permissions: globalUser.permissions,
+        createdAt: new Date().toISOString(),
+      }));
+
+      // Obter usuários criados dinamicamente
+      const dynamicUsers = JSON.parse(localStorage.getItem("users") || "[]");
+
+      // Combinar e remover duplicatas
+      const allUsers = [...globalUsersList];
+
+      dynamicUsers.forEach((dynamicUser: User) => {
+        const exists = allUsers.find(
+          (user) => user.email === dynamicUser.email,
+        );
+        if (!exists) {
+          allUsers.push(dynamicUser);
+        }
+      });
+
+      return allUsers;
+    } catch (error) {
+      console.error("❌ Erro ao obter usuários:", error);
+      return [];
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, isLoading, getAllUsers }}
+    >
       {children}
     </AuthContext.Provider>
   );

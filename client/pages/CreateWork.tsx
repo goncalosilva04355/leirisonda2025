@@ -18,6 +18,7 @@ import {
   WifiOff,
 } from "lucide-react";
 import { Work, CreateWorkData } from "@shared/types";
+import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,9 +49,30 @@ const statusOptions = [
 
 export function CreateWork() {
   const navigate = useNavigate();
+  const { user, getAllUsers } = useAuth();
   const { createWork, isOnline, isSyncing } = useFirebaseSync();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  // Verificar se o usuário tem permissão para criar obras
+  if (!user?.permissions.canCreateWorks) {
+    return (
+      <div className="p-6 max-w-md mx-auto mt-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-red-800 mb-2">
+            Acesso Negado
+          </h2>
+          <p className="text-red-600 mb-4">
+            Não tem permissão para criar novas obras.
+          </p>
+          <Button onClick={() => navigate("/dashboard")} variant="outline">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar ao Dashboard
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const [formData, setFormData] = useState<CreateWorkData>({
     workSheetNumber: generateWorkSheetNumber(),
@@ -63,6 +85,7 @@ export function CreateWork() {
     status: "pendente",
     vehicles: [],
     technicians: [],
+    assignedUsers: [],
     photos: [],
     observations: "",
     workPerformed: "",
@@ -71,6 +94,7 @@ export function CreateWork() {
 
   const [vehicleInput, setVehicleInput] = useState("");
   const [technicianInput, setTechnicianInput] = useState("");
+  const [availableUsers] = useState(() => getAllUsers());
 
   function generateWorkSheetNumber(): string {
     const year = new Date().getFullYear();
@@ -131,6 +155,7 @@ export function CreateWork() {
         status: formData.status,
         vehicles: formData.vehicles,
         technicians: formData.technicians,
+        assignedUsers: formData.assignedUsers,
         photos: formData.photos.map((photo, index) => ({
           id: `${Date.now()}-${index}`,
           url: URL.createObjectURL(photo),
@@ -190,6 +215,19 @@ export function CreateWork() {
   const removeTechnician = (index: number) => {
     const newTechnicians = formData.technicians.filter((_, i) => i !== index);
     updateFormData("technicians", newTechnicians);
+  };
+
+  const addAssignedUser = (userId: string) => {
+    if (!formData.assignedUsers.includes(userId)) {
+      updateFormData("assignedUsers", [...formData.assignedUsers, userId]);
+    }
+  };
+
+  const removeAssignedUser = (userId: string) => {
+    const newAssignedUsers = formData.assignedUsers.filter(
+      (id) => id !== userId,
+    );
+    updateFormData("assignedUsers", newAssignedUsers);
   };
 
   return (
@@ -489,6 +527,55 @@ export function CreateWork() {
                   ))}
                 </div>
               </div>
+
+              <div>
+                <Label>Usuários Atribuídos</Label>
+                <p className="text-sm text-gray-600 mt-1">
+                  Selecione os usuários responsáveis por esta obra
+                </p>
+                <div className="mt-2 space-y-2">
+                  <Select onValueChange={addAssignedUser}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecionar usuário..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableUsers
+                        .filter(
+                          (user) => !formData.assignedUsers.includes(user.id),
+                        )
+                        .map((user) => (
+                          <SelectItem key={user.id} value={user.id}>
+                            {user.name} ({user.email})
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  {formData.assignedUsers.map((userId) => {
+                    const assignedUser = availableUsers.find(
+                      (u) => u.id === userId,
+                    );
+                    return assignedUser ? (
+                      <div
+                        key={userId}
+                        className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded border border-blue-200"
+                      >
+                        <span className="text-blue-800">
+                          {assignedUser.name} ({assignedUser.email})
+                        </span>
+                        <Button
+                          type="button"
+                          onClick={() => removeAssignedUser(userId)}
+                          variant="ghost"
+                          size="sm"
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          Remover
+                        </Button>
+                      </div>
+                    ) : null;
+                  })}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -499,7 +586,7 @@ export function CreateWork() {
                 <FileText className="w-5 h-5 text-blue-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900">
-                Observações e Trabalho
+                Observaç��es e Trabalho
               </h3>
             </div>
 

@@ -111,14 +111,32 @@ export function Dashboard() {
       workSheetsPending,
     });
 
-    // Get recent works (last 5)
-    const sortedWorks = worksList
-      .sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      )
-      .slice(0, 5);
-    setRecentWorks(sortedWorks);
+    // Get recent works - priorizar obras atribuídas ao usuário logado
+    const assignedWorks = worksList.filter(
+      (work) =>
+        work.assignedUsers && work.assignedUsers.includes(user?.id || ""),
+    );
+    const otherWorks = worksList.filter(
+      (work) =>
+        !work.assignedUsers || !work.assignedUsers.includes(user?.id || ""),
+    );
+
+    // Ordenar por data (mais recentes primeiro)
+    const sortedAssignedWorks = assignedWorks.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    const sortedOtherWorks = otherWorks.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+    // Combinar: obras atribuídas primeiro, depois outras (máximo 5 total)
+    const recentWorksList = [...sortedAssignedWorks, ...sortedOtherWorks].slice(
+      0,
+      5,
+    );
+    setRecentWorks(recentWorksList);
   };
 
   const getStatusInfo = (status: string) => {
@@ -334,6 +352,84 @@ export function Dashboard() {
         </Link>
       </div>
 
+      {/* Obras Atribuídas */}
+      {user &&
+        works.filter(
+          (work) => work.assignedUsers && work.assignedUsers.includes(user.id),
+        ).length > 0 && (
+          <div className="w-full mb-6">
+            <div className="card-leirisonda">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Users className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Suas Obras Atribuídas
+                  </h3>
+                </div>
+                <Button variant="outline" asChild className="hover-leirisonda">
+                  <Link to={`/works?assignedTo=${user.id}`}>
+                    <Eye className="w-4 h-4 mr-2" />
+                    Ver Todas
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                {works
+                  .filter(
+                    (work) =>
+                      work.assignedUsers &&
+                      work.assignedUsers.includes(user.id),
+                  )
+                  .sort(
+                    (a, b) =>
+                      new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime(),
+                  )
+                  .slice(0, 3)
+                  .map((work) => {
+                    const statusInfo = getStatusInfo(work.status);
+                    return (
+                      <Link
+                        key={work.id}
+                        to={`/works/${work.id}`}
+                        className="block p-4 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2 mb-1">
+                              <span className="font-medium text-gray-900">
+                                {work.workSheetNumber}
+                              </span>
+                              <span
+                                className={`text-xs px-2 py-1 rounded-full ${statusInfo.className}`}
+                              >
+                                {statusInfo.label}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-1">
+                              {work.clientName}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {format(new Date(work.createdAt), "dd/MM/yyyy", {
+                                locale: pt,
+                              })}
+                            </p>
+                          </div>
+                          <div className="text-blue-600">
+                            <Activity className="w-4 h-4" />
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+        )}
+
       {/* Main Content Grid */}
       <div className="content-grid">
         {/* Recent Works */}
@@ -345,7 +441,7 @@ export function Dashboard() {
                   <Activity className="w-4 h-4 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Obras Recentes
+                  Todas as Obras Recentes
                 </h3>
               </div>
               <Button variant="outline" asChild className="hover-leirisonda">
@@ -363,15 +459,19 @@ export function Dashboard() {
                   Nenhuma obra registada
                 </h3>
                 <p className="text-gray-600 mb-4 text-sm">
-                  Comece por criar a sua primeira obra.
+                  {user?.permissions.canCreateWorks
+                    ? "Comece por criar a sua primeira obra."
+                    : "Não existem obras registadas no sistema."}
                 </p>
-                <button
-                  className="btn-leirisonda"
-                  onClick={() => navigate("/create-work")}
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Criar Primeira Obra
-                </button>
+                {user?.permissions.canCreateWorks && (
+                  <button
+                    className="btn-leirisonda"
+                    onClick={() => navigate("/create-work")}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Criar Primeira Obra
+                  </button>
+                )}
               </div>
             ) : (
               <div className="space-y-4">
@@ -438,7 +538,7 @@ export function Dashboard() {
                   <Waves className="w-4 h-4 text-teal-600" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Manutenções Próximas
+                  Manutenç��es Próximas
                 </h3>
               </div>
               <Button variant="outline" asChild className="hover-leirisonda">
@@ -582,16 +682,18 @@ export function Dashboard() {
               </h3>
             </div>
             <div className="space-y-3">
-              <Button
-                variant="outline"
-                className="w-full justify-start hover-leirisonda h-auto py-3"
-                asChild
-              >
-                <Link to="/create-work">
-                  <Plus className="w-4 h-4 mr-3" />
-                  Nova Obra
-                </Link>
-              </Button>
+              {user?.permissions.canCreateWorks && (
+                <Button
+                  variant="outline"
+                  className="w-full justify-start hover-leirisonda h-auto py-3"
+                  asChild
+                >
+                  <Link to="/create-work">
+                    <Plus className="w-4 h-4 mr-3" />
+                    Nova Obra
+                  </Link>
+                </Button>
+              )}
               <Button
                 variant="outline"
                 className="w-full justify-start hover-leirisonda h-auto py-3"

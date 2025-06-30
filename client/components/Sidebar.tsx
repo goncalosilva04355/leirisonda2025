@@ -129,27 +129,35 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               Voltar
             </button>
 
-            {navigation.map((item) => {
-              const Icon = item.icon;
-              const isActive =
-                location.pathname === item.href ||
-                (item.href === "/works" &&
-                  location.pathname.startsWith("/works"));
+            {navigation
+              .filter((item) => {
+                // Filtrar "Nova Obra" se o usuário não tem permissão para criar obras
+                if (item.href === "/create-work") {
+                  return user?.permissions.canCreateWorks;
+                }
+                return true;
+              })
+              .map((item) => {
+                const Icon = item.icon;
+                const isActive =
+                  location.pathname === item.href ||
+                  (item.href === "/works" &&
+                    location.pathname.startsWith("/works"));
 
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => {
-                    if (window.innerWidth < 1024) onToggle();
-                  }}
-                  className={`nav-item-leirisonda ${isActive ? "active" : ""}`}
-                >
-                  <Icon className="mr-3 h-5 w-5" />
-                  {item.name}
-                </Link>
-              );
-            })}
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => {
+                      if (window.innerWidth < 1024) onToggle();
+                    }}
+                    className={`nav-item-leirisonda ${isActive ? "active" : ""}`}
+                  >
+                    <Icon className="mr-3 h-5 w-5" />
+                    {item.name}
+                  </Link>
+                );
+              })}
 
             {user?.email === "gongonsilva@gmail.com" && (
               <>
