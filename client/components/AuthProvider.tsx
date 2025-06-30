@@ -346,6 +346,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Fallback to legacy local login
+        console.log("🔄 Using legacy authentication...");
+
         const globalUsers = [
           {
             email: "gongonsilva@gmail.com",
@@ -359,7 +361,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               createdAt: new Date().toISOString(),
             },
           },
-
           {
             email: "tecnico@leirisonda.pt",
             password: "tecnico123",
@@ -390,6 +391,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           },
         ];
 
+        console.log("🔍 Checking credentials against global users...");
+        console.log("📧 Email:", email);
+        console.log("🔑 Password length:", password.length);
+
         const globalUser = globalUsers.find(
           (u) => u.email === email && u.password === password,
         );
@@ -402,15 +407,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             JSON.stringify(globalUser.user),
           );
 
-          // Try to create user in Firebase for next time
-          try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            await createGlobalUsersInFirebase();
-          } catch (createError) {
-            console.log("ℹ️ User might already exist in Firebase");
+          // Try to create user in Firebase for next time (without blocking)
+          if (auth) {
+            setTimeout(async () => {
+              try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                await createGlobalUsersInFirebase();
+                console.log("✅ User created in Firebase for future use");
+              } catch (createError) {
+                console.log(
+                  "ℹ️ User might already exist in Firebase or Firebase unavailable",
+                );
+              }
+            }, 100);
           }
 
           return true;
+        } else {
+          console.log("❌ No matching user found in global users");
+          console.log(
+            "Available emails:",
+            globalUsers.map((u) => u.email),
+          );
         }
 
         console.error("❌ Login failed");
