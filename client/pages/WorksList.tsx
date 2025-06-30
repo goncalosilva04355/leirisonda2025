@@ -214,35 +214,6 @@ export function WorksList() {
         </div>
 
         <div className="flex gap-2">
-          {/* Debug button para Gonçalo */}
-          {user?.email === "gongonsilva@gmail.com" && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const localWorks = JSON.parse(
-                  localStorage.getItem("works") || "[]",
-                );
-                console.log("🔍 DEBUG WORKSLIST:", {
-                  localStorage: localWorks.length,
-                  firebaseSync: works?.length || 0,
-                  filteredWorks: filteredWorks.length,
-                  ultimasObras: localWorks.slice(-5).map((w: any) => ({
-                    id: w.id,
-                    cliente: w.clientName,
-                    folhaObra: w.workSheetNumber,
-                    criada: w.createdAt,
-                  })),
-                });
-                alert(
-                  `DEBUG: ${localWorks.length} obras localStorage | ${works?.length || 0} obras Firebase sync | ${filteredWorks.length} filtradas`,
-                );
-              }}
-            >
-              🔍 Debug
-            </Button>
-          )}
-
           {user?.permissions.canCreateWorks && (
             <Button asChild>
               <Link to="/create-work">

@@ -324,87 +324,20 @@ export function CreateWork() {
 
         <div className="text-xs text-gray-500 text-right">
           <div className="flex items-center justify-end space-x-2">
-            <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+            <div
+              className={`w-2 h-2 rounded-full ${isOnline ? "bg-green-500" : "bg-gray-400"}`}
+            ></div>
             <span>
               {isSyncing ? (
-                <>
-                  <span className="text-sm text-blue-600">Sincronizando...</span>
-                </>
+                <span className="text-sm text-blue-600">Sincronizando...</span>
+              ) : isOnline ? (
+                <span className="text-sm text-green-600">Online</span>
               ) : (
                 <span className="text-sm text-orange-600">Offline</span>
               )}
             </span>
           </div>
         </div>
-
-        <div className="hidden">
-          <Button
-              variant="outline"
-              size="sm"
-              onClick={async () => {
-                console.log("🧪 TESTE: Criando obra simples...");
-                try {
-                  const testWork = {
-                    workSheetNumber: `TEST-${Date.now()}`,
-                    type: "piscina" as const,
-                    clientName: "TESTE Cliente",
-                    address: "TESTE Morada",
-                    contact: "123456789",
-                    entryTime: new Date().toISOString(),
-                    status: "pendente" as const,
-                    vehicles: [],
-                    technicians: [],
-                    assignedUsers: [],
-                    photos: [],
-                    observations: "",
-                    workPerformed: "",
-                    workSheetCompleted: false,
-                  };
-
-                  const workId = await createWork(testWork);
-                  console.log("✅ TESTE: Obra criada:", workId);
-                  alert(`TESTE: Obra criada com ID ${workId}`);
-                } catch (error) {
-                  console.error("❌ TESTE: Erro:", error);
-                  alert(`TESTE FALHOU: ${error}`);
-                }
-              }}
-            >
-              🧪 Teste
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                console.log(
-                  "🔧 CONSOLIDAÇÃO: Forçando consolidação de todas as obras...",
-                );
-                const consolidated =
-                  firebaseService.consolidateWorksFromAllBackups();
-
-                // Limpar obras de emergência após consolidação
-                const keysToRemove = [];
-                for (let i = 0; i < localStorage.length; i++) {
-                  const key = localStorage.key(i);
-                  if (key && key.startsWith("emergency_work_")) {
-                    keysToRemove.push(key);
-                  }
-                }
-                keysToRemove.forEach((key) => localStorage.removeItem(key));
-
-                console.log(
-                  `✅ CONSOLIDAÇÃO COMPLETA: ${consolidated.length} obras consolidadas, ${keysToRemove.length} emergências limpas`,
-                );
-                alert(
-                  `🔧 CONSOLIDAÇÃO:\n✅ ${consolidated.length} obras consolidadas\n🧹 ${keysToRemove.length} emergências limpas\n\nRecarregue a página para ver as obras atualizadas.`,
-                );
-              }}
-            >
-              🔧 Consolidar
-            </Button>
-          </div>
-        )}
       </div>
 
       {/* Offline Warning */}
