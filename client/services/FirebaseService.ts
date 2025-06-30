@@ -356,18 +356,33 @@ export class FirebaseService {
         try {
           const worksRef = collection(db, "works");
 
-          // Garantir que assignedUsers seja preservado durante sync Firebase
+          // GARANTIR que assignedUsers seja SEMPRE preservado durante sync Firebase
           const firebaseData = {
             ...newWork,
-            assignedUsers: newWork.assignedUsers || [], // Garantir array vazio se não definido
+            assignedUsers: Array.isArray(newWork.assignedUsers)
+              ? newWork.assignedUsers
+              : [], // VERIFICAÇÃO EXTRA
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
           };
+
+          // VERIFICAÇÃO CRÍTICA: Se havia atribuições mas foram perdidas, interromper
+          if (
+            workData.assignedUsers &&
+            workData.assignedUsers.length > 0 &&
+            (!firebaseData.assignedUsers ||
+              firebaseData.assignedUsers.length === 0)
+          ) {
+            throw new Error(
+              "ERRO CRÍTICO: Atribuições de usuários perdidas durante preparação do Firebase",
+            );
+          }
 
           console.log("🔥 CRIANDO OBRA NO FIREBASE (PRIORIDADE 1):", {
             cliente: firebaseData.clientName,
             atribuicoes: firebaseData.assignedUsers,
             workId: newWork.id,
+            atribuicoesOriginais: workData.assignedUsers,
           });
 
           // Usar setDoc() com ID específico para criar documento novo
