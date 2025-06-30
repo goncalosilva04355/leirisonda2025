@@ -356,7 +356,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return true;
         }
 
-        console.error("❌ Login failed:", firebaseError.message);
+        console.error("❌ Login failed");
+        setInitError("Credenciais inválidas");
+        return false;
+      } catch (loginError: any) {
+        console.error("❌ Login error:", loginError);
+        setInitError("Erro durante o login");
         return false;
       } finally {
         setIsLoading(false);
