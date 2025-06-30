@@ -220,10 +220,6 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                     </p>
                   </div>
                 </div>
-                <div className="mt-3 flex items-center">
-                  <Activity className="w-3 h-3 text-green-500 mr-2" />
-                  <span className="text-xs text-gray-600">Online</span>
-                </div>
               </div>
             )}
 
