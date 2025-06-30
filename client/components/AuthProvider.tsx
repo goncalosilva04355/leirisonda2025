@@ -336,6 +336,7 @@ export function useAuth() {
         login: async () => false,
         logout: () => {},
         isLoading: false,
+        isInitialized: false,
         getAllUsers: () => [],
       };
     }
@@ -348,6 +349,7 @@ export function useAuth() {
       login: async () => false,
       logout: () => {},
       isLoading: false,
+      isInitialized: false,
       getAllUsers: () => [],
     };
   }
