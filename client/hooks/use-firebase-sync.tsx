@@ -4,7 +4,16 @@ import { firebaseService } from "@/services/FirebaseService";
 import { useAuth } from "@/components/AuthProvider";
 
 export function useFirebaseSync() {
-  const { user } = useAuth();
+  // Verificação defensiva do contexto auth
+  let authData;
+  try {
+    authData = useAuth();
+  } catch (error) {
+    console.error("❌ Erro no useFirebaseSync ao acessar auth:", error);
+    authData = { user: null };
+  }
+
+  const { user } = authData;
   const [works, setWorks] = useState<Work[]>([]);
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -12,8 +21,13 @@ export function useFirebaseSync() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSync, setLastSync] = useState<Date | null>(null);
   const [isFirebaseAvailable] = useState(() => {
-    const status = firebaseService.getFirebaseStatus();
-    return status.isAvailable;
+    try {
+      const status = firebaseService.getFirebaseStatus();
+      return status.isAvailable;
+    } catch (error) {
+      console.error("❌ Erro ao verificar status Firebase:", error);
+      return false;
+    }
   });
 
   // Refs para evitar loops infinitos

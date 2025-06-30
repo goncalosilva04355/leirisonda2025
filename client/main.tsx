@@ -108,6 +108,23 @@ const initializeApp = () => {
   try {
     console.log("🚀 Starting Leirisonda...");
 
+    // Check for problematic URLs and redirect to safe route
+    const currentUrl = window.location.href;
+    const currentPath = window.location.pathname + window.location.search;
+
+    console.log("📍 Current URL:", currentUrl);
+    console.log("📍 Current path:", currentPath);
+
+    // Se estiver numa URL problemática que causa loop, redirecionar para login/dashboard
+    if (
+      currentPath.includes("/works?status=pendente") ||
+      currentPath.includes("/works?") ||
+      currentPath.includes("status=pendente")
+    ) {
+      console.log("⚠️ Detected problematic URL, redirecting to safe route...");
+      window.history.replaceState({}, "", "/login");
+    }
+
     // Verify DOM is ready
     if (document.readyState === "loading") {
       console.log("⏳ DOM still loading, waiting...");
@@ -332,8 +349,40 @@ const createErrorHTML = (error: any) => {
   `;
 };
 
-// Expose initializeApp globally for error recovery
+// Função de recuperação de emergência
+const emergencyRecovery = () => {
+  console.log("🚨 RECUPERAÇÃO DE EMERGÊNCIA INICIADA");
+
+  try {
+    // 1. Limpar todos os dados locais
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // 2. Limpar caches se disponível
+    if ("caches" in window) {
+      caches.keys().then((names) => {
+        names.forEach((name) => {
+          caches.delete(name);
+        });
+      });
+    }
+
+    // 3. Remover listeners de eventos
+    window.removeEventListener("online", () => {});
+    window.removeEventListener("offline", () => {});
+
+    // 4. Forçar navegação para login
+    window.location.href = "/login";
+  } catch (error) {
+    console.error("❌ Erro na recuperação de emergência:", error);
+    // Último recurso: reload completo
+    window.location.reload();
+  }
+};
+
+// Expose functions globally for error recovery
 (window as any).initializeApp = initializeApp;
+(window as any).emergencyRecovery = emergencyRecovery;
 
 // Handle different loading states
 if (document.readyState === "loading") {
