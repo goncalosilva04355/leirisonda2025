@@ -363,15 +363,19 @@ export function Dashboard() {
                   Nenhuma obra registada
                 </h3>
                 <p className="text-gray-600 mb-4 text-sm">
-                  Comece por criar a sua primeira obra.
+                  {user?.permissions.canCreateWorks
+                    ? "Comece por criar a sua primeira obra."
+                    : "Não existem obras registadas no sistema."}
                 </p>
-                <button
-                  className="btn-leirisonda"
-                  onClick={() => navigate("/create-work")}
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Criar Primeira Obra
-                </button>
+                {user?.permissions.canCreateWorks && (
+                  <button
+                    className="btn-leirisonda"
+                    onClick={() => navigate("/create-work")}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Criar Primeira Obra
+                  </button>
+                )}
               </div>
             ) : (
               <div className="space-y-4">
