@@ -23,6 +23,15 @@ class NotificationServiceClass {
     this.checkSupport();
   }
 
+  // Getters públicos para acessar propriedades privadas
+  get isSupported(): boolean {
+    return this.isSupported;
+  }
+
+  get isInitialized(): boolean {
+    return this.isInitialized;
+  }
+
   private checkSupport() {
     // Verificar se notificações são suportadas
     this.isSupported =
@@ -858,7 +867,7 @@ class NotificationServiceClass {
     try {
       if (!work.assignedUsers || work.assignedUsers.length === 0) {
         console.log(
-          "⚠️ Obra sem usuários atribuídos, não enviando notificação",
+          "��️ Obra sem usuários atribuídos, não enviando notificação",
         );
         return;
       }
