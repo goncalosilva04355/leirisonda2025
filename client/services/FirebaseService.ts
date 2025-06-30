@@ -606,13 +606,18 @@ export class FirebaseService {
       const workToDelete = works.find((w) => w.id === workId);
 
       if (!workToDelete) {
-        console.error(`❌ ERRO: Obra ${workId} não encontrada para eliminação`);
-        throw new Error(`Obra ${workId} não encontrada`);
+        console.warn(
+          `⚠️ AVISO: Obra ${workId} não encontrada localmente, pode já ter sido eliminada`,
+        );
+        // Continuar com a eliminação mesmo assim para garantir limpeza completa
+        console.log(
+          "🔄 Prosseguindo com eliminação para garantir limpeza completa...",
+        );
+      } else {
+        console.log(
+          `📋 Obra encontrada: ${workToDelete.clientName} (${workToDelete.workSheetNumber})`,
+        );
       }
-
-      console.log(
-        `📋 Obra encontrada: ${workToDelete.clientName} (${workToDelete.workSheetNumber})`,
-      );
 
       // ETAPA 1: Eliminação local GARANTIDA (múltiplas tentativas)
       console.log("📱 Eliminando obra localmente (múltiplas tentativas)...");
@@ -755,7 +760,7 @@ export class FirebaseService {
 
       console.log(`✅ Obra ${workId} eliminada do localStorage`);
 
-      // Verificação dupla
+      // Verifica��ão dupla
       const verification = this.getLocalWorks();
       const stillExists = verification.find((w) => w.id === workId);
 
