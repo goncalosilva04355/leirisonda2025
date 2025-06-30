@@ -4,10 +4,19 @@ import { firebaseService } from "@/services/FirebaseService";
 import { useAuth } from "@/components/AuthProvider";
 
 export function useFirebaseSync() {
-  // Verificação defensiva do contexto auth
+  console.log("🔄 useFirebaseSync hook iniciando...");
+
+  // Verificação defensiva ULTRA ROBUSTA do contexto auth
   let authData;
   try {
     authData = useAuth();
+    if (!authData) {
+      console.warn("⚠️ AuthData é null/undefined, usando fallback");
+      authData = { user: null };
+    }
+    console.log("✅ Auth context carregado no useFirebaseSync:", {
+      hasUser: !!authData.user,
+    });
   } catch (error) {
     console.error("❌ Erro no useFirebaseSync ao acessar auth:", error);
     authData = { user: null };
@@ -241,7 +250,7 @@ export function useFirebaseSync() {
     }
   }, []);
 
-  // Sistema de sincronização contínua melhorado
+  // Sistema de sincroniza��ão contínua melhorado
   useEffect(() => {
     if (!user) {
       if (heartbeatInterval.current) {
