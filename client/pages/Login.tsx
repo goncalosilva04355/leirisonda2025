@@ -8,15 +8,40 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function Login() {
-  const { user, login, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
 
-  // Redirect if already logged in (only when user exists)
-  if (user) {
+  // Get auth context with error handling
+  let authContext;
+  try {
+    authContext = useAuth();
+  } catch (error) {
+    console.error("❌ Error accessing auth context:", error);
+    // Fallback context
+    authContext = {
+      user: null,
+      login: async () => false,
+      logout: () => {},
+      isLoading: false,
+    };
+  }
+
+  const { user, login, isLoading } = authContext;
+
+  // Wait for auth to be ready
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setAuthReady(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Redirect if already logged in (only when user exists and auth is ready)
+  if (user && authReady) {
     return <Navigate to="/dashboard" replace />;
   }
 
