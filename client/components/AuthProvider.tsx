@@ -342,6 +342,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.log(
                   "🔔 Notificações inicializadas após login (usuário dinâmico)",
                 );
+
+                // Verificar obras pendentes atribuídas ao usuário após inicializar notificações
+                setTimeout(async () => {
+                  try {
+                    const pendingWorks =
+                      await notificationService.checkPendingAssignedWorks(
+                        dynamicUser.id,
+                      );
+                    console.log(
+                      `🔍 Verificação de obras pendentes (usuário dinâmico) concluída: ${pendingWorks.length} encontradas`,
+                    );
+                  } catch (error) {
+                    console.warn(
+                      "⚠️ Erro ao verificar obras pendentes:",
+                      error,
+                    );
+                  }
+                }, 2000);
               } catch (notificationError) {
                 console.warn(
                   "⚠️ Erro ao inicializar notificações:",
