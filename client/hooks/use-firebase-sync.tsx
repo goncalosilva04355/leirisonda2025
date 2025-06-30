@@ -73,8 +73,8 @@ export function useFirebaseSync() {
       // Apenas recarregar dados locais sem fazer sync completo do Firebase
       if (user) {
         console.log("🔄 Recarregando dados após delete notification");
-        // Forçar reload dos dados
-        loadData();
+        // Forçar reload dos dados locais
+        loadLocalData();
       }
     };
 
