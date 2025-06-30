@@ -46,6 +46,9 @@ class NotificationServiceClass {
         await this.initializeWebNotifications();
       }
 
+      // Inicializar listener de eventos de broadcast
+      this.initializeNotificationListener();
+
       this.isInitialized = true;
       console.log("✅ Serviço de notificações inicializado com sucesso");
       return true;
@@ -355,23 +358,70 @@ class NotificationServiceClass {
 
       const allUsers = [...storedUsers, ...globalUsers];
 
-      // ENVIAR NOTIFICAÇÕES PUSH PARA TODOS OS USUÁRIOS ATRIBUÍDOS
-      console.log("📤 Enviando notificações push para usuários atribuídos...");
+      // SALVAR NOTIFICAÇÃO PENDENTE PARA CADA USUÁRIO ATRIBUÍDO
+      console.log(
+        "💾 Salvando notificações pendentes para sincronização cross-device...",
+      );
+
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      assignedUsers.forEach((userId) => {
+        const user = allUsers.find((u: User) => u.id === userId);
+        if (user) {
+          const pendingNotification = {
+            id: `work_assigned_${work.id}_${userId}_${Date.now()}`,
+            userId: userId,
+            userName: user.name,
+            userEmail: user.email,
+            type: "work_assigned",
+            title: payload.title,
+            body: payload.body,
+            data: payload.data,
+            icon: payload.icon,
+            timestamp: new Date().toISOString(),
+            workId: work.id,
+            workSheetNumber: work.workSheetNumber,
+            clientName: work.clientName,
+            delivered: false,
+            attempts: 0,
+          };
+
+          pendingNotifications.push(pendingNotification);
+          console.log(`📋 Notificação pendente salva para ${user.name}`);
+        }
+      });
+
+      // Salvar lista atualizada de notificações pendentes
+      localStorage.setItem(
+        "pendingNotifications",
+        JSON.stringify(pendingNotifications),
+      );
+
+      // TENTAR ENTREGAR NOTIFICAÇÕES PUSH IMEDIATAMENTE
+      console.log("📤 Tentando entregar notificações push imediatamente...");
 
       const pushPromises = assignedUsers.map(async (userId) => {
         const user = allUsers.find((u: User) => u.id === userId);
 
         if (user) {
-          console.log(`📱 Enviando push para ${user.name} (${user.email})...`);
+          console.log(`📱 Tentando push para ${user.name} (${user.email})...`);
 
           try {
             const pushSent = await this.sendPushNotification(userId, payload);
 
             if (pushSent) {
               console.log(`✅ Push enviado com sucesso para ${user.name}`);
+              // Marcar notificação como entregue
+              this.markNotificationAsDelivered(
+                userId,
+                work.id,
+                "work_assigned",
+              );
             } else {
               console.warn(
-                `⚠️ Falha no push para ${user.name} - mostrando local se for usuário atual`,
+                `⚠️ Push falhou para ${user.name} - será reentregue quando usuário fizer login`,
               );
 
               // Fallback: mostrar notificação local apenas se for o usuário atual
@@ -379,6 +429,11 @@ class NotificationServiceClass {
                 await this.showLocalNotification(payload);
                 console.log(
                   `💡 Notificação local mostrada para usuário atual: ${user.name}`,
+                );
+                this.markNotificationAsDelivered(
+                  userId,
+                  work.id,
+                  "work_assigned",
                 );
               }
             }
@@ -389,6 +444,11 @@ class NotificationServiceClass {
             if (currentUser.id === userId) {
               await this.showLocalNotification(payload);
               console.log(`💡 Fallback local para usuário atual: ${user.name}`);
+              this.markNotificationAsDelivered(
+                userId,
+                work.id,
+                "work_assigned",
+              );
             }
           }
         } else {
@@ -399,8 +459,43 @@ class NotificationServiceClass {
       // Aguardar todos os envios de push
       await Promise.allSettled(pushPromises);
 
+      // BROADCAST VIA LOCALSTORAGE PARA COMUNICAÇÃO CROSS-TAB/DEVICE
       console.log(
-        "✅ Processo de notificações concluído para todos os usuários atribuídos",
+        "📡 Broadcasting notificação via localStorage para outros dispositivos...",
+      );
+
+      const broadcastEvent = {
+        type: "LEIRISONDA_WORK_ASSIGNED",
+        timestamp: new Date().toISOString(),
+        workId: work.id,
+        workSheetNumber: work.workSheetNumber,
+        clientName: work.clientName,
+        assignedUsers: assignedUsers,
+        payload: payload,
+      };
+
+      // Salvar evento de broadcast
+      localStorage.setItem(
+        "lastNotificationBroadcast",
+        JSON.stringify(broadcastEvent),
+      );
+
+      // Tentar disparar evento storage para outros dispositivos/tabs
+      try {
+        window.dispatchEvent(
+          new StorageEvent("storage", {
+            key: "lastNotificationBroadcast",
+            newValue: JSON.stringify(broadcastEvent),
+            storageArea: localStorage,
+          }),
+        );
+        console.log("📡 Evento de broadcast disparado com sucesso");
+      } catch (broadcastError) {
+        console.warn("⚠️ Erro no broadcast de evento:", broadcastError);
+      }
+
+      console.log(
+        "✅ Processo de notificações concluído para todos os usuários atribuídos (com backup para reentrega)",
       );
     } catch (error) {
       console.error("❌ Erro ao enviar notificações de obra atribuída:", error);
@@ -466,9 +561,52 @@ class NotificationServiceClass {
 
       const allUsers = [...storedUsers, ...globalUsers];
 
-      // ENVIAR NOTIFICAÇÕES PUSH PARA TODOS OS USUÁRIOS ATRIBUÍDOS
+      // SALVAR NOTIFICAÇÕES PENDENTES PARA CADA USUÁRIO ATRIBUÍDO
       console.log(
-        "📤 Enviando notificações push de status para usuários atribuídos...",
+        "💾 Salvando notificações pendentes de status para sincronização cross-device...",
+      );
+
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      assignedUsers.forEach((userId) => {
+        const user = allUsers.find((u: User) => u.id === userId);
+        if (user) {
+          const pendingNotification = {
+            id: `work_status_change_${work.id}_${userId}_${Date.now()}`,
+            userId: userId,
+            userName: user.name,
+            userEmail: user.email,
+            type: "work_status_change",
+            title: payload.title,
+            body: payload.body,
+            data: payload.data,
+            icon: payload.icon,
+            timestamp: new Date().toISOString(),
+            workId: work.id,
+            workSheetNumber: work.workSheetNumber,
+            newStatus: newStatus,
+            delivered: false,
+            attempts: 0,
+          };
+
+          pendingNotifications.push(pendingNotification);
+          console.log(
+            `📋 Notificação de status pendente salva para ${user.name}`,
+          );
+        }
+      });
+
+      // Salvar lista atualizada de notificações pendentes
+      localStorage.setItem(
+        "pendingNotifications",
+        JSON.stringify(pendingNotifications),
+      );
+
+      // TENTAR ENTREGAR NOTIFICAÇÕES PUSH IMEDIATAMENTE
+      console.log(
+        "📤 Tentando entregar notificações push de status imediatamente...",
       );
 
       const pushPromises = assignedUsers.map(async (userId) => {
@@ -486,9 +624,15 @@ class NotificationServiceClass {
               console.log(
                 `✅ Push de status enviado com sucesso para ${user.name}`,
               );
+              // Marcar notificação como entregue
+              this.markNotificationAsDelivered(
+                userId,
+                work.id,
+                "work_status_change",
+              );
             } else {
               console.warn(
-                `⚠️ Falha no push de status para ${user.name} - mostrando local se for usuário atual`,
+                `⚠️ Push de status falhou para ${user.name} - será reentregue quando usuário fizer login`,
               );
 
               // Fallback: mostrar notificação local apenas se for o usuário atual
@@ -496,6 +640,11 @@ class NotificationServiceClass {
                 await this.showLocalNotification(payload);
                 console.log(
                   `💡 Notificação local de status mostrada para usuário atual: ${user.name}`,
+                );
+                this.markNotificationAsDelivered(
+                  userId,
+                  work.id,
+                  "work_status_change",
                 );
               }
             }
@@ -511,6 +660,11 @@ class NotificationServiceClass {
               console.log(
                 `💡 Fallback local de status para usuário atual: ${user.name}`,
               );
+              this.markNotificationAsDelivered(
+                userId,
+                work.id,
+                "work_status_change",
+              );
             }
           }
         } else {
@@ -521,8 +675,46 @@ class NotificationServiceClass {
       // Aguardar todos os envios de push
       await Promise.allSettled(pushPromises);
 
+      // BROADCAST VIA LOCALSTORAGE PARA COMUNICAÇÃO CROSS-TAB/DEVICE
       console.log(
-        "✅ Processo de notificações de status concluído para todos os usuários atribuídos",
+        "📡 Broadcasting mudança de status via localStorage para outros dispositivos...",
+      );
+
+      const broadcastEvent = {
+        type: "LEIRISONDA_WORK_STATUS_CHANGE",
+        timestamp: new Date().toISOString(),
+        workId: work.id,
+        workSheetNumber: work.workSheetNumber,
+        newStatus: newStatus,
+        assignedUsers: assignedUsers,
+        payload: payload,
+      };
+
+      // Salvar evento de broadcast
+      localStorage.setItem(
+        "lastStatusBroadcast",
+        JSON.stringify(broadcastEvent),
+      );
+
+      // Tentar disparar evento storage para outros dispositivos/tabs
+      try {
+        window.dispatchEvent(
+          new StorageEvent("storage", {
+            key: "lastStatusBroadcast",
+            newValue: JSON.stringify(broadcastEvent),
+            storageArea: localStorage,
+          }),
+        );
+        console.log("📡 Evento de broadcast de status disparado com sucesso");
+      } catch (broadcastError) {
+        console.warn(
+          "⚠️ Erro no broadcast de evento de status:",
+          broadcastError,
+        );
+      }
+
+      console.log(
+        "✅ Processo de notificações de status concluído para todos os usuários atribuídos (com backup para reentrega)",
       );
     } catch (error) {
       console.error(
@@ -539,6 +731,9 @@ class NotificationServiceClass {
     );
 
     try {
+      // PRIMEIRO: Verificar e processar notificações pendentes não entregues
+      await this.processPendingNotifications(userId);
+
       // Buscar obras do localStorage e Firebase
       const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
       const leirisondaWorks = JSON.parse(
@@ -798,6 +993,306 @@ class NotificationServiceClass {
 
     console.log("🔍 Diagnóstico completo:", diagnostics);
     return diagnostics;
+  }
+
+  // Marcar notificação como entregue
+  private markNotificationAsDelivered(
+    userId: string,
+    workId: string,
+    type: string,
+  ) {
+    try {
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      const updatedNotifications = pendingNotifications.map(
+        (notification: any) => {
+          if (
+            notification.userId === userId &&
+            notification.workId === workId &&
+            notification.type === type
+          ) {
+            return {
+              ...notification,
+              delivered: true,
+              deliveredAt: new Date().toISOString(),
+            };
+          }
+          return notification;
+        },
+      );
+
+      localStorage.setItem(
+        "pendingNotifications",
+        JSON.stringify(updatedNotifications),
+      );
+      console.log(
+        `✅ Notificação marcada como entregue para ${userId} - obra ${workId}`,
+      );
+    } catch (error) {
+      console.error("❌ Erro ao marcar notificação como entregue:", error);
+    }
+  }
+
+  // Processar notificações pendentes para um usuário específico
+  private async processPendingNotifications(userId: string) {
+    try {
+      console.log(`🔄 Processando notificações pendentes para ${userId}...`);
+
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      // Filtrar notificações não entregues para este usuário
+      const userPendingNotifications = pendingNotifications.filter(
+        (notification: any) =>
+          notification.userId === userId &&
+          !notification.delivered &&
+          notification.attempts < 3, // Máximo 3 tentativas
+      );
+
+      console.log(
+        `📋 Encontradas ${userPendingNotifications.length} notificações pendentes para ${userId}`,
+      );
+
+      if (userPendingNotifications.length === 0) {
+        return;
+      }
+
+      // Processar cada notificação pendente
+      for (const notification of userPendingNotifications) {
+        try {
+          console.log(
+            `📨 Reentregando notificação: ${notification.title} para ${notification.userName}`,
+          );
+
+          // Mostrar notificação local
+          await this.showLocalNotification({
+            title: notification.title,
+            body: notification.body,
+            data: notification.data,
+            icon: notification.icon,
+          });
+
+          // Marcar como entregue
+          this.markNotificationAsDelivered(
+            notification.userId,
+            notification.workId,
+            notification.type,
+          );
+
+          console.log(
+            `✅ Notificação reentregue com sucesso: ${notification.title}`,
+          );
+        } catch (redeliveryError) {
+          console.error(
+            `❌ Erro na reentrega de notificação ${notification.id}:`,
+            redeliveryError,
+          );
+
+          // Incrementar tentativas
+          notification.attempts = (notification.attempts || 0) + 1;
+          notification.lastAttempt = new Date().toISOString();
+        }
+      }
+
+      // Salvar notificações atualizadas
+      localStorage.setItem(
+        "pendingNotifications",
+        JSON.stringify(pendingNotifications),
+      );
+
+      // Limpar notificações muito antigas (mais de 7 dias) ou com muitas tentativas
+      this.cleanupOldNotifications();
+    } catch (error) {
+      console.error("❌ Erro ao processar notificações pendentes:", error);
+    }
+  }
+
+  // Limpar notificações antigas
+  private cleanupOldNotifications() {
+    try {
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      const cleanedNotifications = pendingNotifications.filter(
+        (notification: any) => {
+          const notificationDate = new Date(notification.timestamp);
+          const isRecent = notificationDate > oneWeekAgo;
+          const hasAttemptsLeft = notification.attempts < 3;
+          const isDelivered = notification.delivered;
+
+          // Manter se: recente E (tem tentativas OU já foi entregue)
+          return isRecent && (hasAttemptsLeft || isDelivered);
+        },
+      );
+
+      if (cleanedNotifications.length !== pendingNotifications.length) {
+        localStorage.setItem(
+          "pendingNotifications",
+          JSON.stringify(cleanedNotifications),
+        );
+        console.log(
+          `🧹 Limpeza de notificações: removidas ${pendingNotifications.length - cleanedNotifications.length} notificações antigas`,
+        );
+      }
+    } catch (error) {
+      console.error("❌ Erro na limpeza de notificações:", error);
+    }
+  }
+
+  // Inicializar listener para eventos de broadcast de notificações
+  initializeNotificationListener() {
+    if (typeof window !== "undefined") {
+      console.log("📡 Inicializando listener de eventos de notificações...");
+
+      // Listener para eventos de storage (cross-tab/device communication)
+      window.addEventListener("storage", (event) => {
+        if (event.key === "lastNotificationBroadcast" && event.newValue) {
+          try {
+            const broadcastEvent = JSON.parse(event.newValue);
+            console.log("📡 Recebido evento de broadcast:", broadcastEvent);
+
+            // Verificar se é um evento de obra atribuída
+            if (broadcastEvent.type === "LEIRISONDA_WORK_ASSIGNED") {
+              this.handleBroadcastWorkAssigned(broadcastEvent);
+            }
+          } catch (error) {
+            console.error("❌ Erro ao processar evento de broadcast:", error);
+          }
+        }
+
+        if (event.key === "lastStatusBroadcast" && event.newValue) {
+          try {
+            const broadcastEvent = JSON.parse(event.newValue);
+            console.log(
+              "📡 Recebido evento de broadcast de status:",
+              broadcastEvent,
+            );
+
+            // Verificar se é um evento de mudança de status
+            if (broadcastEvent.type === "LEIRISONDA_WORK_STATUS_CHANGE") {
+              this.handleBroadcastStatusChange(broadcastEvent);
+            }
+          } catch (error) {
+            console.error(
+              "❌ Erro ao processar evento de broadcast de status:",
+              error,
+            );
+          }
+        }
+      });
+
+      console.log("✅ Listener de notificações inicializado");
+    }
+  }
+
+  // Manipular evento de obra atribuída via broadcast
+  private async handleBroadcastWorkAssigned(broadcastEvent: any) {
+    try {
+      const currentUser = JSON.parse(
+        localStorage.getItem("leirisonda_user") || "{}",
+      );
+
+      // Verificar se o usuário atual está na lista de usuários atribuídos
+      if (
+        currentUser.id &&
+        broadcastEvent.assignedUsers.includes(currentUser.id)
+      ) {
+        console.log(
+          `📨 Processando notificação de broadcast para ${currentUser.name}...`,
+        );
+
+        // Mostrar notificação local se ainda não foi entregue
+        const pendingNotifications = JSON.parse(
+          localStorage.getItem("pendingNotifications") || "[]",
+        );
+
+        const alreadyDelivered = pendingNotifications.some(
+          (notification: any) =>
+            notification.userId === currentUser.id &&
+            notification.workId === broadcastEvent.workId &&
+            notification.type === "work_assigned" &&
+            notification.delivered,
+        );
+
+        if (!alreadyDelivered) {
+          await this.showLocalNotification(broadcastEvent.payload);
+
+          // Marcar como entregue
+          this.markNotificationAsDelivered(
+            currentUser.id,
+            broadcastEvent.workId,
+            "work_assigned",
+          );
+
+          console.log("✅ Notificação de broadcast entregue com sucesso");
+        } else {
+          console.log("ℹ️ Notificação já foi entregue anteriormente");
+        }
+      }
+    } catch (error) {
+      console.error("❌ Erro ao processar broadcast de obra atribuída:", error);
+    }
+  }
+
+  // Manipular evento de mudança de status via broadcast
+  private async handleBroadcastStatusChange(broadcastEvent: any) {
+    try {
+      const currentUser = JSON.parse(
+        localStorage.getItem("leirisonda_user") || "{}",
+      );
+
+      // Verificar se o usuário atual está na lista de usuários atribuídos
+      if (
+        currentUser.id &&
+        broadcastEvent.assignedUsers.includes(currentUser.id)
+      ) {
+        console.log(
+          `📨 Processando notificação de mudança de status via broadcast para ${currentUser.name}...`,
+        );
+
+        // Mostrar notificação local se ainda não foi entregue
+        const pendingNotifications = JSON.parse(
+          localStorage.getItem("pendingNotifications") || "[]",
+        );
+
+        const alreadyDelivered = pendingNotifications.some(
+          (notification: any) =>
+            notification.userId === currentUser.id &&
+            notification.workId === broadcastEvent.workId &&
+            notification.type === "work_status_change" &&
+            notification.delivered,
+        );
+
+        if (!alreadyDelivered) {
+          await this.showLocalNotification(broadcastEvent.payload);
+
+          // Marcar como entregue
+          this.markNotificationAsDelivered(
+            currentUser.id,
+            broadcastEvent.workId,
+            "work_status_change",
+          );
+
+          console.log(
+            "✅ Notificação de status via broadcast entregue com sucesso",
+          );
+        } else {
+          console.log("ℹ️ Notificação de status já foi entregue anteriormente");
+        }
+      }
+    } catch (error) {
+      console.error(
+        "❌ Erro ao processar broadcast de mudança de status:",
+        error,
+      );
+    }
   }
 }
 

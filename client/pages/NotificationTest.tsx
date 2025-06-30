@@ -229,6 +229,41 @@ export default function NotificationTest() {
     }
   };
 
+  const checkPendingNotifications = async () => {
+    try {
+      console.log("📋 Verificando notificações pendentes...");
+
+      const pendingNotifications = JSON.parse(
+        localStorage.getItem("pendingNotifications") || "[]",
+      );
+
+      const userPendingNotifications = pendingNotifications.filter(
+        (notification: any) => notification.userId === user?.id,
+      );
+
+      const undeliveredNotifications = userPendingNotifications.filter(
+        (notification: any) => !notification.delivered,
+      );
+
+      addTestResult(
+        "Notificações Pendentes",
+        true,
+        `${userPendingNotifications.length} notificações salvas, ${undeliveredNotifications.length} não entregues`,
+        {
+          all: userPendingNotifications,
+          undelivered: undeliveredNotifications,
+          summary: {
+            total: pendingNotifications.length,
+            forUser: userPendingNotifications.length,
+            undelivered: undeliveredNotifications.length,
+          },
+        },
+      );
+    } catch (error) {
+      addTestResult("Notificações Pendentes", false, `Erro: ${error}`, error);
+    }
+  };
+
   const clearTests = () => {
     setTestResults([]);
     addTestResult("Sistema", true, "Resultados de teste limpos");
@@ -380,6 +415,30 @@ export default function NotificationTest() {
               className="w-full"
             >
               📋 Obras Pendentes
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+            <Button
+              onClick={checkPendingNotifications}
+              variant="outline"
+              className="w-full"
+            >
+              📨 Notificações Pendentes
+            </Button>
+            <Button
+              onClick={() => {
+                localStorage.removeItem("pendingNotifications");
+                addTestResult(
+                  "Limpeza",
+                  true,
+                  "Notificações pendentes limpas",
+                  {},
+                );
+              }}
+              variant="destructive"
+              className="w-full"
+            >
+              🗑️ Limpar Pendentes
             </Button>
           </div>
         </CardContent>
