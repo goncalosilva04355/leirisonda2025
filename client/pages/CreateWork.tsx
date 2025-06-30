@@ -424,7 +424,7 @@ export function CreateWork() {
       </div>
 
       {/* Offline Warning */}
-      {!isOnline && (
+      {typeof isOnline !== "undefined" && !isOnline && (
         <Alert className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
