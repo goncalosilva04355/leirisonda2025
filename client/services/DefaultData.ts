@@ -90,7 +90,32 @@ export class DefaultDataService {
       ];
 
       localStorage.setItem("users", JSON.stringify(defaultUsers));
-      console.log("✅ Default users created successfully");
+
+      // Store passwords for default users
+      defaultUsers.forEach((user) => {
+        let password = "";
+        switch (user.email) {
+          case "gongonsilva@gmail.com":
+            password = "19867gsf";
+            break;
+          case "tecnico@leirisonda.pt":
+            password = "tecnico123";
+            break;
+          case "supervisor@leirisonda.pt":
+            password = "supervisor123";
+            break;
+          case "user@leirisonda.pt":
+            password = "user123";
+            break;
+        }
+
+        if (password) {
+          localStorage.setItem(`password_${user.id}`, password);
+          localStorage.setItem(`password_${user.email}`, password);
+        }
+      });
+
+      console.log("✅ Default users and passwords created successfully");
     }
   }
 
