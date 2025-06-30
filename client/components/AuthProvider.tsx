@@ -61,13 +61,21 @@ const defaultUserPermissions: UserPermissions = {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false); // Start with false
+  const [isLoading, setIsLoading] = useState(false);
+  const [initError, setInitError] = useState<string | null>(null);
 
   const loadStoredUser = () => {
     try {
       const storedUser = localStorage.getItem("leirisonda_user");
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
+
+        // Validate user object structure
+        if (!parsedUser.email || !parsedUser.name) {
+          console.warn("Invalid stored user data, clearing...");
+          localStorage.removeItem("leirisonda_user");
+          return;
+        }
 
         // Add default permissions if missing
         if (!parsedUser.permissions) {
@@ -77,20 +85,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               : defaultUserPermissions;
         }
 
-        console.log("Stored user loaded:", parsedUser.email);
+        console.log("✅ Stored user loaded:", parsedUser.email);
         setUser(parsedUser);
       } else {
-        console.log("No stored user found");
+        console.log("ℹ️ No stored user found");
       }
     } catch (error) {
-      console.error("Error parsing stored user:", error);
+      console.error("❌ Error parsing stored user:", error);
       localStorage.removeItem("leirisonda_user");
+      setInitError("Erro ao carregar dados do utilizador");
     }
   };
 
   useEffect(() => {
-    // Load stored user on mount
-    loadStoredUser();
+    try {
+      // Load stored user on mount
+      loadStoredUser();
+      setInitError(null);
+    } catch (error) {
+      console.error("❌ Error during AuthProvider initialization:", error);
+      setInitError("Erro na inicialização do sistema de autenticação");
+    }
   }, []);
 
   const createGlobalUsersInFirebase = async () => {
