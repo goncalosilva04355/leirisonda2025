@@ -324,12 +324,30 @@ export class FirebaseService {
   ): Promise<string> {
     console.log("🔄 INICIANDO CRIAÇÃO DE OBRA:", workData.clientName);
 
+    // VALIDAÇÃO CRÍTICA: Verificar se assignedUsers está presente e válido
+    if (workData.assignedUsers) {
+      console.log("🎯 ATRIBUIÇÕES RECEBIDAS NO FIREBASESERVICE:", {
+        quantidade: workData.assignedUsers.length,
+        ids: workData.assignedUsers,
+      });
+    } else {
+      console.log("⚠️ NENHUMA ATRIBUIÇÃO RECEBIDA");
+    }
+
     const newWork: Work = {
       ...workData,
+      assignedUsers: workData.assignedUsers || [], // GARANTIR que assignedUsers seja preservado
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+
+    // VERIFICAÇÃO DUPLA: Confirmar que assignedUsers foi preservado
+    console.log("✅ OBRA PREPARADA COM ATRIBUIÇÕES:", {
+      workId: newWork.id,
+      assignedUsers: newWork.assignedUsers,
+      hasAssignments: newWork.assignedUsers.length > 0,
+    });
 
     try {
       // PRIORIDADE 1: FIREBASE PRIMEIRO (para sincronização entre dispositivos)
