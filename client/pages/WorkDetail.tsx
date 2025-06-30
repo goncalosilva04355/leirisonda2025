@@ -79,84 +79,42 @@ export function WorkDetail() {
       return;
     }
 
+    console.log(`🗑️ ELIMINAÇÃO ULTRA ROBUSTA INICIADA: ${work.clientName}`);
+
+    // Marcar operação para ErrorBoundary não forçar logout
+    sessionStorage.setItem("deleting_work", "true");
+
+    let eliminationSuccess = false;
+
     try {
-      console.log(`🗑️ Iniciando eliminação da obra: ${work.clientName}`);
+      // ESTRATÉGIA SUPER ROBUSTA: Não usar Promise.race que pode causar problemas
+      console.log("🔄 Chamando deleteWork sem timeout agressivo...");
 
-      // Marcar que estamos numa operação de delete
-      sessionStorage.setItem("deleting_work", "true");
+      // Executar delete com tratamento robusto
+      await deleteWork(work.id);
 
-      // Eliminar a obra usando o hook Firebase com timeout
-      const deletePromise = deleteWork(work.id);
-
-      // Timeout de segurança (30 segundos)
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Timeout na eliminação")), 30000),
+      eliminationSuccess = true;
+      console.log("✅ DeleteWork retornou com sucesso");
+    } catch (deleteError) {
+      console.warn(
+        "⚠️ Erro no deleteWork, verificando eliminação local...",
+        deleteError,
       );
 
-      // Executar com timeout de segurança
-      await Promise.race([deletePromise, timeoutPromise]);
+      // Verificar se obra foi eliminada localmente mesmo com erro
+      const currentWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const stillExists = currentWorks.find((w: any) => w.id === work.id);
 
-      console.log("✅ Obra eliminada com sucesso");
+      if (!stillExists) {
+        console.log("✅ Obra foi eliminada localmente apesar do erro");
+        eliminationSuccess = true;
+      } else {
+        console.log(
+          "🔧 Obra ainda existe, tentando eliminação de emergência...",
+        );
 
-      // Verificar se obra foi realmente eliminada
-      setTimeout(() => {
-        const currentWorks = JSON.parse(localStorage.getItem("works") || "[]");
-        const stillExists = currentWorks.find((w: any) => w.id === work.id);
-
-        if (stillExists) {
-          console.warn(
-            "⚠️ Obra ainda existe localmente, forçando eliminação...",
-          );
-          const filteredWorks = currentWorks.filter(
-            (w: any) => w.id !== work.id,
-          );
-          localStorage.setItem("works", JSON.stringify(filteredWorks));
-          localStorage.setItem(
-            "leirisonda_works",
-            JSON.stringify(filteredWorks),
-          );
-        }
-
-        // Limpar flag e mostrar sucesso
-        sessionStorage.removeItem("deleting_work");
-        alert(`Obra "${work.clientName}" eliminada com sucesso!`);
-
-        // Navegação robusta usando navigate
+        // Eliminação de emergência
         try {
-          navigate("/works", { replace: true });
-        } catch (navError) {
-          console.warn(
-            "⚠️ Erro na navegação normal, usando fallback:",
-            navError,
-          );
-          // Fallback para window.location em caso de erro no navigate
-          window.location.href = "/works";
-        }
-      }, 1000);
-    } catch (error) {
-      console.error("❌ Erro ao eliminar obra:", error);
-      sessionStorage.removeItem("deleting_work");
-
-      // Para timeouts, verificar se obra foi eliminada mesmo assim
-      if (error instanceof Error && error.message.includes("Timeout")) {
-        console.log("⏰ Timeout detectado, verificando eliminação manual...");
-
-        const currentWorks = JSON.parse(localStorage.getItem("works") || "[]");
-        const stillExists = currentWorks.find((w: any) => w.id === work.id);
-
-        if (!stillExists) {
-          console.log("✅ Obra foi eliminada apesar do timeout");
-          alert(`Obra "${work.clientName}" eliminada com sucesso!`);
-
-          try {
-            navigate("/works", { replace: true });
-          } catch (navError) {
-            window.location.href = "/works";
-          }
-          return;
-        } else {
-          // Forçar eliminação local em caso de timeout
-          console.log("🔧 Forçando eliminação local após timeout...");
           const filteredWorks = currentWorks.filter(
             (w: any) => w.id !== work.id,
           );
@@ -166,29 +124,43 @@ export function WorkDetail() {
             JSON.stringify(filteredWorks),
           );
 
-          alert(`Obra "${work.clientName}" eliminada localmente!`);
+          // Verificar novamente
+          const recheckWorks = JSON.parse(
+            localStorage.getItem("works") || "[]",
+          );
+          const recheckExists = recheckWorks.find((w: any) => w.id === work.id);
 
-          try {
-            navigate("/works", { replace: true });
-          } catch (navError) {
-            window.location.href = "/works";
+          if (!recheckExists) {
+            console.log("✅ Eliminação de emergência bem sucedida");
+            eliminationSuccess = true;
           }
-          return;
+        } catch (emergencyError) {
+          console.error("❌ Eliminação de emergência falhou:", emergencyError);
         }
       }
+    }
 
-      // Mostrar erro apenas se não conseguiu eliminar
-      alert(
-        "Erro ao eliminar obra. A obra pode ter sido eliminada. Verifique a lista de obras.",
-      );
+    // Processar resultado final
+    setTimeout(() => {
+      // Limpar flag de operação
+      sessionStorage.removeItem("deleting_work");
 
-      // Navegar mesmo com erro para o utilizador verificar
+      if (eliminationSuccess) {
+        alert(`Obra "${work.clientName}" eliminada com sucesso!`);
+        console.log("🎉 ELIMINAÇÃO COMPLETA COM SUCESSO");
+      } else {
+        alert("Erro ao eliminar obra. Por favor, verifique a lista de obras.");
+        console.warn("⚠️ Eliminação não conseguiu ser confirmada");
+      }
+
+      // Navegação robusta SEMPRE (mesmo com erro, para utilizador verificar)
       try {
         navigate("/works", { replace: true });
       } catch (navError) {
+        console.warn("⚠️ Erro na navegação, usando window.location:", navError);
         window.location.href = "/works";
       }
-    }
+    }, 500);
   };
 
   const getStatusInfo = (status: string) => {
