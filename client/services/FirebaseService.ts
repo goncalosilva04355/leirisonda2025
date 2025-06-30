@@ -708,11 +708,13 @@ export class FirebaseService {
   listenToWorks(callback: (works: Work[]) => void): () => void {
     if (!this.isFirebaseAvailable) {
       console.log("📱 Firebase not available, using local data for works");
-      // Return local data immediately and setup a storage listener
-      callback(this.getLocalWorks());
+      // Return consolidated local data immediately and setup a storage listener
+      const consolidatedWorks = this.consolidateWorksFromAllBackups();
+      callback(consolidatedWorks);
 
       const handleStorageChange = () => {
-        callback(this.getLocalWorks());
+        const updatedWorks = this.consolidateWorksFromAllBackups();
+        callback(updatedWorks);
       };
 
       window.addEventListener("storage", handleStorageChange);
@@ -726,7 +728,7 @@ export class FirebaseService {
       const unsubscribe = onSnapshot(
         q,
         (snapshot) => {
-          const works = snapshot.docs.map((doc) => ({
+          const firebaseWorks = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
             createdAt:
@@ -737,18 +739,59 @@ export class FirebaseService {
               doc.data().updatedAt,
           })) as Work[];
 
-          console.log(`🔥 Real-time update: ${works.length} obras recebidas`);
+          console.log(
+            `🔥 Real-time Firebase update: ${firebaseWorks.length} obras recebidas do servidor`,
+          );
 
-          // Update localStorage backup instantaneously
-          localStorage.setItem("works", JSON.stringify(works));
+          // CRÍTICO: Consolidar com dados locais para não perder obras
+          const localWorks = this.consolidateWorksFromAllBackups();
 
-          // Trigger callback with fresh data
-          callback(works);
+          // Combinar Firebase + Local (remover duplicatas)
+          const allWorks = [...firebaseWorks, ...localWorks];
+          const uniqueWorks = allWorks.filter(
+            (work, index, self) =>
+              index === self.findIndex((w) => w.id === work.id),
+          );
+
+          // Ordenar por data de criação
+          uniqueWorks.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          );
+
+          console.log(
+            `✅ Obras consolidadas em real-time: Firebase(${firebaseWorks.length}) + Local(${localWorks.length}) = Total(${uniqueWorks.length})`,
+          );
+
+          // Verificar especificamente obras atribuídas
+          const worksWithAssignments = uniqueWorks.filter(
+            (work) => work.assignedUsers && work.assignedUsers.length > 0,
+          );
+          console.log(
+            `���� Obras com atribuições: ${worksWithAssignments.length}`,
+            worksWithAssignments.map((w) => ({
+              id: w.id,
+              cliente: w.clientName,
+              atribuidas: w.assignedUsers,
+            })),
+          );
+
+          // Update all backup storages instantaneously
+          localStorage.setItem("works", JSON.stringify(uniqueWorks));
+          localStorage.setItem("leirisonda_works", JSON.stringify(uniqueWorks));
+          sessionStorage.setItem("temp_works", JSON.stringify(uniqueWorks));
+
+          // Trigger callback with consolidated data
+          callback(uniqueWorks);
         },
         (error) => {
-          console.error("❌ Erro no listener de obras:", error);
-          // Em caso de erro, usar dados locais
-          callback(this.getLocalWorks());
+          console.error("❌ Erro no listener de obras Firebase:", error);
+          // Em caso de erro, usar dados locais consolidados
+          const fallbackWorks = this.consolidateWorksFromAllBackups();
+          console.log(
+            `📱 Fallback: usando ${fallbackWorks.length} obras locais`,
+          );
+          callback(fallbackWorks);
         },
       );
 
@@ -756,8 +799,9 @@ export class FirebaseService {
       return unsubscribe;
     } catch (error) {
       console.error("Error setting up works listener:", error);
-      // Fallback to local data
-      callback(this.getLocalWorks());
+      // Fallback to consolidated local data
+      const fallbackWorks = this.consolidateWorksFromAllBackups();
+      callback(fallbackWorks);
       return () => {};
     }
   }
