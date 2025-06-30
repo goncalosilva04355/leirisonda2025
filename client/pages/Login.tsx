@@ -12,6 +12,9 @@ export const Login = React.memo(function Login() {
   // Usar useAuth normalmente sem try-catch problemático
   const authContext = useAuth();
 
+  // Extrair variáveis do contexto ANTES dos callbacks
+  const { user, login, isLoading, isInitialized } = authContext || {};
+
   // Declarar todos os callbacks aqui (antes de qualquer return)
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -26,9 +29,11 @@ export const Login = React.memo(function Login() {
       }
 
       try {
-        const success = await login(email, password);
-        if (!success) {
-          setError("Email ou palavra-passe incorretos.");
+        if (login) {
+          const success = await login(email, password);
+          if (!success) {
+            setError("Email ou palavra-passe incorretos.");
+          }
         }
       } catch (err) {
         setError("Erro ao iniciar sessão. Tente novamente.");
