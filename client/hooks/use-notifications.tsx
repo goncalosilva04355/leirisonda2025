@@ -187,7 +187,7 @@ export function useNotifications() {
     }
 
     try {
-      return await notificationService.checkPendingAssignedWorks(user.id);
+      return await NotificationService.checkPendingAssignedWorks(user.id);
     } catch (error) {
       console.error("❌ Erro ao verificar obras pendentes:", error);
       return [];
