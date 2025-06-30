@@ -199,7 +199,9 @@ export function WorksList() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Gestão de Obras</h1>
           <p className="mt-2 text-gray-600">
-            Visualizar e gerir todas as obras
+            {assignedToFilter
+              ? "Obras atribuídas ao usuário selecionado"
+              : "Visualizar e gerir todas as obras"}
           </p>
         </div>
         {user?.permissions.canCreateWorks && (
