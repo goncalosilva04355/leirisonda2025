@@ -183,7 +183,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                     : ""
                 }`}
               >
-                <Bell className="mr-3 h-5 w-5" />
+                <span className="mr-3 text-lg">🔔</span>
                 Notificações
               </Link>
             )}
