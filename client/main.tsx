@@ -65,6 +65,7 @@ function App() {
                 path="user-sync-diagnostic"
                 element={<UserSyncDiagnostic />}
               />
+              <Route path="debug-works" element={<DebugWorks />} />
               <Route path="pool-maintenance" element={<MaintenanceList />} />
               <Route
                 path="create-maintenance"
