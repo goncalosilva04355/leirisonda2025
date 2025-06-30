@@ -38,7 +38,7 @@ export interface User {
 export interface Work {
   id: string;
   workSheetNumber: string; // Folha obra Leirisonda
-  type: "piscina" | "manutencao" | "avaria" | "montagem";
+  type: "piscina" | "manutencao" | "avaria" | "montagem" | "furo_agua";
   clientName: string;
   address: string;
   contact: string;
@@ -52,8 +52,22 @@ export interface Work {
   observations: string;
   workPerformed: string; // Trabalho realizado
   workSheetCompleted: boolean; // Se a folha de obra foi preenchida/feita
+  // Campos específicos para Furo de Água
+  furoAgua?: FuroAguaDetails;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface FuroAguaDetails {
+  profundidade: number; // metros
+  nivelAgua: number; // metros
+  profundidadeBomba: number; // metros
+  caudalFuro: number; // m3
+  tipoColuna: "PEAD" | "HIDROROSCADO";
+  diametroColuna: number; // em milímetros ou polegadas
+  bombaModelo: string;
+  potenciaMotor: number; // HP
+  voltagem: "230v" | "400v";
 }
 
 export interface WorkPhoto {
