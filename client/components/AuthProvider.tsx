@@ -269,32 +269,87 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(loginUser);
         console.log(`✅ ${globalUser.name.toUpperCase()} LOGIN SUCESSO`);
 
-        // Inicializar notificações automaticamente após login
+        // Inicializar notificações automaticamente após login com debug detalhado
         setTimeout(async () => {
           try {
+            console.log(`🔔 INICIANDO NOTIFICAÇÕES para ${globalUser.name}...`);
+
             const { notificationService } = await import(
               "@/services/NotificationService"
             );
-            await notificationService.initialize();
-            console.log("🔔 Notificações inicializadas após login");
 
-            // Verificar obras pendentes atribuídas ao usuário após inicializar notificações
-            setTimeout(async () => {
+            // Verificar status antes de inicializar
+            console.log("📊 Status antes da inicialização:");
+            console.log(
+              `  • Suportado: ${notificationService.getIsSupported()}`,
+            );
+            console.log(
+              `  • Inicializado: ${notificationService.getIsInitialized()}`,
+            );
+            console.log(`  • Permissão atual: ${Notification.permission}`);
+
+            // Tentar inicializar
+            const initSuccess = await notificationService.initialize();
+            console.log(
+              `🔔 Inicialização: ${initSuccess ? "✅ SUCESSO" : "❌ FALHA"}`,
+            );
+
+            if (initSuccess) {
+              console.log("📊 Status após inicialização:");
+              console.log(
+                `  • Inicializado: ${notificationService.getIsInitialized()}`,
+              );
+              console.log(`  • Permissão final: ${Notification.permission}`);
+
+              // Executar diagnóstico completo para debug
               try {
-                const pendingWorks =
-                  await notificationService.checkPendingAssignedWorks(
-                    globalUser.id,
+                const diagnostics = await notificationService.runDiagnostics();
+                console.log("🔍 DIAGNÓSTICO COMPLETO:", diagnostics);
+
+                if (diagnostics.recommendations.length > 0) {
+                  console.log("⚠️ PROBLEMAS DETECTADOS:");
+                  diagnostics.recommendations.forEach((rec) =>
+                    console.log(`  • ${rec}`),
                   );
-                console.log(
-                  `🔍 Verificação de obras pendentes concluída: ${pendingWorks.length} encontradas`,
-                );
-              } catch (error) {
-                console.warn("⚠️ Erro ao verificar obras pendentes:", error);
+                }
+              } catch (diagError) {
+                console.warn("⚠️ Erro no diagnóstico:", diagError);
               }
-            }, 2000);
+
+              // Verificar obras pendentes após delay
+              setTimeout(async () => {
+                try {
+                  console.log(
+                    `🔍 Verificando obras pendentes para ${globalUser.name}...`,
+                  );
+                  const pendingWorks =
+                    await notificationService.checkPendingAssignedWorks(
+                      globalUser.id,
+                    );
+
+                  console.log(
+                    `📋 RESULTADO: ${pendingWorks.length} obras pendentes encontradas`,
+                  );
+                  if (pendingWorks.length > 0) {
+                    console.log(
+                      "🏗️ Obras pendentes:",
+                      pendingWorks.map(
+                        (w) => `${w.workSheetNumber} - ${w.clientName}`,
+                      ),
+                    );
+                  }
+                } catch (error) {
+                  console.warn("⚠️ Erro ao verificar obras pendentes:", error);
+                }
+              }, 2000);
+            } else {
+              console.error(
+                "❌ FALHA NA INICIALIZAÇÃO - Notificações não funcionarão",
+              );
+            }
           } catch (notificationError) {
-            console.warn(
-              "⚠️ Erro ao inicializar notificações:",
+            console.error(
+              "❌ ERRO CRÍTICO nas notificações:",
               notificationError,
             );
           }
@@ -332,37 +387,81 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               `✅ UTILIZADOR DINÂMICO ${dynamicUser.name.toUpperCase()} LOGIN SUCESSO`,
             );
 
-            // Inicializar notificações automaticamente após login
+            // Inicializar notificações automaticamente após login com debug detalhado
             setTimeout(async () => {
               try {
+                console.log(
+                  `🔔 INICIANDO NOTIFICAÇÕES para ${dynamicUser.name} (dinâmico)...`,
+                );
+
                 const { notificationService } = await import(
                   "@/services/NotificationService"
                 );
-                await notificationService.initialize();
+
+                // Verificar status antes de inicializar
                 console.log(
-                  "🔔 Notificações inicializadas após login (usuário dinâmico)",
+                  "📊 Status antes da inicialização (usuário dinâmico):",
+                );
+                console.log(
+                  `  • Suportado: ${notificationService.getIsSupported()}`,
+                );
+                console.log(
+                  `  • Inicializado: ${notificationService.getIsInitialized()}`,
+                );
+                console.log(`  • Permissão atual: ${Notification.permission}`);
+
+                // Tentar inicializar
+                const initSuccess = await notificationService.initialize();
+                console.log(
+                  `🔔 Inicialização (dinâmico): ${initSuccess ? "✅ SUCESSO" : "❌ FALHA"}`,
                 );
 
-                // Verificar obras pendentes atribuídas ao usuário após inicializar notificações
-                setTimeout(async () => {
-                  try {
-                    const pendingWorks =
-                      await notificationService.checkPendingAssignedWorks(
-                        dynamicUser.id,
+                if (initSuccess) {
+                  console.log("📊 Status após inicialização (dinâmico):");
+                  console.log(
+                    `  • Inicializado: ${notificationService.getIsInitialized()}`,
+                  );
+                  console.log(
+                    `  • Permissão final: ${Notification.permission}`,
+                  );
+
+                  // Verificar obras pendentes após delay
+                  setTimeout(async () => {
+                    try {
+                      console.log(
+                        `🔍 Verificando obras pendentes para ${dynamicUser.name} (dinâmico)...`,
                       );
-                    console.log(
-                      `🔍 Verificação de obras pendentes (usuário dinâmico) concluída: ${pendingWorks.length} encontradas`,
-                    );
-                  } catch (error) {
-                    console.warn(
-                      "⚠️ Erro ao verificar obras pendentes:",
-                      error,
-                    );
-                  }
-                }, 2000);
+                      const pendingWorks =
+                        await notificationService.checkPendingAssignedWorks(
+                          dynamicUser.id,
+                        );
+
+                      console.log(
+                        `📋 RESULTADO (dinâmico): ${pendingWorks.length} obras pendentes encontradas`,
+                      );
+                      if (pendingWorks.length > 0) {
+                        console.log(
+                          "🏗️ Obras pendentes:",
+                          pendingWorks.map(
+                            (w) => `${w.workSheetNumber} - ${w.clientName}`,
+                          ),
+                        );
+                      }
+                    } catch (error) {
+                      console.warn(
+                        "⚠️ Erro ao verificar obras pendentes (dinâmico):",
+                        error,
+                      );
+                    }
+                  }, 2000);
+                } else {
+                  console.error(
+                    "❌ FALHA NA INICIALIZAÇÃO (dinâmico) - Notificações não funcionarão",
+                  );
+                }
               } catch (notificationError) {
-                console.warn(
-                  "⚠️ Erro ao inicializar notificações:",
+                console.error(
+                  "❌ ERRO CRÍTICO nas notificações (dinâmico):",
                   notificationError,
                 );
               }

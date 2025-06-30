@@ -35,6 +35,7 @@ import SyncDiagnostic from "./pages/SyncDiagnostic";
 import { NotFound } from "./pages/NotFound";
 import { EmergencyDiagnostic } from "./pages/EmergencyDiagnostic";
 import { NotificationSettingsPage } from "./pages/NotificationSettingsPage";
+import { NotificationTest } from "./pages/NotificationTest";
 
 function App() {
   return (
@@ -99,6 +100,7 @@ function App() {
                 path="notification-settings"
                 element={<NotificationSettingsPage />}
               />
+              <Route path="notification-test" element={<NotificationTest />} />
             </Route>
 
             {/* Catch-all route */}
