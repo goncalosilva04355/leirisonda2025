@@ -305,17 +305,28 @@ export function CreateWork() {
               size="sm"
               onClick={() => {
                 const works = JSON.parse(localStorage.getItem("works") || "[]");
-                console.log("🔍 DEBUG OBRAS SALVAS:", {
-                  total: works.length,
-                  ultimasObras: works.slice(-3).map((w: any) => ({
-                    id: w.id,
-                    cliente: w.clientName,
-                    folhaObra: w.workSheetNumber,
-                    criada: w.createdAt,
-                  })),
+                const firebaseStatus = firebaseService.getFirebaseStatus();
+
+                console.log("🔍 DEBUG COMPLETO:", {
+                  localStorage: {
+                    total: works.length,
+                    ultimasObras: works.slice(-3).map((w: any) => ({
+                      id: w.id,
+                      cliente: w.clientName,
+                      folhaObra: w.workSheetNumber,
+                      criada: w.createdAt,
+                    })),
+                  },
+                  firebase: firebaseStatus,
+                  sync: {
+                    isOnline,
+                    isSyncing,
+                    worksFromSync: works?.length || 0,
+                  },
                 });
+
                 alert(
-                  `DEBUG: ${works.length} obras salvas no localStorage. Ver console para detalhes.`,
+                  `DEBUG:\n✅ ${works.length} obras localStorage\n🔥 Firebase: ${firebaseStatus.isAvailable ? "OK" : "OFF"}\n🌐 Online: ${isOnline}\n🔄 Sync: ${isSyncing}`,
                 );
               }}
             >
