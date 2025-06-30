@@ -309,7 +309,7 @@ export function MaintenanceReport({
           ? `
       <div class="section">
         <div class="section-header">
-          <div class="section-title">🧴 Produtos Químicos Aplicados</div>
+          <div class="section-title">Produtos Químicos Aplicados</div>
         </div>
         <div class="section-content">
           ${intervention.chemicalProducts
