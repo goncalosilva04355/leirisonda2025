@@ -322,7 +322,7 @@ export function Login() {
         }
       `}</style>
 
-      <LoginInfo />
+      {/* Debug info removed for security - credentials should not be visible */}
     </div>
   );
 }
