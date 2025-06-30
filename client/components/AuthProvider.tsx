@@ -112,8 +112,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log("🔄 Verificando utilizadores globais...");
 
-      // Busca utilizadores existentes
-      const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
+      // Verificar se localStorage está disponível
+      if (typeof Storage === "undefined") {
+        console.warn("⚠️ localStorage não disponível");
+        return;
+      }
+
+      // Busca utilizadores existentes com fallback seguro
+      let existingUsers = [];
+      try {
+        const storedUsers = localStorage.getItem("users");
+        existingUsers = storedUsers ? JSON.parse(storedUsers) : [];
+        if (!Array.isArray(existingUsers)) {
+          existingUsers = [];
+        }
+      } catch (parseError) {
+        console.warn("⚠️ Erro ao parse de users, reinicializando:", parseError);
+        existingUsers = [];
+      }
+
       let modified = false;
 
       // Verifica cada utilizador global
