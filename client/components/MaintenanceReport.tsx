@@ -237,7 +237,7 @@ export function MaintenanceReport({
       <!-- Water Analysis -->
       <div class="section">
         <div class="section-header">
-          <div class="section-title">🧪 Análise da Água</div>
+          <div class="section-title">Análise da Água</div>
         </div>
         <div class="section-content">
           <div class="info-grid">
