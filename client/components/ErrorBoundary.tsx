@@ -20,11 +20,20 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public static getDerivedStateFromError(error: Error): State {
     console.log("🚨 ErrorBoundary caught error:", error.message);
+    console.log("🚨 Error stack:", error.stack);
 
     // Handle common development errors
-    if (error.message?.includes("useAuth must be used within")) {
+    if (
+      error.message?.includes("useAuth must be used within") ||
+      error.message?.includes("AuthProvider") ||
+      error.message?.includes("useContext")
+    ) {
       console.warn("AuthProvider context error caught, will try to recover...");
-      // Mark for retry instead of ignoring
+      // Try to reload the page to reinitialize context
+      setTimeout(() => {
+        console.log("🔄 Auto-reloading due to context error...");
+        window.location.reload();
+      }, 1000);
       return { hasError: true, error, retryCount: 0 };
     }
 
