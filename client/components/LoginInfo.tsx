@@ -212,6 +212,13 @@ export function LoginInfo() {
                         }}
                       >
                         Pass: {user.passwordStorageDetails.actualPassword}
+                        <br />
+                        Keys: ID:{user.passwordStorageDetails.byId ? "✓" : "❌"}
+                        Email:{user.passwordStorageDetails.byEmail ? "✓" : "❌"}
+                        Norm:
+                        {user.passwordStorageDetails.byNormalizedEmail
+                          ? "✓"
+                          : "❌"}
                       </div>
                     )}
                   </div>
