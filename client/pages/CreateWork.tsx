@@ -85,6 +85,7 @@ export function CreateWork() {
     status: "pendente",
     vehicles: [],
     technicians: [],
+    assignedUsers: [],
     photos: [],
     observations: "",
     workPerformed: "",
