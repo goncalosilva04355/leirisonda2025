@@ -19,13 +19,25 @@ export function LoginInfo() {
         const storedUsers = localStorage.getItem("users");
         if (storedUsers) {
           const parsedUsers = JSON.parse(storedUsers);
-          const debugInfo = parsedUsers.map((user: any) => ({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            hasPassword: !!localStorage.getItem(`password_${user.id}`),
-          }));
+          const debugInfo = parsedUsers.map((user: any) => {
+            const passwordById = localStorage.getItem(`password_${user.id}`);
+            const passwordByEmail = localStorage.getItem(
+              `password_${user.email}`,
+            );
+
+            return {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user.role,
+              hasPassword: !!(passwordById || passwordByEmail),
+              passwordStorageDetails: {
+                byId: !!passwordById,
+                byEmail: !!passwordByEmail,
+                actualPassword: passwordById || passwordByEmail || "none",
+              },
+            };
+          });
           setUsers(debugInfo);
         }
       } catch (error) {
