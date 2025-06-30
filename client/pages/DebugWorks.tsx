@@ -19,6 +19,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 import { firebaseService } from "@/services/FirebaseService";
+import { SyncTestButton } from "@/components/SyncTestButton";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
