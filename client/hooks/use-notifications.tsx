@@ -61,7 +61,7 @@ export function useNotifications() {
 
   // Inicializar notificações
   const initializeNotifications = useCallback(async (): Promise<boolean> => {
-    if (!notificationService.getIsSupported()) {
+    if (!NotificationService.isSupported) {
       console.warn("⚠️ Notificações não são suportadas neste dispositivo");
       return false;
     }
@@ -91,7 +91,7 @@ export function useNotifications() {
   // Pedir permissão para notificações
   const requestPermission = useCallback(async (): Promise<boolean> => {
     if (!("Notification" in window)) {
-      console.warn("⚠️ Notificações não são suportadas");
+      console.warn("⚠��� Notificações não são suportadas");
       return false;
     }
 
