@@ -392,7 +392,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   `🔔 INICIANDO NOTIFICAÇÕES para ${dynamicUser.name} (dinâmico)...`,
                 );
 
-                const { notificationService } = await import(
+                const { NotificationService } = await import(
                   "@/services/NotificationService"
                 );
 
@@ -401,15 +401,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   "📊 Status antes da inicialização (usuário dinâmico):",
                 );
                 console.log(
-                  `  • Suportado: ${notificationService.getIsSupported()}`,
+                  `  • Suportado: ${NotificationService.isSupported}`,
                 );
                 console.log(
-                  `  • Inicializado: ${notificationService.getIsInitialized()}`,
+                  `  • Inicializado: ${NotificationService.isInitialized}`,
                 );
                 console.log(`  • Permissão atual: ${Notification.permission}`);
 
                 // Tentar inicializar
-                const initSuccess = await notificationService.initialize();
+                const initSuccess = await NotificationService.initialize();
                 console.log(
                   `🔔 Inicialização (dinâmico): ${initSuccess ? "✅ SUCESSO" : "❌ FALHA"}`,
                 );
