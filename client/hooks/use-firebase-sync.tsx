@@ -84,9 +84,15 @@ export function useFirebaseSync() {
     try {
       setIsSyncing(true);
       console.log("🔄 Starting manual sync...");
+
+      // Primeiro sincronizar utilizadores globais
+      await firebaseService.syncGlobalUsersFromFirebase();
+
+      // Depois sincronizar dados locais
       await firebaseService.syncLocalDataToFirebase();
+
       setLastSync(new Date());
-      console.log("✅ Manual sync completed");
+      console.log("✅ Manual sync completed (including global users)");
     } catch (error) {
       console.error("❌ Manual sync failed:", error);
       // Fallback to local data
