@@ -17,6 +17,7 @@ import {
   Wrench,
   Search,
   MapPin,
+  RefreshCw,
 } from "lucide-react";
 import { Work, DashboardStats } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
@@ -28,7 +29,7 @@ import { pt } from "date-fns/locale";
 export function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { works, maintenances, isOnline, isSyncing, lastSync } =
+  const { works, maintenances, isOnline, isSyncing, lastSync, syncData } =
     useFirebaseSync();
   const [stats, setStats] = useState<DashboardStats>({
     totalWorks: 0,
@@ -282,6 +283,46 @@ export function Dashboard() {
               </div>
             </div>
           </div>
+
+          {/* Sync controls */}
+          <div className="flex items-center space-x-3">
+            <div className="text-xs text-gray-500 text-right">
+              <div>
+                Sync:{" "}
+                {isSyncing ? "Em curso..." : isOnline ? "Online" : "Offline"}
+              </div>
+              {lastSync && <div>Último: {format(lastSync, "HH:mm:ss")}</div>}
+            </div>
+
+            {/* Manual sync button for all users */}
+            <Button
+              onClick={async () => {
+                console.log("🔄 Sincronização manual iniciada pelo usuário");
+                await syncData();
+              }}
+              variant="outline"
+              size="sm"
+              disabled={isSyncing}
+              className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+            >
+              <RefreshCw
+                className={`w-3 h-3 mr-1 ${isSyncing ? "animate-spin" : ""}`}
+              />
+              {isSyncing ? "Sync..." : "Sync"}
+            </Button>
+
+            {/* Debug button for Gonçalo only */}
+            {user?.email === "gongonsilva@gmail.com" && (
+              <Button
+                onClick={() => navigate("/debug-works")}
+                variant="outline"
+                size="sm"
+                className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+              >
+                🔍 Debug
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -354,81 +395,112 @@ export function Dashboard() {
 
       {/* Obras Atribuídas */}
       {user &&
-        works.filter(
-          (work) => work.assignedUsers && work.assignedUsers.includes(user.id),
-        ).length > 0 && (
-          <div className="w-full mb-6">
-            <div className="card-leirisonda">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Users className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Suas Obras Atribuídas
-                  </h3>
-                </div>
-                <Button variant="outline" asChild className="hover-leirisonda">
-                  <Link to={`/works?assignedTo=${user.id}`}>
-                    <Eye className="w-4 h-4 mr-2" />
-                    Ver Todas
-                  </Link>
-                </Button>
-              </div>
+        (() => {
+          const assignedWorks = works.filter(
+            (work) =>
+              work.assignedUsers && work.assignedUsers.includes(user.id),
+          );
 
-              <div className="space-y-4">
-                {works
-                  .filter(
-                    (work) =>
-                      work.assignedUsers &&
-                      work.assignedUsers.includes(user.id),
-                  )
-                  .sort(
-                    (a, b) =>
-                      new Date(b.createdAt).getTime() -
-                      new Date(a.createdAt).getTime(),
-                  )
-                  .slice(0, 3)
-                  .map((work) => {
-                    const statusInfo = getStatusInfo(work.status);
-                    return (
-                      <Link
-                        key={work.id}
-                        to={`/works/${work.id}`}
-                        className="block p-4 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-1">
-                              <span className="font-medium text-gray-900">
-                                {work.workSheetNumber}
-                              </span>
-                              <span
-                                className={`text-xs px-2 py-1 rounded-full ${statusInfo.className}`}
-                              >
-                                {statusInfo.label}
-                              </span>
-                            </div>
-                            <p className="text-sm text-gray-600 mb-1">
-                              {work.clientName}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {format(new Date(work.createdAt), "dd/MM/yyyy", {
-                                locale: pt,
-                              })}
-                            </p>
-                          </div>
-                          <div className="text-blue-600">
-                            <Activity className="w-4 h-4" />
-                          </div>
-                        </div>
+          // Debug log para Gonçalo
+          if (user.email === "gongonsilva@gmail.com") {
+            console.log(
+              `🎯 Debug Dashboard - Obras Atribuídas para ${user.name}:`,
+              {
+                totalWorks: works.length,
+                userID: user.id,
+                assignedWorks: assignedWorks.length,
+                worksWithAssignments: works.filter(
+                  (w) => w.assignedUsers && w.assignedUsers.length > 0,
+                ).length,
+                assignedWorksList: assignedWorks.map((w) => ({
+                  id: w.id,
+                  cliente: w.clientName,
+                  folhaObra: w.workSheetNumber,
+                  atribuidas: w.assignedUsers,
+                })),
+              },
+            );
+          }
+
+          return (
+            assignedWorks.length > 0 && (
+              <div className="w-full mb-6">
+                <div className="card-leirisonda">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Users className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Suas Obras Atribuídas ({assignedWorks.length})
+                      </h3>
+                    </div>
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="hover-leirisonda"
+                    >
+                      <Link to={`/works?assignedTo=${user.id}`}>
+                        <Eye className="w-4 h-4 mr-2" />
+                        Ver Todas
                       </Link>
-                    );
-                  })}
+                    </Button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {assignedWorks
+                      .sort(
+                        (a, b) =>
+                          new Date(b.createdAt).getTime() -
+                          new Date(a.createdAt).getTime(),
+                      )
+                      .slice(0, 3)
+                      .map((work) => {
+                        const statusInfo = getStatusInfo(work.status);
+                        return (
+                          <Link
+                            key={work.id}
+                            to={`/works/${work.id}`}
+                            className="block p-4 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 transition-colors"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-2 mb-1">
+                                  <span className="font-medium text-gray-900">
+                                    {work.workSheetNumber}
+                                  </span>
+                                  <span
+                                    className={`text-xs px-2 py-1 rounded-full ${statusInfo.className}`}
+                                  >
+                                    {statusInfo.label}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-gray-600 mb-1">
+                                  {work.clientName}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {format(
+                                    new Date(work.createdAt),
+                                    "dd/MM/yyyy",
+                                    {
+                                      locale: pt,
+                                    },
+                                  )}
+                                </p>
+                              </div>
+                              <div className="text-blue-600">
+                                <Activity className="w-4 h-4" />
+                              </div>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            )
+          );
+        })()}
 
       {/* Main Content Grid */}
       <div className="content-grid">

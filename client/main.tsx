@@ -29,6 +29,7 @@ import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
 import { MobileDeploy } from "./pages/MobileDeploy";
 import { SystemStatus } from "./pages/SystemStatus";
 import { UserSyncDiagnostic } from "./pages/UserSyncDiagnostic";
+import { DebugWorks } from "./pages/DebugWorks";
 import { NotFound } from "./pages/NotFound";
 
 function App() {
@@ -64,6 +65,7 @@ function App() {
                 path="user-sync-diagnostic"
                 element={<UserSyncDiagnostic />}
               />
+              <Route path="debug-works" element={<DebugWorks />} />
               <Route path="pool-maintenance" element={<MaintenanceList />} />
               <Route
                 path="create-maintenance"
