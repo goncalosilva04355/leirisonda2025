@@ -40,38 +40,18 @@ export function MaintenanceList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  const loadMaintenances = () => {
-    try {
-      const stored = localStorage.getItem("pool_maintenances");
-      if (stored) {
-        let loadedMaintenances = JSON.parse(stored);
-
-        // Auto-limpeza de duplicados silenciosa
-        const duplicates = detectDuplicateMaintenances(loadedMaintenances);
-        if (duplicates.length > 0) {
-          console.log(
-            `🧹 Auto-limpeza: ${duplicates.length} grupos de duplicados encontrados`,
-          );
-
-          const result = cleanAllMaintenanceStorages();
-          if (result.success) {
-            console.log(
-              `✅ Auto-limpeza concluída: ${result.details.duplicatesRemoved} duplicados removidos`,
-            );
-            // Recarregar dados limpos
-            const cleanedStored = localStorage.getItem("pool_maintenances");
-            if (cleanedStored) {
-              loadedMaintenances = JSON.parse(cleanedStored);
-            }
-          }
-        }
-
-        setMaintenances(loadedMaintenances);
+  // Auto-limpeza de duplicados quando maintenances mudam
+  useEffect(() => {
+    if (maintenances.length > 0) {
+      const duplicates = detectDuplicateMaintenances(maintenances);
+      if (duplicates.length > 0) {
+        console.log(
+          `🧹 Auto-limpeza: ${duplicates.length} grupos de duplicados encontrados`,
+        );
+        cleanAllMaintenanceStorages();
       }
-    } catch (error) {
-      console.error("Error loading maintenances:", error);
     }
-  };
+  }, [maintenances]);
 
   const filteredMaintenances = maintenances.filter((maintenance) => {
     const matchesSearch =
