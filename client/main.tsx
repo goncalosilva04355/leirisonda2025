@@ -389,6 +389,9 @@ const createErrorHTML = (error: any) => {
   `;
 };
 
+// Expose initializeApp globally for error recovery
+(window as any).initializeApp = initializeApp;
+
 // Handle different loading states
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initializeApp);
