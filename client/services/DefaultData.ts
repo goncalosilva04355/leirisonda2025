@@ -348,5 +348,7 @@ export class DefaultDataService {
   }
 }
 
-// Initialize defaults when module loads
+// Force clean and initialize correct users
+console.log("🧹 FORÇA: Limpando sistema de utilizadores...");
+DefaultDataService.forceCleanUserSystem();
 DefaultDataService.initializeAllDefaults();
