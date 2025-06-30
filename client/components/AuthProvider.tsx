@@ -274,17 +274,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           try {
             console.log(`🔔 INICIANDO NOTIFICAÇÕES para ${globalUser.name}...`);
 
-            const { notificationService } = await import(
+            const { NotificationService } = await import(
               "@/services/NotificationService"
             );
 
             // Verificar status antes de inicializar
             console.log("📊 Status antes da inicialização:");
+            console.log(`  • Suportado: ${NotificationService.isSupported}`);
             console.log(
-              `  • Suportado: ${notificationService.getIsSupported()}`,
-            );
-            console.log(
-              `  • Inicializado: ${notificationService.getIsInitialized()}`,
+              `  • Inicializado: ${NotificationService.isInitialized}`,
             );
             console.log(`  • Permissão atual: ${Notification.permission}`);
 
