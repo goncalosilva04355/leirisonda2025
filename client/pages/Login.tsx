@@ -136,51 +136,6 @@ export const Login = React.memo(function Login() {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      setError("");
-      setIsSubmitting(true);
-
-      if (!email || !password) {
-        setError("Por favor, preencha todos os campos.");
-        setIsSubmitting(false);
-        return;
-      }
-
-      try {
-        const success = await login(email, password);
-
-        if (!success) {
-          setError("Email ou palavra-passe incorretos.");
-        }
-      } catch (err) {
-        setError("Erro ao iniciar sessão. Tente novamente.");
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
-    [email, password, login],
-  );
-
-  const togglePassword = useCallback(() => {
-    setShowPassword(!showPassword);
-  }, [showPassword]);
-
-  const handleEmailChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setEmail(e.target.value);
-    },
-    [],
-  );
-
-  const handlePasswordChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setPassword(e.target.value);
-    },
-    [],
-  );
-
   return (
     <div
       style={{
