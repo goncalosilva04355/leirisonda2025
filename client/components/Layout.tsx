@@ -21,6 +21,9 @@ export function Layout() {
           </div>
         </main>
       </div>
+
+      {/* Sync Notifications - Cross-device sync monitoring */}
+      <SyncNotification />
     </div>
   );
 }
