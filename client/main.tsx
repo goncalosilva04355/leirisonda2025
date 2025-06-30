@@ -35,7 +35,7 @@ import SyncDiagnostic from "./pages/SyncDiagnostic";
 import { NotFound } from "./pages/NotFound";
 import { EmergencyDiagnostic } from "./pages/EmergencyDiagnostic";
 import { NotificationSettingsPage } from "./pages/NotificationSettingsPage";
-import { NotificationTest } from "./pages/NotificationTest";
+import NotificationTest from "./pages/NotificationTest";
 
 function App() {
   return (
