@@ -34,12 +34,12 @@ export function UsersList() {
     }
   };
 
-  // Check if admin
-  if (!currentUser || currentUser.role !== "admin") {
+  // Check if admin and specifically Gonçalo
+  if (!currentUser || currentUser.email !== "gongonsilva@gmail.com") {
     return (
       <div style={{ padding: "20px", textAlign: "center" }}>
         <h2>Acesso Negado</h2>
-        <p>Não tem permissões para aceder a esta página.</p>
+        <p>Esta página é exclusiva para o administrador principal.</p>
         <button
           onClick={() => navigate("/dashboard")}
           style={{
