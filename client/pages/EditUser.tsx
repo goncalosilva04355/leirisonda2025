@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function EditUser() {
   const { id } = useParams<{ id: string }>();
   const { user: currentUser } = useAuth();
   const navigate = useNavigate();
+  const { users, updateUser: updateUserWithSync } = useFirebaseSync();
   const [user, setUser] = useState<any>(null);
   const [permissions, setPermissions] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,9 +20,7 @@ export function EditUser() {
       return;
     }
 
-    const storedUsers = localStorage.getItem("users");
-    if (storedUsers && id) {
-      const users = JSON.parse(storedUsers);
+    if (users.length > 0 && id) {
       const foundUser = users.find((u: any) => u.id === id);
       if (foundUser) {
         setUser(foundUser);
@@ -29,7 +29,7 @@ export function EditUser() {
         setError("Utilizador não encontrado");
       }
     }
-  }, [id, currentUser, navigate]);
+  }, [id, currentUser, navigate, users]);
 
   const handlePermissionChange = (permission: string, value: boolean) => {
     setPermissions((prev: any) => ({
@@ -45,27 +45,27 @@ export function EditUser() {
     setIsSubmitting(true);
 
     try {
-      const storedUsers = localStorage.getItem("users");
-      if (storedUsers && user) {
-        const users = JSON.parse(storedUsers);
-        const userIndex = users.findIndex((u: any) => u.id === user.id);
+      if (user) {
+        console.log("🔄 Updating user with Firebase sync:", user.id);
 
-        if (userIndex !== -1) {
-          users[userIndex] = {
-            ...users[userIndex],
-            permissions: permissions,
-          };
+        // Update user with Firebase sync
+        await updateUserWithSync(user.id, {
+          permissions: permissions,
+          updatedAt: new Date().toISOString(),
+        });
 
-          localStorage.setItem("users", JSON.stringify(users));
-          setSuccess("Utilizador atualizado com sucesso!");
+        setSuccess(
+          "Utilizador atualizado com sucesso! Dados sincronizados automaticamente.",
+        );
+        console.log("✅ User updated successfully with Firebase sync");
 
-          setTimeout(() => {
-            navigate("/users");
-          }, 1500);
-        }
+        setTimeout(() => {
+          navigate("/users");
+        }, 1500);
       }
     } catch (err) {
-      setError("Erro ao atualizar utilizador");
+      console.error("❌ Error updating user:", err);
+      setError("Erro ao atualizar utilizador. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
