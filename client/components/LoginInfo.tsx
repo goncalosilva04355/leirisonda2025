@@ -172,7 +172,32 @@ export function LoginInfo() {
   }, [showDebug]);
 
   if (!showDebug) {
-    return null;
+    return (
+      <button
+        onClick={() => setShowDebug(true)}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          background: "#007bff",
+          color: "white",
+          border: "none",
+          borderRadius: "50%",
+          width: "50px",
+          height: "50px",
+          cursor: "pointer",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+          zIndex: 1000,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "16px",
+        }}
+        title="Mostrar informações de debug"
+      >
+        <Eye size={20} />
+      </button>
+    );
   }
 
   return (
