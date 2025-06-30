@@ -67,8 +67,8 @@ export function CreateUser() {
     canViewStats: true,
   });
 
-  // Only admin (Gonçalo) can access this page
-  if (!user || user.role !== "admin") {
+  // Only admin Gonçalo can access this page
+  if (!user || user.email !== "gongonsilva@gmail.com") {
     return (
       <div className="text-center py-12">
         <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -78,7 +78,7 @@ export function CreateUser() {
           Acesso Negado
         </h3>
         <p className="text-gray-600 mb-4">
-          Apenas administradores podem criar novos utilizadores.
+          Esta página é exclusiva para o administrador principal.
         </p>
         <Button onClick={() => navigate("/dashboard")}>
           Voltar ao Dashboard
