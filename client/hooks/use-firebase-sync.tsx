@@ -531,11 +531,20 @@ export function useFirebaseSync() {
             error instanceof Error &&
             (error.message.includes("Timeout") ||
               error.message.includes("NetworkError") ||
-              error.message.includes("Failed to fetch"))
+              error.message.includes("Failed to fetch") ||
+              error.message.includes("Permission denied") ||
+              error.message.includes("Firebase"))
           ) {
             console.log(
-              "⚠️ Erro de rede/timeout em delete - operação local pode ter funcionado",
+              "⚠️ Erro de rede/timeout/Firebase em delete - operação local pode ter funcionado",
             );
+
+            // Não fazer throw para estes tipos de erro em operações delete
+            // A verificação será feita no nível superior (handleDelete)
+            console.log(
+              "🔄 Continuando sem throw para permitir verificação local...",
+            );
+            return undefined as T; // Retorna undefined para indicar erro não crítico
           }
         }
 
