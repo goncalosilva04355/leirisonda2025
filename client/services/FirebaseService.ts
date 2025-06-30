@@ -383,12 +383,27 @@ export class FirebaseService {
       if (this.isFirebaseAvailable) {
         try {
           const worksRef = collection(db, "works");
-          const docRef = await addDoc(worksRef, {
+
+          // Garantir que assignedUsers seja preservado durante sync Firebase
+          const firebaseData = {
             ...newWork,
+            assignedUsers: newWork.assignedUsers || [], // Garantir array vazio se não definido
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
+          };
+
+          console.log("🔥 ENVIANDO PARA FIREBASE COM ATRIBUIÇÕES:", {
+            cliente: firebaseData.clientName,
+            atribuicoes: firebaseData.assignedUsers,
           });
-          console.log("🔥 OBRA SINCRONIZADA COM FIREBASE:", docRef.id);
+
+          const docRef = await addDoc(worksRef, firebaseData);
+          console.log(
+            "✅ OBRA SINCRONIZADA COM FIREBASE:",
+            docRef.id,
+            "Atribuições:",
+            firebaseData.assignedUsers,
+          );
         } catch (error) {
           console.error(
             "⚠️ FIREBASE SYNC FALHOU, obra salva localmente:",
@@ -768,7 +783,7 @@ export class FirebaseService {
             (work) => work.assignedUsers && work.assignedUsers.length > 0,
           );
           console.log(
-            `���� Obras com atribuições: ${worksWithAssignments.length}`,
+            `🎯 Obras com atribuições: ${worksWithAssignments.length}`,
             worksWithAssignments.map((w) => ({
               id: w.id,
               cliente: w.clientName,
