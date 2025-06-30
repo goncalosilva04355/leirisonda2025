@@ -322,7 +322,8 @@ export function Login() {
         }
       `}</style>
 
-      {/* Debug info removed for security - credentials should not be visible */}
+      {/* Debug info for development */}
+      <LoginInfo />
     </div>
   );
 }
