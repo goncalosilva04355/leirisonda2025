@@ -469,7 +469,7 @@ export class FirebaseService {
       sessionWorks.push(newWork);
       sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
 
-      // VERIFICAÇÃO TRIPLA LOCAL
+      // VERIFICAÇÃO TRIPLA LOCAL (incluindo atribuições)
       const verification1 = this.getLocalWorks();
       const verification2 = JSON.parse(
         localStorage.getItem("leirisonda_works") || "[]",
@@ -486,6 +486,65 @@ export class FirebaseService {
         console.log(
           `✅ OBRA SALVA COM BACKUP TRIPLO LOCAL: ${newWork.id} (${worksCountBefore} -> ${verification1.length} obras)`,
         );
+
+        // VERIFICAÇÃO CRÍTICA DAS ATRIBUIÇÕES NOS BACKUPS
+        if (newWork.assignedUsers && newWork.assignedUsers.length > 0) {
+          const assignmentsVerification = {
+            backup1: savedWork1.assignedUsers?.length || 0,
+            backup2: savedWork2.assignedUsers?.length || 0,
+            backup3: savedWork3.assignedUsers?.length || 0,
+            expected: newWork.assignedUsers.length,
+          };
+
+          console.log(
+            "🎯 VERIFICAÇÃO DE ATRIBUIÇÕES NOS BACKUPS:",
+            assignmentsVerification,
+          );
+
+          if (
+            assignmentsVerification.backup1 === 0 ||
+            assignmentsVerification.backup2 === 0 ||
+            assignmentsVerification.backup3 === 0
+          ) {
+            console.error("❌ ATRIBUIÇÕES PERDIDAS EM ALGUNS BACKUPS!");
+
+            // Corrigir backups defeituosos
+            if (assignmentsVerification.backup1 === 0) {
+              const correctedWorks1 = verification1.map((w) =>
+                w.id === newWork.id
+                  ? { ...w, assignedUsers: newWork.assignedUsers }
+                  : w,
+              );
+              localStorage.setItem("works", JSON.stringify(correctedWorks1));
+            }
+            if (assignmentsVerification.backup2 === 0) {
+              const correctedWorks2 = verification2.map((w: any) =>
+                w.id === newWork.id
+                  ? { ...w, assignedUsers: newWork.assignedUsers }
+                  : w,
+              );
+              localStorage.setItem(
+                "leirisonda_works",
+                JSON.stringify(correctedWorks2),
+              );
+            }
+            if (assignmentsVerification.backup3 === 0) {
+              const correctedWorks3 = verification3.map((w: any) =>
+                w.id === newWork.id
+                  ? { ...w, assignedUsers: newWork.assignedUsers }
+                  : w,
+              );
+              sessionStorage.setItem(
+                "temp_works",
+                JSON.stringify(correctedWorks3),
+              );
+            }
+
+            console.log("🔧 CORREÇÃO DE BACKUPS EXECUTADA");
+          } else {
+            console.log("✅ ATRIBUIÇÕES PRESERVADAS EM TODOS OS BACKUPS");
+          }
+        }
       } else {
         console.error("⚠️ BACKUP TRIPLO LOCAL FALHOU:", {
           backup1: !!savedWork1,
