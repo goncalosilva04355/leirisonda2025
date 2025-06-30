@@ -143,46 +143,47 @@ export function MaintenanceReport({
     const timestamp = new Date().toISOString();
 
     return `
-      <!-- Pool Information -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">Informações da Piscina</div>
+      <!-- Cliente Section -->
+      <div class="section-title">Cliente</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Nome</div>
+          <div class="info-value">${maintenance.clientName}</div>
         </div>
-        <div class="section-content">
-          <div class="info-grid">
-            <div class="info-card">
-              <div class="label">Nome da Piscina</div>
-              <div class="value">${maintenance.poolName}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Cliente</div>
-              <div class="value">${maintenance.clientName}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Contacto Cliente</div>
-              <div class="value">${maintenance.clientPhone || "N/A"}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Email Cliente</div>
-              <div class="value">${maintenance.clientEmail || "N/A"}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Morada Completa</div>
-              <div class="value">${maintenance.address}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Tipo de Piscina</div>
-              <div class="value">${getPoolTypeLabel(maintenance.poolType)}</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Volume de Água</div>
-              <div class="value">${maintenance.waterCubicage || "N/A"} m³</div>
-            </div>
-            <div class="info-card">
-              <div class="label">Estado da Piscina</div>
-              <div class="value">${maintenance.status === "ativa" ? "✅ Ativa" : "❌ Inativa"}</div>
-            </div>
+        <div class="info-item">
+          <div class="info-label">Telefone</div>
+          <div class="info-value">${maintenance.clientPhone || "N/A"}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Email</div>
+          <div class="info-value">${maintenance.clientEmail || "N/A"}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Endereço</div>
+          <div class="info-value">${maintenance.address}</div>
+        </div>
+      </div>
+
+      <!-- Dados gerais -->
+      <div class="section-title">Dados gerais</div>
+      <div class="section-content">
+        <div style="margin-bottom: 10px;">
+          <strong>Identificação da piscina</strong><br>
+          ${maintenance.poolName}
+        </div>
+        <div style="display: flex; gap: 20px; margin-bottom: 10px;">
+          <div style="flex: 1;">
+            <div style="font-size: 10px; color: #666;">Tipo de piscina</div>
+            <div>${getPoolTypeLabel(maintenance.poolType)}</div>
           </div>
+          <div style="flex: 1;">
+            <div style="font-size: 10px; color: #666;">Volume</div>
+            <div>${maintenance.waterCubicage || "N/A"} m³</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <strong>Responsável pelo serviço</strong><br>
+          ${intervention.technicians.join(", ")}
         </div>
       </div>
 
