@@ -184,7 +184,7 @@ export function Login() {
               opacity: 0.9,
             }}
           >
-            Sistema de Gestão de Obras
+            Sistema de Gestão de Obras e Manutenções
           </p>
         </div>
 
