@@ -324,12 +324,30 @@ export class FirebaseService {
   ): Promise<string> {
     console.log("🔄 INICIANDO CRIAÇÃO DE OBRA:", workData.clientName);
 
+    // VALIDAÇÃO CRÍTICA: Verificar se assignedUsers está presente e válido
+    if (workData.assignedUsers) {
+      console.log("🎯 ATRIBUIÇÕES RECEBIDAS NO FIREBASESERVICE:", {
+        quantidade: workData.assignedUsers.length,
+        ids: workData.assignedUsers,
+      });
+    } else {
+      console.log("⚠️ NENHUMA ATRIBUIÇÃO RECEBIDA");
+    }
+
     const newWork: Work = {
       ...workData,
+      assignedUsers: workData.assignedUsers || [], // GARANTIR que assignedUsers seja preservado
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+
+    // VERIFICAÇÃO DUPLA: Confirmar que assignedUsers foi preservado
+    console.log("✅ OBRA PREPARADA COM ATRIBUIÇÕES:", {
+      workId: newWork.id,
+      assignedUsers: newWork.assignedUsers,
+      hasAssignments: newWork.assignedUsers.length > 0,
+    });
 
     try {
       // PRIORIDADE 1: FIREBASE PRIMEIRO (para sincronização entre dispositivos)
@@ -338,18 +356,33 @@ export class FirebaseService {
         try {
           const worksRef = collection(db, "works");
 
-          // Garantir que assignedUsers seja preservado durante sync Firebase
+          // GARANTIR que assignedUsers seja SEMPRE preservado durante sync Firebase
           const firebaseData = {
             ...newWork,
-            assignedUsers: newWork.assignedUsers || [], // Garantir array vazio se não definido
+            assignedUsers: Array.isArray(newWork.assignedUsers)
+              ? newWork.assignedUsers
+              : [], // VERIFICAÇÃO EXTRA
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
           };
+
+          // VERIFICAÇÃO CRÍTICA: Se havia atribuições mas foram perdidas, interromper
+          if (
+            workData.assignedUsers &&
+            workData.assignedUsers.length > 0 &&
+            (!firebaseData.assignedUsers ||
+              firebaseData.assignedUsers.length === 0)
+          ) {
+            throw new Error(
+              "ERRO CRÍTICO: Atribuições de usuários perdidas durante preparação do Firebase",
+            );
+          }
 
           console.log("🔥 CRIANDO OBRA NO FIREBASE (PRIORIDADE 1):", {
             cliente: firebaseData.clientName,
             atribuicoes: firebaseData.assignedUsers,
             workId: newWork.id,
+            atribuicoesOriginais: workData.assignedUsers,
           });
 
           // Usar setDoc() com ID específico para criar documento novo
@@ -365,11 +398,36 @@ export class FirebaseService {
 
           firebaseSuccess = true;
 
-          // Verificar se realmente foi criada (double-check)
+          // Verificar se realmente foi criada (double-check) E se atribuições foram preservadas
           try {
             const verifyDoc = await getDoc(docRef);
             if (verifyDoc.exists()) {
+              const savedData = verifyDoc.data();
               console.log("✅ VERIFICAÇÃO: Obra confirmada no Firebase");
+
+              // VERIFICAÇÃO CRÍTICA DAS ATRIBUIÇÕES
+              if (workData.assignedUsers && workData.assignedUsers.length > 0) {
+                if (
+                  savedData?.assignedUsers &&
+                  savedData.assignedUsers.length > 0
+                ) {
+                  console.log(
+                    "✅ ATRIBUIÇÕES CONFIRMADAS NO FIREBASE:",
+                    savedData.assignedUsers,
+                  );
+                } else {
+                  console.error(
+                    "❌ ERRO CRÍTICO: Atribuições perdidas no Firebase!",
+                  );
+                  // Tentar corrigir imediatamente
+                  await updateDoc(docRef, {
+                    assignedUsers: workData.assignedUsers,
+                  });
+                  console.log(
+                    "🔧 TENTATIVA DE CORREÇÃO: Atribuições replicadas no Firebase",
+                  );
+                }
+              }
             } else {
               console.error(
                 "⚠️ VERIFICAÇÃO FALHOU: Obra não encontrada no Firebase após criação",
@@ -411,7 +469,7 @@ export class FirebaseService {
       sessionWorks.push(newWork);
       sessionStorage.setItem("temp_works", JSON.stringify(sessionWorks));
 
-      // VERIFICAÇÃO TRIPLA LOCAL
+      // VERIFICAÇÃO TRIPLA LOCAL (incluindo atribuições)
       const verification1 = this.getLocalWorks();
       const verification2 = JSON.parse(
         localStorage.getItem("leirisonda_works") || "[]",
@@ -428,6 +486,65 @@ export class FirebaseService {
         console.log(
           `✅ OBRA SALVA COM BACKUP TRIPLO LOCAL: ${newWork.id} (${worksCountBefore} -> ${verification1.length} obras)`,
         );
+
+        // VERIFICAÇÃO CRÍTICA DAS ATRIBUIÇÕES NOS BACKUPS
+        if (newWork.assignedUsers && newWork.assignedUsers.length > 0) {
+          const assignmentsVerification = {
+            backup1: savedWork1.assignedUsers?.length || 0,
+            backup2: savedWork2.assignedUsers?.length || 0,
+            backup3: savedWork3.assignedUsers?.length || 0,
+            expected: newWork.assignedUsers.length,
+          };
+
+          console.log(
+            "🎯 VERIFICAÇÃO DE ATRIBUIÇÕES NOS BACKUPS:",
+            assignmentsVerification,
+          );
+
+          if (
+            assignmentsVerification.backup1 === 0 ||
+            assignmentsVerification.backup2 === 0 ||
+            assignmentsVerification.backup3 === 0
+          ) {
+            console.error("❌ ATRIBUIÇÕES PERDIDAS EM ALGUNS BACKUPS!");
+
+            // Corrigir backups defeituosos
+            if (assignmentsVerification.backup1 === 0) {
+              const correctedWorks1 = verification1.map((w) =>
+                w.id === newWork.id
+                  ? { ...w, assignedUsers: newWork.assignedUsers }
+                  : w,
+              );
+              localStorage.setItem("works", JSON.stringify(correctedWorks1));
+            }
+            if (assignmentsVerification.backup2 === 0) {
+              const correctedWorks2 = verification2.map((w: any) =>
+                w.id === newWork.id
+                  ? { ...w, assignedUsers: newWork.assignedUsers }
+                  : w,
+              );
+              localStorage.setItem(
+                "leirisonda_works",
+                JSON.stringify(correctedWorks2),
+              );
+            }
+            if (assignmentsVerification.backup3 === 0) {
+              const correctedWorks3 = verification3.map((w: any) =>
+                w.id === newWork.id
+                  ? { ...w, assignedUsers: newWork.assignedUsers }
+                  : w,
+              );
+              sessionStorage.setItem(
+                "temp_works",
+                JSON.stringify(correctedWorks3),
+              );
+            }
+
+            console.log("🔧 CORREÇÃO DE BACKUPS EXECUTADA");
+          } else {
+            console.log("✅ ATRIBUIÇÕES PRESERVADAS EM TODOS OS BACKUPS");
+          }
+        }
       } else {
         console.error("⚠️ BACKUP TRIPLO LOCAL FALHOU:", {
           backup1: !!savedWork1,

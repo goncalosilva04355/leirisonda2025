@@ -229,9 +229,9 @@ export function CreateWork() {
     }
 
     try {
-      console.log("📝 PREPARANDO DADOS DA OBRA...");
+      console.log("��� PREPARANDO DADOS DA OBRA...");
 
-      // Prepare work data
+      // Prepare work data - GARANTIR que assignedUsers seja preservado
       const workData = {
         workSheetNumber: formData.workSheetNumber,
         type: formData.type,
@@ -245,9 +245,9 @@ export function CreateWork() {
             ? new Date().toISOString()
             : undefined,
         status: formData.status,
-        vehicles: formData.vehicles,
-        technicians: formData.technicians,
-        assignedUsers: formData.assignedUsers,
+        vehicles: formData.vehicles || [],
+        technicians: formData.technicians || [],
+        assignedUsers: formData.assignedUsers || [], // GARANTIR array válido
         photos: formData.photos.map((photo, index) => ({
           id: `${Date.now()}-${index}`,
           url: URL.createObjectURL(photo),
@@ -264,7 +264,24 @@ export function CreateWork() {
         folhaObra: workData.workSheetNumber,
         tipo: workData.type,
         atribuicoes: workData.assignedUsers,
+        formDataOriginal: formData.assignedUsers,
+        quantidadeAtribuicoes: workData.assignedUsers.length,
       });
+
+      // VERIFICAÇÃO CRÍTICA: Verificar se atribuições estão válidas
+      if (
+        formData.assignedUsers.length > 0 &&
+        workData.assignedUsers.length === 0
+      ) {
+        console.error(
+          "❌ ERRO CRÍTICO: Atribuições perdidas na preparação dos dados!",
+        );
+        setError(
+          "Erro interno: atribuições de usuários perdidas. Tente novamente.",
+        );
+        setIsSubmitting(false);
+        return;
+      }
 
       // Create work using Firebase sync
       const workId = await createWork(workData);
@@ -311,9 +328,25 @@ export function CreateWork() {
       }
     } catch (err) {
       console.error("❌ ERRO CRÍTICO AO CRIAR OBRA:", err);
-      setError(
-        `Erro ao criar a obra: ${err instanceof Error ? err.message : "Erro desconhecido"}. Tente novamente.`,
-      );
+
+      // Log detalhado do erro para debugging
+      if (err instanceof Error) {
+        console.error("❌ Stack trace:", err.stack);
+        console.error("❌ Mensagem:", err.message);
+      }
+
+      // Verificar se o erro está relacionado às atribuições
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      if (
+        errorMessage.includes("atribuições") ||
+        errorMessage.includes("assignedUsers")
+      ) {
+        setError(
+          `ERRO DE ATRIBUIÇÕES: ${errorMessage}. Verifique se os usuários selecionados são válidos e tente novamente.`,
+        );
+      } else {
+        setError(`Erro ao criar a obra: ${errorMessage}. Tente novamente.`);
+      }
       setIsSubmitting(false);
     }
   };
