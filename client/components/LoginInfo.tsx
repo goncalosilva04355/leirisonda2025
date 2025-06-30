@@ -7,6 +7,11 @@ interface UserDebugInfo {
   email: string;
   role: string;
   hasPassword: boolean;
+  passwordStorageDetails: {
+    byId: boolean;
+    byEmail: boolean;
+    actualPassword: string;
+  };
 }
 
 export function LoginInfo() {
