@@ -182,7 +182,7 @@ class NotificationServiceClass {
     PushNotifications.addListener(
       "pushNotificationActionPerformed",
       (notification) => {
-        console.log("👆 Ação na notificação push:", notification);
+        console.log("��� Ação na notificação push:", notification);
         this.handleNotificationClick(notification.notification.data);
       },
     );
@@ -675,8 +675,46 @@ class NotificationServiceClass {
       // Aguardar todos os envios de push
       await Promise.allSettled(pushPromises);
 
+      // BROADCAST VIA LOCALSTORAGE PARA COMUNICAÇÃO CROSS-TAB/DEVICE
       console.log(
-        "✅ Processo de notificações de status concluído para todos os usuários atribuídos",
+        "📡 Broadcasting mudança de status via localStorage para outros dispositivos...",
+      );
+
+      const broadcastEvent = {
+        type: "LEIRISONDA_WORK_STATUS_CHANGE",
+        timestamp: new Date().toISOString(),
+        workId: work.id,
+        workSheetNumber: work.workSheetNumber,
+        newStatus: newStatus,
+        assignedUsers: assignedUsers,
+        payload: payload,
+      };
+
+      // Salvar evento de broadcast
+      localStorage.setItem(
+        "lastStatusBroadcast",
+        JSON.stringify(broadcastEvent),
+      );
+
+      // Tentar disparar evento storage para outros dispositivos/tabs
+      try {
+        window.dispatchEvent(
+          new StorageEvent("storage", {
+            key: "lastStatusBroadcast",
+            newValue: JSON.stringify(broadcastEvent),
+            storageArea: localStorage,
+          }),
+        );
+        console.log("📡 Evento de broadcast de status disparado com sucesso");
+      } catch (broadcastError) {
+        console.warn(
+          "⚠️ Erro no broadcast de evento de status:",
+          broadcastError,
+        );
+      }
+
+      console.log(
+        "✅ Processo de notificações de status concluído para todos os usuários atribuídos (com backup para reentrega)",
       );
     } catch (error) {
       console.error(
