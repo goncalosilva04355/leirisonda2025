@@ -204,144 +204,155 @@ export function CreateWork() {
 
       // Verificação mais flexível - permitir fallback se createWork não estiver disponível
 
-    // Validation
-    if (!formData.clientName.trim()) {
-      setError("Por favor, introduza o nome do cliente.");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!formData.address.trim()) {
-      setError("Por favor, introduza a morada.");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!formData.contact.trim()) {
-      setError("Por favor, introduza o contacto.");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      console.log("��� PREPARANDO DADOS DA OBRA...");
-
-      // Prepare work data - GARANTIR que assignedUsers seja preservado
-      const workData = {
-        workSheetNumber: formData.workSheetNumber,
-        type: formData.type,
-        clientName: formData.clientName.trim(),
-        address: formData.address.trim(),
-        contact: formData.contact.trim(),
-        entryTime: new Date(formData.entryTime).toISOString(),
-        exitTime: formData.exitTime
-          ? new Date(formData.exitTime).toISOString()
-          : formData.status === "concluida"
-            ? new Date().toISOString()
-            : undefined,
-        status: formData.status,
-        vehicles: formData.vehicles || [],
-        technicians: formData.technicians || [],
-        assignedUsers: formData.assignedUsers || [], // GARANTIR array válido
-        photos: formData.photos.map((photo, index) => ({
-          id: `${Date.now()}-${index}`,
-          url: URL.createObjectURL(photo),
-          filename: photo.name,
-          uploadedAt: new Date().toISOString(),
-        })),
-        observations: formData.observations.trim(),
-        workPerformed: formData.workPerformed.trim(),
-        workSheetCompleted: formData.workSheetCompleted,
-      };
-
-      console.log("📤 ENVIANDO OBRA PARA CRIAR:", {
-        cliente: workData.clientName,
-        folhaObra: workData.workSheetNumber,
-        tipo: workData.type,
-        atribuicoes: workData.assignedUsers,
-        formDataOriginal: formData.assignedUsers,
-        quantidadeAtribuicoes: workData.assignedUsers.length,
-      });
-
-      // VERIFICAÇÃO CRÍTICA: Verificar se atribuições estão válidas
-      if (
-        formData.assignedUsers.length > 0 &&
-        workData.assignedUsers.length === 0
-      ) {
-        console.error(
-          "❌ ERRO CRÍTICO: Atribuições perdidas na preparação dos dados!",
-        );
-        setError(
-          "Erro interno: atribuições de usuários perdidas. Tente novamente.",
-        );
+      // Validation
+      if (!formData.clientName.trim()) {
+        setError("Por favor, introduza o nome do cliente.");
         setIsSubmitting(false);
         return;
       }
 
-      // Create work using Firebase sync
-      const workId = await createWork(workData);
-      console.log("✅ OBRA CRIADA COM SUCESSO ID:", workId);
+      if (!formData.address.trim()) {
+        setError("Por favor, introduza a morada.");
+        setIsSubmitting(false);
+        return;
+      }
 
-      // Aguardar um pouco para sincronização
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (!formData.contact.trim()) {
+        setError("Por favor, introduza o contacto.");
+        setIsSubmitting(false);
+        return;
+      }
 
-      // Verificar se obra foi realmente salva com backups
-      const savedWorks1 = JSON.parse(localStorage.getItem("works") || "[]");
-      const savedWorks2 = JSON.parse(
-        localStorage.getItem("leirisonda_works") || "[]",
-      );
-      const savedWorks3 = JSON.parse(
-        sessionStorage.getItem("temp_works") || "[]",
-      );
+      try {
+        console.log("��� PREPARANDO DADOS DA OBRA...");
 
-      const savedWork1 = savedWorks1.find((w: any) => w.id === workId);
-      const savedWork2 = savedWorks2.find((w: any) => w.id === workId);
-      const savedWork3 = savedWorks3.find((w: any) => w.id === workId);
+        // Prepare work data - GARANTIR que assignedUsers seja preservado
+        const workData = {
+          workSheetNumber: formData.workSheetNumber,
+          type: formData.type,
+          clientName: formData.clientName.trim(),
+          address: formData.address.trim(),
+          contact: formData.contact.trim(),
+          entryTime: new Date(formData.entryTime).toISOString(),
+          exitTime: formData.exitTime
+            ? new Date(formData.exitTime).toISOString()
+            : formData.status === "concluida"
+              ? new Date().toISOString()
+              : undefined,
+          status: formData.status,
+          vehicles: formData.vehicles || [],
+          technicians: formData.technicians || [],
+          assignedUsers: formData.assignedUsers || [], // GARANTIR array válido
+          photos: formData.photos.map((photo, index) => ({
+            id: `${Date.now()}-${index}`,
+            url: URL.createObjectURL(photo),
+            filename: photo.name,
+            uploadedAt: new Date().toISOString(),
+          })),
+          observations: formData.observations.trim(),
+          workPerformed: formData.workPerformed.trim(),
+          workSheetCompleted: formData.workSheetCompleted,
+        };
 
-      if (savedWork1 || savedWork2 || savedWork3) {
-        const finalWork = savedWork1 || savedWork2 || savedWork3;
-        console.log("✅ OBRA VERIFICADA EM MÚLTIPLOS BACKUPS:", {
-          cliente: finalWork.clientName,
-          folhaObra: finalWork.workSheetNumber,
-          atribuicoes: finalWork.assignedUsers,
-          backups: {
-            works: !!savedWork1,
-            leirisonda_works: !!savedWork2,
-            temp_works: !!savedWork3,
-          },
+        console.log("📤 ENVIANDO OBRA PARA CRIAR:", {
+          cliente: workData.clientName,
+          folhaObra: workData.workSheetNumber,
+          tipo: workData.type,
+          atribuicoes: workData.assignedUsers,
+          formDataOriginal: formData.assignedUsers,
+          quantidadeAtribuicoes: workData.assignedUsers.length,
         });
 
-        // Verificar atribuições específicas
-        if (finalWork.assignedUsers && finalWork.assignedUsers.length > 0) {
-          console.log("🎯 ATRIBUIÇÕES CONFIRMADAS:", finalWork.assignedUsers);
+        // VERIFICAÇÃO CRÍTICA: Verificar se atribuições estão válidas
+        if (
+          formData.assignedUsers.length > 0 &&
+          workData.assignedUsers.length === 0
+        ) {
+          console.error(
+            "❌ ERRO CRÍTICO: Atribuições perdidas na preparação dos dados!",
+          );
+          setError(
+            "Erro interno: atribuições de usuários perdidas. Tente novamente.",
+          );
+          setIsSubmitting(false);
+          return;
         }
 
-        console.log("🧭 REDIRECIONANDO PARA LISTA DE OBRAS...");
-        navigate("/works");
-      } else {
-        throw new Error("Obra criada mas não encontrada em nenhum backup");
-      }
-    } catch (err) {
-      console.error("❌ ERRO CRÍTICO AO CRIAR OBRA:", err);
+        // Create work using Firebase sync
+        const workId = await createWork(workData);
+        console.log("✅ OBRA CRIADA COM SUCESSO ID:", workId);
 
-      // Log detalhado do erro para debugging
-      if (err instanceof Error) {
-        console.error("❌ Stack trace:", err.stack);
-        console.error("❌ Mensagem:", err.message);
-      }
+        // Aguardar um pouco para sincronização
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Verificar se o erro está relacionado às atribuições
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      if (
-        errorMessage.includes("atribuições") ||
-        errorMessage.includes("assignedUsers")
-      ) {
-        setError(
-          `ERRO DE ATRIBUIÇÕES: ${errorMessage}. Verifique se os usuários selecionados são válidos e tente novamente.`,
+        // Verificar se obra foi realmente salva com backups
+        const savedWorks1 = JSON.parse(localStorage.getItem("works") || "[]");
+        const savedWorks2 = JSON.parse(
+          localStorage.getItem("leirisonda_works") || "[]",
         );
-      } else {
-        setError(`Erro ao criar a obra: ${errorMessage}. Tente novamente.`);
+        const savedWorks3 = JSON.parse(
+          sessionStorage.getItem("temp_works") || "[]",
+        );
+
+        const savedWork1 = savedWorks1.find((w: any) => w.id === workId);
+        const savedWork2 = savedWorks2.find((w: any) => w.id === workId);
+        const savedWork3 = savedWorks3.find((w: any) => w.id === workId);
+
+        if (savedWork1 || savedWork2 || savedWork3) {
+          const finalWork = savedWork1 || savedWork2 || savedWork3;
+          console.log("✅ OBRA VERIFICADA EM MÚLTIPLOS BACKUPS:", {
+            cliente: finalWork.clientName,
+            folhaObra: finalWork.workSheetNumber,
+            atribuicoes: finalWork.assignedUsers,
+            backups: {
+              works: !!savedWork1,
+              leirisonda_works: !!savedWork2,
+              temp_works: !!savedWork3,
+            },
+          });
+
+          // Verificar atribuições específicas
+          if (finalWork.assignedUsers && finalWork.assignedUsers.length > 0) {
+            console.log("🎯 ATRIBUIÇÕES CONFIRMADAS:", finalWork.assignedUsers);
+          }
+
+          console.log("🧭 REDIRECIONANDO PARA LISTA DE OBRAS...");
+          navigate("/works");
+        } else {
+          throw new Error("Obra criada mas não encontrada em nenhum backup");
+        }
+      } catch (err) {
+        console.error("❌ ERRO CRÍTICO AO CRIAR OBRA:", err);
+
+        // Log detalhado do erro para debugging
+        if (err instanceof Error) {
+          console.error("❌ Stack trace:", err.stack);
+          console.error("❌ Mensagem:", err.message);
+        }
+
+        // Verificar se o erro está relacionado às atribuições
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        if (
+          errorMessage.includes("atribuições") ||
+          errorMessage.includes("assignedUsers")
+        ) {
+          setError(
+            `ERRO DE ATRIBUIÇÕES: ${errorMessage}. Verifique se os usuários selecionados são válidos e tente novamente.`,
+          );
+        } else {
+          setError(`Erro ao criar a obra: ${errorMessage}. Tente novamente.`);
+        }
+        setIsSubmitting(false);
       }
+    } catch (fatalError) {
+      // PROTEÇÃO FINAL: Capturar qualquer erro que possa causar logout
+      console.error(
+        "❌ Erro fatal capturado (evitando crash da aplicação):",
+        fatalError,
+      );
+      setError(
+        "Erro interno. Por favor, recarregue a página e tente novamente.",
+      );
       setIsSubmitting(false);
     }
   };
