@@ -431,6 +431,9 @@ export function Dashboard() {
           </div>
         )}
 
+      {/* Debug Component (Temporário - apenas para Gonçalo) */}
+      <WorksDebug />
+
       {/* Main Content Grid */}
       <div className="content-grid">
         {/* Recent Works */}
