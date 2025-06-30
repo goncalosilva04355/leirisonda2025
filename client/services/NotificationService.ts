@@ -427,6 +427,76 @@ class NotificationServiceClass {
     }
   }
 
+  async checkPendingAssignedWorks(userId: string) {
+    console.log(
+      "🔍 Verificando obras pendentes atribuídas ao usuário:",
+      userId,
+    );
+
+    try {
+      // Buscar obras do localStorage e Firebase
+      const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const leirisondaWorks = JSON.parse(
+        localStorage.getItem("leirisonda_works") || "[]",
+      );
+
+      // Combinar todas as obras
+      const allWorks = [...localWorks, ...leirisondaWorks];
+
+      // Filtrar obras atribuídas ao usuário atual que estão pendentes ou em progresso
+      const pendingAssignedWorks = allWorks.filter((work: any) => {
+        const isAssigned =
+          work.assignedUsers && work.assignedUsers.includes(userId);
+        const isPending =
+          work.status === "pendente" || work.status === "em_progresso";
+        return isAssigned && isPending;
+      });
+
+      console.log(
+        `📋 Encontradas ${pendingAssignedWorks.length} obras pendentes para ${userId}:`,
+        pendingAssignedWorks.map(
+          (w: any) => `${w.workSheetNumber} - ${w.clientName}`,
+        ),
+      );
+
+      // Se há obras pendentes, mostrar notificação de resumo
+      if (pendingAssignedWorks.length > 0) {
+        const payload: NotificationPayload = {
+          title: "🏗️ Obras Pendentes",
+          body:
+            pendingAssignedWorks.length === 1
+              ? `Tem 1 obra atribuída: ${pendingAssignedWorks[0].workSheetNumber} - ${pendingAssignedWorks[0].clientName}`
+              : `Tem ${pendingAssignedWorks.length} obras atribuídas pendentes`,
+          data: {
+            type: "pending_works_summary",
+            count: pendingAssignedWorks.length,
+            works: pendingAssignedWorks.map((w: any) => ({
+              id: w.id,
+              workSheetNumber: w.workSheetNumber,
+              clientName: w.clientName,
+              status: w.status,
+            })),
+          },
+          icon: "/leirisonda-icon.svg",
+        };
+
+        console.log("📨 Mostrando notificação de obras pendentes...");
+        await this.showLocalNotification(payload);
+        console.log(
+          `✅ Notificação de ${pendingAssignedWorks.length} obras pendentes exibida`,
+        );
+
+        return pendingAssignedWorks;
+      } else {
+        console.log("ℹ️ Nenhuma obra pendente atribuída ao usuário");
+        return [];
+      }
+    } catch (error) {
+      console.error("❌ Erro ao verificar obras pendentes:", error);
+      return [];
+    }
+  }
+
   // Método para enviar notificação via servidor FCM (implementar conforme necessário)
   private async sendPushNotification(
     token: string,
