@@ -154,6 +154,8 @@ export interface DashboardStats {
   workSheetsPending: number; // Folhas de obra por fazer
 }
 
+export type WorkStatus = "pendente" | "em_progresso" | "concluida";
+
 export interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
