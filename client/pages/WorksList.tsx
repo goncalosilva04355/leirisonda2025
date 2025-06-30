@@ -357,24 +357,30 @@ export function WorksList() {
                         </div>
                         <div>
                           <span className="font-medium">Entrada:</span>{" "}
-                          {format(
-                            new Date(work.entryTime),
-                            "dd/MM/yyyy HH:mm",
-                            {
-                              locale: pt,
-                            },
-                          )}
+                          {work.entryTime &&
+                          !isNaN(new Date(work.entryTime).getTime())
+                            ? format(
+                                new Date(work.entryTime),
+                                "dd/MM/yyyy HH:mm",
+                                {
+                                  locale: pt,
+                                },
+                              )
+                            : "Data inválida"}
                         </div>
                         {work.exitTime && (
                           <div>
                             <span className="font-medium">Saída:</span>{" "}
-                            {format(
-                              new Date(work.exitTime),
-                              "dd/MM/yyyy HH:mm",
-                              {
-                                locale: pt,
-                              },
-                            )}
+                            {work.exitTime &&
+                            !isNaN(new Date(work.exitTime).getTime())
+                              ? format(
+                                  new Date(work.exitTime),
+                                  "dd/MM/yyyy HH:mm",
+                                  {
+                                    locale: pt,
+                                  },
+                                )
+                              : "Data inválida"}
                           </div>
                         )}
                         <div>
