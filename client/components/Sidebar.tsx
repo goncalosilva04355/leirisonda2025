@@ -168,16 +168,6 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                 </span>
               </div>
             </div>
-            <Link
-              to="/sync-diagnostic"
-              onClick={() => {
-                if (window.innerWidth < 1024) onToggle();
-              }}
-              className={`nav-item-leirisonda ${location.pathname === "/sync-diagnostic" ? "active" : ""}`}
-            >
-              <Activity className="mr-3 h-5 w-5" />
-              Sincronização
-            </Link>
 
             {user?.email === "gongonsilva@gmail.com" && (
               <>
