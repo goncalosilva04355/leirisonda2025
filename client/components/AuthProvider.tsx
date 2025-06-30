@@ -380,6 +380,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               createdAt: new Date().toISOString(),
             },
           },
+          {
+            email: "alexkamaryta@gmail.com",
+            password: "69alexandre",
+            user: {
+              id: "alexfernandes1",
+              email: "alexkamaryta@gmail.com",
+              name: "Alexandre Fernandes",
+              role: "user" as const,
+              permissions: defaultUserPermissions,
+              createdAt: new Date().toISOString(),
+            },
+          },
         ];
 
         console.log("🔍 Checking local credentials first...");
