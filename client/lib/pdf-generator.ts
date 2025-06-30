@@ -364,65 +364,83 @@ export class PDFGenerator {
             background: white;
           }
 
-          /* Clean Header */
+          /* Header layout exactly like the image */
           .header {
-            border-bottom: 3px solid #e0e0e0;
-            padding-bottom: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
           }
 
           .header-top {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
+            align-items: center;
+            padding-bottom: 15px;
+            position: relative;
           }
 
           .logo-section {
+            flex: 0 0 auto;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
           }
 
-          .logo img {
-            width: 50px;
-            height: 50px;
+          .logo {
+            width: 45px;
+            height: 45px;
             object-fit: contain;
           }
 
-          .company-info h1 {
+          .company-name {
+            font-size: 12px;
+            color: #333;
+            font-weight: normal;
+          }
+
+          .report-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+          }
+
+          .report-title h1 {
             font-size: 16px;
             font-weight: bold;
             color: #333;
             margin-bottom: 2px;
           }
 
-          .company-info .tagline {
-            font-size: 10px;
-            color: #666;
+          .report-title .subtitle {
+            font-size: 14px;
+            color: #333;
+            margin: 0;
           }
 
           .header-meta {
+            flex: 0 0 auto;
             text-align: right;
-            font-size: 10px;
+            font-size: 9px;
             color: #666;
           }
 
-          .report-title {
-            text-align: center;
-            margin-top: 15px;
-          }
-
-          .report-title h2 {
-            font-size: 18px;
+          .page-number {
+            font-size: 14px;
             font-weight: bold;
             color: #333;
             margin-bottom: 5px;
           }
 
-          .report-title .subtitle {
-            font-size: 12px;
+          .date-time {
+            font-size: 9px;
             color: #666;
+          }
+
+          .sub-header {
+            font-size: 9px;
+            color: #666;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
           }
 
           /* Content sections */
