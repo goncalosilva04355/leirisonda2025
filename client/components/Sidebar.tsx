@@ -34,6 +34,7 @@ const navigation = [
 const adminNavigation = [
   { name: "Utilizadores", href: "/users", icon: Users },
   { name: "Criar Utilizador", href: "/create-user", icon: Plus },
+  { name: "Teste Notificações", href: "/notification-test", icon: Activity },
 ];
 
 export function Sidebar({ isOpen, onToggle }: SidebarProps) {
