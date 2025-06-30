@@ -193,7 +193,7 @@ export function DebugWorks() {
             variant="outline"
             disabled={isSyncing}
           >
-            <Refresh className="w-4 h-4 mr-2" />
+            <RefreshCw className="w-4 h-4 mr-2" />
             {isSyncing ? "Sincronizando..." : "Forçar Sync"}
           </Button>
           <Button
