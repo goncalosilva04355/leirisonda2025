@@ -244,6 +244,9 @@ export class DefaultDataService {
     this.initializeDefaultMaintenances();
 
     console.log("✅ All default data initialized successfully");
+    console.log("📋 Available users:");
+    console.log("• gongonsilva@gmail.com / 19867gsf (Admin)");
+    console.log("• alexkamaryta@gmail.com / 69alexandre (User)");
   }
 
   static forceCleanUserSystem(): void {
