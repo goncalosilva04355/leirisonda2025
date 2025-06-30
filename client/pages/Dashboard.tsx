@@ -23,7 +23,6 @@ import { Work, DashboardStats } from "@shared/types";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
-import { SyncTestButton } from "@/components/SyncTestButton";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
