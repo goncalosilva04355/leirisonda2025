@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 
-export function Login() {
+export const Login = React.memo(function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -88,7 +88,7 @@ export function Login() {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsSubmitting(true);
@@ -110,7 +110,19 @@ export function Login() {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [email, password, login]);
+
+  const togglePassword = useCallback(() => {
+    setShowPassword(!showPassword);
+  }, [showPassword]);
+
+  const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  }, []);
+
+  const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  }, []);
 
   return (
     <div
@@ -206,7 +218,7 @@ export function Login() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 placeholder="Email de acesso"
                 disabled={isSubmitting}
                 autoComplete="off"
@@ -243,7 +255,7 @@ export function Login() {
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   placeholder="Palavra-passe"
                   disabled={isSubmitting}
                   autoComplete="new-password"
@@ -264,7 +276,7 @@ export function Login() {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={togglePassword}
                   style={{
                     position: "absolute",
                     right: "16px",
