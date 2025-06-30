@@ -46,6 +46,9 @@ class NotificationServiceClass {
         await this.initializeWebNotifications();
       }
 
+      // Inicializar listener de eventos de broadcast
+      this.initializeNotificationListener();
+
       this.isInitialized = true;
       console.log("✅ Serviço de notificações inicializado com sucesso");
       return true;
