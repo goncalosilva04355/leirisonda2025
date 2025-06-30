@@ -375,25 +375,26 @@ export class PDFGenerator {
 
           /* Modern Header */
           .header {
-            background: linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%);
+            background: linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}cc 100%);
             color: white;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+            border-top: 4px solid rgba(255,255,255,0.2);
           }
 
           .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
           }
 
           .logo-section {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
           }
 
           .logo {
