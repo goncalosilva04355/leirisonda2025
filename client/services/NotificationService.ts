@@ -397,7 +397,7 @@ class NotificationServiceClass {
         );
       } else {
         console.log(
-          `���️ Usuário atual (${currentUser.name || "Desconhecido"}) não está entre os atribuídos - não mostrar notificação de status`,
+          `ℹ️ Usuário atual (${currentUser.name || "Desconhecido"}) não está entre os atribuídos - não mostrar notificação de status`,
         );
       }
 
@@ -450,13 +450,23 @@ class NotificationServiceClass {
         localStorage.getItem("leirisonda_works") || "[]",
       );
 
-      // Combinar todas as obras
-      const allWorks = [...localWorks, ...leirisondaWorks];
+      // Combinar todas as obras e remover duplicatas baseado no ID
+      const allWorksMap = new Map();
+
+      [...localWorks, ...leirisondaWorks].forEach((work: any) => {
+        if (work.id) {
+          allWorksMap.set(work.id, work);
+        }
+      });
+
+      const allWorks = Array.from(allWorksMap.values());
 
       // Filtrar obras atribuídas ao usuário atual que estão pendentes ou em progresso
       const pendingAssignedWorks = allWorks.filter((work: any) => {
         const isAssigned =
-          work.assignedUsers && work.assignedUsers.includes(userId);
+          work.assignedUsers &&
+          Array.isArray(work.assignedUsers) &&
+          work.assignedUsers.includes(userId);
         const isPending =
           work.status === "pendente" || work.status === "em_progresso";
         return isAssigned && isPending;
@@ -465,18 +475,20 @@ class NotificationServiceClass {
       console.log(
         `📋 Encontradas ${pendingAssignedWorks.length} obras pendentes para ${userId}:`,
         pendingAssignedWorks.map(
-          (w: any) => `${w.workSheetNumber} - ${w.clientName}`,
+          (w: any) => `${w.workSheetNumber} - ${w.clientName} (${w.status})`,
         ),
       );
 
       // Se há obras pendentes, mostrar notificação de resumo
       if (pendingAssignedWorks.length > 0) {
+        const mostRecentWork = pendingAssignedWorks[0]; // Primeira obra encontrada
+
         const payload: NotificationPayload = {
-          title: "🏗️ Obras Pendentes",
+          title: "🏗️ Obras Atribuídas",
           body:
             pendingAssignedWorks.length === 1
-              ? `Tem 1 obra atribuída: ${pendingAssignedWorks[0].workSheetNumber} - ${pendingAssignedWorks[0].clientName}`
-              : `Tem ${pendingAssignedWorks.length} obras atribuídas pendentes`,
+              ? `Nova obra atribuída: ${mostRecentWork.workSheetNumber} - ${mostRecentWork.clientName}`
+              : `Tem ${pendingAssignedWorks.length} obras atribuídas (${pendingAssignedWorks.filter((w) => w.status === "pendente").length} pendentes)`,
           data: {
             type: "pending_works_summary",
             count: pendingAssignedWorks.length,
@@ -490,10 +502,10 @@ class NotificationServiceClass {
           icon: "/leirisonda-icon.svg",
         };
 
-        console.log("📨 Mostrando notificação de obras pendentes...");
+        console.log("📨 Mostrando notificação de obras atribuídas...");
         await this.showLocalNotification(payload);
         console.log(
-          `✅ Notificação de ${pendingAssignedWorks.length} obras pendentes exibida`,
+          `✅ Notificação de ${pendingAssignedWorks.length} obras atribuídas exibida`,
         );
 
         return pendingAssignedWorks;
