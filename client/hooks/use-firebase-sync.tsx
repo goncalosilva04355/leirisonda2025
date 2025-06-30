@@ -201,6 +201,46 @@ export function useFirebaseSync() {
     [isFirebaseAvailable, isOnline],
   );
 
+  // Create new user with instant sync
+  const createUser = useCallback(
+    async (userData: Omit<User, "id" | "createdAt">): Promise<string> => {
+      try {
+        // Create user (FirebaseService handles Firebase/local automatically)
+        const userId = await firebaseService.createUser(userData);
+
+        // Update sync timestamp
+        if (isFirebaseAvailable && isOnline) {
+          setLastSync(new Date());
+        }
+
+        return userId;
+      } catch (error) {
+        console.error("❌ Error creating user:", error);
+        throw error;
+      }
+    },
+    [isFirebaseAvailable, isOnline],
+  );
+
+  // Update user with instant sync
+  const updateUser = useCallback(
+    async (userId: string, updates: Partial<User>): Promise<void> => {
+      try {
+        // Update user (FirebaseService handles Firebase/local automatically)
+        await firebaseService.updateUser(userId, updates);
+
+        // Update sync timestamp
+        if (isFirebaseAvailable && isOnline) {
+          setLastSync(new Date());
+        }
+      } catch (error) {
+        console.error("❌ Error updating user:", error);
+        throw error;
+      }
+    },
+    [isFirebaseAvailable, isOnline],
+  );
+
   // Update work with instant sync
   const updateWork = useCallback(
     async (workId: string, updates: Partial<Work>): Promise<void> => {
@@ -290,6 +330,30 @@ export function useFirebaseSync() {
     [isFirebaseAvailable, isOnline],
   );
 
+  // Delete user with instant sync
+  const deleteUser = useCallback(
+    async (userId: string): Promise<void> => {
+      try {
+        console.log("🗑️ Deleting user with auto-sync:", userId);
+
+        // Delete user (FirebaseService handles Firebase/local automatically)
+        await firebaseService.deleteUser(userId);
+
+        // Auto-sync after deletion (if Firebase available and online)
+        if (isFirebaseAvailable && isOnline) {
+          setLastSync(new Date());
+          console.log("✅ User deleted and auto-synced:", userId);
+        } else {
+          console.log("📱 User deleted locally:", userId);
+        }
+      } catch (error) {
+        console.error("❌ Error deleting user:", error);
+        throw error;
+      }
+    },
+    [isFirebaseAvailable, isOnline],
+  );
+
   return {
     // Data
     works,
@@ -309,6 +373,11 @@ export function useFirebaseSync() {
     updateMaintenance,
     deleteWork,
     deleteMaintenance,
+
+    // User actions with auto-sync
+    createUser,
+    updateUser,
+    deleteUser,
 
     // Manual sync
     syncData,
