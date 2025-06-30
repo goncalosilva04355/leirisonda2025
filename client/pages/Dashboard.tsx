@@ -868,6 +868,16 @@ export function Dashboard() {
                   Todas as Obras
                 </Link>
               </Button>
+              <Button
+                variant="outline"
+                className="w-full justify-start hover-leirisonda h-auto py-3"
+                asChild
+              >
+                <Link to="/notification-settings">
+                  <Bell className="w-4 h-4 mr-3" />
+                  Configurar Notificações
+                </Link>
+              </Button>
               {user?.role === "admin" && (
                 <>
                   <Button
