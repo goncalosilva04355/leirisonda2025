@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
+import { useAuth } from "@/components/AuthProvider";
 
 const statusOptions = [
   { value: "all", label: "Todos os Estados" },
