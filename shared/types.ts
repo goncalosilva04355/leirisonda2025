@@ -180,7 +180,7 @@ export interface AuthContextType {
 
 export interface CreateWorkData {
   workSheetNumber: string;
-  type: "piscina" | "manutencao" | "avaria" | "montagem";
+  type: "piscina" | "manutencao" | "avaria" | "montagem" | "furo_agua";
   clientName: string;
   address: string;
   contact: string;
@@ -194,4 +194,5 @@ export interface CreateWorkData {
   observations: string;
   workPerformed: string;
   workSheetCompleted: boolean;
+  furoAgua?: FuroAguaDetails;
 }
