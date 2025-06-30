@@ -365,12 +365,23 @@ export function CreateWork() {
             observations: "",
             workPerformed: "",
             workSheetCompleted: false,
+            furoAgua: {
+              profundidade: 0,
+              nivelAgua: 0,
+              profundidadeBomba: 0,
+              caudalFuro: 0,
+              tipoColuna: "PEAD",
+              diametroColuna: 0,
+              bombaModelo: "",
+              potenciaMotor: 0,
+              voltagem: "230v",
+            },
           });
 
           setIsSubmitting(false);
           setError(""); // Garantir que não há erros visíveis
 
-          console.log("✅ PROCESSO CONCLUÍDO - REDIRECIONANDO...");
+          console.log("�� PROCESSO CONCLUÍDO - REDIRECIONANDO...");
 
           // Navegação DEFINITIVA para Dashboard após guardar obra
           setTimeout(() => {
