@@ -120,6 +120,7 @@ export function Login() {
               fontSize: "24px",
               fontWeight: "bold",
               margin: "0 0 8px 0",
+              color: "white",
             }}
           >
             Leirisonda
