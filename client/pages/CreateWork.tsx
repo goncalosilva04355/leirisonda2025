@@ -527,6 +527,55 @@ export function CreateWork() {
                   ))}
                 </div>
               </div>
+
+              <div>
+                <Label>Usuários Atribuídos</Label>
+                <p className="text-sm text-gray-600 mt-1">
+                  Selecione os usuários responsáveis por esta obra
+                </p>
+                <div className="mt-2 space-y-2">
+                  <Select onValueChange={addAssignedUser}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecionar usuário..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableUsers
+                        .filter(
+                          (user) => !formData.assignedUsers.includes(user.id),
+                        )
+                        .map((user) => (
+                          <SelectItem key={user.id} value={user.id}>
+                            {user.name} ({user.email})
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  {formData.assignedUsers.map((userId) => {
+                    const assignedUser = availableUsers.find(
+                      (u) => u.id === userId,
+                    );
+                    return assignedUser ? (
+                      <div
+                        key={userId}
+                        className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded border border-blue-200"
+                      >
+                        <span className="text-blue-800">
+                          {assignedUser.name} ({assignedUser.email})
+                        </span>
+                        <Button
+                          type="button"
+                          onClick={() => removeAssignedUser(userId)}
+                          variant="ghost"
+                          size="sm"
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          Remover
+                        </Button>
+                      </div>
+                    ) : null;
+                  })}
+                </div>
+              </div>
             </div>
           </div>
 
