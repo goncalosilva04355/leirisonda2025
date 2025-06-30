@@ -184,9 +184,9 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                     >
                       <Icon className="mr-3 h-5 w-5" />
                       {item.name}
-                  </Link>
-                );
-              })}
+                    </Link>
+                  );
+                })}
 
                 <div className="pt-4 pb-2">
                   <div className="flex items-center px-4 py-2">
@@ -208,8 +208,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                 </Link>
               </>
             )}
-          </>
-        )}
+          </nav>
       </nav>
 
           {/* User info and logout */}
