@@ -29,7 +29,6 @@ import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
 import { MobileDeploy } from "./pages/MobileDeploy";
 import { SystemStatus } from "./pages/SystemStatus";
 import { UserSyncDiagnostic } from "./pages/UserSyncDiagnostic";
-import { DataSyncDiagnostic } from "./pages/DataSyncDiagnostic";
 import { NotFound } from "./pages/NotFound";
 
 function App() {
