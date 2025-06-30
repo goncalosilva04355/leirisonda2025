@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/components/AuthProvider";
 import { useNotifications } from "@/hooks/use-notifications";
-import { notificationService } from "@/services/NotificationService";
+import { NotificationService } from "@/services/NotificationService";
 
 interface DiagnosticResult {
   environment: string;
