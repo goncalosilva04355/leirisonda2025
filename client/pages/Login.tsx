@@ -97,8 +97,6 @@ export const Login = React.memo(function Login() {
     );
   }
 
-  const { user, login, isLoading, isInitialized } = authContext;
-
   // Aguardar inicialização se necessário
   if (!isInitialized && isLoading !== false) {
     return (
