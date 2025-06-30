@@ -324,6 +324,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setInitError(null);
 
         console.log("🔐 SIMPLE LOGIN for:", email);
+        console.log("🔐 Password received:", password);
+        console.log("🔐 Email exact match check:");
+        console.log("  - Input email:", `"${email}"`);
+        console.log("  - Expected Gonçalo:", `"gongonsilva@gmail.com"`);
+        console.log("  - Expected Alexandre:", `"alexkamaryta@gmail.com"`);
+        console.log(
+          "  - Email matches Gonçalo:",
+          email === "gongonsilva@gmail.com",
+        );
+        console.log(
+          "  - Email matches Alexandre:",
+          email === "alexkamaryta@gmail.com",
+        );
+        console.log("🔐 Password exact match check:");
+        console.log("  - Input password:", `"${password}"`);
+        console.log("  - Expected Gonçalo pass:", `"19867gsf"`);
+        console.log("  - Expected Alexandre pass:", `"69alexandre"`);
+        console.log("  - Password matches Gonçalo:", password === "19867gsf");
+        console.log(
+          "  - Password matches Alexandre:",
+          password === "69alexandre",
+        );
 
         // DIRECT LOGIN CHECK - No complexity
         if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
