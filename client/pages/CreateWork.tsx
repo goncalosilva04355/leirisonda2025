@@ -94,6 +94,7 @@ export function CreateWork() {
 
   const [vehicleInput, setVehicleInput] = useState("");
   const [technicianInput, setTechnicianInput] = useState("");
+  const [availableUsers] = useState(() => getAllUsers());
 
   function generateWorkSheetNumber(): string {
     const year = new Date().getFullYear();
@@ -522,7 +523,7 @@ export function CreateWork() {
                 <FileText className="w-5 h-5 text-blue-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900">
-                Observações e Trabalho
+                Observaç��es e Trabalho
               </h3>
             </div>
 
