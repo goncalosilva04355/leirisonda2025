@@ -119,6 +119,8 @@ export function CreateWork() {
     setError("");
     setIsSubmitting(true);
 
+    console.log("🚀 INICIANDO PROCESSO DE CRIAÇÃO DE OBRA");
+
     // Validation
     if (!formData.clientName.trim()) {
       setError("Por favor, introduza o nome do cliente.");
@@ -139,6 +141,8 @@ export function CreateWork() {
     }
 
     try {
+      console.log("📝 PREPARANDO DADOS DA OBRA...");
+
       // Prepare work data
       const workData = {
         workSheetNumber: formData.workSheetNumber,
@@ -167,15 +171,37 @@ export function CreateWork() {
         workSheetCompleted: formData.workSheetCompleted,
       };
 
+      console.log("📤 ENVIANDO OBRA PARA CRIAR:", {
+        cliente: workData.clientName,
+        folhaObra: workData.workSheetNumber,
+        tipo: workData.type,
+      });
+
       // Create work using Firebase sync
       const workId = await createWork(workData);
-      console.log("✅ Obra criada com sucesso:", workId);
+      console.log("✅ OBRA CRIADA COM SUCESSO ID:", workId);
 
-      // Navigate to works list
-      navigate("/works");
+      // Verificar se obra foi realmente salva
+      const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const savedWork = savedWorks.find((w: any) => w.id === workId);
+
+      if (savedWork) {
+        console.log(
+          "✅ OBRA VERIFICADA NO LOCALSTORAGE:",
+          savedWork.clientName,
+        );
+        console.log("🧭 REDIRECIONANDO PARA LISTA DE OBRAS...");
+
+        // Navigate to works list
+        navigate("/works");
+      } else {
+        throw new Error("Obra criada mas não encontrada no localStorage");
+      }
     } catch (err) {
-      console.error("❌ Erro ao criar obra:", err);
-      setError("Erro ao criar a obra. Tente novamente.");
+      console.error("❌ ERRO CRÍTICO AO CRIAR OBRA:", err);
+      setError(
+        `Erro ao criar a obra: ${err instanceof Error ? err.message : "Erro desconhecido"}. Tente novamente.`,
+      );
       setIsSubmitting(false);
     }
   };
