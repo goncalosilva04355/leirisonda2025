@@ -50,12 +50,38 @@ export function useFirebaseSync() {
       setIsOnline(false);
     };
 
+    // Custom event listener para cross-tab synchronization
+    const handleCrossTabSync = (event: CustomEvent) => {
+      console.log("🔄 Cross-tab sync triggered:", event.detail);
+      if (user && isFirebaseAvailable) {
+        triggerInstantSync("cross_tab_trigger");
+      }
+    };
+
+    // Listen for visibility changes to trigger sync when tab becomes active
+    const handleVisibilityChange = () => {
+      if (!document.hidden && user && isFirebaseAvailable && isOnline) {
+        console.log("👁️ Tab became visible - triggering sync...");
+        triggerInstantSync("tab_visible");
+      }
+    };
+
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
+    window.addEventListener(
+      "leirisonda_sync_trigger",
+      handleCrossTabSync as EventListener,
+    );
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
+      window.removeEventListener(
+        "leirisonda_sync_trigger",
+        handleCrossTabSync as EventListener,
+      );
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [user, isFirebaseAvailable]);
 
