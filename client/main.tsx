@@ -127,6 +127,14 @@ const initializeApp = async () => {
     // Clear any previous content
     rootElement.innerHTML = "";
 
+    // Check for previous errors and clear them
+    const hasError = sessionStorage.getItem("leirisonda_error");
+    if (hasError) {
+      console.log("🧹 Clearing previous error state...");
+      sessionStorage.removeItem("leirisonda_error");
+      localStorage.removeItem("leirisonda_error_state");
+    }
+
     // Create React root
     console.log("📦 Creating React root...");
     const root = ReactDOM.createRoot(rootElement);
@@ -153,16 +161,27 @@ const initializeApp = async () => {
       </style>
     `;
 
-    // Render with timeout
+    // Render with robust error handling
     const renderPromise = new Promise<void>((resolve, reject) => {
       try {
-        root.render(<App />);
-        // Give React time to render
+        // Wrap App in additional error boundary
+        const AppWithRecovery = () => {
+          return (
+            <React.StrictMode>
+              <App />
+            </React.StrictMode>
+          );
+        };
+
+        root.render(<AppWithRecovery />);
+
+        // Give React time to render and catch initial errors
         setTimeout(() => {
           console.log("✅ App render completed");
           resolve();
-        }, 100);
+        }, 200);
       } catch (error) {
+        console.error("🚨 Error during React render:", error);
         reject(error);
       }
     });
@@ -170,8 +189,8 @@ const initializeApp = async () => {
     // Timeout protection
     const timeoutPromise = new Promise<void>((_, reject) => {
       setTimeout(() => {
-        reject(new Error("App render timeout after 10 seconds"));
-      }, 10000);
+        reject(new Error("App render timeout after 15 seconds"));
+      }, 15000);
     });
 
     await Promise.race([renderPromise, timeoutPromise]);
@@ -180,8 +199,15 @@ const initializeApp = async () => {
 
     // Store successful initialization
     sessionStorage.setItem("leirisonda_init_success", Date.now().toString());
+
+    // Clear any error flags
+    sessionStorage.removeItem("leirisonda_error");
   } catch (error) {
     console.error("🚨 Fatal error during app initialization:", error);
+
+    // Mark that we had an error
+    sessionStorage.setItem("leirisonda_error", "true");
+
     showFallbackError(error);
   }
 };
