@@ -49,14 +49,85 @@ const statusOptions = [
 ];
 
 export function CreateWork() {
+  console.log("🏗️ CreateWork component iniciando...");
   const navigate = useNavigate();
-  const { user, getAllUsers } = useAuth();
-  const { createWork, isOnline, isSyncing } = useFirebaseSync();
+
+  // Use try-catch para capturar erros de contexto
+  let user, getAllUsers, createWork, isOnline, isSyncing;
+
+  try {
+    console.log("🔑 Tentando acessar contexto de autenticação...");
+    const authContext = useAuth();
+    console.log("🔥 Tentando acessar contexto do Firebase...");
+    const firebaseContext = useFirebaseSync();
+
+    user = authContext.user;
+    getAllUsers = authContext.getAllUsers;
+    createWork = firebaseContext.createWork;
+    isOnline = firebaseContext.isOnline ?? true; // Valor padrão
+    isSyncing = firebaseContext.isSyncing ?? false; // Valor padrão
+
+    console.log("✅ Contextos carregados com sucesso:", {
+      hasUser: !!user,
+      userEmail: user?.email,
+      hasGetAllUsers: !!getAllUsers,
+      hasCreateWork: !!createWork,
+      isOnline,
+      isSyncing,
+    });
+  } catch (error) {
+    console.error("❌ Erro ao acessar contextos:", error);
+    return (
+      <div className="p-6 max-w-md mx-auto mt-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-red-800 mb-2">
+            Erro de Contexto
+          </h2>
+          <p className="text-red-600 mb-4">
+            Erro ao carregar contextos da aplicação. Tente recarregar a página.
+          </p>
+          <div className="space-y-2">
+            <Button onClick={() => window.location.reload()} className="w-full">
+              Recarregar Página
+            </Button>
+            <Button
+              onClick={() => navigate("/dashboard")}
+              variant="outline"
+              className="w-full"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar ao Dashboard
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  // Verificar se o usuário existe e tem permissão
+  if (!user) {
+    return (
+      <div className="p-6 max-w-md mx-auto mt-8">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <h2 className="text-lg font-semibold text-yellow-800 mb-2">
+            Utilizador não encontrado
+          </h2>
+          <p className="text-yellow-600 mb-4">
+            Por favor, faça login novamente.
+          </p>
+          <Button onClick={() => navigate("/login")} variant="outline">
+            Ir para Login
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   // Verificar se o usuário tem permissão para criar obras
-  if (!user?.permissions.canCreateWorks) {
+  if (!user?.permissions?.canCreateWorks) {
     return (
       <div className="p-6 max-w-md mx-auto mt-8">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -95,7 +166,14 @@ export function CreateWork() {
 
   const [vehicleInput, setVehicleInput] = useState("");
   const [technicianInput, setTechnicianInput] = useState("");
-  const [availableUsers] = useState(() => getAllUsers());
+  const [availableUsers] = useState(() => {
+    try {
+      return getAllUsers ? getAllUsers() : [];
+    } catch (error) {
+      console.error("❌ Erro ao obter usuários:", error);
+      return [];
+    }
+  });
 
   function generateWorkSheetNumber(): string {
     const year = new Date().getFullYear();
@@ -121,6 +199,15 @@ export function CreateWork() {
     setIsSubmitting(true);
 
     console.log("🚀 INICIANDO PROCESSO DE CRIAÇÃO DE OBRA");
+
+    // Verificar se as funções necessárias estão disponíveis
+    if (!createWork) {
+      setError(
+        "Sistema de criação de obras não disponível. Tente recarregar a página.",
+      );
+      setIsSubmitting(false);
+      return;
+    }
 
     // Validation
     if (!formData.clientName.trim()) {
@@ -305,43 +392,51 @@ export function CreateWork() {
         </div>
 
         {/* Connection Status */}
-        <div className="flex items-center space-x-2">
-          {isOnline ? (
-            <>
-              <Wifi className="w-4 h-4 text-green-600" />
-              <span className="text-sm text-green-600">Online</span>
-              {isSyncing && (
-                <span className="text-xs text-gray-500">Sincronizando...</span>
-              )}
-            </>
-          ) : (
-            <>
-              <WifiOff className="w-4 h-4 text-orange-600" />
-              <span className="text-sm text-orange-600">Offline</span>
-            </>
-          )}
-        </div>
-
-        <div className="text-xs text-gray-500 text-right">
-          <div className="flex items-center justify-end space-x-2">
-            <div
-              className={`w-2 h-2 rounded-full ${isOnline ? "bg-green-500" : "bg-gray-400"}`}
-            ></div>
-            <span>
-              {isSyncing ? (
-                <span className="text-sm text-blue-600">Sincronizando...</span>
-              ) : isOnline ? (
+        {typeof isOnline !== "undefined" && (
+          <div className="flex items-center space-x-2">
+            {isOnline ? (
+              <>
+                <Wifi className="w-4 h-4 text-green-600" />
                 <span className="text-sm text-green-600">Online</span>
-              ) : (
+                {isSyncing && (
+                  <span className="text-xs text-gray-500">
+                    Sincronizando...
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                <WifiOff className="w-4 h-4 text-orange-600" />
                 <span className="text-sm text-orange-600">Offline</span>
-              )}
-            </span>
+              </>
+            )}
           </div>
-        </div>
+        )}
+
+        {typeof isOnline !== "undefined" && (
+          <div className="text-xs text-gray-500 text-right">
+            <div className="flex items-center justify-end space-x-2">
+              <div
+                className={`w-2 h-2 rounded-full ${isOnline ? "bg-green-500" : "bg-gray-400"}`}
+              ></div>
+              <span>
+                {isSyncing ? (
+                  <span className="text-sm text-blue-600">
+                    Sincronizando...
+                  </span>
+                ) : isOnline ? (
+                  <span className="text-sm text-green-600">Online</span>
+                ) : (
+                  <span className="text-sm text-orange-600">Offline</span>
+                )}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Offline Warning */}
-      {!isOnline && (
+      {typeof isOnline !== "undefined" && !isOnline && (
         <Alert className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
