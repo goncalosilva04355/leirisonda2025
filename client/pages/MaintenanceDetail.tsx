@@ -25,10 +25,23 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MaintenanceReport } from "@/components/MaintenanceReport";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
+import { useAuth } from "@/components/AuthProvider";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export function MaintenanceDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { maintenances, deleteMaintenance } = useFirebaseSync();
   const [maintenance, setMaintenance] = useState<PoolMaintenance | null>(null);
   const [loading, setLoading] = useState(true);
