@@ -190,7 +190,7 @@ export function Login() {
 
         {/* Form */}
         <div style={{ padding: "32px" }}>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} autoComplete="off">
             <div style={{ marginBottom: "20px" }}>
               <label
                 style={{
