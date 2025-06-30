@@ -69,113 +69,29 @@ export function WorkDetail() {
 
   const handleDelete = async () => {
     if (!work) {
-      console.error("❌ Erro: Obra não encontrada para eliminação");
       alert("Erro: Obra não encontrada");
       return;
     }
 
+    // Verificar permissões
+    if (!user?.permissions.canDeleteWorks) {
+      alert("Erro: Não tem permissão para eliminar obras");
+      return;
+    }
+
     try {
-      console.log(
-        `🗑️ INICIANDO ELIMINAÇÃO da obra: ${work.id} (${work.clientName})`,
-      );
+      // Eliminar a obra usando o hook Firebase
+      await deleteWork(work.id);
 
-      // Verificar se o utilizador tem permiss��es
-      if (!user?.permissions.canDeleteWorks) {
-        console.error("❌ Erro: Utilizador sem permissão para eliminar obras");
-        alert("Erro: Não tem permissão para eliminar obras");
-        return;
-      }
+      // Mostrar sucesso
+      alert(`Obra "${work.clientName}" eliminada com sucesso!`);
 
-      // Verificar se a obra existe nos dados locais
-      const storedWorks = localStorage.getItem("works");
-      let localWorks: Work[] = [];
-      if (storedWorks) {
-        localWorks = JSON.parse(storedWorks);
-      }
-
-      const workExists = localWorks.find((w) => w.id === work.id);
-      console.log(`📋 Obra existe localmente: ${workExists ? "SIM" : "NÃO"}`);
-
-      // Backup da obra antes de eliminar
-      const workBackup = { ...work };
-      console.log(`💾 Backup da obra criado: ${workBackup.workSheetNumber}`);
-
-      // Eliminar usando Firebase sync com tratamento defensivo
-      console.log("🔥 Chamando deleteWork via Firebase sync...");
-
-      // Usar Promise wrapper para capturar erros sem quebrar o fluxo
-      const deleteResult = await Promise.race([
-        deleteWork(work.id),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Timeout na eliminação")), 10000),
-        ),
-      ]).catch((error) => {
-        console.warn("⚠️ Erro durante eliminação, mas continuando:", error);
-        // Não fazer throw - deixar a verificação manual decidir
-        return { error: error.message };
-      });
-
-      console.log("✅ Processo de eliminação concluído");
-
-      // Verificar se foi realmente eliminada localmente (verificação manual)
-      let deletionSuccess = false;
-      const updatedWorks = localStorage.getItem("works");
-      if (updatedWorks) {
-        const updatedWorksList: Work[] = JSON.parse(updatedWorks);
-        const stillExists = updatedWorksList.find((w) => w.id === work.id);
-        deletionSuccess = !stillExists;
-
-        console.log(
-          `🔍 Verificação pós-eliminação: obra ainda existe = ${stillExists ? "SIM" : "NÃO"}`,
-        );
-
-        if (stillExists) {
-          console.warn(
-            "⚠️ ATENÇÃO: Obra ainda existe após eliminação - forçando eliminação local!",
-          );
-          // Forçar eliminação local se necessário
-          const filteredWorks = updatedWorksList.filter(
-            (w) => w.id !== work.id,
-          );
-          localStorage.setItem("works", JSON.stringify(filteredWorks));
-          localStorage.setItem(
-            "leirisonda_works",
-            JSON.stringify(filteredWorks),
-          );
-          console.log("🔧 Eliminação forçada localmente aplicada");
-          deletionSuccess = true;
-        }
-      } else {
-        // Se não há obras no localStorage, considera que foi eliminada
-        deletionSuccess = true;
-      }
-
-      if (deletionSuccess) {
-        console.log("🎉 OBRA ELIMINADA COM SUCESSO - Redirecionando...");
-
-        // Mostrar mensagem de sucesso
-        alert(`Obra "${work.clientName}" eliminada com sucesso!`);
-
-        // Navegar de volta à lista usando window.location para evitar problemas de roteamento
-        setTimeout(() => {
-          window.location.href = "/works";
-        }, 100);
-      } else {
-        throw new Error("Não foi possível confirmar a eliminação da obra");
-      }
+      // Navegação simples
+      window.location.href = "/works";
     } catch (error) {
-      console.error("❌ ERRO CRÍTICO ao eliminar obra:", error);
-      console.error("📄 Detalhes do erro:", {
-        message: error instanceof Error ? error.message : "Erro desconhecido",
-        workId: work.id,
-        workName: work.clientName,
-        userPermissions: user?.permissions,
-      });
-
-      // Mostrar erro amigável ao utilizador
-      alert(
-        `Erro ao eliminar obra: ${error instanceof Error ? error.message : "Erro desconhecido"}. Tente novamente.`,
-      );
+      // Erro simples
+      console.error("Erro ao eliminar obra:", error);
+      alert("Erro ao eliminar obra. Tente novamente.");
     }
   };
 
