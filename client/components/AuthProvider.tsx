@@ -287,7 +287,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log(`  • Permissão atual: ${Notification.permission}`);
 
             // Tentar inicializar
-            const initSuccess = await notificationService.initialize();
+            const initSuccess = await NotificationService.initialize();
             console.log(
               `🔔 Inicialização: ${initSuccess ? "✅ SUCESSO" : "❌ FALHA"}`,
             );
@@ -295,13 +295,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (initSuccess) {
               console.log("📊 Status após inicialização:");
               console.log(
-                `  • Inicializado: ${notificationService.getIsInitialized()}`,
+                `  • Inicializado: ${NotificationService.isInitialized}`,
               );
               console.log(`  • Permissão final: ${Notification.permission}`);
 
               // Executar diagnóstico completo para debug
               try {
-                const diagnostics = await notificationService.runDiagnostics();
+                const diagnostics = await NotificationService.runDiagnostics();
                 console.log("🔍 DIAGNÓSTICO COMPLETO:", diagnostics);
 
                 if (diagnostics.recommendations.length > 0) {
