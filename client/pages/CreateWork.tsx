@@ -505,6 +505,40 @@ export function CreateWork() {
     updateFormData("assignedUsers", newAssignedUsers);
   };
 
+  const runQuickDiagnostics = () => {
+    console.log("🔍 Executando diagnóstico rápido...");
+
+    const diagnostics = WorkSaveHelper.diagnose();
+    const consolidation = WorkSaveHelper.consolidateEmergencyWorks();
+    const sync = WorkSaveHelper.syncBackups();
+
+    console.log("📊 Resultados do diagnóstico:", {
+      diagnostics,
+      consolidation,
+      sync,
+    });
+
+    let message = `Diagnóstico executado:\n`;
+    message += `• Total de obras: ${diagnostics.totalWorks}\n`;
+    message += `• Obras principais: ${diagnostics.backupLocations.works}\n`;
+    message += `• Obras backup: ${diagnostics.backupLocations.leirisonda_works}\n`;
+
+    if (consolidation.consolidated > 0) {
+      message += `• ${consolidation.consolidated} obras de emergência consolidadas\n`;
+    }
+
+    if (sync.synced) {
+      message += `• Backups sincronizados: ${sync.details}\n`;
+    }
+
+    if (diagnostics.potentialIssues.length > 0) {
+      message += `• Problemas: ${diagnostics.potentialIssues.join(", ")}\n`;
+    }
+
+    alert(message);
+    setShowDiagnostics(false);
+  };
+
   return (
     <div className="space-y-8">
       {/* Header */}
