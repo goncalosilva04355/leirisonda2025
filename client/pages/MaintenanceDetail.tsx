@@ -236,6 +236,37 @@ export function MaintenanceDetail() {
               <span className="sm:hidden">Nova</span>
             </Button>
           </Link>
+
+          {user?.permissions.canDeleteMaintenance && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" className="flex-1 sm:flex-none">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  <span className="hidden sm:inline">Eliminar</span>
+                  <span className="sm:hidden">🗑️</span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirmar eliminação</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Tem a certeza que deseja eliminar a piscina "
+                    {maintenance.poolName}"? Esta ação não pode ser desfeita e
+                    irá eliminar todas as intervenções associadas.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDeleteMaintenance}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    Eliminar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </div>
       </div>
 
