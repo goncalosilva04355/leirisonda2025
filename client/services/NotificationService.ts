@@ -578,6 +578,132 @@ class NotificationServiceClass {
   getIsInitialized(): boolean {
     return this.isInitialized;
   }
+
+  // Método de diagnóstico completo para debug
+  async runDiagnostics(): Promise<{
+    environment: string;
+    isSupported: boolean;
+    isInitialized: boolean;
+    permission: NotificationPermission | null;
+    serviceWorkerStatus: string;
+    fcmTokenStatus: string;
+    firebaseStatus: string;
+    userTokens: Record<string, string>;
+    recommendations: string[];
+  }> {
+    const diagnostics = {
+      environment: Capacitor.isNativePlatform()
+        ? "Native (Capacitor)"
+        : "Web Browser",
+      isSupported: this.isSupported,
+      isInitialized: this.isInitialized,
+      permission: "Notification" in window ? Notification.permission : null,
+      serviceWorkerStatus: "Unknown",
+      fcmTokenStatus: "Unknown",
+      firebaseStatus: "Unknown",
+      userTokens: {},
+      recommendations: [] as string[],
+    };
+
+    try {
+      // Verificar Service Worker
+      if ("serviceWorker" in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        const fcmSW = registrations.find(
+          (reg) =>
+            reg.scope.includes("firebase-messaging-sw") ||
+            reg.active?.scriptURL.includes("firebase-messaging-sw"),
+        );
+
+        if (fcmSW) {
+          diagnostics.serviceWorkerStatus = fcmSW.active
+            ? "Active"
+            : "Inactive";
+        } else {
+          diagnostics.serviceWorkerStatus = "Not Registered";
+          diagnostics.recommendations.push(
+            "Service Worker para Firebase não está registrado",
+          );
+        }
+      } else {
+        diagnostics.serviceWorkerStatus = "Not Supported";
+        diagnostics.recommendations.push(
+          "Service Workers não são suportados neste browser",
+        );
+      }
+
+      // Verificar Firebase status
+      try {
+        if (this.messaging) {
+          diagnostics.firebaseStatus = "Initialized";
+
+          // Tentar obter token
+          try {
+            const token = await getToken(this.messaging);
+            diagnostics.fcmTokenStatus = token
+              ? "Success"
+              : "Failed - No Token";
+            if (!token) {
+              diagnostics.recommendations.push(
+                "Não foi possível obter token FCM - verifique VAPID key",
+              );
+            }
+          } catch (tokenError) {
+            diagnostics.fcmTokenStatus = `Error: ${tokenError}`;
+            diagnostics.recommendations.push(
+              "Erro ao obter token FCM - possível problema com VAPID key",
+            );
+          }
+        } else {
+          diagnostics.firebaseStatus = "Not Initialized";
+          diagnostics.recommendations.push(
+            "Firebase Messaging não foi inicializado",
+          );
+        }
+      } catch (firebaseError) {
+        diagnostics.firebaseStatus = `Error: ${firebaseError}`;
+        diagnostics.recommendations.push("Erro na inicialização do Firebase");
+      }
+
+      // Carregar tokens salvos
+      try {
+        diagnostics.userTokens = JSON.parse(
+          localStorage.getItem("userNotificationTokens") || "{}",
+        );
+      } catch (error) {
+        diagnostics.recommendations.push(
+          "Erro ao carregar tokens de usuários salvos",
+        );
+      }
+
+      // Verificar permissões
+      if (diagnostics.permission !== "granted") {
+        diagnostics.recommendations.push(
+          "Permissão para notificações não foi concedida",
+        );
+      }
+
+      // Verificar suporte geral
+      if (!diagnostics.isSupported) {
+        diagnostics.recommendations.push(
+          "Notificações não são suportadas neste dispositivo/browser",
+        );
+      }
+
+      // Recomendações específicas
+      if (diagnostics.recommendations.length === 0) {
+        diagnostics.recommendations.push(
+          "Sistema aparenta estar funcionando corretamente",
+        );
+      }
+    } catch (error) {
+      console.error("❌ Erro durante diagnóstico:", error);
+      diagnostics.recommendations.push(`Erro durante diagnóstico: ${error}`);
+    }
+
+    console.log("🔍 Diagnóstico completo:", diagnostics);
+    return diagnostics;
+  }
 }
 
 export const notificationService = new NotificationServiceClass();
