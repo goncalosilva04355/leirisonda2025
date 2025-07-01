@@ -8,14 +8,7 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 export function MaintenanceList() {
   const { user } = useAuth();
   const { maintenances } = useFirebaseSync();
-
-  // Limpeza simples e direta
-  React.useEffect(() => {
-    localStorage.removeItem("pool_maintenances");
-    localStorage.setItem("pool_maintenances", "[]");
-  }, []);
-
-  const hasMaintenances = false; // Forçar sempre vazio
+  const hasMaintenances = maintenances.length > 0;
 
   console.log("🏊 MaintenanceList: Carregando piscinas...", {
     original: maintenances.length,
