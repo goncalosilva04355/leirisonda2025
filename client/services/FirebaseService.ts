@@ -687,7 +687,7 @@ export class FirebaseService {
         localStorage.setItem("leirisonda_works", JSON.stringify(finalWorks));
       }
 
-      console.log("✅ Obra eliminada localmente com garantia");
+      console.log("�� Obra eliminada localmente com garantia");
 
       // ETAPA 2: Eliminação Firebase em background (não bloquear)
       if (this.isFirebaseAvailable) {
@@ -831,18 +831,32 @@ export class FirebaseService {
     }
   }
 
-  // Pool Maintenances Collection - SEMPRE VAZIO APÓS LIMPEZA
+  // Pool Maintenances Collection - NORMALIZADO
   async getMaintenances(): Promise<PoolMaintenance[]> {
-    // PRIMEIRO: Limpar tudo do Firebase
-    await this.clearAllFirebaseMaintenances();
+    if (!this.isFirebaseAvailable) {
+      return this.getLocalMaintenances();
+    }
 
-    // SEGUNDO: Limpar tudo do localStorage
-    localStorage.removeItem("pool_maintenances");
-    localStorage.removeItem("maintenances");
-    localStorage.removeItem("leirisonda_maintenances");
+    try {
+      const maintenancesRef = collection(db, "maintenances");
+      const q = query(maintenancesRef, orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+      const maintenances = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt:
+          doc.data().createdAt?.toDate?.()?.toISOString() ||
+          doc.data().createdAt,
+        updatedAt:
+          doc.data().updatedAt?.toDate?.()?.toISOString() ||
+          doc.data().updatedAt,
+      })) as PoolMaintenance[];
 
-    console.log("🧹 LIMPEZA TOTAL: Firebase + localStorage limpos");
-    return [];
+      return maintenances;
+    } catch (error) {
+      console.error("Error fetching maintenances from Firebase:", error);
+      return this.getLocalMaintenances();
+    }
   }
 
   private getLocalMaintenances(): PoolMaintenance[] {

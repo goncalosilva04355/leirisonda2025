@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// LIMPEZA DE EMERGÊNCIA - Remove TUDO imediatamente
-import "./utils/emergencyCleanup";
+// Sistema normalizado - sem limpeza automática
+// import "./utils/emergencyCleanup";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
