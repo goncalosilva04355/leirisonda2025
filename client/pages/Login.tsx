@@ -15,7 +15,6 @@ export const Login = React.memo(function Login() {
   const { user, login, isLoading, isInitialized } = useAuth();
 
   console.log("🔑 Login state:", {
-    hasAuthContext: !!authContext,
     user: !!user,
     hasLogin: !!login,
     isLoading,
