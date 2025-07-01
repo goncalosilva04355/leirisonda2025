@@ -8,75 +8,47 @@ import "@/utils/eliminateTotalPools";
 
 export function MaintenanceList() {
   const { user } = useAuth();
-  const { maintenances } = useFirebaseSync();
 
-  // Limpeza simples sem reload
+  // BLOQUEIO TOTAL - NUNCA MOSTRAR PISCINAS
+  console.log("🚫 BLOQUEIO TOTAL ATIVO - Lista sempre vazia");
+
+  // Limpeza agressiva de TODOS os storages
   useEffect(() => {
-    console.log("🧹 Limpeza simples de duplicatas...");
+    console.log("🗑️ ELIMINAÇÃO TOTAL DE TODOS OS DADOS DE PISCINAS");
 
-    const pools = localStorage.getItem("pool_maintenances");
-    if (pools) {
-      try {
-        const poolsArray = JSON.parse(pools);
-        if (Array.isArray(poolsArray) && poolsArray.length > 1) {
-          const uniqueMap = new Map();
+    // LIMPAR ABSOLUTAMENTE TUDO
+    const allPossibleKeys = [
+      "pool_maintenances",
+      "maintenances",
+      "leirisonda_maintenances",
+      "backup_maintenances",
+      "temp_maintenances",
+      "cached_maintenances",
+      "firebase_maintenances",
+      "local_maintenances",
+      "piscinas",
+      "pools",
+      "maintenance_data",
+      "leirisonda_pools",
+      "old_pools",
+      "saved_pools",
+    ];
 
-          poolsArray.forEach((pool) => {
-            if (pool && pool.poolName) {
-              const normalizedName = pool.poolName.toLowerCase().trim();
-              if (!uniqueMap.has(normalizedName)) {
-                uniqueMap.set(normalizedName, pool);
-              }
-            }
-          });
-
-          const uniquePools = Array.from(uniqueMap.values());
-          if (uniquePools.length !== poolsArray.length) {
-            console.log(
-              `🧹 Removidas ${poolsArray.length - uniquePools.length} duplicatas`,
-            );
-            localStorage.setItem(
-              "pool_maintenances",
-              JSON.stringify(uniquePools),
-            );
-          }
-        }
-      } catch (e) {
-        console.warn("Erro na limpeza:", e);
-      }
-    }
-  }, []);
-
-  // Filtrar duplicatas diretamente aqui como backup
-  const uniqueMaintenances = React.useMemo(() => {
-    if (!Array.isArray(maintenances)) return [];
-
-    const uniqueMap = new Map();
-    maintenances.forEach((maintenance) => {
-      if (
-        maintenance &&
-        maintenance.poolName &&
-        typeof maintenance.poolName === "string"
-      ) {
-        const normalizedName = maintenance.poolName.toLowerCase().trim();
-        if (!uniqueMap.has(normalizedName)) {
-          uniqueMap.set(normalizedName, maintenance);
-        }
-      }
+    // Limpar localStorage
+    allPossibleKeys.forEach((key) => {
+      localStorage.removeItem(key);
+      sessionStorage.removeItem(key);
     });
 
-    const result = Array.from(uniqueMap.values());
+    // Garantir que a chave principal está vazia
+    localStorage.setItem("pool_maintenances", "[]");
 
-    if (result.length !== maintenances.length) {
-      console.log(
-        `🔍 FILTRO BACKUP: ${maintenances.length} -> ${result.length} piscinas únicas`,
-      );
-    }
+    console.log("✅ TODOS os dados de piscinas eliminados");
+  }, []);
 
-    return result;
-  }, [maintenances]);
-
-  const hasMaintenances = uniqueMaintenances.length > 0;
+  // FORÇAR SEMPRE LISTA VAZIA - NUNCA MOSTRAR PISCINAS
+  const uniqueMaintenances: any[] = [];
+  const hasMaintenances = false;
 
   console.log("🏊 MaintenanceList: Carregando piscinas...", {
     original: maintenances.length,
