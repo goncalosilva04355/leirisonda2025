@@ -26,6 +26,33 @@ export function useFirebaseSync() {
   const [works, setWorks] = useState<Work[]>([]);
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
 
+  // Interceptor de duplicatas ultra-agressivo
+  const interceptDuplicates = (pools: PoolMaintenance[]): PoolMaintenance[] => {
+    if (!Array.isArray(pools)) return [];
+
+    const uniqueMap = new Map();
+
+    pools.forEach((pool) => {
+      if (pool && pool.poolName && typeof pool.poolName === "string") {
+        const normalizedName = pool.poolName.toLowerCase().trim();
+        // APENAS uma piscina por nome - sempre
+        if (!uniqueMap.has(normalizedName)) {
+          uniqueMap.set(normalizedName, pool);
+        }
+      }
+    });
+
+    const result = Array.from(uniqueMap.values());
+
+    if (result.length !== pools.length) {
+      console.log(
+        `🚨 HOOK INTERCEPTOR: Bloqueadas ${pools.length - result.length} duplicatas`,
+      );
+    }
+
+    return result;
+  };
+
   // Sistema melhorado de deduplicação ultra-robusta
   const setMaintenancesWithDedup = (newMaintenances: PoolMaintenance[]) => {
     if (!Array.isArray(newMaintenances)) {
@@ -33,57 +60,10 @@ export function useFirebaseSync() {
       return;
     }
 
-    // 1. Filtrar dados inválidos
-    const validMaintenances = newMaintenances.filter(
-      (m) =>
-        m &&
-        m.poolName &&
-        typeof m.poolName === "string" &&
-        m.poolName.trim().length > 0,
-    );
+    // Aplicar interceptor de duplicatas SEMPRE
+    const finalMaintenances = interceptDuplicates(newMaintenances);
 
-    // 2. Criar map para deduplicação por ID
-    const uniqueById = new Map();
-    validMaintenances.forEach((maintenance) => {
-      if (maintenance.id && !uniqueById.has(maintenance.id)) {
-        uniqueById.set(maintenance.id, maintenance);
-      }
-    });
-
-    // 3. Remover duplicados por nome (case-insensitive e trim)
-    const uniqueByName = new Map();
-    Array.from(uniqueById.values()).forEach((maintenance) => {
-      const normalizedName = maintenance.poolName.toLowerCase().trim();
-
-      if (!uniqueByName.has(normalizedName)) {
-        uniqueByName.set(normalizedName, maintenance);
-      } else {
-        // Se há duplicado por nome, manter o mais recente
-        const existing = uniqueByName.get(normalizedName);
-        const current = maintenance;
-
-        if (
-          new Date(current.updatedAt || current.createdAt) >
-          new Date(existing.updatedAt || existing.createdAt)
-        ) {
-          uniqueByName.set(normalizedName, current);
-          console.log(
-            `🔄 Substituindo ${normalizedName} por versão mais recente`,
-          );
-        }
-      }
-    });
-
-    const finalMaintenances = Array.from(uniqueByName.values());
-    const removedCount = newMaintenances.length - finalMaintenances.length;
-
-    if (removedCount > 0) {
-      console.log(
-        `🧹 DEDUP: Removidos ${removedCount} duplicados, restam ${finalMaintenances.length} piscinas únicas`,
-      );
-    }
-
-    // 4. Salvar no localStorage imediatamente
+    // Salvar no localStorage imediatamente
     localStorage.setItem(
       "pool_maintenances",
       JSON.stringify(finalMaintenances),
