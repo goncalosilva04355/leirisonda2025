@@ -65,6 +65,14 @@ export function CreateMaintenance() {
       if (!formData.poolName.trim()) {
         throw new Error("Nome da piscina é obrigatório");
       }
+
+      // BLOQUEIO MAGNOLIA - VALIDAÇÃO NO FRONTEND
+      if (formData.poolName.toLowerCase().includes("magnolia")) {
+        throw new Error(
+          "O nome 'Magnolia' não é permitido para piscinas. Por favor, escolha outro nome.",
+        );
+      }
+
       if (!formData.clientName.trim()) {
         throw new Error("Nome do cliente é obrigatório");
       }
