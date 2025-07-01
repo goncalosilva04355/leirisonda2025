@@ -102,21 +102,7 @@ export class FirebaseService {
 
     console.log("🏊 Criando nova piscina:", newMaintenance.poolName);
 
-    // Verificar duplicados localmente primeiro
-    const existingMaintenances = this.getLocalMaintenances();
-    const duplicate = existingMaintenances.find(
-      (m) =>
-        m.poolName?.toLowerCase().trim() ===
-        maintenanceData.poolName?.toLowerCase().trim(),
-    );
-
-    if (duplicate) {
-      throw new Error(
-        `Já existe uma piscina com o nome "${maintenanceData.poolName}"`,
-      );
-    }
-
-    // Criar apenas localmente para evitar duplicação
+    // Criar diretamente sem verificação rigorosa
     existingMaintenances.push(newMaintenance);
     localStorage.setItem(
       "pool_maintenances",
