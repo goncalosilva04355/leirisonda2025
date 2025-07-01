@@ -135,7 +135,7 @@ export function LoginInfo() {
       console.log("🔄 Sincronizando utilizadores globais...");
 
       // Primeiro força a criação dos utilizadores globais localmente
-      DefaultDataService.forceCleanUserSystem();
+      DefaultData.forceCleanUserSystem();
 
       // Se Firebase disponível, tenta sincronizar
       if (firebaseService.getFirebaseStatus().isAvailable && navigator.onLine) {
