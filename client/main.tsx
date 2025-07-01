@@ -7,6 +7,7 @@ import "./global.css";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { SimpleErrorBoundary } from "./components/SimpleErrorBoundary";
 import { AuthProvider } from "./components/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Layout } from "./components/Layout";
@@ -44,82 +45,87 @@ import { NotificationDiagnostic } from "./pages/NotificationDiagnostic";
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/system-status" element={<SystemStatus />} />
-            <Route
-              path="/emergency-diagnostic"
-              element={<EmergencyDiagnostic />}
-            />
+      <SimpleErrorBoundary>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/system-status" element={<SystemStatus />} />
+              <Route
+                path="/emergency-diagnostic"
+                element={<EmergencyDiagnostic />}
+              />
 
-            {/* Protected routes */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="works" element={<WorksList />} />
-              <Route path="works/:id" element={<WorkDetail />} />
-              <Route path="create-work" element={<CreateWork />} />
-              <Route path="edit-work/:id" element={<EditWork />} />
-              <Route path="users" element={<UsersList />} />
-              <Route path="create-user" element={<CreateUser />} />
-              <Route path="edit-user/:id" element={<EditUser />} />
-              <Route path="user-data" element={<UserDataManager />} />
+              {/* Protected routes */}
               <Route
-                path="user-sync-diagnostic"
-                element={<UserSyncDiagnostic />}
-              />
-              <Route path="debug-works" element={<DebugWorks />} />
-              <Route path="sync-monitor" element={<SyncMonitor />} />
-              <Route path="sync-diagnostic" element={<SyncDiagnostic />} />
-              <Route path="pool-maintenance" element={<MaintenanceList />} />
-              <Route
-                path="create-maintenance"
-                element={<CreateMaintenance />}
-              />
-              <Route
-                path="edit-maintenance/:id"
-                element={<EditMaintenance />}
-              />
-              <Route path="maintenance/:id" element={<MaintenanceDetail />} />
-              <Route
-                path="maintenance/:maintenanceId/new-intervention"
-                element={<CreateIntervention />}
-              />
-              <Route
-                path="maintenance/new-general"
-                element={<NewMaintenanceSelector />}
-              />
-              <Route path="mobile-deploy" element={<MobileDeploy />} />
-              <Route
-                path="old-pool-maintenance"
-                element={<PoolMaintenancePage />}
-              />
-              <Route
-                path="notification-settings"
-                element={<NotificationSettingsPage />}
-              />
-              <Route path="notification-test" element={<NotificationTest />} />
-              <Route
-                path="notification-diagnostic"
-                element={<NotificationDiagnostic />}
-              />
-            </Route>
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="works" element={<WorksList />} />
+                <Route path="works/:id" element={<WorkDetail />} />
+                <Route path="create-work" element={<CreateWork />} />
+                <Route path="edit-work/:id" element={<EditWork />} />
+                <Route path="users" element={<UsersList />} />
+                <Route path="create-user" element={<CreateUser />} />
+                <Route path="edit-user/:id" element={<EditUser />} />
+                <Route path="user-data" element={<UserDataManager />} />
+                <Route
+                  path="user-sync-diagnostic"
+                  element={<UserSyncDiagnostic />}
+                />
+                <Route path="debug-works" element={<DebugWorks />} />
+                <Route path="sync-monitor" element={<SyncMonitor />} />
+                <Route path="sync-diagnostic" element={<SyncDiagnostic />} />
+                <Route path="pool-maintenance" element={<MaintenanceList />} />
+                <Route
+                  path="create-maintenance"
+                  element={<CreateMaintenance />}
+                />
+                <Route
+                  path="edit-maintenance/:id"
+                  element={<EditMaintenance />}
+                />
+                <Route path="maintenance/:id" element={<MaintenanceDetail />} />
+                <Route
+                  path="maintenance/:maintenanceId/new-intervention"
+                  element={<CreateIntervention />}
+                />
+                <Route
+                  path="maintenance/new-general"
+                  element={<NewMaintenanceSelector />}
+                />
+                <Route path="mobile-deploy" element={<MobileDeploy />} />
+                <Route
+                  path="old-pool-maintenance"
+                  element={<PoolMaintenancePage />}
+                />
+                <Route
+                  path="notification-settings"
+                  element={<NotificationSettingsPage />}
+                />
+                <Route
+                  path="notification-test"
+                  element={<NotificationTest />}
+                />
+                <Route
+                  path="notification-diagnostic"
+                  element={<NotificationDiagnostic />}
+                />
+              </Route>
 
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
+              {/* Catch-all route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </SimpleErrorBoundary>
     </ErrorBoundary>
   );
 }

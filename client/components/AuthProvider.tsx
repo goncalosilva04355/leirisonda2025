@@ -102,7 +102,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        ensureGlobalUsers();
+        try {
+          ensureGlobalUsers();
+        } catch (error) {
+          console.error("Erro ao garantir utilizadores globais:", error);
+        }
 
         if (!mounted) return;
 
