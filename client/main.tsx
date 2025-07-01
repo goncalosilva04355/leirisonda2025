@@ -3,8 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// LIMPEZA PARA CRIAÇÃO - Permite criar piscinas novas
-import "./utils/clearForCreation";
+// Sistema limpo sem scripts de limpeza que causam erros
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
