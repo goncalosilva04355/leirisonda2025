@@ -9,11 +9,22 @@ export const Login = React.memo(function Login() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Usar useAuth normalmente sem try-catch problemático
-  const authContext = useAuth();
+  // Usar useAuth com tratamento defensivo
+  let authContext;
+  try {
+    authContext = useAuth();
+  } catch (error) {
+    console.error("Erro no useAuth:", error);
+    authContext = null;
+  }
 
-  // Extrair variáveis do contexto ANTES dos callbacks
-  const { user, login, isLoading, isInitialized } = authContext || {};
+  // Extrair variáveis do contexto ANTES dos callbacks com fallbacks
+  const { user, login, isLoading, isInitialized } = authContext || {
+    user: null,
+    login: null,
+    isLoading: false,
+    isInitialized: false,
+  };
 
   // Declarar todos os callbacks aqui (antes de qualquer return)
   const handleSubmit = useCallback(
