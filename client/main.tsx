@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// LIMPEZA AGRESSIVA - Remove todas as piscinas quadriplicadas
-import "./utils/aggressiveCleanup";
+// LIMPEZA NUCLEAR ÚNICA - Executa uma vez apenas
+import "./utils/nuclearCleanup";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";

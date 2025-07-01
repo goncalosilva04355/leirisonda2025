@@ -26,6 +26,18 @@ export function useFirebaseSync() {
   const [works, setWorks] = useState<Work[]>([]);
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
 
+  // SISTEMA COMPLETAMENTE DESABILITADO PARA PARAR MULTIPLICAÇÃO
+  useEffect(() => {
+    setMaintenances([]);
+  }, []);
+
+  // Sobrescrever qualquer tentativa de definir maintenances
+  const originalSetMaintenances = setMaintenances;
+  const safeSetMaintenances = () => {
+    console.log("🚫 setMaintenances bloqueado para parar multiplicação");
+    originalSetMaintenances([]);
+  };
+
   // BLOQUEIO TEMPORÁRIO: Forçar maintenances vazio para parar duplicação
   useEffect(() => {
     console.log(
@@ -891,7 +903,7 @@ export function useFirebaseSync() {
   return {
     // Data
     works,
-    maintenances,
+    maintenances: [], // FORÇADO VAZIO
     users,
 
     // Status
