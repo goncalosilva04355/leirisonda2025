@@ -79,14 +79,15 @@ export class FirebaseService {
   }
 
   private getLocalMaintenances(): PoolMaintenance[] {
-    // ELIMINAÇÃO DEFINITIVA - SEMPRE RETORNA LISTA VAZIA
-    console.log("🚫 getLocalMaintenances: BLOQUEADO - retornando lista vazia");
-
-    // Limpar storage para garantir
-    localStorage.setItem("pool_maintenances", "[]");
-    sessionStorage.removeItem("pool_maintenances");
-
-    return [];
+    try {
+      const maintenances = JSON.parse(
+        localStorage.getItem("pool_maintenances") || "[]",
+      );
+      return maintenances;
+    } catch (error) {
+      console.error("Error fetching local maintenances:", error);
+      return [];
+    }
   }
 
   async createMaintenance(
@@ -243,7 +244,7 @@ export class FirebaseService {
         "pool_maintenances",
         JSON.stringify(filteredMaintenances),
       );
-      console.log("���� Maintenance deleted locally:", maintenanceId);
+      console.log("📱 Maintenance deleted locally:", maintenanceId);
     } catch (error) {
       console.error("Error deleting local maintenance:", error);
     }
