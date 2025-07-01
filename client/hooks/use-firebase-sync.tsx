@@ -24,33 +24,7 @@ export function useFirebaseSync() {
 
   const { user } = authData;
   const [works, setWorks] = useState<Work[]>([]);
-  // FORÇAR LISTA VAZIA - ELIMINAÇÃO TOTAL
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
-
-  // INTERCEPTOR TOTAL - SEMPRE RETORNA LISTA VAZIA
-  const finalMaintenances: PoolMaintenance[] = [];
-
-  // Limpar storage sempre que o hook inicializar
-  useEffect(() => {
-    console.log("🗑️ HOOK: Forçando eliminação total de piscinas");
-
-    const allKeys = [
-      "pool_maintenances",
-      "maintenances",
-      "leirisonda_maintenances",
-      "backup_maintenances",
-      "temp_maintenances",
-      "cached_maintenances",
-    ];
-
-    allKeys.forEach((key) => {
-      localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
-    });
-
-    localStorage.setItem("pool_maintenances", JSON.stringify([]));
-    console.log("✅ HOOK: Todas as piscinas eliminadas - storage limpo");
-  }, []);
 
   // Interceptor de duplicatas ultra-agressivo
   const interceptDuplicates = (pools: PoolMaintenance[]): PoolMaintenance[] => {
