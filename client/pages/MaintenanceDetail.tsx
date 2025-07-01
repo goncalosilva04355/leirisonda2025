@@ -41,11 +41,13 @@ import {
 export function MaintenanceDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { maintenances, deleteMaintenance } = useFirebaseSync();
-  const [maintenance, setMaintenance] = useState<PoolMaintenance | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+
+  // PÁGINA BLOQUEADA - Não mostrar detalhes de piscinas fantasma
+  console.log("🚫 MaintenanceDetail bloqueado - redirecionando para lista");
+
+  React.useEffect(() => {
+    navigate("/pool-maintenance");
+  }, [navigate]);
 
   useEffect(() => {
     loadMaintenance();
