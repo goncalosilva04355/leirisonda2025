@@ -42,10 +42,14 @@
       content="Sistema de gestão de obras e manutenção de piscinas da Leirisonda"
     />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="/" />
     <meta
       property="og:image"
       content="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F4bab7908433647cf893ac37d2e1a2962?format=png&width=512"
     />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="/" />
 
     <!-- PWA Manifest -->
     <link
@@ -96,7 +100,15 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root" role="main" aria-label="Aplicação Leirisonda"></div>
+
+    <noscript>
+      <div style="text-align: center; padding: 20px; font-family: sans-serif">
+        <h1>Leirisonda - Gestão de Obras</h1>
+        <p>Esta aplicação requer JavaScript para funcionar.</p>
+        <p>Por favor, ative o JavaScript no seu navegador.</p>
+      </div>
+    </noscript>
 
     <!-- PWA Service Worker -->
     <script>
