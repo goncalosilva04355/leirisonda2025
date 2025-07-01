@@ -126,7 +126,7 @@ export function useFirebaseSync() {
       JSON.stringify(finalMaintenances),
     );
 
-    setMaintenances(finalMaintenances);
+    setRawMaintenances(finalMaintenances);
   };
 
   // Sistema normalizado sem interceptações que quebram React
@@ -798,7 +798,7 @@ export function useFirebaseSync() {
           try {
             localStorage.removeItem(`emergency_work_${workId}`);
             console.log(
-              `🗑️ Backup de emergência removido: emergency_work_${workId}`,
+              `🗑️ Backup de emerg��ncia removido: emergency_work_${workId}`,
             );
           } catch (emergencyError) {
             console.warn(
