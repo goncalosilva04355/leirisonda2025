@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// ELIMINADOR DE MAGNÓLIAS - Remove as 3 Magnólias
-import "./utils/cleanMagnolia";
+// LIMPEZA PARA CRIAÇÃO - Permite criar piscinas novas
+import "./utils/clearForCreation";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
