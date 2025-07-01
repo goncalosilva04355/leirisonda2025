@@ -134,7 +134,7 @@ export function useFirebaseSync() {
 
       try {
         console.log(
-          `��� SYNC ROBUSTO INICIADO (${reason}) - retry: ${retryCount}`,
+          `🔄 SYNC ROBUSTO INICIADO (${reason}) - retry: ${retryCount}`,
         );
 
         // 1. Verificar conectividade
@@ -219,9 +219,7 @@ export function useFirebaseSync() {
 
         // 7. Atualizar estado com dados sincronizados
         setWorks(latestWorks);
-        // FORÇA LIMPEZA: Sempre definir maintenances como array vazio
-        console.log("🧹 BLOQUEANDO CARREGAMENTO DE MAINTENANCES");
-        setMaintenances([]);
+        setMaintenances(latestMaintenances);
         setUsers(latestUsers);
 
         setLastSync(new Date());
@@ -274,12 +272,13 @@ export function useFirebaseSync() {
       const consolidatedWorks =
         firebaseService.consolidateWorksFromAllBackups();
 
+      const localMaintenances = JSON.parse(
+        localStorage.getItem("pool_maintenances") || "[]",
+      );
       const localUsers = JSON.parse(localStorage.getItem("users") || "[]");
 
       setWorks(consolidatedWorks);
-      // FORÇA LIMPEZA: Ignorar dados locais de maintenances
-      console.log("🧹 FALLBACK: Forçando maintenances vazio");
-      setMaintenances([]);
+      setMaintenances(localMaintenances);
       setUsers(localUsers);
 
       console.log(

@@ -671,7 +671,9 @@ export class FirebaseService {
       const stillExistsLocal = worksAfterLocal.find((w) => w.id === workId);
 
       if (stillExistsLocal && !localDeleteSuccess) {
-        console.error(`❌ FALHA CRÍTICA na eliminação local da obra ${workId}`);
+        console.error(
+          `❌ FALHA CRÍTICA na elimina��ão local da obra ${workId}`,
+        );
         throw new Error("Falha crítica na eliminação local da obra");
       }
 
@@ -845,8 +847,7 @@ export class FirebaseService {
     throw new Error("Criação de piscinas está temporariamente desabilitada");
   }
 
-  // VERSÃO ORIGINAL BLOQUEADA
-  async createMaintenanceOriginal(
+  async createMaintenance(
     maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
     const newMaintenance: PoolMaintenance = {
