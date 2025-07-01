@@ -26,11 +26,8 @@ export function useFirebaseSync() {
   const [works, setWorks] = useState<Work[]>([]);
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
 
-  // FORÇA LIMPEZA: Sempre retornar array vazio para maintenances
-  useEffect(() => {
-    console.log("🧹 FORÇANDO LIMPEZA: Definindo maintenances como array vazio");
-    setMaintenances([]);
-  }, []);
+  // Sistema reativado para permitir novas piscinas
+  console.log("✅ Sistema de piscinas reativado para novas criações");
   const [users, setUsers] = useState<User[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -137,7 +134,7 @@ export function useFirebaseSync() {
 
       try {
         console.log(
-          `🔄 SYNC ROBUSTO INICIADO (${reason}) - retry: ${retryCount}`,
+          `��� SYNC ROBUSTO INICIADO (${reason}) - retry: ${retryCount}`,
         );
 
         // 1. Verificar conectividade
@@ -211,7 +208,7 @@ export function useFirebaseSync() {
               );
             });
 
-            // Se é uma opera��ão de delete, forçar atualização imediata do estado
+            // Se é uma operação de delete, forçar atualização imediata do estado
             if (reason.includes("after_delete_work")) {
               console.log(
                 "🔄 Sync após DELETE - Atualizando estado imediatamente",

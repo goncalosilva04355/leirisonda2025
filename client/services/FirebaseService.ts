@@ -503,7 +503,7 @@ export class FirebaseService {
           }
         }
       } else {
-        console.error("����� BACKUP TRIPLO LOCAL FALHOU:", {
+        console.error("⚠��� BACKUP TRIPLO LOCAL FALHOU:", {
           backup1: !!savedWork1,
           backup2: !!savedWork2,
           backup3: !!savedWork3,
@@ -792,17 +792,48 @@ export class FirebaseService {
     }
   }
 
-  // Pool Maintenances Collection - BLOQUEADO
+  // Pool Maintenances Collection - REATIVADO PARA NOVAS PISCINAS
   async getMaintenances(): Promise<PoolMaintenance[]> {
-    console.log(
-      "🚫 BLOQUEIO TOTAL: getMaintenances sempre retorna array vazio",
-    );
-    return [];
+    if (!this.isFirebaseAvailable) {
+      return this.getLocalMaintenances();
+    }
+
+    try {
+      const maintenancesRef = collection(db, "maintenances");
+      const q = query(maintenancesRef, orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+      const maintenances = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt:
+          doc.data().createdAt?.toDate?.()?.toISOString() ||
+          doc.data().createdAt,
+        updatedAt:
+          doc.data().updatedAt?.toDate?.()?.toISOString() ||
+          doc.data().updatedAt,
+      })) as PoolMaintenance[];
+
+      // Apenas salvar localmente se há dados válidos
+      if (maintenances.length > 0) {
+        localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
+      }
+      return maintenances;
+    } catch (error) {
+      console.error("Error fetching maintenances from Firebase:", error);
+      return this.getLocalMaintenances();
+    }
   }
 
   private getLocalMaintenances(): PoolMaintenance[] {
-    console.log("🚫 BLOQUEIO: getLocalMaintenances sempre retorna array vazio");
-    return [];
+    try {
+      const maintenances = JSON.parse(
+        localStorage.getItem("pool_maintenances") || "[]",
+      );
+      return maintenances;
+    } catch (error) {
+      console.error("Error fetching local maintenances:", error);
+      return [];
+    }
   }
 
   async createMaintenance(
