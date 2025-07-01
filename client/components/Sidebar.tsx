@@ -27,6 +27,7 @@ interface SidebarProps {
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
+  { name: "Obras", href: "/works", icon: Briefcase },
   { name: "Nova Obra", href: "/create-work", icon: Plus },
   { name: "Manutenção Piscinas", href: "/pool-maintenance", icon: Droplets },
 ];
