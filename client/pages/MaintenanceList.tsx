@@ -7,14 +7,13 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function MaintenanceList() {
   const { user } = useAuth();
-  const { maintenances: rawMaintenances } = useFirebaseSync();
+  const { maintenances } = useFirebaseSync();
+  const hasMaintenances = maintenances.length > 0;
 
-  // BLOQUEIO: Sempre mostrar sistema limpo para evitar Magnólias
-  console.log(
-    "🚫 MaintenanceList: Forçando lista vazia para eliminar Magnólias",
-  );
-  const maintenances: any[] = []; // SEMPRE VAZIO
-  const hasMaintenances = false; // SEMPRE FALSO
+  console.log("🏊 MaintenanceList: Carregando piscinas...", {
+    count: maintenances.length,
+    hasMaintenances,
+  });
 
   return (
     <div className="space-y-6">
