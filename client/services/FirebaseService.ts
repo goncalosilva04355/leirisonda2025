@@ -182,6 +182,15 @@ export class FirebaseService {
     return newMaintenance.id;
   }
 
+  private getCurrentUserEmail(): string {
+    try {
+      const user = JSON.parse(localStorage.getItem("leirisonda_user") || "{}");
+      return user.email || "unknown";
+    } catch {
+      return "unknown";
+    }
+  }
+
   private deduplicateMaintenances(
     maintenances: PoolMaintenance[],
   ): PoolMaintenance[] {
