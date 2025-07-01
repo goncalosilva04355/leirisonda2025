@@ -80,12 +80,42 @@ export class FirebaseService {
 
   private getLocalMaintenances(): PoolMaintenance[] {
     try {
-      const maintenances = JSON.parse(
+      // 1. Tentar carregar dados partilhados globais primeiro
+      const sharedData = localStorage.getItem("shared_pool_data");
+      if (sharedData) {
+        const parsed = JSON.parse(sharedData);
+        if (parsed.pools && Array.isArray(parsed.pools)) {
+          console.log(
+            `🌐 Carregando ${parsed.pools.length} piscinas partilhadas (atualizadas por ${parsed.updatedBy})`,
+          );
+          return parsed.pools;
+        }
+      }
+
+      // 2. Fallback para dados locais
+      const localMaintenances = JSON.parse(
         localStorage.getItem("pool_maintenances") || "[]",
       );
-      return maintenances;
+
+      // 3. Verificar dados globais como backup
+      const globalMaintenances = JSON.parse(
+        localStorage.getItem("global_pool_maintenances") || "[]",
+      );
+
+      // Usar o maior conjunto de dados
+      if (globalMaintenances.length > localMaintenances.length) {
+        console.log(
+          `🌐 Usando dados globais: ${globalMaintenances.length} piscinas`,
+        );
+        return globalMaintenances;
+      }
+
+      console.log(
+        `📱 Usando dados locais: ${localMaintenances.length} piscinas`,
+      );
+      return localMaintenances;
     } catch (error) {
-      console.error("Error fetching local maintenances:", error);
+      console.error("Error fetching maintenances:", error);
       return [];
     }
   }
