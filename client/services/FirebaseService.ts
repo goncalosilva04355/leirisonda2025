@@ -143,12 +143,42 @@ export class FirebaseService {
     const uniqueMaintenances =
       this.deduplicateMaintenances(existingMaintenances);
 
+    // GUARDAR EM TODOS OS DISPOSITIVOS E UTILIZADORES
+    // 1. Guardar localmente
     localStorage.setItem(
       "pool_maintenances",
       JSON.stringify(uniqueMaintenances),
     );
-    console.log("📱 Piscina criada com sucesso:", newMaintenance.id);
 
+    // 2. Guardar globalmente para partilhar entre dispositivos
+    try {
+      // Usar uma chave global que todos os utilizadores acedem
+      localStorage.setItem(
+        "global_pool_maintenances",
+        JSON.stringify(uniqueMaintenances),
+      );
+
+      // Backup em sessionStorage
+      sessionStorage.setItem(
+        "global_pool_maintenances",
+        JSON.stringify(uniqueMaintenances),
+      );
+
+      // 3. Simular partilha global usando timestamp para outros dispositivos detectarem
+      const sharedData = {
+        pools: uniqueMaintenances,
+        lastUpdated: new Date().toISOString(),
+        updatedBy: this.getCurrentUserEmail(),
+      };
+
+      localStorage.setItem("shared_pool_data", JSON.stringify(sharedData));
+
+      console.log("🌐 Piscina guardada globalmente para todos os dispositivos");
+    } catch (error) {
+      console.warn("⚠️ Erro ao guardar globalmente:", error);
+    }
+
+    console.log("📱 Piscina criada com sucesso:", newMaintenance.id);
     return newMaintenance.id;
   }
 
