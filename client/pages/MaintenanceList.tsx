@@ -11,19 +11,19 @@ export function MaintenanceList() {
   const { maintenances } = useFirebaseSync();
   const hasMaintenances = maintenances.length > 0;
 
-  // Limpeza automática de duplicadas ao carregar
+  // Limpeza NUCLEAR de duplicadas ao carregar
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log("🧹 Executando limpeza preventiva de duplicadas...");
-      const result = cleanPoolDuplicates();
-      if (result.success && result.cleaned > 0) {
-        console.log(
-          `✅ Limpeza preventiva: ${result.cleaned} duplicadas removidas`,
-        );
-        // Recarregar página para mostrar dados limpos
+      console.log("💥 Executando limpeza NUCLEAR de duplicadas...");
+      const result = nuclearCleanDuplicates();
+      console.log(`💥 Limpeza nuclear resultado:`, result);
+
+      // Sempre recarregar após limpeza nuclear para garantir estado limpo
+      setTimeout(() => {
+        console.log("🔄 Recarregando página após limpeza nuclear...");
         window.location.reload();
-      }
-    }, 1000);
+      }, 500);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
