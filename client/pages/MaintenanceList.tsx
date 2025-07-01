@@ -7,8 +7,12 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function MaintenanceList() {
   const { user } = useAuth();
-  const { maintenances } = useFirebaseSync();
-  const hasMaintenances = maintenances.length > 0;
+
+  // FORÇAR SISTEMA VAZIO - IGNORAR QUALQUER DADO
+  const maintenances: any[] = [];
+  const hasMaintenances = false;
+
+  console.log("🚫 MAINTENANCELIST: Forçando exibição vazia - dados ignorados");
 
   console.log("🏊 MaintenanceList: Carregando piscinas...", {
     original: maintenances.length,
