@@ -33,8 +33,9 @@ export function Dashboard() {
 
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { works, maintenances, isOnline, isSyncing, lastSync, syncData } =
-    useFirebaseSync();
+  const { works, isOnline, isSyncing, lastSync, syncData } = useFirebaseSync();
+  // BLOQUEIO: Forçar maintenances vazio para não mostrar piscinas fantasma
+  const maintenances: any[] = [];
   const { checkPendingWorks } = useNotifications();
 
   const [stats, setStats] = useState<DashboardStats>({
@@ -294,8 +295,9 @@ export function Dashboard() {
   const getUpcomingMaintenances = () => {
     if (!maintenances) return [];
 
-    // Filter only active maintenances that have a next maintenance date
-    const activeMaintances = maintenances.filter(
+  // BLOQUEADO: Não mostrar manutenções
+  console.log("🚫 getUpcomingMaintenances bloqueado - retornando array vazio");
+  const activeMaintances = [];
       (m: any) =>
         m.status === "active" && getNextMaintenanceDate(m) !== "A definir",
     );
