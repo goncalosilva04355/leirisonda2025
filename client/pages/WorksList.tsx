@@ -234,7 +234,7 @@ export function WorksList() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <Input
-              placeholder="Pesquisar por cliente, folha obra ou morada..."
+              placeholder="Pesquisar por cliente, folha de obra ou morada..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -269,7 +269,7 @@ export function WorksList() {
 
           <Select value={worksheetFilter} onValueChange={setWorksheetFilter}>
             <SelectTrigger>
-              <SelectValue placeholder="Filtrar por folha obra" />
+              <SelectValue placeholder="Filtrar por folha de obra" />
             </SelectTrigger>
             <SelectContent>
               {worksheetOptions.map((option) => (
@@ -348,7 +348,7 @@ export function WorksList() {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
                         <div>
-                          <span className="font-medium">Folha Obra:</span>{" "}
+                          <span className="font-medium">Folha de Obra:</span>{" "}
                           {work.workSheetNumber}
                         </div>
                         <div>
@@ -357,24 +357,30 @@ export function WorksList() {
                         </div>
                         <div>
                           <span className="font-medium">Entrada:</span>{" "}
-                          {format(
-                            new Date(work.entryTime),
-                            "dd/MM/yyyy HH:mm",
-                            {
-                              locale: pt,
-                            },
-                          )}
+                          {work.entryTime &&
+                          !isNaN(new Date(work.entryTime).getTime())
+                            ? format(
+                                new Date(work.entryTime),
+                                "dd/MM/yyyy HH:mm",
+                                {
+                                  locale: pt,
+                                },
+                              )
+                            : "Data inválida"}
                         </div>
                         {work.exitTime && (
                           <div>
                             <span className="font-medium">Saída:</span>{" "}
-                            {format(
-                              new Date(work.exitTime),
-                              "dd/MM/yyyy HH:mm",
-                              {
-                                locale: pt,
-                              },
-                            )}
+                            {work.exitTime &&
+                            !isNaN(new Date(work.exitTime).getTime())
+                              ? format(
+                                  new Date(work.exitTime),
+                                  "dd/MM/yyyy HH:mm",
+                                  {
+                                    locale: pt,
+                                  },
+                                )
+                              : "Data inválida"}
                           </div>
                         )}
                         <div>

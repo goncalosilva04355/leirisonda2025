@@ -1,49 +1,72 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 
-export function Login() {
+export const Login = React.memo(function Login() {
+  console.log("🔑 Login component renderizando...");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  let authContext;
-  try {
-    authContext = useAuth();
+  // Usar useAuth normalmente
+  const { user, login, isLoading, isInitialized } = useAuth();
 
-    // Verificar se o contexto foi inicializado corretamente
-    if (!authContext || typeof authContext.login !== "function") {
-      throw new Error("AuthContext not properly initialized");
-    }
-  } catch (error) {
-    console.error("❌ Erro ao acessar AuthContext:", error);
+  console.log("🔑 Login state:", {
+    user: !!user,
+    hasLogin: !!login,
+    isLoading,
+    isInitialized,
+  });
 
-    // Se falhar múltiplas vezes, tentar recarregar a página
-    const errorCount = parseInt(
-      sessionStorage.getItem("login_auth_errors") || "0",
-    );
-    sessionStorage.setItem("login_auth_errors", String(errorCount + 1));
+  // Declarar todos os callbacks aqui (antes de qualquer return)
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setError("");
+      setIsSubmitting(true);
 
-    if (errorCount >= 3) {
-      console.warn("⚠️ Múltiplos erros de AuthContext, a recarregar...");
-      sessionStorage.removeItem("login_auth_errors");
-      setTimeout(() => window.location.reload(), 1000);
-    }
+      if (!email || !password) {
+        setError("Por favor, preencha todos os campos.");
+        setIsSubmitting(false);
+        return;
+      }
 
-    // Fallback seguro para evitar crash
-    authContext = {
-      user: null,
-      login: async () => false,
-      logout: () => {},
-      isLoading: false,
-      isInitialized: false,
-      getAllUsers: () => [],
-    };
-  }
+      try {
+        if (login) {
+          const success = await login(email, password);
+          if (!success) {
+            setError("Email ou palavra-passe incorretos.");
+          }
+        }
+      } catch (err) {
+        setError("Erro ao iniciar sessão. Tente novamente.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [email, password, login],
+  );
 
-  const { user, login, isLoading, isInitialized } = authContext;
+  const togglePassword = useCallback(() => {
+    setShowPassword(!showPassword);
+  }, [showPassword]);
+
+  const handleEmailChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+    },
+    [],
+  );
+
+  const handlePasswordChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value);
+    },
+    [],
+  );
 
   // Aguardar inicialização se necessário
   if (!isInitialized && isLoading !== false) {
@@ -59,13 +82,10 @@ export function Login() {
           padding: "20px",
           color: "white",
           fontSize: "18px",
+          fontFamily: "Open Sans, sans-serif",
         }}
       >
-        <div
-          style={{
-            textAlign: "center",
-          }}
-        >
+        <div style={{ textAlign: "center" }}>
           <div
             style={{
               width: "40px",
@@ -87,30 +107,6 @@ export function Login() {
   if (user) {
     return <Navigate to="/dashboard" replace />;
   }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsSubmitting(true);
-
-    if (!email || !password) {
-      setError("Por favor, preencha todos os campos.");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const success = await login(email, password);
-
-      if (!success) {
-        setError("Email ou palavra-passe incorretos.");
-      }
-    } catch (err) {
-      setError("Erro ao iniciar sessão. Tente novamente.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div
@@ -206,7 +202,7 @@ export function Login() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 placeholder="Email de acesso"
                 disabled={isSubmitting}
                 autoComplete="off"
@@ -243,7 +239,7 @@ export function Login() {
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   placeholder="Palavra-passe"
                   disabled={isSubmitting}
                   autoComplete="new-password"
@@ -264,7 +260,7 @@ export function Login() {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={togglePassword}
                   style={{
                     position: "absolute",
                     right: "16px",
@@ -365,4 +361,4 @@ export function Login() {
       `}</style>
     </div>
   );
-}
+});

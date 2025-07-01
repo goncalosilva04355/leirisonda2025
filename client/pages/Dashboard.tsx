@@ -31,65 +31,20 @@ import { pt } from "date-fns/locale";
 export function Dashboard() {
   console.log("🏠 Dashboard component iniciando...");
 
-  // PROTEÇÃO MÁXIMA: Try-catch para contextos
-  let user,
-    navigate,
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const {
     works,
-    maintenances,
+    maintenances: rawMaintenances,
     isOnline,
     isSyncing,
     lastSync,
-    syncData;
-
-  try {
-    const authContext = useAuth();
-    user = authContext.user;
-    console.log("✅ Auth context carregado:", { hasUser: !!user });
-  } catch (authError) {
-    console.error("❌ Erro no auth context:", authError);
-    user = null;
-  }
-
-  try {
-    navigate = useNavigate();
-    console.log("✅ Navigate hook carregado");
-  } catch (navError) {
-    console.error("❌ Erro no navigate hook:", navError);
-    navigate = () => console.warn("Navigate não disponível");
-  }
-
-  try {
-    const firebaseContext = useFirebaseSync();
-    works = firebaseContext.works || [];
-    maintenances = firebaseContext.maintenances || [];
-    isOnline = firebaseContext.isOnline ?? true;
-    isSyncing = firebaseContext.isSyncing ?? false;
-    lastSync = firebaseContext.lastSync;
-    syncData = firebaseContext.syncData || (() => Promise.resolve());
-    console.log("✅ Firebase context carregado:", {
-      worksCount: works.length,
-      maintenancesCount: maintenances.length,
-    });
-  } catch (firebaseError) {
-    console.error("❌ Erro no firebase context:", firebaseError);
-    works = [];
-    maintenances = [];
-    isOnline = false;
-    isSyncing = false;
-    lastSync = undefined;
-    syncData = () => Promise.resolve();
-  }
-
-  // Hook de notificações
-  let checkPendingWorks;
-  try {
-    const notificationsContext = useNotifications();
-    checkPendingWorks = notificationsContext.checkPendingWorks;
-    console.log("✅ Notifications context carregado");
-  } catch (notificationsError) {
-    console.error("❌ Erro no notifications context:", notificationsError);
-    checkPendingWorks = () => Promise.resolve([]);
-  }
+    syncData,
+  } = useFirebaseSync();
+  // Filtro simples: sempre mostrar array vazio para maintenances no dashboard
+  const maintenances: any[] = [];
+  console.log("🏠 Dashboard: maintenances filtrado para vazio");
+  const { checkPendingWorks } = useNotifications();
 
   const [stats, setStats] = useState<DashboardStats>({
     totalWorks: 0,
@@ -144,17 +99,10 @@ export function Dashboard() {
     try {
       console.log("📊 Carregando dados do dashboard...");
       loadDashboardData();
-
-      // Limpar marcação de obra criada quando Dashboard carrega
-      if (sessionStorage.getItem("just_created_work") === "true") {
-        console.log("🧹 Limpando marcação de obra criada");
-        sessionStorage.removeItem("just_created_work");
-      }
     } catch (error) {
       console.error("❌ Erro ao carregar dados do dashboard:", error);
-      // Não fazer throw - continuar sem quebrar
     }
-  }, [works, maintenances]); // React to Firebase data changes
+  }, [works]); // Only depend on works to prevent infinite loop
 
   useEffect(() => {
     if (searchTerm.trim()) {
@@ -346,22 +294,9 @@ export function Dashboard() {
   };
 
   const getUpcomingMaintenances = () => {
-    if (!maintenances) return [];
-
-    // Filter only active maintenances that have a next maintenance date
-    const activeMaintances = maintenances.filter(
-      (m: any) =>
-        m.status === "active" && getNextMaintenanceDate(m) !== "A definir",
-    );
-
-    // Sort by days until maintenance (closest first, including overdue)
-    return activeMaintances
-      .sort((a: any, b: any) => {
-        const daysA = getDaysUntilMaintenance(a);
-        const daysB = getDaysUntilMaintenance(b);
-        return daysA - daysB;
-      })
-      .slice(0, 5); // Show only next 5 maintenances
+    // BLOQUEIO PERMANENTE: NUNCA retorna piscinas
+    console.log("🚫 getUpcomingMaintenances PERMANENTEMENTE bloqueado");
+    return [];
   };
 
   return (
@@ -697,7 +632,7 @@ export function Dashboard() {
             )}
           </div>
 
-          {/* Manutenções Próximas */}
+          {/* Manutenç��es Próximas */}
           <div className="card-leirisonda">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
@@ -935,7 +870,7 @@ export function Dashboard() {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Cliente, folha obra, morada..."
+                  placeholder="Cliente, folha de obra, morada..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="input-leirisonda text-sm"

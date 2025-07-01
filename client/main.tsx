@@ -5,6 +5,7 @@ import "./global.css";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { SimpleErrorBoundary } from "./components/SimpleErrorBoundary";
 import { AuthProvider } from "./components/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Layout } from "./components/Layout";
@@ -23,6 +24,7 @@ import { UserDataManager } from "./pages/UserDataManager";
 import { PoolMaintenancePage } from "./pages/PoolMaintenance";
 import { MaintenanceList } from "./pages/MaintenanceList";
 import { CreateMaintenance } from "./pages/CreateMaintenance";
+import { EditMaintenance } from "./pages/EditMaintenance";
 import { MaintenanceDetail } from "./pages/MaintenanceDetail";
 import { CreateIntervention } from "./pages/CreateIntervention";
 import { NewMaintenanceSelector } from "./pages/NewMaintenanceSelector";
@@ -41,135 +43,105 @@ import { NotificationDiagnostic } from "./pages/NotificationDiagnostic";
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/system-status" element={<SystemStatus />} />
-            <Route
-              path="/emergency-diagnostic"
-              element={<EmergencyDiagnostic />}
-            />
+      <SimpleErrorBoundary>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/system-status" element={<SystemStatus />} />
+              <Route
+                path="/emergency-diagnostic"
+                element={<EmergencyDiagnostic />}
+              />
 
-            {/* Protected routes */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="works" element={<WorksList />} />
-              <Route path="works/:id" element={<WorkDetail />} />
-              <Route path="create-work" element={<CreateWork />} />
-              <Route path="edit-work/:id" element={<EditWork />} />
-              <Route path="users" element={<UsersList />} />
-              <Route path="create-user" element={<CreateUser />} />
-              <Route path="edit-user/:id" element={<EditUser />} />
-              <Route path="user-data" element={<UserDataManager />} />
+              {/* Protected routes */}
               <Route
-                path="user-sync-diagnostic"
-                element={<UserSyncDiagnostic />}
-              />
-              <Route path="debug-works" element={<DebugWorks />} />
-              <Route path="sync-monitor" element={<SyncMonitor />} />
-              <Route path="sync-diagnostic" element={<SyncDiagnostic />} />
-              <Route path="pool-maintenance" element={<MaintenanceList />} />
-              <Route
-                path="create-maintenance"
-                element={<CreateMaintenance />}
-              />
-              <Route path="maintenance/:id" element={<MaintenanceDetail />} />
-              <Route
-                path="maintenance/:maintenanceId/new-intervention"
-                element={<CreateIntervention />}
-              />
-              <Route
-                path="maintenance/new-general"
-                element={<NewMaintenanceSelector />}
-              />
-              <Route path="mobile-deploy" element={<MobileDeploy />} />
-              <Route
-                path="old-pool-maintenance"
-                element={<PoolMaintenancePage />}
-              />
-              <Route
-                path="notification-settings"
-                element={<NotificationSettingsPage />}
-              />
-              <Route path="notification-test" element={<NotificationTest />} />
-              <Route
-                path="notification-diagnostic"
-                element={<NotificationDiagnostic />}
-              />
-            </Route>
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="works" element={<WorksList />} />
+                <Route path="works/:id" element={<WorkDetail />} />
+                <Route path="create-work" element={<CreateWork />} />
+                <Route path="edit-work/:id" element={<EditWork />} />
+                <Route path="users" element={<UsersList />} />
+                <Route path="create-user" element={<CreateUser />} />
+                <Route path="edit-user/:id" element={<EditUser />} />
+                <Route path="user-data" element={<UserDataManager />} />
+                <Route
+                  path="user-sync-diagnostic"
+                  element={<UserSyncDiagnostic />}
+                />
+                <Route path="debug-works" element={<DebugWorks />} />
+                <Route path="sync-monitor" element={<SyncMonitor />} />
+                <Route path="sync-diagnostic" element={<SyncDiagnostic />} />
+                <Route path="pool-maintenance" element={<MaintenanceList />} />
+                <Route
+                  path="create-maintenance"
+                  element={<CreateMaintenance />}
+                />
+                <Route
+                  path="edit-maintenance/:id"
+                  element={<EditMaintenance />}
+                />
+                <Route path="maintenance/:id" element={<MaintenanceDetail />} />
+                <Route
+                  path="maintenance/:maintenanceId/new-intervention"
+                  element={<CreateIntervention />}
+                />
+                <Route
+                  path="maintenance/new-general"
+                  element={<NewMaintenanceSelector />}
+                />
+                <Route path="mobile-deploy" element={<MobileDeploy />} />
+                <Route
+                  path="old-pool-maintenance"
+                  element={<PoolMaintenancePage />}
+                />
+                <Route
+                  path="notification-settings"
+                  element={<NotificationSettingsPage />}
+                />
+                <Route
+                  path="notification-test"
+                  element={<NotificationTest />}
+                />
+                <Route
+                  path="notification-diagnostic"
+                  element={<NotificationDiagnostic />}
+                />
+              </Route>
 
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
+              {/* Catch-all route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </SimpleErrorBoundary>
     </ErrorBoundary>
   );
 }
 
-// Simple and robust initialization
+// Simple and reliable initialization
 const initializeApp = () => {
   try {
-    console.log("🚀 Starting Leirisonda...");
-
-    // Check for problematic URLs and redirect to safe route
-    const currentUrl = window.location.href;
-    const currentPath = window.location.pathname + window.location.search;
-
-    console.log("📍 Current URL:", currentUrl);
-    console.log("📍 Current path:", currentPath);
-
-    // Se estiver numa URL problemática que causa loop, redirecionar para login/dashboard
-    if (
-      currentPath.includes("/works?status=pendente") ||
-      currentPath.includes("/works?") ||
-      currentPath.includes("status=pendente")
-    ) {
-      console.log("⚠️ Detected problematic URL, redirecting to safe route...");
-      window.history.replaceState({}, "", "/login");
-    }
-
-    // Verify DOM is ready
-    if (document.readyState === "loading") {
-      console.log("⏳ DOM still loading, waiting...");
-      document.addEventListener("DOMContentLoaded", initializeApp);
-      return;
-    }
-
     const rootElement = document.getElementById("root");
     if (!rootElement) {
       throw new Error("Root element not found");
     }
 
-    // Check for React availability
-    if (!React || !ReactDOM) {
-      throw new Error("React or ReactDOM not available");
-    }
-
-    // Clear any previous content
-    rootElement.innerHTML = "";
-
-    // Create React root and render with strict mode
     const root = ReactDOM.createRoot(rootElement);
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>,
-    );
+    root.render(<App />);
 
-    console.log("✅ Leirisonda loaded successfully!");
+    console.log("✅ Leirisonda carregada com sucesso!");
   } catch (error) {
-    console.error("❌ Error loading app:", error);
+    console.error("❌ Erro ao carregar aplicação:", error);
     showFallbackError(error);
   }
 };

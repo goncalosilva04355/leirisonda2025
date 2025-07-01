@@ -7,7 +7,7 @@ import {
   Trash2,
   RefreshCw,
 } from "lucide-react";
-import { DefaultDataService } from "@/services/DefaultData";
+import { DefaultData } from "@/services/DefaultData";
 import { firebaseService } from "@/services/FirebaseService";
 
 interface UserDebugInfo {
@@ -118,7 +118,7 @@ export function LoginInfo() {
       )
     ) {
       try {
-        DefaultDataService.forceCleanUserSystem();
+        DefaultData.forceCleanUserSystem();
         alert(
           "✅ Sistema de utilizadores limpo e reconfigurado!\n\nUtilizadores disponíveis:\n• gongonsilva@gmail.com / 19867gsf\n• alexkamaryta@gmail.com / 69alexandre",
         );
@@ -135,7 +135,7 @@ export function LoginInfo() {
       console.log("🔄 Sincronizando utilizadores globais...");
 
       // Primeiro força a criação dos utilizadores globais localmente
-      DefaultDataService.forceCleanUserSystem();
+      DefaultData.forceCleanUserSystem();
 
       // Se Firebase disponível, tenta sincronizar
       if (firebaseService.getFirebaseStatus().isAvailable && navigator.onLine) {
