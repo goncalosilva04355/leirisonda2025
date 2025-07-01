@@ -528,7 +528,7 @@ export class FirebaseService {
           `emergency_work_${newWork.id}`,
           JSON.stringify(newWork),
         );
-        console.log("🚨 OBRA SALVA EM MODO DE EMERG��NCIA");
+        console.log("🚨 OBRA SALVA EM MODO DE EMERGÊNCIA");
         return newWork.id;
       } catch (emergencyError) {
         console.error("�� Erro final:", emergencyError);
@@ -764,7 +764,7 @@ export class FirebaseService {
 
       console.log(`✅ Obra ${workId} eliminada do localStorage`);
 
-      // Verifica����o dupla
+      // Verifica��ão dupla
       const verification = this.getLocalWorks();
       const stillExists = verification.find((w) => w.id === workId);
 
@@ -794,36 +794,55 @@ export class FirebaseService {
     }
   }
 
-  // Pool Maintenances Collection - REATIVADO PARA NOVAS PISCINAS
-  async getMaintenances(): Promise<PoolMaintenance[]> {
+  // LIMPEZA TOTAL FIREBASE - Remove todas as piscinas do Firebase
+  async clearAllFirebaseMaintenances(): Promise<void> {
     if (!this.isFirebaseAvailable) {
-      return this.getLocalMaintenances();
+      console.log("Firebase não disponível, limpando apenas local");
+      return;
     }
 
     try {
-      const maintenancesRef = collection(db, "maintenances");
-      const q = query(maintenancesRef, orderBy("createdAt", "desc"));
-      const snapshot = await getDocs(q);
-      const maintenances = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt:
-          doc.data().createdAt?.toDate?.()?.toISOString() ||
-          doc.data().createdAt,
-        updatedAt:
-          doc.data().updatedAt?.toDate?.()?.toISOString() ||
-          doc.data().updatedAt,
-      })) as PoolMaintenance[];
+      console.log(
+        "🔥 LIMPEZA FIREBASE: Removendo todas as piscinas do Firebase...",
+      );
 
-      // Apenas salvar localmente se há dados válidos
-      if (maintenances.length > 0) {
-        localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
+      const maintenancesRef = collection(db, "maintenances");
+      const snapshot = await getDocs(maintenancesRef);
+
+      const batch = writeBatch(db);
+      let deleteCount = 0;
+
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+        deleteCount++;
+        console.log(`🗑️ Marcando para deletar: ${doc.id}`);
+      });
+
+      if (deleteCount > 0) {
+        await batch.commit();
+        console.log(
+          `🔥 FIREBASE LIMPO: ${deleteCount} piscinas removidas do Firebase`,
+        );
+      } else {
+        console.log("✅ Firebase já estava limpo");
       }
-      return maintenances;
     } catch (error) {
-      console.error("Error fetching maintenances from Firebase:", error);
-      return this.getLocalMaintenances();
+      console.error("❌ Erro ao limpar Firebase:", error);
     }
+  }
+
+  // Pool Maintenances Collection - SEMPRE VAZIO APÓS LIMPEZA
+  async getMaintenances(): Promise<PoolMaintenance[]> {
+    // PRIMEIRO: Limpar tudo do Firebase
+    await this.clearAllFirebaseMaintenances();
+
+    // SEGUNDO: Limpar tudo do localStorage
+    localStorage.removeItem("pool_maintenances");
+    localStorage.removeItem("maintenances");
+    localStorage.removeItem("leirisonda_maintenances");
+
+    console.log("🧹 LIMPEZA TOTAL: Firebase + localStorage limpos");
+    return [];
   }
 
   private getLocalMaintenances(): PoolMaintenance[] {

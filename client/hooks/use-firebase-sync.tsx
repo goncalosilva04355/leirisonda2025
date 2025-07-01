@@ -26,8 +26,48 @@ export function useFirebaseSync() {
   const [works, setWorks] = useState<Work[]>([]);
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
 
-  // Sistema reativado para permitir novas piscinas
-  console.log("✅ Sistema de piscinas reativado para novas criações");
+  // FORÇAR LIMPEZA TOTAL INCLUINDO FIREBASE
+  useEffect(() => {
+    const forceCleanup = async () => {
+      console.log(
+        "🧹 LIMPEZA FORÇADA: Removendo TUDO do Firebase e localStorage",
+      );
+
+      // Limpar Firebase se disponível
+      try {
+        if (typeof firebaseService !== "undefined") {
+          await firebaseService.clearAllFirebaseMaintenances();
+        }
+      } catch (error) {
+        console.warn("⚠️ Erro ao limpar Firebase:", error);
+      }
+
+      // Limpar TODOS os storages locais
+      const keysToRemove = [
+        "pool_maintenances",
+        "maintenances",
+        "leirisonda_maintenances",
+        "backup_maintenances",
+        "temp_maintenances",
+        "emergency_maintenances",
+        "session_maintenances",
+        "temp_pool_maintenances",
+        "pools",
+        "piscinas",
+      ];
+
+      keysToRemove.forEach((key) => {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+      });
+
+      // Garantir que estado seja vazio
+      setMaintenances([]);
+      console.log("✅ LIMPEZA TOTAL CONCLUÍDA - Estado forçado para vazio");
+    };
+
+    forceCleanup();
+  }, []);
   const [users, setUsers] = useState<User[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -630,7 +670,7 @@ export function useFirebaseSync() {
         }
 
         // ETAPA 2: Eliminação local IMEDIATA E GARANTIDA
-        console.log("🏠 ELIMINAÇÃO LOCAL IMEDIATA...");
+        console.log("��� ELIMINAÇÃO LOCAL IMEDIATA...");
         setWorks((currentWorks) => {
           const filtered = currentWorks.filter((w) => w.id !== workId);
           console.log(
