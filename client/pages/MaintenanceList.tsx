@@ -4,7 +4,7 @@ import { Waves, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
-import { cleanPoolDuplicates } from "@/utils/cleanPoolDuplicates";
+import { nuclearCleanDuplicates } from "@/utils/nuclearDuplicateRemover";
 
 export function MaintenanceList() {
   const { user } = useAuth();
