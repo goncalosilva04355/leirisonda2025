@@ -26,31 +26,70 @@ export function useFirebaseSync() {
   const [works, setWorks] = useState<Work[]>([]);
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
 
-  // Sistema reativado com proteção anti-duplicação
+  // Sistema melhorado de deduplicação ultra-robusta
   const setMaintenancesWithDedup = (newMaintenances: PoolMaintenance[]) => {
-    // Remover duplicados por ID
-    const uniqueById = newMaintenances.filter(
-      (maintenance, index, self) =>
-        index === self.findIndex((m) => m.id === maintenance.id),
+    if (!Array.isArray(newMaintenances)) {
+      console.warn("⚠️ setMaintenancesWithDedup: dados inválidos recebidos");
+      return;
+    }
+
+    // 1. Filtrar dados inválidos
+    const validMaintenances = newMaintenances.filter(
+      (m) =>
+        m &&
+        m.poolName &&
+        typeof m.poolName === "string" &&
+        m.poolName.trim().length > 0,
     );
 
-    // Remover duplicados por nome
-    const uniqueByName = uniqueById.filter(
-      (maintenance, index, self) =>
-        index ===
-        self.findIndex(
-          (m) =>
-            m.poolName?.toLowerCase() === maintenance.poolName?.toLowerCase(),
-        ),
-    );
+    // 2. Criar map para deduplicação por ID
+    const uniqueById = new Map();
+    validMaintenances.forEach((maintenance) => {
+      if (maintenance.id && !uniqueById.has(maintenance.id)) {
+        uniqueById.set(maintenance.id, maintenance);
+      }
+    });
 
-    if (uniqueByName.length !== newMaintenances.length) {
+    // 3. Remover duplicados por nome (case-insensitive e trim)
+    const uniqueByName = new Map();
+    Array.from(uniqueById.values()).forEach((maintenance) => {
+      const normalizedName = maintenance.poolName.toLowerCase().trim();
+
+      if (!uniqueByName.has(normalizedName)) {
+        uniqueByName.set(normalizedName, maintenance);
+      } else {
+        // Se há duplicado por nome, manter o mais recente
+        const existing = uniqueByName.get(normalizedName);
+        const current = maintenance;
+
+        if (
+          new Date(current.updatedAt || current.createdAt) >
+          new Date(existing.updatedAt || existing.createdAt)
+        ) {
+          uniqueByName.set(normalizedName, current);
+          console.log(
+            `🔄 Substituindo ${normalizedName} por versão mais recente`,
+          );
+        }
+      }
+    });
+
+    const finalMaintenances = Array.from(uniqueByName.values());
+    const removedCount = newMaintenances.length - finalMaintenances.length;
+
+    if (removedCount > 0) {
       console.log(
-        `🧹 Removidos ${newMaintenances.length - uniqueByName.length} duplicados`,
+        `🧹 DEDUP: Removidos ${removedCount} duplicados, restam ${finalMaintenances.length} piscinas únicas`,
       );
     }
 
-    setMaintenances(uniqueByName);
+    // 4. Salvar no localStorage imediatamente
+    localStorage.setItem(
+      "pool_maintenances",
+      JSON.stringify(finalMaintenances),
+    );
+
+    setMaintenances(finalMaintenances);
   };
 
   // Sistema normalizado sem interceptações que quebram React
