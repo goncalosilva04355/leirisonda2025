@@ -83,84 +83,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     },
   };
 
-  // Carrega utilizador do localStorage na inicialização
+  // Inicialização simples sem loops
   useEffect(() => {
-    let mounted = true;
+    console.log("🚀 AUTH INIT - Inicialização simples");
 
-    const initializeAuth = async () => {
-      try {
-        if (!mounted) return;
-
-        console.log("🚀 AUTH INIT - Garantindo utilizadores globais...");
-
-        // Verificar se localStorage está disponível antes de usar
-        if (typeof Storage === "undefined") {
-          console.warn("⚠️ localStorage não disponível, usando fallback");
-          if (mounted) {
-            setIsInitialized(true);
-          }
-          return;
-        }
-
-        try {
-          ensureGlobalUsers();
-        } catch (error) {
-          console.error("Erro ao garantir utilizadores globais:", error);
-        }
-
-        if (!mounted) return;
-
-        // Tentar carregar utilizador armazenado com tratamento defensivo
-        try {
-          const stored = localStorage.getItem("leirisonda_user");
-          if (stored && mounted) {
-            const parsedUser = JSON.parse(stored);
-
-            // Validar se o objeto tem as propriedades essenciais
-            if (parsedUser && parsedUser.email && parsedUser.name) {
-              console.log("👤 UTILIZADOR CARREGADO:", parsedUser.email);
-              setUser(parsedUser);
-            } else {
-              console.warn("⚠️ Dados de utilizador inválidos, a limpar...");
-              localStorage.removeItem("leirisonda_user");
-            }
-          }
-        } catch (parseError) {
-          console.error(
-            "❌ Erro ao fazer parse de utilizador, a limpar dados:",
-            parseError,
-          );
-          try {
-            localStorage.removeItem("leirisonda_user");
-          } catch (clearError) {
-            console.error("❌ Erro ao limpar dados de utilizador:", clearError);
-          }
-        }
-      } catch (error) {
-        console.error("❌ Erro na inicialização auth:", error);
-        // Não quebrar, continuar com user = null
-        // Tentar limpar dados corrompidos
-        try {
-          localStorage.removeItem("leirisonda_user");
-          localStorage.removeItem("leirisonda_last_user");
-        } catch (clearError) {
-          console.error("❌ Erro ao limpar dados após falha:", clearError);
-        }
-      } finally {
-        if (mounted) {
-          setIsInitialized(true);
+    try {
+      // Apenas verificar se há utilizador guardado
+      const stored = localStorage.getItem("leirisonda_user");
+      if (stored) {
+        const parsedUser = JSON.parse(stored);
+        if (parsedUser && parsedUser.email) {
+          setUser(parsedUser);
         }
       }
-    };
+    } catch (error) {
+      console.warn("Erro ao carregar utilizador:", error);
+    }
 
-    // Adicionar delay mínimo para garantir que DOM está pronto
-    const timer = setTimeout(initializeAuth, 100);
-
-    return () => {
-      mounted = false;
-      clearTimeout(timer);
-    };
-  }, []);
+    setIsInitialized(true);
+  }, []); // Executar apenas uma vez
 
   // Garante que utilizadores globais estão presentes em todos os dispositivos
   const ensureGlobalUsers = () => {
@@ -350,7 +291,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   );
                   if (pendingWorks.length > 0) {
                     console.log(
-                      "🏗️ Obras pendentes:",
+                      "��️ Obras pendentes:",
                       pendingWorks.map(
                         (w) => `${w.workSheetNumber} - ${w.clientName}`,
                       ),
