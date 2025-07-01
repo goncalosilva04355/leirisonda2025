@@ -102,7 +102,8 @@ export class FirebaseService {
 
     console.log("🏊 Criando nova piscina:", newMaintenance.poolName);
 
-    // Criar diretamente sem verificação rigorosa
+    // Buscar piscinas existentes e adicionar a nova
+    const existingMaintenances = this.getLocalMaintenances();
     existingMaintenances.push(newMaintenance);
     localStorage.setItem(
       "pool_maintenances",
