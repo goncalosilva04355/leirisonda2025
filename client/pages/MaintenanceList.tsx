@@ -11,6 +11,23 @@ export function MaintenanceList() {
   const { maintenances } = useFirebaseSync();
   const hasMaintenances = maintenances.length > 0;
 
+  // Limpeza automática de duplicadas ao carregar
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log("🧹 Executando limpeza preventiva de duplicadas...");
+      const result = cleanPoolDuplicates();
+      if (result.success && result.cleaned > 0) {
+        console.log(
+          `✅ Limpeza preventiva: ${result.cleaned} duplicadas removidas`,
+        );
+        // Recarregar página para mostrar dados limpos
+        window.location.reload();
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   console.log("🏊 MaintenanceList: Carregando piscinas...", {
     count: maintenances.length,
     hasMaintenances,
