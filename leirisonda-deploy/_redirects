@@ -1,1 +1,13 @@
-/*    /index.html   200
+# Static files first
+/favicon.ico    /favicon.ico    200
+/manifest.json    /manifest.json    200
+/sw.js    /sw.js    200
+/pwa-style.css    /pwa-style.css    200
+/assets/*    /assets/:splat    200
+/*.css    /:splat.css    200
+/*.js    /:splat.js    200
+/*.svg    /:splat.svg    200
+/*.png    /:splat.png    200
+
+# SPA routing - all other paths to index.html
+/*    /index.html    200
