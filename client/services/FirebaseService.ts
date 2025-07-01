@@ -93,6 +93,15 @@ export class FirebaseService {
   async createMaintenance(
     maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
+    // BLOQUEIO MAGNOLIA - NUNCA MAIS PERMITIR
+    const poolName = maintenanceData.poolName?.toLowerCase().trim();
+    if (poolName?.includes("magnolia")) {
+      console.error("🚫 BLOQUEADO: Nome 'Magnolia' não é permitido");
+      throw new Error(
+        "O nome 'Magnolia' não é permitido para piscinas. Escolha outro nome.",
+      );
+    }
+
     const newMaintenance: PoolMaintenance = {
       ...maintenanceData,
       id: crypto.randomUUID(),
