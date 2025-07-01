@@ -12,38 +12,53 @@ export function MaintenanceList() {
   // BLOQUEIO TOTAL - NUNCA MOSTRAR PISCINAS
   console.log("🚫 BLOQUEIO TOTAL ATIVO - Lista sempre vazia");
 
-  // Limpeza agressiva de TODOS os storages
+  // Limpeza agressiva de TODOS os storages + RELOAD FORÇADO
   useEffect(() => {
     console.log("🗑️ ELIMINAÇÃO TOTAL DE TODOS OS DADOS DE PISCINAS");
 
-    // LIMPAR ABSOLUTAMENTE TUDO
-    const allPossibleKeys = [
-      "pool_maintenances",
-      "maintenances",
-      "leirisonda_maintenances",
-      "backup_maintenances",
-      "temp_maintenances",
-      "cached_maintenances",
-      "firebase_maintenances",
-      "local_maintenances",
-      "piscinas",
-      "pools",
-      "maintenance_data",
-      "leirisonda_pools",
-      "old_pools",
-      "saved_pools",
-    ];
+    // Verificar se já foi executada a limpeza
+    const cleanupExecuted = sessionStorage.getItem("cleanup_executed");
 
-    // Limpar localStorage
-    allPossibleKeys.forEach((key) => {
-      localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
-    });
+    if (!cleanupExecuted) {
+      // LIMPAR ABSOLUTAMENTE TUDO
+      const allPossibleKeys = [
+        "pool_maintenances",
+        "maintenances",
+        "leirisonda_maintenances",
+        "backup_maintenances",
+        "temp_maintenances",
+        "cached_maintenances",
+        "firebase_maintenances",
+        "local_maintenances",
+        "piscinas",
+        "pools",
+        "maintenance_data",
+        "leirisonda_pools",
+        "old_pools",
+        "saved_pools",
+      ];
 
-    // Garantir que a chave principal está vazia
-    localStorage.setItem("pool_maintenances", "[]");
+      // Limpar localStorage e sessionStorage
+      allPossibleKeys.forEach((key) => {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+      });
 
-    console.log("✅ TODOS os dados de piscinas eliminados");
+      // Garantir que a chave principal está vazia
+      localStorage.setItem("pool_maintenances", "[]");
+
+      // Marcar como executado
+      sessionStorage.setItem("cleanup_executed", "true");
+
+      console.log("✅ TODOS os dados eliminados - FORÇANDO RELOAD");
+
+      // FORÇAR RELOAD COMPLETO DA PÁGINA para limpar cache
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    } else {
+      console.log("✅ Limpeza já executada - página limpa");
+    }
   }, []);
 
   // FORÇAR SEMPRE LISTA VAZIA - NUNCA MOSTRAR PISCINAS
