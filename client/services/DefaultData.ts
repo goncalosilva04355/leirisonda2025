@@ -169,19 +169,7 @@ export class DefaultDataService {
                 temperature: 24,
                 chlorine: 1.5,
                 bromine: 0,
-                alkalinity: 120,
-                hardness: 250,
-                stabilizer: 50,
-              },
-              chemicalProducts: [
-                {
-                  productName: "Cloro líquido",
-                  quantity: 2,
-                  unit: "l",
-                },
-              ],
-              workPerformed: {
-                filtros: true,
+      // Código removido para evitar dados de exemplo
                 preFiltro: true,
                 filtroAreiaVidro: false,
                 enchimentoAutomatico: false,
