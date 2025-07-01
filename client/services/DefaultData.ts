@@ -149,6 +149,9 @@ export class DefaultDataService {
   }
 
   static initializeDefaultMaintenances(): void {
+    console.log("🚫 BLOQUEADO: Não inicializar dados de exemplo de piscinas");
+    return; // Bloquear completamente inicialização de dados de exemplo
+
     const existingMaintenances = localStorage.getItem("pool_maintenances");
 
     if (

@@ -87,27 +87,10 @@ export function MaintenanceDetail() {
         setMaintenance(found);
       } else {
         // BLOQUEADO: Não carregar dados locais para evitar mostrar dados antigos
-        console.log("🚫 Não carregar dados locais para evitar piscinas fantasma");
-        const localFound = null;
-          if (localFound) {
-            // Ensure photos array exists
-            if (!localFound.photos) {
-              localFound.photos = [];
-            }
-            // Ensure interventions have photos
-            localFound.interventions = localFound.interventions.map(
-              (intervention) => ({
-                ...intervention,
-                photos: intervention.photos || [],
-              }),
-            );
-            setMaintenance(localFound);
-          } else {
-            setError("Piscina não encontrada");
-          }
-        } else {
-          setError("Nenhuma piscina encontrada");
-        }
+        console.log(
+          "🚫 Não carregar dados locais para evitar piscinas fantasma",
+        );
+        setError("Piscina não encontrada - sistema limpo");
       }
     } catch (err) {
       setError("Erro ao carregar dados");
