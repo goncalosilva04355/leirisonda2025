@@ -102,16 +102,68 @@ export class FirebaseService {
 
     console.log("🏊 Criando nova piscina:", newMaintenance.poolName);
 
-    // Buscar piscinas existentes e adicionar a nova
+    // Buscar piscinas existentes
     const existingMaintenances = this.getLocalMaintenances();
+
+    // Verificar se já existe piscina com o mesmo nome
+    const normalizedNewName = newMaintenance.poolName.toLowerCase().trim();
+    const existingByName = existingMaintenances.find(
+      (m) => m.poolName?.toLowerCase().trim() === normalizedNewName,
+    );
+
+    if (existingByName) {
+      console.warn(
+        `⚠️ Piscina '${newMaintenance.poolName}' já existe - atualizando em vez de criar duplicada`,
+      );
+      // Atualizar a existente em vez de criar nova
+      existingByName.updatedAt = newMaintenance.updatedAt;
+      Object.assign(existingByName, maintenanceData);
+
+      localStorage.setItem(
+        "pool_maintenances",
+        JSON.stringify(existingMaintenances),
+      );
+      console.log("📱 Piscina atualizada com sucesso:", existingByName.id);
+      return existingByName.id;
+    }
+
+    // Adicionar nova piscina
     existingMaintenances.push(newMaintenance);
+
+    // Aplicar deduplicação robusta antes de salvar
+    const uniqueMaintenances =
+      this.deduplicateMaintenances(existingMaintenances);
+
     localStorage.setItem(
       "pool_maintenances",
-      JSON.stringify(existingMaintenances),
+      JSON.stringify(uniqueMaintenances),
     );
     console.log("📱 Piscina criada com sucesso:", newMaintenance.id);
 
     return newMaintenance.id;
+  }
+
+  private deduplicateMaintenances(
+    maintenances: PoolMaintenance[],
+  ): PoolMaintenance[] {
+    const uniqueMap = new Map();
+
+    maintenances.forEach((maintenance) => {
+      if (!maintenance || !maintenance.poolName) return;
+
+      const normalizedName = maintenance.poolName.toLowerCase().trim();
+      const key = maintenance.id || normalizedName;
+
+      if (!uniqueMap.has(normalizedName)) {
+        uniqueMap.set(normalizedName, maintenance);
+      }
+    });
+
+    const result = Array.from(uniqueMap.values());
+    console.log(
+      `🧹 Deduplicação: ${maintenances.length} -> ${result.length} piscinas`,
+    );
+    return result;
   }
 
   async updateMaintenance(
