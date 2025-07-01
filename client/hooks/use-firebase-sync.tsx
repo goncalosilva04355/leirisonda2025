@@ -86,20 +86,43 @@ export function useFirebaseSync() {
   };
 
   const createMaintenance = async (maintenanceData: any) => {
-    console.log("🏊 Criando piscina...");
+    console.log("🏊 Criando piscina para todos os dispositivos...");
     const result = await firebaseService.createMaintenance(maintenanceData);
 
-    // Recarregar dados após criar
+    // Recarregar dados globais após criar
     try {
-      const localMaintenances = JSON.parse(
-        localStorage.getItem("pool_maintenances") || "[]",
-      );
-      setMaintenances(localMaintenances);
+      // Carregar dados partilhados mais recentes
+      const sharedData = localStorage.getItem("shared_pool_data");
+      let latestMaintenances = [];
+
+      if (sharedData) {
+        const parsed = JSON.parse(sharedData);
+        if (parsed.pools && Array.isArray(parsed.pools)) {
+          latestMaintenances = parsed.pools;
+        }
+      }
+
+      // Fallback para dados locais
+      if (latestMaintenances.length === 0) {
+        const localMaintenances = JSON.parse(
+          localStorage.getItem("pool_maintenances") || "[]",
+        );
+        const globalMaintenances = JSON.parse(
+          localStorage.getItem("global_pool_maintenances") || "[]",
+        );
+
+        latestMaintenances =
+          globalMaintenances.length > localMaintenances.length
+            ? globalMaintenances
+            : localMaintenances;
+      }
+
+      setMaintenances(latestMaintenances);
       console.log(
-        `🔄 Dados recarregados: ${localMaintenances.length} piscinas`,
+        `🌐 Dados globais recarregados: ${latestMaintenances.length} piscinas`,
       );
     } catch (error) {
-      console.error("❌ Erro ao recarregar dados:", error);
+      console.error("❌ Erro ao recarregar dados globais:", error);
     }
 
     return result;
