@@ -30,16 +30,54 @@ export function MaintenanceList() {
 
   const hasMaintenances = uniqueMaintenances.length > 0;
 
-  // Limpeza do localStorage se houver duplicatas
+  // Limpeza agressiva do localStorage
   useEffect(() => {
+    const cleanStorage = () => {
+      const rawData = localStorage.getItem("pool_maintenances");
+      if (!rawData) return;
+
+      try {
+        const pools = JSON.parse(rawData);
+        if (!Array.isArray(pools)) return;
+
+        // Criar map para eliminar duplicatas
+        const uniqueMap = new Map();
+        const validPools = [];
+
+        pools.forEach((pool) => {
+          if (pool && pool.poolName && typeof pool.poolName === "string") {
+            const normalizedName = pool.poolName.toLowerCase().trim();
+            if (!uniqueMap.has(normalizedName)) {
+              uniqueMap.set(normalizedName, pool);
+              validPools.push(pool);
+            } else {
+              console.log(
+                `🗑️ Removendo duplicata do storage: ${pool.poolName}`,
+              );
+            }
+          }
+        });
+
+        if (validPools.length !== pools.length) {
+          console.log(
+            `🧹 LIMPEZA STORAGE: ${pools.length} -> ${validPools.length} piscinas`,
+          );
+          localStorage.setItem("pool_maintenances", JSON.stringify(validPools));
+
+          // Forçar reload para mostrar dados limpos
+          setTimeout(() => window.location.reload(), 100);
+        }
+      } catch (error) {
+        console.error("Erro na limpeza do storage:", error);
+      }
+    };
+
+    // Executar limpeza imediata
+    cleanStorage();
+
+    // Executar novamente se houver diferença entre raw e unique
     if (maintenances.length !== uniqueMaintenances.length) {
-      console.log(
-        `🧹 Atualizando localStorage: ${maintenances.length} -> ${uniqueMaintenances.length}`,
-      );
-      localStorage.setItem(
-        "pool_maintenances",
-        JSON.stringify(uniqueMaintenances),
-      );
+      setTimeout(cleanStorage, 500);
     }
   }, [maintenances, uniqueMaintenances]);
 
