@@ -356,7 +356,7 @@ export function MaintenanceList() {
                   >
                     <Edit className="mr-2 h-4 w-4" />
                     <span className="hidden sm:inline">Editar</span>
-                    <span className="sm:hidden">���️</span>
+                    <span className="sm:hidden">��️</span>
                   </Button>
                 </Link>
               )}
@@ -373,7 +373,7 @@ export function MaintenanceList() {
               </Link>
             </div>
           </div>
-        ))}
+        ))} */}
       </div>
 
       {filteredMaintenances.length === 0 && (
