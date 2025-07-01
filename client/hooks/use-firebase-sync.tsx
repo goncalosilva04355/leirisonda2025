@@ -59,7 +59,22 @@ export function useFirebaseSync() {
 
   const createMaintenance = async (maintenanceData: any) => {
     console.log("🏊 Criando piscina...");
-    return await firebaseService.createMaintenance(maintenanceData);
+    const result = await firebaseService.createMaintenance(maintenanceData);
+
+    // Recarregar dados após criar
+    try {
+      const localMaintenances = JSON.parse(
+        localStorage.getItem("pool_maintenances") || "[]",
+      );
+      setMaintenances(localMaintenances);
+      console.log(
+        `🔄 Dados recarregados: ${localMaintenances.length} piscinas`,
+      );
+    } catch (error) {
+      console.error("❌ Erro ao recarregar dados:", error);
+    }
+
+    return result;
   };
 
   const updateMaintenance = async (maintenanceId: string, updates: any) => {
