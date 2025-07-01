@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Waves, Plus } from "lucide-react";
+import { Waves, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
 import { useFirebaseSync } from "@/hooks/use-firebase-sync";
-import "@/utils/eliminateTotalPools";
 
 export function MaintenanceList() {
   const { user } = useAuth();
