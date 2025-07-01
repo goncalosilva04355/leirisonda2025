@@ -531,7 +531,7 @@ export class FirebaseService {
         console.log("🚨 OBRA SALVA EM MODO DE EMERGÊNCIA");
         return newWork.id;
       } catch (emergencyError) {
-        console.error("❌ Erro final:", emergencyError);
+        console.error("�� Erro final:", emergencyError);
         // NUNCA fazer throw para evitar ErrorBoundary
         console.log("⚠️ Retornando ID para evitar crash da aplicação");
         return newWork.id;
@@ -733,7 +733,7 @@ export class FirebaseService {
         return Promise.resolve();
       }
 
-      // Só fazer throw se realmente falhou
+      // S�� fazer throw se realmente falhou
       throw error;
     }
   }
@@ -826,18 +826,21 @@ export class FirebaseService {
   }
 
   private getLocalMaintenances(): PoolMaintenance[] {
-    try {
-      const maintenances = JSON.parse(
-        localStorage.getItem("pool_maintenances") || "[]",
-      );
-      return maintenances;
-    } catch (error) {
-      console.error("Error fetching local maintenances:", error);
-      return [];
-    }
+    console.log("🚫 BLOQUEIO: getLocalMaintenances sempre retorna array vazio");
+    return [];
   }
 
   async createMaintenance(
+    maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
+  ): Promise<string> {
+    console.log(
+      "🚫 BLOQUEIO: createMaintenance cancelado - não criar piscinas",
+    );
+    throw new Error("Criação de piscinas está temporariamente desabilitada");
+  }
+
+  // VERSÃO ORIGINAL BLOQUEADA
+  async createMaintenanceOriginal(
     maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
     const newMaintenance: PoolMaintenance = {
