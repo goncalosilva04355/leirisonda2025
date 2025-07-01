@@ -3,8 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// Sistema completamente limpo - sem imports de limpeza
-// import "./utils/finalCleanup";
+// No cleanup imports to avoid Vite conflicts
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";

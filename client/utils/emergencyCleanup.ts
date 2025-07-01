@@ -82,21 +82,7 @@ try {
   console.warn("⚠️ Erro na varredura de chaves suspeitas:", error);
 }
 
-// Interceptar qualquer tentativa de definir dados de piscinas
-const originalSetItem = localStorage.setItem;
-localStorage.setItem = function (key: string, value: string) {
-  const lowerKey = key.toLowerCase();
-  if (
-    lowerKey.includes("pool") ||
-    lowerKey.includes("piscina") ||
-    lowerKey.includes("maintenance") ||
-    lowerKey.includes("manutenc")
-  ) {
-    console.log(`🚫 INTERCEPTADO: Tentativa de salvar ${key} - BLOQUEADO`);
-    return; // Não salvar
-  }
-  return originalSetItem.call(this, key, value);
-};
+// Removed localStorage override to prevent Vite conflicts
 
 console.log("🚨 LIMPEZA DE EMERGÊNCIA CONCLUÍDA - TUDO REMOVIDO");
 
