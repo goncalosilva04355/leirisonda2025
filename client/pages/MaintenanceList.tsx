@@ -1,26 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { Waves, Plus, Trash2 } from "lucide-react";
+import { Waves, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
-import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function MaintenanceList() {
   const { user } = useAuth();
-  const { maintenances } = useFirebaseSync();
 
-  console.log("🏊 MaintenanceList carregou:", {
-    maintenances: maintenances?.length || 0,
-  });
-
-  const hasMaintenances =
-    Array.isArray(maintenances) && maintenances.length > 0;
-
-  console.log("🏊 MaintenanceList: Carregando piscinas...", {
-    original: maintenances.length,
-    unique: uniqueMaintenances.length,
-    hasMaintenances,
-  });
+  console.log("🏊 MaintenanceList carregou - versão simplificada");
 
   return (
     <div className="space-y-6">
@@ -41,7 +28,7 @@ export function MaintenanceList() {
                 <span className="truncate">Manutenção de Piscinas</span>
               </h1>
               <p className="text-gray-600 mt-1 text-sm lg:text-base">
-                Sistema totalmente limpo - Magnólias eliminadas
+                Sistema limpo - pronto para criar piscinas
               </p>
             </div>
           </div>
@@ -57,75 +44,28 @@ export function MaintenanceList() {
         </div>
       </div>
 
-      {/* Show content based on whether pools exist */}
-      {!hasMaintenances ? (
-        <div className="text-center py-16">
-          <div className="mx-auto max-w-md">
-            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Waves className="h-10 w-10 text-blue-600" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">
-              Sistema Limpo - Pronto para Usar
-            </h3>
-            <p className="text-gray-600 mb-6 text-lg">
-              Nenhuma piscina registrada. Crie a primeira piscina para começar.
-            </p>
-            <div className="space-y-3">
-              <Link to="/create-maintenance" className="block">
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full text-lg py-3">
-                  <Plus className="mr-2 h-5 w-5" />
-                  Criar Primeira Piscina
-                </Button>
-              </Link>
-            </div>
+      {/* Empty state */}
+      <div className="text-center py-16">
+        <div className="mx-auto max-w-md">
+          <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Waves className="h-10 w-10 text-blue-600" />
+          </div>
+          <h3 className="text-2xl font-bold text-gray-900 mb-3">
+            Sistema Limpo - Pronto para Usar
+          </h3>
+          <p className="text-gray-600 mb-6 text-lg">
+            Nenhuma piscina registrada. Crie a primeira piscina para começar.
+          </p>
+          <div className="space-y-3">
+            <Link to="/create-maintenance" className="block">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full text-lg py-3">
+                <Plus className="mr-2 h-5 w-5" />
+                Criar Primeira Piscina
+              </Button>
+            </Link>
           </div>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {(maintenances || []).map((maintenance) => (
-            <div
-              key={maintenance.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">
-                    {maintenance.poolName}
-                  </h3>
-                  <div className="flex items-center text-gray-600 mt-1">
-                    <span className="mr-1">👤</span>
-                    {maintenance.clientName}
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-2 text-sm text-gray-600">
-                <div className="flex items-center">
-                  <span className="mr-1">📍</span>
-                  {maintenance.location}
-                </div>
-                {maintenance.clientPhone && (
-                  <div className="flex items-center">
-                    <span className="mr-1">📞</span>
-                    {maintenance.clientPhone}
-                  </div>
-                )}
-              </div>
-              <div className="mt-4 flex gap-2">
-                <Link to={`/maintenance/${maintenance.id}`}>
-                  <Button variant="outline" size="sm">
-                    Ver Detalhes
-                  </Button>
-                </Link>
-                <Link to={`/edit-maintenance/${maintenance.id}`}>
-                  <Button variant="outline" size="sm">
-                    Editar
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      </div>
     </div>
   );
 }
