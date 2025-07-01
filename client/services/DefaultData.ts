@@ -161,12 +161,8 @@ export class DefaultDataService {
       console.log("🔧 Initializing sample maintenances...");
 
       const sampleMaintenances: PoolMaintenance[] = [
-        {
-          id: crypto.randomUUID(),
-          poolName: "Piscina Magnolia",
-          location: "Vieira de Leiria",
-          clientName: "MICHEL Duarte",
-          clientPhone: "913456789",
+        // REMOVIDO: Dados de exemplo que causavam problemas
+        // Piscina Magnolia e MICHEL Duarte removidos permanentemente
           clientEmail: "michel@email.com",
           poolType: "outdoor",
           waterCubicage: "48m³",
