@@ -3,8 +3,6 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// Sistema limpo sem scripts de limpeza que causam erros
-
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { SimpleErrorBoundary } from "./components/SimpleErrorBoundary";
