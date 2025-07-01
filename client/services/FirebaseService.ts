@@ -503,7 +503,7 @@ export class FirebaseService {
           }
         }
       } else {
-        console.error("⚠��� BACKUP TRIPLO LOCAL FALHOU:", {
+        console.error("����� BACKUP TRIPLO LOCAL FALHOU:", {
           backup1: !!savedWork1,
           backup2: !!savedWork2,
           backup3: !!savedWork3,
@@ -792,37 +792,12 @@ export class FirebaseService {
     }
   }
 
-  // Pool Maintenances Collection
+  // Pool Maintenances Collection - BLOQUEADO
   async getMaintenances(): Promise<PoolMaintenance[]> {
-    if (!this.isFirebaseAvailable) {
-      return this.getLocalMaintenances();
-    }
-
-    try {
-      const maintenancesRef = collection(db, "maintenances");
-      const q = query(maintenancesRef, orderBy("createdAt", "desc"));
-      const snapshot = await getDocs(q);
-      const maintenances = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt:
-          doc.data().createdAt?.toDate?.()?.toISOString() ||
-          doc.data().createdAt,
-        updatedAt:
-          doc.data().updatedAt?.toDate?.()?.toISOString() ||
-          doc.data().updatedAt,
-      })) as PoolMaintenance[];
-
-      // Sync to localStorage as backup
-      localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
-      return maintenances;
-    } catch (error) {
-      console.error(
-        "Error fetching maintenances from Firebase, falling back to local:",
-        error,
-      );
-      return this.getLocalMaintenances();
-    }
+    console.log(
+      "🚫 BLOQUEIO TOTAL: getMaintenances sempre retorna array vazio",
+    );
+    return [];
   }
 
   private getLocalMaintenances(): PoolMaintenance[] {
