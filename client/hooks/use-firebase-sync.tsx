@@ -53,23 +53,8 @@ export function useFirebaseSync() {
     setMaintenances(uniqueByName);
   };
 
-  // BLOQUEIO PERMANENTE PARA DASHBOARD: maintenances sempre vazio
-  useEffect(() => {
-    console.log(
-      "🚫 BLOQUEIO PERMANENTE: maintenances sempre vazio para Dashboard",
-    );
-    setMaintenances([]);
-    // Interceptar qualquer tentativa de definir maintenances
-    const originalSet = setMaintenances;
-    setMaintenances = () => {
-      console.log("🚫 setMaintenances interceptado - mantendo vazio");
-      originalSet([]);
-    };
-  }, []);
-
-  console.log(
-    "🚫 Sistema: maintenances PERMANENTEMENTE bloqueado para Dashboard",
-  );
+  // Sistema normalizado sem interceptações que quebram React
+  console.log("✅ Sistema funcionando normalmente");
   const [users, setUsers] = useState<User[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isSyncing, setIsSyncing] = useState(false);
