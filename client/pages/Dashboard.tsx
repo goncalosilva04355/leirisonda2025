@@ -33,10 +33,17 @@ export function Dashboard() {
 
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { works, isOnline, isSyncing, lastSync, syncData } = useFirebaseSync();
-  // BLOQUEIO PERMANENTE: Dashboard NUNCA mostra piscinas
+  const {
+    works,
+    maintenances: rawMaintenances,
+    isOnline,
+    isSyncing,
+    lastSync,
+    syncData,
+  } = useFirebaseSync();
+  // Filtro simples: sempre mostrar array vazio para maintenances no dashboard
   const maintenances: any[] = [];
-  console.log("🚫 Dashboard: maintenances PERMANENTEMENTE bloqueado");
+  console.log("🏠 Dashboard: maintenances filtrado para vazio");
   const { checkPendingWorks } = useNotifications();
 
   const [stats, setStats] = useState<DashboardStats>({
