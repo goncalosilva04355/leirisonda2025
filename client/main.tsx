@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// Sistema limpo e reativado sem imports de limpeza
+// Bloqueador permanente do dashboard para piscinas
+import "./utils/dashboardBlocker";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";

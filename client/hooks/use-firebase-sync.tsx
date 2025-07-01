@@ -53,15 +53,23 @@ export function useFirebaseSync() {
     setMaintenances(uniqueByName);
   };
 
-  // BLOQUEIO TEMPORÁRIO: Forçar maintenances vazio para parar duplicação
+  // BLOQUEIO PERMANENTE PARA DASHBOARD: maintenances sempre vazio
   useEffect(() => {
     console.log(
-      "🚫 BLOQUEIO: Forçando maintenances vazio para parar quadriplicação",
+      "🚫 BLOQUEIO PERMANENTE: maintenances sempre vazio para Dashboard",
     );
     setMaintenances([]);
+    // Interceptar qualquer tentativa de definir maintenances
+    const originalSet = setMaintenances;
+    setMaintenances = () => {
+      console.log("🚫 setMaintenances interceptado - mantendo vazio");
+      originalSet([]);
+    };
   }, []);
 
-  console.log("🚫 Sistema temporariamente bloqueado para corrigir duplicação");
+  console.log(
+    "🚫 Sistema: maintenances PERMANENTEMENTE bloqueado para Dashboard",
+  );
   const [users, setUsers] = useState<User[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -533,7 +541,7 @@ export function useFirebaseSync() {
               triggerInstantSync(`after_${operationType}`);
             } catch (syncError) {
               console.warn(
-                `���️ Erro no sync após ${operationType} (operação original bem sucedida):`,
+                `⚠️ Erro no sync após ${operationType} (operação original bem sucedida):`,
                 syncError,
               );
               // Não fazer throw aqui - a operação principal já funcionou

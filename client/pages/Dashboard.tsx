@@ -33,12 +33,10 @@ export function Dashboard() {
 
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { works, maintenances, isOnline, isSyncing, lastSync, syncData } =
-    useFirebaseSync();
-  // Sistema reativado para novas piscinas
-  console.log(
-    "✅ Dashboard reativado para mostrar novas piscinas quando criadas",
-  );
+  const { works, isOnline, isSyncing, lastSync, syncData } = useFirebaseSync();
+  // BLOQUEIO PERMANENTE: Dashboard NUNCA mostra piscinas
+  const maintenances: any[] = [];
+  console.log("🚫 Dashboard: maintenances PERMANENTEMENTE bloqueado");
   const { checkPendingWorks } = useNotifications();
 
   const [stats, setStats] = useState<DashboardStats>({
@@ -296,25 +294,9 @@ export function Dashboard() {
   };
 
   const getUpcomingMaintenances = () => {
-    if (!maintenances || maintenances.length === 0) {
-      console.log("📊 Nenhuma piscina para mostrar no dashboard");
-      return [];
-    }
-
-    // Filter only active maintenances that have a next maintenance date
-    const activeMaintances = maintenances.filter(
-      (m: any) =>
-        m.status === "active" && getNextMaintenanceDate(m) !== "A definir",
-    );
-
-    // Sort by days until maintenance (closest first, including overdue)
-    return activeMaintances
-      .sort((a: any, b: any) => {
-        const daysA = getDaysUntilMaintenance(a);
-        const daysB = getDaysUntilMaintenance(b);
-        return daysA - daysB;
-      })
-      .slice(0, 5); // Show only next 5 maintenances
+    // BLOQUEIO PERMANENTE: NUNCA retorna piscinas
+    console.log("🚫 getUpcomingMaintenances PERMANENTEMENTE bloqueado");
+    return [];
   };
 
   return (
