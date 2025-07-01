@@ -50,28 +50,71 @@ export function MaintenanceList() {
         </div>
       </div>
 
-      {/* Empty state */}
-      <div className="text-center py-16">
-        <div className="mx-auto max-w-md">
-          <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Waves className="h-10 w-10 text-blue-600" />
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">
-            Sistema Limpo - Pronto para Usar
-          </h3>
-          <p className="text-gray-600 mb-6 text-lg">
-            Nenhuma piscina registrada. Crie a primeira piscina para começar.
-          </p>
-          <div className="space-y-3">
-            <Link to="/create-maintenance" className="block">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full text-lg py-3">
-                <Plus className="mr-2 h-5 w-5" />
-                Criar Primeira Piscina
-              </Button>
-            </Link>
+      {/* Show content based on whether pools exist */}
+      {!hasMaintenances ? (
+        <div className="text-center py-16">
+          <div className="mx-auto max-w-md">
+            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Waves className="h-10 w-10 text-blue-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              Sistema Limpo - Pronto para Usar
+            </h3>
+            <p className="text-gray-600 mb-6 text-lg">
+              Nenhuma piscina registrada. Crie a primeira piscina para começar.
+            </p>
+            <div className="space-y-3">
+              <Link to="/create-maintenance" className="block">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full text-lg py-3">
+                  <Plus className="mr-2 h-5 w-5" />
+                  Criar Primeira Piscina
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {maintenances.map((maintenance) => (
+            <div
+              key={maintenance.id}
+              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    {maintenance.poolName}
+                  </h3>
+                  <div className="flex items-center text-gray-600 mt-1">
+                    <span className="mr-1">👤</span>
+                    {maintenance.clientName}
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2 text-sm text-gray-600">
+                <div className="flex items-center">
+                  <span className="mr-1">📍</span>
+                  {maintenance.location}
+                </div>
+              </div>
+              <div className="flex gap-2 mt-4">
+                <Link
+                  to={`/maintenance/${maintenance.id}`}
+                  className="btn-primary text-sm px-3 py-1"
+                >
+                  Ver Detalhes
+                </Link>
+                <Link
+                  to={`/edit-maintenance/${maintenance.id}`}
+                  className="btn-secondary text-sm px-3 py-1"
+                >
+                  Editar
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
