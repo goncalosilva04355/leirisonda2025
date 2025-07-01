@@ -76,7 +76,7 @@ export function MaintenanceList() {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {maintenances.map((maintenance) => (
+          {(maintenances || []).map((maintenance) => (
             <div
               key={maintenance.id}
               className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
