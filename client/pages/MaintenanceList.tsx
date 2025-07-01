@@ -7,28 +7,23 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function MaintenanceList() {
   const { user } = useAuth();
+  const { maintenances } = useFirebaseSync();
 
-  // FORÇAR SISTEMA VAZIO - IGNORAR QUALQUER DADO
-  const maintenances: any[] = [];
-  const hasMaintenances = false;
+  // Filtro simples para remover duplicatas
+  const uniqueMaintenances = React.useMemo(() => {
+    if (!Array.isArray(maintenances)) return [];
 
-  console.log("🚫 MAINTENANCELIST: Forçando exibição vazia - dados ignorados");
+    const seen = new Set();
+    return maintenances.filter((m) => {
+      if (!m?.poolName) return false;
+      const name = m.poolName.toLowerCase();
+      if (seen.has(name)) return false;
+      seen.add(name);
+      return true;
+    });
+  }, [maintenances]);
 
-  // RELOAD FORÇADO se ainda houver dados em cache
-  React.useEffect(() => {
-    const checkCache = () => {
-      const poolData = localStorage.getItem("pool_maintenances");
-      if (poolData && poolData !== "[]") {
-        console.log("🔄 DETECTADO CACHE SUJO - FORÇANDO RELOAD TOTAL");
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = window.location.href; // Hard reload
-      }
-    };
-
-    checkCache();
-    setTimeout(checkCache, 500);
-  }, []);
+  const hasMaintenances = uniqueMaintenances.length > 0;
 
   console.log("🏊 MaintenanceList: Carregando piscinas...", {
     original: maintenances.length,
