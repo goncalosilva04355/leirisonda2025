@@ -930,7 +930,7 @@ export function useFirebaseSync() {
   return {
     // Data
     works,
-    maintenances,
+    maintenances: [], // SEMPRE VAZIO - ELIMINAÇÃO DEFINITIVA
     users,
 
     // Status
