@@ -322,7 +322,7 @@ export function useFirebaseSync() {
 
         // 7. Atualizar estado com dados sincronizados
         setWorks(latestWorks);
-        setMaintenances(latestMaintenances);
+        setRawMaintenances(latestMaintenances);
         setUsers(latestUsers);
 
         setLastSync(new Date());
@@ -798,7 +798,7 @@ export function useFirebaseSync() {
           try {
             localStorage.removeItem(`emergency_work_${workId}`);
             console.log(
-              `🗑️ Backup de emerg��ncia removido: emergency_work_${workId}`,
+              `🗑️ Backup de emergência removido: emergency_work_${workId}`,
             );
           } catch (emergencyError) {
             console.warn(
