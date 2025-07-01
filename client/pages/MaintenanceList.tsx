@@ -14,6 +14,22 @@ export function MaintenanceList() {
 
   console.log("🚫 MAINTENANCELIST: Forçando exibição vazia - dados ignorados");
 
+  // RELOAD FORÇADO se ainda houver dados em cache
+  React.useEffect(() => {
+    const checkCache = () => {
+      const poolData = localStorage.getItem("pool_maintenances");
+      if (poolData && poolData !== "[]") {
+        console.log("🔄 DETECTADO CACHE SUJO - FORÇANDO RELOAD TOTAL");
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = window.location.href; // Hard reload
+      }
+    };
+
+    checkCache();
+    setTimeout(checkCache, 500);
+  }, []);
+
   console.log("🏊 MaintenanceList: Carregando piscinas...", {
     original: maintenances.length,
     unique: uniqueMaintenances.length,
