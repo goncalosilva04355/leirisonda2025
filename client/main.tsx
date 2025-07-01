@@ -90,10 +90,7 @@ function App() {
                 path="edit-maintenance/:id"
                 element={<EditMaintenance />}
               />
-              <Route
-                path="maintenance/:id"
-                element={<div>Página bloqueada - sistema limpo</div>}
-              />
+              <Route path="maintenance/:id" element={<MaintenanceDetail />} />
               <Route
                 path="maintenance/:maintenanceId/new-intervention"
                 element={<CreateIntervention />}
