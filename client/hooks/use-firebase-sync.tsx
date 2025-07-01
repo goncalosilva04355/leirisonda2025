@@ -344,7 +344,7 @@ export function useFirebaseSync() {
       const localUsers = JSON.parse(localStorage.getItem("users") || "[]");
 
       setWorks(consolidatedWorks);
-      setRawMaintenances(localMaintenances);
+      setMaintenances(localMaintenances);
       setUsers(localUsers);
 
       console.log(
