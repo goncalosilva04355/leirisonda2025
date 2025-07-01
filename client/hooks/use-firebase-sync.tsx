@@ -285,7 +285,7 @@ export function useFirebaseSync() {
 
         // 7. Atualizar estado com dados sincronizados
         setWorks(latestWorks);
-        setRawMaintenances(latestMaintenances);
+        setMaintenances(latestMaintenances);
         setUsers(latestUsers);
 
         setLastSync(new Date());
