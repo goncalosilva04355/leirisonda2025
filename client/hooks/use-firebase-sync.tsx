@@ -15,29 +15,57 @@ export function useFirebaseSync() {
   const [lastSync] = useState<Date | null>(null);
   const [isFirebaseAvailable] = useState(false);
 
-  // Load local data on mount
+  // Load global shared data on mount
   useEffect(() => {
     if (!user) return;
 
-    console.log("📱 Carregando dados locais...");
+    console.log("🌐 Carregando dados globais partilhados...");
 
     try {
       // Load works
       const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
       setWorks(localWorks);
 
-      // Load maintenances (always empty for now)
-      setMaintenances([]);
+      // Load global shared maintenances
+      const sharedData = localStorage.getItem("shared_pool_data");
+      let maintenancesToLoad = [];
+
+      if (sharedData) {
+        const parsed = JSON.parse(sharedData);
+        if (parsed.pools && Array.isArray(parsed.pools)) {
+          maintenancesToLoad = parsed.pools;
+          console.log(
+            `🌐 Carregadas ${maintenancesToLoad.length} piscinas partilhadas`,
+          );
+        }
+      }
+
+      // Fallback para dados locais
+      if (maintenancesToLoad.length === 0) {
+        const localMaintenances = JSON.parse(
+          localStorage.getItem("pool_maintenances") || "[]",
+        );
+        const globalMaintenances = JSON.parse(
+          localStorage.getItem("global_pool_maintenances") || "[]",
+        );
+
+        maintenancesToLoad =
+          globalMaintenances.length > localMaintenances.length
+            ? globalMaintenances
+            : localMaintenances;
+      }
+
+      setMaintenances(maintenancesToLoad);
 
       // Load users
       const localUsers = JSON.parse(localStorage.getItem("users") || "[]");
       setUsers(localUsers);
 
       console.log(
-        `✅ Dados carregados: ${localWorks.length} works, 0 maintenances, ${localUsers.length} users`,
+        `✅ Dados globais carregados: ${localWorks.length} works, ${maintenancesToLoad.length} maintenances, ${localUsers.length} users`,
       );
     } catch (error) {
-      console.error("❌ Erro ao carregar dados locais:", error);
+      console.error("❌ Erro ao carregar dados globais:", error);
     }
   }, [user]);
 
