@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// LIMPEZA FINAL - Executa uma vez para remover tudo
-import "./utils/finalCleanup";
+// Sistema completamente limpo - sem imports de limpeza
+// import "./utils/finalCleanup";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -91,7 +91,10 @@ function App() {
                 path="edit-maintenance/:id"
                 element={<EditMaintenance />}
               />
-              <Route path="maintenance/:id" element={<MaintenanceDetail />} />
+              <Route
+                path="maintenance/:id"
+                element={<div>Página bloqueada - sistema limpo</div>}
+              />
               <Route
                 path="maintenance/:maintenanceId/new-intervention"
                 element={<CreateIntervention />}

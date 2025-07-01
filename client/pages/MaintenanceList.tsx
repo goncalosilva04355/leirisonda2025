@@ -26,7 +26,7 @@ export function MaintenanceList() {
                 <span className="truncate">Manutenção de Piscinas</span>
               </h1>
               <p className="text-gray-600 mt-1 text-sm lg:text-base">
-                Sistema completamente limpo - sem piscinas
+                Sistema 100% limpo - zero piscinas no sistema
               </p>
             </div>
           </div>
