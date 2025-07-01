@@ -208,17 +208,11 @@ export function useFirebaseSync() {
         // 4. Skip upload step
         console.log("📤 Skipping upload...");
 
-        // 5. Download dados mais recentes
-        console.log("📥 Baixando dados do Firebase...");
-        const [latestWorks, latestMaintenances, latestUsers] =
-          await syncTimeout(
-            Promise.all([
-              firebaseService.getWorks(),
-              firebaseService.getMaintenances(),
-              firebaseService.getUsers(),
-            ]),
-            20000,
-          );
+        // 5. Get local data only
+        console.log("📥 Loading local data...");
+        const latestWorks = [];
+        const latestMaintenances = [];
+        const latestUsers = [];
 
         // 6. Verificar novos dados
         const currentWorksCount = works.length;
