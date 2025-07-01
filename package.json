@@ -1,0 +1,14 @@
+{
+  "name": "leirisonda-static-server",
+  "version": "1.0.0",
+  "description": "Static file server for Leirisonda PWA",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx serve leirisonda-deploy -p 5173",
+    "start": "npx serve leirisonda-deploy -p 5173",
+    "preview": "npx serve leirisonda-deploy -p 5173"
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  }
+}
