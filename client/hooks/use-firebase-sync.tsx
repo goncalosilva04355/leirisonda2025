@@ -930,7 +930,7 @@ export function useFirebaseSync() {
   return {
     // Data
     works,
-    maintenances: finalMaintenances, // SEMPRE LISTA VAZIA
+    maintenances,
     users,
 
     // Status
