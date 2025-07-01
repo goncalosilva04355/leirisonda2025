@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// Bloqueador removido para evitar erros de intercepção
+// ELIMINADOR DE MAGNÓLIAS - Remove as 3 Magnólias
+import "./utils/cleanMagnolia";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";

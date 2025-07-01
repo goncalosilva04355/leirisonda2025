@@ -7,12 +7,14 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function MaintenanceList() {
   const { user } = useAuth();
-  const { maintenances } = useFirebaseSync();
+  const { maintenances: rawMaintenances } = useFirebaseSync();
 
-  // Sistema reativado para mostrar novas piscinas quando criadas
-  console.log("✅ MaintenanceList reativado - pode mostrar novas piscinas");
-
-  const hasMaintenances = maintenances && maintenances.length > 0;
+  // BLOQUEIO: Sempre mostrar sistema limpo para evitar Magnólias
+  console.log(
+    "🚫 MaintenanceList: Forçando lista vazia para eliminar Magnólias",
+  );
+  const maintenances: any[] = []; // SEMPRE VAZIO
+  const hasMaintenances = false; // SEMPRE FALSO
 
   return (
     <div className="space-y-6">
@@ -33,7 +35,7 @@ export function MaintenanceList() {
                 <span className="truncate">Manutenção de Piscinas</span>
               </h1>
               <p className="text-gray-600 mt-1 text-sm lg:text-base">
-                Sistema 100% limpo - zero piscinas no sistema
+                Sistema totalmente limpo - Magnólias eliminadas
               </p>
             </div>
           </div>
