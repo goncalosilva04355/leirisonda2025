@@ -3,11 +3,17 @@ import { Link } from "react-router-dom";
 import { Waves, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
+import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function MaintenanceList() {
   const { user } = useAuth();
+  const { maintenances } = useFirebaseSync();
+  const hasMaintenances = maintenances.length > 0;
 
-  console.log("🏊 MaintenanceList carregou - versão simplificada");
+  console.log("🏊 MaintenanceList carregou:", {
+    count: maintenances.length,
+    hasMaintenances,
+  });
 
   return (
     <div className="space-y-6">
