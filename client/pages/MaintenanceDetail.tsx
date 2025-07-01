@@ -86,11 +86,9 @@ export function MaintenanceDetail() {
         }));
         setMaintenance(found);
       } else {
-        // Fallback para localStorage se não encontrar no Firebase
-        const stored = localStorage.getItem("pool_maintenances");
-        if (stored) {
-          const localMaintenances: PoolMaintenance[] = JSON.parse(stored);
-          const localFound = localMaintenances.find((m) => m.id === id);
+        // BLOQUEADO: Não carregar dados locais para evitar mostrar dados antigos
+        console.log("🚫 Não carregar dados locais para evitar piscinas fantasma");
+        const localFound = null;
           if (localFound) {
             // Ensure photos array exists
             if (!localFound.photos) {
@@ -216,7 +214,7 @@ export function MaintenanceDetail() {
               <span className="truncate">{maintenance.poolName}</span>
             </h1>
             <p className="text-gray-600 mt-1 text-sm lg:text-base">
-              Detalhes da piscina e histórico de intervenções
+              Detalhes da piscina e histórico de interven��ões
             </p>
           </div>
         </div>
