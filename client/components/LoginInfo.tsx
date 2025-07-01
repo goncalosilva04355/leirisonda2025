@@ -118,7 +118,7 @@ export function LoginInfo() {
       )
     ) {
       try {
-        DefaultDataService.forceCleanUserSystem();
+        DefaultData.forceCleanUserSystem();
         alert(
           "✅ Sistema de utilizadores limpo e reconfigurado!\n\nUtilizadores disponíveis:\n• gongonsilva@gmail.com / 19867gsf\n• alexkamaryta@gmail.com / 69alexandre",
         );
