@@ -619,7 +619,7 @@ export class FirebaseService {
         );
       }
 
-      // ETAPA 1: Eliminação local GARANTIDA (múltiplas tentativas)
+      // ETAPA 1: Elimina��ão local GARANTIDA (múltiplas tentativas)
       console.log("📱 Eliminando obra localmente (múltiplas tentativas)...");
 
       let localDeleteSuccess = false;
@@ -881,39 +881,24 @@ export class FirebaseService {
       updatedAt: new Date().toISOString(),
     };
 
-    console.log("🏊 Criando nova piscina com proteção anti-duplicação:", newMaintenance.poolName);
+    console.log("🏊 Criando nova piscina:", newMaintenance.poolName);
 
-    // Verificar se já existe uma piscina com mesmo nome
-    const existing = this.getLocalMaintenances();
-    const duplicateByName = existing.find(
-      m => m.poolName?.toLowerCase() === maintenanceData.poolName?.toLowerCase()
+    // Criar apenas localmente por enquanto para evitar duplicação
+    const maintenances = this.getLocalMaintenances();
+
+    // Verificar duplicados
+    const exists = maintenances.find(m =>
+      m.poolName?.toLowerCase() === maintenanceData.poolName?.toLowerCase() ||
+      m.id === newMaintenance.id
     );
 
-    if (duplicateByName) {
+    if (exists) {
       throw new Error(`Já existe uma piscina com o nome "${maintenanceData.poolName}"`);
     }
 
-    if (this.isFirebaseAvailable) {
-      try {
-        // Criar APENAS no Firebase - deixar o real-time listener sincronizar
-        const maintenancesRef = collection(db, "maintenances");
-        const docRef = await addDoc(maintenancesRef, {
-          ...newMaintenance,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        });
-        console.log("🔥 Piscina criada no Firebase:", docRef.id);
-        return docRef.id;
-      } catch (error) {
-        console.error("❌ Erro Firebase, criando localmente:", error);
-      }
-    }
-
-    // Fallback local apenas se Firebase falhar
-    const maintenances = this.getLocalMaintenances();
     maintenances.push(newMaintenance);
     localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
-    console.log("📱 Piscina criada localmente:", newMaintenance.id);
+    console.log("📱 Piscina criada com sucesso:", newMaintenance.id);
     return newMaintenance.id;
   }
     const newMaintenance: PoolMaintenance = {
