@@ -1,9 +1,2 @@
-# SPA routing - redirect all non-file requests to index.html
+# SPA fallback - must be last rule
 /*    /index.html   200
-
-# Specific redirects for PWA
-/dashboard/*  /index.html  200
-/login        /index.html  200
-/create-work  /index.html  200
-/works/*      /index.html  200
-/profile      /index.html  200
