@@ -1,9 +1,11 @@
-const CACHE_NAME = "leirisonda-v1.0.0";
+const CACHE_NAME = "leirisonda-v2.0.2";
 const urlsToCache = [
   "/",
-  "/static/js/bundle.js",
-  "/static/css/main.css",
+  "/assets/index-DnEsHg1H.js",
+  "/assets/index-DFdR-byQ.css",
   "/manifest.json",
+  "/pwa-style.css",
+  "/favicon-leirisonda.svg",
 ];
 
 // Install event
