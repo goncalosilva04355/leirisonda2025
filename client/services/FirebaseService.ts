@@ -528,7 +528,7 @@ export class FirebaseService {
           `emergency_work_${newWork.id}`,
           JSON.stringify(newWork),
         );
-        console.log("🚨 OBRA SALVA EM MODO DE EMERGÊNCIA");
+        console.log("🚨 OBRA SALVA EM MODO DE EMERG��NCIA");
         return newWork.id;
       } catch (emergencyError) {
         console.error("�� Erro final:", emergencyError);
@@ -764,7 +764,7 @@ export class FirebaseService {
 
       console.log(`✅ Obra ${workId} eliminada do localStorage`);
 
-      // Verifica��ão dupla
+      // Verifica����o dupla
       const verification = this.getLocalWorks();
       const stillExists = verification.find((w) => w.id === workId);
 
@@ -836,15 +836,6 @@ export class FirebaseService {
       console.error("Error fetching local maintenances:", error);
       return [];
     }
-  }
-
-  async createMaintenance(
-    maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
-  ): Promise<string> {
-    console.log(
-      "🚫 BLOQUEIO: createMaintenance cancelado - não criar piscinas",
-    );
-    throw new Error("Criação de piscinas está temporariamente desabilitada");
   }
 
   async createMaintenance(
