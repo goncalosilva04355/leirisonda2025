@@ -874,6 +874,18 @@ export class FirebaseService {
   async createMaintenance(
     maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
+    console.log(
+      "🚫 CRIAÇÃO TEMPORARIAMENTE BLOQUEADA - Corrigindo problema de duplicação",
+    );
+    throw new Error(
+      "Criação temporariamente desabilitada para corrigir duplicação",
+    );
+  }
+
+  // VERSÃO ORIGINAL DESABILITADA
+  async createMaintenanceDisabled(
+    maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
+  ): Promise<string> {
     const newMaintenance: PoolMaintenance = {
       ...maintenanceData,
       id: crypto.randomUUID(),
@@ -1402,7 +1414,7 @@ export class FirebaseService {
         }
       }
 
-      console.log("✅ Local data sync completed (works, maintenances, users)");
+      console.log("��� Local data sync completed (works, maintenances, users)");
     } catch (error) {
       console.error("❌ Error syncing local data:", error);
     }

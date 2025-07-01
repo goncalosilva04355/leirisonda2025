@@ -26,8 +26,15 @@ export function useFirebaseSync() {
   const [works, setWorks] = useState<Work[]>([]);
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
 
-  // Sistema normalizado para funcionamento normal
-  console.log("✅ Sistema de sincronização inicializado normalmente");
+  // BLOQUEIO TEMPORÁRIO: Forçar maintenances vazio para parar duplicação
+  useEffect(() => {
+    console.log(
+      "🚫 BLOQUEIO: Forçando maintenances vazio para parar quadriplicação",
+    );
+    setMaintenances([]);
+  }, []);
+
+  console.log("🚫 Sistema temporariamente bloqueado para corrigir duplicação");
   const [users, setUsers] = useState<User[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isSyncing, setIsSyncing] = useState(false);

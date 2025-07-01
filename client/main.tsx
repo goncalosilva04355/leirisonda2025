@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// Remove duplicados de piscinas criadas
-import "./utils/removeDuplicates";
+// LIMPEZA AGRESSIVA - Remove todas as piscinas quadriplicadas
+import "./utils/aggressiveCleanup";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";
