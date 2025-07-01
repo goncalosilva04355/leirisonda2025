@@ -24,7 +24,44 @@ export function useFirebaseSync() {
 
   const { user } = authData;
   const [works, setWorks] = useState<Work[]>([]);
-  const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
+  const [rawMaintenances, setRawMaintenances] = useState<PoolMaintenance[]>([]);
+
+  // Interceptor nuclear que NUNCA permite duplicatas
+  const maintenances = React.useMemo(() => {
+    if (!Array.isArray(rawMaintenances) || rawMaintenances.length === 0) {
+      return [];
+    }
+
+    // Aplicar limpeza nuclear a cada renderização
+    const uniqueMap = new Map();
+
+    rawMaintenances.forEach((maintenance) => {
+      if (
+        !maintenance ||
+        !maintenance.poolName ||
+        typeof maintenance.poolName !== "string"
+      ) {
+        return;
+      }
+
+      const normalizedName = maintenance.poolName.toLowerCase().trim();
+
+      // Apenas uma piscina por nome - SEMPRE
+      if (!uniqueMap.has(normalizedName)) {
+        uniqueMap.set(normalizedName, maintenance);
+      }
+    });
+
+    const result = Array.from(uniqueMap.values());
+
+    if (result.length !== rawMaintenances.length) {
+      console.log(
+        `🚨 NUCLEAR DEDUP: ${rawMaintenances.length} -> ${result.length} (removidas ${rawMaintenances.length - result.length} duplicatas)`,
+      );
+    }
+
+    return result;
+  }, [rawMaintenances]);
 
   // Sistema melhorado de deduplicação ultra-robusta
   const setMaintenancesWithDedup = (newMaintenances: PoolMaintenance[]) => {
