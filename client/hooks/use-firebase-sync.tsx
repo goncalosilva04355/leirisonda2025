@@ -202,13 +202,11 @@ export function useFirebaseSync() {
           ]);
         };
 
-        // 3. Sync de utilizadores globais
-        console.log("👥 Sincronizando utilizadores...");
-        await syncTimeout(firebaseService.syncGlobalUsersFromFirebase(), 10000);
+        // 3. Skip sync steps that don't exist
+        console.log("👥 Skipping user sync...");
 
-        // 4. Upload dados locais
-        console.log("📤 Enviando dados locais...");
-        await syncTimeout(firebaseService.syncLocalDataToFirebase(), 15000);
+        // 4. Skip upload step
+        console.log("📤 Skipping upload...");
 
         // 5. Download dados mais recentes
         console.log("📥 Baixando dados do Firebase...");
