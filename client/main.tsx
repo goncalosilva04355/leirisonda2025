@@ -3,8 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// LIMPEZA NUCLEAR ÚNICA - Executa uma vez apenas
-import "./utils/nuclearCleanup";
+// Sistema limpo e reativado sem imports de limpeza
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";

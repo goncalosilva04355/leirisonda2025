@@ -874,18 +874,48 @@ export class FirebaseService {
   async createMaintenance(
     maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
   ): Promise<string> {
-    console.log(
-      "🚫 CRIAÇÃO TEMPORARIAMENTE BLOQUEADA - Corrigindo problema de duplicação",
-    );
-    throw new Error(
-      "Criação temporariamente desabilitada para corrigir duplicação",
-    );
-  }
+    const newMaintenance: PoolMaintenance = {
+      ...maintenanceData,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-  // VERSÃO ORIGINAL DESABILITADA
-  async createMaintenanceDisabled(
-    maintenanceData: Omit<PoolMaintenance, "id" | "createdAt" | "updatedAt">,
-  ): Promise<string> {
+    console.log("🏊 Criando nova piscina com proteção anti-duplicação:", newMaintenance.poolName);
+
+    // Verificar se já existe uma piscina com mesmo nome
+    const existing = this.getLocalMaintenances();
+    const duplicateByName = existing.find(
+      m => m.poolName?.toLowerCase() === maintenanceData.poolName?.toLowerCase()
+    );
+
+    if (duplicateByName) {
+      throw new Error(`Já existe uma piscina com o nome "${maintenanceData.poolName}"`);
+    }
+
+    if (this.isFirebaseAvailable) {
+      try {
+        // Criar APENAS no Firebase - deixar o real-time listener sincronizar
+        const maintenancesRef = collection(db, "maintenances");
+        const docRef = await addDoc(maintenancesRef, {
+          ...newMaintenance,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+        console.log("🔥 Piscina criada no Firebase:", docRef.id);
+        return docRef.id;
+      } catch (error) {
+        console.error("❌ Erro Firebase, criando localmente:", error);
+      }
+    }
+
+    // Fallback local apenas se Firebase falhar
+    const maintenances = this.getLocalMaintenances();
+    maintenances.push(newMaintenance);
+    localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
+    console.log("📱 Piscina criada localmente:", newMaintenance.id);
+    return newMaintenance.id;
+  }
     const newMaintenance: PoolMaintenance = {
       ...maintenanceData,
       id: crypto.randomUUID(),
@@ -902,10 +932,7 @@ export class FirebaseService {
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         });
-        console.log(
-          "🔥 Maintenance created in Firebase only:",
-          newMaintenance.id,
-        );
+        console.log("🔥 Maintenance created in Firebase only:", newMaintenance.id);
         return newMaintenance.id;
       } catch (error) {
         console.error("❌ Firebase creation failed, creating locally:", error);
@@ -916,7 +943,7 @@ export class FirebaseService {
     // Criar localmente apenas se Firebase não disponível ou falhou
     const maintenances = this.getLocalMaintenances();
     // Verificar se já existe para evitar duplicação
-    const exists = maintenances.find((m) => m.id === newMaintenance.id);
+    const exists = maintenances.find(m => m.id === newMaintenance.id);
     if (!exists) {
       maintenances.push(newMaintenance);
       localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
@@ -1414,7 +1441,7 @@ export class FirebaseService {
         }
       }
 
-      console.log("��� Local data sync completed (works, maintenances, users)");
+      console.log("✅ Local data sync completed (works, maintenances, users)");
     } catch (error) {
       console.error("❌ Error syncing local data:", error);
     }

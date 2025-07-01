@@ -26,16 +26,31 @@ export function useFirebaseSync() {
   const [works, setWorks] = useState<Work[]>([]);
   const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
 
-  // SISTEMA COMPLETAMENTE DESABILITADO PARA PARAR MULTIPLICAÇÃO
-  useEffect(() => {
-    setMaintenances([]);
-  }, []);
+  // Sistema reativado com proteção anti-duplicação
+  const setMaintenancesWithDedup = (newMaintenances: PoolMaintenance[]) => {
+    // Remover duplicados por ID
+    const uniqueById = newMaintenances.filter(
+      (maintenance, index, self) =>
+        index === self.findIndex((m) => m.id === maintenance.id),
+    );
 
-  // Sobrescrever qualquer tentativa de definir maintenances
-  const originalSetMaintenances = setMaintenances;
-  const safeSetMaintenances = () => {
-    console.log("🚫 setMaintenances bloqueado para parar multiplicação");
-    originalSetMaintenances([]);
+    // Remover duplicados por nome
+    const uniqueByName = uniqueById.filter(
+      (maintenance, index, self) =>
+        index ===
+        self.findIndex(
+          (m) =>
+            m.poolName?.toLowerCase() === maintenance.poolName?.toLowerCase(),
+        ),
+    );
+
+    if (uniqueByName.length !== newMaintenances.length) {
+      console.log(
+        `🧹 Removidos ${newMaintenances.length - uniqueByName.length} duplicados`,
+      );
+    }
+
+    setMaintenances(uniqueByName);
   };
 
   // BLOQUEIO TEMPORÁRIO: Forçar maintenances vazio para parar duplicação
@@ -518,7 +533,7 @@ export function useFirebaseSync() {
               triggerInstantSync(`after_${operationType}`);
             } catch (syncError) {
               console.warn(
-                `⚠️ Erro no sync após ${operationType} (operação original bem sucedida):`,
+                `���️ Erro no sync após ${operationType} (operação original bem sucedida):`,
                 syncError,
               );
               // Não fazer throw aqui - a operação principal já funcionou
@@ -903,7 +918,7 @@ export function useFirebaseSync() {
   return {
     // Data
     works,
-    maintenances: [], // FORÇADO VAZIO
+    maintenances,
     users,
 
     // Status
