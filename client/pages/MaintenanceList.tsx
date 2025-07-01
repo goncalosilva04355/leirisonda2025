@@ -10,23 +10,6 @@ export function MaintenanceList() {
   const { maintenances } = useFirebaseSync();
   const hasMaintenances = maintenances.length > 0;
 
-  // Limpeza NUCLEAR de duplicadas ao carregar
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log("💥 Executando limpeza NUCLEAR de duplicadas...");
-      const result = nuclearCleanDuplicates();
-      console.log(`💥 Limpeza nuclear resultado:`, result);
-
-      // Sempre recarregar após limpeza nuclear para garantir estado limpo
-      setTimeout(() => {
-        console.log("🔄 Recarregando página após limpeza nuclear...");
-        window.location.reload();
-      }, 500);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   console.log("🏊 MaintenanceList: Carregando piscinas...", {
     count: maintenances.length,
     hasMaintenances,
