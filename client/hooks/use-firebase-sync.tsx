@@ -538,7 +538,7 @@ export function useFirebaseSync() {
               );
             }
 
-            setMaintenances(uniqueMaintenances);
+            setRawMaintenances(uniqueMaintenances);
             setLastSync(new Date());
             localStorage.setItem(
               "pool_maintenances",
