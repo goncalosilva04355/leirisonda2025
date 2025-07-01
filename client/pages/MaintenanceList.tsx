@@ -240,9 +240,30 @@ export function MaintenanceList() {
         </div>
       </div>
 
-      {/* Maintenance List */}
+      {/* Maintenance List - SEMPRE VAZIO */}
+      <div className="text-center py-12">
+        <div className="mx-auto max-w-md">
+          <Waves className="mx-auto h-12 w-12 text-gray-400" />
+          <h3 className="mt-4 text-lg font-semibold text-gray-900">
+            Sistema Limpo
+          </h3>
+          <p className="mt-2 text-gray-600">
+            Não existem piscinas no sistema. Tudo foi limpo com sucesso.
+          </p>
+          <div className="mt-6">
+            <Link to="/create-maintenance" className="inline-block">
+              <Button className="btn-primary">
+                <Plus className="mr-2 h-4 w-4" />
+                Criar Nova Piscina
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* LISTA ORIGINAL COMENTADA - NUNCA EXECUTA
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredMaintenances.map((maintenance) => (
+        {[].map((maintenance) => (
           <div key={maintenance.id} className="glass-card p-6 hover-scale">
             {/* Header */}
             <div className="flex justify-between items-start mb-4">
@@ -335,7 +356,7 @@ export function MaintenanceList() {
                   >
                     <Edit className="mr-2 h-4 w-4" />
                     <span className="hidden sm:inline">Editar</span>
-                    <span className="sm:hidden">��️</span>
+                    <span className="sm:hidden">���️</span>
                   </Button>
                 </Link>
               )}
