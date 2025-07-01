@@ -161,22 +161,8 @@ export class DefaultDataService {
       console.log("🔧 Initializing sample maintenances...");
 
       const sampleMaintenances: PoolMaintenance[] = [
-        // REMOVIDO: Dados de exemplo que causavam problemas
-        // Piscina Magnolia e MICHEL Duarte removidos permanentemente
-          clientEmail: "michel@email.com",
-          poolType: "outdoor",
-          waterCubicage: "48m³",
-          status: "active",
-          photos: [],
-          interventions: [
-            {
-              id: crypto.randomUUID(),
-              maintenanceId: "",
-              date: new Date().toISOString(),
-              timeStart: "09:00",
-              timeEnd: "11:00",
-              technicians: ["Técnico Leirisonda"],
-              vehicles: ["LC-45-67"],
+        // ARRAY VAZIO - Todos os dados de exemplo removidos permanentemente
+      ];
               waterValues: {
                 ph: 7.2,
                 salt: 3200,
