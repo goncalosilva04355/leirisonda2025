@@ -1,5 +1,5 @@
 /**
- * LIMPEZA IMEDIATA DE PISCINAS DUPLICADAS
+ * LIMPEZA SIMPLES DE PISCINAS DUPLICADAS
  */
 
 export function cleanPoolDuplicates() {
@@ -60,11 +60,6 @@ export function cleanPoolDuplicates() {
     console.log(`  • Piscinas removidas: ${removedCount}`);
     console.log(`  • Piscinas restantes: ${finalCount}`);
 
-    // Log das piscinas finais
-    cleanedPools.forEach((pool: any, index: number) => {
-      console.log(`  ${index + 1}. ${pool.poolName} (${pool.id})`);
-    });
-
     return {
       success: true,
       cleaned: removedCount,
@@ -77,15 +72,4 @@ export function cleanPoolDuplicates() {
   }
 }
 
-// Executar limpeza automaticamente quando o módulo for importado
-console.log("🚀 Executando limpeza automática de duplicadas...");
-const result = cleanPoolDuplicates();
-if (result.success) {
-  console.log(
-    `✅ Auto-limpeza: ${result.cleaned} duplicadas removidas, ${result.remaining} piscinas restantes`,
-  );
-} else {
-  console.error(`❌ Auto-limpeza falhou: ${result.error}`);
-}
-
-export {};
+// NO AUTO-EXECUTION - only export function
