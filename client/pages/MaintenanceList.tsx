@@ -9,71 +9,39 @@ export function MaintenanceList() {
   const { user } = useAuth();
   const { maintenances } = useFirebaseSync();
 
-  // LIMPEZA IMEDIATA ao carregar o componente
+  // Limpeza simples sem reload
   useEffect(() => {
-    console.log("🧹 LIMPEZA IMEDIATA DE DUPLICATAS INICIADA");
+    console.log("🧹 Limpeza simples de duplicatas...");
 
-    // 1. Limpar todas as possíveis chaves de storage
-    const storageKeys = [
-      "pool_maintenances",
-      "maintenances",
-      "leirisonda_maintenances",
-      "backup_maintenances",
-    ];
+    const pools = localStorage.getItem("pool_maintenances");
+    if (pools) {
+      try {
+        const poolsArray = JSON.parse(pools);
+        if (Array.isArray(poolsArray) && poolsArray.length > 1) {
+          const uniqueMap = new Map();
 
-    let hasData = false;
-    let cleanData = [];
+          poolsArray.forEach((pool) => {
+            if (pool && pool.poolName) {
+              const normalizedName = pool.poolName.toLowerCase().trim();
+              if (!uniqueMap.has(normalizedName)) {
+                uniqueMap.set(normalizedName, pool);
+              }
+            }
+          });
 
-    // 2. Buscar dados de qualquer key
-    for (const key of storageKeys) {
-      const data = localStorage.getItem(key);
-      if (data) {
-        try {
-          const pools = JSON.parse(data);
-          if (Array.isArray(pools) && pools.length > 0) {
+          const uniquePools = Array.from(uniqueMap.values());
+          if (uniquePools.length !== poolsArray.length) {
             console.log(
-              `📦 Encontrados dados em ${key}: ${pools.length} items`,
+              `🧹 Removidas ${poolsArray.length - uniquePools.length} duplicatas`,
             );
-            cleanData = [...cleanData, ...pools];
-            hasData = true;
-          }
-        } catch (e) {
-          console.warn(`❌ Erro ao parse ${key}:`, e);
-        }
-      }
-    }
-
-    // 3. Se encontrou dados, limpar duplicatas
-    if (hasData && cleanData.length > 0) {
-      const uniqueMap = new Map();
-
-      cleanData.forEach((pool) => {
-        if (pool && pool.poolName && typeof pool.poolName === "string") {
-          const normalizedName = pool.poolName.toLowerCase().trim();
-          if (!uniqueMap.has(normalizedName)) {
-            uniqueMap.set(normalizedName, pool);
+            localStorage.setItem(
+              "pool_maintenances",
+              JSON.stringify(uniquePools),
+            );
           }
         }
-      });
-
-      const finalData = Array.from(uniqueMap.values());
-      console.log(
-        `🧹 RESULTADO LIMPEZA: ${cleanData.length} -> ${finalData.length} piscinas`,
-      );
-
-      // 4. Limpar TODAS as chaves primeiro
-      storageKeys.forEach((key) => localStorage.removeItem(key));
-
-      // 5. Salvar apenas dados únicos na chave principal
-      localStorage.setItem("pool_maintenances", JSON.stringify(finalData));
-
-      // 6. Se removeu duplicatas, recarregar
-      if (cleanData.length !== finalData.length) {
-        console.log(
-          `🔄 Recarregando página - removidas ${cleanData.length - finalData.length} duplicatas`,
-        );
-        setTimeout(() => window.location.reload(), 100);
-        return;
+      } catch (e) {
+        console.warn("Erro na limpeza:", e);
       }
     }
   }, []);
