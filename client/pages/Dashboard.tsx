@@ -293,23 +293,9 @@ export function Dashboard() {
   };
 
   const getUpcomingMaintenances = () => {
-    if (!maintenances) return [];
-
-  // BLOQUEADO: Não mostrar manutenções
-  console.log("🚫 getUpcomingMaintenances bloqueado - retornando array vazio");
-  const activeMaintances = [];
-      (m: any) =>
-        m.status === "active" && getNextMaintenanceDate(m) !== "A definir",
-    );
-
-    // Sort by days until maintenance (closest first, including overdue)
-    return activeMaintances
-      .sort((a: any, b: any) => {
-        const daysA = getDaysUntilMaintenance(a);
-        const daysB = getDaysUntilMaintenance(b);
-        return daysA - daysB;
-      })
-      .slice(0, 5); // Show only next 5 maintenances
+    // BLOQUEADO COMPLETAMENTE: Sempre retorna array vazio
+    console.log("🚫 getUpcomingMaintenances bloqueado - zero piscinas");
+    return [];
   };
 
   return (
