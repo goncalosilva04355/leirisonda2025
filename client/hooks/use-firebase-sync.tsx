@@ -24,31 +24,7 @@ export function useFirebaseSync() {
 
   const { user } = authData;
   const [works, setWorks] = useState<Work[]>([]);
-
-  // BLOQUEIO NUCLEAR - MAINTENANCES SEMPRE VAZIO
-  const maintenances: PoolMaintenance[] = [];
-
-  // Limpar storage agressivamente sempre
-  useEffect(() => {
-    const clearAllPools = () => {
-      const keys = [
-        "pool_maintenances",
-        "maintenances",
-        "leirisonda_maintenances",
-        "backup_maintenances",
-      ];
-      keys.forEach((key) => {
-        localStorage.removeItem(key);
-        sessionStorage.removeItem(key);
-      });
-      localStorage.setItem("pool_maintenances", "[]");
-    };
-
-    clearAllPools();
-    const interval = setInterval(clearAllPools, 1000); // Limpar a cada segundo
-
-    return () => clearInterval(interval);
-  }, []);
+  const [maintenances, setMaintenances] = useState<PoolMaintenance[]>([]);
 
   // Interceptor de duplicatas ultra-agressivo
   const interceptDuplicates = (pools: PoolMaintenance[]): PoolMaintenance[] => {
