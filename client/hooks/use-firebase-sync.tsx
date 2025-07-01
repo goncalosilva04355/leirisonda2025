@@ -956,7 +956,7 @@ export function useFirebaseSync() {
   return {
     // Data
     works,
-    maintenances,
+    maintenances: finalMaintenances, // SEMPRE LISTA VAZIA
     users,
 
     // Status
