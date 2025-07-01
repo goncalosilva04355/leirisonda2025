@@ -7,48 +7,15 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 
 export function MaintenanceList() {
   const { user } = useAuth();
+  const { maintenances } = useFirebaseSync();
 
-  // ELIMINAÇÃO IMEDIATA AO CARREGAR ESTA PÁGINA
+  // Limpeza simples e direta
   React.useEffect(() => {
-    console.log("🗑️ ELIMINAÇÃO IMEDIATA: Apagando TODAS as piscinas");
-
-    // Lista de TODAS as chaves possíveis
-    const allKeys = [
-      "pool_maintenances",
-      "maintenances",
-      "leirisonda_maintenances",
-      "backup_maintenances",
-      "temp_maintenances",
-      "cached_maintenances",
-      "firebase_maintenances",
-      "local_maintenances",
-      "piscinas",
-      "pools",
-      "maintenance_data",
-      "leirisonda_pools",
-      "old_pools",
-      "saved_pools",
-      "magnolia",
-      "piscina_magnolia",
-    ];
-
-    // Limpar TUDO
-    allKeys.forEach((key) => {
-      localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
-    });
-
-    // Garantir que está vazio
+    localStorage.removeItem("pool_maintenances");
     localStorage.setItem("pool_maintenances", "[]");
-
-    console.log("✅ TODAS as piscinas eliminadas - sistema limpo");
   }, []);
 
-  // SEMPRE RETORNAR LISTA VAZIA - IGNORAR QUALQUER DADO
-  const uniqueMaintenances: any[] = [];
-  const hasMaintenances = false;
-
-  console.log("🚫 MaintenanceList: Forçando lista vazia");
+  const hasMaintenances = false; // Forçar sempre vazio
 
   console.log("🏊 MaintenanceList: Carregando piscinas...", {
     original: maintenances.length,
