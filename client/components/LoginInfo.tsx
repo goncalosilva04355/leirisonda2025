@@ -7,7 +7,7 @@ import {
   Trash2,
   RefreshCw,
 } from "lucide-react";
-import { DefaultDataService } from "@/services/DefaultData";
+import { DefaultData } from "@/services/DefaultData";
 import { firebaseService } from "@/services/FirebaseService";
 
 interface UserDebugInfo {

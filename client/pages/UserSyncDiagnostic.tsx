@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { firebaseService } from "@/services/FirebaseService";
-import { DefaultDataService } from "@/services/DefaultData";
+import { DefaultData } from "@/services/DefaultData";
 import { User } from "@shared/types";
 import {
   ArrowLeft,
