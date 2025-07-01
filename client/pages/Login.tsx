@@ -3,6 +3,8 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 
 export const Login = React.memo(function Login() {
+  console.log("🔑 Login component renderizando...");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +27,14 @@ export const Login = React.memo(function Login() {
     isLoading: false,
     isInitialized: false,
   };
+
+  console.log("🔑 Login state:", {
+    hasAuthContext: !!authContext,
+    user: !!user,
+    hasLogin: !!login,
+    isLoading,
+    isInitialized,
+  });
 
   // Declarar todos os callbacks aqui (antes de qualquer return)
   const handleSubmit = useCallback(
