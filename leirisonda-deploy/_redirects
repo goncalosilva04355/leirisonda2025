@@ -1,1 +1,17 @@
-/*    /index.html   200
+# API fallbacks
+/api/*  /index.html  404
+
+# Static assets - serve directly
+/assets/*  /assets/:splat  200
+/favicon*  /favicon:splat  200
+/manifest.json  /manifest.json  200
+/sw.js  /sw.js  200
+/robots.txt  /robots.txt  200
+/*.css  /:splat.css  200
+/*.js  /:splat.js  200
+/*.svg  /:splat.svg  200
+/*.png  /:splat.png  200
+/*.ico  /:splat.ico  200
+
+# SPA fallback - must be last
+/*  /index.html  200
