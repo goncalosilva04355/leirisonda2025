@@ -8,10 +8,44 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 export function MaintenanceList() {
   const { user } = useAuth();
   const { maintenances } = useFirebaseSync();
-  const hasMaintenances = maintenances.length > 0;
+
+  // Filtrar duplicatas diretamente aqui
+  const uniqueMaintenances = React.useMemo(() => {
+    if (!Array.isArray(maintenances)) return [];
+
+    const seen = new Set();
+    return maintenances.filter((maintenance) => {
+      if (!maintenance || !maintenance.poolName) return false;
+
+      const normalizedName = maintenance.poolName.toLowerCase().trim();
+      if (seen.has(normalizedName)) {
+        console.log(`🗑️ Removendo duplicata: ${maintenance.poolName}`);
+        return false;
+      }
+
+      seen.add(normalizedName);
+      return true;
+    });
+  }, [maintenances]);
+
+  const hasMaintenances = uniqueMaintenances.length > 0;
+
+  // Limpeza do localStorage se houver duplicatas
+  useEffect(() => {
+    if (maintenances.length !== uniqueMaintenances.length) {
+      console.log(
+        `🧹 Atualizando localStorage: ${maintenances.length} -> ${uniqueMaintenances.length}`,
+      );
+      localStorage.setItem(
+        "pool_maintenances",
+        JSON.stringify(uniqueMaintenances),
+      );
+    }
+  }, [maintenances, uniqueMaintenances]);
 
   console.log("🏊 MaintenanceList: Carregando piscinas...", {
-    count: maintenances.length,
+    original: maintenances.length,
+    unique: uniqueMaintenances.length,
     hasMaintenances,
   });
 
