@@ -89,7 +89,7 @@ export function useFirebaseSync() {
       JSON.stringify(finalMaintenances),
     );
 
-    setRawMaintenances(finalMaintenances);
+    setMaintenances(finalMaintenances);
   };
 
   // Sistema normalizado sem interceptações que quebram React
