@@ -8,7 +8,13 @@ import { useFirebaseSync } from "@/hooks/use-firebase-sync";
 export function MaintenanceList() {
   const { user } = useAuth();
   const { maintenances } = useFirebaseSync();
-  const hasMaintenances = maintenances.length > 0;
+
+  console.log("🏊 MaintenanceList carregou:", {
+    maintenances: maintenances?.length || 0,
+  });
+
+  const hasMaintenances =
+    Array.isArray(maintenances) && maintenances.length > 0;
 
   console.log("🏊 MaintenanceList: Carregando piscinas...", {
     original: maintenances.length,
