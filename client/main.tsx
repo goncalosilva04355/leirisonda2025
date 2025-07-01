@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./global.css";
 
-// No cleanup imports to avoid Vite conflicts
+// Remove duplicados de piscinas criadas
+import "./utils/removeDuplicates";
 
 // Components
 import { ErrorBoundary } from "./components/ErrorBoundary";

@@ -881,28 +881,34 @@ export class FirebaseService {
       updatedAt: new Date().toISOString(),
     };
 
-    // SEMPRE criar localmente primeiro (sync instantâneo local)
-    const maintenances = this.getLocalMaintenances();
-    maintenances.push(newMaintenance);
-    localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
-    console.log("📱 Maintenance created locally first:", newMaintenance.id);
-
-    // Tentar Firebase em paralelo se disponível
     if (this.isFirebaseAvailable) {
       try {
+        // Criar apenas no Firebase - o real-time listener vai sincronizar automaticamente
         const maintenancesRef = collection(db, "maintenances");
         await addDoc(maintenancesRef, {
           ...newMaintenance,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         });
-        console.log("🔥 Maintenance synced to Firebase:", newMaintenance.id);
-      } catch (error) {
-        console.error(
-          "⚠️ Firebase sync failed, maintenance saved locally:",
-          error,
+        console.log(
+          "🔥 Maintenance created in Firebase only:",
+          newMaintenance.id,
         );
+        return newMaintenance.id;
+      } catch (error) {
+        console.error("❌ Firebase creation failed, creating locally:", error);
+        // Fallback para local se Firebase falhar
       }
+    }
+
+    // Criar localmente apenas se Firebase não disponível ou falhou
+    const maintenances = this.getLocalMaintenances();
+    // Verificar se já existe para evitar duplicação
+    const exists = maintenances.find((m) => m.id === newMaintenance.id);
+    if (!exists) {
+      maintenances.push(newMaintenance);
+      localStorage.setItem("pool_maintenances", JSON.stringify(maintenances));
+      console.log("📱 Maintenance created locally:", newMaintenance.id);
     }
 
     return newMaintenance.id;

@@ -416,17 +416,30 @@ export function useFirebaseSync() {
           );
         });
 
-        // Listener para manutenções
+        // Listener para manutenções com deduplicação
         unsubscribeMaintenances = firebaseService.listenToMaintenances(
           (updatedMaintenances) => {
             console.log(
               `🏊 REAL-TIME: ${updatedMaintenances.length} manutenções`,
             );
-            setMaintenances(updatedMaintenances);
+
+            // Remover duplicados por ID
+            const uniqueMaintenances = updatedMaintenances.filter(
+              (maintenance, index, self) =>
+                index === self.findIndex((m) => m.id === maintenance.id),
+            );
+
+            if (uniqueMaintenances.length !== updatedMaintenances.length) {
+              console.log(
+                `🧹 Removidos ${updatedMaintenances.length - uniqueMaintenances.length} duplicados`,
+              );
+            }
+
+            setMaintenances(uniqueMaintenances);
             setLastSync(new Date());
             localStorage.setItem(
               "pool_maintenances",
-              JSON.stringify(updatedMaintenances),
+              JSON.stringify(uniqueMaintenances),
             );
           },
         );
