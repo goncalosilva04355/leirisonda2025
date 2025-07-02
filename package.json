@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "mkdir -p dist/spa && cp -r leirisonda-deploy/* dist/spa/",
-    "dev": "npx serve leirisonda-deploy -p 5173",
-    "start": "npx serve leirisonda-deploy -p 5173",
-    "preview": "npx serve leirisonda-deploy -p 5173"
+    "dev": "npx serve leirisonda-deploy -p 5173 -s",
+    "start": "npx serve leirisonda-deploy -p 5173 -s",
+    "preview": "npx serve leirisonda-deploy -p 5173 -s"
   },
   "dependencies": {
     "serve": "^14.2.1"
