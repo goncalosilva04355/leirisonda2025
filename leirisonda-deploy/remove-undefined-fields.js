@@ -180,6 +180,60 @@ console.log(
     return false;
   }
 
+  // Interceptar TODAS as possíveis funções de escrita do Firebase
+  function interceptAllFirebaseMethods() {
+    // Interceptar via módulos globais se disponíveis
+    if (typeof setDoc !== "undefined") {
+      const original = setDoc;
+      window.setDoc = function (docRef, data, options) {
+        console.log("🧹 UNDEFINED: Global setDoc interceptado");
+        const cleaned = removeUndefinedFields(data);
+        return original(docRef, cleaned, options);
+      };
+    }
+
+    if (typeof addDoc !== "undefined") {
+      const original = addDoc;
+      window.addDoc = function (collectionRef, data) {
+        console.log("🧹 UNDEFINED: Global addDoc interceptado");
+        const cleaned = removeUndefinedFields(data);
+        return original(collectionRef, cleaned);
+      };
+    }
+
+    if (typeof updateDoc !== "undefined") {
+      const original = updateDoc;
+      window.updateDoc = function (docRef, data) {
+        console.log("🧹 UNDEFINED: Global updateDoc interceptado");
+        const cleaned = removeUndefinedFields(data);
+        return original(docRef, cleaned);
+      };
+    }
+
+    // Interceptar fetch direto para Firestore
+    const originalFetch = window.fetch;
+    window.fetch = function (url, options) {
+      if (typeof url === "string" && url.includes("firestore.googleapis.com")) {
+        if (options && options.body) {
+          try {
+            let body = options.body;
+            if (typeof body === "string") {
+              const parsed = JSON.parse(body);
+              if (parsed.writes || parsed.fields) {
+                console.log("🧹 UNDEFINED: Firestore fetch interceptado");
+                const cleaned = removeUndefinedFields(parsed);
+                options.body = JSON.stringify(cleaned);
+              }
+            }
+          } catch (e) {
+            // Ignorar erros de parsing
+          }
+        }
+      }
+      return originalFetch.apply(this, arguments);
+    };
+  }
+
   // Aguardar e interceptar todas as funções
   function waitAndIntercept() {
     let intercepted = 0;
@@ -189,29 +243,37 @@ console.log(
     if (interceptUpdateDoc()) intercepted++;
     if (interceptFirestoreInstance()) intercepted++;
 
-    if (intercepted < 4) {
-      setTimeout(waitAndIntercept, 100);
-    } else {
-      console.log("✅ UNDEFINED: Todas as funções interceptadas");
-    }
+    // Interceptar métodos adicionais
+    interceptAllFirebaseMethods();
+
+    console.log(`🧹 UNDEFINED: ${intercepted} funções interceptadas`);
   }
 
-  // Iniciar interceptação imediatamente
+  // Interceptação imediata e agressiva
   waitAndIntercept();
 
-  // Tentar múltiplas vezes
-  setTimeout(waitAndIntercept, 1000);
-  setTimeout(waitAndIntercept, 3000);
-  setTimeout(waitAndIntercept, 5000);
-
-  // Monitor contínuo por 30 segundos
-  const monitor = setInterval(() => {
+  // Interceptar a cada 500ms por 1 minuto
+  let attempts = 0;
+  const aggressiveMonitor = setInterval(() => {
+    attempts++;
     waitAndIntercept();
-  }, 2000);
+
+    if (attempts > 120) {
+      // 60 segundos / 0.5 = 120 tentativas
+      clearInterval(aggressiveMonitor);
+    }
+  }, 500);
+
+  // Interceptar também quando Firebase carrega
+  const firebaseWaiter = setInterval(() => {
+    if (window.firebase) {
+      waitAndIntercept();
+    }
+  }, 100);
 
   setTimeout(() => {
-    clearInterval(monitor);
-  }, 30000);
+    clearInterval(firebaseWaiter);
+  }, 60000);
 
   console.log("🧹 UNDEFINED: Sistema de remoção de undefined ativo");
 })();
