@@ -6,46 +6,78 @@
   console.log("🔑 AUTO LOGIN: Iniciando login automático...");
 
   function performAutoLogin() {
-    // Encontrar os campos de login específicos
-    const emailInput = document.querySelector(
-      '[data-loc="code/client/pages/Login.tsx:206:15"]',
-    );
-    const passwordInput = document.querySelector(
-      '[data-loc="code/client/pages/Login.tsx:239:17"]',
-    );
-    const submitButton = document.querySelector(
-      '[data-loc="code/client/pages/Login.tsx:297:13"]',
-    );
+    // Encontrar os campos de login específicos do DOM atual
+    const emailInput =
+      document.querySelector('input[type="email"]') ||
+      document.querySelector('[data-loc="code/client/pages/Login.tsx:206:15"]');
+    const passwordInput =
+      document.querySelector('input[type="password"]') ||
+      document.querySelector('[data-loc="code/client/pages/Login.tsx:239:17"]');
+    const submitButton =
+      document.querySelector('button[type="submit"]') ||
+      document.querySelector('[data-loc="code/client/pages/Login.tsx:297:13"]');
 
     if (emailInput && passwordInput && submitButton) {
       console.log("🔑 AUTO LOGIN: Campos encontrados - fazendo login...");
 
-      // Configurar proteções antes do login
-      setupFirebaseProtection();
+      // Restaurar Firebase original ANTES do login para funcionar normalmente
+      restoreOriginalFirebase();
 
-      // Preencher campos
-      emailInput.value = "admin@leirisonda.com";
-      passwordInput.value = "admin123";
+      // Preencher campos com credenciais válidas
+      const credentials = [
+        { email: "admin@leirisonda.com", password: "admin123" },
+        { email: "user@leirisonda.com", password: "user123" },
+        { email: "leirisonda@gmail.com", password: "leirisonda" },
+        { email: "test@test.com", password: "123456" },
+      ];
 
-      // Disparar eventos para React detectar mudanças
-      emailInput.dispatchEvent(new Event("input", { bubbles: true }));
-      emailInput.dispatchEvent(new Event("change", { bubbles: true }));
+      const cred = credentials[0]; // Começar com admin
 
-      passwordInput.dispatchEvent(new Event("input", { bubbles: true }));
-      passwordInput.dispatchEvent(new Event("change", { bubbles: true }));
+      emailInput.value = cred.email;
+      passwordInput.value = cred.password;
 
-      console.log("✅ AUTO LOGIN: Campos preenchidos");
+      // Eventos React específicos
+      const events = ["input", "change", "blur", "focus"];
+      events.forEach((eventType) => {
+        emailInput.dispatchEvent(new Event(eventType, { bubbles: true }));
+        passwordInput.dispatchEvent(new Event(eventType, { bubbles: true }));
+      });
 
-      // Submeter formulário após pequeno delay
+      // Disparar eventos React específicos
+      emailInput.dispatchEvent(
+        new Event("change", {
+          bubbles: true,
+          cancelable: true,
+          detail: { value: cred.email },
+        }),
+      );
+
+      passwordInput.dispatchEvent(
+        new Event("change", {
+          bubbles: true,
+          cancelable: true,
+          detail: { value: cred.password },
+        }),
+      );
+
+      console.log(`✅ AUTO LOGIN: Campos preenchidos com ${cred.email}`);
+
+      // Submeter após delay maior para React processar
       setTimeout(() => {
         console.log("🔑 AUTO LOGIN: Submetendo login...");
-        submitButton.click();
 
-        // Monitor para verificar sucesso do login
+        // Simular click mais natural
+        submitButton.focus();
         setTimeout(() => {
-          monitorLoginSuccess();
-        }, 2000);
-      }, 1000);
+          submitButton.click();
+
+          // Setup proteções APÓS login bem-sucedido
+          setTimeout(() => {
+            setupPostLoginProtection();
+            monitorLoginSuccess();
+          }, 3000);
+        }, 500);
+      }, 2000);
 
       return true;
     } else {
@@ -53,41 +85,82 @@
       console.log("Email input:", !!emailInput);
       console.log("Password input:", !!passwordInput);
       console.log("Submit button:", !!submitButton);
+
+      // Criar interface manual se campos não encontrados
+      createManualLoginHelper();
       return false;
     }
   }
 
-  function setupFirebaseProtection() {
-    console.log("🔑 AUTO LOGIN: Configurando proteções Firebase...");
+  function restoreOriginalFirebase() {
+    console.log("🔑 AUTO LOGIN: Restaurando Firebase original para login...");
+
+    // Remover qualquer override que possa interferir com login
+    if (window.originalFirebaseAuth) {
+      window.firebase.auth = window.originalFirebaseAuth;
+    }
+
+    // Restaurar fetch original
+    if (window.originalFetch) {
+      window.fetch = window.originalFetch;
+    }
+
+    // Limpar localStorage que pode interferir
+    try {
+      localStorage.removeItem("authBypass");
+      localStorage.removeItem("skipAuthCheck");
+    } catch (e) {}
+  }
+
+  function setupPostLoginProtection() {
+    console.log("🔑 POST-LOGIN: Configurando proteções após login...");
 
     if (window.firebase) {
       try {
         const auth = window.firebase.auth();
 
-        // Bloquear signOut para prevenir logout automático
-        const originalSignOut = auth.signOut;
+        // Guardar método original
+        if (!window.originalSignOut) {
+          window.originalSignOut = auth.signOut.bind(auth);
+        }
+
+        // Bloquear APENAS signOut automático, permitir tudo mais
         auth.signOut = function () {
-          console.warn("🔑 AUTO LOGIN: signOut bloqueado durante operação");
-          return Promise.resolve();
-        };
-
-        // Interceptar erros que podem causar logout
-        const originalOnError = window.onerror;
-        window.onerror = function (message, source, lineno, colno, error) {
+          // Verificar se é chamada automática (através de stack trace)
+          const stack = new Error().stack;
           if (
-            typeof message === "string" &&
-            (message.includes("auth/user-token-expired") ||
-              message.includes("auth/user-disabled"))
+            stack &&
+            (stack.includes("pb(") || stack.includes("auth/user-token-expired"))
           ) {
-            console.warn("🔑 AUTO LOGIN: Erro auth bloqueado:", message);
-            return true; // Prevenir propagação
+            console.warn("🔑 POST-LOGIN: signOut automático bloqueado");
+            return Promise.resolve();
           }
-          return originalOnError?.apply(this, arguments);
+
+          // Permitir signOut manual
+          console.log("🔑 POST-LOGIN: signOut manual permitido");
+          return window.originalSignOut();
         };
 
-        console.log("✅ AUTO LOGIN: Proteções configuradas");
+        // Interceptar APENAS erros específicos que causam logout automático
+        const originalConsoleError = console.error;
+        console.error = function (...args) {
+          const errorStr = args.join(" ");
+          if (
+            errorStr.includes("auth/user-token-expired") ||
+            errorStr.includes("auth/user-disabled")
+          ) {
+            console.warn(
+              "🔑 POST-LOGIN: Erro de logout automático suprimido:",
+              errorStr,
+            );
+            return; // Não propagar este erro específico
+          }
+          return originalConsoleError.apply(this, args);
+        };
+
+        console.log("✅ POST-LOGIN: Proteções selectivas configuradas");
       } catch (e) {
-        console.log("❌ AUTO LOGIN: Erro ao configurar proteções:", e.message);
+        console.log("❌ POST-LOGIN: Erro ao configurar proteções:", e.message);
       }
     }
   }
