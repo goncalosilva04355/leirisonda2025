@@ -1,7 +1,7 @@
-// Obra Operation Tracker
-// This script monitors for obra creation operations and enables protection
-
-console.log("📊 Obra Tracker loaded");
+// ==========================================
+// OBRA OPERATION TRACKER v2.0 - AGGRESSIVE MODE
+// ==========================================
+console.log("🚀 Enhanced Obra Tracker v2.0 LOADED");
 
 // Monitor for obra form submissions
 function trackObraOperations() {
