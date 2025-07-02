@@ -110,34 +110,82 @@ function trackFormSubmissions() {
   });
 }
 
-// Monitor button clicks that might create obras
-function trackButtonClicks() {
+// Enhanced button and interaction monitoring
+function trackAllInteractions() {
+  // Button clicks
   document.addEventListener("click", (event) => {
-    const button = event.target;
-    const text = button.textContent?.toLowerCase() || "";
+    const element = event.target;
+    const text = (element.textContent || element.value || "").toLowerCase();
 
+    // More aggressive patterns
+    const actionWords = [
+      "criar",
+      "guardar",
+      "save",
+      "submit",
+      "enviar",
+      "confirmar",
+      "adicionar",
+      "novo",
+    ];
+    const hasActionWord = actionWords.some((word) => text.includes(word));
+
+    if (hasActionWord || element.type === "submit") {
+      console.log("🎯 ACTION BUTTON CLICKED - enabling protection");
+      console.log("🎯 Element:", element.tagName, element.type, text);
+
+      if (window.LeirisondaAuth) {
+        window.LeirisondaAuth.startOperation();
+
+        // Extended protection for button clicks
+        setTimeout(() => {
+          window.LeirisondaAuth.endOperation();
+        }, 15000);
+      }
+    }
+  });
+
+  // Input changes that might trigger saves
+  document.addEventListener("input", (event) => {
+    const input = event.target;
     if (
-      text.includes("criar") ||
-      text.includes("guardar") ||
-      text.includes("save") ||
-      text.includes("submit")
+      input.name &&
+      (input.name.includes("client") || input.name.includes("obra"))
     ) {
-      // Check if we're in a form or modal that might be creating an obra
-      const form = button.closest("form");
-      const modal =
-        button.closest('[role="dialog"]') || button.closest(".modal");
+      console.log("📝 Obra-related input detected - preparing protection");
+      // Don't activate yet, just prepare
+    }
+  });
 
-      if (form || modal) {
-        console.log("🎯 Potential obra creation button clicked");
+  // Key combinations (Ctrl+S, Ctrl+Enter)
+  document.addEventListener("keydown", (event) => {
+    if (
+      (event.ctrlKey && event.key === "s") ||
+      (event.ctrlKey && event.key === "Enter")
+    ) {
+      console.log("⌨️ Save keyboard shortcut detected");
+      if (window.LeirisondaAuth) {
+        window.LeirisondaAuth.startOperation();
+        setTimeout(() => {
+          window.LeirisondaAuth.endOperation();
+        }, 10000);
+      }
+    }
+  });
 
-        // Enable protection temporarily
-        if (window.LeirisondaAuth) {
-          window.LeirisondaAuth.startOperation();
-
-          // Disable after 10 seconds if no other triggers
-          setTimeout(() => {
-            window.LeirisondaAuth.endOperation();
-          }, 10000);
+  // Focus on forms (user starting to fill obra form)
+  document.addEventListener("focusin", (event) => {
+    const form = event.target.closest("form");
+    if (form) {
+      const formData = new FormData(form);
+      for (let [key] of formData.entries()) {
+        if (
+          key.includes("client") ||
+          key.includes("obra") ||
+          key.includes("work")
+        ) {
+          console.log("📋 Focus on obra-related form detected");
+          break;
         }
       }
     }
