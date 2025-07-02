@@ -70,42 +70,89 @@ console.log("🔧 STABLE: Iniciando correção estável...");
             text.includes("guardar") ||
             text.includes("gravar") ||
             text.includes("salvar") ||
-            text.includes("criar")
+            text.includes("criar") ||
+            text.includes("save") ||
+            text.includes("add")
           ) {
-            console.log("💾 STABLE: Operação de save detectada");
+            console.log("💾 STABLE: Operação de save detectada - " + text);
 
             saveInProgress = true;
 
-            // Manter proteção por 10 segundos
+            // Reforçar proteção Firebase imediatamente
+            if (window.firebase) {
+              setupStableAuth();
+            }
+
+            // Manter proteção por 15 segundos (aumentado)
             setTimeout(() => {
               saveInProgress = false;
               console.log("💾 STABLE: Proteção removida");
-            }, 10000);
+            }, 15000);
           }
         }
       },
       true,
     );
 
-    // Monitor fetch requests para Firestore
+    // Monitor fetch requests para Firestore (mais específico)
     const originalFetch = window.fetch;
     window.fetch = function (url, options) {
-      if (typeof url === "string" && url.includes("firestore")) {
+      if (
+        typeof url === "string" &&
+        (url.includes("firestore") ||
+          url.includes("googleapis") ||
+          url.includes("firebase"))
+      ) {
         const method = options?.method?.toUpperCase();
-        if (method === "POST" || method === "PATCH") {
-          console.log("💾 STABLE: Operação Firestore detectada");
+        if (method === "POST" || method === "PATCH" || method === "PUT") {
+          console.log(
+            "💾 STABLE: Operação Firebase detectada - " + method + " " + url,
+          );
+
           saveInProgress = true;
+
+          // Reforçar proteção
+          if (window.firebase) {
+            setupStableAuth();
+          }
 
           setTimeout(() => {
             saveInProgress = false;
-          }, 8000);
+          }, 12000);
         }
       }
 
       return originalFetch.apply(this, arguments);
     };
 
-    console.log("✅ STABLE: Detecção de save ativa");
+    // Monitor para detecção de forms de obra
+    const formMonitor = setInterval(() => {
+      const forms = document.querySelectorAll("form");
+      forms.forEach((form) => {
+        if (!form.hasStableListener) {
+          form.addEventListener("submit", (e) => {
+            console.log("💾 STABLE: Form submission detectado");
+            saveInProgress = true;
+
+            if (window.firebase) {
+              setupStableAuth();
+            }
+
+            setTimeout(() => {
+              saveInProgress = false;
+            }, 15000);
+          });
+          form.hasStableListener = true;
+        }
+      });
+    }, 2000);
+
+    // Parar monitor após 60 segundos
+    setTimeout(() => {
+      clearInterval(formMonitor);
+    }, 60000);
+
+    console.log("✅ STABLE: Detecção de save reforçada ativa");
   }
 
   // Aguardar Firebase carregar
