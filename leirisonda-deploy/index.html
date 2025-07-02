@@ -47,16 +47,7 @@
         navigator.serviceWorker.register("/sw.js");
       }
 
-      // Auto-navigate away from login if detected
-      setTimeout(() => {
-        if (
-          window.location.pathname.includes("/login") ||
-          document.querySelector('[data-loc*="Login.tsx"]')
-        ) {
-          console.log("🔄 Login detected - redirecting to obras...");
-          window.location.href = "/obras";
-        }
-      }, 3000);
+      // Auto-redirect removed to prevent 404 errors
     </script>
   </body>
 </html>
