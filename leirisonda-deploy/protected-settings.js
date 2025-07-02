@@ -274,6 +274,17 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                   cursor: pointer;
                   font-size: 14px;
                 ">🗑️ Limpar Cache</button>
+
+                <button id="total-reset" style="
+                  background: #DC2626;
+                  color: white;
+                  border: none;
+                  padding: 8px 15px;
+                  border-radius: 5px;
+                  cursor: pointer;
+                  font-size: 14px;
+                  font-weight: bold;
+                ">💥 RESET TOTAL</button>
               </div>
 
               <div id="diagnostics-output" style="
@@ -374,7 +385,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
           "leirisonda_assignment_notification",
           JSON.stringify(assignmentData),
         );
-        logOutput("�� Notificação de atribuição de teste disparada");
+        logOutput("✅ Notificação de atribuição de teste disparada");
       };
 
     // Botões de token
