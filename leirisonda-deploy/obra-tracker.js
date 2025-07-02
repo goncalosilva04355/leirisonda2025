@@ -5,52 +5,79 @@ console.log("🚀 Enhanced Obra Tracker v2.0 LOADED");
 
 // Monitor for obra form submissions
 function trackObraOperations() {
-  // Monitor fetch requests to Firebase
-  const originalFetch = window.fetch;
+  // Enhanced fetch monitoring - more aggressive detection
+  if (!window.OBRA_FETCH_HOOKED) {
+    window.OBRA_FETCH_HOOKED = true;
+    const originalFetch = window.fetch;
 
-  window.fetch = function (...args) {
-    const url = args[0];
+    window.fetch = function (...args) {
+      const url = args[0];
+      const options = args[1] || {};
 
-    // Check if it's a Firestore request for creating obra
-    if (
-      typeof url === "string" &&
-      (url.includes("firestore") || url.includes("firebase")) &&
-      (url.includes("obra") || args[1]?.method === "POST")
-    ) {
-      console.log("🏗️ Obra operation detected - enabling protection");
+      // More aggressive detection patterns
+      const isFirebaseRequest =
+        typeof url === "string" &&
+        (url.includes("firestore") ||
+          url.includes("firebase") ||
+          url.includes("googleapis"));
 
-      // Enable protection
-      if (window.LeirisondaAuth) {
-        window.LeirisondaAuth.startOperation();
+      const isWriteOperation =
+        options.method === "POST" ||
+        options.method === "PUT" ||
+        options.method === "PATCH";
+
+      const isObraRelated =
+        typeof url === "string" &&
+        (url.includes("obra") ||
+          url.includes("client") ||
+          url.includes("project") ||
+          url.includes("work") ||
+          url.includes("documents"));
+
+      if (isFirebaseRequest && (isWriteOperation || isObraRelated)) {
+        console.log(
+          "🚨 FIREBASE WRITE OPERATION DETECTED - MAXIMUM PROTECTION",
+        );
+        console.log("📍 URL:", url);
+        console.log("📍 Method:", options.method);
+
+        // Enable protection IMMEDIATELY
+        if (window.LeirisondaAuth) {
+          window.LeirisondaAuth.startOperation();
+        }
+
+        // Call original fetch
+        const fetchPromise = originalFetch.apply(this, args);
+
+        // Extended protection period
+        fetchPromise
+          .then((response) => {
+            console.log("✅ Firebase operation completed:", response.status);
+            setTimeout(() => {
+              if (window.LeirisondaAuth) {
+                window.LeirisondaAuth.endOperation();
+              }
+              console.log("🔓 Protection disabled after Firebase success");
+            }, 10000); // 10 seconds protection
+          })
+          .catch((error) => {
+            console.log("❌ Firebase operation failed:", error);
+            setTimeout(() => {
+              if (window.LeirisondaAuth) {
+                window.LeirisondaAuth.endOperation();
+              }
+              console.log("🔓 Protection disabled after Firebase error");
+            }, 3000); // 3 seconds on error
+          });
+
+        return fetchPromise;
       }
 
-      // Call original fetch
-      const fetchPromise = originalFetch.apply(this, args);
+      return originalFetch.apply(this, args);
+    };
 
-      // Disable protection after operation completes
-      fetchPromise
-        .then(() => {
-          setTimeout(() => {
-            if (window.LeirisondaAuth) {
-              window.LeirisondaAuth.endOperation();
-            }
-            console.log("✅ Obra operation completed - protection disabled");
-          }, 5000); // Keep protection for 5 seconds after completion
-        })
-        .catch(() => {
-          setTimeout(() => {
-            if (window.LeirisondaAuth) {
-              window.LeirisondaAuth.endOperation();
-            }
-            console.log("❌ Obra operation failed - protection disabled");
-          }, 1000);
-        });
-
-      return fetchPromise;
-    }
-
-    return originalFetch.apply(this, args);
-  };
+    console.log("✅ Enhanced fetch monitoring active");
+  }
 }
 
 // Monitor form submissions
