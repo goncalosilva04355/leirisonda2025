@@ -2,21 +2,45 @@
 
 console.log("📝 SETDOC FIX: Iniciando interceptação simples...");
 
-// Função para converter apenas Date objects para string ISO
+// Função para converter Date objects E remover undefined
 function simpleDateConvert(obj) {
+  if (obj === undefined || obj === null) {
+    return null; // Convert undefined to null
+  }
+
   if (obj instanceof Date) {
     return obj.toISOString();
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(simpleDateConvert);
+    return obj.map(simpleDateConvert).filter((item) => item !== undefined);
   }
 
   if (obj && typeof obj === "object") {
     const converted = {};
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
-        converted[key] = simpleDateConvert(obj[key]);
+        const value = obj[key];
+
+        // Skip undefined fields completely
+        if (value === undefined) {
+          console.warn(`📝 SETDOC: Campo ${key} removido (undefined)`);
+          continue;
+        }
+
+        // Handle problematic exitTime specifically
+        if (
+          key === "exitTime" &&
+          (value === undefined || value === null || value === "")
+        ) {
+          console.warn(`📝 SETDOC: exitTime problemático removido:`, value);
+          continue;
+        }
+
+        const convertedValue = simpleDateConvert(value);
+        if (convertedValue !== undefined) {
+          converted[key] = convertedValue;
+        }
       }
     }
     return converted;
