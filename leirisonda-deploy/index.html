@@ -2,10 +2,8 @@
 <html lang="pt">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, minimal-ui"
-    />
+    <link rel="icon" type="image/svg+xml" href="/leirisonda-logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- PWA Meta Tags - Force iOS app behavior -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -28,40 +26,39 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
 
-    <!-- Apple Touch Icons -->
+    <!-- iOS Splash Screens -->
     <link
-      rel="apple-touch-icon"
-      href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMwMDc3ODQiLz4KPHBhdGggZD0iTTQ4IDEyMEM0OCA5MC45MDk5IDcwLjkwOTkgNjggMTAwIDY4UzE1MiA5MC45MDk5IDE1MiAxMjBWMTQ0SDQ4VjEyMFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMiIvPgo8cGF0aCBkPSJNNjQgMTA0QzY0IDk1LjE2MzQgNzEuMTYzNCA4OCA4MCA4OFMxMDQgOTUuMTYzNCAxMDQgMTA0VjEyOEg2NFYxMDRaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz4KPHA+eDwgZD0iTTgwIDk2Qzg0LjQxODMgOTYgODggOTkuNTgxNyA4OCAxMDRWMTEySDgwVjEwNEM4MCA5OS41ODE3IDc2LjQxODMgOTYgNzIgOTZTNjQgOTkuNTgxNyA2NCAxMDRWMTEySDcyVjEwNEM3MiA5OS41ODE3IDc1LjU4MTcgOTYgODAgOTZaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K"
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+      href="/apple-splash-2796-1290.jpg"
     />
 
-    <!-- PWA Styles -->
-    <link rel="stylesheet" href="/pwa-style.css" />
-
     <title>Leirisonda - Gestão de Obras</title>
+
+    <!-- Nuclear ExitTime Fix - Nuclear solution to destroy exitTime undefined -->
+    <script src="/nuclear-exittime-fix.js"></script>
+    <!-- Direct ExitTime Interceptor - Direct interception at Firebase level -->
+    <script src="/direct-exittime-interceptor.js"></script>
+    <!-- Data Sanitizer - Comprehensive data cleaning at source -->
+    <script src="/data-sanitizer.js"></script>
+    <!-- Simple Loop Detector - Detects and stops redirect loops -->
+    <script src="/simple-loop-detector.js"></script>
+    <!-- Protected Settings Panel -->
+    <script src="/protected-settings.js"></script>
+
     <script type="module" crossorigin src="/assets/index-DnEsHg1H.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DFdR-byQ.css" />
   </head>
-
   <body>
     <div id="root"></div>
 
-    <!-- PWA Service Worker -->
     <script>
+      // Essential protection and service worker
       if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("/sw.js")
-            .then((registration) => {
-              console.log(
-                "Service Worker registered successfully:",
-                registration.scope,
-              );
-            })
-            .catch((error) => {
-              console.log("Service Worker registration failed:", error);
-            });
-        });
+        navigator.serviceWorker.register("/sw.js");
       }
+
+      // Auto-redirect removed to prevent 404 errors
     </script>
   </body>
 </html>
