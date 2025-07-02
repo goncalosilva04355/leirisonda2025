@@ -105,7 +105,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
               border-left: 4px solid #10B981;
               padding-left: 10px;
             ">📱 Gestão de Notificações</h3>
-            
+
             <div style="display: grid; gap: 15px;">
               <div style="
                 background: #f8f9fa;
@@ -114,7 +114,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                 border-left: 4px solid #10B981;
               ">
                 <div style="margin-bottom: 10px;">
-                  <strong>Estado Atual:</strong> 
+                  <strong>Estado Atual:</strong>
                   <span id="notification-status" style="color: #10B981;">Verificando...</span>
                 </div>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -127,7 +127,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                     cursor: pointer;
                     font-size: 14px;
                   ">🔔 Ativar Notificações</button>
-                  
+
                   <button id="test-notification" style="
                     background: #3B82F6;
                     color: white;
@@ -137,7 +137,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                     cursor: pointer;
                     font-size: 14px;
                   ">📨 Teste de Notificação</button>
-                  
+
                   <button id="test-work-notification" style="
                     background: #8B5CF6;
                     color: white;
@@ -147,7 +147,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                     cursor: pointer;
                     font-size: 14px;
                   ">🏗️ Teste Obra</button>
-                  
+
                   <button id="test-assignment-notification" style="
                     background: #F59E0B;
                     color: white;
@@ -171,7 +171,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
               border-left: 4px solid #EF4444;
               padding-left: 10px;
             ">🔑 Gestão de Tokens</h3>
-            
+
             <div style="
               background: #fff5f5;
               padding: 15px;
@@ -193,7 +193,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                   background: #f9f9f9;
                 " placeholder="Token será gerado após ativar notificações..."></textarea>
               </div>
-              
+
               <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <button id="generate-token" style="
                   background: #EF4444;
@@ -204,7 +204,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                   cursor: pointer;
                   font-size: 14px;
                 ">🔑 Gerar Token</button>
-                
+
                 <button id="copy-token" style="
                   background: #6B7280;
                   color: white;
@@ -214,7 +214,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                   cursor: pointer;
                   font-size: 14px;
                 ">📋 Copiar Token</button>
-                
+
                 <button id="refresh-token" style="
                   background: #F59E0B;
                   color: white;
@@ -237,7 +237,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
               border-left: 4px solid #8B5CF6;
               padding-left: 10px;
             ">🔧 Diagnósticos e Testes</h3>
-            
+
             <div style="
               background: #faf5ff;
               padding: 15px;
@@ -254,7 +254,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                   cursor: pointer;
                   font-size: 14px;
                 ">🧪 Teste Undefined Fix</button>
-                
+
                 <button id="show-system-info" style="
                   background: #6B7280;
                   color: white;
@@ -264,7 +264,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                   cursor: pointer;
                   font-size: 14px;
                 ">ℹ️ Info do Sistema</button>
-                
+
                 <button id="clear-cache" style="
                   background: #EF4444;
                   color: white;
@@ -275,7 +275,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                   font-size: 14px;
                 ">🗑️ Limpar Cache</button>
               </div>
-              
+
               <div id="diagnostics-output" style="
                 background: #000;
                 color: #00ff00;
@@ -316,8 +316,8 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
     // Botões de notificação
     document.getElementById("request-notifications").onclick =
       async function () {
-        if (window.requestNotificationPermission) {
-          const granted = await window.requestNotificationPermission();
+        if (window.requestCleanNotificationPermission) {
+          const granted = await window.requestCleanNotificationPermission();
           updateNotificationStatus();
           if (granted) {
             generatePushToken();
@@ -329,8 +329,8 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
       };
 
     document.getElementById("test-notification").onclick = function () {
-      if (window.testSimpleNotification) {
-        window.testSimpleNotification(
+      if (window.testCleanNotification) {
+        window.testCleanNotification(
           "Teste das Configurações",
           "Notificação de teste enviada das configurações avançadas",
         );
@@ -374,7 +374,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
           "leirisonda_assignment_notification",
           JSON.stringify(assignmentData),
         );
-        logOutput("✅ Notificação de atribuição de teste disparada");
+        logOutput("�� Notificação de atribuição de teste disparada");
       };
 
     // Botões de token
