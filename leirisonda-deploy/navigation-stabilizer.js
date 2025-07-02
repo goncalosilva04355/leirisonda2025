@@ -56,25 +56,11 @@ console.log("🔄 STABILIZER: Iniciando estabilizador de navegação...");
     console.log("🛑 STABILIZER: Ativando estabilização...");
     stabilizationActive = true;
 
-    // Parar todos os redirects automáticos
+    // Parar todos os redirects automáticos usando uma abordagem mais segura
     const originalLocationReplace = window.location.replace;
     const originalLocationAssign = window.location.assign;
-    const originalLocationHref = Object.getOwnPropertyDescriptor(
-      window.location,
-      "href",
-    );
 
-    // Interceptar mudanças de localização
-    Object.defineProperty(window.location, "href", {
-      get: originalLocationHref.get,
-      set: function (value) {
-        console.log("🛑 STABILIZER: Redirect bloqueado:", value);
-        // Não executar redirect durante estabilização
-        return;
-      },
-      configurable: true,
-    });
-
+    // Bloquear métodos de navegação
     window.location.replace = function (url) {
       console.log("🛑 STABILIZER: location.replace bloqueado:", url);
       return;
@@ -99,26 +85,49 @@ console.log("🔄 STABILIZER: Iniciando estabilizador de navegação...");
       return;
     };
 
-    // Restaurar navegação normal após 10 segundos
+    // Interceptar cliques em links
+    document.addEventListener("click", blockLinkClicks, true);
+
+    // Bloquear submissões de forms
+    document.addEventListener("submit", blockFormSubmits, true);
+
+    // Mostrar UI manual imediatamente
+    addManualNavigationUI();
+
+    // Restaurar navegação normal após 15 segundos
     setTimeout(() => {
       console.log("🔄 STABILIZER: Restaurando navegação normal...");
 
-      Object.defineProperty(window.location, "href", originalLocationHref);
       window.location.replace = originalLocationReplace;
       window.location.assign = originalLocationAssign;
       history.pushState = originalPushState;
       history.replaceState = originalReplaceState;
 
-      stabilizationActive = false;
+      document.removeEventListener("click", blockLinkClicks, true);
+      document.removeEventListener("submit", blockFormSubmits, true);
 
-      // Tentar navegação manual para dashboard se estamos no login
-      if (
-        window.location.pathname === "/" ||
-        window.location.pathname.includes("login")
-      ) {
-        addManualNavigationUI();
-      }
-    }, 10000);
+      stabilizationActive = false;
+    }, 15000);
+  }
+
+  // Bloquear cliques em links durante estabilização
+  function blockLinkClicks(e) {
+    if (stabilizationActive && e.target.tagName === "A") {
+      console.log("🛑 STABILIZER: Link click bloqueado:", e.target.href);
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return false;
+    }
+  }
+
+  // Bloquear submissões de forms durante estabilização
+  function blockFormSubmits(e) {
+    if (stabilizationActive) {
+      console.log("🛑 STABILIZER: Form submit bloqueado");
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return false;
+    }
   }
 
   // Adicionar interface manual de navegação
@@ -149,7 +158,7 @@ console.log("🔄 STABILIZER: Iniciando estabilizador de navegação...");
           margin: 0 0 20px 0;
           font-size: 18px;
         ">🔄 Loop de Navegação Detectado</h3>
-        
+
         <p style="
           color: #666;
           margin: 0 0 25px 0;
@@ -159,7 +168,7 @@ console.log("🔄 STABILIZER: Iniciando estabilizador de navegação...");
           O sistema detectou redirects automáticos em loop.
           <br>Escolha onde quer ir:
         </p>
-        
+
         <div style="
           display: flex;
           gap: 15px;
@@ -175,7 +184,7 @@ console.log("🔄 STABILIZER: Iniciando estabilizador de navegação...");
             font-weight: bold;
             cursor: pointer;
           ">🏠 Ir para Dashboard</button>
-          
+
           <button id="stay-login" style="
             background: #6B7280;
             color: white;
@@ -185,7 +194,7 @@ console.log("🔄 STABILIZER: Iniciando estabilizador de navegação...");
             font-size: 16px;
             cursor: pointer;
           ">🔐 Ficar no Login</button>
-          
+
           <button id="force-refresh" style="
             background: #F59E0B;
             color: white;
