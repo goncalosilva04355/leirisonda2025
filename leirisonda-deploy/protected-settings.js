@@ -287,6 +287,42 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
                 ">💥 RESET TOTAL</button>
               </div>
 
+              <div style="
+                background: #FEF2F2;
+                border: 2px solid #DC2626;
+                border-radius: 8px;
+                padding: 15px;
+                margin-top: 15px;
+              ">
+                <div style="
+                  display: flex;
+                  align-items: center;
+                  margin-bottom: 10px;
+                ">
+                  <span style="
+                    font-size: 20px;
+                    margin-right: 8px;
+                  ">⚠️</span>
+                  <strong style="color: #DC2626;">AVISO: Reset Total</strong>
+                </div>
+                <p style="
+                  color: #DC2626;
+                  margin: 0;
+                  font-size: 13px;
+                  line-height: 1.4;
+                ">
+                  O botão "RESET TOTAL" apaga <strong>PERMANENTEMENTE</strong>:
+                  <br>• Todas as obras criadas
+                  <br>• Todas as piscinas registadas
+                  <br>• Todas as manutenções programadas
+                  <br>• Todos os dados locais da aplicação
+                  <br><br>
+                  <strong>Esta operação é IRREVERSÍVEL!</strong>
+                  <br>Requer confirmação tripla + senha de administrador.
+                </p>
+              </div>
+            </div>
+
               <div id="diagnostics-output" style="
                 background: #000;
                 color: #00ff00;
@@ -529,7 +565,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
         typeof Notification !== "undefined" ? Notification.permission : "N/A",
     };
 
-    let output = "=== INFORMAÇÕES DO SISTEMA ===\n\n";
+    let output = "=== INFORMAÇ��ES DO SISTEMA ===\n\n";
     for (const [key, value] of Object.entries(info)) {
       output += `${key}: ${value}\n`;
     }
