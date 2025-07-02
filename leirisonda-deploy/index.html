@@ -59,6 +59,45 @@
             });
         });
       }
+
+      // Token refresh and operation protection
+      window.LeirisondaOperationManager = {
+        operationInProgress: false,
+
+        startOperation() {
+          this.operationInProgress = true;
+          // Notify service worker
+          if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({
+              type: "OPERATION_START",
+            });
+          }
+          console.log("✅ Operation protection enabled");
+        },
+
+        endOperation() {
+          this.operationInProgress = false;
+          // Notify service worker
+          if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({
+              type: "OPERATION_END",
+            });
+          }
+          console.log("✅ Operation protection disabled");
+        },
+      };
+
+      // Intercept Firebase signOut calls during operations
+      window.addEventListener("error", (event) => {
+        if (window.LeirisondaOperationManager.operationInProgress) {
+          if (event.error && event.error.code === "auth/user-token-expired") {
+            console.log(
+              "⚠️ Token expired during operation - preventing logout",
+            );
+            event.preventDefault();
+          }
+        }
+      });
     </script>
   </body>
 </html>
