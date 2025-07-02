@@ -78,7 +78,10 @@ console.log("🔧 COMPREHENSIVE FIX: Iniciando correção completa...");
         (path.includes("Time") ||
           path.includes("Date") ||
           path.includes("time") ||
-          path.includes("date"))
+          path.includes("date") ||
+          path.includes("At") ||
+          path.includes("Created") ||
+          path.includes("Updated"))
       ) {
         if (
           obj === "undefined" ||
@@ -87,6 +90,14 @@ console.log("🔧 COMPREHENSIVE FIX: Iniciando correção completa...");
           obj === "Invalid Date"
         ) {
           console.warn(`🧹 Data inválida corrigida em ${path}:`, obj);
+          // Retornar Firestore Timestamp se disponível
+          if (
+            window.firebase &&
+            window.firebase.firestore &&
+            window.firebase.firestore.Timestamp
+          ) {
+            return window.firebase.firestore.Timestamp.now();
+          }
           return new Date().toISOString();
         }
 
@@ -94,8 +105,40 @@ console.log("🔧 COMPREHENSIVE FIX: Iniciando correção completa...");
         const parsed = Date.parse(obj);
         if (isNaN(parsed)) {
           console.warn(`🧹 String de data inválida em ${path}:`, obj);
+          if (
+            window.firebase &&
+            window.firebase.firestore &&
+            window.firebase.firestore.Timestamp
+          ) {
+            return window.firebase.firestore.Timestamp.now();
+          }
           return new Date().toISOString();
         }
+      }
+
+      // Se é Date object, converter para Firestore Timestamp
+      if (
+        obj instanceof Date &&
+        (path.includes("Time") ||
+          path.includes("Date") ||
+          path.includes("time") ||
+          path.includes("date") ||
+          path.includes("At") ||
+          path.includes("Created") ||
+          path.includes("Updated"))
+      ) {
+        console.warn(
+          `🧹 Date object convertido para Timestamp em ${path}:`,
+          obj,
+        );
+        if (
+          window.firebase &&
+          window.firebase.firestore &&
+          window.firebase.firestore.Timestamp
+        ) {
+          return window.firebase.firestore.Timestamp.fromDate(obj);
+        }
+        return obj.toISOString();
       }
 
       return obj;
@@ -130,18 +173,73 @@ console.log("🔧 COMPREHENSIVE FIX: Iniciando correção completa...");
 
         // Corrigir campos de tempo/data
         if (
-          (key.includes("Time") ||
-            key.includes("Date") ||
-            key.includes("time") ||
-            key.includes("date")) &&
-          (value === null ||
+          key.includes("Time") ||
+          key.includes("Date") ||
+          key.includes("time") ||
+          key.includes("date") ||
+          key.includes("At") ||
+          key.includes("Created") ||
+          key.includes("Updated")
+        ) {
+          if (
+            value === null ||
             value === undefined ||
             value === "" ||
-            value === "Invalid Date")
-        ) {
-          console.warn(`🧹 Campo de data ${currentPath} corrigido:`, value);
-          cleaned[key] = new Date().toISOString();
-          continue;
+            value === "Invalid Date"
+          ) {
+            console.warn(
+              `🧹 Campo de data ${currentPath} corrigido (null/undefined):`,
+              value,
+            );
+            // Usar Firestore Timestamp se disponível, senão ISO string
+            if (
+              window.firebase &&
+              window.firebase.firestore &&
+              window.firebase.firestore.Timestamp
+            ) {
+              cleaned[key] = window.firebase.firestore.Timestamp.now();
+            } else {
+              cleaned[key] = new Date().toISOString();
+            }
+            continue;
+          }
+
+          // Se é objeto Date, converter para Firestore Timestamp
+          if (value instanceof Date) {
+            console.warn(
+              `🧹 Date object ${currentPath} convertido para Timestamp:`,
+              value,
+            );
+            if (
+              window.firebase &&
+              window.firebase.firestore &&
+              window.firebase.firestore.Timestamp
+            ) {
+              cleaned[key] =
+                window.firebase.firestore.Timestamp.fromDate(value);
+            } else {
+              cleaned[key] = value.toISOString();
+            }
+            continue;
+          }
+
+          // Se é string de data inválida
+          if (typeof value === "string") {
+            const parsed = Date.parse(value);
+            if (isNaN(parsed)) {
+              console.warn(`🧹 String de data inválida ${currentPath}:`, value);
+              if (
+                window.firebase &&
+                window.firebase.firestore &&
+                window.firebase.firestore.Timestamp
+              ) {
+                cleaned[key] = window.firebase.firestore.Timestamp.now();
+              } else {
+                cleaned[key] = new Date().toISOString();
+              }
+              continue;
+            }
+          }
         }
 
         // Limpar recursivamente
