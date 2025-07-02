@@ -1,8 +1,8 @@
-const CACHE_NAME = "leirisonda-v2";
+const CACHE_NAME = "leirisonda-v3";
 const urlsToCache = [
   "/",
-  "/assets/index-DHnQ0z6C.css",
-  "/assets/index-Cf1crVxO.js",
+  "/assets/index-DFdR-byQ.css",
+  "/assets/index-DnEsHg1H.js",
   "/manifest.json",
 ];
 
