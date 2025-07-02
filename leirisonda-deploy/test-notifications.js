@@ -143,6 +143,25 @@ console.log("🧪 TEST: Carregando teste de notificações...");
       logMessage("✅ Obra simulada criada");
     };
 
+    document.getElementById("test-assignment").onclick = () => {
+      logMessage("Simulando atribuição de obra...");
+      const assignmentData = {
+        userId: "user_test",
+        userName: "Utilizador Teste",
+        workId: "ASSIGN_" + Date.now(),
+        workNumber: "OB-" + Math.floor(Math.random() * 1000),
+        clientName: "Cliente Teste Lda",
+        timestamp: new Date().toISOString(),
+        type: "work_assignment",
+      };
+
+      localStorage.setItem(
+        "leirisonda_assignment_notification",
+        JSON.stringify(assignmentData),
+      );
+      logMessage("✅ Atribuição simulada");
+    };
+
     document.getElementById("close-test").onclick = () => {
       testUI.remove();
     };
