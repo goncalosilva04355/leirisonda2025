@@ -1,4 +1,4 @@
-const CACHE_NAME = "leirisonda-v4";
+const CACHE_NAME = "leirisonda-v5";
 const urlsToCache = [
   "/",
   "/assets/index-DFdR-byQ.css",
