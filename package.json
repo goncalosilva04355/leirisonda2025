@@ -4,6 +4,7 @@
   "description": "Static file server for Leirisonda PWA",
   "main": "index.js",
   "scripts": {
+    "build": "mkdir -p dist/spa && cp -r leirisonda-deploy/* dist/spa/",
     "dev": "npx serve leirisonda-deploy -p 5173",
     "start": "npx serve leirisonda-deploy -p 5173",
     "preview": "npx serve leirisonda-deploy -p 5173"
