@@ -1,4 +1,4 @@
-// PROTECTED SETTINGS - Seção de configurações protegida por senha
+// PROTECTED SETTINGS - Se��ão de configurações protegida por senha
 
 console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida...");
 
@@ -404,6 +404,7 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
 
     document.getElementById("show-system-info").onclick = showSystemInfo;
     document.getElementById("clear-cache").onclick = clearApplicationCache;
+    document.getElementById("total-reset").onclick = performTotalReset;
   }
 
   // Atualizar status das notificações
