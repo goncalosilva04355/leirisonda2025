@@ -27,7 +27,7 @@ console.log("🧪 TEST: Carregando teste de notificações...");
         font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       ">
         <h3 style="margin: 0 0 15px 0; font-size: 16px;">📱 Teste de Notificações</h3>
-        
+
         <div style="margin-bottom: 15px;">
           <div style="margin-bottom: 8px; font-size: 14px;">
             Status: <span id="notification-status">Verificando...</span>
@@ -47,7 +47,7 @@ console.log("🧪 TEST: Carregando teste de notificações...");
             cursor: pointer;
             font-size: 14px;
           ">🔔 Ativar Notificações</button>
-          
+
           <button id="test-local" style="
             background: #3B82F6;
             border: none;
@@ -57,7 +57,7 @@ console.log("🧪 TEST: Carregando teste de notificações...");
             cursor: pointer;
             font-size: 14px;
           ">📨 Teste Local</button>
-          
+
           <button id="test-work" style="
             background: #8B5CF6;
             border: none;
@@ -67,7 +67,17 @@ console.log("🧪 TEST: Carregando teste de notificações...");
             cursor: pointer;
             font-size: 14px;
           ">🏗️ Simular Nova Obra</button>
-          
+
+          <button id="test-assignment" style="
+            background: #F59E0B;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+          ">👥 Simular Atribuição</button>
+
           <button id="close-test" style="
             background: #EF4444;
             border: none;
@@ -78,7 +88,7 @@ console.log("🧪 TEST: Carregando teste de notificações...");
             font-size: 12px;
           ">✕ Fechar</button>
         </div>
-        
+
         <div id="test-log" style="
           margin-top: 15px;
           padding: 10px;
