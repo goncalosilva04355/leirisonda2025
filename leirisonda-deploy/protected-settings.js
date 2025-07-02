@@ -1,4 +1,4 @@
-// PROTECTED SETTINGS - Se��ão de configurações protegida por senha
+// PROTECTED SETTINGS - Seção de configurações protegida por senha
 
 console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida...");
 
@@ -569,6 +569,185 @@ console.log("⚙️ SETTINGS: Iniciando seção de configurações protegida..."
     } catch (error) {
       logOutput("❌ Erro ao limpar cache: " + error.message);
       alert("❌ Erro ao limpar cache: " + error.message);
+    }
+  }
+
+  // RESET TOTAL - Apagar todas as obras, piscinas e manutenções
+  async function performTotalReset() {
+    logOutput("🚨 RESET TOTAL: Iniciando processo...");
+
+    // Primeira confirmação
+    const confirm1 = confirm(
+      "⚠️ ATENÇÃO: Vai apagar TODAS as obras, piscinas e manutenções!\n\n" +
+        "Esta operação é IRREVERSÍVEL!\n\n" +
+        "Tem a certeza que quer continuar?",
+    );
+
+    if (!confirm1) {
+      logOutput("❌ RESET TOTAL: Cancelado pelo utilizador (1ª confirmação)");
+      return;
+    }
+
+    // Segunda confirmação com password
+    const password = prompt(
+      "🔐 Para confirmar o RESET TOTAL, introduza a senha de administrador:",
+    );
+
+    if (password !== ADMIN_PASSWORD) {
+      logOutput("❌ RESET TOTAL: Senha incorreta");
+      alert("❌ Senha incorreta! Reset cancelado.");
+      return;
+    }
+
+    // Terceira confirmação final
+    const confirm3 = confirm(
+      "🚨 ÚLTIMA CONFIRMAÇÃO:\n\n" +
+        "Vai apagar PERMANENTEMENTE:\n" +
+        "• Todas as obras\n" +
+        "• Todas as piscinas\n" +
+        "• Todas as manutenções\n" +
+        "• Todos os dados locais\n\n" +
+        "CONTINUAR COM O RESET TOTAL?",
+    );
+
+    if (!confirm3) {
+      logOutput(
+        "❌ RESET TOTAL: Cancelado pelo utilizador (confirmação final)",
+      );
+      return;
+    }
+
+    try {
+      logOutput("💥 RESET TOTAL: Executando reset completo...");
+
+      // 1. Apagar dados do localStorage
+      const dataKeys = [
+        "works",
+        "leirisonda_works",
+        "pools",
+        "leirisonda_pools",
+        "maintenance",
+        "leirisonda_maintenance",
+        "maintenances",
+        "leirisonda_maintenances",
+        "users",
+        "leirisonda_users",
+      ];
+
+      let deletedKeys = 0;
+      dataKeys.forEach((key) => {
+        if (localStorage.getItem(key)) {
+          const data = localStorage.getItem(key);
+          try {
+            const parsed = JSON.parse(data);
+            const count = Array.isArray(parsed) ? parsed.length : 1;
+            logOutput(`🗑️ Removendo ${key}: ${count} itens`);
+          } catch (e) {
+            logOutput(`🗑️ Removendo ${key}: dados corrompidos`);
+          }
+          localStorage.removeItem(key);
+          deletedKeys++;
+        }
+      });
+
+      // 2. Apagar todos os dados do sessionStorage
+      const sessionKeys = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        sessionKeys.push(sessionStorage.key(i));
+      }
+      sessionKeys.forEach((key) => sessionStorage.removeItem(key));
+      logOutput(`🗑️ SessionStorage: ${sessionKeys.length} itens removidos`);
+
+      // 3. Apagar todos os dados com prefixo leirisonda
+      const allLocalStorageKeys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (
+          key &&
+          (key.includes("leirisonda") ||
+            key.includes("work") ||
+            key.includes("pool") ||
+            key.includes("maintenance"))
+        ) {
+          allLocalStorageKeys.push(key);
+        }
+      }
+      allLocalStorageKeys.forEach((key) => {
+        localStorage.removeItem(key);
+        logOutput(`🗑️ Extra cleanup: ${key}`);
+      });
+
+      // 4. Limpar caches do browser
+      if ("caches" in window) {
+        const cacheNames = await caches.keys();
+        for (const cacheName of cacheNames) {
+          await caches.delete(cacheName);
+        }
+        logOutput(`🗑️ ${cacheNames.length} caches do browser limpos`);
+      }
+
+      // 5. Limpar IndexedDB (se existir)
+      if ("indexedDB" in window) {
+        try {
+          // Tentar limpar bases de dados IndexedDB conhecidas
+          const dbNames = ["leirisonda-db", "firestore", "firebase"];
+          for (const dbName of dbNames) {
+            const deleteReq = indexedDB.deleteDatabase(dbName);
+            deleteReq.onsuccess = () =>
+              logOutput(`🗑️ IndexedDB ${dbName} removida`);
+            deleteReq.onerror = () =>
+              logOutput(`⚠️ IndexedDB ${dbName} não encontrada`);
+          }
+        } catch (e) {
+          logOutput(`⚠️ Erro ao limpar IndexedDB: ${e.message}`);
+        }
+      }
+
+      // 6. Tentar limpar dados do Firebase (se acessível)
+      if (window.firebase) {
+        try {
+          logOutput("🔥 Tentando limpar dados Firebase locais...");
+          // Nota: Não podemos apagar dados do Firebase remoto por segurança
+          // Apenas limpamos caches locais
+          const auth = window.firebase.auth();
+          if (auth.currentUser) {
+            logOutput(
+              "🔥 Utilizador Firebase encontrado (dados remotos mantidos por segurança)",
+            );
+          }
+        } catch (e) {
+          logOutput(`⚠️ Firebase cleanup: ${e.message}`);
+        }
+      }
+
+      // 7. Estatísticas finais
+      const summary = {
+        dataKeysRemoved: deletedKeys,
+        sessionItemsRemoved: sessionKeys.length,
+        extraCleanup: allLocalStorageKeys.length,
+        timestamp: new Date().toISOString(),
+      };
+
+      logOutput("✅ RESET TOTAL CONCLUÍDO!");
+      logOutput(`📊 Resumo: ${JSON.stringify(summary, null, 2)}`);
+
+      // Mostrar resultado ao utilizador
+      alert(
+        "✅ RESET TOTAL CONCLUÍDO!\n\n" +
+          `• ${deletedKeys} tipos de dados principais removidos\n` +
+          `• ${sessionKeys.length} itens de sessão limpos\n` +
+          `• ${allLocalStorageKeys.length} itens extra removidos\n\n` +
+          "A página será recarregada em 3 segundos...",
+      );
+
+      // Recarregar página após 3 segundos
+      setTimeout(() => {
+        logOutput("🔄 Recarregando página...");
+        window.location.reload();
+      }, 3000);
+    } catch (error) {
+      logOutput(`❌ RESET TOTAL FALHOU: ${error.message}`);
+      alert(`❌ Erro durante reset total: ${error.message}`);
     }
   }
 
