@@ -9,14 +9,19 @@ console.log("🔔 SIMPLE: Iniciando notificações simplificadas...");
 
   // Verificar se notificações são suportadas
   function checkSupport() {
-    if (!("Notification" in window)) {
-      console.error("🔔 SIMPLE: Notificações não suportadas");
+    try {
+      if (!("Notification" in window)) {
+        console.error("🔔 SIMPLE: Notificações não suportadas");
+        return false;
+      }
+
+      console.log("🔔 SIMPLE: Notificações suportadas");
+      console.log("🔔 SIMPLE: Permissão atual:", Notification.permission);
+      return true;
+    } catch (error) {
+      console.error("🔔 SIMPLE: Erro ao verificar suporte:", error);
       return false;
     }
-
-    console.log("🔔 SIMPLE: Notificações suportadas");
-    console.log("🔔 SIMPLE: Permissão atual:", Notification.permission);
-    return true;
   }
 
   // Pedir permissão de forma simples
