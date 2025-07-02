@@ -102,19 +102,31 @@ console.log("🔔 SIMPLE: Iniciando notificações simplificadas...");
 
   // Auto-pedir permissão no primeiro clique
   function setupAutoPermission() {
-    let hasRequested = false;
+    try {
+      let hasRequested = false;
 
-    document.addEventListener(
-      "click",
-      async function () {
-        if (!hasRequested && Notification.permission === "default") {
-          hasRequested = true;
-          console.log("🔔 SIMPLE: Pedindo permissão no primeiro clique...");
-          await requestPermission();
-        }
-      },
-      { once: true },
-    );
+      document.addEventListener(
+        "click",
+        async function () {
+          try {
+            if (
+              !hasRequested &&
+              typeof Notification !== "undefined" &&
+              Notification.permission === "default"
+            ) {
+              hasRequested = true;
+              console.log("🔔 SIMPLE: Pedindo permissão no primeiro clique...");
+              await requestPermission();
+            }
+          } catch (error) {
+            console.error("🔔 SIMPLE: Erro no auto-permission:", error);
+          }
+        },
+        { once: true },
+      );
+    } catch (error) {
+      console.error("🔔 SIMPLE: Erro ao configurar auto-permission:", error);
+    }
   }
 
   // Detectar criação de obras
