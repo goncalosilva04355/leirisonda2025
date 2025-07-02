@@ -1,59 +1,84 @@
-// MINIMAL PROTECTION - Apenas proteção contra logout, preservar layout original
+// MINIMAL PROTECTION - Proteção mínima sem interferir com navegação
+
+console.log("🛡️ MINIMAL: Iniciando proteção mínima...");
 
 (function () {
   "use strict";
 
-  console.log("🛡️ MINIMAL: Ativando proteção mínima...");
+  let saveInProgress = false;
 
-  function setupMinimalProtection() {
-    if (window.firebase) {
-      try {
-        const auth = window.firebase.auth();
+  // Proteção básica do Firebase apenas durante saves
+  function setupBasicProtection() {
+    if (!window.firebase) return;
 
-        // Guardar método original
-        if (!window.originalSignOut) {
-          window.originalSignOut = auth.signOut.bind(auth);
+    try {
+      const auth = window.firebase.auth();
+
+      if (!window.originalSignOut) {
+        window.originalSignOut = auth.signOut.bind(auth);
+      }
+
+      auth.signOut = function () {
+        const stack = new Error().stack;
+
+        // Só bloquear durante saves
+        if (saveInProgress) {
+          console.log("🛡️ MINIMAL: signOut bloqueado durante save");
+          return Promise.resolve();
         }
 
-        // Bloquear APENAS signOut automático causado por erros
-        auth.signOut = function () {
-          const stack = new Error().stack;
+        // Bloquear signOut automático do Firebase
+        if (stack && stack.includes("pb(")) {
+          console.log("🛡️ MINIMAL: signOut automático bloqueado");
+          return Promise.resolve();
+        }
 
-          // Verificar se é chamada automática por erro de token
-          if (
-            stack &&
-            (stack.includes("pb(") ||
-              stack.includes("auth/user-token-expired") ||
-              stack.includes("auth/user-disabled"))
-          ) {
-            console.warn("🛡️ MINIMAL: Logout automático bloqueado");
-            return Promise.resolve();
-          }
-
-          // Permitir logout manual
-          console.log("🛡️ MINIMAL: Logout manual permitido");
-          return window.originalSignOut();
-        };
-
-        console.log("✅ MINIMAL: Proteção contra logout automático ativa");
-      } catch (e) {
-        console.log("Firebase ainda não disponível");
-      }
+        // Permitir logout manual
+        console.log("🛡️ MINIMAL: Logout manual permitido");
+        return window.originalSignOut();
+      };
+    } catch (e) {
+      console.error("🛡️ MINIMAL: Erro:", e);
     }
   }
 
-  // Configurar proteção quando Firebase estiver disponível
-  const checkFirebase = setInterval(() => {
+  // Detectar saves simples
+  function detectSaves() {
+    document.addEventListener("click", (e) => {
+      const target = e.target;
+      if (target && target.tagName === "BUTTON") {
+        const text = target.textContent?.toLowerCase() || "";
+
+        if (
+          text.includes("guardar") ||
+          text.includes("gravar") ||
+          text.includes("criar")
+        ) {
+          console.log("🛡️ MINIMAL: Save detectado");
+          saveInProgress = true;
+
+          setTimeout(() => {
+            saveInProgress = false;
+          }, 10000);
+        }
+      }
+    });
+  }
+
+  // Configurar proteção quando Firebase carregar
+  const firebaseWaiter = setInterval(() => {
     if (window.firebase) {
-      setupMinimalProtection();
-      clearInterval(checkFirebase);
+      setupBasicProtection();
+      clearInterval(firebaseWaiter);
     }
-  }, 100);
+  }, 500);
 
-  // Parar verificação após 10 segundos
+  // Parar waiter após 30 segundos
   setTimeout(() => {
-    clearInterval(checkFirebase);
-  }, 10000);
+    clearInterval(firebaseWaiter);
+  }, 30000);
 
-  console.log("✅ MINIMAL PROTECTION: Ativo - layout original preservado");
+  detectSaves();
+
+  console.log("🛡️ MINIMAL: Proteção mínima ativa");
 })();
