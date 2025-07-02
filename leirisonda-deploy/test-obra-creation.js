@@ -53,30 +53,42 @@
   function activateAllProtections() {
     console.log("🛡️ TESTE: Ativando todas as proteções...");
 
-    if (window.LEIRISONDA_PROTECTION) {
-      window.LEIRISONDA_PROTECTION.enable();
-      console.log("✅ Proteção Leirisonda ativada");
+    try {
+      if (window.LEIRISONDA_PROTECTION) {
+        if (typeof window.LEIRISONDA_PROTECTION.enable === "function") {
+          window.LEIRISONDA_PROTECTION.enable();
+          console.log("✅ Proteção Leirisonda ativada");
+        }
+      }
+    } catch (e) {
+      console.log("⚠️ Proteção Leirisonda não disponível:", e.message);
     }
 
-    if (window.ULTIMATE_PROTECTION) {
-      window.ULTIMATE_PROTECTION.enable();
-      console.log("✅ Proteção Ultimate ativada");
+    try {
+      if (window.ULTIMATE_PROTECTION) {
+        if (typeof window.ULTIMATE_PROTECTION.enable === "function") {
+          window.ULTIMATE_PROTECTION.enable();
+          console.log("✅ Proteção Ultimate ativada");
+        }
+      }
+    } catch (e) {
+      console.log("⚠️ Proteção Ultimate não disponível:", e.message);
     }
 
-    // Override Firebase signOut
-    if (window.firebase && window.firebase.auth) {
-      try {
+    // Override Firebase signOut safely
+    try {
+      if (window.firebase && window.firebase.auth) {
         const auth = window.firebase.auth();
-        if (auth.signOut) {
+        if (auth && typeof auth.signOut === "function") {
           auth.signOut = function () {
             console.warn("🛡️ TESTE: Firebase signOut BLOQUEADO durante teste");
             return Promise.resolve();
           };
           console.log("✅ Firebase signOut bloqueado para teste");
         }
-      } catch (e) {
-        console.log("Firebase auth não disponível ainda");
       }
+    } catch (e) {
+      console.log("⚠️ Firebase auth não disponível:", e.message);
     }
   }
 
@@ -85,24 +97,48 @@
     console.log("🔑 TESTE: Fazendo login...");
 
     try {
+      // Ativar proteções primeiro (safely)
+      try {
+        activateAllProtections();
+      } catch (protectionError) {
+        console.warn(
+          "⚠️ TESTE: Erro ao ativar proteções:",
+          protectionError.message,
+        );
+      }
+
       // Encontrar campos de email e password
-      const emailInput = document.querySelector('input[type="email"]');
-      const passwordInput = document.querySelector('input[type="password"]');
-      const loginButton = document.querySelector('button[type="submit"]');
+      const emailInput =
+        document.querySelector('input[type="email"]') ||
+        document.querySelector('input[placeholder*="email"]') ||
+        document.querySelector('input[name*="email"]');
+
+      const passwordInput =
+        document.querySelector('input[type="password"]') ||
+        document.querySelector('input[placeholder*="password"]') ||
+        document.querySelector('input[name*="password"]');
+
+      const loginButton =
+        document.querySelector('button[type="submit"]') ||
+        document.querySelector('button:contains("Entrar")') ||
+        document.querySelector('button:contains("Login")') ||
+        document.querySelector("form button");
 
       if (!emailInput || !passwordInput || !loginButton) {
         console.error("❌ TESTE: Campos de login não encontrados");
+        console.log("📋 TESTE: Campos disponíveis:", {
+          email: !!emailInput,
+          password: !!passwordInput,
+          button: !!loginButton,
+        });
         return false;
       }
 
-      // Simular preenchimento (usar credenciais de teste)
-      simulateTyping(emailInput, "test@leirisonda.com");
-      simulateTyping(passwordInput, "test123");
+      // Simular preenchimento
+      simulateTyping(emailInput, "admin@leirisonda.com");
+      simulateTyping(passwordInput, "admin123");
 
       console.log("✅ TESTE: Campos preenchidos");
-
-      // Ativar proteções antes do login
-      activateAllProtections();
 
       // Simular submit
       simulateClick(loginButton);
