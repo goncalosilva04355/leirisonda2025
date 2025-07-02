@@ -39,142 +39,11 @@
       console.log("⚠️ Erro ao configurar storage:", e.message);
     }
 
-    // Substituir completamente o body com aplicação funcional
+    // Apenas navegar para a aplicação sem substituir o DOM
     setTimeout(() => {
-      document.body.innerHTML = `
-        <div style="
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(135deg, #4A90E2 0%, #50C878 100%);
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          color: white;
-          z-index: 999999;
-        ">
-          <div style="text-align: center; max-width: 600px; padding: 40px;">
-            <h1 style="font-size: 3em; margin-bottom: 20px; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">
-              🏗️ Leirisonda
-            </h1>
-            <p style="font-size: 1.4em; margin-bottom: 40px; opacity: 0.95;">
-              Sistema de Gestão de Obras e Piscinas
-            </p>
-            
-            <div style="
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-              gap: 20px;
-              margin: 40px 0;
-            ">
-              <button id="obrasBtn" style="
-                background: rgba(255,255,255,0.2);
-                backdrop-filter: blur(10px);
-                border: 2px solid rgba(255,255,255,0.3);
-                color: white;
-                padding: 20px;
-                border-radius: 15px;
-                font-size: 1.1em;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                min-height: 80px;
-              ">
-                🏗️<br>Gestão de Obras
-              </button>
-              
-              <button id="piscinasBtn" style="
-                background: rgba(255,255,255,0.2);
-                backdrop-filter: blur(10px);
-                border: 2px solid rgba(255,255,255,0.3);
-                color: white;
-                padding: 20px;
-                border-radius: 15px;
-                font-size: 1.1em;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                min-height: 80px;
-              ">
-                🏊‍♀️<br>Piscinas
-              </button>
-              
-              <button id="manutencaoBtn" style="
-                background: rgba(255,255,255,0.2);
-                backdrop-filter: blur(10px);
-                border: 2px solid rgba(255,255,255,0.3);
-                color: white;
-                padding: 20px;
-                border-radius: 15px;
-                font-size: 1.1em;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                min-height: 80px;
-              ">
-                🔧<br>Manutenção
-              </button>
-              
-              <button id="dashboardBtn" style="
-                background: rgba(255,255,255,0.2);
-                backdrop-filter: blur(10px);
-                border: 2px solid rgba(255,255,255,0.3);
-                color: white;
-                padding: 20px;
-                border-radius: 15px;
-                font-size: 1.1em;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                min-height: 80px;
-              ">
-                📊<br>Dashboard
-              </button>
-            </div>
-            
-            <div style="
-              background: rgba(76, 175, 80, 0.3);
-              padding: 20px;
-              border-radius: 10px;
-              margin: 30px 0;
-              border: 1px solid rgba(76, 175, 80, 0.5);
-            ">
-              <p style="margin: 0; font-size: 1em;">
-                ✅ Sistema restaurado • Logout automático desativado • Pronto para usar
-              </p>
-            </div>
-            
-            <p style="font-size: 0.9em; opacity: 0.7; margin-top: 20px;">
-              Clique em qualquer área para aceder à funcionalidade
-            </p>
-          </div>
-        </div>
-      `;
-
-      // Adicionar funcionalidade aos botões
-      document.getElementById("obrasBtn").onclick = () =>
-        navigateToApp("/obras");
-      document.getElementById("piscinasBtn").onclick = () =>
-        navigateToApp("/piscinas");
-      document.getElementById("manutencaoBtn").onclick = () =>
-        navigateToApp("/manutencao");
-      document.getElementById("dashboardBtn").onclick = () =>
-        navigateToApp("/dashboard");
-
-      // Adicionar efeitos hover
-      document.querySelectorAll("button").forEach((btn) => {
-        btn.onmouseover = () => {
-          btn.style.transform = "scale(1.05)";
-          btn.style.background = "rgba(255,255,255,0.3)";
-        };
-        btn.onmouseout = () => {
-          btn.style.transform = "scale(1)";
-          btn.style.background = "rgba(255,255,255,0.2)";
-        };
-      });
-
-      console.log("✅ RESTAURAÇÃO: Interface da aplicação criada");
-    }, 1000);
+      console.log("✅ RESTAURAÇÃO: Navegando para aplicação original...");
+      navigateToApp("/obras");
+    }, 2000);
   }
 
   function navigateToApp(route) {
@@ -184,15 +53,20 @@
     try {
       localStorage.setItem("lastRoute", route);
       localStorage.setItem("appReady", "true");
+      localStorage.setItem("userAuthenticated", "true");
     } catch (e) {}
 
-    // Múltiplas tentativas de navegação
+    // Limpar qualquer overlay ou modal que possa estar bloqueando
+    document
+      .querySelectorAll('[style*="fixed"], [style*="z-index"]')
+      .forEach((el) => {
+        if (el.style.position === "fixed" && parseInt(el.style.zIndex) > 1000) {
+          el.remove();
+        }
+      });
+
+    // Navegação simples
     window.location.href = route;
-    setTimeout(() => window.location.replace(route), 500);
-    setTimeout(() => {
-      history.pushState({}, "", route);
-      window.location.reload();
-    }, 1000);
   }
 
   // Executar imediatamente
