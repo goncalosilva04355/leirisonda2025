@@ -192,13 +192,14 @@ function trackAllInteractions() {
   });
 }
 
-// Initialize tracking
+// Initialize comprehensive tracking
 function initObraTracker() {
   trackObraOperations();
   trackFormSubmissions();
-  trackButtonClicks();
+  trackAllInteractions();
 
-  console.log("✅ Obra tracking initialized");
+  console.log("🚀 COMPREHENSIVE obra tracking initialized");
+  console.log("🛡️ Protection will auto-activate on any suspicious activity");
 }
 
 // Start when DOM is ready
