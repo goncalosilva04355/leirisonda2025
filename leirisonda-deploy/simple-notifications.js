@@ -209,29 +209,55 @@ console.log("🔔 SIMPLE: Iniciando notificações simplificadas...");
   // Função de permissão global
   window.requestNotificationPermission = requestPermission;
 
-  // Inicializar
+  // Inicializar com proteção contra erros
   function init() {
-    checkSupport();
+    try {
+      console.log("🔔 SIMPLE: Iniciando init...");
 
-    // Se já tem permissão, ativar
-    if (Notification.permission === "granted") {
-      permissionGranted = true;
-      console.log("✅ SIMPLE: Permissão já concedida");
+      if (!checkSupport()) {
+        console.warn("🔔 SIMPLE: Suporte limitado, continuando...");
+      }
+
+      // Se já tem permissão, ativar
+      if (
+        typeof Notification !== "undefined" &&
+        Notification.permission === "granted"
+      ) {
+        permissionGranted = true;
+        console.log("✅ SIMPLE: Permissão já concedida");
+      }
+
+      setupAutoPermission();
+      monitorWorkCreation();
+
+      // Criar botão após 2 segundos
+      setTimeout(() => {
+        try {
+          createTestButton();
+        } catch (e) {
+          console.error("🔔 SIMPLE: Erro ao criar botão:", e);
+        }
+      }, 2000);
+
+      console.log("✅ SIMPLE: Sistema simples de notificações ativo");
+    } catch (error) {
+      console.error("❌ SIMPLE: Erro na inicialização:", error);
     }
-
-    setupAutoPermission();
-    monitorWorkCreation();
-
-    // Criar botão após 2 segundos
-    setTimeout(createTestButton, 2000);
-
-    console.log("✅ SIMPLE: Sistema simples de notificações ativo");
   }
 
-  // Executar quando DOM estiver pronto
+  // Executar quando DOM estiver pronto com proteção
+  function safeInit() {
+    try {
+      init();
+    } catch (error) {
+      console.error("❌ SIMPLE: Erro crítico:", error);
+    }
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", safeInit);
   } else {
-    init();
+    // Aguardar um pouco antes de inicializar
+    setTimeout(safeInit, 100);
   }
 })();
