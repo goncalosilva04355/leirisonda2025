@@ -1387,35 +1387,21 @@ function App() {
               <span>Manutenção Piscinas</span>
             </button>
 
-            {/* Diagnóstico Section */}
-            <div className="pt-4">
-              <p className="px-4 text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
-                DIAGN��STICO
-              </p>
-            </div>
+            <button
+              onClick={() => {
+                setActiveSection("utilizadores");
+                setSidebarOpen(false);
+              }}
+              className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left"
+            >
+              <UserCheck className="h-5 w-5" />
+              <span>Utilizadores</span>
+            </button>
 
-            {/* Administração Section */}
-            <div className="pt-4">
-              <p className="px-4 text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
-                ADMINISTRAÇÃO
-              </p>
-
-              <button
-                onClick={() => {
-                  setActiveSection("utilizadores");
-                  setSidebarOpen(false);
-                }}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left"
-              >
-                <UserCheck className="h-5 w-5" />
-                <span>Utilizadores</span>
-              </button>
-
-              <button className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left">
-                <Plus className="h-5 w-5" />
-                <span>Criar Utilizador</span>
-              </button>
-            </div>
+            <button className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left">
+              <Plus className="h-5 w-5" />
+              <span>Criar Utilizador</span>
+            </button>
           </nav>
 
           {/* User Profile */}
