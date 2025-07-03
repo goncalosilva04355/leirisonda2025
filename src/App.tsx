@@ -1591,10 +1591,9 @@ function App() {
                     <Plus className="h-4 w-4" />
                     <span>Agendar Manutenção</span>
                   </button>
-                </div>
-
-                    <div className="space-y-3">
-                      {/* Manutenção agendada 1 */}
+              </div>
+            </div>
+          </div>
                       <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg">
                         <div className="flex items-start justify-between">
                           <div>
@@ -1791,7 +1790,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Valores da Água */}
+              {/* Valores da ��gua */}
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -1914,7 +1913,7 @@ function App() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600 text-sm">⚗️</span>
+                      <span className="text-blue-600 text-sm">⚗���</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Produtos Químicos Utilizados
