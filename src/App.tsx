@@ -2149,17 +2149,6 @@ function App() {
 
             <button
               onClick={() => {
-                setActiveSection("nova-manutencao");
-                setSidebarOpen(false);
-              }}
-              className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left"
-            >
-              <Wrench className="h-5 w-5" />
-              <span>Manutenção Piscinas</span>
-            </button>
-
-            <button
-              onClick={() => {
                 setActiveSection("piscinas");
                 setSidebarOpen(false);
               }}
