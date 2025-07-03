@@ -10,6 +10,7 @@ import {
   BarChart3,
   Users,
   Settings,
+  LogOut,
 } from "lucide-react";
 
 function App() {
@@ -67,7 +68,7 @@ function App() {
             </h1>
             <div className="bg-white rounded-lg shadow p-6">
               <p className="text-gray-600">
-                Formulário para registar uma nova manutenç��o será implementado
+                Formulário para registar uma nova manutenção será implementado
                 aqui.
               </p>
             </div>
@@ -234,7 +235,17 @@ function App() {
           </nav>
 
           {/* Footer */}
-          <div className="px-6 py-4 border-t border-gray-200">
+          <div className="px-4 py-4 border-t border-gray-200 space-y-3">
+            <button
+              onClick={() => {
+                console.log("Terminar sessão");
+                // Aqui implementar a lógica de logout
+              }}
+              className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200"
+            >
+              <LogOut className="h-5 w-5" />
+              <span>Terminar Sessão</span>
+            </button>
             <p className="text-xs text-gray-500 text-center">
               © 2024 Leirisonda
             </p>
