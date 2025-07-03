@@ -87,7 +87,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true); // Temporarily hidden login page
   const [currentUser, setCurrentUser] = useState(ADMIN_USER);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("dashboard");
+  const [activeSection, setActiveSection] = useState("nova-piscina");
   const [users, setUsers] = useState(initialUsers);
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
