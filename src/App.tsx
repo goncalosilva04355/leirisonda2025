@@ -406,7 +406,7 @@ function App() {
     {
       id: "nova-manutencao",
       icon: Wrench,
-      label: "Nova Manutenção",
+      label: "Nova Manutenç��o",
       path: "/manutencao/nova",
     },
     {
@@ -534,7 +534,7 @@ function App() {
                         Criado
                       </th>
                       <th className="text-right py-3 px-4 font-medium text-gray-900">
-                        A��ões
+                        Ações
                       </th>
                     </tr>
                   </thead>
@@ -821,249 +821,200 @@ function App() {
         );
       default:
         return (
-          <div className="min-h-screen bg-gray-50 p-4 lg:ml-72">
-            {/* Header com saudação personalizada */}
-            <div className="bg-white rounded-lg p-6 mb-6 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white text-lg font-bold">G</span>
+          <div className="min-h-screen bg-gray-50">
+            {/* Mobile Dashboard */}
+            <div className="lg:ml-72">
+              {/* Header personalizado mobile */}
+              <div className="bg-white p-6 m-4 rounded-xl shadow-sm">
+                <div className="flex items-center space-x-4 mb-6">
+                  <div className="w-12 h-12">
+                    <svg viewBox="0 0 100 100" className="w-full h-full">
+                      <circle cx="50" cy="50" r="45" fill="#007784" />
+                      <path
+                        d="M30 60 Q50 40 70 60 Q50 80 30 60"
+                        fill="white"
+                        opacity="0.8"
+                      />
+                    </svg>
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <h1 className="text-2xl font-bold text-gray-900">
                       Olá,{" "}
-                      <span className="text-blue-600">Gonçalo Fonseca</span>
+                      <span className="text-gray-900">Gonçalo Fonseca</span>
                     </h1>
-                    <p className="text-sm text-gray-500">
-                      quinta-feira, 03 de julho
+                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                      <span>📅 quinta-feira, 03 de julho</span>
+                      <span>🕐 23:19</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2 text-sm">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-green-600 font-medium">Online</span>
+                </div>
+              </div>
+
+              {/* Cards de Status */}
+              <div className="px-4 space-y-4 mb-6">
+                {/* Pendentes */}
+                <div className="bg-white rounded-xl p-6 shadow-sm border-l-4 border-red-500">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <AlertCircle className="h-6 w-6 text-red-600" />
+                      </div>
+                      <div>
+                        <p className="text-lg font-medium text-gray-900">
+                          Pendentes
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Necessitam atenção
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+
+                {/* Em Progresso */}
+                <div className="bg-white rounded-xl p-6 shadow-sm border-l-4 border-orange-500">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                        <BarChart3 className="h-6 w-6 text-orange-600" />
+                      </div>
+                      <div>
+                        <p className="text-lg font-medium text-gray-900">
+                          Em Progresso
+                        </p>
+                        <p className="text-sm text-gray-500">A decorrer</p>
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+
+                {/* Concluídas */}
+                <div className="bg-white rounded-xl p-6 shadow-sm border-l-4 border-green-500">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <Check className="h-6 w-6 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-lg font-medium text-gray-900">
+                          Concluídas
+                        </p>
+                        <p className="text-sm text-gray-500">Finalizadas</p>
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+
+                {/* Folhas por Fazer */}
+                <div className="bg-white rounded-xl p-6 shadow-sm border-l-4 border-red-500">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <Building2 className="h-6 w-6 text-red-600" />
+                      </div>
+                      <div>
+                        <p className="text-lg font-medium text-gray-900">
+                          Folhas por Fazer
+                        </p>
+                        <p className="text-sm text-gray-500">Por preencher</p>
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Todas as Obras */}
+              <div className="mx-4 mb-6">
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Building2 className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      Nenhuma obra registada
+                    </h3>
+                    <p className="text-gray-500 mb-6">
+                      Comece por criar a sua primeira obra.
                     </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-gray-900">23:19</div>
-                  <div className="flex items-center space-x-2 text-sm text-green-600">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span>Online</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Cards de Status */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              {/* Pendentes */}
-              <div className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-red-500">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                      <AlertCircle className="h-5 w-5 text-red-600" />
-                    </div>
-                    <div>
-                      <p className="text-lg font-bold text-gray-900">0</p>
-                      <p className="text-sm font-medium text-gray-900">
-                        Pendentes
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Necessitam atenção
-                      </p>
-                    </div>
+                    <button
+                      onClick={() => setActiveSection("nova-obra")}
+                      className="bg-red-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-700 transition-colors"
+                    >
+                      + Criar Primeira Obra
+                    </button>
                   </div>
                 </div>
               </div>
 
-              {/* Em Progresso */}
-              <div className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-orange-500">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                      <BarChart3 className="h-5 w-5 text-orange-600" />
-                    </div>
-                    <div>
-                      <p className="text-lg font-bold text-gray-900">0</p>
-                      <p className="text-sm font-medium text-gray-900">
-                        Em Progresso
-                      </p>
-                      <p className="text-xs text-gray-500">A decorrer</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Concluídas */}
-              <div className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-green-500">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                      <Check className="h-5 w-5 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="text-lg font-bold text-gray-900">0</p>
-                      <p className="text-sm font-medium text-gray-900">
-                        Concluídas
-                      </p>
-                      <p className="text-xs text-gray-500">Finalizadas</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Folhas por Fazer */}
-              <div className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-red-500">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                      <Building2 className="h-5 w-5 text-red-600" />
-                    </div>
-                    <div>
-                      <p className="text-lg font-bold text-gray-900">0</p>
-                      <p className="text-sm font-medium text-gray-900">
-                        Folhas por Fazer
-                      </p>
-                      <p className="text-xs text-gray-500">Por preencher</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Próximas Piscinas */}
-            <div className="bg-white rounded-lg p-6 mb-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Próximas Piscinas
-              </h2>
-
-              {/* Piscina Card */}
-              <div className="border-l-4 border-cyan-400 bg-cyan-50 rounded-r-lg p-4 mb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
-                      <Waves className="h-5 w-5 text-cyan-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">
-                        Piscina Magnolia
-                      </h3>
-                      <div className="flex items-center space-x-1 text-sm text-gray-600">
-                        <span>📍 Vieira de Leiria</span>
+              {/* Manutenções Próximas */}
+              <div className="mx-4 mb-6">
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                        <Waves className="h-5 w-5 text-cyan-600" />
                       </div>
-                      <div className="flex items-center space-x-1 text-sm text-gray-500">
-                        <span>📅 Em 28 dias</span>
-                        <span className="text-xs text-gray-400">
-                          Próxima: 31/07/2025
-                        </span>
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-900">
+                          Manutenções Próximas
+                        </h3>
                       </div>
                     </div>
+                    <button className="text-sm text-gray-500 hover:text-gray-700">
+                      Ver Todas
+                    </button>
                   </div>
-                  <span className="inline-flex px-3 py-1 text-xs font-medium bg-cyan-200 text-cyan-800 rounded-full">
-                    Agendada
-                  </span>
-                </div>
-              </div>
 
-              {/* Segunda Piscina */}
-              <div className="border-l-4 border-cyan-400 bg-cyan-50 rounded-r-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
-                      <Waves className="h-5 w-5 text-cyan-600" />
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Waves className="h-8 w-8 text-gray-400" />
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">
-                        Piscina Magnolia
-                      </h3>
-                      <div className="flex items-center space-x-1 text-sm text-gray-600">
-                        <span>📍 Vieira de Leiria</span>
-                      </div>
-                      <div className="flex items-center space-x-1 text-sm text-gray-500">
-                        <span>📅 Em 28 dias</span>
-                        <span className="text-xs text-gray-400">
-                          Próxima: 31/07/2025
-                        </span>
-                      </div>
+                    <h4 className="text-lg font-medium text-gray-900 mb-2">
+                      Nenhuma manutenção agendada
+                    </h4>
+                    <p className="text-gray-500 mb-4">
+                      Não há manutenções de piscinas programadas para breve.
+                    </p>
+                    <button className="bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-cyan-700 transition-colors">
+                      Ver Manutenções
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Ações Rápidas */}
+              <div className="mx-4 mb-6">
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
+                      <Plus className="h-4 w-4 text-green-600" />
                     </div>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Ações Rápidas
+                    </h2>
                   </div>
-                  <span className="inline-flex px-3 py-1 text-xs font-medium bg-cyan-200 text-cyan-800 rounded-full">
-                    Agendada
-                  </span>
-                </div>
-              </div>
-            </div>
 
-            {/* Ações Rápidas */}
-            <div className="bg-white rounded-lg p-6 mb-6 shadow-sm">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Plus className="h-4 w-4 text-green-600" />
-                </div>
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Ações Rápidas
-                </h2>
-              </div>
-
-              <div className="space-y-3">
-                <button
-                  onClick={() => setActiveSection("nova-obra")}
-                  className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <Plus className="h-5 w-5 text-gray-600" />
-                  <span className="font-medium text-gray-900">Nova Obra</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveSection("nova-manutencao")}
-                  className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <Wrench className="h-5 w-5 text-gray-600" />
-                  <span className="font-medium text-gray-900">
-                    Manutenção Piscinas
-                  </span>
-                </button>
-
-                <button className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                  <Building2 className="h-5 w-5 text-gray-600" />
-                  <span className="font-medium text-gray-900">
-                    Todas as Obras
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setActiveSection("utilizadores")}
-                  className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <UserPlus className="h-5 w-5 text-gray-600" />
-                  <span className="font-medium text-gray-900">
-                    Novo Utilizador
-                  </span>
-                </button>
-
-                <button className="w-full flex items-center space-x-3 p-4 text-left border border-blue-200 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                  <div className="w-5 h-5 flex items-center justify-center">
-                    <span className="text-blue-600">🔄</span>
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => setActiveSection("nova-obra")}
+                      className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <Plus className="h-5 w-5 text-gray-600" />
+                      <span className="font-medium text-gray-900">
+                        Nova Obra
+                      </span>
+                    </button>
                   </div>
-                  <span className="font-medium text-blue-900">
-                    Diagnóstico de Sincronização
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            {/* Pesquisar Obras */}
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <span className="text-blue-600">🔍</span>
                 </div>
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Pesquisar Obras
-                </h2>
-              </div>
-
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Cliente, folha obra, morada..."
-                  className="w-full p-4 border border-gray-200 rounded-lg text-gray-600 bg-gray-50"
-                />
               </div>
             </div>
           </div>
@@ -1072,90 +1023,236 @@ function App() {
   };
 
   return (
-    <div className="leirisonda-layout">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-gray-50">
+      {/* Mobile Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-xl transform ${
+        className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 border-r border-gray-200`}
+        } transition-transform duration-300 ease-in-out lg:hidden`}
       >
         <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="flex items-center px-6 py-5 border-b border-gray-200">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center mr-3">
-              <Building2 className="h-6 w-6 text-white" />
+          {/* Status Bar */}
+          <div className="px-4 py-2 bg-gray-100 text-xs text-gray-600 flex items-center justify-between">
+            <div className="flex items-center space-x-1">
+              <div className="w-1 h-3 bg-cyan-400 rounded-full"></div>
+              <span>23:19</span>
+              <span className="ml-4">📅 Em 27 dias</span>
+              <span className="text-xs">Próxima: 30/07/2025</span>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">Leirisonda</h1>
-              <p className="text-sm text-gray-500">Gestão de Obras</p>
+            <div className="flex items-center space-x-1">
+              <span>••••</span>
+              <span>📶</span>
+              <div className="w-6 h-3 bg-red-500 rounded-sm text-white text-center text-xs">
+                6
+              </div>
             </div>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeSection === item.id;
+          {/* Logo Header */}
+          <div className="px-6 py-6 border-b border-gray-200">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10">
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                  <circle cx="50" cy="50" r="45" fill="#007784" />
+                  <path
+                    d="M30 60 Q50 40 70 60 Q50 80 30 60"
+                    fill="white"
+                    opacity="0.8"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Leirisonda</h1>
+                <p className="text-sm text-gray-500">Gestão de Obras</p>
+              </div>
+            </div>
+          </div>
 
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveSection(item.id);
-                    setSidebarOpen(false);
-                  }}
-                  className={`nav-item-leirisonda ${isActive ? "active" : ""}`}
-                >
-                  <Icon className="h-5 w-5 mr-3" />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
+          {/* Back Button */}
+          <div className="px-6 py-4">
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
+            >
+              <span>←</span>
+              <span>Voltar</span>
+            </button>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 px-6 space-y-1">
+            <button
+              onClick={() => {
+                setActiveSection("dashboard");
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                activeSection === "dashboard"
+                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                  : "text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              <Home className="h-5 w-5" />
+              <span>Dashboard</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveSection("nova-obra");
+                setSidebarOpen(false);
+              }}
+              className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Nova Obra</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveSection("nova-manutencao");
+                setSidebarOpen(false);
+              }}
+              className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left"
+            >
+              <Wrench className="h-5 w-5" />
+              <span>Manutenção Piscinas</span>
+            </button>
+
+            {/* Diagnóstico Section */}
+            <div className="pt-4">
+              <p className="px-4 text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
+                DIAGNÓSTICO
+              </p>
+            </div>
+
+            {/* Administração Section */}
+            <div className="pt-4">
+              <p className="px-4 text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
+                ADMINISTRAÇÃO
+              </p>
+
+              <button
+                onClick={() => {
+                  setActiveSection("utilizadores");
+                  setSidebarOpen(false);
+                }}
+                className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left"
+              >
+                <UserCheck className="h-5 w-5" />
+                <span>Utilizadores</span>
+              </button>
+
+              <button className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left">
+                <Plus className="h-5 w-5" />
+                <span>Criar Utilizador</span>
+              </button>
+            </div>
           </nav>
 
-          {/* Footer */}
-          <div className="px-4 py-4 border-t border-gray-200">
+          {/* User Profile */}
+          <div className="px-6 py-4 border-t border-gray-200">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-medium text-sm">G</span>
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">Gonçalo Fonseca</p>
+                <p className="text-sm text-gray-500">gongonsilva@gmail.com</p>
+              </div>
+            </div>
+
             <button
               onClick={handleLogout}
-              className="w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              className="w-full flex items-center space-x-2 mt-4 px-4 py-2 text-gray-600 hover:text-gray-800 text-left"
             >
-              <LogOut className="h-5 w-5" />
+              <LogOut className="h-4 w-4" />
               <span>Terminar Sessão</span>
             </button>
-            <p className="text-xs text-gray-500 text-center mt-4">
-              © 2024 Leirisonda
-            </p>
           </div>
         </div>
       </div>
 
-      {/* Header */}
-      <header className="lg:ml-72 bg-white shadow-sm border-b px-6 py-4">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 lg:hidden"
-          >
-            {sidebarOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
+      {/* Main App */}
+      <div className="min-h-screen">
+        {/* Top Mobile Header */}
+        <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 rounded-lg hover:bg-gray-100"
+            >
+              <Menu className="h-6 w-6 text-gray-700" />
+            </button>
 
-          <div className="text-right">
-            <p className="text-sm font-medium text-gray-900">
-              Bem-vindo, {currentUser?.name || "Utilizador"}
-            </p>
-            <p className="text-xs text-gray-500">Sistema de Gestão de Obras</p>
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8">
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                  <circle cx="50" cy="50" r="45" fill="#007784" />
+                  <path
+                    d="M30 60 Q50 40 70 60 Q50 80 30 60"
+                    fill="white"
+                    opacity="0.8"
+                  />
+                </svg>
+              </div>
+              <span className="font-medium text-gray-900">Leirisonda</span>
+            </div>
+
+            <div className="w-8"></div>
           </div>
         </div>
-      </header>
 
-      {/* Main content */}
-      <main className="lg:ml-72">{renderContent()}</main>
+        {/* Main Content */}
+        <main className="lg:ml-72">{renderContent()}</main>
 
-      {/* Sidebar overlay for mobile */}
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:bg-white lg:border-r lg:border-gray-200">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center px-6 py-5 border-b border-gray-200">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center mr-3">
+                <Building2 className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Leirisonda</h1>
+                <p className="text-sm text-gray-500">Gestão de Obras</p>
+              </div>
+            </div>
+
+            <nav className="flex-1 px-4 py-6 space-y-2">
+              {menuItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeSection === item.id;
+
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveSection(item.id)}
+                    className={`nav-item-leirisonda ${isActive ? "active" : ""}`}
+                  >
+                    <Icon className="h-5 w-5 mr-3" />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            <div className="px-4 py-4 border-t border-gray-200">
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <LogOut className="h-5 w-5" />
+                <span>Terminar Sessão</span>
+              </button>
+              <p className="text-xs text-gray-500 text-center mt-4">
+                © 2024 Leirisonda
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
