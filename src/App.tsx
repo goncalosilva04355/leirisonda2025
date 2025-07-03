@@ -647,7 +647,7 @@ function App() {
     {
       id: "nova-manutencao",
       icon: Wrench,
-      label: "Nova Manutenção",
+      label: "Nova Manuten��ão",
       path: "/manutencao/nova",
     },
     {
@@ -1632,7 +1632,7 @@ function App() {
                             <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
                               <span>📅 22/01/2025</span>
                               <span>⏰ 14:30</span>
-                              <span>👨‍🔧 Maria Silva</span>
+                              <span>👨��🔧 Maria Silva</span>
                             </div>
                             <p className="text-xs text-gray-500 mt-1">
                               Verificação sistema de filtração
@@ -2721,7 +2721,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Próximas Piscinas */}
+              {/* Próximas Manutenções */}
               <div className="bg-white rounded-lg shadow-sm">
                 <div className="flex items-center p-4 border-b border-gray-100">
                   <button className="p-1 mr-3">
