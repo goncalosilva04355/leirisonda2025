@@ -1144,7 +1144,7 @@ function App() {
                     onClick={() => setActiveSection("futuras-manutencoes")}
                     className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                   >
-                    Futuras Manutenções
+                    Futuras Manutenç��es
                   </button>
                 </div>
               </div>
@@ -2091,7 +2091,7 @@ function App() {
                     </label>
                     <textarea
                       rows="4"
-                      placeholder="Observações gerais sobre a intervenção..."
+                      placeholder="Observações gerais sobre a intervenç��o..."
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                     ></textarea>
                   </div>
@@ -2728,7 +2728,7 @@ function App() {
                     <span className="text-gray-600 text-lg">←</span>
                   </button>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Próximas Piscinas
+                    Próximas Manutenções
                   </h2>
                 </div>
 
