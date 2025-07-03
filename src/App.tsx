@@ -1475,19 +1475,464 @@ function App() {
         );
       case "nova-manutencao":
         return (
-          <div className="leirisonda-main">
-            <div className="dashboard-hero">
-              <h1 className="text-3xl font-bold mb-2">Nova Manutenção</h1>
-              <p className="text-white/90">Registar uma nova manutenção</p>
-            </div>
-            <div className="card-leirisonda">
-              <h2 className="text-lg font-semibold mb-4">
-                Detalhes da Manutenção
-              </h2>
-              <p className="text-gray-600">
-                Formulário para registar uma nova manutenção será implementado
-                aqui.
-              </p>
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Waves className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Nova Intervenção
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Piscina Magnolia • Vieira de Leiria
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Informações Básicas */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  Informações Básicas
+                </h2>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Data da Intervenção *
+                    </label>
+                    <input
+                      type="date"
+                      defaultValue="2025-07-04"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Hora de Início *
+                    </label>
+                    <input
+                      type="time"
+                      defaultValue="00:10"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Hora de Fim *
+                    </label>
+                    <input
+                      type="time"
+                      defaultValue="01:10"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Equipa e Viaturas */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Users className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Equipa e Viaturas
+                  </h2>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Técnicos *
+                      </label>
+                      <button className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Plus className="h-4 w-4 text-blue-600" />
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Nome do técnico"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Viaturas
+                      </label>
+                      <button className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Plus className="h-4 w-4 text-blue-600" />
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Matrícula ou identificação"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Valores da Água */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600 text-sm">🌡️</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Valores da Água
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      pH
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      defaultValue="7.2"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Cloro (ppm)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      defaultValue="1.5"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Temperatura (°C)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      defaultValue="25"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Sal (gr/lt)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      defaultValue="3.2"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      ORP (mv)
+                    </label>
+                    <input
+                      type="number"
+                      defaultValue="650"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Bromo (ppm)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      defaultValue="2.5"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Alcalinidade
+                    </label>
+                    <input
+                      type="number"
+                      defaultValue="120"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Dureza
+                    </label>
+                    <input
+                      type="number"
+                      defaultValue="200"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div className="col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Estabilizador
+                    </label>
+                    <input
+                      type="number"
+                      defaultValue="50"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Produtos Químicos Utilizados */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <span className="text-blue-600 text-sm">⚗️</span>
+                    </div>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Produtos Químicos Utilizados
+                    </h2>
+                  </div>
+                  <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 flex items-center space-x-1">
+                    <Plus className="h-3 w-3" />
+                    <span>Adicionar Produto</span>
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Nome do Produto
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Cloro líquido"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Quantidade
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="0"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Unidade
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>kg</option>
+                        <option>litros</option>
+                        <option>gramas</option>
+                        <option>ml</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Trabalho Realizado */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  Trabalho Realizado
+                </h2>
+
+                <div className="space-y-3">
+                  {[
+                    "Filtros",
+                    "Pré Filtro",
+                    "Filtro Areia Vidro",
+                    "Enchimento Automático",
+                    "Linha Água",
+                    "Limpeza Fundo",
+                    "Limpeza Paredes",
+                    "Limpeza Skimmers",
+                    "Verificação Equipamentos",
+                  ].map((task) => (
+                    <div key={task} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id={task.toLowerCase().replace(/\s+/g, "-")}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label
+                        htmlFor={task.toLowerCase().replace(/\s+/g, "-")}
+                        className="text-sm text-gray-700"
+                      >
+                        {task}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Outros trabalhos
+                  </label>
+                  <textarea
+                    rows="3"
+                    placeholder="Descreve outros trabalhos realizados..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  ></textarea>
+                </div>
+              </div>
+
+              {/* Problemas Encontrados */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                      <AlertCircle className="h-4 w-4 text-orange-600" />
+                    </div>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Problemas Encontrados
+                    </h2>
+                  </div>
+                  <button className="px-3 py-1 bg-orange-600 text-white text-sm rounded hover:bg-orange-700 flex items-center space-x-1">
+                    <Plus className="h-3 w-3" />
+                    <span>Adicionar Problema</span>
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Descrição do Problema
+                    </label>
+                    <textarea
+                      rows="3"
+                      placeholder="Descreve o problema encontrado..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    ></textarea>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Gravidade
+                    </label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>Baixa</option>
+                      <option>Média</option>
+                      <option>Alta</option>
+                      <option>Crítica</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="resolvido"
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label
+                      htmlFor="resolvido"
+                      className="text-sm text-gray-700"
+                    >
+                      Resolvido
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Informações Adicionais */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  Informações Adicionais
+                </h2>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Próxima Manutenção
+                    </label>
+                    <input
+                      type="date"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Observações
+                    </label>
+                    <textarea
+                      rows="4"
+                      placeholder="Observações gerais sobre a intervenção..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fotografias da Intervenção */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Eye className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Fotografias da Intervenção
+                  </h2>
+                </div>
+
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Plus className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Adicionar Fotos da Intervenção
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Arrasta fotos aqui ou clica para selecionar
+                  </p>
+                  <button className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-2 mx-auto mb-2">
+                    <Plus className="h-4 w-4 text-gray-600" />
+                    <span>Selecionar Fotos</span>
+                  </button>
+                  <p className="text-xs text-gray-400">
+                    0 de 15 fotos • PNG, JPG até 10MB
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex space-x-3 pb-6">
+                <button
+                  onClick={() => setActiveSection("piscinas")}
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2">
+                  <Save className="h-4 w-4" />
+                  <span>Guardar Intervenção</span>
+                </button>
+              </div>
             </div>
           </div>
         );
