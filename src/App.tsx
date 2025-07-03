@@ -1596,13 +1596,7 @@ function App() {
         );
 
 
-                      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-r-lg">
-                        <div className="flex items-start justify-between">
-                          <div>
 
-                            <p className="text-sm text-gray-600">
-                              📍 Leiria Centro
-                            </p>
                             <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
                               <span>📅 22/01/2025</span>
                               <span>⏰ 14:30</span>
