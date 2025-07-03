@@ -1302,14 +1302,14 @@ function App() {
                 </div>
               </div>
 
-              {/* Informações do Cliente */}
+              {/* Informaç��es do Cliente */}
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                     <Users className="h-4 w-4 text-blue-600" />
                   </div>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Informa��ões do Cliente
+                    Informações do Cliente
                   </h2>
                 </div>
 
@@ -1607,14 +1607,7 @@ function App() {
 
 
 
-                    <div className="space-y-3">
-                      {/* Manutenção agendada 3 */}
-                      <div className="bg-green-50 border-l-4 border-green-400 p-3 rounded-r-lg">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h4 className="font-medium text-gray-900">
-                              Piscina Quinta do Sol
-                            </h4>
+
                             <p className="text-sm text-gray-600">
                               📍 Marinha Grande
                             </p>
@@ -2532,7 +2525,7 @@ function App() {
                                   : module === "relatorios"
                                     ? "Relatórios"
                                     : module === "manutencoes"
-                                      ? "Manutenç��es"
+                                      ? "Manutenções"
                                       : module}
                               </h5>
                               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
