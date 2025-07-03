@@ -98,6 +98,8 @@ function App() {
   const [settingsPassword, setSettingsPassword] = useState("");
   const [settingsPasswordError, setSettingsPasswordError] = useState("");
   const [selectedWorkType, setSelectedWorkType] = useState("");
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [interventionSaved, setInterventionSaved] = useState(false);
 
   // Login form state
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
