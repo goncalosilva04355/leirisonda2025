@@ -1475,7 +1475,7 @@ function App() {
         <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:bg-white lg:border-r lg:border-gray-200">
           <div className="flex flex-col h-full">
             <div className="flex items-center px-6 py-5 border-b border-gray-200">
-              <div className="w-20 h-12 mr-3">
+              <div className="w-20 h-12 mr-3 bg-white rounded-lg shadow-md p-1">
                 <img
                   src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                   alt="Leirisonda Logo"
