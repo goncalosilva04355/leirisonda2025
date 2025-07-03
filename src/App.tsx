@@ -1279,7 +1279,7 @@ function App() {
                     <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option value="">Selecionar tratamento...</option>
                       <option value="cloro">Cloro</option>
-                      <option value="sal">Sal/Eletrólise</option>
+                      <option value="sal">Sal/Eletr��lise</option>
                       <option value="bromo">Bromo</option>
                       <option value="uv">UV + Cloro</option>
                       <option value="ozonio">Ozônio</option>
@@ -1491,109 +1491,16 @@ function App() {
 
               {/* Lista de Manutenções */}
               <div className="space-y-4">
-                {/* Manutenção 1 */}
-                <div className="bg-white rounded-lg shadow-sm p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                        <Check className="h-6 w-6 text-green-600" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Piscina Magnolia
-                        </h3>
-                        <p className="text-gray-600 text-sm">
-                          📍 Vieira de Leiria
-                        </p>
-                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
-                          <span>📅 15/01/2025</span>
-                          <span>⏰ 09:00 - 11:30</span>
-                          <span>👨‍🔧 João Santos</span>
-                        </div>
-                        <p className="text-xs text-gray-400 mt-1">
-                          Limpeza completa, ajuste pH, adição de cloro
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end space-y-2">
-                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
-                        Concluída
-                      </span>
-                      <button className="p-1 text-gray-400 hover:text-gray-600">
-                        <Eye className="h-4 w-4" />
-                      </button>
-                    </div>
+                <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Wrench className="h-8 w-8 text-gray-400" />
                   </div>
-                </div>
-
-                {/* Manutenção 2 */}
-                <div className="bg-white rounded-lg shadow-sm p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Wrench className="h-6 w-6 text-blue-600" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Piscina Villa Mar
-                        </h3>
-                        <p className="text-gray-600 text-sm">
-                          📍 Leiria Centro
-                        </p>
-                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
-                          <span>📅 10/01/2025</span>
-                          <span>⏰ 14:00 - 16:00</span>
-                          <span>👨‍🔧 Maria Silva</span>
-                        </div>
-                        <p className="text-xs text-gray-400 mt-1">
-                          Manutenção preventiva, limpeza de filtros
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end space-y-2">
-                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
-                        Concluída
-                      </span>
-                      <button className="p-1 text-gray-400 hover:text-gray-600">
-                        <Eye className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Manutenção 3 */}
-                <div className="bg-white rounded-lg shadow-sm p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                        <AlertCircle className="h-6 w-6 text-orange-600" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Piscina Quinta do Sol
-                        </h3>
-                        <p className="text-gray-600 text-sm">
-                          📍 Marinha Grande
-                        </p>
-                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
-                          <span>📅 05/01/2025</span>
-                          <span>⏰ 10:30 - 12:00</span>
-                          <span>👨‍🔧 João Santos</span>
-                        </div>
-                        <p className="text-xs text-gray-400 mt-1">
-                          Problema no sistema UV, substituição de lâmpada
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end space-y-2">
-                      <span className="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full font-medium">
-                        Com Problemas
-                      </span>
-                      <button className="p-1 text-gray-400 hover:text-gray-600">
-                        <Eye className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Nenhuma manutenção registada
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    As manutenções aparecerão aqui quando forem criadas
+                  </p>
                 </div>
               </div>
             </div>
