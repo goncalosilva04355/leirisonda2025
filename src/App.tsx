@@ -1050,7 +1050,7 @@ function App() {
 
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                   <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <span className="text-gray-400 text-2xl">📁</span>
+                    <Plus className="h-8 w-8 text-gray-400" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
                     Carregar Fotografias
@@ -1060,7 +1060,7 @@ function App() {
                   </p>
                   <p className="text-sm text-gray-400 mb-4">0/20 fotografias</p>
                   <button className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-2 mx-auto">
-                    <span className="text-gray-600">📷</span>
+                    <Eye className="h-4 w-4 text-gray-600" />
                     <span>Escolher Fotografias</span>
                   </button>
                 </div>
