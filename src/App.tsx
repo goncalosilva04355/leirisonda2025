@@ -651,10 +651,10 @@ function App() {
       path: "/manutencao/nova",
     },
     {
-      id: "nova-piscina",
+      id: "piscinas",
       icon: Waves,
-      label: "Nova Piscina",
-      path: "/piscinas/nova",
+      label: "Piscinas",
+      path: "/piscinas",
     },
     {
       id: "utilizadores",
