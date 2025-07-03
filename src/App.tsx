@@ -1599,7 +1599,7 @@ function App() {
 
 
                             <p className="text-xs text-gray-500 mt-1">
-                              Manutenç��o mensal programada
+
                             </p>
                           </div>
                           <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
