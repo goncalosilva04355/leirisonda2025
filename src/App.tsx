@@ -2006,13 +2006,13 @@ function App() {
 
             <button
               onClick={() => {
-                setActiveSection("nova-piscina");
+                setActiveSection("piscinas");
                 setSidebarOpen(false);
               }}
               className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left"
             >
-              <Plus className="h-5 w-5" />
-              <span>Nova Piscina</span>
+              <Waves className="h-5 w-5" />
+              <span>Piscinas</span>
             </button>
 
             <button
