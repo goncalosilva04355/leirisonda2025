@@ -1041,7 +1041,7 @@ function App() {
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-blue-600 text-sm">📷</span>
+                    <Eye className="h-4 w-4 text-blue-600" />
                   </div>
                   <h2 className="text-lg font-semibold text-gray-900">
                     Fotografias da Obra
