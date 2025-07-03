@@ -1977,7 +1977,7 @@ function App() {
                         className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                       >
                         <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                          <span className="text-green-600 text-sm">📱</span>
+                          <Users className="h-4 w-4 text-green-600" />
                         </div>
                         <div className="text-left">
                           <p className="font-medium text-gray-900">WhatsApp</p>
@@ -1992,7 +1992,7 @@ function App() {
                         className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                       >
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <span className="text-blue-600 text-sm">📧</span>
+                          <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <div className="text-left">
                           <p className="font-medium text-gray-900">Email</p>
@@ -2007,7 +2007,7 @@ function App() {
                         className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                       >
                         <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                          <span className="text-purple-600 text-sm">💬</span>
+                          <BarChart3 className="h-4 w-4 text-purple-600" />
                         </div>
                         <div className="text-left">
                           <p className="font-medium text-gray-900">SMS</p>
@@ -2022,7 +2022,7 @@ function App() {
                         className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                       >
                         <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <span className="text-gray-600 text-sm">📄</span>
+                          <Save className="h-4 w-4 text-gray-600" />
                         </div>
                         <div className="text-left">
                           <p className="font-medium text-gray-900">
