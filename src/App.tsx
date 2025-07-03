@@ -1573,8 +1573,24 @@ function App() {
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  {/* Próximas semanas */}
+                <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <BarChart3 className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Nenhuma manutenção agendada
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4">
+                    As futuras manutenções aparecerão aqui quando forem
+                    agendadas
+                  </p>
+                  <button
+                    onClick={() => setActiveSection("nova-manutencao")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Agendar Manutenção</span>
+                  </button>
                   <div>
                     <h3 className="text-md font-medium text-gray-700 mb-2">
                       Esta Semana
