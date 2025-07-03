@@ -340,7 +340,6 @@ function App() {
                 className="w-full h-full object-contain"
               />
             </div>
-            <p className="text-gray-600">Sistema de Gestão de Obras</p>
           </div>
 
           <div className="bg-white rounded-xl shadow-lg p-8">
