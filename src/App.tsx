@@ -62,7 +62,7 @@ function App() {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Nova Obra
             </h1>
-            <div className="bg-white rounded-xl shadow-sm border border-blue-100 p-4 sm:p-6">
+            <div className="bg-white shadow-sm border border-blue-100 p-4 sm:p-6">
               <p className="text-gray-600">
                 Formulário para criar uma nova obra será implementado aqui.
               </p>
@@ -75,7 +75,7 @@ function App() {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Nova Manutenção
             </h1>
-            <div className="bg-white rounded-xl shadow-sm border border-blue-100 p-4 sm:p-6">
+            <div className="bg-white shadow-sm border border-blue-100 p-4 sm:p-6">
               <p className="text-gray-600">
                 Formulário para registar uma nova manutenção será implementado
                 aqui.
@@ -89,7 +89,7 @@ function App() {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Nova Piscina
             </h1>
-            <div className="bg-white rounded-xl shadow-sm border border-blue-100 p-4 sm:p-6">
+            <div className="bg-white shadow-sm border border-blue-100 p-4 sm:p-6">
               <p className="text-gray-600">
                 Formulário para registar uma nova piscina será implementado
                 aqui.
@@ -103,7 +103,7 @@ function App() {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Utilizadores
             </h1>
-            <div className="bg-white rounded-xl shadow-sm border border-blue-100 p-4 sm:p-6">
+            <div className="bg-white shadow-sm border border-blue-100 p-4 sm:p-6">
               <p className="text-gray-600">
                 Gestão de utilizadores do sistema será implementada aqui.
               </p>
@@ -119,9 +119,9 @@ function App() {
 
             {/* Stats Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-              <div className="bg-white rounded-xl shadow-sm border border-blue-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
+              <div className="bg-white shadow-sm border border-blue-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
                 <div className="flex items-center">
-                  <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl">
+                  <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-100 to-blue-200">
                     <Building2 className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                   </div>
                   <div className="ml-3 sm:ml-4">
@@ -135,9 +135,9 @@ function App() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm border border-blue-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
+              <div className="bg-white shadow-sm border border-blue-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
                 <div className="flex items-center">
-                  <div className="p-2 sm:p-3 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-xl">
+                  <div className="p-2 sm:p-3 bg-gradient-to-br from-emerald-100 to-emerald-200">
                     <Wrench className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
                   </div>
                   <div className="ml-3 sm:ml-4">
@@ -151,9 +151,9 @@ function App() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm border border-blue-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
+              <div className="bg-white shadow-sm border border-blue-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
                 <div className="flex items-center">
-                  <div className="p-2 sm:p-3 bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-xl">
+                  <div className="p-2 sm:p-3 bg-gradient-to-br from-cyan-100 to-cyan-200">
                     <Waves className="h-5 w-5 sm:h-6 sm:w-6 text-cyan-600" />
                   </div>
                   <div className="ml-3 sm:ml-4">
@@ -167,9 +167,9 @@ function App() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm border border-blue-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
+              <div className="bg-white shadow-sm border border-blue-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
                 <div className="flex items-center">
-                  <div className="p-2 sm:p-3 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl">
+                  <div className="p-2 sm:p-3 bg-gradient-to-br from-purple-100 to-purple-200">
                     <Users className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
                   </div>
                   <div className="ml-3 sm:ml-4">
@@ -185,7 +185,7 @@ function App() {
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden">
+            <div className="bg-white shadow-sm border border-blue-100 overflow-hidden">
               <div className="px-4 sm:px-6 py-4 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-slate-50">
                 <h2 className="text-lg font-semibold text-gray-900">
                   Atividade Recente
@@ -239,7 +239,7 @@ function App() {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center px-4 sm:px-6 py-4 sm:py-5 border-b border-blue-100 bg-gradient-to-r from-blue-600 to-blue-700">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mr-3">
+            <div className="w-10 h-10 bg-white/20 backdrop-blur flex items-center justify-center mr-3">
               <Building2 className="h-6 w-6 text-white" />
             </div>
             <div>
@@ -263,10 +263,10 @@ function App() {
                     setActiveSection(item.id);
                     setSidebarOpen(false);
                   }}
-                  className={`w-full flex items-center space-x-3 px-3 sm:px-4 py-3 sm:py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  className={`w-full flex items-center space-x-3 px-3 sm:px-4 py-3 sm:py-3 text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg transform scale-[0.98]"
-                      : "text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm"
+                      ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white border-l-4 border-blue-400"
+                      : "text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:border-l-2 hover:border-blue-300"
                   }`}
                 >
                   <Icon className="h-5 w-5 flex-shrink-0" />
@@ -283,7 +283,7 @@ function App() {
                 console.log("Terminar sessão");
                 // Aqui implementar a lógica de logout
               }}
-              className="w-full flex items-center space-x-3 px-3 sm:px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 border border-red-200/50"
+              className="w-full flex items-center space-x-3 px-3 sm:px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 border border-red-200/50"
             >
               <LogOut className="h-5 w-5 flex-shrink-0" />
               <span>Terminar Sessão</span>
@@ -302,7 +302,7 @@ function App() {
           <div className="flex items-center justify-between">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 rounded-xl text-blue-600 hover:text-blue-700 hover:bg-blue-50 lg:hidden transition-all duration-200"
+              className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 lg:hidden transition-all duration-200"
             >
               {sidebarOpen ? (
                 <X className="h-6 w-6" />
