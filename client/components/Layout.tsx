@@ -9,7 +9,6 @@ import {
   Menu,
   X,
   LogOut,
-  Settings,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuth } from "../hooks/useAuth";
