@@ -692,7 +692,7 @@ function App() {
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-blue-600 text-sm">📋</span>
+                    <Building2 className="h-4 w-4 text-blue-600" />
                   </div>
                   <h2 className="text-lg font-semibold text-gray-900">
                     Informações Básicas
@@ -715,11 +715,16 @@ function App() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Tipo de Trabalho *
                     </label>
-                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>Piscina</option>
-                      <option>Furo</option>
-                      <option>Captação</option>
-                      <option>Manutenção</option>
+                    <select
+                      value={selectedWorkType}
+                      onChange={(e) => setSelectedWorkType(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Selecionar tipo...</option>
+                      <option value="Piscina">Piscina</option>
+                      <option value="Furo">Furo</option>
+                      <option value="Captação">Captação</option>
+                      <option value="Manutenção">Manutenção</option>
                     </select>
                   </div>
 
