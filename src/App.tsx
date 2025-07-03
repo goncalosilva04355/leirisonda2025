@@ -1,130 +1,285 @@
 import React, { useState } from "react";
-import { Building2, Eye, EyeOff } from "lucide-react";
+import {
+  Building2,
+  Menu,
+  X,
+  Home,
+  Plus,
+  Wrench,
+  Waves,
+  BarChart3,
+  Users,
+  Settings,
+} from "lucide-react";
 
 function App() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("dashboard");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Login attempt:", { email, password });
+  const menuItems = [
+    { id: "dashboard", icon: Home, label: "Dashboard", path: "/dashboard" },
+    { id: "nova-obra", icon: Plus, label: "Nova Obra", path: "/obras/nova" },
+    {
+      id: "nova-manutencao",
+      icon: Wrench,
+      label: "Nova Manutenção",
+      path: "/manutencao/nova",
+    },
+    {
+      id: "nova-piscina",
+      icon: Waves,
+      label: "Nova Piscina",
+      path: "/piscinas/nova",
+    },
+    {
+      id: "relatorios",
+      icon: BarChart3,
+      label: "Relatórios",
+      path: "/relatorios",
+    },
+    { id: "clientes", icon: Users, label: "Clientes", path: "/clientes" },
+    {
+      id: "configuracoes",
+      icon: Settings,
+      label: "Configurações",
+      path: "/configuracoes",
+    },
+  ];
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case "nova-obra":
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900">Nova Obra</h1>
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600">
+                Formulário para criar uma nova obra será implementado aqui.
+              </p>
+            </div>
+          </div>
+        );
+      case "nova-manutencao":
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Nova Manutenção
+            </h1>
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600">
+                Formulário para registar uma nova manutenç��o será implementado
+                aqui.
+              </p>
+            </div>
+          </div>
+        );
+      case "nova-piscina":
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900">Nova Piscina</h1>
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600">
+                Formulário para registar uma nova piscina será implementado
+                aqui.
+              </p>
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <Building2 className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">
+                      Obras Ativas
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">12</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-green-100 rounded-lg">
+                    <Wrench className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">
+                      Manutenções
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">8</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-cyan-100 rounded-lg">
+                    <Waves className="h-6 w-6 text-cyan-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">
+                      Piscinas
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">24</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-purple-100 rounded-lg">
+                    <Users className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-600">
+                      Clientes
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">156</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent Activity */}
+            <div className="bg-white rounded-lg shadow">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Atividade Recente
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <p className="text-sm text-gray-600">
+                      Nova obra iniciada - Piscina Quinta da Marinha
+                    </p>
+                    <span className="text-xs text-gray-400">há 2 horas</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <p className="text-sm text-gray-600">
+                      Manutenção completada - Casa Sr. Silva
+                    </p>
+                    <span className="text-xs text-gray-400">há 4 horas</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <p className="text-sm text-gray-600">
+                      Novo cliente registado - Maria Santos
+                    </p>
+                    <span className="text-xs text-gray-400">há 1 dia</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8">
-        {/* Logo and Header */}
-        <div className="text-center">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-xl flex items-center justify-center mb-6">
-            <Building2 className="h-8 w-8 text-white" />
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}
+      >
+        <div className="flex flex-col h-full">
+          {/* Logo */}
+          <div className="flex items-center px-6 py-4 border-b">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-xl flex items-center justify-center mr-3">
+              <Building2 className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">Leirisonda</h1>
+              <p className="text-xs text-gray-500">Gestão de Obras</p>
+            </div>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Leirisonda</h2>
-          <p className="text-gray-600">Sistema de Gestão de Obras</p>
-        </div>
 
-        {/* Login Form */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Digite o seu email"
-              />
-            </div>
+          {/* Navigation */}
+          <nav className="flex-1 px-4 py-6 space-y-2">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeSection === item.id;
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Palavra-passe
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Digite a sua palavra-passe"
-                />
+              return (
                 <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  key={item.id}
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    isActive
+                      ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg"
+                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  }`}
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
+                  <Icon className="h-5 w-5" />
+                  <span>{item.label}</span>
                 </button>
-              </div>
-            </div>
+              );
+            })}
+          </nav>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-700"
-                >
-                  Lembrar-me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 hover:text-blue-500"
-                >
-                  Esqueceu a palavra-passe?
-                </a>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
-            >
-              Entrar
-            </button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-xs text-gray-500">
-              Sistema de gestão de obras e manutenção de piscinas
+          {/* Footer */}
+          <div className="px-6 py-4 border-t border-gray-200">
+            <p className="text-xs text-gray-500 text-center">
+              © 2024 Leirisonda
             </p>
           </div>
         </div>
-
-        {/* Footer */}
-        <div className="text-center text-xs text-gray-400">
-          © 2024 Leirisonda. Todos os direitos reservados.
-        </div>
       </div>
+
+      {/* Main content */}
+      <div className="flex-1 lg:ml-0">
+        {/* Header */}
+        <header className="bg-white shadow-sm border-b px-6 py-4">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 lg:hidden transition-colors"
+            >
+              {sidebarOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+
+            <div className="text-right">
+              <p className="text-sm font-medium text-gray-900">
+                Sistema de Gestão
+              </p>
+              <p className="text-xs text-gray-500">
+                Obras e Manutenção de Piscinas
+              </p>
+            </div>
+          </div>
+        </header>
+
+        {/* Page content */}
+        <main className="p-6">{renderContent()}</main>
+      </div>
+
+      {/* Sidebar overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden transition-opacity"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }
