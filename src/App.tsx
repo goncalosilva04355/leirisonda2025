@@ -1594,11 +1594,6 @@ function App() {
               </div>
             </div>
         );
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h4 className="font-medium text-gray-900">
-                              Piscina Magnolia
-                            </h4>
                             <p className="text-sm text-gray-600">
                               📍 Vieira de Leiria
                             </p>
@@ -3025,7 +3020,7 @@ function App() {
                 />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Gestão de Serviços</p>
+                <p className="text-sm text-gray-500">Gest��o de Serviços</p>
               </div>
             </div>
 
