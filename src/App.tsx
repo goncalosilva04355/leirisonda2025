@@ -1457,7 +1457,7 @@ function App() {
             <div className="flex items-center space-x-2">
               <div className="w-12 h-6">
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F4b5bd36f986542949534375ed87ca588?format=webp&width=800"
+                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                   alt="Leirisonda Logo"
                   className="w-full h-full object-contain"
                 />
