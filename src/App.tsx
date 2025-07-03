@@ -142,6 +142,20 @@ function App() {
     setSettingsPasswordError("");
   };
 
+  const handleSaveIntervention = () => {
+    setInterventionSaved(true);
+    setShowShareModal(true);
+  };
+
+  const handleShare = (platform) => {
+    // Generate PDF and share logic would go here
+    console.log(`Sharing via ${platform}`);
+    // For demo purposes, just close modal and go back to piscinas
+    setShowShareModal(false);
+    setInterventionSaved(false);
+    setActiveSection("piscinas");
+  };
+
   // Authentication functions
   const handleLogin = (e) => {
     e.preventDefault();
