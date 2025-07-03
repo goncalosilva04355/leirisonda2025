@@ -1597,7 +1597,7 @@ function App() {
 
                             <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
 
-                              <span>⏰ 10:00</span>
+
                               <span>👨‍🔧 João Santos</span>
                             </div>
                             <p className="text-xs text-gray-500 mt-1">
