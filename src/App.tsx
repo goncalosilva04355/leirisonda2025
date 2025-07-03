@@ -1510,6 +1510,351 @@ function App() {
             </div>
           </div>
         );
+      case "manutencoes":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Wrench className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Manutenções
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Histórico de manutenções realizadas
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection("nova-manutencao")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Nova Manutenção</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Submenu */}
+              <div className="bg-white rounded-lg shadow-sm p-1">
+                <div className="grid grid-cols-3 gap-1">
+                  <button
+                    onClick={() => setActiveSection("piscinas")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Piscinas
+                  </button>
+                  <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
+                    Manutenções
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("futuras-manutencoes")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Futuras Manutenções
+                  </button>
+                </div>
+              </div>
+
+              {/* Filtros */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <input
+                    type="text"
+                    placeholder="Pesquisar manutenções..."
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>Todas as piscinas</option>
+                    <option>Piscina Magnolia</option>
+                    <option>Piscina Villa Mar</option>
+                    <option>Piscina Quinta do Sol</option>
+                  </select>
+                  <input
+                    type="month"
+                    defaultValue="2025-01"
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Lista de Manutenções */}
+              <div className="space-y-4">
+                {/* Manutenção 1 */}
+                <div className="bg-white rounded-lg shadow-sm p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <Check className="h-6 w-6 text-green-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Piscina Magnolia
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          📍 Vieira de Leiria
+                        </p>
+                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                          <span>📅 15/01/2025</span>
+                          <span>⏰ 09:00 - 11:30</span>
+                          <span>👨‍🔧 João Santos</span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Limpeza completa, ajuste pH, adição de cloro
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end space-y-2">
+                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                        Concluída
+                      </span>
+                      <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <Eye className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Manutenção 2 */}
+                <div className="bg-white rounded-lg shadow-sm p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Wrench className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Piscina Villa Mar
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          📍 Leiria Centro
+                        </p>
+                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                          <span>📅 10/01/2025</span>
+                          <span>⏰ 14:00 - 16:00</span>
+                          <span>👨‍🔧 Maria Silva</span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Manutenção preventiva, limpeza de filtros
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end space-y-2">
+                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                        Concluída
+                      </span>
+                      <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <Eye className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Manutenção 3 */}
+                <div className="bg-white rounded-lg shadow-sm p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <AlertCircle className="h-6 w-6 text-orange-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Piscina Quinta do Sol
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          📍 Marinha Grande
+                        </p>
+                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                          <span>📅 05/01/2025</span>
+                          <span>⏰ 10:30 - 12:00</span>
+                          <span>👨‍🔧 João Santos</span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Problema no sistema UV, substituição de lâmpada
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end space-y-2">
+                      <span className="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full font-medium">
+                        Com Problemas
+                      </span>
+                      <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <Eye className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case "futuras-manutencoes":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <BarChart3 className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Futuras Manutenções
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Manutenções agendadas e programadas
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection("nova-manutencao")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Agendar Manutenção</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Submenu */}
+              <div className="bg-white rounded-lg shadow-sm p-1">
+                <div className="grid grid-cols-3 gap-1">
+                  <button
+                    onClick={() => setActiveSection("piscinas")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Piscinas
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("manutencoes")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Manutenções
+                  </button>
+                  <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
+                    Futuras Manutenções
+                  </button>
+                </div>
+              </div>
+
+              {/* Vista Mensal */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Janeiro 2025
+                  </h2>
+                  <div className="flex space-x-2">
+                    <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                      ‹ Anterior
+                    </button>
+                    <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                      Próximo ›
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Próximas semanas */}
+                  <div>
+                    <h3 className="text-md font-medium text-gray-700 mb-2">
+                      Esta Semana
+                    </h3>
+                    <div className="space-y-3">
+                      {/* Manutenção agendada 1 */}
+                      <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-medium text-gray-900">
+                              Piscina Magnolia
+                            </h4>
+                            <p className="text-sm text-gray-600">
+                              📍 Vieira de Leiria
+                            </p>
+                            <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
+                              <span>📅 20/01/2025</span>
+                              <span>⏰ 10:00</span>
+                              <span>👨‍🔧 João Santos</span>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Manutenção mensal programada
+                            </p>
+                          </div>
+                          <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
+                            Agendada
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Manutenção agendada 2 */}
+                      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-r-lg">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-medium text-gray-900">
+                              Piscina Villa Mar
+                            </h4>
+                            <p className="text-sm text-gray-600">
+                              📍 Leiria Centro
+                            </p>
+                            <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
+                              <span>📅 22/01/2025</span>
+                              <span>⏰ 14:30</span>
+                              <span>👨‍🔧 Maria Silva</span>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Verificação sistema de filtração
+                            </p>
+                          </div>
+                          <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-medium">
+                            Urgente
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-md font-medium text-gray-700 mb-2">
+                      Próxima Semana
+                    </h3>
+                    <div className="space-y-3">
+                      {/* Manutenção agendada 3 */}
+                      <div className="bg-green-50 border-l-4 border-green-400 p-3 rounded-r-lg">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-medium text-gray-900">
+                              Piscina Quinta do Sol
+                            </h4>
+                            <p className="text-sm text-gray-600">
+                              📍 Marinha Grande
+                            </p>
+                            <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
+                              <span>📅 28/01/2025</span>
+                              <span>⏰ 09:00</span>
+                              <span>👨‍🔧 João Santos</span>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Limpeza trimestral completa
+                            </p>
+                          </div>
+                          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                            Programada
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       case "nova-manutencao":
         return (
           <div className="min-h-screen bg-gray-50">
