@@ -1514,7 +1514,7 @@ function App() {
                 <span>Terminar Sessão</span>
               </button>
               <p className="text-xs text-gray-500 text-center mt-4">
-                © 2024 Leirisonda
+                © 2025 Leirisonda
               </p>
             </div>
           </div>
