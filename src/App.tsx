@@ -1455,17 +1455,13 @@ function App() {
             </button>
 
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8">
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <circle cx="50" cy="50" r="45" fill="#007784" />
-                  <path
-                    d="M30 60 Q50 40 70 60 Q50 80 30 60"
-                    fill="white"
-                    opacity="0.8"
-                  />
-                </svg>
+              <div className="w-12 h-6">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                  alt="Leirisonda Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <span className="font-medium text-gray-900">Leirisonda</span>
             </div>
 
             <div className="w-8"></div>
