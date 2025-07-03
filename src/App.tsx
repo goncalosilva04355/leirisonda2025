@@ -1598,8 +1598,6 @@ function App() {
                             <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
 
 
-                            <p className="text-xs text-gray-500 mt-1">
-
 
                       <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-r-lg">
                         <div className="flex items-start justify-between">
