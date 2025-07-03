@@ -419,7 +419,7 @@ function App() {
           </div>
 
           <div className="text-center text-xs text-gray-400">
-            © 2024 Leirisonda. Todos os direitos reservados.
+            © 2025 Leirisonda. Todos os direitos reservados.
           </div>
         </div>
 
