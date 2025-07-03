@@ -1605,12 +1605,7 @@ function App() {
 
                           </div>
 
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div>
                     <h3 className="text-md font-medium text-gray-700 mb-2">
                       Próxima Semana
                     </h3>
