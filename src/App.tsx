@@ -1389,6 +1389,17 @@ function App() {
 
             <button
               onClick={() => {
+                setActiveSection("nova-piscina");
+                setSidebarOpen(false);
+              }}
+              className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Nova Piscina</span>
+            </button>
+
+            <button
+              onClick={() => {
                 setActiveSection("utilizadores");
                 setSidebarOpen(false);
               }}
