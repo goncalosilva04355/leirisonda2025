@@ -1428,15 +1428,7 @@ function App() {
               <Menu className="h-6 w-6 text-gray-700" />
             </button>
 
-            <div className="flex items-center space-x-2">
-              <div className="w-12 h-6 bg-white rounded shadow-sm p-1">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                  alt="Leirisonda Logo"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-            </div>
+            <div className="flex items-center space-x-2"></div>
 
             <div className="w-8"></div>
           </div>
