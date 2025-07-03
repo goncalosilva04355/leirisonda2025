@@ -664,16 +664,288 @@ function App() {
     switch (activeSection) {
       case "nova-obra":
         return (
-          <div className="leirisonda-main">
-            <div className="dashboard-hero">
-              <h1 className="text-3xl font-bold mb-2">Nova Obra</h1>
-              <p className="text-white/90">Criar uma nova obra no sistema</p>
-            </div>
-            <div className="card-leirisonda">
-              <h2 className="text-lg font-semibold mb-4">Detalhes da Obra</h2>
-              <p className="text-gray-600">
-                Formulário para criar uma nova obra será implementado aqui.
-              </p>
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="w-8 h-8 bg-white rounded shadow-sm p-1">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                      alt="Leirisonda Logo"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Nova Obra
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Criar uma nova obra no sistema Leirisonda
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Informações Básicas */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600 text-sm">📋</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Informações Básicas
+                  </h2>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Folha de Obra *
+                    </label>
+                    <input
+                      type="text"
+                      defaultValue="LS-2025-163"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Tipo de Trabalho *
+                    </label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>Piscina</option>
+                      <option>Furo</option>
+                      <option>Captação</option>
+                      <option>Manutenção</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Nome do Cliente *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: João Silva"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contacto *
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="Ex: 244 123 456"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Morada *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Rua das Flores, 123, Leiria"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Hora de Entrada *
+                    </label>
+                    <input
+                      type="datetime-local"
+                      defaultValue="2025-07-03T23:45"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Hora de Saída
+                    </label>
+                    <input
+                      type="datetime-local"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Deixe vazio se ainda não terminou
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Estado da Obra *
+                    </label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>Pendente</option>
+                      <option>Em Progresso</option>
+                      <option>Concluída</option>
+                      <option>Cancelada</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="folhaPreenchida"
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label
+                      htmlFor="folhaPreenchida"
+                      className="text-sm text-gray-700"
+                    >
+                      Folha de obra preenchida/feita
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Viaturas e Técnicos */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600 text-sm">🚗</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Viaturas e Técnicos
+                  </h2>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Viaturas Utilizadas
+                    </label>
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        placeholder="Ex: Carrinha Leirisonda 1"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Adicionar
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Técnicos
+                    </label>
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        placeholder="Ex: João Santos"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Adicionar
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Usuários Atribuídos
+                    </label>
+                    <p className="text-sm text-gray-600 mb-2">
+                      Selecione os usuários responsáveis por esta obra
+                    </p>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>Selecionar usuário...</option>
+                      <option>Gonçalo Fonseca</option>
+                      <option>João Santos</option>
+                      <option>Maria Silva</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Observações e Trabalho */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600 text-sm">📝</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Observações e Trabalho
+                  </h2>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Observações
+                    </label>
+                    <textarea
+                      rows="4"
+                      placeholder="Observações sobre a obra..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    ></textarea>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Trabalho Realizado
+                    </label>
+                    <textarea
+                      rows="4"
+                      placeholder="Descrição do trabalho realizado..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fotografias da Obra */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600 text-sm">📷</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Fotografias da Obra
+                  </h2>
+                </div>
+
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <span className="text-gray-400 text-2xl">📁</span>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Carregar Fotografias
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Arraste e solte ou clique para selecionar
+                  </p>
+                  <p className="text-sm text-gray-400 mb-4">0/20 fotografias</p>
+                  <button className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-2 mx-auto">
+                    <span className="text-gray-600">📷</span>
+                    <span>Escolher Fotografias</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex space-x-3 pb-6">
+                <button
+                  onClick={() => setActiveSection("dashboard")}
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2">
+                  <span>📋</span>
+                  <span>Criar Obra</span>
+                </button>
+              </div>
             </div>
           </div>
         );
