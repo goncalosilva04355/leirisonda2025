@@ -84,8 +84,8 @@ const initialUsers = [
 ];
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Temporarily hidden login page
+  const [currentUser, setCurrentUser] = useState(ADMIN_USER);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [users, setUsers] = useState(initialUsers);
