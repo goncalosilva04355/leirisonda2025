@@ -1005,7 +1005,7 @@ function App() {
                       Usuários Atribuídos
                     </label>
                     <p className="text-sm text-gray-600 mb-2">
-                      Selecione os usuários responsáveis por esta obra
+                      Selecione os usuários respons��veis por esta obra
                     </p>
                     <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>Selecionar usuário...</option>
@@ -1592,9 +1592,7 @@ function App() {
                     <span>Agendar Manutenção</span>
                   </button>
                 </div>
-                    <h3 className="text-md font-medium text-gray-700 mb-2">
-                      Esta Semana
-                    </h3>
+
                     <div className="space-y-3">
                       {/* Manutenção agendada 1 */}
                       <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg">
