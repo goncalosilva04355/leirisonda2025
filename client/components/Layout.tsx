@@ -109,14 +109,9 @@ export default function Layout({ children }: LayoutProps) {
             </nav>
 
             <div className="p-4 border-t">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start text-gray-700 hover:bg-gray-100"
-              >
-                <Settings className="h-4 w-4 mr-3" />
-                Configurações
-              </Button>
+              <div className="text-xs text-gray-500 text-center">
+                Leirisonda v1.0
+              </div>
             </div>
           </div>
         </aside>
