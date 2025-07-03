@@ -1591,7 +1591,7 @@ function App() {
                     <Plus className="h-4 w-4" />
                     <span>Agendar Manutenção</span>
                   </button>
-                  <div>
+                </div>
                     <h3 className="text-md font-medium text-gray-700 mb-2">
                       Esta Semana
                     </h3>
@@ -1607,7 +1607,7 @@ function App() {
                               📍 Vieira de Leiria
                             </p>
                             <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
-                              <span>📅 20/01/2025</span>
+                              <span>��� 20/01/2025</span>
                               <span>⏰ 10:00</span>
                               <span>👨‍🔧 João Santos</span>
                             </div>
