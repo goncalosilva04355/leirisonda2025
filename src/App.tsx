@@ -1082,6 +1082,208 @@ function App() {
             </div>
           </div>
         );
+      case "nova-piscina":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="w-8 h-8 bg-white rounded shadow-sm p-1">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                      alt="Leirisonda Logo"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Registrar Nova Piscina
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Adiciona uma nova piscina ao sistema de manutenção
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Informações da Piscina */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Waves className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Informações da Piscina
+                  </h2>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Nome da Piscina *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Piscina Villa Mar"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Localização *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Morada completa"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Tipo de Piscina
+                    </label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="exterior">Exterior</option>
+                      <option value="interior">Interior</option>
+                      <option value="coberta">Coberta</option>
+                      <option value="aquecida">Aquecida</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Cubicagem de Água
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: 50m³"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Estado
+                    </label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="ativa">Ativa</option>
+                      <option value="inativa">Inativa</option>
+                      <option value="manutencao">Em Manutenção</option>
+                      <option value="reforma">Em Reforma</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Informações do Cliente */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Users className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Informações do Cliente
+                  </h2>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Nome do Cliente *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Nome completo"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Telefone
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="910 000 000"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="cliente@email.com"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Observações Gerais */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  Observações Gerais
+                </h2>
+                <textarea
+                  rows="4"
+                  placeholder="Notas adicionais sobre a piscina, equipamentos, acesso, etc..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                ></textarea>
+              </div>
+
+              {/* Fotografias da Piscina */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Eye className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Fotografias da Piscina
+                  </h2>
+                </div>
+
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Plus className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Adicionar Fotos da Piscina
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Arrasta fotos aqui ou clica para selecionar
+                  </p>
+                  <button className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 flex items-center space-x-2 mx-auto mb-2">
+                    <Plus className="h-4 w-4 text-gray-600" />
+                    <span>Selecionar Fotos</span>
+                  </button>
+                  <p className="text-xs text-gray-400">
+                    0 de 20 fotos • PNG, JPG até 10MB
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex space-x-3 pb-6">
+                <button
+                  onClick={() => setActiveSection("dashboard")}
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2">
+                  <Save className="h-4 w-4" />
+                  <span>Guardar Piscina</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        );
       case "nova-manutencao":
         return (
           <div className="leirisonda-main">
