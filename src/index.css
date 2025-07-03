@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --leirisonda-primary: #007784;
+    --leirisonda-secondary: #61a5d6;
+    --leirisonda-dark: #004d54;
+  }
+}
+
+body {
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.leirisonda-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--leirisonda-primary),
+    var(--leirisonda-secondary)
+  );
+}
