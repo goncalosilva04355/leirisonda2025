@@ -1166,6 +1166,22 @@ function App() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Tipo de Tratamento de Água
+                    </label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="">Selecionar tratamento...</option>
+                      <option value="cloro">Cloro</option>
+                      <option value="sal">Sal/Eletrólise</option>
+                      <option value="bromo">Bromo</option>
+                      <option value="uv">UV + Cloro</option>
+                      <option value="ozonio">Ozônio</option>
+                      <option value="cobre-prata">Cobre-Prata</option>
+                      <option value="natural">Natural/Biológico</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Estado
                     </label>
                     <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
