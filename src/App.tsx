@@ -421,6 +421,205 @@ function App() {
             © 2024 Leirisonda. Todos os direitos reservados.
           </div>
         </div>
+
+        {/* Settings Icon */}
+        <button
+          onClick={() => setShowSettingsPasswordModal(true)}
+          className="fixed bottom-4 left-4 w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center opacity-30 hover:opacity-60 transition-opacity"
+        >
+          <Settings className="h-4 w-4 text-gray-600" />
+        </button>
+
+        {/* Settings Password Modal */}
+        {showSettingsPasswordModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4 z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Definições do Sistema
+                </h2>
+                <button
+                  onClick={() => setShowSettingsPasswordModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              <form
+                onSubmit={handleSettingsPasswordSubmit}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Palavra-passe de administrador
+                  </label>
+                  <input
+                    type="password"
+                    value={settingsPassword}
+                    onChange={(e) => {
+                      setSettingsPassword(e.target.value);
+                      setSettingsPasswordError("");
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Digite a palavra-passe"
+                    autoFocus
+                  />
+                  {settingsPasswordError && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {settingsPasswordError}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowSettingsPasswordModal(false)}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    Entrar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Settings Page */}
+        {showSettingsPage && (
+          <div className="fixed inset-0 bg-white z-50">
+            <div className="min-h-screen bg-gray-50">
+              {/* Header */}
+              <div className="bg-white shadow-sm border-b border-gray-200">
+                <div className="px-4 py-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <button
+                        onClick={closeSettings}
+                        className="p-2 hover:bg-gray-100 rounded-lg"
+                      >
+                        <X className="h-5 w-5 text-gray-600" />
+                      </button>
+                      <h1 className="text-xl font-semibold text-gray-900">
+                        Definições do Sistema
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Settings Content */}
+              <div className="px-4 py-6 space-y-6">
+                {/* Database Settings */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                    Base de Dados
+                  </h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        URL da Base de Dados
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="postgresql://..."
+                      />
+                    </div>
+                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                      Testar Ligação
+                    </button>
+                  </div>
+                </div>
+
+                {/* Sync Settings */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                    Sincronização
+                  </h2>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-700">
+                        Sincronização automática
+                      </span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
+                          defaultChecked
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Intervalo de sincronização (minutos)
+                      </label>
+                      <input
+                        type="number"
+                        defaultValue="15"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* System Info */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                    Informações do Sistema
+                  </h2>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Versão:</span>
+                      <span className="font-medium">2.1.0</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Última atualização:</span>
+                      <span className="font-medium">03/07/2024</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Estado da ligação:</span>
+                      <span className="text-green-600 font-medium">Online</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Backup Settings */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                    Cópia de Segurança
+                  </h2>
+                  <div className="space-y-4">
+                    <button className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                      Criar Backup Manual
+                    </button>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-700">
+                        Backup automático diário
+                      </span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
+                          defaultChecked
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
