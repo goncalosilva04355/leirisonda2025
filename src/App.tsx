@@ -119,6 +119,26 @@ function App() {
     active: true,
   });
 
+  // Settings functions
+  const handleSettingsPasswordSubmit = (e) => {
+    e.preventDefault();
+    if (settingsPassword === "19867") {
+      setShowSettingsPasswordModal(false);
+      setShowSettingsPage(true);
+      setSettingsPassword("");
+      setSettingsPasswordError("");
+    } else {
+      setSettingsPasswordError("Palavra-passe incorreta");
+    }
+  };
+
+  const closeSettings = () => {
+    setShowSettingsPage(false);
+    setShowSettingsPasswordModal(false);
+    setSettingsPassword("");
+    setSettingsPasswordError("");
+  };
+
   // Authentication functions
   const handleLogin = (e) => {
     e.preventDefault();
