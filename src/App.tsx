@@ -333,7 +333,7 @@ function App() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center px-4">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <div className="mx-auto w-32 h-20 mb-6 flex items-center justify-center">
+            <div className="mx-auto w-32 h-20 mb-6 flex items-center justify-center bg-white rounded-lg shadow-md p-2">
               <img
                 src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                 alt="Leirisonda Logo"
