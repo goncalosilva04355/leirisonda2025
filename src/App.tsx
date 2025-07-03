@@ -821,53 +821,37 @@ function App() {
         );
       default:
         return (
-          <div className="min-h-screen bg-gray-50 lg:ml-72">
-            {/* Header exato das imagens */}
-            <div className="bg-white rounded-xl m-4 p-6 shadow-sm">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 flex-shrink-0">
-                  <svg viewBox="0 0 100 100" className="w-full h-full">
-                    <circle cx="50" cy="50" r="45" fill="#007784" />
-                    <path
-                      d="M30 60 Q50 40 70 60 Q50 80 30 60"
-                      fill="white"
-                      opacity="0.8"
-                    />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-1">
-                    Olá, <span className="text-gray-900">Gonçalo Fonseca</span>
-                  </h1>
-                  <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                    <div className="flex items-center space-x-1">
-                      <span>📅</span>
-                      <span>quinta-feira, 03 de julho</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <span>🕐</span>
-                      <span>23:19</span>
-                    </div>
+          <div className="min-h-screen bg-gray-50">
+            {/* Dashboard Content - Mobile First Design */}
+            <div className="px-4 py-4 space-y-4">
+              {/* Header Card */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">G</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-600 text-sm font-medium">
-                      Online
-                    </span>
+                  <div>
+                    <h1 className="text-xl font-bold text-gray-900">
+                      Olá, Gonçalo Fonseca
+                    </h1>
+                    <p className="text-sm text-gray-500">
+                      quinta-feira, 03 de julho • 23:19
+                    </p>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-green-600 text-sm font-medium">
+                        Online
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Cards de Status - Layout exato das imagens */}
-            <div className="px-4 space-y-4 mb-6">
-              {/* Pendentes */}
-              <div className="bg-white rounded-lg shadow-sm border-l-4 border-red-500">
-                <div className="flex items-center justify-between p-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center">
-                      <AlertCircle className="h-6 w-6 text-red-600" />
-                    </div>
+              {/* Status Cards */}
+              <div className="space-y-3">
+                {/* Pendentes */}
+                <div className="bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
                         Pendentes
@@ -876,101 +860,80 @@ function App() {
                         Necessitam atenção
                       </p>
                     </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
                   </div>
-                  <div className="text-4xl font-bold text-gray-900">0</div>
                 </div>
-              </div>
 
-              {/* Em Progresso */}
-              <div className="bg-white rounded-lg shadow-sm border-l-4 border-orange-500">
-                <div className="flex items-center justify-between p-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center">
-                      <BarChart3 className="h-6 w-6 text-orange-600" />
-                    </div>
+                {/* Em Progresso */}
+                <div className="bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
                         Em Progresso
                       </h3>
                       <p className="text-sm text-gray-500">A decorrer</p>
                     </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
                   </div>
-                  <div className="text-4xl font-bold text-gray-900">0</div>
                 </div>
-              </div>
 
-              {/* Concluídas */}
-              <div className="bg-white rounded-lg shadow-sm border-l-4 border-green-500">
-                <div className="flex items-center justify-between p-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <Check className="h-6 w-6 text-green-600" />
-                    </div>
+                {/* Concluídas */}
+                <div className="bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
                         Concluídas
                       </h3>
                       <p className="text-sm text-gray-500">Finalizadas</p>
                     </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
                   </div>
-                  <div className="text-4xl font-bold text-gray-900">0</div>
                 </div>
-              </div>
 
-              {/* Folhas por Fazer */}
-              <div className="bg-white rounded-lg shadow-sm border-l-4 border-red-500">
-                <div className="flex items-center justify-between p-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center">
-                      <Building2 className="h-6 w-6 text-red-600" />
-                    </div>
+                {/* Folhas por Fazer */}
+                <div className="bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
                         Folhas por Fazer
                       </h3>
                       <p className="text-sm text-gray-500">Por preencher</p>
                     </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
                   </div>
-                  <div className="text-4xl font-bold text-gray-900">0</div>
                 </div>
               </div>
-            </div>
 
-            {/* Próximas Piscinas - se existissem */}
-            <div className="mx-4 mb-6">
-              <div className="bg-white rounded-xl shadow-sm">
-                {/* Header com back button */}
+              {/* Próximas Piscinas */}
+              <div className="bg-white rounded-lg shadow-sm">
                 <div className="flex items-center p-4 border-b border-gray-100">
-                  <button className="p-2 hover:bg-gray-100 rounded-lg mr-3">
-                    <span className="text-gray-600">←</span>
+                  <button className="p-1 mr-3">
+                    <span className="text-gray-600 text-lg">←</span>
                   </button>
-                  <div className="flex-1">
-                    <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Piscinas
-                    </h2>
-                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Próximas Piscinas
+                  </h2>
                 </div>
 
-                {/* Lista de Piscinas */}
-                <div className="p-4 space-y-4">
+                <div className="p-4 space-y-3">
                   {/* Piscina Magnolia 1 */}
-                  <div className="border-l-4 border-cyan-400 bg-cyan-50 rounded-r-lg p-4">
+                  <div className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center mt-1">
+                        <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
                           <Waves className="h-5 w-5 text-cyan-600" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-gray-900 text-lg">
+                          <h3 className="font-semibold text-gray-900">
                             Piscina Magnolia
                           </h3>
-                          <div className="flex items-center space-x-1 text-gray-600 mb-1">
+                          <div className="flex items-center space-x-1 text-gray-600 text-sm">
                             <span>📍</span>
-                            <span className="text-sm">Vieira de Leiria</span>
+                            <span>Vieira de Leiria</span>
                           </div>
-                          <div className="flex items-center space-x-1 text-gray-500">
+                          <div className="flex items-center space-x-1 text-gray-500 text-sm">
                             <span>📅</span>
-                            <span className="text-sm">Em 28 dias</span>
+                            <span>Em 28 dias</span>
                           </div>
                           <p className="text-xs text-gray-400 mt-1">
                             Próxima: 31/07/2025
@@ -978,10 +941,10 @@ function App() {
                         </div>
                       </div>
                       <div className="flex items-start space-x-2">
-                        <span className="inline-flex px-3 py-1 text-xs font-medium bg-cyan-200 text-cyan-800 rounded-full">
+                        <span className="bg-cyan-200 text-cyan-800 text-xs px-2 py-1 rounded-full font-medium">
                           Agendada
                         </span>
-                        <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <button className="p-1 text-gray-400">
                           <Eye className="h-4 w-4" />
                         </button>
                       </div>
@@ -989,23 +952,23 @@ function App() {
                   </div>
 
                   {/* Piscina Magnolia 2 */}
-                  <div className="border-l-4 border-cyan-400 bg-cyan-50 rounded-r-lg p-4">
+                  <div className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center mt-1">
+                        <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
                           <Waves className="h-5 w-5 text-cyan-600" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-gray-900 text-lg">
+                          <h3 className="font-semibold text-gray-900">
                             Piscina Magnolia
                           </h3>
-                          <div className="flex items-center space-x-1 text-gray-600 mb-1">
+                          <div className="flex items-center space-x-1 text-gray-600 text-sm">
                             <span>📍</span>
-                            <span className="text-sm">Vieira de Leiria</span>
+                            <span>Vieira de Leiria</span>
                           </div>
-                          <div className="flex items-center space-x-1 text-gray-500">
+                          <div className="flex items-center space-x-1 text-gray-500 text-sm">
                             <span>📅</span>
-                            <span className="text-sm">Em 28 dias</span>
+                            <span>Em 28 dias</span>
                           </div>
                           <p className="text-xs text-gray-400 mt-1">
                             Próxima: 31/07/2025
@@ -1013,10 +976,10 @@ function App() {
                         </div>
                       </div>
                       <div className="flex items-start space-x-2">
-                        <span className="inline-flex px-3 py-1 text-xs font-medium bg-cyan-200 text-cyan-800 rounded-full">
+                        <span className="bg-cyan-200 text-cyan-800 text-xs px-2 py-1 rounded-full font-medium">
                           Agendada
                         </span>
-                        <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <button className="p-1 text-gray-400">
                           <Eye className="h-4 w-4" />
                         </button>
                       </div>
@@ -1024,12 +987,10 @@ function App() {
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Ações Rápidas */}
-            <div className="mx-4 mb-6">
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center space-x-2 mb-6">
+              {/* Ações Rápidas */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-2 mb-4">
                   <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
                     <Plus className="h-4 w-4 text-green-600" />
                   </div>
@@ -1041,7 +1002,7 @@ function App() {
                 <div className="space-y-3">
                   <button
                     onClick={() => setActiveSection("nova-obra")}
-                    className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
                   >
                     <Plus className="h-5 w-5 text-gray-600" />
                     <span className="font-medium text-gray-900">Nova Obra</span>
@@ -1049,7 +1010,7 @@ function App() {
 
                   <button
                     onClick={() => setActiveSection("nova-manutencao")}
-                    className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
                   >
                     <Wrench className="h-5 w-5 text-gray-600" />
                     <span className="font-medium text-gray-900">
@@ -1057,7 +1018,7 @@ function App() {
                     </span>
                   </button>
 
-                  <button className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                  <button className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left">
                     <Building2 className="h-5 w-5 text-gray-600" />
                     <span className="font-medium text-gray-900">
                       Todas as Obras
@@ -1066,7 +1027,7 @@ function App() {
 
                   <button
                     onClick={() => setActiveSection("utilizadores")}
-                    className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
                   >
                     <UserPlus className="h-5 w-5 text-gray-600" />
                     <span className="font-medium text-gray-900">
@@ -1074,9 +1035,9 @@ function App() {
                     </span>
                   </button>
 
-                  <button className="w-full flex items-center space-x-3 p-4 text-left border border-blue-200 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                  <button className="w-full flex items-center space-x-3 p-3 border border-blue-200 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors text-left">
                     <div className="w-5 h-5 flex items-center justify-center">
-                      <span className="text-blue-600 text-sm">🔄</span>
+                      <span className="text-blue-600">🔄</span>
                     </div>
                     <span className="font-medium text-blue-900">
                       Diagnóstico de Sincronização
@@ -1084,14 +1045,12 @@ function App() {
                   </button>
                 </div>
               </div>
-            </div>
 
-            {/* Pesquisar Obras */}
-            <div className="mx-4 mb-6">
-              <div className="bg-white rounded-xl shadow-sm p-6">
+              {/* Pesquisar Obras */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center space-x-2 mb-4">
                   <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-blue-600 text-sm">🔍</span>
+                    <span className="text-blue-600">🔍</span>
                   </div>
                   <h2 className="text-lg font-semibold text-gray-900">
                     Pesquisar Obras
@@ -1102,7 +1061,7 @@ function App() {
                   <input
                     type="text"
                     placeholder="Cliente, folha obra, morada..."
-                    className="w-full p-4 border border-gray-200 rounded-lg text-gray-600 bg-gray-50 placeholder-gray-400"
+                    className="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 placeholder-gray-400 text-sm"
                   />
                 </div>
               </div>
