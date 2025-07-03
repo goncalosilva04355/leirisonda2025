@@ -1600,15 +1600,7 @@ function App() {
 
                             <p className="text-xs text-gray-500 mt-1">
 
-                            </p>
-                          </div>
-                          <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
-                            Agendada
-                          </span>
-                        </div>
-                      </div>
 
-                      {/* Manutenção agendada 2 */}
                       <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-r-lg">
                         <div className="flex items-start justify-between">
                           <div>
