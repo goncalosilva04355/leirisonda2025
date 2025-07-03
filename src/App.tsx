@@ -97,6 +97,7 @@ function App() {
   const [showSettingsPage, setShowSettingsPage] = useState(false);
   const [settingsPassword, setSettingsPassword] = useState("");
   const [settingsPasswordError, setSettingsPasswordError] = useState("");
+  const [selectedWorkType, setSelectedWorkType] = useState("");
 
   // Login form state
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
