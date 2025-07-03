@@ -1082,6 +1082,160 @@ function App() {
             </div>
           </div>
         );
+      case "piscinas":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Waves className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Piscinas
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gestão de piscinas no sistema
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection("nova-piscina")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Nova Piscina</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Search and Filters */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex space-x-3">
+                  <input
+                    type="text"
+                    placeholder="Pesquisar piscinas..."
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>Todos os estados</option>
+                    <option>Ativa</option>
+                    <option>Inativa</option>
+                    <option>Em Manutenção</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Pools List */}
+              <div className="space-y-4">
+                {/* Pool 1 - Piscina Magnolia */}
+                <div className="bg-white rounded-lg shadow-sm p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center">
+                        <Waves className="h-6 w-6 text-cyan-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Piscina Magnolia
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          📍 Vieira de Leiria
+                        </p>
+                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                          <span>🌊 Exterior • 45m³</span>
+                          <span>💧 Sal/Eletrólise</span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Cliente: João Silva
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end space-y-2">
+                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                        Ativa
+                      </span>
+                      <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <Eye className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pool 2 - Piscina Villa Mar */}
+                <div className="bg-white rounded-lg shadow-sm p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Waves className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Piscina Villa Mar
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          📍 Leiria Centro
+                        </p>
+                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                          <span>🏠 Interior • 30m³</span>
+                          <span>💧 Cloro</span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Cliente: Maria Santos
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end space-y-2">
+                      <span className="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full font-medium">
+                        Em Manutenção
+                      </span>
+                      <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <Eye className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pool 3 - Piscina Quinta do Sol */}
+                <div className="bg-white rounded-lg shadow-sm p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <Waves className="h-6 w-6 text-purple-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Piscina Quinta do Sol
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          📍 Marinha Grande
+                        </p>
+                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                          <span>🌊 Exterior • 60m³</span>
+                          <span>💧 UV + Cloro</span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Cliente: Pedro Costa
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end space-y-2">
+                      <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                        Ativa
+                      </span>
+                      <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <Eye className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       case "nova-piscina":
         return (
           <div className="min-h-screen bg-gray-50">
