@@ -1599,9 +1599,7 @@ function App() {
                       <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-r-lg">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h4 className="font-medium text-gray-900">
-                              Piscina Villa Mar
-                            </h4>
+
                             <p className="text-sm text-gray-600">
                               📍 Leiria Centro
                             </p>
