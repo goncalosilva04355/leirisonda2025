@@ -1408,11 +1408,6 @@ function App() {
               <UserCheck className="h-5 w-5" />
               <span>Utilizadores</span>
             </button>
-
-            <button className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-left">
-              <Plus className="h-5 w-5" />
-              <span>Criar Utilizador</span>
-            </button>
           </nav>
 
           {/* User Profile */}
