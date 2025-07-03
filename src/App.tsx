@@ -92,6 +92,11 @@ function App() {
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [showSettingsPasswordModal, setShowSettingsPasswordModal] =
+    useState(false);
+  const [showSettingsPage, setShowSettingsPage] = useState(false);
+  const [settingsPassword, setSettingsPassword] = useState("");
+  const [settingsPasswordError, setSettingsPasswordError] = useState("");
 
   // Login form state
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
