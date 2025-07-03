@@ -1309,7 +1309,7 @@ function App() {
                     <Users className="h-4 w-4 text-blue-600" />
                   </div>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Informações do Cliente
+                    Informa��ões do Cliente
                   </h2>
                 </div>
 
@@ -1606,9 +1606,7 @@ function App() {
                           </div>
 
 
-                    <h3 className="text-md font-medium text-gray-700 mb-2">
-                      Próxima Semana
-                    </h3>
+
                     <div className="space-y-3">
                       {/* Manutenção agendada 3 */}
                       <div className="bg-green-50 border-l-4 border-green-400 p-3 rounded-r-lg">
@@ -2534,7 +2532,7 @@ function App() {
                                   : module === "relatorios"
                                     ? "Relatórios"
                                     : module === "manutencoes"
-                                      ? "Manutenções"
+                                      ? "Manutenç��es"
                                       : module}
                               </h5>
                               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
