@@ -1568,7 +1568,7 @@ function App() {
                       ‹ Anterior
                     </button>
                     <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
-                      Próximo ›
+                      Próximo ���
                     </button>
                   </div>
                 </div>
@@ -1593,8 +1593,7 @@ function App() {
                   </button>
               </div>
             </div>
-          </div>
-                      <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg">
+        );
                         <div className="flex items-start justify-between">
                           <div>
                             <h4 className="font-medium text-gray-900">
