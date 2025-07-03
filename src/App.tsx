@@ -3193,7 +3193,7 @@ function App() {
         <main className="lg:ml-72">{renderContent()}</main>
 
         {/* Desktop Sidebar */}
-        <div className="flex fixed inset-y-0 left-0 w-72 bg-white border-r border-gray-200">
+        <div className="hidden">
           <div className="flex flex-col h-full">
             <div className="flex items-center px-6 py-5 border-b border-gray-200">
               <div className="w-20 h-12 mr-3 bg-white rounded-lg shadow-md p-1">
