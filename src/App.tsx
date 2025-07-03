@@ -1594,9 +1594,7 @@ function App() {
               </div>
             </div>
         );
-                            <p className="text-sm text-gray-600">
-                              📍 Vieira de Leiria
-                            </p>
+
                             <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
                               <span>��� 20/01/2025</span>
                               <span>⏰ 10:00</span>
@@ -2117,7 +2115,7 @@ function App() {
                     <span>Selecionar Fotos</span>
                   </button>
                   <p className="text-xs text-gray-400">
-                    0 de 15 fotos • PNG, JPG até 10MB
+                    0 de 15 fotos �� PNG, JPG até 10MB
                   </p>
                 </div>
               </div>
