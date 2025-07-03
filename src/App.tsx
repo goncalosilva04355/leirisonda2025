@@ -1944,11 +1944,154 @@ function App() {
                 >
                   Cancelar
                 </button>
-                <button className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2">
+                <button
+                  onClick={handleSaveIntervention}
+                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
+                >
                   <Save className="h-4 w-4" />
                   <span>Guardar Intervenção</span>
                 </button>
               </div>
+
+              {/* Share Modal */}
+              {showShareModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4 z-50">
+                  <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                    <div className="text-center mb-6">
+                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Check className="h-8 w-8 text-green-600" />
+                      </div>
+                      <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                        Intervenção Guardada!
+                      </h2>
+                      <p className="text-gray-600 text-sm">
+                        Pretende partilhar o relatório da manutenção com o
+                        cliente?
+                      </p>
+                    </div>
+
+                    {/* Share Options */}
+                    <div className="space-y-3 mb-6">
+                      <button
+                        onClick={() => handleShare("whatsapp")}
+                        className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                          <span className="text-green-600 text-sm">📱</span>
+                        </div>
+                        <div className="text-left">
+                          <p className="font-medium text-gray-900">WhatsApp</p>
+                          <p className="text-xs text-gray-500">
+                            Enviar relatório em PDF via WhatsApp
+                          </p>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleShare("email")}
+                        className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <span className="text-blue-600 text-sm">📧</span>
+                        </div>
+                        <div className="text-left">
+                          <p className="font-medium text-gray-900">Email</p>
+                          <p className="text-xs text-gray-500">
+                            Enviar relatório em PDF por email
+                          </p>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleShare("sms")}
+                        className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                          <span className="text-purple-600 text-sm">💬</span>
+                        </div>
+                        <div className="text-left">
+                          <p className="font-medium text-gray-900">SMS</p>
+                          <p className="text-xs text-gray-500">
+                            Enviar link do relatório por SMS
+                          </p>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleShare("download")}
+                        className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                          <span className="text-gray-600 text-sm">📄</span>
+                        </div>
+                        <div className="text-left">
+                          <p className="font-medium text-gray-900">
+                            Baixar PDF
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Descarregar relatório para partilhar depois
+                          </p>
+                        </div>
+                      </button>
+                    </div>
+
+                    {/* Preview Info */}
+                    <div className="bg-gray-50 rounded-lg p-3 mb-6">
+                      <h3 className="text-sm font-medium text-gray-900 mb-2">
+                        Relatório inclui:
+                      </h3>
+                      <div className="space-y-1 text-xs text-gray-600">
+                        <div className="flex items-center space-x-2">
+                          <span>✓</span>
+                          <span>
+                            Dados da intervenção (data, hora, técnicos)
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span>✓</span>
+                          <span>Valores da água analisados</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span>✓</span>
+                          <span>Produtos químicos utilizados</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span>✓</span>
+                          <span>Trabalhos realizados</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span>✓</span>
+                          <span>Fotografias da intervenção</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span>✓</span>
+                          <span>Observações e próxima manutenção</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex space-x-3">
+                      <button
+                        onClick={() => {
+                          setShowShareModal(false);
+                          setInterventionSaved(false);
+                          setActiveSection("piscinas");
+                        }}
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                      >
+                        Agora Não
+                      </button>
+                      <button
+                        onClick={() => handleShare("preview")}
+                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      >
+                        Pré-visualizar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         );
