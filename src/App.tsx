@@ -3186,7 +3186,7 @@ function App() {
         </div>
 
         {/* Main Content */}
-        <main className="lg:ml-72">{renderContent()}</main>
+        <main className="ml-80">{renderContent()}</main>
 
         {/* Desktop Sidebar */}
         <div className="hidden">
