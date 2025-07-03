@@ -1475,11 +1475,14 @@ function App() {
         <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:bg-white lg:border-r lg:border-gray-200">
           <div className="flex flex-col h-full">
             <div className="flex items-center px-6 py-5 border-b border-gray-200">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center mr-3">
-                <Building2 className="h-6 w-6 text-white" />
+              <div className="w-20 h-12 mr-3">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                  alt="Leirisonda Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Leirisonda</h1>
                 <p className="text-sm text-gray-500">Gestão de Obras</p>
               </div>
             </div>
