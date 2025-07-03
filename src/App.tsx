@@ -1304,23 +1304,6 @@ function App() {
         } transition-transform duration-300 ease-in-out lg:hidden`}
       >
         <div className="flex flex-col h-full">
-          {/* Status Bar */}
-          <div className="px-4 py-2 bg-gray-100 text-xs text-gray-600 flex items-center justify-between">
-            <div className="flex items-center space-x-1">
-              <div className="w-1 h-3 bg-cyan-400 rounded-full"></div>
-              <span>23:19</span>
-              <span className="ml-4">📅 Em 27 dias</span>
-              <span className="text-xs">Próxima: 30/07/2025</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <span>••••</span>
-              <span>📶</span>
-              <div className="w-6 h-3 bg-red-500 rounded-sm text-white text-center text-xs">
-                6
-              </div>
-            </div>
-          </div>
-
           {/* Logo Header */}
           <div className="px-6 py-6 border-b border-gray-200">
             <div className="flex items-center space-x-3">
