@@ -1005,7 +1005,7 @@ function App() {
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-blue-600 text-sm">📝</span>
+                    <Edit2 className="h-4 w-4 text-blue-600" />
                   </div>
                   <h2 className="text-lg font-semibold text-gray-900">
                     Observações e Trabalho
@@ -1087,7 +1087,7 @@ function App() {
           <div className="leirisonda-main">
             <div className="dashboard-hero">
               <h1 className="text-3xl font-bold mb-2">Nova Manutenção</h1>
-              <p className="text-white/90">Registar uma nova manuten��ão</p>
+              <p className="text-white/90">Registar uma nova manutenção</p>
             </div>
             <div className="card-leirisonda">
               <h2 className="text-lg font-semibold mb-4">
