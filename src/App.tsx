@@ -1457,7 +1457,7 @@ function App() {
                 />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Gestão de Obras</p>
+                <p className="text-sm text-gray-500">Gestão de Serviços</p>
               </div>
             </div>
 
