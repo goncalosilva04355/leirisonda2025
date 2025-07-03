@@ -1158,9 +1158,17 @@ function App() {
                       <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
                         Ativa
                       </span>
-                      <button className="p-1 text-gray-400 hover:text-gray-600">
-                        <Eye className="h-4 w-4" />
-                      </button>
+                      <div className="flex space-x-1">
+                        <button
+                          onClick={() => setActiveSection("nova-manutencao")}
+                          className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+                        >
+                          Nova Manutenção
+                        </button>
+                        <button className="p-1 text-gray-400 hover:text-gray-600">
+                          <Eye className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
