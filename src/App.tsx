@@ -651,7 +651,7 @@ function App() {
       path: "/manutencao/nova",
     },
     {
-      id: "piscinas",
+      id: "futuras-manutencoes",
       icon: Waves,
       label: "Piscinas",
       path: "/piscinas",
