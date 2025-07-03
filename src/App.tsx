@@ -534,7 +534,7 @@ function App() {
                         Criado
                       </th>
                       <th className="text-right py-3 px-4 font-medium text-gray-900">
-                        Ações
+                        A��ões
                       </th>
                     </tr>
                   </thead>
@@ -821,217 +821,249 @@ function App() {
         );
       default:
         return (
-          <div className="leirisonda-main">
-            <div className="dashboard-hero">
-              <h1 className="text-4xl font-bold mb-4">
-                Bem-vindo ao Sistema Leirisonda
-              </h1>
-              <p className="text-lg text-white/90">
-                Sistema de gestão de obras e manutenção de piscinas
-              </p>
-            </div>
-
-            {/* Stats Grid */}
-            <div className="stats-grid mb-8">
-              <div className="stat-card-leirisonda stat-card-primary">
-                <div className="flex items-center mb-4">
-                  <div className="p-3 bg-blue-100 rounded-lg mr-4">
-                    <Building2 className="h-6 w-6 text-blue-600" />
+          <div className="min-h-screen bg-gray-50 p-4 lg:ml-72">
+            {/* Header com saudação personalizada */}
+            <div className="bg-white rounded-lg p-6 mb-6 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-lg font-bold">G</span>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900">12</h3>
-                    <p className="text-sm text-gray-600">Obras Ativas</p>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Olá,{" "}
+                      <span className="text-blue-600">Gonçalo Fonseca</span>
+                    </h1>
+                    <p className="text-sm text-gray-500">
+                      quinta-feira, 03 de julho
+                    </p>
                   </div>
                 </div>
-              </div>
-
-              <div className="stat-card-leirisonda stat-card-success">
-                <div className="flex items-center mb-4">
-                  <div className="p-3 bg-green-100 rounded-lg mr-4">
-                    <Wrench className="h-6 w-6 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">8</h3>
-                    <p className="text-sm text-gray-600">Manutenções</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="stat-card-leirisonda stat-card-secondary">
-                <div className="flex items-center mb-4">
-                  <div className="p-3 bg-blue-100 rounded-lg mr-4">
-                    <Waves className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">24</h3>
-                    <p className="text-sm text-gray-600">Piscinas</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="stat-card-leirisonda stat-card-warning">
-                <div className="flex items-center mb-4">
-                  <div className="p-3 bg-orange-100 rounded-lg mr-4">
-                    <Users className="h-6 w-6 text-orange-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">156</h3>
-                    <p className="text-sm text-gray-600">Clientes</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="stat-card-leirisonda stat-card-primary">
-                <div className="flex items-center mb-4">
-                  <div className="p-3 bg-blue-100 rounded-lg mr-4">
-                    <UserCheck className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">6</h3>
-                    <p className="text-sm text-gray-600">Utilizadores</p>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-gray-900">23:19</div>
+                  <div className="flex items-center space-x-2 text-sm text-green-600">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>Online</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Content Grid */}
-            <div className="content-grid">
-              <div className="space-y-6">
-                <div className="card-leirisonda">
-                  <h2 className="text-xl font-semibold mb-4">
-                    Atividade Recente
-                  </h2>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">
-                          Nova obra iniciada - Piscina Quinta da Marinha
-                        </p>
-                        <p className="text-xs text-gray-500">há 2 horas</p>
-                      </div>
+            {/* Cards de Status */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              {/* Pendentes */}
+              <div className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-red-500">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                      <AlertCircle className="h-5 w-5 text-red-600" />
                     </div>
-                    <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">
-                          Manutenção completada - Casa Sr. Silva
-                        </p>
-                        <p className="text-xs text-gray-500">há 4 horas</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3 p-3 bg-orange-50 rounded-lg">
-                      <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">
-                          Novo cliente registado - Maria Santos
-                        </p>
-                        <p className="text-xs text-gray-500">há 1 dia</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card-leirisonda">
-                  <h2 className="text-xl font-semibold mb-4">
-                    Próximas Tarefas
-                  </h2>
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        className="rounded border-gray-300"
-                      />
-                      <span className="text-sm">
-                        Inspeção piscina - Hotel Atlantic
-                      </span>
-                      <span className="text-xs text-gray-500 ml-auto">
-                        Amanhã
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        className="rounded border-gray-300"
-                      />
-                      <span className="text-sm">
-                        Manutenção quinzenal - Condomínio Sol
-                      </span>
-                      <span className="text-xs text-gray-500 ml-auto">
-                        Sexta-feira
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        className="rounded border-gray-300"
-                      />
-                      <span className="text-sm">
-                        Orçamento nova piscina - Villa Cascais
-                      </span>
-                      <span className="text-xs text-gray-500 ml-auto">
-                        Próxima semana
-                      </span>
+                    <div>
+                      <p className="text-lg font-bold text-gray-900">0</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Pendentes
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Necessitam atenção
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <div className="card-leirisonda">
-                  <h2 className="text-xl font-semibold mb-4">Resumo do Mês</h2>
-                  <div className="space-y-4">
-                    <div className="section-leirisonda-blue">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">Receita</span>
-                        <span className="text-lg font-bold">€12.450</span>
-                      </div>
+              {/* Em Progresso */}
+              <div className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-orange-500">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                      <BarChart3 className="h-5 w-5 text-orange-600" />
                     </div>
-                    <div className="section-leirisonda">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">
-                          Obras Concluídas
-                        </span>
-                        <span className="text-lg font-bold">18</span>
-                      </div>
-                    </div>
-                    <div className="section-leirisonda">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">
-                          Novos Clientes
-                        </span>
-                        <span className="text-lg font-bold">7</span>
-                      </div>
+                    <div>
+                      <p className="text-lg font-bold text-gray-900">0</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Em Progresso
+                      </p>
+                      <p className="text-xs text-gray-500">A decorrer</p>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="card-leirisonda">
-                  <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
-                  <div className="space-y-3">
-                    <button
-                      onClick={() => setActiveSection("nova-obra")}
-                      className="btn-leirisonda w-full"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Nova Obra
-                    </button>
-                    <button
-                      onClick={() => setActiveSection("nova-manutencao")}
-                      className="btn-leirisonda btn-leirisonda-secondary w-full"
-                    >
-                      <Wrench className="h-4 w-4 mr-2" />
-                      Nova Manutenção
-                    </button>
-                    <button
-                      onClick={() => setActiveSection("nova-piscina")}
-                      className="btn-leirisonda w-full"
-                    >
-                      <Waves className="h-4 w-4 mr-2" />
-                      Nova Piscina
-                    </button>
+              {/* Concluídas */}
+              <div className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-green-500">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                      <Check className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-gray-900">0</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Concluídas
+                      </p>
+                      <p className="text-xs text-gray-500">Finalizadas</p>
+                    </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Folhas por Fazer */}
+              <div className="bg-white rounded-lg p-6 shadow-sm border-l-4 border-red-500">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-5 w-5 text-red-600" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-gray-900">0</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Folhas por Fazer
+                      </p>
+                      <p className="text-xs text-gray-500">Por preencher</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Próximas Piscinas */}
+            <div className="bg-white rounded-lg p-6 mb-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Próximas Piscinas
+              </h2>
+
+              {/* Piscina Card */}
+              <div className="border-l-4 border-cyan-400 bg-cyan-50 rounded-r-lg p-4 mb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                      <Waves className="h-5 w-5 text-cyan-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        Piscina Magnolia
+                      </h3>
+                      <div className="flex items-center space-x-1 text-sm text-gray-600">
+                        <span>📍 Vieira de Leiria</span>
+                      </div>
+                      <div className="flex items-center space-x-1 text-sm text-gray-500">
+                        <span>📅 Em 28 dias</span>
+                        <span className="text-xs text-gray-400">
+                          Próxima: 31/07/2025
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="inline-flex px-3 py-1 text-xs font-medium bg-cyan-200 text-cyan-800 rounded-full">
+                    Agendada
+                  </span>
+                </div>
+              </div>
+
+              {/* Segunda Piscina */}
+              <div className="border-l-4 border-cyan-400 bg-cyan-50 rounded-r-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                      <Waves className="h-5 w-5 text-cyan-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        Piscina Magnolia
+                      </h3>
+                      <div className="flex items-center space-x-1 text-sm text-gray-600">
+                        <span>📍 Vieira de Leiria</span>
+                      </div>
+                      <div className="flex items-center space-x-1 text-sm text-gray-500">
+                        <span>📅 Em 28 dias</span>
+                        <span className="text-xs text-gray-400">
+                          Próxima: 31/07/2025
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="inline-flex px-3 py-1 text-xs font-medium bg-cyan-200 text-cyan-800 rounded-full">
+                    Agendada
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Ações Rápidas */}
+            <div className="bg-white rounded-lg p-6 mb-6 shadow-sm">
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
+                  <Plus className="h-4 w-4 text-green-600" />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Ações Rápidas
+                </h2>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={() => setActiveSection("nova-obra")}
+                  className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <Plus className="h-5 w-5 text-gray-600" />
+                  <span className="font-medium text-gray-900">Nova Obra</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveSection("nova-manutencao")}
+                  className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <Wrench className="h-5 w-5 text-gray-600" />
+                  <span className="font-medium text-gray-900">
+                    Manutenção Piscinas
+                  </span>
+                </button>
+
+                <button className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                  <Building2 className="h-5 w-5 text-gray-600" />
+                  <span className="font-medium text-gray-900">
+                    Todas as Obras
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => setActiveSection("utilizadores")}
+                  className="w-full flex items-center space-x-3 p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <UserPlus className="h-5 w-5 text-gray-600" />
+                  <span className="font-medium text-gray-900">
+                    Novo Utilizador
+                  </span>
+                </button>
+
+                <button className="w-full flex items-center space-x-3 p-4 text-left border border-blue-200 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <span className="text-blue-600">🔄</span>
+                  </div>
+                  <span className="font-medium text-blue-900">
+                    Diagnóstico de Sincronização
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Pesquisar Obras */}
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <span className="text-blue-600">🔍</span>
+                </div>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Pesquisar Obras
+                </h2>
+              </div>
+
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Cliente, folha obra, morada..."
+                  className="w-full p-4 border border-gray-200 rounded-lg text-gray-600 bg-gray-50"
+                />
               </div>
             </div>
           </div>
