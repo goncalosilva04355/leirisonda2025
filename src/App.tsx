@@ -1480,9 +1480,6 @@ function App() {
                   />
                   <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>Todas as piscinas</option>
-                    <option>Piscina Magnolia</option>
-                    <option>Piscina Villa Mar</option>
-                    <option>Piscina Quinta do Sol</option>
                   </select>
                   <input
                     type="month"
@@ -1692,7 +1689,7 @@ function App() {
                               <span>👨‍🔧 João Santos</span>
                             </div>
                             <p className="text-xs text-gray-500 mt-1">
-                              Manutenção mensal programada
+                              Manutenç��o mensal programada
                             </p>
                           </div>
                           <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
@@ -1701,7 +1698,7 @@ function App() {
                         </div>
                       </div>
 
-                      {/* Manuten��ão agendada 2 */}
+                      {/* Manutenção agendada 2 */}
                       <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-r-lg">
                         <div className="flex items-start justify-between">
                           <div>
@@ -2173,7 +2170,7 @@ function App() {
                     </label>
                     <textarea
                       rows="4"
-                      placeholder="Observações gerais sobre a interven��ão..."
+                      placeholder="Observações gerais sobre a intervenção..."
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                     ></textarea>
                   </div>
