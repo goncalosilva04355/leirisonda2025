@@ -1128,6 +1128,27 @@ function App() {
                 </div>
               </div>
 
+              {/* Submenu */}
+              <div className="bg-white rounded-lg shadow-sm p-1">
+                <div className="grid grid-cols-3 gap-1">
+                  <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
+                    Piscinas
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("manutencoes")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Manutenções
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("futuras-manutencoes")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Futuras Manutenções
+                  </button>
+                </div>
+              </div>
+
               {/* Search and Filters */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
                 <div className="flex space-x-3">
