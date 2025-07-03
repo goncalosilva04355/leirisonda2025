@@ -1325,18 +1325,14 @@ function App() {
           {/* Logo Header */}
           <div className="px-6 py-6 border-b border-gray-200">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10">
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <circle cx="50" cy="50" r="45" fill="#007784" />
-                  <path
-                    d="M30 60 Q50 40 70 60 Q50 80 30 60"
-                    fill="white"
-                    opacity="0.8"
-                  />
-                </svg>
+              <div className="w-16 h-10">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                  alt="Leirisonda Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Leirisonda</h1>
                 <p className="text-sm text-gray-500">Gestão de Obras</p>
               </div>
             </div>
