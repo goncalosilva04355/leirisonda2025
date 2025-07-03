@@ -807,6 +807,131 @@ function App() {
                 </div>
               </div>
 
+              {/* Detalhes do Furo de Água */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600 text-sm">🌊</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Detalhes do Furo de Água
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Profundidade (metros)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      placeholder="Ex: 120.5"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Nível de Água (metros)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      placeholder="Ex: 15.2"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Profundidade da Bomba (metros)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      placeholder="Ex: 80.0"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Caudal do Furo (m³/h)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      placeholder="Ex: 5.5"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Tipo de Coluna
+                    </label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="">Selecionar tipo...</option>
+                      <option value="PEAD">PEAD</option>
+                      <option value="HIDROROSCADO">HIDROROSCADO</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Diâmetro da Coluna (polegadas)
+                    </label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="">Selecionar diâmetro...</option>
+                      <option value="1">1"</option>
+                      <option value="1.25">1¼"</option>
+                      <option value="1.5">1½"</option>
+                      <option value="2">2"</option>
+                      <option value="2.5">2½"</option>
+                      <option value="3">3"</option>
+                      <option value="4">4"</option>
+                      <option value="5">5"</option>
+                      <option value="6">6"</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Bomba Instalada (modelo)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Grundfos SQ3-40"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Potência do Motor (HP)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      placeholder="Ex: 1.5"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Voltagem da Bomba
+                    </label>
+                    <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option value="">Selecionar voltagem...</option>
+                      <option value="230v">230V</option>
+                      <option value="400v">400V</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
               {/* Viaturas e Técnicos */}
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center space-x-3 mb-4">
