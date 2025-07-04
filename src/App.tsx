@@ -679,6 +679,127 @@ function App() {
 
   const renderContent = () => {
     switch (activeSection) {
+      case "dashboard":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            {/* Dashboard Content - Mobile First Design */}
+            <div className="px-4 py-4 space-y-4">
+              {/* Header Card */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-white rounded-lg shadow-md p-1">
+                      <img
+                        src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                        alt="Leirisonda Logo"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <h1 className="text-lg font-semibold text-gray-900">
+                      Olá, Gonçalo Fonseca
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Bem-vindo ao sistema Leirisonda
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Cards */}
+              <div className="space-y-3">
+                {/* Pendentes */}
+                <div className="bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-red-600 font-medium text-sm">Pendentes</p>
+                      <p className="text-2xl font-bold text-gray-900">0</p>
+                    </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+
+                {/* Em Progresso */}
+                <div className="bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-orange-600 font-medium text-sm">Em Progresso</p>
+                      <p className="text-2xl font-bold text-gray-900">0</p>
+                    </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+
+                {/* Concluídas */}
+                <div className="bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-green-600 font-medium text-sm">Concluídas</p>
+                      <p className="text-2xl font-bold text-gray-900">0</p>
+                    </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Próximas Manutenções */}
+              <div className="bg-white rounded-lg shadow-sm">
+                <div className="flex items-center p-4 border-b border-gray-100">
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Próximas Manutenções
+                  </h2>
+                </div>
+
+                <div className="p-4 text-center text-gray-500">
+                  <p>Nenhuma manutenção agendada</p>
+                </div>
+              </div>
+
+              {/* Ações Rápidas */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600">⚡</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Ações Rápidas
+                  </h2>
+                </div>
+
+                <div className="space-y-3">
+                  <button
+                    onClick={() => setActiveSection("nova-obra")}
+                    className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Criar Obra</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Pesquisar Obras */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600">🔍</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Pesquisar Obras
+                  </h2>
+                </div>
+
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Cliente, folha obra, morada..."
+                    className="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 placeholder-gray-400 text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       case "nova-obra":
         return (
           <div className="min-h-screen bg-gray-50">
