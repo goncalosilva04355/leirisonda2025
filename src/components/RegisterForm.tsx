@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { authService } from "../services/authService";
+import { mockAuthService } from "../services/mockAuthService";
 
 interface RegisterFormProps {
   onRegisterSuccess: () => void;
