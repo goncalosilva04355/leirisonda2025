@@ -979,7 +979,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relatório PDF. Tente novamente.");
+      alert("Erro ao gerar o relat��rio PDF. Tente novamente.");
     }
   };
 
@@ -3665,7 +3665,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Próxima Manutenção
+                        Próxima Manuten��ão
                       </label>
                       <input
                         type="date"
@@ -5746,10 +5746,39 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div>
                               <span className="font-medium">Cliente:</span>{" "}
                               {work.client}
+                              {work.contact && (
+                                <div className="mt-1">
+                                  <button
+                                    onClick={() =>
+                                      handlePhoneClick(work.contact)
+                                    }
+                                    className={`text-xs ${
+                                      enablePhoneDialer
+                                        ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                        : "text-gray-500"
+                                    }`}
+                                    disabled={!enablePhoneDialer}
+                                  >
+                                    📞 {work.contact}
+                                  </button>
+                                </div>
+                              )}
                             </div>
                             <div>
                               <span className="font-medium">Local:</span>{" "}
-                              {work.location}
+                              <button
+                                onClick={() =>
+                                  handleAddressClick(work.location)
+                                }
+                                className={`text-xs ${
+                                  enableMapsRedirect
+                                    ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                    : "text-gray-500"
+                                }`}
+                                disabled={!enableMapsRedirect}
+                              >
+                                📍 {work.location}
+                              </button>
                             </div>
                             <div>
                               <span className="font-medium">Início:</span>{" "}
