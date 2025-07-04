@@ -5298,8 +5298,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   }
 
-  // Show login page if not authenticated
-  if (!isAuthenticated) {
+  // SECURITY: Triple check - never allow access without proper authentication
+  if (!isAuthenticated || !currentUser) {
+    console.log(
+      "Security check: Blocking access - isAuthenticated:",
+      isAuthenticated,
+      "currentUser:",
+      !!currentUser,
+    );
     if (showAdvancedSettings) {
       if (isAdvancedUnlocked) {
         return (
