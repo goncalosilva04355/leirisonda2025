@@ -285,7 +285,8 @@ function App() {
       console.log("🔒 SECURITY: Forced logout completed on app initialization");
 
       // Set up auth state listener only AFTER forced logout
-      const unsubscribe = authService.onAuthStateChanged((user) => {
+      // Temporarily disable Firebase listener to prevent crashes
+      // const unsubscribe = authService.onAuthStateChanged((user) => {
         console.log(
           "���� AUTH STATE CHANGE:",
           user ? `User ${user.email} logged in` : "No user - login required",
@@ -311,7 +312,7 @@ function App() {
         }
       });
 
-      return unsubscribe;
+      // return unsubscribe;
     });
 
     // DO NOT initialize default admin automatically - this was causing the security issue
@@ -585,7 +586,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manuten��ão agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -898,7 +899,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
