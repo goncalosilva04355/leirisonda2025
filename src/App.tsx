@@ -2093,7 +2093,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <div className="flex items-center space-x-4 text-sm">
                             <span className="text-blue-600">
-                              ����{" "}
+                              ������{" "}
                               {new Date(maint.scheduledDate).toLocaleDateString(
                                 "pt-PT",
                               )}
@@ -4170,6 +4170,70 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
               </div>
+
+              {/* Data Management Section - Only for Super Admin */}
+              {currentUser.role === "super_admin" && (
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <Trash2 className="h-6 w-6 text-red-600 mr-3" />
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Gestão de Dados
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 mb-6">
+                    Elimine todos os dados de obras, manutenções e piscinas para
+                    começar com uma aplicação limpa. Os utilizadores são
+                    mantidos.
+                  </p>
+
+                  <div className="space-y-4">
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-red-900 mb-2">
+                            Limpar Dados do Sistema
+                          </h4>
+                          <p className="text-red-700 text-sm mb-3">
+                            Esta ação eliminará permanentemente:
+                          </p>
+                          <ul className="text-red-700 text-sm space-y-1 mb-4">
+                            <li>• Todas as obras ({works.length} registos)</li>
+                            <li>
+                              • Todas as manutenções ({maintenance.length}{" "}
+                              registos)
+                            </li>
+                            <li>
+                              • Todas as piscinas ({pools.length} registos)
+                            </li>
+                            <li>• Dados do Firebase e armazenamento local</li>
+                          </ul>
+                          <p className="text-red-700 text-sm font-medium mb-3">
+                            ⚠️ ATENÇÃO: Esta operação é irreversível!
+                          </p>
+                          <button
+                            onClick={handleDataCleanup}
+                            disabled={cleanupLoading}
+                            className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span>
+                              {cleanupLoading
+                                ? "A Eliminar..."
+                                : "Eliminar Todos os Dados"}
+                            </span>
+                          </button>
+                          {cleanupError && (
+                            <p className="text-red-600 text-sm mt-2">
+                              {cleanupError}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         );
@@ -5078,7 +5142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             {work.budget && (
                               <div>
                                 <span className="font-medium">Orçamento:</span>{" "}
-                                €{work.budget}
+                                ��{work.budget}
                               </div>
                             )}
                           </div>
