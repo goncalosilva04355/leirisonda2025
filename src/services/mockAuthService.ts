@@ -25,6 +25,24 @@ class MockAuthService {
 
     if (savedUsers) {
       this.users = JSON.parse(savedUsers);
+
+      // Migrate old users without password field
+      let needsMigration = false;
+      this.users = this.users.map((user) => {
+        if (!user.password) {
+          needsMigration = true;
+          return {
+            ...user,
+            password: "123456", // Default password for migrated users
+          };
+        }
+        return user;
+      });
+
+      if (needsMigration) {
+        console.log("Migrating users to include password field");
+        localStorage.setItem("mock-users", JSON.stringify(this.users));
+      }
     } else {
       // Initialize with default admin user
       this.users = [
