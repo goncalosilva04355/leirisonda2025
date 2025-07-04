@@ -914,7 +914,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -4485,6 +4485,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
               <UserPermissionsManager />
+            </div>
+          </div>
+        );
+
+      case "configuracoes":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
               {/* System Information */}
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -7307,7 +7315,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                       disabled={!enableMapsRedirect}
                     >
-                      📍 {selectedWork.location}
+                      ��� {selectedWork.location}
                     </button>
                   </div>
                   <div>
