@@ -1040,7 +1040,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <span>Vieira de Leiria</span>
                           </div>
                           <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                            <span>�����</span>
+                            <span>�������</span>
                             <span>Em 28 dias</span>
                           </div>
                           <p className="text-xs text-gray-400 mt-1">
@@ -1959,7 +1959,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                         </div>
 
-                        {/* Observações Específicas do Furo */}
+                        {/* Observaç��es Específicas do Furo */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Observações Específicas do Furo
@@ -4303,66 +4303,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             >
               <Waves className="h-5 w-5" />
               <span>Piscinas</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setActiveSection("utilizadores");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "utilizadores"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <UserCheck className="h-5 w-5" />
-              <span>Utilizadores</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setActiveSection("relatorios");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "relatorios"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <BarChart3 className="h-5 w-5" />
-              <span>Relatórios</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setActiveSection("clientes");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "clientes"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Users className="h-5 w-5" />
-              <span>Clientes</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setActiveSection("configuracoes");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "configuracoes"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Settings className="h-5 w-5" />
-              <span>Configurações</span>
             </button>
           </nav>
 
