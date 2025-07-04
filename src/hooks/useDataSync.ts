@@ -554,6 +554,14 @@ export function useDataSync(): SyncState & SyncActions {
     localStorage.setItem("works", JSON.stringify(savedWorks));
     localStorage.setItem("clients", JSON.stringify(savedClients));
 
+    // Log what real data was found and preserved
+    console.log("📊 Dados reais carregados:", {
+      piscinas: savedPools.length,
+      obras: savedWorks.length,
+      manutencoes: savedMaintenance.length,
+      clientes: savedClients.length,
+    });
+
     // Always use only saved data, never add mock data automatically
     const finalPools = savedPools;
     const finalMaintenance = savedMaintenance;
