@@ -4371,6 +4371,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Use sync system to add pool (will handle Firebase and localStorage)
                           addPool(poolData);
 
+                          // Clear form after successful creation
+                          form.reset();
+
                           alert(
                             `Piscina "${poolData.name}" criada com sucesso!`,
                           );
