@@ -164,11 +164,9 @@ function App() {
   } = useDataCleanup();
 
   // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
-  const {
-    syncStatus,
-    lastSync: autoSyncLastSync,
-    isAutoSyncing,
-  } = useAutoSync();
+  const autoSyncData = useAutoSync();
+  const { syncStatus, isAutoSyncing } = autoSyncData;
+  const autoSyncLastSync = autoSyncData.lastSync;
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
