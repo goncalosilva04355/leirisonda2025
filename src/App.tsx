@@ -1281,7 +1281,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                     </div>
                     <div className="text-4xl font-bold text-gray-900">
-                      {works.filter((w) => !w.folhaGerada).length}
+                      {
+                        works.filter(
+                          (w) => !w.folhaGerada && w.status !== "completed",
+                        ).length
+                      }
                     </div>
                   </div>
                 </button>
@@ -5139,7 +5143,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     }`}
                   >
                     Sem Folha de Obra (
-                    {works.filter((w) => !w.folhaGerada).length})
+                    {
+                      works.filter(
+                        (w) => !w.folhaGerada && w.status !== "completed",
+                      ).length
+                    }
+                    )
                   </button>
                 </div>
               </div>
@@ -5150,7 +5159,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   .filter((work) => {
                     if (activeWorkFilter === "all") return true;
                     if (activeWorkFilter === "no_sheet")
-                      return !work.folhaGerada;
+                      return !work.folhaGerada && work.status !== "completed";
                     return work.status === activeWorkFilter;
                   })
                   .map((work) => (
@@ -5250,7 +5259,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 {works.filter((work) => {
                   if (activeWorkFilter === "all") return true;
-                  if (activeWorkFilter === "no_sheet") return !work.folhaGerada;
+                  if (activeWorkFilter === "no_sheet")
+                    return !work.folhaGerada && work.status !== "completed";
                   return work.status === activeWorkFilter;
                 }).length === 0 && (
                   <div className="bg-white rounded-lg p-8 shadow-sm text-center">
