@@ -72,6 +72,34 @@ class DataCleanupService {
           result.details.firestoreDeleted.maintenance++;
         }
 
+        // Delete all clients
+        try {
+          const clientsSnapshot = await getDocs(collection(db, "clients"));
+          for (const clientDoc of clientsSnapshot.docs) {
+            await deleteDoc(doc(db, "clients", clientDoc.id));
+          }
+          console.log(
+            `Deleted ${clientsSnapshot.docs.length} clients from Firestore`,
+          );
+        } catch (error) {
+          console.warn("Failed to delete clients from Firestore:", error);
+        }
+
+        // Delete all interventions (if they exist as a separate collection)
+        try {
+          const interventionsSnapshot = await getDocs(
+            collection(db, "interventions"),
+          );
+          for (const interventionDoc of interventionsSnapshot.docs) {
+            await deleteDoc(doc(db, "interventions", interventionDoc.id));
+          }
+          console.log(
+            `Deleted ${interventionsSnapshot.docs.length} interventions from Firestore`,
+          );
+        } catch (error) {
+          console.warn("Failed to delete interventions from Firestore:", error);
+        }
+
         console.log(
           `Firestore cleanup complete: ${result.details.firestoreDeleted.pools} pools, ${result.details.firestoreDeleted.works} works, ${result.details.firestoreDeleted.maintenance} maintenance deleted`,
         );
@@ -94,13 +122,28 @@ class DataCleanupService {
 
       // 3. Clean Local Storage data
       console.log("Cleaning Local Storage data...");
+
+      // Remove main data collections
       localStorage.removeItem("pools");
       localStorage.removeItem("works");
       localStorage.removeItem("maintenance");
       localStorage.removeItem("interventions");
       localStorage.removeItem("clients");
+
+      // Remove cleanup and sync flags
+      localStorage.removeItem("demo-data-cleaned");
+      localStorage.removeItem("auto-sync-completed");
+      localStorage.removeItem("last-full-sync");
+
+      // Remove any cached/temporary data
+      localStorage.removeItem("mock-users");
+      localStorage.removeItem("mock-current-user");
+
+      // Clear session storage as well
+      sessionStorage.clear();
+
       result.details.localStorageCleared = true;
-      console.log("Local Storage cleanup complete");
+      console.log("Local Storage and Session Storage cleanup complete");
 
       result.success = true;
       result.message =
@@ -151,9 +194,11 @@ class DataCleanupService {
       // Delete all clients
       for (const client of allData.clients) {
         if (client.id) {
-          // Note: realFirebaseService doesn't have deleteClient method,
-          // so we need to implement it or skip clients for now
-          console.log("Skipping client deletion - method not available");
+          try {
+            await realFirebaseService.deleteClient(client.id);
+          } catch (error) {
+            console.warn(`Failed to delete client ${client.id}:`, error);
+          }
         }
       }
     }
@@ -265,12 +310,14 @@ class DataCleanupService {
     const works = localStorage.getItem("works");
     const maintenance = localStorage.getItem("maintenance");
     const interventions = localStorage.getItem("interventions");
+    const clients = localStorage.getItem("clients");
 
     const localStorageEmpty =
       (!pools || pools === "[]") &&
       (!works || works === "[]") &&
       (!maintenance || maintenance === "[]") &&
-      (!interventions || interventions === "[]");
+      (!interventions || interventions === "[]") &&
+      (!clients || clients === "[]");
 
     return {
       lastCleanup,
