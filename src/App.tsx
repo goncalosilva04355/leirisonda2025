@@ -1666,7 +1666,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }}
                             className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
                           >
-                            Testar Notificaç��o
+                            Testar Notifica����o
                           </button>
                         </div>
                       )}
@@ -6846,7 +6846,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <button
                         type="button"
                         onClick={(e) => {
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const inputs = form.querySelectorAll(
                             "input, select, textarea",
                           );
@@ -7432,7 +7434,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   "❌ Access denied: User management requires authentication",
                 );
                 setLoginError(
-                  "Por favor, faça login primeiro para aceder à gestão de utilizadores",
+                  "Por favor, faça login primeiro para aceder à gest��o de utilizadores",
                 );
                 setShowAdvancedSettings(false);
                 setIsAdvancedUnlocked(false);
