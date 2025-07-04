@@ -437,8 +437,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 </button>
                 <button
                   onClick={testFirebaseConnection}
-                  disabled={!localStorage.getItem("firebase-config")}
-                  className="bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2"
+                  className="bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
                 >
                   <Wifi className="w-5 h-5" />
                   <span>Testar Conexão</span>
@@ -851,7 +850,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   </li>
                   <li>
                     • A obra aparece automaticamente no dashboard do utilizador
-                    na seção "Obras Atribuídas"
+                    na se��ão "Obras Atribuídas"
                   </li>
                   <li>
                     • As notificações funcionam mesmo com a aplicaç��o fechada
