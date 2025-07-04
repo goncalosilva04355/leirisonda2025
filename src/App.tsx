@@ -555,7 +555,7 @@ function App() {
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
-          description: "Manutenção programada automaticamente",
+          description: "Manuten��ão programada automaticamente",
           notes: "Agendada automaticamente após manutenç��o anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
@@ -1806,7 +1806,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           if (diffDays === 0) {
                             timeText = "Hoje";
                           } else if (diffDays === 1) {
-                            timeText = "Amanh��";
+                            timeText = "Amanhã";
                           } else if (diffDays > 0) {
                             timeText = `Em ${diffDays} dias`;
                           } else {
@@ -3971,7 +3971,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
                           <option value="manutencao">Em Manutenção</option>
-                          <option value="construcao">Em Constru���ão</option>
+                          <option value="construcao">Em Construção</option>
                         </select>
                       </div>
                     </div>
@@ -5128,7 +5128,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Estado e localiza����o</li>
+                        <li>�� Estado e localizaç��o</li>
                         <li>• Informações de clientes</li>
                         <li>����� Histórico de manutenç����es</li>
                         <li>• Próximas intervenções</li>
