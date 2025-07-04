@@ -26,6 +26,9 @@ export interface Maintenance {
   technician: string;
   notes?: string;
   observations?: string;
+  clientName?: string;
+  clientContact?: string;
+  location?: string;
   createdAt: string;
 }
 
