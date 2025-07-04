@@ -866,7 +866,7 @@ RESUMO EXECUTIVO:
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
 
-ESTATÍSTICAS:
+ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
@@ -913,7 +913,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr����������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr������������-definidos por agora.",
     );
   };
 
@@ -3117,7 +3117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     selectedUser &&
                                     !assignedUsers.some(
                                       (assigned) =>
-                                        assigned.id === selectedUser.id,
+                                        assigned.id === String(selectedUser.id),
                                     )
                                   ) {
                                     setAssignedUsers([
@@ -4392,7 +4392,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
                           "Enchimento autom��tico",
-                          "Limpeza linha de ����gua",
+                          "Limpeza linha de ���gua",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
                           "Limpeza skimmers",
@@ -4947,7 +4947,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registos)
                               </li>
                               <li>
-                                �� Todas as piscinas ({pools.length} registos)
+                                • Todas as piscinas ({pools.length} registos)
                               </li>
                               <li>• Dados do Firebase e armazenamento local</li>
                             </ul>
@@ -5134,7 +5134,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>• Piscinas associadas</li>
-                        <li>• Histórico de servi����os</li>
+                        <li>• Histórico de servi��os</li>
                         <li>• Informaç��es contratuais</li>
                       </ul>
                     </div>
@@ -6178,7 +6178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   selectedUser &&
                                   !editAssignedUsers.some(
                                     (assigned) =>
-                                      assigned.id === selectedUser.id,
+                                      assigned.id === String(selectedUser.id),
                                   )
                                 ) {
                                   setEditAssignedUsers([
@@ -6592,7 +6592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const poolType = inputs[4].value; // Tipo de Piscina
                           const dimensions = inputs[5].value; // Dimensões
                           const volume = inputs[6].value; // Volume
-                          const filtrationSystem = inputs[7].value; // Sistema de Filtraç��o
+                          const filtrationSystem = inputs[7].value; // Sistema de Filtração
                           const installationDate = inputs[8].value; // Data de Instala��ão
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente
