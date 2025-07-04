@@ -50,6 +50,7 @@ const initialUsers = [
     id: 1,
     name: "Gonçalo Fonseca",
     email: "gongonsilva@gmail.com",
+    password: "19867gsf",
     role: "super_admin",
     permissions: {
       obras: { view: true, create: true, edit: true, delete: true },
@@ -66,6 +67,7 @@ const initialUsers = [
     id: 2,
     name: "Maria Silva",
     email: "maria.silva@leirisonda.pt",
+    password: "123456",
     role: "manager",
     permissions: {
       obras: { view: true, create: true, edit: true, delete: false },
@@ -82,6 +84,7 @@ const initialUsers = [
     id: 3,
     name: "João Santos",
     email: "joao.santos@leirisonda.pt",
+    password: "123456",
     role: "technician",
     permissions: {
       obras: { view: true, create: false, edit: true, delete: false },
@@ -98,6 +101,7 @@ const initialUsers = [
     id: 4,
     name: "Alexandre",
     email: "alexandre@leirisonda.pt",
+    password: "123456",
     role: "technician",
     permissions: {
       obras: { view: true, create: false, edit: true, delete: false },
@@ -309,7 +313,7 @@ function App() {
     // DO NOT initialize default admin automatically - this was causing the security issue
     // Users must always login manually for security
     console.log(
-      "🔒 SECURITY: No automatic admin initialization - manual login required",
+      "��� SECURITY: No automatic admin initialization - manual login required",
     );
 
     // Return empty cleanup function since unsubscribe is handled inside the promise
@@ -490,7 +494,7 @@ function App() {
   });
 
   // Settings functions
-  const handleSettingsPasswordSubmit = (e) => {
+  const handleSettingsPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (settingsPassword === "19867") {
       setShowSettingsPasswordModal(false);
@@ -652,7 +656,7 @@ function App() {
   };
 
   // Authentication functions
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError("");
 
@@ -878,7 +882,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localização: ${work.location}
+   Localizaç��o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -976,7 +980,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+���� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -1343,7 +1347,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   };
 
-  const handleSaveUser = async (e) => {
+  const handleSaveUser = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
 
     try {
@@ -1424,7 +1428,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const setRolePermissions = (role) => {
-    let permissions = userForm.permissions;
+    let permissions = {
+      obras: { view: false, create: false, edit: false, delete: false },
+      manutencoes: { view: false, create: false, edit: false, delete: false },
+      piscinas: { view: false, create: false, edit: false, delete: false },
+      utilizadores: { view: false, create: false, edit: false, delete: false },
+      relatorios: { view: false, create: false, edit: false, delete: false },
+      clientes: { view: false, create: false, edit: false, delete: false },
+    };
 
     switch (role) {
       case "super_admin":
@@ -1658,7 +1669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }}
                             className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
                           >
-                            Testar Notificação
+                            Testar Notifica����o
                           </button>
                         </div>
                       )}
@@ -2414,7 +2425,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão de piscinas no sistema
+                          Gest��o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -2509,7 +2520,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                               disabled={!enableMapsRedirect}
                             >
-                              📍 {pool.location}
+                              ��� {pool.location}
                             </button>
                             <div className="flex items-center space-x-4 mt-2">
                               <span className="text-sm text-gray-500">
@@ -3261,7 +3272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <option value="">
                                 {users.length > 0
                                   ? "Selecionar usuário..."
-                                  : "Nenhum utilizador disponível"}
+                                  : "Nenhum utilizador dispon��vel"}
                               </option>
                               {users
                                 .filter((user) => {
@@ -3693,7 +3704,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="submit"
                         onClick={(e) => {
                           e.preventDefault();
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
 
                           // Extract all form data
                           const workTitle =
@@ -4208,7 +4221,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="submit"
                         onClick={(e) => {
                           e.preventDefault();
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const formData = new FormData(form);
 
                           // Collect all form data
@@ -4672,7 +4687,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenção
+                          Pr��xima Manutenção
                         </label>
                         <input
                           type="date"
@@ -5443,7 +5458,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estatísticas Rápidas
+                    Estatísticas R��pidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
@@ -5963,7 +5978,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Obras
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão de obras e projetos
+                          Gest��o de obras e projetos
                         </p>
                       </div>
                     </div>
@@ -6581,7 +6596,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <button
                         type="button"
                         onClick={(e) => {
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const inputs = form.querySelectorAll(
                             "input, select, textarea",
                           );
@@ -6832,7 +6849,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <button
                         type="button"
                         onClick={(e) => {
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const inputs = form.querySelectorAll(
                             "input, select, textarea",
                           );
@@ -7064,7 +7083,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <button
                         type="button"
                         onClick={(e) => {
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const inputs = form.querySelectorAll(
                             "input, select, textarea",
                           );
@@ -7351,7 +7372,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>��</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -7418,7 +7439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   "❌ Access denied: User management requires authentication",
                 );
                 setLoginError(
-                  "Por favor, faça login primeiro para aceder à gestão de utilizadores",
+                  "Por favor, faça login primeiro para aceder à gest��o de utilizadores",
                 );
                 setShowAdvancedSettings(false);
                 setIsAdvancedUnlocked(false);
@@ -7939,7 +7960,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ? selectedWork.assignedUsers
                               .map((u) => u.name)
                               .join(", ")
-                          : selectedWork.assignedTo || "Não atribuída"}
+                          : selectedWork.assignedTo || "Não atribu��da"}
                       </p>
                     </div>
                   </div>
