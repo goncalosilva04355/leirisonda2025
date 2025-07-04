@@ -103,6 +103,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             <p className="text-gray-600 mt-2">
               Preencha os dados para criar uma nova conta
             </p>
+            <div className="mt-3 text-sm text-blue-600 bg-blue-50 p-3 rounded-md">
+              ✅ Conta criada permite acesso de qualquer dispositivo
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
