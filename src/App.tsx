@@ -4371,6 +4371,39 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Use sync system to add pool (will handle Firebase and localStorage)
                           addPool(poolData);
 
+                          // Create future maintenance if next maintenance date is provided
+                          if (poolData.nextMaintenance) {
+                            const nextMaintenanceDate = new Date(
+                              poolData.nextMaintenance,
+                            );
+                            const today = new Date();
+
+                            // Only create future maintenance if the date is in the future
+                            if (nextMaintenanceDate > today) {
+                              const futureMaintenance = {
+                                poolId: poolData.id.toString(),
+                                poolName: poolData.name,
+                                type: "Manutenção Programada",
+                                scheduledDate: poolData.nextMaintenance,
+                                technician: "A atribuir",
+                                status: "scheduled" as const,
+                                description:
+                                  "Manutenção programada durante criação da piscina",
+                                notes:
+                                  "Agendada automaticamente na criação da piscina",
+                                clientName: poolData.client,
+                                clientContact: poolData.contact || "",
+                                location: poolData.location,
+                              };
+
+                              addMaintenance(futureMaintenance);
+                              console.log(
+                                "Futura manutenção criada para nova piscina:",
+                                futureMaintenance,
+                              );
+                            }
+                          }
+
                           // Clear form after successful creation
                           form.reset();
 
