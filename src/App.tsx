@@ -296,7 +296,7 @@ function App() {
       try {
         const user = JSON.parse(storedUser);
         console.log(
-          "🔄 App init: Restoring user from localStorage:",
+          "���� App init: Restoring user from localStorage:",
           user.email,
         );
         setCurrentUser(user);
@@ -1815,7 +1815,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <p className="text-sm text-gray-500">Atribuídas a si</p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {assignedWorks.length}
+                        {currentUser
+                          ? works.filter(
+                              (work) =>
+                                work &&
+                                work.assignedTo &&
+                                (work.assignedTo
+                                  .toLowerCase()
+                                  .includes(currentUser.name.toLowerCase()) ||
+                                  work.assignedUsers?.some(
+                                    (user) =>
+                                      user.name &&
+                                      user.name
+                                        .toLowerCase()
+                                        .includes(
+                                          currentUser.name.toLowerCase(),
+                                        ),
+                                  )),
+                            ).length
+                          : 0}
                       </div>
                     </div>
                   </button>
@@ -1848,7 +1866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <div className="flex items-center space-x-1 text-gray-600 text-sm">
                                   <span>👤</span>
                                   <span>
-                                    Atribuída a:{" "}
+                                    Atribu��da a:{" "}
                                     {work.assignedUsers &&
                                     work.assignedUsers.length > 0
                                       ? work.assignedUsers
@@ -7914,7 +7932,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enablePhoneDialer}
                         >
-                          📞 {selectedWork.contact}
+                          �� {selectedWork.contact}
                         </button>
                       )}
                     </div>
