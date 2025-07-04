@@ -1,6 +1,10 @@
 import { initializeApp, getApps, getApp, deleteApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import {
+  getAuth,
+  setPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 
 // Fixed Firebase config
 const firebaseConfig = {
@@ -45,6 +49,21 @@ try {
   if (app) {
     db = getFirestore(app);
     auth = getAuth(app);
+
+    // SECURITY: Set auth persistence to session-only (not persistent across browser sessions)
+    // This prevents automatic login when reopening the browser
+    if (auth) {
+      setPersistence(auth, browserSessionPersistence)
+        .then(() => {
+          console.log(
+            "Firebase Auth persistence set to session-only for security",
+          );
+        })
+        .catch((error) => {
+          console.error("Failed to set Firebase Auth persistence:", error);
+        });
+    }
+
     console.log("Firebase services initialized successfully");
   }
 } catch (error) {

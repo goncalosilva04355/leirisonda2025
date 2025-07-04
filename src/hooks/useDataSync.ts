@@ -55,138 +55,18 @@ export interface Client {
   createdAt: string;
 }
 
-// Mock data for demonstration
-const mockPools: Pool[] = [
-  {
-    id: "1",
-    name: "Piscina Villa Marina",
-    location: "Cascais, Villa Marina Resort",
-    client: "Hotel Marina",
-    type: "Comercial",
-    status: "Ativa",
-    lastMaintenance: "2024-01-15",
-    nextMaintenance: "2024-01-22",
-    createdAt: "2024-01-01",
-  },
-  {
-    id: "2",
-    name: "Piscina Residencial Costa",
-    location: "Sintra, Quinta da Beloura",
-    client: "Família Costa",
-    type: "Residencial",
-    status: "Ativa",
-    lastMaintenance: "2024-01-10",
-    nextMaintenance: "2024-01-17",
-    createdAt: "2024-01-05",
-  },
-];
+// Mock data for demonstration - DISABLED FOR PRODUCTION
+// User requested removal of old demo data
+const mockPools: Pool[] = [];
 
-const mockMaintenance: Maintenance[] = [
-  {
-    id: "1",
-    poolId: "1",
-    poolName: "Piscina Villa Marina",
-    type: "Limpeza Completa",
-    status: "completed",
-    description: "Limpeza completa da piscina, verificação química",
-    scheduledDate: "2024-01-15",
-    completedDate: "2024-01-15",
-    technician: "João Santos",
-    notes: "pH ajustado, cloro adicionado",
-    createdAt: "2024-01-14",
-  },
-  {
-    id: "2",
-    poolId: "2",
-    poolName: "Piscina Residencial Costa",
-    type: "Manutenção Preventiva",
-    status: "pending",
-    description: "Verificação dos sistemas de filtração",
-    scheduledDate: "2024-01-20",
-    technician: "Maria Silva",
-    createdAt: "2024-01-18",
-  },
-];
+// Mock maintenance data - DISABLED FOR PRODUCTION
+const mockMaintenance: Maintenance[] = [];
 
-const mockWorks: Work[] = [
-  {
-    id: "1",
-    title: "Renovação Sistema Filtração",
-    description: "Substituição completa do sistema de filtração da piscina",
-    client: "Hotel Marina",
-    location: "Cascais, Villa Marina Resort",
-    type: "Renovação",
-    status: "in_progress",
-    startDate: "2024-01-10",
-    budget: 5000,
-    assignedTo: "Equipa Técnica A",
-    folhaGerada: true,
-    createdAt: "2024-01-08",
-  },
-  {
-    id: "2",
-    title: "Instalação Nova Piscina",
-    description: "Construção de nova piscina 8x4m com deck",
-    client: "Família Costa",
-    location: "Sintra, Quinta da Beloura",
-    type: "Construção",
-    status: "pending",
-    startDate: "2024-02-01",
-    budget: 25000,
-    assignedTo: "Equipa Construção",
-    folhaGerada: false,
-    createdAt: "2024-01-20",
-  },
-  {
-    id: "3",
-    title: "Manutenção Piscina Municipal",
-    description: "Limpeza e tratamento químico da piscina municipal",
-    client: "Câmara Municipal",
-    location: "Lisboa, Centro Desportivo",
-    type: "Manutenção",
-    status: "completed",
-    startDate: "2024-01-05",
-    budget: 1500,
-    assignedTo: "João Santos",
-    folhaGerada: true,
-    createdAt: "2024-01-03",
-  },
-  {
-    id: "4",
-    title: "Reparação Bomba de Calor",
-    description: "Substituição de componentes da bomba de calor",
-    client: "Condomínio Bela Vista",
-    location: "Porto, Foz do Douro",
-    type: "Reparação",
-    status: "pending",
-    startDate: "2024-01-25",
-    budget: 800,
-    assignedTo: "Maria Silva",
-    folhaGerada: false,
-    createdAt: "2024-01-22",
-  },
-];
+// Mock works data - DISABLED FOR PRODUCTION
+const mockWorks: Work[] = [];
 
-const mockClients: Client[] = [
-  {
-    id: "1",
-    name: "Hotel Marina",
-    email: "gestao@hotelmarina.pt",
-    phone: "+351 214 123 456",
-    address: "Av. Marginal, 2750 Cascais",
-    pools: ["1"],
-    createdAt: "2024-01-01",
-  },
-  {
-    id: "2",
-    name: "Família Costa",
-    email: "joao.costa@email.pt",
-    phone: "+351 919 876 543",
-    address: "Quinta da Beloura, 2710 Sintra",
-    pools: ["2"],
-    createdAt: "2024-01-05",
-  },
-];
+// Mock clients data - DISABLED FOR PRODUCTION
+const mockClients: Client[] = [];
 
 export interface SyncState {
   pools: Pool[];
@@ -337,86 +217,67 @@ export function useDataSync(): SyncState & SyncActions {
   useEffect(() => {
     const today = new Date();
 
-    // Check if app was recently cleaned - if so, start with empty data
-    const appCleaned = localStorage.getItem("app-cleaned");
-    const lastCleanup = localStorage.getItem("last-cleanup");
+    // Check if we need to do a one-time cleanup
+    const hasBeenCleaned = localStorage.getItem("demo-data-cleaned");
 
-    let shouldUseEmptyData = false;
-    if (appCleaned && lastCleanup) {
-      const cleanupTime = new Date(lastCleanup);
-      const hoursSinceCleanup =
-        (today.getTime() - cleanupTime.getTime()) / (1000 * 60 * 60);
-      shouldUseEmptyData = hoursSinceCleanup < 24; // Use empty data if cleaned within 24 hours
-    }
+    if (!hasBeenCleaned) {
+      // ONE-TIME CLEANUP: Remove old demo data only once
+      console.log("🧹 ONE-TIME CLEANUP: Removing old demo data");
+      localStorage.removeItem("pools");
+      localStorage.removeItem("works");
+      localStorage.removeItem("maintenance");
+      localStorage.removeItem("interventions");
+      localStorage.removeItem("clients");
 
-    if (shouldUseEmptyData) {
-      // Use only mock data (no localStorage data) if recently cleaned
-      const future = mockMaintenance.filter(
-        (m) => new Date(m.scheduledDate) >= today,
-      );
+      // Mark as cleaned so this doesn't happen again
+      localStorage.setItem("demo-data-cleaned", "true");
+      localStorage.setItem("app-cleaned", new Date().toISOString());
+      localStorage.setItem("last-cleanup", new Date().toISOString());
 
+      // Start with empty data after cleanup
       setState((prev) => ({
         ...prev,
-        pools: [...mockPools],
-        maintenance: [...mockMaintenance],
-        futureMaintenance: future,
-        works: [...mockWorks],
-        clients: [...mockClients],
+        pools: [],
+        maintenance: [],
+        futureMaintenance: [],
+        works: [],
+        clients: [],
       }));
+
+      console.log("✅ Demo data cleaned - new data will be saved normally");
       return;
     }
 
-    // Load saved data from localStorage (normal behavior)
+    // Normal startup - load existing data from localStorage
+    console.log("📂 Loading saved data from localStorage");
     const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
     const savedMaintenance = JSON.parse(
       localStorage.getItem("maintenance") || "[]",
     );
-    const savedInterventions = JSON.parse(
-      localStorage.getItem("interventions") || "[]",
-    );
     const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
     const savedClients = JSON.parse(localStorage.getItem("clients") || "[]");
 
-    // Convert interventions to maintenance format
-    const interventionsAsMaintenance = savedInterventions.map(
-      (intervention) => ({
-        id: intervention.id.toString(),
-        poolId: intervention.poolId || "unknown",
-        poolName: intervention.poolName || "Piscina",
-        type: "Manutenção",
-        status: intervention.status || "completed",
-        description: intervention.workPerformed || "Manutenção realizada",
-        scheduledDate: intervention.date,
-        completedDate: intervention.date,
-        technician: intervention.technician || "Técnico",
-        notes: intervention.observations,
-        createdAt: intervention.createdAt || new Date().toISOString(),
-      }),
-    );
-
-    // Combine all maintenance data
-    const allMaintenance = [
-      ...mockMaintenance,
-      ...savedMaintenance,
-      ...interventionsAsMaintenance,
-    ];
-    const future = allMaintenance.filter(
+    // Calculate future maintenance
+    const future = savedMaintenance.filter(
       (m) => new Date(m.scheduledDate) >= today,
     );
 
-    // Combine all data
-    const allPools = [...mockPools, ...savedPools];
-    const allWorks = [...mockWorks, ...savedWorks];
-    const allClients = [...mockClients, ...savedClients];
-
+    // Set the loaded data
     setState((prev) => ({
       ...prev,
-      pools: allPools,
-      maintenance: allMaintenance,
+      pools: savedPools,
+      maintenance: savedMaintenance,
       futureMaintenance: future,
-      works: allWorks,
-      clients: allClients,
+      works: savedWorks,
+      clients: savedClients,
     }));
+
+    console.log("✅ Data loaded:", {
+      pools: savedPools.length,
+      works: savedWorks.length,
+      maintenance: savedMaintenance.length,
+      clients: savedClients.length,
+    });
   }, []);
 
   // Real Firebase sync

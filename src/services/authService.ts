@@ -279,8 +279,31 @@ class AuthService {
 
   // Logout user
   async logout(): Promise<void> {
-    if (!auth) return;
-    await signOut(auth);
+    try {
+      // Clear mock auth state
+      await mockAuthService.logout();
+
+      // Clear Firebase auth state
+      if (auth) {
+        await signOut(auth);
+      }
+
+      // Clear any remaining local storage auth data
+      localStorage.removeItem("mock-current-user");
+      localStorage.removeItem("mock-users");
+
+      // Clear session storage
+      sessionStorage.clear();
+
+      console.log("Complete logout performed - all auth data cleared");
+    } catch (error) {
+      console.error("Error during logout:", error);
+
+      // Force clear everything even if logout fails
+      localStorage.removeItem("mock-current-user");
+      localStorage.removeItem("mock-users");
+      sessionStorage.clear();
+    }
   }
 
   // Listen to auth state changes
