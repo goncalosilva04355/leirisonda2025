@@ -20,6 +20,7 @@ import { UserDebugger } from "../components/UserDebugger";
 import { DataCleanupManager } from "../components/DataCleanupManager";
 import { DataManagementPanel } from "../components/DataManagementPanel";
 import { FirebaseConfig } from "../components/FirebaseConfig";
+import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
 
 interface AdminPageProps {
   onLogout: () => void;
