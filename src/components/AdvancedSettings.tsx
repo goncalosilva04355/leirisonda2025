@@ -53,6 +53,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
     | "firebase"
     | "sync-test"
     | "notifications"
+    | "auth-diagnostic"
     | "utilizadores"
     | "relatorios"
     | "clientes"
@@ -855,7 +856,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                     melhor experiência
                   </li>
                   <li>
-                    • O service worker garante que as notificações funcionem em
+                    �� O service worker garante que as notificações funcionem em
                     background
                   </li>
                 </ul>
