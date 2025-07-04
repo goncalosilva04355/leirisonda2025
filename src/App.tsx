@@ -510,7 +510,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manuten��ão Regular",
+      type: "Manutenção Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -762,7 +762,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localização: ${pool.location}
+   Localizaç��o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -1816,7 +1816,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>����</span>
+                                      <span>⏰</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -2261,7 +2261,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">🔍</div>
+                                  <div className="text-gray-400 mb-2">��</div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -6035,7 +6035,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </button>
                               </div>
                               <div>
-                                <span className="font-medium">Início:</span>{" "}
+                                <span className="font-medium">In��cio:</span>{" "}
                                 {new Date(work.startDate).toLocaleDateString(
                                   "pt-PT",
                                 )}
