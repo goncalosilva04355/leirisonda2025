@@ -286,7 +286,7 @@ class RealFirebaseService {
       callback(works);
     });
 
-    return () => off(worksRef, "value", unsubscribe);
+    return unsubscribe;
   }
 
   onMaintenanceChange(callback: (maintenance: any[]) => void): () => void {
