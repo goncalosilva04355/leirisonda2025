@@ -285,9 +285,16 @@ class AuthService {
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
-      // Additional validation before Firebase call
+      // Check if Firebase Auth is available
       if (!auth) {
+        console.warn("Firebase Auth not available, falling back to mock auth");
         throw new Error("Firebase Auth not initialized");
+      }
+
+      // Check if Firestore is available
+      if (!db) {
+        console.warn("Firestore not available, falling back to mock auth");
+        throw new Error("Firestore not initialized");
       }
 
       if (!email || !password) {
