@@ -3124,21 +3124,40 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   const selectedUser = users.find(
                                     (u) => String(u.id) === currentAssignedUser,
                                   );
-                                  if (
-                                    selectedUser &&
-                                    !assignedUsers.some(
-                                      (assigned) =>
-                                        assigned.id === String(selectedUser.id),
-                                    )
-                                  ) {
-                                    setAssignedUsers([
-                                      ...assignedUsers,
-                                      {
-                                        id: String(selectedUser.id),
-                                        name: selectedUser.name,
-                                      },
-                                    ]);
-                                    setCurrentAssignedUser("");
+
+                                  if (selectedUser) {
+                                    const userIdStr = String(selectedUser.id);
+                                    const isAlreadyAssigned =
+                                      assignedUsers.some(
+                                        (assigned) => assigned.id === userIdStr,
+                                      );
+
+                                    console.log(
+                                      "Nova obra - Attempting to assign user:",
+                                      selectedUser.name,
+                                      "ID:",
+                                      userIdStr,
+                                      "Already assigned:",
+                                      isAlreadyAssigned,
+                                    );
+
+                                    if (!isAlreadyAssigned) {
+                                      setAssignedUsers([
+                                        ...assignedUsers,
+                                        {
+                                          id: userIdStr,
+                                          name: selectedUser.name,
+                                        },
+                                      ]);
+                                      setCurrentAssignedUser("");
+                                      console.log(
+                                        "Nova obra - User assigned successfully!",
+                                      );
+                                    } else {
+                                      console.log(
+                                        "Nova obra - User already assigned, skipping",
+                                      );
+                                    }
                                   }
                                 }
                               }}
@@ -6341,7 +6360,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           defaultValue={editingWork?.workType || "installation"}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                          <option value="installation">Instalação</option>
+                          <option value="installation">Instala��ão</option>
                           <option value="maintenance">Manutenção</option>
                           <option value="repair">Reparação</option>
                           <option value="renovation">Renova��ão</option>
