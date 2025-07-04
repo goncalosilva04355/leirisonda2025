@@ -1377,7 +1377,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             userForm.email,
             userForm.password,
             userForm.name,
-            userForm.role,
+            userForm.role as "super_admin" | "manager" | "technician",
           );
 
           if (result.success) {
@@ -3262,7 +3262,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <option value="">
                                 {users.length > 0
                                   ? "Selecionar usuário..."
-                                  : "Nenhum utilizador disponível"}
+                                  : "Nenhum utilizador dispon��vel"}
                               </option>
                               {users
                                 .filter((user) => {
