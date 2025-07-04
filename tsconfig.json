@@ -16,12 +16,11 @@
     "noImplicitAny": false,
     "noImplicitReturns": false,
     "noImplicitThis": false,
-    "noStrictNullChecks": true,
+    "strictNullChecks": false,
     "noFallthroughCasesInSwitch": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": false,
-    "suppressImplicitAnyIndexErrors": true
+    "forceConsistentCasingInFileNames": false
   },
   "include": ["src/**/*", "src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist"]
