@@ -2284,15 +2284,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           startDate: new Date().toISOString(),
                         };
 
-                        // Save to localStorage
-                        const savedWorks = JSON.parse(
-                          localStorage.getItem("works") || "[]",
-                        );
-                        savedWorks.push(workData);
-                        localStorage.setItem(
-                          "works",
-                          JSON.stringify(savedWorks),
-                        );
+                        // Use sync system to add work (will handle Firebase and localStorage)
+                        addWork(workData);
 
                         // Send notification if user assigned
                         if (selectedUserId) {
@@ -3659,7 +3652,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="text-2xl font-bold text-green-600">
                       {maintenance.length}
                     </div>
-                    <div className="text-sm text-gray-600">Manutenções</div>
+                    <div className="text-sm text-gray-600">Manuten��ões</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-orange-600">
@@ -4019,7 +4012,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <input
                           type="text"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Rua, número, andar, etc."
+                          placeholder="Rua, n��mero, andar, etc."
                           required
                         />
                       </div>
