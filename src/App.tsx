@@ -5295,7 +5295,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Trabalhos realizados</li>
                         <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observações</li>
+                        <li>• Estados e observaç��es</li>
                       </ul>
                     </div>
                     <button
@@ -7596,16 +7596,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               >
                 Entrar
               </button>
-
-              {/* Administration Button */}
-              <button
-                type="button"
-                onClick={() => setShowAdminLogin(true)}
-                className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 flex items-center justify-center space-x-2"
-              >
-                <Shield className="h-4 w-4" />
-                <span>Administração</span>
-              </button>
             </div>
           </form>
 
@@ -7782,20 +7772,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 >
                   <Users className="h-5 w-5" />
                   <span>Utilizadores</span>
-                </button>
-              )}
-
-              {/* Administration Section - Only for super admin */}
-              {currentUser?.role === "super_admin" && (
-                <button
-                  onClick={() => {
-                    setShowAdminLogin(true);
-                    setSidebarOpen(false);
-                  }}
-                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 hover:bg-gray-100"
-                >
-                  <Shield className="h-5 w-5" />
-                  <span>Administração</span>
                 </button>
               )}
             </nav>
