@@ -721,7 +721,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest���o
     `;
     downloadPDF(
       content,
@@ -1405,6 +1405,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const renderContent = () => {
     // Add loading state check with timeout
     if (!currentUser || !isAuthenticated) {
+      console.log("🔄 renderContent: Waiting for auth state", {
+        currentUser: !!currentUser,
+        isAuthenticated,
+        activeSection,
+      });
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
@@ -1417,6 +1422,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         </div>
       );
     }
+
+    console.log("✅ renderContent: Auth state valid, rendering", {
+      activeSection,
+      userRole: currentUser?.role,
+    });
 
     // Add error boundary
     try {
