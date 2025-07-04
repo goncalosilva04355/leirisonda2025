@@ -33,16 +33,12 @@ class FullSyncService {
       clientsSync: { local: 0, firebase: 0, merged: 0 },
     };
 
-    // EMERGENCY STOP - Firebase quota exceeded - block ALL operations
-    console.error(
-      "🚨 EMERGENCY: Firebase operations BLOCKED due to quota exceeded",
-    );
+    // Firebase temporarily paused - running in offline mode
+    console.log("⏸️ Firebase sync paused - app running in offline mode");
     return {
       success: true,
-      message: "Firebase operations blocked - quota exceeded",
-      details: [
-        "All Firebase operations temporarily blocked to prevent quota exceeded",
-      ],
+      message: "App running in offline mode",
+      details: ["Using local storage only - Firebase sync temporarily paused"],
       stats,
     };
 
