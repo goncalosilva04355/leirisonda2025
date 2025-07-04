@@ -127,5 +127,25 @@ try {
   auth = null;
 }
 
+// Function to check if Firebase is properly initialized and ready
+export const isFirebaseReady = () => {
+  try {
+    return !!(app && auth && db);
+  } catch (error) {
+    console.warn("Firebase health check failed:", error);
+    return false;
+  }
+};
+
+// Function to get Firebase connection status
+export const getFirebaseStatus = () => {
+  return {
+    app: !!app,
+    auth: !!auth,
+    db: !!db,
+    ready: isFirebaseReady(),
+  };
+};
+
 export { app, db, auth };
 export default app;
