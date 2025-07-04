@@ -102,8 +102,8 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
         isInitialized.current = true;
       }
 
-      // 3. Agenda próxima verificação
-      if (finalConfig.enabled) {
+      // 3. Agenda próxima verificação (apenas se não estamos em erro)
+      if (finalConfig.enabled && !syncStatus.current.error) {
         syncTimeoutRef.current = setTimeout(
           performAutoSync,
           finalConfig.syncInterval,
