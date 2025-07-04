@@ -43,6 +43,7 @@ import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
+import { dataIntegrityService } from "./services/dataIntegrityService";
 
 // Mock users database
 const initialUsers = [
