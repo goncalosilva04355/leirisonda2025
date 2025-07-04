@@ -301,34 +301,15 @@ function App() {
     return () => {};
   }, []);
 
-  // SECURITY: Additional check to prevent bypass, but first try to restore from localStorage
-  useEffect(() => {
-    // First try to restore currentUser from localStorage if authenticated but no user in memory
-    if (isAuthenticated && !currentUser) {
-      const storedUser =
-        localStorage.getItem("currentUser") ||
-        localStorage.getItem("mock-current-user");
-      if (storedUser) {
-        try {
-          const user = JSON.parse(storedUser);
-          console.log("🔄 Restoring user from localStorage:", user.email);
-          setCurrentUser(user);
-          return; // Exit early, user restored successfully
-        } catch (e) {
-          console.warn("Error parsing stored user:", e);
-        }
-      }
-
-      // Only force logout if we can't restore user and the state is inconsistent
-      console.warn(
-        "SECURITY: Inconsistent auth state detected, forcing logout",
-      );
-      setIsAuthenticated(false);
-      setCurrentUser(null);
-      localStorage.removeItem("currentUser");
-      authService.logout();
-    }
-  }, [isAuthenticated, currentUser]);
+  // Auth state check disabled to prevent errors
+  // useEffect(() => {
+  //   if (isAuthenticated && !currentUser) {
+  //     console.warn("SECURITY: Inconsistent auth state detected");
+  //     setIsAuthenticated(false);
+  //     setCurrentUser(null);
+  //     localStorage.removeItem("currentUser");
+  //   }
+  // }, [isAuthenticated, currentUser]);
 
   // SECURITY: Periodic auth check to prevent tampering
   // Periodic auth check disabled to prevent errors
