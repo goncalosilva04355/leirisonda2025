@@ -497,26 +497,56 @@ export function useDataSync(): SyncState & SyncActions {
     const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
     const savedClients = JSON.parse(localStorage.getItem("clients") || "[]");
 
+    // If no data exists, initialize with mock data and save it
+    const finalPools = savedPools.length > 0 ? savedPools : mockPools;
+    const finalMaintenance =
+      savedMaintenance.length > 0 ? savedMaintenance : mockMaintenance;
+    const finalWorks = savedWorks.length > 0 ? savedWorks : mockWorks;
+    const finalClients = savedClients.length > 0 ? savedClients : mockClients;
+
+    // Save mock data to localStorage if it was used
+    if (savedPools.length === 0) {
+      localStorage.setItem("pools", JSON.stringify(mockPools));
+      console.log("💾 Mock pools data saved to localStorage");
+    }
+    if (savedMaintenance.length === 0) {
+      localStorage.setItem("maintenance", JSON.stringify(mockMaintenance));
+      console.log("💾 Mock maintenance data saved to localStorage");
+    }
+    if (savedWorks.length === 0) {
+      localStorage.setItem("works", JSON.stringify(mockWorks));
+      console.log(
+        "💾 Mock works data saved to localStorage (including Alexandre's works)",
+      );
+    }
+    if (savedClients.length === 0) {
+      localStorage.setItem("clients", JSON.stringify(mockClients));
+      console.log("💾 Mock clients data saved to localStorage");
+    }
+
     // Calculate future maintenance
-    const future = savedMaintenance.filter(
+    const future = finalMaintenance.filter(
       (m) => new Date(m.scheduledDate) >= today,
     );
 
     // Set the loaded data
     setState((prev) => ({
       ...prev,
-      pools: savedPools,
-      maintenance: savedMaintenance,
+      pools: finalPools,
+      maintenance: finalMaintenance,
       futureMaintenance: future,
-      works: savedWorks,
-      clients: savedClients,
+      works: finalWorks,
+      clients: finalClients,
     }));
 
     console.log("✅ Data loaded:", {
-      pools: savedPools.length,
-      works: savedWorks.length,
-      maintenance: savedMaintenance.length,
-      clients: savedClients.length,
+      pools: finalPools.length,
+      works: finalWorks.length,
+      maintenance: finalMaintenance.length,
+      clients: finalClients.length,
+      alexandreWorks: finalWorks.filter((w) =>
+        w.assignedTo.includes("Alexandre"),
+      ).length,
     });
   }, []);
 
