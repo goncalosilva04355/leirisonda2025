@@ -13,6 +13,7 @@ import {
   UserCheck,
   BarChart3,
   Users,
+  Key,
 } from "lucide-react";
 import { FirebaseConfig } from "./FirebaseConfig";
 
@@ -177,7 +178,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       await new Promise((resolve) => setTimeout(resolve, 800));
       tests.push("✅ Sincroniza��ão de piscinas: Operacional");
 
-      tests.push("🔄 Testando sincronização de manutenções...");
+      tests.push("��� Testando sincronização de manutenções...");
       await new Promise((resolve) => setTimeout(resolve, 600));
       tests.push("✅ Sincronização de manutenções: Operacional");
 
