@@ -224,7 +224,34 @@ class AuthService {
       const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
 
       if (!userDoc.exists()) {
-        return { success: false, error: "Perfil de utilizador não encontrado" };
+        // Auto-create profile for existing Firebase Auth users
+        console.log("Creating missing user profile for:", firebaseUser.email);
+
+        // Determine role and name based on email
+        let role: "super_admin" | "manager" | "technician" = "technician";
+        let name = firebaseUser.displayName || "Utilizador";
+
+        // Special case for Gonçalo's admin account
+        if (firebaseUser.email === "gongonsilva@gmail.com") {
+          role = "super_admin";
+          name = "Gonçalo Fonseca";
+        }
+
+        // Create user profile in Firestore
+        const userProfile: UserProfile = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email!,
+          name,
+          role,
+          permissions: this.getDefaultPermissions(role),
+          active: true,
+          createdAt: new Date().toISOString(),
+        };
+
+        await setDoc(doc(db, "users", firebaseUser.uid), userProfile);
+        console.log("User profile created successfully");
+
+        return { success: true, user: userProfile };
       }
 
       const userProfile = userDoc.data() as UserProfile;
