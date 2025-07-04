@@ -101,6 +101,7 @@ const initialUsers = [
     id: 4,
     name: "Alexandre",
     email: "alexandre@leirisonda.pt",
+    password: "123456",
     role: "technician",
     permissions: {
       obras: { view: true, create: false, edit: true, delete: false },
