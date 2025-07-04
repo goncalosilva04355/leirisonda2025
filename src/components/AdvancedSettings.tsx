@@ -302,6 +302,19 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 <span>Teste de Sincronização</span>
               </div>
             </button>
+            <button
+              onClick={() => setActiveTab("notifications")}
+              className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${
+                activeTab === "notifications"
+                  ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Wifi className="w-5 h-5" />
+                <span>Notificações Push</span>
+              </div>
+            </button>
           </div>
         </div>
 
