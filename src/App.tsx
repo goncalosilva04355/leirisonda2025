@@ -913,7 +913,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relat��rios pr����������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr����������-definidos por agora.",
     );
   };
 
@@ -5242,7 +5242,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estatísticas R������pidas
+                    Estatísticas R����pidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
@@ -5897,9 +5897,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </span>
                               )}
                             </div>
-                            <p className="text-gray-600 mb-2">
-                              {work.description}
-                            </p>
+                            {/* Enhanced Description */}
+                            {work.description && (
+                              <p className="text-gray-700 mb-3 bg-gray-50 p-3 rounded-md border-l-4 border-blue-200">
+                                {work.description}
+                              </p>
+                            )}
                             <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
                               <div>
                                 <span className="font-medium">Cliente:</span>{" "}
@@ -6523,9 +6526,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="sand">Areia</option>
                           <option value="cartridge">Cartucho</option>
-                          <option value="diatomaceous">
-                            Terra Diatom��cea
-                          </option>
+                          <option value="diatomaceous">Terra Diatomácea</option>
                           <option value="other">Outro</option>
                         </select>
                       </div>
@@ -7364,9 +7365,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-gray-500">
-                      Gest��o de Servi��os
-                    </p>
+                    <p className="text-sm text-gray-500">Gest��o de Serviços</p>
                   </div>
                 </div>
                 {/* Sync Status Indicator */}
