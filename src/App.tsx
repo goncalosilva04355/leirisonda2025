@@ -36,7 +36,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { SyncStatusIcon } from "./components/SyncStatusIndicator";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
-import { DataIntegrityAlert } from "./components/DataIntegrityAlert";
+
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
@@ -44,7 +44,6 @@ import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
-import { dataIntegrityService } from "./services/dataIntegrityService";
 
 // Mock users database
 const initialUsers = [
@@ -136,12 +135,9 @@ function App() {
 
   // Monitoramento de integridade de dados
   useEffect(() => {
-    // Iniciar monitoramento de integridade de dados
-    dataIntegrityService.startIntegrityMonitoring();
-
     // Cleanup ao desmontar componente
     return () => {
-      dataIntegrityService.stopIntegrityMonitoring();
+      // Cleanup functions if needed
     };
   }, []);
 
@@ -8173,9 +8169,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             />
           </div>
         )}
-
-        {/* Data Integrity Alert */}
-        <DataIntegrityAlert />
       </div>
     </AutoSyncProvider>
   );
