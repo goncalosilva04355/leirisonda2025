@@ -928,7 +928,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "configuracoes",
       icon: Settings,
-      label: "Configuraç��es",
+      label: "Configurações",
       path: "/configuracoes",
     },
   ];
@@ -2695,6 +2695,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="text"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Ex: Furgão 1, Carrinha 2"
+                        value={maintenanceForm.vehicle}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            vehicle: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
