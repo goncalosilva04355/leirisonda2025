@@ -4989,23 +4989,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2 ml-4">
-                          <button className="p-2 text-gray-400 hover:text-gray-600">
-                            <Eye className="h-4 w-4" />
-                          </button>
-                          <button className="p-2 text-gray-400 hover:text-gray-600">
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() =>
-                              confirmDelete(
-                                `Tem a certeza que deseja apagar a obra "${work.title}"?`,
-                                () => dataSync.deleteWork(work.id),
-                              )
-                            }
-                            className="p-2 text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                          {hasPermission("obras", "view") && (
+                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                              <Eye className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("obras", "edit") && (
+                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("obras", "delete") && (
+                            <button
+                              onClick={() =>
+                                confirmDelete(
+                                  `Tem a certeza que deseja apagar a obra "${work.title}"?`,
+                                  () => dataSync.deleteWork(work.id),
+                                )
+                              }
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -5302,7 +5308,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Shield className="h-8 w-8 text-red-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                ��rea Protegida
+                ����rea Protegida
               </h1>
               <p className="text-gray-600">
                 Insira a palavra-passe para aceder às configurações avançadas
