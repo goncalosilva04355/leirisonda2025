@@ -1449,15 +1449,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Header */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <Building2 className="h-4 w-4 text-orange-600" />
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Building2 className="h-4 w-4 text-blue-600" />
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900">
                       Nova Obra
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar uma nova obra ou projeto
+                      Criar uma nova obra no sistema Leirisonda
                     </p>
                   </div>
                 </div>
