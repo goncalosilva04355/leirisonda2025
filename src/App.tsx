@@ -244,57 +244,33 @@ function App() {
     }
   };
 
-  const handleSaveUser = async (e) => {
+  const handleSaveUser = (e) => {
     e.preventDefault();
 
-    try {
-      if (syncEnabled && userSync) {
-        if (editingUser) {
-          // Update existing user in Firebase
-          const updateData = {
-            ...userForm,
-            ...(userForm.password ? {} : { password: undefined }), // Don't include empty password
-          };
-          await userSync.updateUser(editingUser.id.toString(), updateData);
-        } else {
-          // Add new user to Firebase
-          await userSync.addUser({
-            name: userForm.name,
-            email: userForm.email,
-            role: userForm.role,
-            permissions: userForm.permissions,
-            active: userForm.active,
-          });
-        }
-      } else {
-        // Fallback to local state
-        if (editingUser) {
-          setUsers(
-            users.map((u) =>
-              u.id === editingUser.id
-                ? {
-                    ...u,
-                    ...userForm,
-                    password: userForm.password || u.password,
-                  }
-                : u,
-            ),
-          );
-        } else {
-          const newUser = {
-            id: Math.max(...users.map((u) => u.id)) + 1,
-            ...userForm,
-            createdAt: new Date().toISOString().split("T")[0],
-          };
-          setUsers([...users, newUser]);
-        }
-      }
-
-      setShowUserForm(false);
-    } catch (error) {
-      console.error("Error saving user:", error);
-      alert("Erro ao guardar utilizador. Tente novamente.");
+    if (editingUser) {
+      // Update existing user
+      setUsers(
+        users.map((u) =>
+          u.id === editingUser.id
+            ? {
+                ...u,
+                ...userForm,
+                password: userForm.password || u.password,
+              }
+            : u,
+        ),
+      );
+    } else {
+      // Add new user
+      const newUser = {
+        id: Math.max(...users.map((u) => u.id)) + 1,
+        ...userForm,
+        createdAt: new Date().toISOString().split("T")[0],
+      };
+      setUsers([...users, newUser]);
     }
+
+    setShowUserForm(false);
   };
 
   const handlePermissionChange = (module, permission, value) => {
