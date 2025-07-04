@@ -1813,23 +1813,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="text-4xl font-bold text-gray-900">
                         {currentUser
                           ? (() => {
-                              const assignedWorks = works.filter(
-                                (work) =>
-                                  work &&
+                              const assignedWorks = works.filter((work) => {
+                                if (!work) return false;
+
+                                // Check if user is in assignedTo string (exact match or comma-separated list)
+                                const assignedToMatch =
                                   work.assignedTo &&
-                                  (work.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                    work.assignedUsers?.some(
-                                      (user) =>
-                                        user.name &&
-                                        user.name
-                                          .toLowerCase()
-                                          .includes(
-                                            currentUser.name.toLowerCase(),
-                                          ),
-                                    )),
-                              );
+                                  work.assignedTo
+                                    .split(",")
+                                    .map((name) => name.trim().toLowerCase())
+                                    .includes(currentUser.name.toLowerCase());
+
+                                // Check if user is in assignedUsers array (exact match)
+                                const assignedUsersMatch =
+                                  work.assignedUsers?.some(
+                                    (user) =>
+                                      user.name &&
+                                      user.name.toLowerCase() ===
+                                        currentUser.name.toLowerCase(),
+                                  );
+
+                                return assignedToMatch || assignedUsersMatch;
+                              });
 
                               // Debug logging for assigned works
                               console.log(
