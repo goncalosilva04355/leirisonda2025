@@ -432,10 +432,13 @@ function App() {
       // Find works assigned to Alexandre
       const alexandreWorks = works.filter(
         (work) =>
-          work.assignedTo.toLowerCase().includes("alexandre") ||
-          work.assignedUsers?.some((user) =>
-            user.name.toLowerCase().includes("alexandre"),
-          ),
+          work &&
+          work.assignedTo &&
+          (work.assignedTo.toLowerCase().includes("alexandre") ||
+            work.assignedUsers?.some(
+              (user) =>
+                user.name && user.name.toLowerCase().includes("alexandre"),
+            )),
       );
 
       // Notify Alexandre about his assigned works
@@ -6840,7 +6843,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const poolType = inputs[4].value; // Tipo de Piscina
                           const dimensions = inputs[5].value; // Dimensões
                           const volume = inputs[6].value; // Volume
-                          const filtrationSystem = inputs[7].value; // Sistema de Filtração
+                          const filtrationSystem = inputs[7].value; // Sistema de Filtra��ão
                           const installationDate = inputs[8].value; // Data de Instalação
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente
