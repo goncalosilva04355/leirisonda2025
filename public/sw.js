@@ -19,8 +19,9 @@ self.addEventListener("push", (event) => {
 
   const options = {
     body: event.data ? event.data.text() : "Nova notificação Leirisonda",
-    icon: "/icon-192x192.png",
-    badge: "/icon-192x192.png",
+    icon: "https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=192",
+    badge:
+      "https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=96",
     tag: "leirisonda-notification",
     timestamp: Date.now(),
     requireInteraction: true,
