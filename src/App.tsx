@@ -33,6 +33,7 @@ import { InstallPrompt } from "./components/InstallPrompt";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
+import { useDataCleanup } from "./hooks/useDataCleanup";
 
 // Mock users database
 const initialUsers = [
