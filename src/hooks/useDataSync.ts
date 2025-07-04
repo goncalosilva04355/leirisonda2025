@@ -263,7 +263,7 @@ export function useDataSync(): SyncState & SyncActions {
     }));
   }, []);
 
-  // Simulate Firebase sync
+  // Real Firebase sync
   const syncWithFirebase = useCallback(async () => {
     if (!syncEnabled) {
       setState((prev) => ({ ...prev, error: "Firebase not configured" }));
@@ -273,21 +273,106 @@ export function useDataSync(): SyncState & SyncActions {
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Initialize Firebase if not already done
+      if (!realFirebaseService.isReady()) {
+        const initialized = realFirebaseService.initialize();
+        if (!initialized) {
+          throw new Error("Failed to initialize Firebase");
+        }
+      }
 
-      // Simulate successful sync
-      setState((prev) => ({
-        ...prev,
-        isLoading: false,
-        lastSync: new Date(),
-        error: null,
-      }));
+      // Test connection
+      const connectionOk = await realFirebaseService.testConnection();
+      if (!connectionOk) {
+        throw new Error("Firebase connection test failed");
+      }
+
+      // Sync all data from Firebase
+      const firebaseData = await realFirebaseService.syncAllData();
+      if (firebaseData) {
+        // Merge with local data
+        const localPools = JSON.parse(localStorage.getItem("pools") || "[]");
+        const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
+        const localMaintenance = JSON.parse(
+          localStorage.getItem("maintenance") || "[]",
+        );
+        const localInterventions = JSON.parse(
+          localStorage.getItem("interventions") || "[]",
+        );
+        const localClients = JSON.parse(
+          localStorage.getItem("clients") || "[]",
+        );
+
+        // Upload local data to Firebase if it doesn't exist there
+        for (const pool of localPools) {
+          if (!firebaseData.pools.find((p) => p.id === pool.id)) {
+            await realFirebaseService.addPool(pool);
+          }
+        }
+
+        for (const work of localWorks) {
+          if (!firebaseData.works.find((w) => w.id === work.id)) {
+            await realFirebaseService.addWork(work);
+          }
+        }
+
+        for (const maintenance of localMaintenance) {
+          if (!firebaseData.maintenance.find((m) => m.id === maintenance.id)) {
+            await realFirebaseService.addMaintenance(maintenance);
+          }
+        }
+
+        for (const intervention of localInterventions) {
+          const maintenanceData = {
+            id: intervention.id.toString(),
+            poolId: intervention.poolId || "unknown",
+            poolName: intervention.poolName || "Piscina",
+            type: "Manutenção",
+            status: intervention.status || "completed",
+            description: intervention.workPerformed || "Manutenção realizada",
+            scheduledDate: intervention.date,
+            completedDate: intervention.date,
+            technician: intervention.technician || "Técnico",
+            notes: intervention.observations,
+            createdAt: intervention.createdAt || new Date().toISOString(),
+          };
+
+          if (
+            !firebaseData.maintenance.find((m) => m.id === maintenanceData.id)
+          ) {
+            await realFirebaseService.addMaintenance(maintenanceData);
+          }
+        }
+
+        // Get updated data after upload
+        const updatedData = await realFirebaseService.syncAllData();
+        if (updatedData) {
+          const today = new Date();
+          const futureMaintenance = updatedData.maintenance.filter(
+            (m) => new Date(m.scheduledDate) >= today,
+          );
+
+          setState((prev) => ({
+            ...prev,
+            pools: [...mockPools, ...updatedData.pools],
+            works: [...mockWorks, ...updatedData.works],
+            maintenance: [...mockMaintenance, ...updatedData.maintenance],
+            futureMaintenance,
+            clients: [...mockClients, ...updatedData.clients],
+            isLoading: false,
+            lastSync: new Date(),
+            error: null,
+          }));
+        }
+      }
+
+      console.log("Firebase sync completed successfully");
     } catch (error) {
+      console.error("Firebase sync failed:", error);
       setState((prev) => ({
         ...prev,
         isLoading: false,
-        error: "Sync failed",
+        error: `Sync failed: ${error.message}`,
       }));
     }
   }, [syncEnabled]);
