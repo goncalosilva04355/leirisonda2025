@@ -907,7 +907,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS AÇÕES:
+PRÓXIMAS AÇ��ES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -3458,7 +3458,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Observa����es e Trabalho */}
+                    {/* Observações e Trabalho */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -5099,7 +5099,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relat����rios
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gere relatórios detalhados em PDF
+                          Gere relat��rios detalhados em PDF
                         </p>
                       </div>
                     </div>
@@ -5202,7 +5202,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>��� Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>• Equipas respons��veis</li>
-                        <li>��������� Estados de progresso</li>
+                        <li>������� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
