@@ -2993,7 +2993,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Usu��rios Atribuídos
+                          Usu����rios Atribuídos
                         </label>
                         <p className="text-sm text-gray-600 mb-2">
                           Selecione os usuários responsáveis por esta obra
@@ -7160,20 +7160,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </button>
             )}
 
-            <button
-              onClick={() => {
-                navigateToSection("nova-manutencao");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "nova-manutencao"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Plus className="h-5 w-5" />
-              <span>Nova Manutenção</span>
-            </button>
+            {hasPermission("manutencoes", "create") && (
+              <button
+                onClick={() => {
+                  navigateToSection("nova-manutencao");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "nova-manutencao"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Plus className="h-5 w-5" />
+                <span>Nova Manutenção</span>
+              </button>
+            )}
 
             <button
               onClick={() => {
