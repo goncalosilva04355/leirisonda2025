@@ -3280,7 +3280,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="checkbox"
                           id="active"
                           className="mr-2"
-                          defaultChecked={editingUser?.active ?? true}
+                          checked={userForm.active}
+                          onChange={(e) =>
+                            setUserForm({
+                              ...userForm,
+                              active: e.target.checked,
+                            })
+                          }
                         />
                         <label
                           htmlFor="active"
