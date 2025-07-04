@@ -5450,15 +5450,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => setShowRegisterForm(true)}
-              className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-            >
-              Não tem conta? Criar nova conta
-            </button>
-          </div>
+          {/* SECURITY: Only super admin can create new accounts - removed public registration */}
         </div>
 
         {/* Floating Advanced Settings Button */}
@@ -5558,7 +5550,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               }`}
             >
               <Wrench className="h-5 w-5" />
-              <span>Nova Manutenção</span>
+              <span>Nova Manutenç��o</span>
             </button>
 
             <button
