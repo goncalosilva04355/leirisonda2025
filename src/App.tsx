@@ -3732,6 +3732,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         );
 
       case "utilizadores":
+        // SECURITY: Only super admin can access user management
+        if (currentUser?.role !== "super_admin") {
+          return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+              <div className="text-center">
+                <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                  Acesso Restrito
+                </h2>
+                <p className="text-gray-500">
+                  Apenas super administradores podem gerir utilizadores.
+                </p>
+              </div>
+            </div>
+          );
+        }
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
