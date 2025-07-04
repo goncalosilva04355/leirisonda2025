@@ -726,7 +726,7 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Work actions
   const addWork = useCallback(
-    async (workData: Omit<Work, "id" | "createdAt">) => {
+    withAutoSync(async (workData: Omit<Work, "id" | "createdAt">) => {
       const newWork: Work = {
         ...workData,
         id: Date.now().toString(),
@@ -753,8 +753,8 @@ export function useDataSync(): SyncState & SyncActions {
           console.error("Failed to add work to Firebase:", error);
         }
       }
-    },
-    [syncEnabled],
+    }),
+    [syncEnabled, withAutoSync],
   );
 
   const updateWork = useCallback(
