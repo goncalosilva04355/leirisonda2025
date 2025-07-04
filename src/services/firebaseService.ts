@@ -151,6 +151,12 @@ export const userService = {
       createdAt: new Date().toISOString(),
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger synchronization for the new user
+    console.log(
+      `User ${userData.name} (${userData.email}) added and will be synchronized automatically`,
+    );
+
     return docRef.id;
   },
 
