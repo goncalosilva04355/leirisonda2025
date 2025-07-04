@@ -888,5 +888,6 @@ export function useDataSync(): SyncState & SyncActions {
     deleteClient,
     syncWithFirebase,
     enableSync,
+    cleanAllData,
   };
 }
