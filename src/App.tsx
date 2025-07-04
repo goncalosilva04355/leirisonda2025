@@ -5029,7 +5029,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Estado e localizaç��o</li>
                         <li>• Informações de clientes</li>
-                        <li>����� Histórico de manutenç����es</li>
+                        <li>������� Histórico de manutenç����es</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -5857,7 +5857,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     .map((work) => (
                       <div
                         key={work.id}
-                        className="bg-white rounded-lg p-4 shadow-sm"
+                        className="bg-white rounded-lg p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
