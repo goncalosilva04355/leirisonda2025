@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 
-// Get Firebase config from localStorage or use dummy config
+// Get Firebase config from localStorage or use production config
 const getFirebaseConfig = () => {
   try {
     const savedConfig = localStorage.getItem("firebase-config");
@@ -13,14 +13,15 @@ const getFirebaseConfig = () => {
     console.warn("Error loading Firebase config from localStorage:", error);
   }
 
-  // Return dummy config that won't initialize Firebase
+  // Return production Firebase config
   return {
-    apiKey: "demo",
-    authDomain: "demo.firebaseapp.com",
-    projectId: "demo",
-    storageBucket: "demo.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:demo",
+    apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+    authDomain: "leirisonda-16f8b.firebaseapp.com",
+    projectId: "leirisonda-16f8b",
+    storageBucket: "leirisonda-16f8b.firebasestorage.app",
+    messagingSenderId: "540456875574",
+    appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+    measurementId: "G-R9W43EHH2C",
   };
 };
 
