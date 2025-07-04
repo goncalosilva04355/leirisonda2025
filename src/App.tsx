@@ -4485,28 +4485,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
               <UserPermissionsManager />
-                      </p>
-                    </div>
-                  </div>
-                  {/* SECURITY: Only super admin can create new users */}
-                  {currentUser?.role === "super_admin" && (
-                    <button
-                      onClick={() => {
-                        setUserForm({
-                          name: "",
-                          email: "",
-                          role: "technician",
-                          active: true,
-                          permissions: {},
-                        });
-                        setEditingUser(null);
-                        setShowUserForm(true);
-                      }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                    >
-                      <UserPlus className="h-4 w-4" />
-                      <span>Novo Utilizador</span>
-                    </button>
                   )}
                 </div>
               </div>
@@ -5248,7 +5226,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Relatório Personalizado
+                        Relat��rio Personalizado
                       </h3>
                       <p className="text-sm text-gray-600">
                         Configure os dados
