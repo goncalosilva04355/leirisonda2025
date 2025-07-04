@@ -1850,19 +1850,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     title: w.title,
                                     assignedTo: w.assignedTo,
                                     assignedUsers: w.assignedUsers,
-                                    matches:
-                                      w.assignedTo
-                                        ?.toLowerCase()
-                                        .includes(
-                                          currentUser.name.toLowerCase(),
-                                        ) ||
-                                      w.assignedUsers?.some((user) =>
-                                        user.name
-                                          ?.toLowerCase()
+                                    matches: (() => {
+                                      const assignedToMatch =
+                                        w.assignedTo &&
+                                        w.assignedTo
+                                          .split(",")
+                                          .map((name) =>
+                                            name.trim().toLowerCase(),
+                                          )
                                           .includes(
                                             currentUser.name.toLowerCase(),
-                                          ),
-                                      ),
+                                          );
+
+                                      const assignedUsersMatch =
+                                        w.assignedUsers?.some(
+                                          (user) =>
+                                            user.name &&
+                                            user.name.toLowerCase() ===
+                                              currentUser.name.toLowerCase(),
+                                        );
+
+                                      return (
+                                        assignedToMatch || assignedUsersMatch
+                                      );
+                                    })(),
                                   })),
                                   userWorks: assignedWorks.map((w) => ({
                                     id: w.id,
