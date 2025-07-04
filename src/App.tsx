@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
+import { useDataSync } from "./hooks/useDataSync";
 
 // Mock authentication and user data
 const ADMIN_USER = {
