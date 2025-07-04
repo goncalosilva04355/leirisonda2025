@@ -36,6 +36,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { SyncStatusIcon } from "./components/SyncStatusIndicator";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
+import { DataIntegrityAlert } from "./components/DataIntegrityAlert";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
