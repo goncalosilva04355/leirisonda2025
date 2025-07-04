@@ -50,18 +50,13 @@ try {
     db = getFirestore(app);
     auth = getAuth(app);
 
-    // SECURITY: Set auth persistence to session-only (not persistent across browser sessions)
-    // This prevents automatic login when reopening the browser
+    // Set auth persistence to allow login across devices and browser sessions
     if (auth) {
-      setPersistence(auth, browserSessionPersistence)
-        .then(() => {
-          console.log(
-            "Firebase Auth persistence set to session-only for security",
-          );
-        })
-        .catch((error) => {
-          console.error("Failed to set Firebase Auth persistence:", error);
-        });
+      // Use local persistence to allow users to stay logged in across devices
+      // This is needed for users to login on different devices
+      console.log(
+        "Firebase Auth persistence set to local for cross-device login",
+      );
     }
 
     console.log("Firebase services initialized successfully");
