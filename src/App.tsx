@@ -363,7 +363,7 @@ ${index + 1}. ${work.title}
 
 © ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
-    downloadPDF(content, `Obras_${new Date().toISOString().split("T")[0]}.txt`);
+    downloadPDF(content, `Obras_${new Date().toISOString().split("T")[0]}.pdf`);
   };
 
   const generateClientsPDF = () => {
@@ -522,7 +522,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const testPushNotification = () => {
     if (Notification.permission === "granted") {
       showNotification(
-        "Teste de Notificaç��o",
+        "Teste de Notificação",
         "As notificações estão a funcionar corretamente!",
         "test",
       );
