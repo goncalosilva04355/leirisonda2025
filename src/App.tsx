@@ -3497,7 +3497,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Trabalhos realizados</li>
                       <li>• T���cnicos responsáveis</li>
-                      <li>• Datas e dura��ões</li>
+                      <li>• Datas e durações</li>
                       <li>• Estados e observações</li>
                     </ul>
                   </div>
@@ -4587,7 +4587,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
             <button
               onClick={() => {
-                setActiveSection("nova-manutencao");
+                navigateToSection("nova-manutencao");
                 setSidebarOpen(false);
               }}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
