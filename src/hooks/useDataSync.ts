@@ -255,6 +255,9 @@ export function useDataSync(): SyncState & SyncActions {
   // Firebase sync is always enabled with fixed configuration
   const [syncEnabled, setSyncEnabled] = useState(true);
 
+  // Hook para sincronização automática em mutações
+  const { withAutoSync } = useDataMutationSync();
+
   // Initial sync when enabled
   useEffect(() => {
     if (syncEnabled) {
