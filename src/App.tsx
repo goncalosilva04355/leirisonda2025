@@ -459,9 +459,7 @@ function App() {
   const handleSaveIntervention = () => {
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert(
-        "Por favor, preencha os campos obrigat����rios (Piscina e Técnico).",
-      );
+      alert("Por favor, preencha os campos obrigatórios (Piscina e Técnico).");
       return;
     }
 
@@ -2733,7 +2731,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manuten����ões aparecerão aqui quando forem
+                        As futuras manuten������ões aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
