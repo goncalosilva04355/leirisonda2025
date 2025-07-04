@@ -349,8 +349,16 @@ class AuthService {
           createdAt: new Date().toISOString(),
         };
 
-        await setDoc(doc(db, "users", firebaseUser.uid), userProfile);
-        console.log("User profile created successfully");
+        try {
+          await setDoc(doc(db, "users", firebaseUser.uid), userProfile);
+          console.log("User profile created successfully");
+        } catch (createError: any) {
+          console.warn(
+            "Failed to create user profile in Firestore:",
+            createError.message,
+          );
+          throw new Error("Failed to create user profile");
+        }
 
         return { success: true, user: userProfile };
       }
