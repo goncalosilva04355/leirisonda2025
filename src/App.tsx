@@ -413,6 +413,79 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   };
 
+  // Push Notification functions
+  const requestNotificationPermission = async () => {
+    if ("Notification" in window) {
+      const permission = await Notification.requestPermission();
+      setPushPermission(permission);
+      if (permission === "granted") {
+        setNotificationsEnabled(true);
+        showNotification(
+          "Notificações Ativadas",
+          "Agora vai receber notificações de obras atribuídas",
+          "success",
+        );
+      }
+      return permission;
+    }
+    return "denied";
+  };
+
+  const showNotification = (title: string, body: string, type = "info") => {
+    if (Notification.permission === "granted") {
+      const notification = new Notification(title, {
+        body: body,
+        icon: "/icon-192x192.png",
+        badge: "/icon-192x192.png",
+        tag: type,
+        timestamp: Date.now(),
+        requireInteraction: true,
+      });
+
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+      };
+    }
+  };
+
+  const sendWorkAssignmentNotification = (
+    workTitle: string,
+    assignedTo: string,
+  ) => {
+    if (notificationsEnabled && Notification.permission === "granted") {
+      showNotification(
+        "Nova Obra Atribuída",
+        `A obra "${workTitle}" foi-lhe atribuída`,
+        "work-assignment",
+      );
+
+      // Add to assigned works
+      const newAssignedWork = {
+        id: Date.now(),
+        title: workTitle,
+        assignedTo: assignedTo,
+        dateAssigned: new Date().toISOString(),
+        status: "Nova",
+      };
+      setAssignedWorks((prev) => [newAssignedWork, ...prev]);
+    }
+  };
+
+  const testPushNotification = () => {
+    if (Notification.permission === "granted") {
+      showNotification(
+        "Teste de Notificação",
+        "As notificações estão a funcionar corretamente!",
+        "test",
+      );
+    } else {
+      alert(
+        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
+      );
+    }
+  };
+
   const downloadPDF = (content: string, filename: string) => {
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = window.URL.createObjectURL(blob);
