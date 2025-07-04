@@ -1498,18 +1498,251 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
+              {/* Header */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Nova Piscina
-                </h1>
-                <p className="text-gray-600 text-sm">
-                  Adicionar uma nova piscina ao sistema
-                </p>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Waves className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Nova Piscina
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Registar uma nova piscina no sistema
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <p className="text-gray-600">
-                  Formulário de nova piscina em desenvolvimento
-                </p>
+
+              {/* Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-6">
+                  {/* Basic Information */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nome da Piscina *
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Piscina Villa Marina"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Cliente Proprietário *
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecionar cliente</option>
+                        {clients.map((client) => (
+                          <option key={client.id} value={client.id}>
+                            {client.name}
+                          </option>
+                        ))}
+                        <option value="novo">+ Adicionar Novo Cliente</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Location */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Localização Completa *
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Ex: Cascais, Villa Marina Resort, Edifício A, Apartamento 205"
+                      required
+                    />
+                  </div>
+
+                  {/* Pool Specifications */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de Piscina *
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecionar tipo</option>
+                        <option value="residencial">Residencial</option>
+                        <option value="comercial">Comercial</option>
+                        <option value="hotel">Hotel/Resort</option>
+                        <option value="condominio">Condomínio</option>
+                        <option value="spa">SPA/Wellness</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Formato
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="retangular">Retangular</option>
+                        <option value="oval">Oval</option>
+                        <option value="redonda">Redonda</option>
+                        <option value="kidney">Kidney</option>
+                        <option value="irregular">Irregular</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado Atual
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="ativa">Ativa</option>
+                        <option value="inativa">Inativa</option>
+                        <option value="manutencao">Em Manutenção</option>
+                        <option value="construcao">Em Construção</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Dimensions */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Comprimento (m)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="8.0"
+                        min="0"
+                        step="0.1"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Largura (m)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="4.0"
+                        min="0"
+                        step="0.1"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Profundidade Min (m)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="1.2"
+                        min="0"
+                        step="0.1"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Profundidade Max (m)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="2.0"
+                        min="0"
+                        step="0.1"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Equipment and Features */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Sistema de Filtração
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecionar sistema</option>
+                        <option value="areia">Filtro de Areia</option>
+                        <option value="cartucho">Filtro de Cartucho</option>
+                        <option value="diatomaceas">Terra Diatomáceas</option>
+                        <option value="uv">Sistema UV</option>
+                        <option value="sal">Eletrólise de Sal</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Aquecimento
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="nao">Sem Aquecimento</option>
+                        <option value="solar">Aquecimento Solar</option>
+                        <option value="bomba-calor">Bomba de Calor</option>
+                        <option value="resistencia">
+                          Resistência Elétrica
+                        </option>
+                        <option value="gas">Aquecimento a Gás</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Maintenance Schedule */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Frequência de Manutenção
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="semanal">Semanal</option>
+                        <option value="quinzenal">Quinzenal</option>
+                        <option value="mensal">Mensal</option>
+                        <option value="trimestral">Trimestral</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Próxima Manutenção
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Additional Information */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Observações e Características Especiais
+                    </label>
+                    <textarea
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Características especiais, equipamentos adicionais, notas importantes..."
+                    />
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection("piscinas")}
+                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        alert(
+                          "Piscina criada com sucesso! (Função em desenvolvimento)",
+                        );
+                      }}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Save className="h-4 w-4" />
+                      <span>Criar Piscina</span>
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
