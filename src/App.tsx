@@ -636,7 +636,7 @@ function App() {
                       <span className="text-blue-600">🔄</span>
                     </div>
                     <span className="font-medium text-blue-900">
-                      Diagnóstico de Sincronização
+                      Diagn��stico de Sincronização
                     </span>
                   </button>
                 </div>
@@ -1217,12 +1217,65 @@ function App() {
   // Show login page if not authenticated
   if (!isAuthenticated) {
     if (showAdvancedSettings) {
+      if (isAdvancedUnlocked) {
+        return <AdvancedSettings onBack={handleAdvancedSettingsBack} />;
+      }
+
+      // Password protection screen
       return (
-        <FirebaseConfig
-          onConfigured={() => {
-            setShowAdvancedSettings(false);
-          }}
-        />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-red-600" />
+              </div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                Área Protegida
+              </h1>
+              <p className="text-gray-600">
+                Insira a palavra-passe para aceder às configurações avançadas
+              </p>
+            </div>
+
+            <form onSubmit={handleAdvancedPasswordSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Palavra-passe
+                </label>
+                <input
+                  type="password"
+                  value={advancedPassword}
+                  onChange={(e) => setAdvancedPassword(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  placeholder="Insira a palavra-passe"
+                  required
+                />
+              </div>
+
+              {advancedPasswordError && (
+                <div className="text-red-600 text-sm">
+                  {advancedPasswordError}
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedSettings(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Voltar
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                  Entrar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       );
     }
 
@@ -1444,7 +1497,7 @@ function App() {
               }`}
             >
               <Settings className="h-5 w-5" />
-              <span>Configuraç��es</span>
+              <span>Configurações</span>
             </button>
           </nav>
 
