@@ -5098,7 +5098,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Orçamentos e custos</li>
+                        <li>��� Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>• Equipas respons��veis</li>
                         <li>������� Estados de progresso</li>
@@ -6038,7 +6038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
                           ? "Não há obras registadas no sistema."
-                          : `Não h��� obras com o filtro "${
+                          : `Não h���� obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
                                 : activeWorkFilter === "in_progress"
@@ -6174,14 +6174,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar usuário...</option>
                             {users
-                              .filter(
-                                (user) =>
+                              .filter((user) => {
+                                console.log(
+                                  "User:",
+                                  user.name,
+                                  "Role:",
+                                  user.role,
+                                  "Active:",
+                                  user.active,
+                                );
+                                return (
                                   user.role !== "viewer" &&
+                                  user.active !== false &&
                                   !editAssignedUsers.some(
                                     (assigned) =>
                                       assigned.id === String(user.id),
-                                  ),
-                              )
+                                  )
+                                );
+                              })
                               .map((user) => (
                                 <option key={user.id} value={user.id}>
                                   {user.name}
