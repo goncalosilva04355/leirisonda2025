@@ -866,7 +866,7 @@ RESUMO EXECUTIVO:
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
 
-ESTAT��STICAS:
+ESTATÍSTICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
@@ -913,7 +913,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr������������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr����������-definidos por agora.",
     );
   };
 
@@ -3123,7 +3123,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     setAssignedUsers([
                                       ...assignedUsers,
                                       {
-                                        id: selectedUser.id,
+                                        id: String(selectedUser.id),
                                         name: selectedUser.name,
                                       },
                                     ]);
@@ -3869,7 +3869,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
                           <option value="manutencao">Em Manutenção</option>
-                          <option value="construcao">Em Constru��ão</option>
+                          <option value="construcao">Em Constru���ão</option>
                         </select>
                       </div>
                     </div>
@@ -4106,7 +4106,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data da Interven��ão *
+                          Data da Interven����ão *
                         </label>
                         <input
                           type="date"
@@ -4454,7 +4454,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendações, próxima manutenção..."
+                          placeholder="Observações, recomendaç��es, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -6184,7 +6184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   setEditAssignedUsers([
                                     ...editAssignedUsers,
                                     {
-                                      id: selectedUser.id,
+                                      id: String(selectedUser.id),
                                       name: selectedUser.name,
                                     },
                                   ]);
