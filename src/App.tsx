@@ -3393,6 +3393,113 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
               </div>
+
+              {/* Notifications Section */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Notificações Push
+                  </h3>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Ative as notificações para receber alertas sobre novas obras
+                  atribuídas e atualizações importantes.
+                </p>
+
+                <div className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-blue-900 mb-2">
+                          Notificações de Obras
+                        </h4>
+                        <p className="text-blue-700 text-sm mb-3">
+                          Receba notificações quando uma nova obra for atribuída
+                          a si.
+                        </p>
+                        <button
+                          onClick={() => {
+                            if ("Notification" in window) {
+                              if (Notification.permission === "default") {
+                                Notification.requestPermission().then(
+                                  (permission) => {
+                                    if (permission === "granted") {
+                                      new Notification("Leirisonda", {
+                                        body: "Notificações ativadas com sucesso!",
+                                        icon: "/icon.svg",
+                                      });
+                                    }
+                                  },
+                                );
+                              } else if (
+                                Notification.permission === "granted"
+                              ) {
+                                new Notification("Leirisonda", {
+                                  body: "Notificações já estão ativadas!",
+                                  icon: "/icon.svg",
+                                });
+                              } else {
+                                alert(
+                                  "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                );
+                              }
+                            } else {
+                              alert("Este navegador não suporta notificações.");
+                            }
+                          }}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                        >
+                          Ativar Notificações
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <Check className="h-5 w-5 text-green-600 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-green-900 mb-2">
+                          Notificações de Sistema
+                        </h4>
+                        <p className="text-green-700 text-sm mb-3">
+                          Receba alertas sobre atualizações do sistema e
+                          manutenções programadas.
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-green-800 text-sm font-medium">
+                            Status: Ativo
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900 mb-2">
+                          Instruções
+                        </h4>
+                        <ul className="text-gray-700 text-sm space-y-1">
+                          <li>• As notificações funcionam apenas com HTTPS</li>
+                          <li>
+                            • Certifique-se de que permite notificações no seu
+                            navegador
+                          </li>
+                          <li>
+                            • Em dispositivos móveis, adicione a app ao ecrã
+                            inicial
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         );
