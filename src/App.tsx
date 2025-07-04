@@ -1923,13 +1923,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         e.preventDefault();
                         const form = e.target.closest("form");
                         const formData = new FormData(form);
-                        const workTitle =
-                          form.querySelector(
-                            'input[placeholder*="Construção Piscina"]',
-                          ).value || "Nova Obra";
-                        const responsibleUser = form.querySelector(
-                          'select[aria-label="Responsável do Projeto"]',
-                        );
+                        const workTitle = form.querySelector('input[placeholder*="LS-"]').value || "Nova Obra";
+                        const responsibleUser = form.querySelector('select[aria-label="Usuários Atribuídos"]');
                         const selectedUserId = responsibleUser
                           ? responsibleUser.value
                           : null;
