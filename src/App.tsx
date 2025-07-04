@@ -23,12 +23,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { FirebaseConfig } from "./components/FirebaseConfig";
-import {
-  useRealtimeSync,
-  useUsers,
-  usePools,
-  useMaintenance,
-} from "./hooks/useRealtimeSync";
 
 // Mock authentication and user data
 const ADMIN_USER = {
