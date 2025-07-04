@@ -865,7 +865,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest�����o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -7785,7 +7785,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                         disabled={!enableMapsRedirect}
                       >
-                        ����� {selectedWork.location}
+                        ��� {selectedWork.location}
                       </button>
                     </div>
                     <div>
