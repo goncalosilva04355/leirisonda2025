@@ -209,8 +209,34 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // SECURITY: Clear ALL potential auto-login data on app start
-    localStorage.removeItem("mock-current-user");
+    // Try to restore user from localStorage first
+    const storedUser =
+      localStorage.getItem("currentUser") ||
+      localStorage.getItem("mock-current-user");
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        console.log(
+          "🔄 App init: Restoring user from localStorage:",
+          user.email,
+        );
+        setCurrentUser(user);
+        setIsAuthenticated(true);
+
+        // Set up auth state listener for restored user
+        const unsubscribe = authService.onAuthStateChanged((authUser) => {
+          console.log(
+            "🔒 AUTH STATE CHANGE (restored user):",
+            authUser ? `User ${authUser.email} logged in` : "Auth user changed",
+          );
+        });
+        return () => unsubscribe();
+      } catch (e) {
+        console.warn("App init: Error parsing stored user:", e);
+      }
+    }
+
+    // If no stored user, clear session data and force logout for security
     sessionStorage.clear(); // Clear any session data
 
     // Force clear authentication state
@@ -2728,7 +2754,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="">Selecionar tipo</option>
                           <option value="piscina">Piscina</option>
                           <option value="manutencao">Manutenção</option>
-                          <option value="instalacao">Instalação</option>
+                          <option value="instalacao">Instala��ão</option>
                           <option value="reparacao">Reparação</option>
                           <option value="limpeza">Limpeza</option>
                           <option value="furo">Furo de Água</option>
@@ -6988,7 +7014,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 }}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
               >
-                Agora Não
+                Agora N��o
               </button>
               <button
                 onClick={() => handleShare("preview")}
