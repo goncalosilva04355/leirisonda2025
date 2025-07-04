@@ -1351,7 +1351,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               ? {
                   ...u,
                   ...userForm,
-                  password: userForm.password || u.password,
                 }
               : u,
           ),
