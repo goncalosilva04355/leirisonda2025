@@ -592,10 +592,36 @@ function App() {
   };
 
   const handleLogout = async () => {
-    await authService.logout();
-    // Auth state will be updated by the listener
-    setLoginForm({ email: "", password: "" });
-    navigateToSection("dashboard");
+    try {
+      console.log("🔄 Initiating logout process...");
+
+      // Close sidebar immediately
+      setSidebarOpen(false);
+
+      // Clear current user state immediately for better UX
+      setCurrentUser(null);
+      setIsAuthenticated(false);
+
+      // Clear form and navigate to dashboard
+      setLoginForm({ email: "", password: "" });
+      navigateToSection("dashboard");
+
+      // Perform actual logout
+      await authService.logout();
+
+      console.log("✅ Logout completed successfully");
+    } catch (error) {
+      console.error("❌ Error during logout:", error);
+
+      // Force clear state even if logout service fails
+      setSidebarOpen(false);
+      setCurrentUser(null);
+      setIsAuthenticated(false);
+      setLoginForm({ email: "", password: "" });
+      navigateToSection("dashboard");
+
+      console.log("🔧 Forced logout state clear completed");
+    }
   };
 
   // Register functions
@@ -6435,7 +6461,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                Partilhar Relat��rio
+                Partilhar Relat����rio
               </h2>
               <button
                 onClick={() => {
