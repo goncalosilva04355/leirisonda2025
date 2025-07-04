@@ -55,31 +55,9 @@ export interface Client {
   createdAt: string;
 }
 
-// Mock data for demonstration
-const mockPools: Pool[] = [
-  {
-    id: "1",
-    name: "Piscina Villa Marina",
-    location: "Cascais, Villa Marina Resort",
-    client: "Hotel Marina",
-    type: "Comercial",
-    status: "Ativa",
-    lastMaintenance: "2024-01-15",
-    nextMaintenance: "2024-01-22",
-    createdAt: "2024-01-01",
-  },
-  {
-    id: "2",
-    name: "Piscina Residencial Costa",
-    location: "Sintra, Quinta da Beloura",
-    client: "Família Costa",
-    type: "Residencial",
-    status: "Ativa",
-    lastMaintenance: "2024-01-10",
-    nextMaintenance: "2024-01-17",
-    createdAt: "2024-01-05",
-  },
-];
+// Mock data for demonstration - DISABLED FOR PRODUCTION
+// User requested removal of old demo data
+const mockPools: Pool[] = [];
 
 const mockMaintenance: Maintenance[] = [
   {
