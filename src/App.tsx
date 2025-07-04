@@ -1155,8 +1155,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       permissionGranted: Notification.permission === "granted",
     });
 
+    // Check if current user is the one assigned (exact match or partial match for combined assignments)
+    const isAssignedToCurrentUser =
+      currentUser &&
+      (assignedTo === currentUser.name ||
+        assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
+        currentUser.name.toLowerCase().includes(assignedTo.toLowerCase()));
+
+    console.log("🔍 DEBUG: Assignment check:", {
+      currentUser: currentUser?.name,
+      assignedTo,
+      exactMatch: currentUser?.name === assignedTo,
+      partialMatch: assignedTo
+        .toLowerCase()
+        .includes(currentUser?.name.toLowerCase()),
+      isAssignedToCurrentUser,
+    });
+
     // Send notification if user is assigned to current user and notifications are enabled
-    if (currentUser && assignedTo === currentUser.name) {
+    if (isAssignedToCurrentUser) {
       if (notificationsEnabled && Notification.permission === "granted") {
         console.log("✅ All conditions met, sending notification...");
         showNotification(
@@ -1165,16 +1182,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           "work-assignment",
         );
       } else {
-        console.warn("❌ Notification blocked:", {
+        console.warn("❌ Notification blocked, using alert fallback:", {
           notificationsEnabled,
           permission: Notification.permission,
         });
+
+        // Show alert as fallback for better user experience
+        setTimeout(() => {
+          alert(
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+          );
+        }, 1000);
       }
     } else {
-      console.warn("❌ User not matching:", {
+      console.log("ℹ️ Notification not for current user:", {
         currentUser: currentUser?.name,
         assignedTo,
-        match: currentUser?.name === assignedTo,
+        isAssignedToCurrentUser,
       });
     }
 
