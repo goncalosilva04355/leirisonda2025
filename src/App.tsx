@@ -1634,7 +1634,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <div className="flex items-center space-x-4 text-sm">
                             <span className="text-blue-600">
-                              📅{" "}
+                              ����{" "}
                               {new Date(maint.scheduledDate).toLocaleDateString(
                                 "pt-PT",
                               )}
@@ -2638,7 +2638,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar intervenção de manutenç��o
+                      Registar intervenção de manutenç����o
                     </p>
                   </div>
                 </div>
