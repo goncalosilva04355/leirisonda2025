@@ -4428,13 +4428,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ) as HTMLInputElement
                               )?.value || "",
                             type:
-                              form.querySelector("select").value ||
-                              "residencial",
+                              (
+                                form.querySelector(
+                                  "select",
+                                ) as HTMLSelectElement
+                              )?.value || "residencial",
                             status: "Ativa",
                             createdAt: new Date().toISOString(),
                             nextMaintenance:
-                              form.querySelector('input[type="date"]')?.value ||
-                              null,
+                              (
+                                form.querySelector(
+                                  'input[type="date"]',
+                                ) as HTMLInputElement
+                              )?.value || null,
                           };
 
                           // Use sync system to add pool (will handle Firebase and localStorage)
