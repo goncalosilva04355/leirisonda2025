@@ -1812,23 +1812,44 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {currentUser
-                          ? works.filter(
-                              (work) =>
-                                work &&
-                                work.assignedTo &&
-                                (work.assignedTo
-                                  .toLowerCase()
-                                  .includes(currentUser.name.toLowerCase()) ||
-                                  work.assignedUsers?.some(
-                                    (user) =>
-                                      user.name &&
-                                      user.name
-                                        .toLowerCase()
-                                        .includes(
-                                          currentUser.name.toLowerCase(),
-                                        ),
-                                  )),
-                            ).length
+                          ? (() => {
+                              const assignedWorks = works.filter(
+                                (work) =>
+                                  work &&
+                                  work.assignedTo &&
+                                  (work.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                    work.assignedUsers?.some(
+                                      (user) =>
+                                        user.name &&
+                                        user.name
+                                          .toLowerCase()
+                                          .includes(
+                                            currentUser.name.toLowerCase(),
+                                          ),
+                                    )),
+                              );
+
+                              // Debug logging for assigned works
+                              console.log(
+                                "🔍 DEBUG: Obras atribuídas para",
+                                currentUser.name,
+                                ":",
+                                {
+                                  totalWorks: works.length,
+                                  assignedWorks: assignedWorks.length,
+                                  userWorks: assignedWorks.map((w) => ({
+                                    id: w.id,
+                                    title: w.title,
+                                    assignedTo: w.assignedTo,
+                                    assignedUsers: w.assignedUsers,
+                                  })),
+                                },
+                              );
+
+                              return assignedWorks.length;
+                            })()
                           : 0}
                       </div>
                     </div>
@@ -6343,7 +6364,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ��{work.budget}
+                                  ����{work.budget}
                                 </div>
                               )}
                             </div>
