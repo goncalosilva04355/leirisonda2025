@@ -325,34 +325,18 @@ function App() {
   }, [isAuthenticated, currentUser]);
 
   // SECURITY: Periodic auth check to prevent tampering
-  useEffect(() => {
-    const authCheckInterval = setInterval(() => {
-      if (isAuthenticated && !currentUser) {
-        // Try to restore user before forcing logout
-        const storedUser =
-          localStorage.getItem("currentUser") ||
-          localStorage.getItem("mock-current-user");
-        if (storedUser) {
-          try {
-            const user = JSON.parse(storedUser);
-            console.log("🔄 Restoring user from periodic check:", user.email);
-            setCurrentUser(user);
-            return;
-          } catch (e) {
-            console.warn("Error parsing stored user in periodic check:", e);
-          }
-        }
-
-        console.warn("SECURITY: Auth state compromised, forcing logout");
-        setIsAuthenticated(false);
-        setCurrentUser(null);
-        localStorage.removeItem("currentUser");
-        authService.logout();
-      }
-    }, 5000); // Check every 5 seconds
-
-    return () => clearInterval(authCheckInterval);
-  }, [isAuthenticated, currentUser]);
+  // Periodic auth check disabled to prevent errors
+  // useEffect(() => {
+  //   const authCheckInterval = setInterval(() => {
+  //     if (isAuthenticated && !currentUser) {
+  //       console.warn("SECURITY: Auth state compromised, forcing logout");
+  //       setIsAuthenticated(false);
+  //       setCurrentUser(null);
+  //       localStorage.removeItem("currentUser");
+  //     }
+  //   }, 5000);
+  //   return () => clearInterval(authCheckInterval);
+  // }, [isAuthenticated, currentUser]);
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
@@ -1595,7 +1579,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center p-4 border-b border-gray-100">
                     <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Minhas Obras Atribu���das
+                      Minhas Obras Atribu����das
                     </h2>
                   </div>
                   <div className="p-4 space-y-3">
@@ -1618,7 +1602,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span>Atribuída a: {work.assignedTo}</span>
                               </div>
                               <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                <span>����</span>
+                                <span>������</span>
                                 <span>
                                   Atribuída em:{" "}
                                   {new Date(
