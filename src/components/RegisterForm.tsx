@@ -35,6 +35,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       return;
     }
 
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      setError("Por favor, insira um email válido");
+      return;
+    }
+
     if (formData.password.length < 6) {
       setError("Password deve ter pelo menos 6 caracteres");
       return;
