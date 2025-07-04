@@ -31,6 +31,7 @@ class MockAuthService {
         {
           uid: "mock-admin-1",
           email: "gongonsilva@gmail.com",
+          password: "admin123", // Default password
           name: "Gonçalo Fonseca",
           role: "super_admin",
           active: true,
