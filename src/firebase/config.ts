@@ -16,21 +16,25 @@ const firebaseConfig = {
 // Function to get or create Firebase app
 const getFirebaseApp = () => {
   try {
-    // Delete any existing apps to prevent conflicts
+    // Check if app already exists
     const existingApps = getApps();
     if (existingApps.length > 0) {
-      console.log("Cleaning up existing Firebase apps...");
-      for (const app of existingApps) {
-        deleteApp(app);
-      }
+      console.log("Using existing Firebase app");
+      return existingApps[0];
     }
 
-    // Initialize fresh app
+    // Initialize new app only if none exists
     const app = initializeApp(firebaseConfig);
     console.log("Fresh Firebase app initialized");
     return app;
   } catch (error) {
     console.error("Firebase app initialization failed:", error);
+    // Try to get existing app if initialization fails
+    const existingApps = getApps();
+    if (existingApps.length > 0) {
+      console.log("Using existing Firebase app after error");
+      return existingApps[0];
+    }
     return null;
   }
 };
