@@ -3268,7 +3268,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de Água - Conditional */}
+                    {/* Detalhes do Furo de ��gua - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div>
                         <div className="flex items-center space-x-3 mb-6">
@@ -4435,7 +4435,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Chemical Products */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Produtos Qu�����micos Utilizados
+                        Produtos Químicos Utilizados
                       </h3>
                       <div className="space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
