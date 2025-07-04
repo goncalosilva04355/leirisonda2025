@@ -30,17 +30,18 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    // Check if config is already saved
-    const savedConfig = localStorage.getItem("firebase-config");
-    if (savedConfig) {
-      try {
-        const parsed = JSON.parse(savedConfig);
-        setConfig(parsed);
-        onConfigured();
-      } catch (e) {
-        console.error("Error parsing saved config:", e);
-      }
-    }
+    // Firebase is always configured with fixed settings
+    const fixedConfig = {
+      apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+      authDomain: "leirisonda-16f8b.firebaseapp.com",
+      projectId: "leirisonda-16f8b",
+      storageBucket: "leirisonda-16f8b.firebasestorage.app",
+      messagingSenderId: "540456875574",
+      appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+    };
+    setConfig(fixedConfig);
+    setSuccess(true);
+    onConfigured();
   }, [onConfigured]);
 
   const handleSave = async () => {
