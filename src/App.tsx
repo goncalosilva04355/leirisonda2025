@@ -1417,7 +1417,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+              `⚠️ Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -2513,13 +2513,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-600 text-sm mb-4">
                         Comece por adicionar a primeira piscina ao sistema
                       </p>
-                      <button
-                        onClick={() => setActiveSection("nova-piscina")}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
-                      >
-                        <Plus className="h-4 w-4" />
-                        <span>Adicionar Piscina</span>
-                      </button>
+                      {hasPermission("piscinas", "create") && (
+                        <button
+                          onClick={() => setActiveSection("nova-piscina")}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
+                        >
+                          <Plus className="h-4 w-4" />
+                          <span>Adicionar Piscina</span>
+                        </button>
+                      )}
                     </div>
                   ) : (
                     pools.map((pool) => (
