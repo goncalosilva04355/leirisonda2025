@@ -488,7 +488,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manuten���ões: ${maintenance.length}
+- Total de Manuten����ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -1412,7 +1412,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {work.title}
                                     </p>
                                     <p className="text-sm text-gray-600">
-                                      {work.client} • {work.location}
+                                      {work.client} �� {work.location}
                                     </p>
                                   </div>
                                 </div>
@@ -2476,7 +2476,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         {/* Observaç��es Específicas do Furo */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações Específicas do Furo
+                            Observaç��es Específicas do Furo
                           </label>
                           <textarea
                             rows={3}
@@ -4578,20 +4578,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           )}
                         </div>
                         <div className="flex items-center space-x-2">
-                          <button className="p-2 text-gray-400 hover:text-gray-600">
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() =>
-                              confirmDelete(
-                                `Tem a certeza que deseja apagar o cliente "${client.name}"?`,
-                                () => dataSync.deleteClient(client.id),
-                              )
-                            }
-                            className="p-2 text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                          {hasPermission("clientes", "edit") && (
+                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("clientes", "delete") && (
+                            <button
+                              onClick={() =>
+                                confirmDelete(
+                                  `Tem a certeza que deseja apagar o cliente "${client.name}"?`,
+                                  () => dataSync.deleteClient(client.id),
+                                )
+                              }
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
