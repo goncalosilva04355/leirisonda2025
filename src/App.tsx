@@ -1515,7 +1515,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Form */}
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <form className="space-y-8">
-                  {/* Informaç��es Básicas */}
+                  {/* Informações Básicas */}
                   <div>
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -1976,7 +1976,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="residencial">Residencial</option>
                         <option value="comercial">Comercial</option>
                         <option value="hotel">Hotel/Resort</option>
-                        <option value="condominio">Condom��nio</option>
+                        <option value="condominio">Condomínio</option>
                         <option value="spa">SPA/Wellness</option>
                       </select>
                     </div>
@@ -3585,6 +3585,46 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         );
     }
   };
+
+  // Photo Gallery Modal
+  if (showPhotoGallery) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden m-4">
+          <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Galeria de Fotografias ({selectedPhotos.length} fotos)
+            </h2>
+            <button
+              onClick={() => setShowPhotoGallery(false)}
+              className="p-2 hover:bg-gray-100 rounded-lg"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {selectedPhotos.map((photo) => (
+                <div key={photo.id} className="relative">
+                  <img
+                    src={photo.data}
+                    alt={photo.name}
+                    className="w-full h-48 object-cover rounded-lg border border-gray-200"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 rounded-b-lg">
+                    <p className="text-sm truncate">{photo.name}</p>
+                    <p className="text-xs text-gray-300">
+                      {new Date(photo.timestamp).toLocaleDateString("pt-PT")}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Share Modal
   if (showShareModal) {
