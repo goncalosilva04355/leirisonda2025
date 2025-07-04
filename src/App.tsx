@@ -4063,7 +4063,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequ���ncia de Manutenção
+                          Frequência de Manutenção
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -5202,7 +5202,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>��� Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>• Equipas respons��veis</li>
-                        <li>�������� Estados de progresso</li>
+                        <li>������� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -6028,7 +6028,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {work.contact}
+                                        ��� {work.contact}
                                       </button>
                                     </div>
                                   )}
