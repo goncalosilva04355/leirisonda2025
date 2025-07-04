@@ -147,6 +147,13 @@ function App() {
     addClient,
   } = dataSync;
 
+  // Data cleanup hook
+  const {
+    cleanAllData,
+    isLoading: cleanupLoading,
+    error: cleanupError,
+  } = useDataCleanup();
+
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
   const [selectedWorkType, setSelectedWorkType] = useState("");
