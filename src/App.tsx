@@ -1434,7 +1434,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <Edit2 className="h-4 w-4" />
                           </button>
                           <button
-                            onClick={() => dataSync.deletePool(pool.id)}
+                            onClick={() =>
+                              confirmDelete(
+                                `Tem a certeza que deseja apagar a piscina "${pool.name}"?`,
+                                () => dataSync.deletePool(pool.id),
+                              )
+                            }
                             className="p-2 text-gray-400 hover:text-red-600"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -1896,7 +1901,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          aria-label="Usuários Atribuídos"
+                          aria-label="Usuários Atribu��dos"
                         >
                           <option value="">Selecionar usuário...</option>
                           {users
