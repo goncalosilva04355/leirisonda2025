@@ -30,12 +30,8 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { InstallPrompt } from "./components/InstallPrompt";
-import { AuthSyncDiagnostic } from "./components/AuthSyncDiagnostic";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
-import { FirebaseStatus } from "./components/FirebaseStatus";
-import { UserDebugger } from "./components/UserDebugger";
-import { FullSyncManager } from "./components/FullSyncManager";
 import { AutoSyncNotification } from "./components/AutoSyncNotification";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -137,7 +133,6 @@ function App() {
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
   const [showDataCleanup, setShowDataCleanup] = useState(false);
-  const [showAuthDiagnostic, setShowAuthDiagnostic] = useState(false);
 
   // Admin area states
   const [showAdminLogin, setShowAdminLogin] = useState(false);
@@ -1310,7 +1305,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `���️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -6841,7 +6836,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observações e próxima manutenção</span>
+                  <span>Observa��ões e próxima manutenção</span>
                 </div>
               </div>
             </div>
