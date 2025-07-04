@@ -1836,53 +1836,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 return assignedToMatch || assignedUsersMatch;
                               });
 
-                              // Debug logging for assigned works
-                              console.log(
-                                "🔍 DEBUG: Obras atribuídas para",
-                                currentUser.name,
-                                ":",
-                                {
-                                  currentUserName: currentUser.name,
-                                  totalWorks: works.length,
-                                  assignedWorks: assignedWorks.length,
-                                  allWorks: works.map((w) => ({
-                                    id: w.id,
-                                    title: w.title,
-                                    assignedTo: w.assignedTo,
-                                    assignedUsers: w.assignedUsers,
-                                    matches: (() => {
-                                      const assignedToMatch =
-                                        w.assignedTo &&
-                                        w.assignedTo
-                                          .split(",")
-                                          .map((name) =>
-                                            name.trim().toLowerCase(),
-                                          )
-                                          .includes(
-                                            currentUser.name.toLowerCase(),
-                                          );
-
-                                      const assignedUsersMatch =
-                                        w.assignedUsers?.some(
-                                          (user) =>
-                                            user.name &&
-                                            user.name.toLowerCase() ===
-                                              currentUser.name.toLowerCase(),
-                                        );
-
-                                      return (
-                                        assignedToMatch || assignedUsersMatch
-                                      );
-                                    })(),
-                                  })),
-                                  userWorks: assignedWorks.map((w) => ({
-                                    id: w.id,
-                                    title: w.title,
-                                    assignedTo: w.assignedTo,
-                                    assignedUsers: w.assignedUsers,
-                                  })),
-                                },
-                              );
+                              // Simple debug logging for assigned works
+                              if (assignedWorks.length > 0) {
+                                console.log(
+                                  `✅ ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser.name}`,
+                                );
+                              }
 
                               return assignedWorks.length;
                             })()
