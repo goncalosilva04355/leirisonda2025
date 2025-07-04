@@ -1941,9 +1941,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </div>
                                     <span
                                       className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
-                                        work.status === "Em Progresso"
+                                        work.status === "in_progress"
                                           ? "bg-yellow-100 text-yellow-800"
-                                          : work.status === "Concluída"
+                                          : work.status === "completed"
                                             ? "bg-green-100 text-green-800"
                                             : "bg-blue-100 text-blue-800"
                                       }`}
@@ -1955,18 +1955,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <div className="flex space-x-2">
                                   <button
                                     onClick={() => {
-                                      if (work.status !== "Em Progresso") {
+                                      if (work.status !== "in_progress") {
                                         dataSync.updateWork(work.id, {
-                                          status: "Em Progresso",
+                                          status: "in_progress",
                                         });
                                       }
                                     }}
                                     className={`px-3 py-1 text-white text-sm rounded-lg transition-colors ${
-                                      work.status === "Em Progresso"
+                                      work.status === "in_progress"
                                         ? "bg-gray-400 cursor-not-allowed"
                                         : "bg-purple-600 hover:bg-purple-700"
                                     }`}
-                                    disabled={work.status === "Em Progresso"}
+                                    disabled={work.status === "in_progress"}
                                   >
                                     {work.status === "Em Progresso"
                                       ? "Em Progresso"
@@ -3935,7 +3935,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           alert(
                             `Obra "${workTitle}" criada com sucesso! ` +
                               (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} responsável(eis).`
+                                ? `Notificações enviadas a ${assignedUsers.length} respons��vel(eis).`
                                 : "") +
                               (selectedWorkType === "furo"
                                 ? " Dados do furo registados."
