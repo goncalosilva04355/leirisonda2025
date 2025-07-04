@@ -529,7 +529,7 @@ ${index + 1}. ${maint.poolName}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -5288,15 +5288,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   }
 
-  // Show register form
-  if (showRegisterForm) {
-    return (
-      <RegisterForm
-        onRegisterSuccess={handleRegisterSuccess}
-        onBackToLogin={handleBackToLogin}
-      />
-    );
-  }
+  // SECURITY: Register form removed - only super admin can create users
 
   // SECURITY: Triple check - never allow access without proper authentication
   if (!isAuthenticated || !currentUser) {
@@ -5550,7 +5542,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               }`}
             >
               <Wrench className="h-5 w-5" />
-              <span>Nova Manutenç��o</span>
+              <span>Nova Manutenção</span>
             </button>
 
             <button
