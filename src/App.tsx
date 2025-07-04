@@ -5349,7 +5349,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{clients.length}</strong> clientes registados
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Dados de contacto</li>
+                        <li>• Dados de contacto</li>
                         <li>• Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
@@ -7856,7 +7856,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-600 text-sm">
                         {selectedWork.id?.toUpperCase() ||
                           "ID-" + Date.now().toString().slice(-6)}{" "}
-                        �� {selectedWork.title}
+                        → {selectedWork.title}
                       </p>
                     </div>
                   </div>
