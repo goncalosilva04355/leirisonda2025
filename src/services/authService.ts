@@ -164,6 +164,45 @@ class AuthService {
     }
   }
 
+  private async registerWithMock(
+    email: string,
+    password: string,
+    name: string,
+    role: "super_admin" | "manager" | "technician",
+  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
+    try {
+      const mockResult = await mockAuthService.register(
+        email,
+        password,
+        name,
+        role,
+      );
+
+      if (mockResult.success && mockResult.user) {
+        // Convert mock user to UserProfile format
+        const userProfile: UserProfile = {
+          uid: mockResult.user.uid,
+          email: mockResult.user.email,
+          name: mockResult.user.name,
+          role: mockResult.user.role,
+          permissions: this.getDefaultPermissions(mockResult.user.role),
+          active: mockResult.user.active,
+          createdAt: mockResult.user.createdAt,
+        };
+
+        return { success: true, user: userProfile };
+      } else {
+        return {
+          success: false,
+          error: mockResult.error || "Erro na autenticação local",
+        };
+      }
+    } catch (error: any) {
+      console.error("Mock auth registration failed:", error);
+      return { success: false, error: "Erro na autenticação local" };
+    }
+  }
+
   // Login user
   async login(
     email: string,
