@@ -729,7 +729,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     e.preventDefault();
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
     const fakeEvent = { target: { files } };
@@ -2619,7 +2619,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {/* Additional Information */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Observações e Características Especiais
+                      Observaç��es e Características Especiais
                     </label>
                     <textarea
                       rows={3}
