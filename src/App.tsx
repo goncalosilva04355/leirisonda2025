@@ -1924,21 +1924,27 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="p-4 space-y-3">
                         {works
-                          .filter(
-                            (work) =>
-                              work &&
+                          .filter((work) => {
+                            if (!work) return false;
+
+                            // Check if user is in assignedTo string (exact match or comma-separated list)
+                            const assignedToMatch =
                               work.assignedTo &&
-                              (work.assignedTo
-                                .toLowerCase()
-                                .includes(currentUser.name.toLowerCase()) ||
-                                work.assignedUsers?.some(
-                                  (user) =>
-                                    user.name &&
-                                    user.name
-                                      .toLowerCase()
-                                      .includes(currentUser.name.toLowerCase()),
-                                )),
-                          )
+                              work.assignedTo
+                                .split(",")
+                                .map((name) => name.trim().toLowerCase())
+                                .includes(currentUser.name.toLowerCase());
+
+                            // Check if user is in assignedUsers array (exact match)
+                            const assignedUsersMatch = work.assignedUsers?.some(
+                              (user) =>
+                                user.name &&
+                                user.name.toLowerCase() ===
+                                  currentUser.name.toLowerCase(),
+                            );
+
+                            return assignedToMatch || assignedUsersMatch;
+                          })
                           .map((work) => (
                             <div
                               key={work.id}
