@@ -3751,23 +3751,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => {
-                      setUserForm({
-                        name: "",
-                        email: "",
-                        role: "technician",
-                        active: true,
-                        permissions: {},
-                      });
-                      setEditingUser(null);
-                      setShowUserForm(true);
-                    }}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                  >
-                    <UserPlus className="h-4 w-4" />
-                    <span>Novo Utilizador</span>
-                  </button>
+                  {/* SECURITY: Only super admin can create new users */}
+                  {currentUser?.role === "super_admin" && (
+                    <button
+                      onClick={() => {
+                        setUserForm({
+                          name: "",
+                          email: "",
+                          role: "technician",
+                          active: true,
+                          permissions: {},
+                        });
+                        setEditingUser(null);
+                        setShowUserForm(true);
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                    >
+                      <UserPlus className="h-4 w-4" />
+                      <span>Novo Utilizador</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -4383,7 +4386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="text-2xl font-bold text-green-600">
                       {maintenance.length}
                     </div>
-                    <div className="text-sm text-gray-600">Manuten��ões</div>
+                    <div className="text-sm text-gray-600">Manuten����ões</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-orange-600">
