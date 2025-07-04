@@ -23,6 +23,7 @@ import {
   AlertCircle,
   Download,
   ArrowLeft,
+  Bell,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
@@ -3995,7 +3996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email Secundário
+                          Email Secund��rio
                         </label>
                         <input
                           type="email"
