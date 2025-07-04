@@ -9,6 +9,14 @@ export const useAutoSync = () => {
 
   useEffect(() => {
     const performAutoSync = async () => {
+      // TEMPORARILY DISABLED TO PREVENT FIREBASE QUOTA EXCEEDED ERRORS
+      console.warn("🛑 Auto-sync DISABLED to prevent quota exceeded");
+      setSyncStatus("completed");
+      const now = new Date();
+      setLastSync(now);
+      sessionStorage.setItem("auto-sync-completed", "true");
+      return;
+
       // Check if we should auto-sync (e.g., only once per session)
       const hasAutoSynced = sessionStorage.getItem("auto-sync-completed");
 
