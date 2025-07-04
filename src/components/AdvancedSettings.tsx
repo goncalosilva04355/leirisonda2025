@@ -715,13 +715,39 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                       <button
                         onClick={() => {
                           const testWorkTitle = `Obra Urgente ${new Date().toLocaleTimeString()}`;
-                          // Get current user from localStorage or default
-                          const currentUserName = localStorage.getItem(
-                            "currentUser",
-                          )
-                            ? JSON.parse(localStorage.getItem("currentUser"))
-                                .name
-                            : "Utilizador Atual";
+                          // Get current user from localStorage (check both possible keys)
+                          let currentUserName = "Utilizador Atual";
+
+                          // First try the mock-current-user key
+                          const mockCurrentUser =
+                            localStorage.getItem("mock-current-user");
+                          if (mockCurrentUser) {
+                            try {
+                              currentUserName =
+                                JSON.parse(mockCurrentUser).name;
+                            } catch (e) {
+                              console.warn(
+                                "Error parsing mock-current-user:",
+                                e,
+                              );
+                            }
+                          } else {
+                            // Fallback to currentUser key
+                            const currentUser =
+                              localStorage.getItem("currentUser");
+                            if (currentUser) {
+                              try {
+                                currentUserName = JSON.parse(currentUser).name;
+                              } catch (e) {
+                                console.warn("Error parsing currentUser:", e);
+                              }
+                            }
+                          }
+
+                          console.log(
+                            "🔍 DEBUG: Current user for notification:",
+                            currentUserName,
+                          );
                           notifications.sendWorkAssignmentNotification(
                             testWorkTitle,
                             currentUserName,
@@ -786,8 +812,8 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 </h4>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>
-                    • Quando uma obra é criada e atribuída a um utilizador, ele
-                    recebe uma notificação push
+                    ��� Quando uma obra é criada e atribuída a um utilizador,
+                    ele recebe uma notificação push
                   </li>
                   <li>
                     • A obra aparece automaticamente no dashboard do utilizador
