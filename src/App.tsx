@@ -799,7 +799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat��rio personalizado em desenvolvimento. Use os relatórios pr���-definidos por agora.",
+      "Funcionalidade de relat��rio personalizado em desenvolvimento. Use os relatórios pr�����-definidos por agora.",
     );
   };
 
@@ -1439,7 +1439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span>Atribuída a: {work.assignedTo}</span>
                               </div>
                               <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                <span>�����</span>
+                                <span>����</span>
                                 <span>
                                   Atribuída em:{" "}
                                   {new Date(
@@ -4762,7 +4762,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>�� Trabalhos realizados</li>
-                      <li>• T���cnicos responsáveis</li>
+                      <li>• T����cnicos responsáveis</li>
                       <li>• Datas e duraç��es</li>
                       <li>• Estados e observações</li>
                     </ul>
@@ -6685,12 +6685,35 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Cliente
                     </label>
                     <p className="text-gray-900">{selectedWork.client}</p>
+                    {selectedWork.contact && (
+                      <button
+                        onClick={() => handlePhoneClick(selectedWork.contact)}
+                        className={`text-sm mt-1 ${
+                          enablePhoneDialer
+                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                            : "text-gray-500"
+                        }`}
+                        disabled={!enablePhoneDialer}
+                      >
+                        📞 {selectedWork.contact}
+                      </button>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Local
                     </label>
-                    <p className="text-gray-900">{selectedWork.location}</p>
+                    <button
+                      onClick={() => handleAddressClick(selectedWork.location)}
+                      className={`text-left ${
+                        enableMapsRedirect
+                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                          : "text-gray-900"
+                      }`}
+                      disabled={!enableMapsRedirect}
+                    >
+                      📍 {selectedWork.location}
+                    </button>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
