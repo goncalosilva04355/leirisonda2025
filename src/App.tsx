@@ -2792,7 +2792,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </p>
                             <div className="flex items-center space-x-4 text-sm">
                               <span className="text-blue-600">
-                                €{" "}
+                                ���{" "}
                                 {new Date(
                                   maint.scheduledDate,
                                 ).toLocaleDateString("pt-PT")}
@@ -5187,10 +5187,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio de Obras
+                          Relatório de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Projetos e construç��es
+                          Projetos e construções
                         </p>
                       </div>
                     </div>
@@ -5199,10 +5199,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>��� Orçamentos e custos</li>
+                        <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>• Equipas respons��veis</li>
-                        <li>������� Estados de progresso</li>
+                        <li>• Equipas responsáveis</li>
+                        <li>• Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -5236,8 +5236,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>• Piscinas associadas</li>
-                        <li>• Histórico de servi��os</li>
-                        <li>• Informaç��es contratuais</li>
+                        <li>• Histórico de serviços</li>
+                        <li>• Informações contratuais</li>
                       </ul>
                     </div>
                     <button
@@ -5257,7 +5257,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio Completo
+                          Relatório Completo
                         </h3>
                         <p className="text-sm text-gray-600">
                           Todas as informações
@@ -5266,7 +5266,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Relat��rio consolidado de todo o sistema
+                        Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
@@ -7663,7 +7663,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 hover:bg-gray-100"
                 >
                   <Shield className="h-5 w-5" />
-                  <span>Administração</span>
+                  <span>Administra��ão</span>
                 </button>
               )}
             </nav>
