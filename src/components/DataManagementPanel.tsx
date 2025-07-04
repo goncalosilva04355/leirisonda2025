@@ -416,7 +416,7 @@ export function DataManagementPanel() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Sync className="h-5 w-5" />
+            <RefreshCw className="h-5 w-5" />
             Sincronização
           </CardTitle>
           <CardDescription>
@@ -430,7 +430,7 @@ export function DataManagementPanel() {
               disabled={dataSync.isLoading}
               className="flex items-center gap-2"
             >
-              <Sync className="h-4 w-4" />
+              <RefreshCw className="h-4 w-4" />
               {dataSync.isLoading ? "A Sincronizar..." : "Sincronizar Agora"}
             </Button>
 
@@ -467,7 +467,7 @@ export function DataManagementPanel() {
     { id: "overview", label: "Visão Geral", icon: Database },
     { id: "cleanup", label: "Limpeza", icon: Trash2 },
     { id: "users", label: "Utilizadores", icon: Users },
-    { id: "sync", label: "Sincronização", icon: Sync },
+    { id: "sync", label: "Sincronização", icon: RefreshCw },
   ] as const;
 
   return (
