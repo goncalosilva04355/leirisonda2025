@@ -1355,38 +1355,16 @@ function App() {
         <div className="flex flex-col h-full">
           {/* Logo Header */}
           <div className="px-6 py-6 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
-                  <img
-                    src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                    alt="Leirisonda Logo"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Gestão de Serviços</p>
-                </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                  alt="Leirisonda Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
-
-              {/* Sync Status Indicator */}
-              <div className="flex items-center space-x-1">
-                {syncEnabled ? (
-                  <div
-                    className="flex items-center space-x-1 text-green-600"
-                    title="Sincronização ativa"
-                  >
-                    <Wifi className="h-4 w-4" />
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  </div>
-                ) : (
-                  <div
-                    className="flex items-center space-x-1 text-gray-400"
-                    title="Sem sincronização"
-                  >
-                    <WifiOff className="h-4 w-4" />
-                  </div>
-                )}
+              <div>
+                <p className="text-sm text-gray-500">Gestão de Serviços</p>
               </div>
             </div>
           </div>
