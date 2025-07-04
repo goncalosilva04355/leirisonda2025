@@ -99,6 +99,8 @@ export interface Work {
   budget?: number;
   actualCost?: number;
   assignedTo: string;
+  assignedUsers?: Array<{ id: string; name: string }>;
+  assignedUserIds?: string[];
   createdAt: Timestamp;
   updatedAt?: Timestamp;
 }

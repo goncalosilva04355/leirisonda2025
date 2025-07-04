@@ -47,6 +47,8 @@ export interface Work {
   budget?: number;
   actualCost?: number;
   assignedTo: string;
+  assignedUsers?: Array<{ id: string; name: string }>;
+  assignedUserIds?: string[];
   folhaGerada?: boolean;
   createdAt: string;
 }
