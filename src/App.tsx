@@ -1910,12 +1910,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenções aparecerão aqui
                         </p>
-                        <button
-                          onClick={() => navigateToSection("nova-manutencao")}
-                          className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
-                        >
-                          Agendar Manutenção
-                        </button>
+                        {hasPermission("manutencoes", "create") && (
+                          <button
+                            onClick={() => navigateToSection("nova-manutencao")}
+                            className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
+                          >
+                            Agendar Manutenção
+                          </button>
+                        )}
                       </div>
                     ) : (
                       futureMaintenance
@@ -5151,7 +5153,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As definições são guardadas localmente no
+                              • As defini��ões são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
@@ -5207,7 +5209,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <li>
                                 • Todas as piscinas ({pools.length} registos)
                               </li>
-                              <li>• Dados do Firebase e armazenamento local</li>
+                              <li>
+                                ��� Dados do Firebase e armazenamento local
+                              </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
                               ⚠️ ATENÇÃO: Esta operação é irreversível!
