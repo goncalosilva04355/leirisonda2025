@@ -292,7 +292,7 @@ function App() {
       try {
         const user = JSON.parse(storedUser);
         console.log(
-          "���� App init: Restoring user from localStorage:",
+          "����� App init: Restoring user from localStorage:",
           user.email,
         );
         setCurrentUser(user);
@@ -4404,18 +4404,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const poolData = {
                             id: Date.now(),
                             name:
-                              form.querySelector('input[placeholder*="Nome"]')
-                                ?.value || "Nova Piscina",
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Nome"]',
+                                ) as HTMLInputElement
+                              )?.value || "Nova Piscina",
                             client:
-                              form.querySelector(
-                                'input[placeholder*="Cliente"]',
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Cliente"]',
+                                ) as HTMLInputElement
                               )?.value || "Cliente",
                             location:
-                              form.querySelector('input[placeholder*="Morada"]')
-                                ?.value || "",
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Morada"]',
+                                ) as HTMLInputElement
+                              )?.value || "",
                             contact:
-                              form.querySelector(
-                                'input[placeholder*="Contacto"]',
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Contacto"]',
+                                ) as HTMLInputElement
                               )?.value || "",
                             type:
                               form.querySelector("select").value ||
