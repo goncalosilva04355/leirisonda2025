@@ -1425,7 +1425,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const setRolePermissions = (role) => {
-    let permissions = {};
+    let permissions = {
+      obras: { view: false, create: false, edit: false, delete: false },
+      manutencoes: { view: false, create: false, edit: false, delete: false },
+      piscinas: { view: false, create: false, edit: false, delete: false },
+      utilizadores: { view: false, create: false, edit: false, delete: false },
+      relatorios: { view: false, create: false, edit: false, delete: false },
+      clientes: { view: false, create: false, edit: false, delete: false },
+    };
 
     switch (role) {
       case "super_admin":
