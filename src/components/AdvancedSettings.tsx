@@ -683,28 +683,56 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   </div>
 
                   {/* Simulate Work Assignment */}
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <h5 className="font-medium text-gray-900">
-                        Simular Atribuição de Obra
-                      </h5>
-                      <p className="text-sm text-gray-600">
-                        Simular uma obra sendo atribuída para testar o fluxo
-                        completo
-                      </p>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h5 className="font-medium text-gray-900">
+                          Simular Atribuição de Obra
+                        </h5>
+                        <p className="text-sm text-gray-600">
+                          Testar o sistema completo de atribuição e notificações
+                        </p>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => {
-                        const testWorkTitle = `Obra Teste ${new Date().toLocaleTimeString()}`;
-                        notifications.sendWorkAssignmentNotification(
-                          testWorkTitle,
-                          "Utilizador Teste",
-                        );
-                      }}
-                      className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-sm font-medium transition-colors"
-                    >
-                      Simular
-                    </button>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => {
+                          const testWorkTitle = `Obra Teste ${new Date().toLocaleTimeString()}`;
+                          notifications.sendWorkAssignmentNotification(
+                            testWorkTitle,
+                            "Utilizador Teste",
+                          );
+                          alert(
+                            `✅ Obra "${testWorkTitle}" atribuída a "Utilizador Teste"\n📋 Verifique o resumo no dashboard`,
+                          );
+                        }}
+                        className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-sm font-medium transition-colors"
+                      >
+                        🏗️ Simular Obra
+                      </button>
+                      <button
+                        onClick={() => {
+                          const testWorkTitle = `Obra Urgente ${new Date().toLocaleTimeString()}`;
+                          // Get current user from localStorage or default
+                          const currentUserName = localStorage.getItem(
+                            "currentUser",
+                          )
+                            ? JSON.parse(localStorage.getItem("currentUser"))
+                                .name
+                            : "Utilizador Atual";
+                          notifications.sendWorkAssignmentNotification(
+                            testWorkTitle,
+                            currentUserName,
+                          );
+                          alert(
+                            `🔔 Obra "${testWorkTitle}" atribuída a si!\n📱 Deve receber notificação push`,
+                          );
+                        }}
+                        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-medium transition-colors"
+                      >
+                        🔔 Testar Push
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
