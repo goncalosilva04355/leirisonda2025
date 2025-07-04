@@ -491,23 +491,47 @@ export function useDataSync(): SyncState & SyncActions {
     // Normal startup - load existing data from localStorage
     console.log("📂 Loading saved data from localStorage");
 
-    // Clean any mock/fictitious data that might exist
+    // Clean only specific known mock/fictitious data while preserving real user data
     const cleanMockData = (data: any[], type: string) => {
-      if (!Array.isArray(data)) return [];
-      // Filter out known mock IDs and names
+      if (!Array.isArray(data)) return data;
+      // Only remove data with very specific mock identifiers
       return data.filter((item) => {
-        if (!item || !item.id) return false;
-        const isMockId =
-          item.id.includes("pool-") ||
-          item.id.includes("maint-") ||
-          item.id.includes("work-") ||
-          item.id.includes("client-");
-        const isMockName =
-          item.name?.includes("Villa Marina") ||
-          item.name?.includes("Condomínio Sol") ||
-          item.title?.includes("Instalação Nova Piscina") ||
-          item.name?.includes("João Silva");
-        return !isMockId && !isMockName;
+        if (!item || !item.id) return true; // Keep items without IDs
+
+        // Only remove items that match exact mock data patterns
+        const isExactMockPool =
+          (item.id === "pool-1" && item.name === "Piscina Villa Marina") ||
+          (item.id === "pool-2" && item.name === "Piscina Condomínio Sol");
+
+        const isExactMockWork =
+          (item.id === "work-1" && item.title === "Instalação Nova Piscina") ||
+          (item.id === "work-2" &&
+            item.title === "Reparação Sistema Filtração") ||
+          (item.id === "work-3" &&
+            item.title === "Manutenção Mensal Pool Club") ||
+          (item.id === "work-4" &&
+            item.title === "Instalação Cobertura Automática") ||
+          (item.id === "work-5" &&
+            item.title === "Renovação Sistema Filtração");
+
+        const isExactMockMaintenance =
+          item.id === "maint-1" ||
+          item.id === "maint-2" ||
+          item.id === "maint-3" ||
+          item.id === "maint-4" ||
+          item.id === "maint-5";
+
+        const isExactMockClient =
+          (item.id === "client-1" && item.name === "João Silva") ||
+          (item.id === "client-2" && item.name === "Maria Santos");
+
+        // Keep everything except exact mock matches
+        return !(
+          isExactMockPool ||
+          isExactMockWork ||
+          isExactMockMaintenance ||
+          isExactMockClient
+        );
       });
     };
 
