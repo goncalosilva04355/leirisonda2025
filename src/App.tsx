@@ -180,7 +180,25 @@ function App() {
           console.log("Service Worker registration failed:", error);
         });
     }
-  }, []);
+
+    // Handle URL hash for PWA shortcuts
+    const handleHashChange = () => {
+      const hash = window.location.hash.substring(1); // Remove the '#'
+      if (hash && isAuthenticated) {
+        setActiveSection(hash);
+      }
+    };
+
+    // Check initial hash on load
+    handleHashChange();
+
+    // Listen for hash changes
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, [isAuthenticated]);
 
   // Login form state
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
