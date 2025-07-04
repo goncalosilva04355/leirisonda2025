@@ -97,12 +97,16 @@ export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
   }
 
   const contextValue: AutoSyncContextType = {
-    isActive: autoSync.isActive,
-    syncing: autoSync.syncing,
-    lastSync: autoSync.lastSync,
-    error: autoSync.error,
-    forceSyncNow: autoSync.forceSyncNow,
-    config: autoSync.config,
+    isActive: autoSync?.isActive ?? false,
+    syncing: autoSync?.syncing ?? false,
+    lastSync: autoSync?.lastSync ?? null,
+    error: autoSync?.error ?? null,
+    forceSyncNow: autoSync?.forceSyncNow ?? (async () => {}),
+    config: autoSync?.config ?? {
+      enabled: false,
+      syncInterval: 30000,
+      collections: [],
+    },
   };
 
   return (
