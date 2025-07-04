@@ -2,6 +2,7 @@
 export interface MockUser {
   uid: string;
   email: string;
+  password: string; // Added password field
   name: string;
   role: "super_admin" | "manager" | "technician";
   active: boolean;
