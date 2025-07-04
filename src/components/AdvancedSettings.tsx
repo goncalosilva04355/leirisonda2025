@@ -714,6 +714,18 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                       </button>
                       <button
                         onClick={() => {
+                          // Check notification permissions first
+                          if (Notification.permission !== "granted") {
+                            alert(
+                              "❌ Notificações não estão ativadas!\n\n" +
+                                "Para receber notificações de obras atribuídas:\n" +
+                                "1. Clique no botão 'Ativar' acima\n" +
+                                "2. Permita notificações quando o browser pedir\n" +
+                                "3. Tente a simulação novamente",
+                            );
+                            return;
+                          }
+
                           const testWorkTitle = `Obra Urgente ${new Date().toLocaleTimeString()}`;
                           // Get current user from localStorage (check both possible keys)
                           let currentUserName = "Utilizador Atual";
@@ -752,8 +764,11 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                             testWorkTitle,
                             currentUserName,
                           );
+
+                          // Show success message with debugging info
+                          const debugInfo = `\n\n📋 Debug Info:\n- Usuário: ${currentUserName}\n- Permissão: ${Notification.permission}\n- Hora: ${new Date().toLocaleTimeString()}`;
                           alert(
-                            `🔔 Obra "${testWorkTitle}" atribuída a si!\n📱 Deve receber notificação push`,
+                            `🔔 Obra "${testWorkTitle}" atribuída a si!\n📱 Deve receber notificação push${debugInfo}`,
                           );
                         }}
                         className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-medium transition-colors"
