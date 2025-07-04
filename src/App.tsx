@@ -246,43 +246,77 @@ function App() {
     setShowUserForm(true);
   };
 
-  const handleDeleteUser = (userId) => {
-    if (userId === 1) {
+  const handleDeleteUser = async (userId) => {
+    // Check if it's the main user
+    const user = users.find(
+      (u) => u.id === userId || u.id === parseInt(userId),
+    );
+    if (user && user.email === "gongonsilva@gmail.com") {
       alert("Não pode eliminar o utilizador principal!");
       return;
     }
+
     if (confirm("Tem a certeza que quer eliminar este utilizador?")) {
-      setUsers(users.filter((u) => u.id !== userId));
+      if (syncEnabled && userSync) {
+        await userSync.deleteUser(userId.toString());
+      } else {
+        // Fallback to local state
+        setUsers(users.filter((u) => u.id !== userId));
+      }
     }
   };
 
-  const handleSaveUser = (e) => {
+  const handleSaveUser = async (e) => {
     e.preventDefault();
 
-    if (editingUser) {
-      // Update existing user
-      setUsers(
-        users.map((u) =>
-          u.id === editingUser.id
-            ? {
-                ...u,
-                ...userForm,
-                password: userForm.password || u.password, // Only update password if provided
-              }
-            : u,
-        ),
-      );
-    } else {
-      // Add new user
-      const newUser = {
-        id: Math.max(...users.map((u) => u.id)) + 1,
-        ...userForm,
-        createdAt: new Date().toISOString().split("T")[0],
-      };
-      setUsers([...users, newUser]);
-    }
+    try {
+      if (syncEnabled && userSync) {
+        if (editingUser) {
+          // Update existing user in Firebase
+          const updateData = {
+            ...userForm,
+            ...(userForm.password ? {} : { password: undefined }), // Don't include empty password
+          };
+          await userSync.updateUser(editingUser.id.toString(), updateData);
+        } else {
+          // Add new user to Firebase
+          await userSync.addUser({
+            name: userForm.name,
+            email: userForm.email,
+            role: userForm.role,
+            permissions: userForm.permissions,
+            active: userForm.active,
+          });
+        }
+      } else {
+        // Fallback to local state
+        if (editingUser) {
+          setUsers(
+            users.map((u) =>
+              u.id === editingUser.id
+                ? {
+                    ...u,
+                    ...userForm,
+                    password: userForm.password || u.password,
+                  }
+                : u,
+            ),
+          );
+        } else {
+          const newUser = {
+            id: Math.max(...users.map((u) => u.id)) + 1,
+            ...userForm,
+            createdAt: new Date().toISOString().split("T")[0],
+          };
+          setUsers([...users, newUser]);
+        }
+      }
 
-    setShowUserForm(false);
+      setShowUserForm(false);
+    } catch (error) {
+      console.error("Error saving user:", error);
+      alert("Erro ao guardar utilizador. Tente novamente.");
+    }
   };
 
   const handlePermissionChange = (module, permission, value) => {
@@ -505,7 +539,7 @@ function App() {
                     <span className="text-gray-600 text-lg">←</span>
                   </button>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Próximas Manutenções
+                    Próximas Manuten��ões
                   </h2>
                 </div>
 
