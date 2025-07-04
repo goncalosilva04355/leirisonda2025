@@ -992,11 +992,11 @@ export function useDataSync(): SyncState & SyncActions {
 
       setState((prev) => ({
         ...prev,
-        pools: [...mockPools],
-        maintenance: [...mockMaintenance],
-        futureMaintenance: future,
-        works: [...mockWorks],
-        clients: [...mockClients],
+        pools: [],
+        maintenance: [],
+        futureMaintenance: [],
+        works: [],
+        clients: [],
         isLoading: false,
         lastSync: new Date(),
         error: null,
