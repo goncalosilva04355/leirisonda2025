@@ -379,7 +379,9 @@ function App() {
   const handleSaveIntervention = () => {
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigat��rios (Piscina e Técnico).");
+      alert(
+        "Por favor, preencha os campos obrigat����rios (Piscina e Técnico).",
+      );
       return;
     }
 
@@ -2189,17 +2191,101 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               {/* Lista de Manutenções */}
               <div className="space-y-4">
-                <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <Wrench className="h-8 w-8 text-gray-400" />
+                {maintenance.length === 0 ? (
+                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Wrench className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhuma manutenção registada
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      As manutenções aparecerão aqui quando forem criadas
+                    </p>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Nenhuma manutenção registada
-                  </h3>
-                  <p className="text-gray-600 text-sm">
-                    As manutenções aparecerão aqui quando forem criadas
-                  </p>
-                </div>
+                ) : (
+                  maintenance.map((maint) => (
+                    <div
+                      key={maint.id}
+                      className="bg-white rounded-lg shadow-sm p-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {maint.poolName} - {maint.type}
+                            </h3>
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                maint.status === "scheduled"
+                                  ? "bg-blue-100 text-blue-700"
+                                  : maint.status === "in_progress"
+                                    ? "bg-orange-100 text-orange-700"
+                                    : maint.status === "completed"
+                                      ? "bg-green-100 text-green-700"
+                                      : "bg-gray-100 text-gray-700"
+                              }`}
+                            >
+                              {maint.status === "scheduled"
+                                ? "Agendado"
+                                : maint.status === "in_progress"
+                                  ? "Em Progresso"
+                                  : maint.status === "completed"
+                                    ? "Concluído"
+                                    : maint.status}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
+                            <div>
+                              <span className="font-medium">Data:</span>{" "}
+                              {new Date(maint.scheduledDate).toLocaleDateString(
+                                "pt-PT",
+                              )}
+                            </div>
+                            <div>
+                              <span className="font-medium">Técnico:</span>{" "}
+                              {maint.technician}
+                            </div>
+                            {maint.observations && (
+                              <div className="col-span-2">
+                                <span className="font-medium">
+                                  Observações:
+                                </span>{" "}
+                                {maint.observations}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {hasPermission("manutencoes", "edit") && (
+                            <button
+                              onClick={() => {
+                                setEditingMaintenance(maint);
+                                setActiveSection("editar-manutencao");
+                              }}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("manutencoes", "delete") && (
+                            <button
+                              onClick={() =>
+                                confirmDelete(
+                                  `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                  () => dataSync.deleteMaintenance(maint.id),
+                                )
+                              }
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -2665,7 +2751,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          aria-label="Usuários Atribu��dos"
+                          aria-label="Usu��rios Atribu��dos"
                         >
                           <option value="">Selecionar usuário...</option>
                           {users
