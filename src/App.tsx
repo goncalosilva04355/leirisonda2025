@@ -1496,6 +1496,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {/* Search Results */}
                   {globalSearchTerm && (
                     <div className="space-y-3 max-h-96 overflow-y-auto">
+                      {/* Check if there's any data to search */}
+                      {works.length === 0 && pools.length === 0 && maintenance.length === 0 && clients.length === 0 ? (
+                        <div className="text-center py-8">
+                          <div className="text-gray-400 mb-2">📋</div>
+                          <p className="text-gray-500 text-sm font-medium">
+                            Não há dados para pesquisar
+                          </p>
+                          <p className="text-gray-400 text-xs mt-1">
+                            Adicione obras, piscinas, manutenções ou clientes primeiro
+                          </p>
+                        </div>
+                      ) : (
                       {/* Works Results */}
                       {works.filter(
                         (work) =>
