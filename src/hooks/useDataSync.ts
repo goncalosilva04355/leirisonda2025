@@ -521,23 +521,35 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Work actions
   const addWork = useCallback(
-    (workData: Omit<Work, "id" | "createdAt">) => {
+    async (workData: Omit<Work, "id" | "createdAt">) => {
       const newWork: Work = {
         ...workData,
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
       };
 
+      // Add to local state immediately
       setState((prev) => ({
         ...prev,
         works: [...prev.works, newWork],
       }));
 
-      if (syncEnabled) {
-        syncWithFirebase();
+      // Add to localStorage for backup
+      const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      savedWorks.push(newWork);
+      localStorage.setItem("works", JSON.stringify(savedWorks));
+
+      // Add to Firebase if sync is enabled
+      if (syncEnabled && realFirebaseService.isReady()) {
+        try {
+          await realFirebaseService.addWork(newWork);
+          console.log("Work added to Firebase successfully");
+        } catch (error) {
+          console.error("Failed to add work to Firebase:", error);
+        }
       }
     },
-    [syncEnabled, syncWithFirebase],
+    [syncEnabled],
   );
 
   const updateWork = useCallback(
