@@ -182,7 +182,7 @@ const mockWorks: Work[] = [
     client: "Pedro Almeida",
     contact: "934567890",
     location: "Cascais",
-    type: "Reparação",
+    type: "Repara��ão",
     status: "pending",
     startDate: "2025-01-25",
     budget: 1500,
@@ -195,7 +195,7 @@ const mockWorks: Work[] = [
   {
     id: "work-3",
     title: "Manutenção Anual Piscina Premium",
-    description: "Serviço completo de manutenç��o anual com limpeza profunda",
+    description: "Serviço completo de manutenção anual com limpeza profunda",
     client: "Hotel Quinta da Marinha",
     contact: "214567890",
     location: "Quinta da Marinha, Cascais",
