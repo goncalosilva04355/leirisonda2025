@@ -188,7 +188,7 @@ function App() {
     error: cleanupError,
   } = useDataCleanup();
 
-  // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
+  // Auto-sync hook for automatic Firebase �� localStorage synchronization
   const autoSyncData = useAutoSync();
   const { syncStatus, isAutoSyncing } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
@@ -282,33 +282,30 @@ function App() {
 
     // Firebase auth disabled to prevent crashes
     console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
-        console.log(
-          "AUTH STATE CHANGE:",
-          user ? `User ${user.email} logged in` : "No user - login required",
-        );
+    console.log(
+      "AUTH STATE CHANGE:",
+      user ? `User ${user.email} logged in` : "No user - login required",
+    );
 
-        // Only accept authentication if user actually exists and is active
-        if (user && user.active) {
-          console.log(
-            "✅ Valid user authenticated:",
-            user.email,
-            "Role:",
-            user.role,
-          );
-          setCurrentUser(user);
-          setIsAuthenticated(true);
-          // Persist current user for notifications
-          localStorage.setItem("currentUser", JSON.stringify(user));
-        } else {
-          console.log("❌ Invalid or inactive user, forcing logout");
-          setCurrentUser(null);
-          setIsAuthenticated(false);
-          authService.logout(); // Force logout if invalid user
-        }
-      });
-
-      // return unsubscribe;
-    });
+    // Only accept authentication if user actually exists and is active
+    if (user && user.active) {
+      console.log(
+        "✅ Valid user authenticated:",
+        user.email,
+        "Role:",
+        user.role,
+      );
+      setCurrentUser(user);
+      setIsAuthenticated(true);
+      // Persist current user for notifications
+      localStorage.setItem("currentUser", JSON.stringify(user));
+    } else {
+      console.log("❌ Invalid or inactive user, forcing logout");
+      setCurrentUser(null);
+      setIsAuthenticated(false);
+      authService.logout(); // Force logout if invalid user
+    }
+    // Firebase code removed to fix syntax errors
 
     // DO NOT initialize default admin automatically - this was causing the security issue
     // Users must always login manually for security
@@ -814,7 +811,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manuten���ões: ${maintenance.length}
+- Total de Manuten����ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -3963,7 +3960,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar interven��ão de manutenç������o
+                      Registar interven��ão de manutenç�����o
                     </p>
                   </div>
                 </div>
@@ -4656,7 +4653,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Instruções
                         </h4>
                         <ul className="text-gray-700 text-sm space-y-1">
-                          <li>�� As notificações funcionam apenas com HTTPS</li>
+                          <li>• As notificações funcionam apenas com HTTPS</li>
                           <li>
                             • Certifique-se de que permite notificaç��es no seu
                             navegador
