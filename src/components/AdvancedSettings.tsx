@@ -75,7 +75,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       if (!savedConfig) {
         setSyncTest({
           status: "error",
-          message: "Firebase não configurado",
+          message: "Firebase n��o configurado",
           details: ["Configure as credenciais Firebase primeiro"],
         });
         return;
@@ -541,7 +541,9 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Configure o Firebase primeiro antes de testar</li>
                   <li>• Os testes verificam conectividade e funcionalidades</li>
-                  <li>• Resultados são apenas simulações para demonstração</li>
+                  <li>
+                    ��� Resultados são apenas simulações para demonstração
+                  </li>
                   <li>• Para uso real, implemente autenticação adequada</li>
                 </ul>
               </div>
@@ -683,29 +685,97 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   </div>
 
                   {/* Simulate Work Assignment */}
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <h5 className="font-medium text-gray-900">
-                        Simular Atribuição de Obra
-                      </h5>
-                      <p className="text-sm text-gray-600">
-                        Simular uma obra sendo atribuída para testar o fluxo
-                        completo
-                      </p>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h5 className="font-medium text-gray-900">
+                          Simular Atribuição de Obra
+                        </h5>
+                        <p className="text-sm text-gray-600">
+                          Testar o sistema completo de atribuição e notificações
+                        </p>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => {
-                        const testWorkTitle = `Obra Teste ${new Date().toLocaleTimeString()}`;
-                        notifications.sendWorkAssignmentNotification(
-                          testWorkTitle,
-                          "Utilizador Teste",
-                        );
-                      }}
-                      className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-sm font-medium transition-colors"
-                    >
-                      Simular
-                    </button>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => {
+                          const testWorkTitle = `Obra Teste ${new Date().toLocaleTimeString()}`;
+                          notifications.sendWorkAssignmentNotification(
+                            testWorkTitle,
+                            "Utilizador Teste",
+                          );
+                          alert(
+                            `✅ Obra "${testWorkTitle}" atribuída a "Utilizador Teste"\n📋 Verifique o resumo no dashboard`,
+                          );
+                        }}
+                        className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-sm font-medium transition-colors"
+                      >
+                        🏗️ Simular Obra
+                      </button>
+                      <button
+                        onClick={() => {
+                          const testWorkTitle = `Obra Urgente ${new Date().toLocaleTimeString()}`;
+                          // Get current user from localStorage or default
+                          const currentUserName = localStorage.getItem(
+                            "currentUser",
+                          )
+                            ? JSON.parse(localStorage.getItem("currentUser"))
+                                .name
+                            : "Utilizador Atual";
+                          notifications.sendWorkAssignmentNotification(
+                            testWorkTitle,
+                            currentUserName,
+                          );
+                          alert(
+                            `🔔 Obra "${testWorkTitle}" atribuída a si!\n📱 Deve receber notificação push`,
+                          );
+                        }}
+                        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-medium transition-colors"
+                      >
+                        🔔 Testar Push
+                      </button>
+                    </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Summary of Assigned Works */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h4 className="font-medium text-yellow-900 mb-3">
+                  📋 Resumo de Atribuições de Obra
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div className="text-center p-3 bg-white rounded border">
+                    <div className="text-2xl font-bold text-gray-900">
+                      {dataSync?.works?.length || 0}
+                    </div>
+                    <div className="text-sm text-gray-600">Total de Obras</div>
+                  </div>
+                  <div className="text-center p-3 bg-white rounded border">
+                    <div className="text-2xl font-bold text-orange-600">
+                      {dataSync?.works?.filter((work) => work.assignedTo)
+                        ?.length || 0}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Obras Atribuídas
+                    </div>
+                  </div>
+                  <div className="text-center p-3 bg-white rounded border">
+                    <div className="text-2xl font-bold text-green-600">
+                      {dataSync?.works?.filter(
+                        (work) => work.status === "completed",
+                      )?.length || 0}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Obras Concluídas
+                    </div>
+                  </div>
+                </div>
+                <div className="text-sm text-yellow-800">
+                  💡 Este resumo mostra o estado atual do sistema de atribuição
+                  de obras. Quando uma obra é atribuída, automaticamente aparece
+                  nas estatísticas e o utilizador responsável recebe uma
+                  notificação push.
                 </div>
               </div>
 
@@ -776,12 +846,15 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   <div className="mt-4 text-center">
                     <button
                       onClick={() => {
-                        onNavigateToSection("utilizadores");
-                        onBack();
+                        if (onNavigateToSection) {
+                          console.log("🔄 Redirecionando para Utilizadores...");
+                          onNavigateToSection("utilizadores");
+                          onBack();
+                        }
                       }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
                     >
-                      Aceder aos Utilizadores
+                      <span>👥 Aceder aos Utilizadores</span>
                     </button>
                   </div>
                 )}
@@ -810,8 +883,10 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   <div className="mt-4 text-center">
                     <button
                       onClick={() => {
-                        onNavigateToSection("relatorios");
-                        onBack();
+                        if (onNavigateToSection) {
+                          onNavigateToSection("relatorios");
+                          onBack();
+                        }
                       }}
                       className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                     >
@@ -844,8 +919,10 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   <div className="mt-4 text-center">
                     <button
                       onClick={() => {
-                        onNavigateToSection("clientes");
-                        onBack();
+                        if (onNavigateToSection) {
+                          onNavigateToSection("clientes");
+                          onBack();
+                        }
                       }}
                       className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                     >
@@ -878,12 +955,17 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   <div className="mt-4 text-center">
                     <button
                       onClick={() => {
-                        onNavigateToSection("configuracoes");
-                        onBack();
+                        if (onNavigateToSection) {
+                          console.log(
+                            "🔄 Redirecionando para Configurações...",
+                          );
+                          onNavigateToSection("configuracoes");
+                          onBack();
+                        }
                       }}
-                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center space-x-2"
                     >
-                      Aceder às Configurações
+                      <span>⚙️ Aceder às Configurações</span>
                     </button>
                   </div>
                 )}

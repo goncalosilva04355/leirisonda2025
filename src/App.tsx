@@ -901,18 +901,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
-    // Only add to assigned works if the work is assigned to the current user
-    if (currentUser && assignedTo === currentUser.name) {
-      const newAssignedWork = {
-        id: Date.now(),
-        title: workTitle,
-        assignedTo: assignedTo,
-        dateAssigned: new Date().toISOString(),
-        status: "Nova",
-      };
-      setAssignedWorks((prev) => [newAssignedWork, ...prev]);
+    // Always add to assigned works list when a work is assigned
+    const newAssignedWork = {
+      id: Date.now(),
+      title: workTitle,
+      assignedTo: assignedTo,
+      dateAssigned: new Date().toISOString(),
+      status: "Nova",
+    };
+    setAssignedWorks((prev) => [newAssignedWork, ...prev]);
 
-      // Send notification if enabled and permission granted
+    // Send notification if user is assigned to current user and notifications are enabled
+    if (currentUser && assignedTo === currentUser.name) {
       if (notificationsEnabled && Notification.permission === "granted") {
         showNotification(
           "Nova Obra Atribuída",
@@ -921,6 +921,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         );
       }
     }
+
+    // Console log for debugging purposes (admin view)
+    console.log(`🏗️ OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
   const testPushNotification = () => {
@@ -1549,7 +1553,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <span className="text-gray-600 text-lg">→</span>
                   </button>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Próximas Manuten��ões
+                    Próximas Manuten����es
                   </h2>
                 </div>
 
@@ -6617,6 +6621,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
+              console.log(`🔄 Navegando para seção: ${section}`);
               navigateToSection(section);
               setShowAdvancedSettings(false);
               setIsAdvancedUnlocked(false);
