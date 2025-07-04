@@ -1909,17 +1909,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
                                       <span>📍</span>
                                       <span>
-                                        Atribuída em:{" "}
+                                        Criada em:{" "}
                                         {new Date(
-                                          work.dateAssigned,
+                                          work.createdAt,
                                         ).toLocaleDateString("pt-PT")}
                                       </span>
                                     </div>
                                     <span
                                       className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
-                                        work.status === "Nova"
-                                          ? "bg-blue-100 text-blue-800"
-                                          : "bg-gray-100 text-gray-800"
+                                        work.status === "Em Progresso"
+                                          ? "bg-yellow-100 text-yellow-800"
+                                          : work.status === "Concluída"
+                                            ? "bg-green-100 text-green-800"
+                                            : "bg-blue-100 text-blue-800"
                                       }`}
                                     >
                                       {work.status}
@@ -1929,17 +1931,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <div className="flex space-x-2">
                                   <button
                                     onClick={() => {
-                                      const updatedWorks = assignedWorks.map(
-                                        (w) =>
-                                          w.id === work.id
-                                            ? { ...w, status: "Em Progresso" }
-                                            : w,
-                                      );
-                                      setAssignedWorks(updatedWorks);
+                                      if (work.status !== "Em Progresso") {
+                                        dataSync.updateWork(work.id, {
+                                          status: "Em Progresso",
+                                        });
+                                      }
                                     }}
-                                    className="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700"
+                                    className={`px-3 py-1 text-white text-sm rounded-lg transition-colors ${
+                                      work.status === "Em Progresso"
+                                        ? "bg-gray-400 cursor-not-allowed"
+                                        : "bg-purple-600 hover:bg-purple-700"
+                                    }`}
+                                    disabled={work.status === "Em Progresso"}
                                   >
-                                    Iniciar
+                                    {work.status === "Em Progresso"
+                                      ? "Em Progresso"
+                                      : "Iniciar"}
                                   </button>
                                 </div>
                               </div>
