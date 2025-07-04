@@ -638,7 +638,7 @@ function App() {
       console.log("🔐 Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("✅ Login successful for:", result.user.email);
+        console.log("�� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -4229,7 +4229,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Hora In���cio
+                          Hora Início
                         </label>
                         <input
                           type="time"
@@ -5202,7 +5202,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>��� Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>• Equipas respons��veis</li>
-                        <li>������� Estados de progresso</li>
+                        <li>��������� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
