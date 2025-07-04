@@ -15,6 +15,8 @@ export interface CleanupResult {
       pools: number;
       works: number;
       maintenance: number;
+      clients: number;
+      interventions: number;
     };
     realtimeDbCleared: boolean;
     localStorageCleared: boolean;
@@ -38,6 +40,8 @@ class DataCleanupService {
           pools: 0,
           works: 0,
           maintenance: 0,
+          clients: 0,
+          interventions: 0,
         },
         realtimeDbCleared: false,
         localStorageCleared: false,
@@ -77,6 +81,7 @@ class DataCleanupService {
           const clientsSnapshot = await getDocs(collection(db, "clients"));
           for (const clientDoc of clientsSnapshot.docs) {
             await deleteDoc(doc(db, "clients", clientDoc.id));
+            result.details.firestoreDeleted.clients++;
           }
           console.log(
             `Deleted ${clientsSnapshot.docs.length} clients from Firestore`,
@@ -92,6 +97,7 @@ class DataCleanupService {
           );
           for (const interventionDoc of interventionsSnapshot.docs) {
             await deleteDoc(doc(db, "interventions", interventionDoc.id));
+            result.details.firestoreDeleted.interventions++;
           }
           console.log(
             `Deleted ${interventionsSnapshot.docs.length} interventions from Firestore`,
@@ -101,7 +107,7 @@ class DataCleanupService {
         }
 
         console.log(
-          `Firestore cleanup complete: ${result.details.firestoreDeleted.pools} pools, ${result.details.firestoreDeleted.works} works, ${result.details.firestoreDeleted.maintenance} maintenance deleted`,
+          `Firestore cleanup complete: ${result.details.firestoreDeleted.pools} pools, ${result.details.firestoreDeleted.works} works, ${result.details.firestoreDeleted.maintenance} maintenance, ${result.details.firestoreDeleted.clients} clients, ${result.details.firestoreDeleted.interventions} interventions deleted`,
         );
       }
 
