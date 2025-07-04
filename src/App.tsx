@@ -87,6 +87,7 @@ const initialUsers = [
 ];
 
 function App() {
+  // SECURITY: Always start as not authenticated
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -482,7 +483,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest����o
     `;
     downloadPDF(
       content,
@@ -5537,7 +5538,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               }`}
             >
               <Wrench className="h-5 w-5" />
-              <span>Nova Manutenç��o</span>
+              <span>Nova Manutenção</span>
             </button>
 
             <button
