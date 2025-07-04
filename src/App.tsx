@@ -179,6 +179,28 @@ function App() {
     addClient,
   } = dataSync;
 
+  // Debug logging for Alexandre issue
+  useEffect(() => {
+    if (currentUser?.name.toLowerCase().includes("alexandre")) {
+      console.log("🔍 DEBUG Alexandre - Data loaded:", {
+        currentUser: currentUser.name,
+        worksCount: works.length,
+        works: works.map((w) => ({
+          id: w.id,
+          title: w.title,
+          assignedTo: w.assignedTo,
+          assignedUsers: w.assignedUsers,
+        })),
+        localStorage: {
+          pools: JSON.parse(localStorage.getItem("pools") || "[]").length,
+          works: JSON.parse(localStorage.getItem("works") || "[]").length,
+          maintenance: JSON.parse(localStorage.getItem("maintenance") || "[]")
+            .length,
+        },
+      });
+    }
+  }, [currentUser, works]);
+
   // Data cleanup hook
   const {
     cleanAllData,
@@ -861,7 +883,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
 - Manutenções Realizadas: ${maintenance.length}
-- Futuras Manutenções: ${futureMaintenance.length}
+- Futuras Manuten��ões: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
