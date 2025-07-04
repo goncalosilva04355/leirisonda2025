@@ -3411,11 +3411,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const status =
                             form.querySelector('select[name="status"]')
                               ?.value || "pending";
-                          const responsibleUser = form.querySelector(
-                            'select[aria-label="Usuários Atribuídos"]',
-                          );
-                          const selectedUserId = responsibleUser?.value || null;
-
                           // Create complete work data object
                           const workData = {
                             id: Date.now(),
@@ -3427,10 +3422,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             startTime: startTime,
                             endTime: endTime,
                             status: status,
-                            assignedTo: selectedUserId
-                              ? users.find((u) => u.id == selectedUserId)?.name
-                              : "",
-                            assignedUserId: selectedUserId,
+                            assignedTo:
+                              assignedUsers.length > 0
+                                ? assignedUsers.map((u) => u.name).join(", ")
+                                : "",
+                            assignedUsers: assignedUsers, // Store complete user objects
+                            assignedUserIds: assignedUsers.map((u) => u.id), // Store user IDs
                             vehicles: workVehicles,
                             technicians: workTechnicians,
                             photos: uploadedPhotos,
@@ -3442,18 +3439,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Use sync system to add work (will handle Firebase and localStorage)
                           addWork(workData);
 
-                          // Send notification if user assigned
-                          if (selectedUserId) {
-                            const selectedUser = users.find(
-                              (u) => u.id == selectedUserId,
+                          // Send notifications to all assigned users
+                          assignedUsers.forEach((assignedUser) => {
+                            sendWorkAssignmentNotification(
+                              workTitle,
+                              assignedUser.name,
                             );
-                            if (selectedUser) {
-                              sendWorkAssignmentNotification(
-                                workTitle,
-                                selectedUser.name,
-                              );
-                            }
-                          }
+                          });
 
                           // Save water bore data if work type is "furo"
                           if (selectedWorkType === "furo") {
@@ -3478,8 +3470,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           alert(
                             `Obra "${workTitle}" criada com sucesso! ` +
-                              (selectedUserId
-                                ? "Notificação enviada ao responsável."
+                              (assignedUsers.length > 0
+                                ? `Notificações enviadas a ${assignedUsers.length} responsável(eis).`
                                 : "") +
                               (selectedWorkType === "furo"
                                 ? " Dados do furo registados."
@@ -3493,6 +3485,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           setWorkTechnicians([]);
                           setCurrentVehicle("");
                           setCurrentTechnician("");
+                          setAssignedUsers([]);
+                          setCurrentAssignedUser("");
                           setActiveSection("dashboard");
                         }}
                         className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
