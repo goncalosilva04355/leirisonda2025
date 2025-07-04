@@ -2364,7 +2364,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {/* Location */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Localizaç��o Completa *
+                      Localização Completa *
                     </label>
                     <input
                       type="text"
@@ -2617,7 +2617,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <input
                         type="date"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        defaultValue={new Date().toISOString().split("T")[0]}
+                        value={maintenanceForm.date}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            date: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
