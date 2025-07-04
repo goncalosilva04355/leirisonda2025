@@ -20,7 +20,6 @@ import { FirebaseConfig } from "./FirebaseConfig";
 interface AdvancedSettingsProps {
   onBack: () => void;
   onNavigateToSection?: (section: string) => void;
-  onShowAuthDiagnostic?: () => void;
   dataSync?: {
     pools: any[];
     maintenance: any[];
@@ -45,7 +44,6 @@ interface AdvancedSettingsProps {
 export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
   onBack,
   onNavigateToSection,
-  onShowAuthDiagnostic,
   dataSync,
   notifications,
 }) => {
@@ -157,7 +155,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
     try {
       // Test data availability
-      tests.push("🔄 Verificando dados disponíveis...");
+      tests.push("���� Verificando dados disponíveis...");
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       if (dataSync) {
