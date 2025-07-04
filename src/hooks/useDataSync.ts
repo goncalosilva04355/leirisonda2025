@@ -206,6 +206,25 @@ export function useDataSync(): SyncState & SyncActions {
     return !!localStorage.getItem("firebase-config");
   });
 
+  // Initial sync when enabled
+  useEffect(() => {
+    if (syncEnabled) {
+      const performInitialSync = async () => {
+        const initialized = realFirebaseService.initialize();
+        if (initialized) {
+          await syncWithFirebase();
+        } else {
+          setState((prev) => ({
+            ...prev,
+            error: "Firebase configuration invalid",
+          }));
+        }
+      };
+
+      performInitialSync();
+    }
+  }, [syncEnabled, syncWithFirebase]);
+
   // Real-time listeners
   useEffect(() => {
     if (!syncEnabled || !realFirebaseService.isReady()) {
