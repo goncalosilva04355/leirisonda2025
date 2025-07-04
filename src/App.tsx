@@ -3215,10 +3215,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => {
-                            setEditingUser(user);
-                            setShowUserForm(true);
-                          }}
+                          onClick={() => handleEditUser(user)}
                           className="p-2 text-gray-400 hover:text-gray-600"
                         >
                           <Edit2 className="h-4 w-4" />
@@ -4373,7 +4370,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Shield className="h-8 w-8 text-red-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                Área Protegida
+                ��rea Protegida
               </h1>
               <p className="text-gray-600">
                 Insira a palavra-passe para aceder às configurações avançadas
