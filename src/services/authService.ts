@@ -7,7 +7,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/config";
+import { auth, db, isFirebaseReady } from "../firebase/config";
 import { mockAuthService } from "./mockAuthService";
 
 export interface UserProfile {
@@ -233,8 +233,8 @@ class AuthService {
       return { success: false, error: "Email e password são obrigatórios" };
     }
 
-    // Try Firebase first for cross-device access, but with timeout
-    if (auth && db) {
+    // Try Firebase first for cross-device access, but only if properly initialized
+    if (isFirebaseReady()) {
       console.log("🔥 Attempting Firebase login for cross-device access...");
       try {
         // Set a timeout to prevent hanging
