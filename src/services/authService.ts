@@ -235,13 +235,13 @@ class AuthService {
 
     // Try Firebase first for cross-device access, but with timeout
     if (auth && db) {
-      console.log("Attempting Firebase login for cross-device access...");
+      console.log("🔥 Attempting Firebase login for cross-device access...");
       try {
         // Set a timeout to prevent hanging
         const result = await Promise.race([
           this.loginWithFirebase(email, password),
           new Promise<{ success: boolean; error: string }>((_, reject) =>
-            setTimeout(() => reject(new Error("Firebase timeout")), 5000),
+            setTimeout(() => reject(new Error("Firebase timeout")), 8000),
           ),
         ]);
 
@@ -252,13 +252,17 @@ class AuthService {
           return result;
         }
       } catch (error: any) {
-        console.warn(
-          "Firebase login failed, trying local auth:",
-          error.message || error,
-        );
+        // Only log specific errors, not all Firebase errors
+        if (error.message === "Firebase timeout") {
+          console.log("⏱️ Firebase login timeout, using local auth");
+        } else if (error.code === "auth/network-request-failed") {
+          console.log("🌐 Network error, using local auth");
+        } else {
+          console.log("🔄 Firebase unavailable, using local auth");
+        }
       }
     } else {
-      console.log("Firebase not available, using local authentication");
+      console.log("📱 Firebase not configured, using local authentication");
     }
 
     // Fallback to mock auth for local-only users
