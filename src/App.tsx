@@ -5110,7 +5110,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-green-900">
-                              Navegação Maps
+                              Navega��ão Maps
                             </h4>
                             <button
                               onClick={() =>
@@ -6309,12 +6309,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       : activeWorkFilter
                             }" aplicado.`}
                       </p>
-                      <button
-                        onClick={() => navigateToSection("nova-obra")}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                      >
-                        Criar Nova Obra
-                      </button>
+                      {hasPermission("obras", "create") && (
+                        <button
+                          onClick={() => navigateToSection("nova-obra")}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                        >
+                          Criar Nova Obra
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
