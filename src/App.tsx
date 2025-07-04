@@ -847,7 +847,7 @@ ${index + 1}. ${work.title}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: ���${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -1063,7 +1063,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     if (Notification.permission === "granted") {
       showNotification(
         "Teste de Notificação",
-        "As notificações est��o a funcionar corretamente!",
+        "As notificações estão a funcionar corretamente!",
         "test",
       );
     } else {
@@ -5713,7 +5713,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Secund��rio
+                            Email Secundário
                           </label>
                           <input
                             type="email"
@@ -5747,7 +5747,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Rua, n��mero, andar, etc."
+                            placeholder="Rua, número, andar, etc."
                             required
                           />
                         </div>
@@ -5801,7 +5801,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Nome da pessoa respons����vel"
+                            placeholder="Nome da pessoa responsável"
                           />
                         </div>
                         <div>
@@ -5811,7 +5811,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Informa��ões relevantes sobre o cliente, preferências, histórico, etc."
+                            placeholder="Informações relevantes sobre o cliente, preferências, histórico, etc."
                           />
                         </div>
                       </div>
@@ -6045,7 +6045,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  ���� {work.location}
+                                  📍 {work.location}
                                 </button>
                               </div>
                               <div>
@@ -6619,7 +6619,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenç��o">Em Manutenç��o</option>
+                          <option value="Em Manutenç���o">
+                            Em Manutenç��o
+                          </option>
                         </select>
                       </div>
                       <div>
