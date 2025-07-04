@@ -995,6 +995,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const menuItems = [
     { id: "dashboard", icon: Home, label: "Dashboard", path: "/dashboard" },
+    { id: "obras", icon: Building2, label: "Obras", path: "/obras" },
     { id: "nova-obra", icon: Plus, label: "Nova Obra", path: "/obras/nova" },
     {
       id: "nova-manutencao",
