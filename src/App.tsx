@@ -7190,6 +7190,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <span>Piscinas</span>
             </button>
 
+            {/* Only show Users button for super admins */}
+            {currentUser?.role === "super_admin" && (
+              <button
+                onClick={() => {
+                  navigateToSection("utilizadores");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "utilizadores"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Users className="h-5 w-5" />
+                <span>Utilizadores</span>
+              </button>
+            )}
+
             <button
               onClick={() => {
                 navigateToSection("futuras-manutencoes");
