@@ -1278,67 +1278,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
               </div>
 
-              {/* Ações Rápidas */}
-              <div className="bg-white rounded-lg shadow-sm p-4">
-                <div className="flex items-center space-x-2 mb-4">
-                  <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
-                    <Plus className="h-4 w-4 text-green-600" />
-                  </div>
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Ações Rápidas
-                  </h2>
-                </div>
-
-                <div className="space-y-3">
-                  <button
-                    onClick={() => setActiveSection("nova-obra")}
-                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
-                  >
-                    <Plus className="h-5 w-5 text-gray-600" />
-                    <span className="font-medium text-gray-900">Nova Obra</span>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveSection("nova-manutencao")}
-                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
-                  >
-                    <Wrench className="h-5 w-5 text-gray-600" />
-                    <span className="font-medium text-gray-900">
-                      Manutenç��o Piscinas
-                    </span>
-                  </button>
-
-                  <button className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left">
-                    <Building2 className="h-5 w-5 text-gray-600" />
-                    <span className="font-medium text-gray-900">
-                      Todas as Obras
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveSection("utilizadores")}
-                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
-                  >
-                    <UserPlus className="h-5 w-5 text-gray-600" />
-                    <span className="font-medium text-gray-900">
-                      Novo Utilizador
-                    </span>
-                  </button>
-
-                  <button className="w-full flex items-center space-x-3 p-3 border border-blue-200 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors text-left">
-                    <div className="w-5 h-5 flex items-center justify-center">
-                      <span className="text-blue-600">���</span>
-                    </div>
-                    <span className="font-medium text-blue-900">
-                      Diagnóstico de Sincronização
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Pesquisar Obras */}
-              <div className="bg-white rounded-lg shadow-sm p-4">
-                <div className="flex items-center space-x-2 mb-4">
                   <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
                     <span className="text-blue-600">🔍</span>
                   </div>
