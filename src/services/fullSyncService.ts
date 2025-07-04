@@ -33,6 +33,19 @@ class FullSyncService {
       clientsSync: { local: 0, firebase: 0, merged: 0 },
     };
 
+    // EMERGENCY STOP - Firebase quota exceeded - block ALL operations
+    console.error(
+      "🚨 EMERGENCY: Firebase operations BLOCKED due to quota exceeded",
+    );
+    return {
+      success: true,
+      message: "Firebase operations blocked - quota exceeded",
+      details: [
+        "All Firebase operations temporarily blocked to prevent quota exceeded",
+      ],
+      stats,
+    };
+
     if (!db) {
       return {
         success: false,
