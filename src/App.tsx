@@ -30,6 +30,7 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { InstallPrompt } from "./components/InstallPrompt";
+import { AuthSyncDiagnostic } from "./components/AuthSyncDiagnostic";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
