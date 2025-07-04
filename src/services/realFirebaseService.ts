@@ -56,6 +56,7 @@ class RealFirebaseService {
   // Test connection
   async testConnection(): Promise<boolean> {
     if (!this.isReady()) {
+      console.warn("Firebase service not ready for connection test");
       return false;
     }
 
@@ -63,9 +64,13 @@ class RealFirebaseService {
       const testRef = ref(this.database!, "test");
       await set(testRef, { timestamp: Date.now() });
       await remove(testRef);
+      console.log("Firebase connection test successful");
       return true;
     } catch (error) {
-      console.error("Firebase connection test failed:", error);
+      console.warn(
+        "Firebase connection test failed, will use local mode:",
+        error,
+      );
       return false;
     }
   }
