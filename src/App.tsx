@@ -1080,11 +1080,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Obras Atribuídas */}
                 <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
                   <div className="flex items-center justify-between">
