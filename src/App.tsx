@@ -5653,7 +5653,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Basic Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informações Básicas
+                        Informa��ões Básicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -6070,7 +6070,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ��{work.budget}
+                                  €{work.budget}
                                 </div>
                               )}
                             </div>
@@ -6137,7 +6137,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
                           ? "Não há obras registadas no sistema."
-                          : `Não h���� obras com o filtro "${
+                          : `Não há obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
                                 : activeWorkFilter === "in_progress"
@@ -6433,10 +6433,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           defaultValue={editingWork?.workType || "installation"}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                          <option value="installation">Instala��ão</option>
+                          <option value="installation">Instalação</option>
                           <option value="maintenance">Manutenção</option>
                           <option value="repair">Reparação</option>
-                          <option value="renovation">Renova��ão</option>
+                          <option value="renovation">Renovação</option>
                           <option value="inspection">Inspeção</option>
                         </select>
                       </div>
@@ -6498,7 +6498,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const clientEmail = inputs[8].value; // Email do Cliente
                           const priority = inputs[9].value; // Prioridade
                           const workType = inputs[10].value; // Tipo de Obra
-                          const description = inputs[12].value; // Descri��ão
+                          const description = inputs[12].value; // Descrição
                           const technicalNotes = inputs[12].value; // Observações Técnicas
 
                           dataSync.updateWork(editingWork.id, {
@@ -6619,9 +6619,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenç���o">
-                            Em Manutenç��o
-                          </option>
+                          <option value="Em Manutenção">Em Manutenção</option>
                         </select>
                       </div>
                       <div>
