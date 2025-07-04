@@ -99,6 +99,7 @@ function App() {
     phone: "",
     address: "",
   });
+  const [activeWorkFilter, setActiveWorkFilter] = useState("all");
 
   // Custom setActiveSection that updates URL hash
   const navigateToSection = (section: string) => {
