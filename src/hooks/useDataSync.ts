@@ -111,7 +111,7 @@ const mockMaintenance: Maintenance[] = [
     id: "maint-2",
     poolId: "pool-2",
     poolName: "Piscina Condomínio Sol",
-    type: "Manutenç��o",
+    type: "Manutenção",
     status: "completed",
     description: "Verificação de equipamentos e limpeza",
     scheduledDate: "2025-01-10",
@@ -195,7 +195,7 @@ const mockWorks: Work[] = [
   {
     id: "work-3",
     title: "Manutenção Anual Piscina Premium",
-    description: "Serviço completo de manutenção anual com limpeza profunda",
+    description: "Serviço completo de manutenç��o anual com limpeza profunda",
     client: "Hotel Quinta da Marinha",
     contact: "214567890",
     location: "Quinta da Marinha, Cascais",
