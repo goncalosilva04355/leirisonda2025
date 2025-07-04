@@ -92,7 +92,7 @@ const initialUsers = [
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState(ADMIN_USER);
+  const [currentUser, setCurrentUser] = useState<any>(ADMIN_USER);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("futuras-manutencoes");
 
