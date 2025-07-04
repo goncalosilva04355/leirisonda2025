@@ -39,10 +39,11 @@ interface AdvancedSettingsProps {
 export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
   onBack,
   dataSync,
+  notifications,
 }) => {
-  const [activeTab, setActiveTab] = useState<"firebase" | "sync-test">(
-    "firebase",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "firebase" | "sync-test" | "notifications"
+  >("firebase");
   const [syncTest, setSyncTest] = useState({
     status: "idle", // idle, testing, success, error
     message: "",
@@ -128,7 +129,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       setSyncTest({
         status: "error",
         message: "Erro durante o teste",
-        details: ["❌ Erro inesperado durante a verificação"],
+        details: ["❌ Erro inesperado durante a verificaç��o"],
       });
     }
   };
