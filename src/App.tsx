@@ -2116,19 +2116,179 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
+              {/* Header */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Utilizadores
-                </h1>
-                <p className="text-gray-600 text-sm">
-                  Gestão de utilizadores do sistema
-                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <UserCheck className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Utilizadores
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gestão de utilizadores do sistema
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowUserForm(true)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    <span>Novo Utilizador</span>
+                  </button>
+                </div>
               </div>
+
+              {/* Search */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
-                <p className="text-gray-600">
-                  Sistema de utilizadores em desenvolvimento
-                </p>
+                <input
+                  type="text"
+                  placeholder="Pesquisar utilizadores..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
+
+              {/* Users List */}
+              <div className="space-y-4">
+                {users.map((user) => (
+                  <div
+                    key={user.id}
+                    className="bg-white rounded-lg shadow-sm p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                          <UserCheck className="h-6 w-6 text-gray-600" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {user.name}
+                          </h3>
+                          <p className="text-gray-600">{user.email}</p>
+                          <div className="flex items-center space-x-4 mt-2">
+                            <span className="text-sm text-gray-500">
+                              Perfil: {user.role}
+                            </span>
+                            <span
+                              className={`text-sm px-2 py-1 rounded-full ${
+                                user.active
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {user.active ? "Ativo" : "Inativo"}
+                            </span>
+                            <span className="text-sm text-gray-500">
+                              Criado: {user.createdAt}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => {
+                            setEditingUser(user);
+                            setShowUserForm(true);
+                          }}
+                          className="p-2 text-gray-400 hover:text-gray-600"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteUser(user.id)}
+                          className="p-2 text-gray-400 hover:text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* User Form Modal */}
+              {showUserForm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                    <h3 className="text-lg font-semibold mb-4">
+                      {editingUser ? "Editar Utilizador" : "Novo Utilizador"}
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Nome
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          defaultValue={editingUser?.name || ""}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          defaultValue={editingUser?.email || ""}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Perfil
+                        </label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          defaultValue={editingUser?.role || "technician"}
+                        >
+                          <option value="super_admin">Super Admin</option>
+                          <option value="manager">Gestor</option>
+                          <option value="technician">Técnico</option>
+                        </select>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="active"
+                          className="mr-2"
+                          defaultChecked={editingUser?.active ?? true}
+                        />
+                        <label
+                          htmlFor="active"
+                          className="text-sm text-gray-700"
+                        >
+                          Utilizador ativo
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex justify-end space-x-3 mt-6">
+                      <button
+                        onClick={() => {
+                          setShowUserForm(false);
+                          setEditingUser(null);
+                        }}
+                        className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleSaveUser();
+                          setShowUserForm(false);
+                          setEditingUser(null);
+                        }}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      >
+                        Guardar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         );
