@@ -213,7 +213,7 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
       }
     };
 
-    // Função para restaurar métodos originais
+    // Fun��ão para restaurar métodos originais
     return () => {
       localStorage.setItem = originalSetItem;
       localStorage.removeItem = originalRemoveItem;
@@ -226,7 +226,7 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
       syncStatus.current.isActive = false;
       syncStatus.current.syncing = false;
       syncStatus.current.lastSync = null;
-      syncStatus.current.error = "Auto-sync disabled";
+      syncStatus.current.error = null;
       console.log("🛑 Auto-sync disabled via config");
       return;
     }
