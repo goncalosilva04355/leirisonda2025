@@ -593,14 +593,22 @@ function App() {
         // Clear login form
         setLoginForm({ email: "", password: "" });
 
+        console.log("✅ Login state updated", {
+          user: result.user.email,
+          role: result.user.role,
+          isAuthenticated: true,
+        });
+
         // Use setTimeout to ensure state is set before navigation
         setTimeout(() => {
           // Handle any pending hash navigation after login
           const hash = window.location.hash.substring(1);
           if (hash && hash !== "login") {
+            console.log("🔄 Navigating to hash section:", hash);
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
+            console.log("🔄 Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -721,7 +729,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest���o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
