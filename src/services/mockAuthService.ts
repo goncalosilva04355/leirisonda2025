@@ -62,7 +62,7 @@ class MockAuthService {
 
     console.log(
       "MockAuthService loaded users:",
-      this.users.map((u) => u.email),
+      this.users.map((u) => `${u.name} (${u.email})`),
     );
   }
 
