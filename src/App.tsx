@@ -928,7 +928,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "configuracoes",
       icon: Settings,
-      label: "Configurações",
+      label: "Configuraç��es",
       path: "/configuracoes",
     },
   ];
@@ -2667,7 +2667,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Técnico Responsável *
                       </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.technician}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            technician: e.target.value,
+                          })
+                        }
+                      >
                         <option value="">Selecionar técnico</option>
                         {users
                           .filter((user) => user.role !== "super_admin")
