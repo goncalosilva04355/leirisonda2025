@@ -4849,13 +4849,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => navigateToSection("nova-obra")}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>Nova Obra</span>
-                  </button>
+                  {hasPermission("obras", "create") && (
+                    <button
+                      onClick={() => navigateToSection("nova-obra")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Nova Obra</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
