@@ -1061,24 +1061,32 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Status Cards */}
               <div className="space-y-3">
                 {/* Pendentes */}
-                <div className="bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm">
+                <button
+                  onClick={() => navigateToSection("obras")}
+                  className="w-full bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="text-left">
                       <h3 className="text-lg font-semibold text-gray-900">
                         Pendentes
                       </h3>
                       <p className="text-sm text-gray-500">
-                        Necessitam atenção
+                        Obras necessitam atenção
                       </p>
                     </div>
-                    <div className="text-4xl font-bold text-gray-900">0</div>
+                    <div className="text-4xl font-bold text-gray-900">
+                      {works.filter((w) => w.status === "pending").length}
+                    </div>
                   </div>
-                </div>
+                </button>
 
                 {/* Em Progresso */}
-                <div className="bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm">
+                <button
+                  onClick={() => navigateToSection("obras")}
+                  className="w-full bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="text-left">
                       <h3 className="text-lg font-semibold text-gray-900">
                         Em Progresso
                       </h3>
@@ -1086,35 +1094,49 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Obras em andamento
                       </p>
                     </div>
-                    <div className="text-4xl font-bold text-gray-900">0</div>
+                    <div className="text-4xl font-bold text-gray-900">
+                      {works.filter((w) => w.status === "in_progress").length}
+                    </div>
                   </div>
-                </div>
+                </button>
 
                 {/* Concluídas */}
-                <div className="bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm">
+                <button
+                  onClick={() => navigateToSection("obras")}
+                  className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="text-left">
                       <h3 className="text-lg font-semibold text-gray-900">
                         Concluídas
                       </h3>
-                      <p className="text-sm text-gray-500">Finalizadas</p>
+                      <p className="text-sm text-gray-500">Obras finalizadas</p>
                     </div>
-                    <div className="text-4xl font-bold text-gray-900">0</div>
+                    <div className="text-4xl font-bold text-gray-900">
+                      {works.filter((w) => w.status === "completed").length}
+                    </div>
                   </div>
-                </div>
+                </button>
 
-                {/* Folhas por Fazer */}
-                <div className="bg-white rounded-lg border-l-4 border-blue-500 p-4 shadow-sm">
+                {/* Falta de Folhas de Obra */}
+                <button
+                  onClick={() => navigateToSection("obras")}
+                  className="w-full bg-white rounded-lg border-l-4 border-blue-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="text-left">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Folhas por Fazer
+                        Falta de Folhas de Obra
                       </h3>
-                      <p className="text-sm text-gray-500">A processar</p>
+                      <p className="text-sm text-gray-500">
+                        Folhas não geradas
+                      </p>
                     </div>
-                    <div className="text-4xl font-bold text-gray-900">0</div>
+                    <div className="text-4xl font-bold text-gray-900">
+                      {works.filter((w) => !w.folhaGerada).length}
+                    </div>
                   </div>
-                </div>
+                </button>
 
                 {/* Obras Atribuídas */}
                 <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
