@@ -32,7 +32,7 @@ class DataIntegrityService {
       this.performIntegrityCheck();
     }, 30000);
 
-    console.log("🔍 Monitoramento de integridade de dados iniciado");
+    // Integrity monitoring started silently
   }
 
   /**
@@ -43,7 +43,7 @@ class DataIntegrityService {
       clearInterval(this.integrityCheckInterval);
       this.integrityCheckInterval = null;
     }
-    console.log("🔍 Monitoramento de integridade de dados parado");
+    // Integrity monitoring stopped silently
   }
 
   /**
@@ -232,9 +232,7 @@ class DataIntegrityService {
         this.attemptDataRecovery(result.errors);
       }
 
-      if (result.warnings.length > 0) {
-        console.warn("⚠️ Avisos de integridade:", result.warnings);
-      }
+      // Integrity warnings removed per user request
     } catch (error) {
       console.error("❌ Erro durante verificação de integridade:", error);
     }
