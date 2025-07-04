@@ -262,15 +262,31 @@ function App() {
     return () => {};
   }, []);
 
-  // SECURITY: Additional check to prevent bypass
+  // SECURITY: Additional check to prevent bypass, but first try to restore from localStorage
   useEffect(() => {
-    // Double check - if somehow authentication state is true but no user, force logout
+    // First try to restore currentUser from localStorage if authenticated but no user in memory
     if (isAuthenticated && !currentUser) {
+      const storedUser =
+        localStorage.getItem("currentUser") ||
+        localStorage.getItem("mock-current-user");
+      if (storedUser) {
+        try {
+          const user = JSON.parse(storedUser);
+          console.log("🔄 Restoring user from localStorage:", user.email);
+          setCurrentUser(user);
+          return; // Exit early, user restored successfully
+        } catch (e) {
+          console.warn("Error parsing stored user:", e);
+        }
+      }
+
+      // Only force logout if we can't restore user and the state is inconsistent
       console.warn(
         "SECURITY: Inconsistent auth state detected, forcing logout",
       );
       setIsAuthenticated(false);
       setCurrentUser(null);
+      localStorage.removeItem("currentUser");
       authService.logout();
     }
   }, [isAuthenticated, currentUser]);
@@ -863,7 +879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat����rio personalizado em desenvolvimento. Use os relatórios pr�����-definidos por agora.",
+      "Funcionalidade de relat����rio personalizado em desenvolvimento. Use os relatórios pr������-definidos por agora.",
     );
   };
 
@@ -3659,7 +3675,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="ativa">Ativa</option>
                         <option value="inativa">Inativa</option>
-                        <option value="manutencao">Em Manutenção</option>
+                        <option value="manutencao">Em Manutenç��o</option>
                         <option value="construcao">Em Construção</option>
                       </select>
                     </div>
