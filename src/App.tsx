@@ -2640,7 +2640,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manuten����ões aparecerão aqui quando forem
+                        As futuras manuten�����ões aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -7547,6 +7547,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           lastSync={autoSyncLastSync}
           onDismiss={syncStatus === "completed" ? () => {} : undefined}
         />
+
+        {/* Firebase quota warning */}
+        <FirebaseQuotaWarning />
 
         {/* Admin Login Modal */}
         {showAdminLogin && !isAdminAuthenticated && (
