@@ -69,11 +69,13 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
     }
 
     if (error) {
+      const isQuotaError =
+        error.includes("quota") || error.includes("resource-exhausted");
       return {
         icon: AlertCircle,
-        color: "text-red-500",
-        bgColor: "bg-red-50",
-        text: "Erro na sincronização",
+        color: isQuotaError ? "text-orange-500" : "text-red-500",
+        bgColor: isQuotaError ? "bg-orange-50" : "bg-red-50",
+        text: isQuotaError ? "Limite atingido" : "Erro na sincroniza��ão",
         pulse: false,
       };
     }
@@ -177,7 +179,7 @@ export const SyncStatusBadge: React.FC<{ className?: string }> = ({
   );
 };
 
-// Hook para informações detalhadas de sincronização
+// Hook para informa��ões detalhadas de sincronização
 export const useSyncStatusInfo = () => {
   const { isActive, syncing, lastSync, error, config } = useAutoSync();
 
