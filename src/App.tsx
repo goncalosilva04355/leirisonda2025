@@ -840,7 +840,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleSaveUser = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     if (editingUser) {
       // Update existing user
@@ -2619,7 +2619,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar intervenção de manutenção
+                      Registar intervenção de manutenç��o
                     </p>
                   </div>
                 </div>
