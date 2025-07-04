@@ -2035,20 +2035,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <button className="p-2 text-gray-400 hover:text-gray-600">
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() =>
-                              confirmDelete(
-                                `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
-                                () => dataSync.deleteMaintenance(maint.id),
-                              )
-                            }
-                            className="p-2 text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                          {hasPermission("manutencoes", "edit") && (
+                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("manutencoes", "delete") && (
+                            <button
+                              onClick={() =>
+                                confirmDelete(
+                                  `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                  () => dataSync.deleteMaintenance(maint.id),
+                                )
+                              }
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -5016,7 +5020,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-gray-500 mb-4">
                       {activeWorkFilter === "all"
                         ? "Não há obras registadas no sistema."
-                        : `Não há obras com o filtro "${
+                        : `Não h�� obras com o filtro "${
                             activeWorkFilter === "pending"
                               ? "Pendentes"
                               : activeWorkFilter === "in_progress"
