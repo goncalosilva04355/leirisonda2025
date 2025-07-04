@@ -20,6 +20,7 @@ class MockAuthService {
     },
   ];
 
+  // SECURITY: Always start with no user logged in
   private currentUser: MockUser | null = null;
 
   async register(
@@ -81,24 +82,18 @@ class MockAuthService {
   }
 
   getCurrentUser(): MockUser | null {
-    if (this.currentUser) return this.currentUser;
-
-    try {
-      const stored = localStorage.getItem("mock-current-user");
-      if (stored) {
-        this.currentUser = JSON.parse(stored);
-        return this.currentUser;
-      }
-    } catch (error) {
-      console.warn("Error loading mock user from localStorage");
-    }
-
-    return null;
+    // DO NOT restore user from localStorage automatically - security risk
+    // Users must login manually every time for security
+    return this.currentUser; // Only return if currently logged in this session
   }
 
   onAuthStateChanged(callback: (user: MockUser | null) => void): () => void {
-    // Immediately call with current user
-    callback(this.getCurrentUser());
+    // Do NOT immediately call with current user - this was causing automatic login
+    // Only call callback when user actually logs in
+    setTimeout(() => {
+      // Only return user if they are actually logged in through manual login
+      callback(null); // Always start as not authenticated for security
+    }, 100);
 
     // Return empty unsubscribe function
     return () => {};

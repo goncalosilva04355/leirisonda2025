@@ -30,7 +30,7 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { InstallPrompt } from "./components/InstallPrompt";
-import { RegisterForm } from "./components/RegisterForm";
+// SECURITY: RegisterForm removed - only super admin can create users
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 
@@ -87,11 +87,12 @@ const initialUsers = [
 ];
 
 function App() {
+  // SECURITY: Always start as not authenticated
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
-  const [showRegisterForm, setShowRegisterForm] = useState(false);
+  // SECURITY: Register form removed - only super admin can create users
   const [showNewClientForm, setShowNewClientForm] = useState(false);
   const [newClientForm, setNewClientForm] = useState({
     name: "",
@@ -176,18 +177,40 @@ function App() {
     status: "completed",
   });
 
-  // Initialize authentication state
+  // Initialize authentication state with security checks
   useEffect(() => {
+    // SECURITY: Clear any potential auto-login data on app start
+    localStorage.removeItem("mock-current-user");
+
+    // Force logout on app start for security
+    authService.logout().then(() => {
+      console.log("Security: Forced logout on app initialization");
+    });
+
     const unsubscribe = authService.onAuthStateChanged((user) => {
+      console.log("Auth state changed:", user ? "User logged in" : "No user");
       setCurrentUser(user);
       setIsAuthenticated(!!user);
     });
 
-    // Initialize default admin if needed
-    authService.initializeDefaultAdmin();
+    // DO NOT initialize default admin automatically - this was causing the security issue
+    // Users must always login manually for security
 
     return unsubscribe;
   }, []);
+
+  // SECURITY: Additional check to prevent bypass
+  useEffect(() => {
+    // Double check - if somehow authentication state is true but no user, force logout
+    if (isAuthenticated && !currentUser) {
+      console.warn(
+        "SECURITY: Inconsistent auth state detected, forcing logout",
+      );
+      setIsAuthenticated(false);
+      setCurrentUser(null);
+      authService.logout();
+    }
+  }, [isAuthenticated, currentUser]);
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
@@ -352,7 +375,7 @@ function App() {
     // Use sync system to add maintenance (will handle Firebase and localStorage)
     addMaintenance(newMaintenance);
 
-    console.log("Manutenção salva com sucesso:", interventionData);
+    console.log("Manuten��ão salva com sucesso:", interventionData);
 
     alert(
       `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`,
@@ -424,14 +447,7 @@ function App() {
   };
 
   // Register functions
-  const handleRegisterSuccess = () => {
-    setShowRegisterForm(false);
-    // User will be automatically logged in by the auth state listener
-  };
-
-  const handleBackToLogin = () => {
-    setShowRegisterForm(false);
-  };
+  // SECURITY: Register functions removed - only super admin can create users
 
   // Advanced settings functions
   const handleAdvancedPasswordSubmit = (e: React.FormEvent) => {
@@ -506,7 +522,7 @@ ${index + 1}. ${maint.poolName}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -3709,6 +3725,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         );
 
       case "utilizadores":
+        // SECURITY: Only super admin can access user management
+        if (currentUser?.role !== "super_admin") {
+          return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+              <div className="text-center">
+                <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                  Acesso Restrito
+                </h2>
+                <p className="text-gray-500">
+                  Apenas super administradores podem gerir utilizadores.
+                </p>
+              </div>
+            </div>
+          );
+        }
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
@@ -3728,23 +3760,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => {
-                      setUserForm({
-                        name: "",
-                        email: "",
-                        role: "technician",
-                        active: true,
-                        permissions: {},
-                      });
-                      setEditingUser(null);
-                      setShowUserForm(true);
-                    }}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                  >
-                    <UserPlus className="h-4 w-4" />
-                    <span>Novo Utilizador</span>
-                  </button>
+                  {/* SECURITY: Only super admin can create new users */}
+                  {currentUser?.role === "super_admin" && (
+                    <button
+                      onClick={() => {
+                        setUserForm({
+                          name: "",
+                          email: "",
+                          role: "technician",
+                          active: true,
+                          permissions: {},
+                        });
+                        setEditingUser(null);
+                        setShowUserForm(true);
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                    >
+                      <UserPlus className="h-4 w-4" />
+                      <span>Novo Utilizador</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -3794,21 +3829,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
-                        {hasPermission("utilizadores", "edit") && (
-                          <button
-                            onClick={() => handleEditUser(user)}
-                            className="p-2 text-gray-400 hover:text-gray-600"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                        )}
-                        {hasPermission("utilizadores", "delete") && (
-                          <button
-                            onClick={() => handleDeleteUser(user.id)}
-                            className="p-2 text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                        {/* SECURITY: Only super admin can edit/delete users */}
+                        {currentUser?.role === "super_admin" && (
+                          <>
+                            <button
+                              onClick={() => handleEditUser(user)}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteUser(user.id)}
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </>
                         )}
                       </div>
                     </div>
@@ -3816,8 +3852,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 ))}
               </div>
 
-              {/* User Form Modal */}
-              {showUserForm && (
+              {/* User Form Modal - SECURITY: Only super admin can access */}
+              {showUserForm && currentUser?.role === "super_admin" && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                   <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
                     <h3 className="text-lg font-semibold mb-4">
@@ -5265,18 +5301,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   }
 
-  // Show register form
-  if (showRegisterForm) {
-    return (
-      <RegisterForm
-        onRegisterSuccess={handleRegisterSuccess}
-        onBackToLogin={handleBackToLogin}
-      />
-    );
-  }
+  // SECURITY: Register form removed - only super admin can create users
 
-  // Show login page if not authenticated
-  if (!isAuthenticated) {
+  // SECURITY: Triple check - never allow access without proper authentication
+  if (!isAuthenticated || !currentUser) {
+    console.log(
+      "Security check: Blocking access - isAuthenticated:",
+      isAuthenticated,
+      "currentUser:",
+      !!currentUser,
+    );
     if (showAdvancedSettings) {
       if (isAdvancedUnlocked) {
         return (
@@ -5421,15 +5455,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => setShowRegisterForm(true)}
-              className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-            >
-              Não tem conta? Criar nova conta
-            </button>
-          </div>
+          {/* SECURITY: Only super admin can create new accounts - removed public registration */}
         </div>
 
         {/* Floating Advanced Settings Button */}
