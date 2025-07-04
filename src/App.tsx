@@ -2364,7 +2364,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {/* Location */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Localização Completa *
+                      Localizaç��o Completa *
                     </label>
                     <input
                       type="text"
@@ -2592,7 +2592,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Piscina *
                       </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.poolId}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            poolId: e.target.value,
+                          })
+                        }
+                      >
                         <option value="">Selecionar piscina</option>
                         {pools.map((pool) => (
                           <option key={pool.id} value={pool.id}>
