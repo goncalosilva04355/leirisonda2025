@@ -33,7 +33,7 @@ let db: any = null;
 let auth: any = null;
 
 try {
-  if (firebaseConfig.apiKey !== "demo") {
+  if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "demo") {
     app = initializeApp(firebaseConfig);
     db = getFirestore(app);
     auth = getAuth(app);
