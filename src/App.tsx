@@ -512,6 +512,52 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
   };
 
+  // Photo management functions
+  const handlePhotoUpload = (event) => {
+    const files = Array.from(event.target.files);
+    if (files.length + uploadedPhotos.length > 20) {
+      alert("Máximo de 20 fotografias permitidas");
+      return;
+    }
+
+    files.forEach((file) => {
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const newPhoto = {
+            id: Date.now() + Math.random(),
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            data: e.target.result,
+            timestamp: new Date().toISOString(),
+          };
+          setUploadedPhotos((prev) => [...prev, newPhoto]);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
+  const removePhoto = (photoId) => {
+    setUploadedPhotos((prev) => prev.filter((photo) => photo.id !== photoId));
+  };
+
+  const clearAllPhotos = () => {
+    setUploadedPhotos([]);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    const fakeEvent = { target: { files } };
+    handlePhotoUpload(fakeEvent);
+  };
+
   const downloadPDF = (content: string, filename: string) => {
     const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = window.URL.createObjectURL(blob);
@@ -1695,7 +1741,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={3}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Observações sobre a obra..."
+                          placeholder="Observa��ões sobre a obra..."
                         />
                       </div>
 
