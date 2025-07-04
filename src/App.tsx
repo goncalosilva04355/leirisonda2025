@@ -2617,7 +2617,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                               disabled={!enableMapsRedirect}
                             >
-                              ��� {pool.location}
+                              📍 {pool.location}
                             </button>
                             <div className="flex items-center space-x-4 mt-2">
                               <span className="text-sm text-gray-500">
