@@ -273,7 +273,7 @@ class RealFirebaseService {
       callback(pools);
     });
 
-    return () => off(poolsRef, "value", unsubscribe);
+    return unsubscribe;
   }
 
   onWorksChange(callback: (works: any[]) => void): () => void {
