@@ -795,7 +795,92 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="text-4xl font-bold text-gray-900">0</div>
                   </div>
                 </div>
+
+                {/* Obras Atribuídas */}
+                <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Obras Atribuídas
+                      </h3>
+                      <p className="text-sm text-gray-500">Atribuídas a si</p>
+                    </div>
+                    <div className="text-4xl font-bold text-gray-900">
+                      {assignedWorks.length}
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* Lista de Obras Atribuídas */}
+              {assignedWorks.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm">
+                  <div className="flex items-center p-4 border-b border-gray-100">
+                    <Building2 className="h-5 w-5 text-purple-600 mr-3" />
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Minhas Obras Atribuídas
+                    </h2>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    {assignedWorks.map((work) => (
+                      <div
+                        key={work.id}
+                        className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                              <Building2 className="h-5 w-5 text-purple-600" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-gray-900">
+                                {work.title}
+                              </h3>
+                              <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                                <span>👤</span>
+                                <span>Atribuída a: {work.assignedTo}</span>
+                              </div>
+                              <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                                <span>📅</span>
+                                <span>
+                                  Atribuída em:{" "}
+                                  {new Date(
+                                    work.dateAssigned,
+                                  ).toLocaleDateString("pt-PT")}
+                                </span>
+                              </div>
+                              <span
+                                className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
+                                  work.status === "Nova"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {work.status}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => {
+                                const updatedWorks = assignedWorks.map((w) =>
+                                  w.id === work.id
+                                    ? { ...w, status: "Em Progresso" }
+                                    : w,
+                                );
+                                setAssignedWorks(updatedWorks);
+                              }}
+                              className="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700"
+                            >
+                              Iniciar
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Próximas Manutenções */}
               <div className="bg-white rounded-lg shadow-sm">
