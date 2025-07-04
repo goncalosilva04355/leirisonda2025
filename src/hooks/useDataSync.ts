@@ -55,18 +55,115 @@ export interface Client {
   createdAt: string;
 }
 
-// Mock data for demonstration - DISABLED FOR PRODUCTION
-// User requested removal of old demo data
-const mockPools: Pool[] = [];
+// Mock data for demonstration
+const mockPools: Pool[] = [
+  {
+    id: "pool-1",
+    name: "Piscina Villa Marina",
+    location: "Quinta da Marinha, Cascais",
+    client: "João Silva",
+    type: "Residencial",
+    status: "Ativa",
+    lastMaintenance: "2025-01-15",
+    nextMaintenance: "2025-02-15",
+    createdAt: "2025-01-01",
+  },
+  {
+    id: "pool-2",
+    name: "Piscina Condomínio Sol",
+    location: "Estoril",
+    client: "Condomínio Sol Nascente",
+    type: "Comunitária",
+    status: "Ativa",
+    lastMaintenance: "2025-01-10",
+    nextMaintenance: "2025-02-10",
+    createdAt: "2025-01-02",
+  },
+];
 
-// Mock maintenance data - DISABLED FOR PRODUCTION
-const mockMaintenance: Maintenance[] = [];
+// Mock maintenance data
+const mockMaintenance: Maintenance[] = [
+  {
+    id: "maint-1",
+    poolId: "pool-1",
+    poolName: "Piscina Villa Marina",
+    type: "Limpeza",
+    status: "completed",
+    description: "Limpeza completa e tratamento químico",
+    scheduledDate: "2025-01-15",
+    completedDate: "2025-01-15",
+    technician: "Maria Santos",
+    notes: "Piscina em excelentes condições",
+    createdAt: "2025-01-10",
+  },
+  {
+    id: "maint-2",
+    poolId: "pool-2",
+    poolName: "Piscina Condomínio Sol",
+    type: "Manutenção",
+    status: "completed",
+    description: "Verificação de equipamentos e limpeza",
+    scheduledDate: "2025-01-10",
+    completedDate: "2025-01-10",
+    technician: "João Santos",
+    notes: "Bomba a precisar de revisão",
+    createdAt: "2025-01-05",
+  },
+];
 
-// Mock works data - DISABLED FOR PRODUCTION
-const mockWorks: Work[] = [];
+// Mock works data
+const mockWorks: Work[] = [
+  {
+    id: "work-1",
+    title: "Instalação Nova Piscina",
+    description: "Construção de piscina 8x4m com sistema de filtração",
+    client: "Ana Costa",
+    location: "Sintra",
+    type: "Instalação",
+    status: "in_progress",
+    startDate: "2025-01-20",
+    budget: 25000,
+    assignedTo: "Equipa A",
+    folhaGerada: false,
+    createdAt: "2025-01-18",
+  },
+  {
+    id: "work-2",
+    title: "Reparação Sistema Filtração",
+    description: "Substituição de bomba e filtros",
+    client: "Pedro Almeida",
+    location: "Cascais",
+    type: "Reparação",
+    status: "pending",
+    startDate: "2025-01-25",
+    budget: 1500,
+    assignedTo: "João Santos",
+    folhaGerada: false,
+    createdAt: "2025-01-22",
+  },
+];
 
-// Mock clients data - DISABLED FOR PRODUCTION
-const mockClients: Client[] = [];
+// Mock clients data
+const mockClients: Client[] = [
+  {
+    id: "client-1",
+    name: "João Silva",
+    email: "joao.silva@email.com",
+    phone: "912345678",
+    address: "Quinta da Marinha, Cascais",
+    pools: ["pool-1"],
+    createdAt: "2025-01-01",
+  },
+  {
+    id: "client-2",
+    name: "Ana Costa",
+    email: "ana.costa@email.com",
+    phone: "923456789",
+    address: "Sintra",
+    pools: [],
+    createdAt: "2025-01-18",
+  },
+];
 
 export interface SyncState {
   pools: Pool[];
