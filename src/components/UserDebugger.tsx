@@ -50,15 +50,22 @@ export const UserDebugger: React.FC = () => {
     loadUsers();
   };
 
-  const testLogin = async (email: string) => {
+  const testLogin = async (email: string, password: string = "123456") => {
     const { authService } = await import("../services/authService");
-    const result = await authService.login(email, "123456"); // Test password
+    const result = await authService.login(email, password);
 
     if (result.success) {
       alert(`✅ Login com ${email} funcionou!`);
     } else {
       alert(`❌ Login com ${email} falhou: ${result.error}`);
     }
+  };
+
+  const forceMigration = async () => {
+    const { mockAuthService } = await import("../services/mockAuthService");
+    mockAuthService.reloadUsers();
+    loadUsers();
+    alert("Migração forçada realizada!");
   };
 
   useEffect(() => {
