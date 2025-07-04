@@ -1414,7 +1414,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `���️ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `����� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -2992,7 +2992,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informações Básicas
+                          Informa��ões Básicas
                         </h3>
                       </div>
 
@@ -8064,6 +8064,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             />
           </div>
         )}
+
+        {/* Data Integrity Alert */}
+        <DataIntegrityAlert />
       </div>
     </AutoSyncProvider>
   );
