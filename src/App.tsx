@@ -21,8 +21,6 @@ import {
   Shield,
   Check,
   AlertCircle,
-  Wifi,
-  WifiOff,
 } from "lucide-react";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import {
