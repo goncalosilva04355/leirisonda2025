@@ -604,7 +604,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat��rio personalizado em desenvolvimento. Use os relatórios pr��-definidos por agora.",
+      "Funcionalidade de relat��rio personalizado em desenvolvimento. Use os relatórios pr���-definidos por agora.",
     );
   };
 
@@ -682,22 +682,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Photo management functions
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files);
+    const files = Array.from(event.target.files || []);
     if (files.length + uploadedPhotos.length > 20) {
       alert("Máximo de 20 fotografias permitidas");
       return;
     }
 
-    files.forEach((file) => {
+    files.forEach((file: File) => {
       if (file.type.startsWith("image/")) {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = (e: ProgressEvent<FileReader>) => {
           const newPhoto = {
             id: Date.now() + Math.random(),
             name: file.name,
             size: file.size,
             type: file.type,
-            data: e.target.result,
+            data: e.target?.result,
             timestamp: new Date().toISOString(),
           };
           setUploadedPhotos((prev) => [...prev, newPhoto]);
