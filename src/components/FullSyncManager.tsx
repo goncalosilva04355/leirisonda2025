@@ -143,7 +143,7 @@ export const FullSyncManager: React.FC = () => {
               </>
             ) : (
               <>
-                <Sync className="w-3 h-3 mr-1" />
+                <RefreshCw className="w-3 h-3 mr-1" />
                 Sincronizar Tudo
               </>
             )}
