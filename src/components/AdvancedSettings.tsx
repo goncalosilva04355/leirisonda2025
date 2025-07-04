@@ -484,6 +484,213 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               </div>
             </div>
           )}
+
+          {activeTab === "notifications" && notifications && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <Wifi className="w-16 h-16 text-purple-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Notificações Push
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Configure e teste notificações push para atribuição de obras
+                </p>
+              </div>
+
+              {/* Permission Status */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h4 className="font-semibold text-gray-900 mb-4">
+                  Estado das Permissões
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 border border-gray-200 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div
+                        className={`w-4 h-4 rounded-full ${
+                          "Notification" in window
+                            ? "bg-green-500"
+                            : "bg-red-500"
+                        }`}
+                      ></div>
+                      <div>
+                        <h5 className="font-medium text-gray-900">
+                          Suporte do Browser
+                        </h5>
+                        <p className="text-sm text-gray-600">
+                          {"Notification" in window
+                            ? "Suportado"
+                            : "Não suportado"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4 border border-gray-200 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div
+                        className={`w-4 h-4 rounded-full ${
+                          notifications.pushPermission === "granted"
+                            ? "bg-green-500"
+                            : notifications.pushPermission === "denied"
+                              ? "bg-red-500"
+                              : "bg-yellow-500"
+                        }`}
+                      ></div>
+                      <div>
+                        <h5 className="font-medium text-gray-900">
+                          Permissão Atual
+                        </h5>
+                        <p className="text-sm text-gray-600">
+                          {notifications.pushPermission === "granted"
+                            ? "Concedida"
+                            : notifications.pushPermission === "denied"
+                              ? "Negada"
+                              : "Pendente"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notification Controls */}
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h4 className="font-semibold text-gray-900 mb-4">
+                  Controles de Notificação
+                </h4>
+                <div className="space-y-4">
+                  {/* Enable Notifications */}
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <h5 className="font-medium text-gray-900">
+                        Ativar Notificações
+                      </h5>
+                      <p className="text-sm text-gray-600">
+                        Permitir notificações push quando obras forem atribuídas
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <span
+                        className={`text-xs px-2 py-1 rounded-full font-medium ${
+                          notifications.pushPermission === "granted"
+                            ? "bg-green-100 text-green-800"
+                            : notifications.pushPermission === "denied"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {notifications.pushPermission === "granted"
+                          ? "Ativadas"
+                          : notifications.pushPermission === "denied"
+                            ? "Negadas"
+                            : "Pendente"}
+                      </span>
+                      <button
+                        onClick={notifications.requestNotificationPermission}
+                        disabled={notifications.pushPermission === "granted"}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          notifications.pushPermission === "granted"
+                            ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                            : "bg-blue-600 text-white hover:bg-blue-700"
+                        }`}
+                      >
+                        {notifications.pushPermission === "granted"
+                          ? "Ativadas"
+                          : "Ativar"}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Test Notification */}
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <h5 className="font-medium text-gray-900">
+                        Teste de Notificação
+                      </h5>
+                      <p className="text-sm text-gray-600">
+                        Enviar uma notificação de teste para verificar se está a
+                        funcionar
+                      </p>
+                    </div>
+                    <button
+                      onClick={notifications.testPushNotification}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-medium transition-colors"
+                    >
+                      Testar
+                    </button>
+                  </div>
+
+                  {/* Simulate Work Assignment */}
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <h5 className="font-medium text-gray-900">
+                        Simular Atribuição de Obra
+                      </h5>
+                      <p className="text-sm text-gray-600">
+                        Simular uma obra sendo atribuída para testar o fluxo
+                        completo
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const testWorkTitle = `Obra Teste ${new Date().toLocaleTimeString()}`;
+                        notifications.sendWorkAssignmentNotification(
+                          testWorkTitle,
+                          "Utilizador Teste",
+                        );
+                      }}
+                      className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-sm font-medium transition-colors"
+                    >
+                      Simular
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* How it works */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="font-medium text-blue-900 mb-2">
+                  Como funcionam as notificações:
+                </h4>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>
+                    • Quando uma obra é criada e atribuída a um utilizador, ele
+                    recebe uma notificação push
+                  </li>
+                  <li>
+                    • A obra aparece automaticamente no dashboard do utilizador
+                    na seção "Obras Atribuídas"
+                  </li>
+                  <li>
+                    • As notificações funcionam mesmo com a aplicaç��o fechada
+                    (no telemóvel)
+                  </li>
+                  <li>
+                    • Para telemóveis, adicione a aplicação ao ecrã inicial para
+                    melhor experiência
+                  </li>
+                  <li>
+                    • O service worker garante que as notificações funcionem em
+                    background
+                  </li>
+                </ul>
+              </div>
+
+              {/* Mobile Instructions */}
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h4 className="font-medium text-green-900 mb-2">
+                  📱 Instruções para Telemóvel:
+                </h4>
+                <ol className="text-sm text-green-800 space-y-1">
+                  <li>1. Abra a aplicação no browser do telemóvel</li>
+                  <li>2. Faça login e aceda às configurações avançadas</li>
+                  <li>3. Clique em "Ativar" na seção de notificações</li>
+                  <li>4. Permita notificações quando o browser pedir</li>
+                  <li>5. Teste com o botão "Testar" ou "Simular"</li>
+                  <li>6. Adicione a app ao ecrã inicial (opcional)</li>
+                </ol>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
