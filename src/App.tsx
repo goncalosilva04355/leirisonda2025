@@ -283,7 +283,7 @@ function App() {
     // Firebase auth disabled to prevent crashes
     console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
         console.log(
-          "���� AUTH STATE CHANGE:",
+          "AUTH STATE CHANGE:",
           user ? `User ${user.email} logged in` : "No user - login required",
         );
 
@@ -3963,7 +3963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar interven��ão de manutenç�����o
+                      Registar interven��ão de manutenç������o
                     </p>
                   </div>
                 </div>
@@ -4656,7 +4656,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Instruções
                         </h4>
                         <ul className="text-gray-700 text-sm space-y-1">
-                          <li>• As notificações funcionam apenas com HTTPS</li>
+                          <li>�� As notificações funcionam apenas com HTTPS</li>
                           <li>
                             • Certifique-se de que permite notificaç��es no seu
                             navegador
