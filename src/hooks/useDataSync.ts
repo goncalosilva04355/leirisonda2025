@@ -182,7 +182,7 @@ const mockWorks: Work[] = [
     client: "Pedro Almeida",
     contact: "934567890",
     location: "Cascais",
-    type: "Repara��ão",
+    type: "Repara����ão",
     status: "pending",
     startDate: "2025-01-25",
     budget: 1500,
@@ -409,14 +409,14 @@ export function useDataSync(): SyncState & SyncActions {
     const unsubscribePools = realFirebaseService.onPoolsChange((pools) => {
       setState((prev) => ({
         ...prev,
-        pools: [...mockPools, ...pools],
+        pools: pools,
       }));
     });
 
     const unsubscribeWorks = realFirebaseService.onWorksChange((works) => {
       setState((prev) => ({
         ...prev,
-        works: [...mockWorks, ...works],
+        works: works,
       }));
     });
 
@@ -429,7 +429,7 @@ export function useDataSync(): SyncState & SyncActions {
 
         setState((prev) => ({
           ...prev,
-          maintenance: [...mockMaintenance, ...maintenance],
+          maintenance: maintenance,
           futureMaintenance,
         }));
       },
@@ -439,7 +439,7 @@ export function useDataSync(): SyncState & SyncActions {
       (clients) => {
         setState((prev) => ({
           ...prev,
-          clients: [...mockClients, ...clients],
+          clients: clients,
         }));
       },
     );
