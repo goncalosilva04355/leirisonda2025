@@ -950,33 +950,72 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   };
 
-  const handleSaveUser = (e) => {
+  const handleSaveUser = async (e) => {
     if (e) e.preventDefault();
 
-    if (editingUser) {
-      // Update existing user
-      setUsers(
-        users.map((u) =>
-          u.id === editingUser.id
-            ? {
-                ...u,
-                ...userForm,
-                password: userForm.password || u.password,
-              }
-            : u,
-        ),
-      );
-    } else {
-      // Add new user
-      const newUser = {
-        id: Math.max(...users.map((u) => u.id)) + 1,
-        ...userForm,
-        createdAt: new Date().toISOString().split("T")[0],
-      };
-      setUsers([...users, newUser]);
-    }
+    try {
+      if (editingUser) {
+        // Update existing user
+        setUsers(
+          users.map((u) =>
+            u.id === editingUser.id
+              ? {
+                  ...u,
+                  ...userForm,
+                  password: userForm.password || u.password,
+                }
+              : u,
+          ),
+        );
 
-    setShowUserForm(false);
+        console.log(`Utilizador ${userForm.name} atualizado com sucesso`);
+      } else {
+        // Add new user
+        const newUser = {
+          id: Math.max(...users.map((u) => u.id)) + 1,
+          ...userForm,
+          createdAt: new Date().toISOString().split("T")[0],
+        };
+        setUsers([...users, newUser]);
+
+        // Try to register with Firebase for automatic synchronization
+        try {
+          const result = await authService.register(
+            userForm.email,
+            userForm.password,
+            userForm.name,
+            userForm.role,
+          );
+
+          if (result.success) {
+            console.log(
+              `✅ Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
+            );
+
+            // Show success message
+            setTimeout(() => {
+              alert(
+                `Utilizador ${userForm.name} criado e sincronizado com sucesso!`,
+              );
+            }, 100);
+          } else {
+            console.log(
+              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+            );
+          }
+        } catch (syncError) {
+          console.log(
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            syncError,
+          );
+        }
+      }
+
+      setShowUserForm(false);
+    } catch (error) {
+      console.error("Erro ao salvar utilizador:", error);
+      alert("Erro ao salvar utilizador. Tente novamente.");
+    }
   };
 
   const handlePermissionChange = (module, permission, value) => {
@@ -2093,7 +2132,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <div className="flex items-center space-x-4 text-sm">
                             <span className="text-blue-600">
-                              ������{" "}
+                              ��������{" "}
                               {new Date(maint.scheduledDate).toLocaleDateString(
                                 "pt-PT",
                               )}
