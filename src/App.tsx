@@ -938,7 +938,7 @@ function App() {
                   Nenhuma manutenção agendada
                 </h3>
                 <p className="text-gray-600 text-sm mb-4">
-                  As futuras manutenções aparecerão aqui quando forem agendadas
+                  As futuras manutenç��es aparecerão aqui quando forem agendadas
                 </p>
                 <button
                   onClick={() => setActiveSection("nova-manutencao")}
@@ -1243,19 +1243,6 @@ function App() {
           </div>
         </div>
       </div>
-    );
-  }
-
-  // Show Firebase configuration if not configured and user clicked to configure
-  if (!firebaseConfigured && activeSection === "configuracoes") {
-    return (
-      <FirebaseConfig
-        onConfigured={() => {
-          setFirebaseConfigured(true);
-          setSyncEnabled(true);
-          setActiveSection("configuracoes"); // Stay on settings page
-        }}
-      />
     );
   }
 
