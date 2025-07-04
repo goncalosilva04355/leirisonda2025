@@ -229,7 +229,7 @@ function App() {
     setShowUserForm(true);
   };
 
-  const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = (userId) => {
     // Check if it's the main user
     const user = users.find(
       (u) => u.id === userId || u.id === parseInt(userId),
@@ -240,12 +240,7 @@ function App() {
     }
 
     if (confirm("Tem a certeza que quer eliminar este utilizador?")) {
-      if (syncEnabled && userSync) {
-        await userSync.deleteUser(userId.toString());
-      } else {
-        // Fallback to local state
-        setUsers(users.filter((u) => u.id !== userId));
-      }
+      setUsers(users.filter((u) => u.id !== userId));
     }
   };
 
