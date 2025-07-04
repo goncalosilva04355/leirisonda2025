@@ -1898,22 +1898,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     if (!work) return false;
 
                     // Check if user is in assignedTo string (exact match or comma-separated list)
-                    const assignedToMatch = work.assignedTo &&
+                    const assignedToMatch =
+                      work.assignedTo &&
                       work.assignedTo
-                        .split(',')
-                        .map(name => name.trim().toLowerCase())
+                        .split(",")
+                        .map((name) => name.trim().toLowerCase())
                         .includes(currentUser.name.toLowerCase());
 
                     // Check if user is in assignedUsers array (exact match)
                     const assignedUsersMatch = work.assignedUsers?.some(
                       (user) =>
                         user.name &&
-                        user.name.toLowerCase() === currentUser.name.toLowerCase()
+                        user.name.toLowerCase() ===
+                          currentUser.name.toLowerCase(),
                     );
 
                     return assignedToMatch || assignedUsersMatch;
-                  })
-                  ).length > 0 && (
+                  }).length > 0 && (
                     <div className="bg-white rounded-lg shadow-sm">
                       <div className="flex items-center p-4 border-b border-gray-100">
                         <Building2 className="h-5 w-5 text-purple-600 mr-3" />
