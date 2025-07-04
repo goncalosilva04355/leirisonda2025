@@ -36,6 +36,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { SyncStatusIcon } from "./components/SyncStatusIndicator";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
+import { DataIntegrityAlert } from "./components/DataIntegrityAlert";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
@@ -43,6 +44,7 @@ import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
+import { dataIntegrityService } from "./services/dataIntegrityService";
 
 // Mock users database
 const initialUsers = [
@@ -131,6 +133,17 @@ function App() {
       timestamp: new Date().toISOString(),
     });
   }, [isAuthenticated, currentUser]);
+
+  // Monitoramento de integridade de dados
+  useEffect(() => {
+    // Iniciar monitoramento de integridade de dados
+    dataIntegrityService.startIntegrityMonitoring();
+
+    // Cleanup ao desmontar componente
+    return () => {
+      dataIntegrityService.stopIntegrityMonitoring();
+    };
+  }, []);
 
   // No auto-login - users must login manually
   useEffect(() => {
@@ -597,7 +610,7 @@ function App() {
           technician: interventionData.technician,
           status: "scheduled" as const,
           description: "Manutenção programada automaticamente",
-          notes: "Agendada automaticamente após manutenç��o anterior",
+          notes: "Agendada automaticamente após manutenção anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
           location: selectedPool ? selectedPool.location : "",
@@ -608,7 +621,7 @@ function App() {
       }
     }
 
-    console.log("Manuten��ão salva com sucesso:", interventionData);
+    console.log("Manutenção salva com sucesso:", interventionData);
 
     let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
 
@@ -616,7 +629,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manuten����ão agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -781,7 +794,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇ��O: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -823,7 +836,7 @@ ${index + 1}. ${pool.name}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
-   ${pool.nextMaintenance ? `Pr��xima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
+   ${pool.nextMaintenance ? `Próxima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
 `,
   )
   .join("\n")}
@@ -1108,7 +1121,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribu��da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1401,7 +1414,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `���️ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `����� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -2855,7 +2868,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <BarChart3 className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manuten��ão agendada
+                        Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
                         As futuras manutenções aparecerão aqui quando forem
@@ -2979,7 +2992,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informações Básicas
+                          Informa��ões Básicas
                         </h3>
                       </div>
 
@@ -4687,7 +4700,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Pr��xima Manutenção
+                          Próxima Manutenção
                         </label>
                         <input
                           type="date"
@@ -5052,7 +5065,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-blue-600 text-xs">
                             Estado:{" "}
-                            {enablePhoneDialer ? "��� Ativo" : "⭕ Inativo"}
+                            {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
@@ -5280,7 +5293,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Trabalhos realizados</li>
-                        <li>• Técnicos responsáveis</li>
+                        <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -5458,7 +5471,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estatísticas R��pidas
+                    Estatísticas Rápidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
@@ -5978,7 +5991,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Obras
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o de obras e projetos
+                          Gestão de obras e projetos
                         </p>
                       </div>
                     </div>
@@ -6736,7 +6749,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenção">Em Manuten��ão</option>
+                          <option value="Em Manutenção">Em Manutenção</option>
                         </select>
                       </div>
                       <div>
@@ -6863,7 +6876,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const poolType = inputs[4].value; // Tipo de Piscina
                           const dimensions = inputs[5].value; // Dimensões
                           const volume = inputs[6].value; // Volume
-                          const filtrationSystem = inputs[7].value; // Sistema de Filtra��ão
+                          const filtrationSystem = inputs[7].value; // Sistema de Filtração
                           const installationDate = inputs[8].value; // Data de Instalação
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente
@@ -7372,7 +7385,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��</span>
+                  <span>✓</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -7439,7 +7452,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   "❌ Access denied: User management requires authentication",
                 );
                 setLoginError(
-                  "Por favor, faça login primeiro para aceder à gest��o de utilizadores",
+                  "Por favor, faça login primeiro para aceder à gestão de utilizadores",
                 );
                 setShowAdvancedSettings(false);
                 setIsAdvancedUnlocked(false);
@@ -7482,7 +7495,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configurações avan��adas
+                Insira a palavra-passe para aceder às configurações avançadas
               </p>
             </div>
 
@@ -7856,7 +7869,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-600 text-sm">
                         {selectedWork.id?.toUpperCase() ||
                           "ID-" + Date.now().toString().slice(-6)}{" "}
-                        �� {selectedWork.title}
+                        → {selectedWork.title}
                       </p>
                     </div>
                   </div>
@@ -7960,7 +7973,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ? selectedWork.assignedUsers
                               .map((u) => u.name)
                               .join(", ")
-                          : selectedWork.assignedTo || "Não atribu��da"}
+                          : selectedWork.assignedTo || "Não atribuída"}
                       </p>
                     </div>
                   </div>
@@ -8051,6 +8064,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             />
           </div>
         )}
+
+        {/* Data Integrity Alert */}
+        <DataIntegrityAlert />
       </div>
     </AutoSyncProvider>
   );
