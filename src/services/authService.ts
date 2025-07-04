@@ -369,37 +369,13 @@ class AuthService {
     }
   }
 
-  // Initialize default super admin if no users exist
+  // Initialize default super admin if no users exist - REMOVED FOR SECURITY
+  // This function was causing automatic login which is a security risk
+  // Users must always login manually
   async initializeDefaultAdmin(): Promise<void> {
-    if (!auth || !db) return;
-
-    try {
-      // Check if super admin already exists
-      const adminEmail = "gongonsilva@gmail.com";
-      const result = await this.login(adminEmail, "19867gsf");
-
-      if (!result.success) {
-        // Create default admin if login failed
-        console.log("Creating default super admin...");
-        const registerResult = await this.register(
-          adminEmail,
-          "19867gsf",
-          "Gonçalo Fonseca",
-          "super_admin",
-        );
-
-        if (registerResult.success) {
-          console.log("Default super admin created successfully");
-        } else {
-          console.log(
-            "Default admin might already exist:",
-            registerResult.error,
-          );
-        }
-      }
-    } catch (error) {
-      console.error("Error initializing default admin:", error);
-    }
+    // Function disabled for security - no automatic login allowed
+    console.log("Automatic admin initialization disabled for security");
+    return;
   }
 }
 
