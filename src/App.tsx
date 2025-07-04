@@ -2145,7 +2145,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações
+                          Observa��ões
                         </label>
                         <textarea
                           rows={3}
@@ -3498,7 +3498,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Trabalhos realizados</li>
                       <li>• T���cnicos responsáveis</li>
                       <li>• Datas e durações</li>
-                      <li>• Estados e observações</li>
+                      <li>�� Estados e observações</li>
                     </ul>
                   </div>
                   <button
@@ -4328,7 +4328,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Produtos químicos utilizados</span>
+                  <span>Produtos qu��micos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
@@ -4602,7 +4602,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
             <button
               onClick={() => {
-                setActiveSection("futuras-manutencoes");
+                navigateToSection("futuras-manutencoes");
                 setSidebarOpen(false);
               }}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
