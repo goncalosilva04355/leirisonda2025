@@ -4962,7 +4962,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Relatório Completo
+                        Relat��rio Completo
                       </h3>
                       <p className="text-sm text-gray-600">
                         Todas as informações
@@ -7080,6 +7080,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-sm text-gray-500">Gestão de Serviços</p>
                   </div>
                 </div>
+                {/* Sync Status Indicator */}
+                <SyncStatusIcon className="ml-2" />
                 {/* Close button for mobile */}
                 <button
                   onClick={() => setSidebarOpen(false)}
