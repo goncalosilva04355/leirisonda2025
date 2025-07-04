@@ -1894,20 +1894,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 {/* Lista de Obras Atribuídas */}
                 {currentUser &&
-                  works.filter(
-                    (work) =>
-                      work &&
-                      work.assignedTo &&
-                      (work.assignedTo
-                        .toLowerCase()
-                        .includes(currentUser.name.toLowerCase()) ||
-                        work.assignedUsers?.some(
-                          (user) =>
-                            user.name &&
-                            user.name
-                              .toLowerCase()
-                              .includes(currentUser.name.toLowerCase()),
-                        )),
+                  works.filter((work) => {
+                    if (!work) return false;
+
+                    // Check if user is in assignedTo string (exact match or comma-separated list)
+                    const assignedToMatch = work.assignedTo &&
+                      work.assignedTo
+                        .split(',')
+                        .map(name => name.trim().toLowerCase())
+                        .includes(currentUser.name.toLowerCase());
+
+                    // Check if user is in assignedUsers array (exact match)
+                    const assignedUsersMatch = work.assignedUsers?.some(
+                      (user) =>
+                        user.name &&
+                        user.name.toLowerCase() === currentUser.name.toLowerCase()
+                    );
+
+                    return assignedToMatch || assignedUsersMatch;
+                  })
                   ).length > 0 && (
                     <div className="bg-white rounded-lg shadow-sm">
                       <div className="flex items-center p-4 border-b border-gray-100">
@@ -2968,7 +2973,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenções agendadas e programadas
+                          Manutenç��es agendadas e programadas
                         </p>
                       </div>
                     </div>
