@@ -67,6 +67,7 @@ const initialUsers = [
     id: 2,
     name: "Maria Silva",
     email: "maria.silva@leirisonda.pt",
+    password: "123456",
     role: "manager",
     permissions: {
       obras: { view: true, create: true, edit: true, delete: false },
@@ -353,7 +354,7 @@ function App() {
       if (permission === "granted") {
         console.log("✅ Notifications already granted");
       } else if (permission === "denied") {
-        console.warn("�� Notifications denied by user");
+        console.warn("❌ Notifications denied by user");
       } else {
         console.log("⏳ Notifications permission not yet requested");
       }
@@ -446,7 +447,7 @@ function App() {
         Notification.permission === "granted"
       ) {
         console.log(
-          "�� Sending notification to Alexandre about assigned works:",
+          "🔔 Sending notification to Alexandre about assigned works:",
           alexandreWorks.length,
         );
 
@@ -5961,7 +5962,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Obras
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão de obras e projetos
+                          Gest��o de obras e projetos
                         </p>
                       </div>
                     </div>
@@ -6735,7 +6736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dimens��es (m)
+                          Dimensões (m)
                         </label>
                         <input
                           type="text"
