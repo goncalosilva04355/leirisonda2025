@@ -9,11 +9,12 @@ export const FirebaseQuotaWarning: React.FC = () => {
           <AlertTriangle className="h-5 w-5 text-orange-500 mt-0.5 flex-shrink-0" />
           <div>
             <h3 className="text-sm font-medium text-orange-800 mb-1">
-              Sincronização Temporariamente Desabilitada
+              Modo Offline Ativo
             </h3>
             <p className="text-xs text-orange-600 mb-2">
-              O Firebase atingiu o limite de operações. A sincronização entre
-              dispositivos está pausada para evitar problemas.
+              A aplicação está a funcionar em modo offline. Todas as
+              funcionalidades estão disponíveis, mas a sincronização entre
+              dispositivos está pausada.
             </p>
             <div className="flex items-center gap-4 text-xs text-orange-600">
               <div className="flex items-center gap-1">
