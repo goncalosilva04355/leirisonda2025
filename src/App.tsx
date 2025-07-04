@@ -1407,8 +1407,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   ];
 
   const renderContent = () => {
-    switch (activeSection) {
-      case "dashboard":
+    // Add loading state check
+    if (!currentUser || !isAuthenticated) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">A carregar...</p>
+          </div>
+        </div>
+      );
+    }
+
+    // Add error boundary
+    try {
+      switch (activeSection) {
+        case "dashboard":
         return (
           <div className="min-h-screen bg-gray-50">
             {/* Dashboard Content - Mobile First Design */}
@@ -1427,7 +1441,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                   <div>
                     <h1 className="text-lg font-semibold text-gray-900">
-                      Olá, Gonçalo Fonseca
+                      Olá, {currentUser?.name || "Utilizador"}
                     </h1>
                     <p className="text-gray-600 text-sm">
                       Bem-vindo ao sistema Leirisonda
@@ -4562,7 +4576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h4>
                         <p className="text-green-700 text-sm mb-3">
                           Receba alertas sobre atualizações do sistema e
-                          manutenções programadas.
+                          manuten��ões programadas.
                         </p>
                         <div className="flex items-center justify-between">
                           <span className="text-green-800 text-sm font-medium">
