@@ -1372,7 +1372,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             userForm.email,
             userForm.password,
             userForm.name,
-            userForm.role,
+            userForm.role as "super_admin" | "manager" | "technician",
           );
 
           if (result.success) {
