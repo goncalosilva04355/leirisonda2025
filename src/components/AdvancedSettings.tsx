@@ -930,20 +930,6 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 </ol>
               </div>
 
-              {onShowAuthDiagnostic && (
-                <div className="text-center">
-                  <button
-                    onClick={onShowAuthDiagnostic}
-                    className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium"
-                  >
-                    🔍 Executar Diagnóstico Detalhado
-                  </button>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Executa testes de autenticação e verifica configurações
-                  </p>
-                </div>
-              )}
-
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 className="font-medium text-green-900 mb-2">
                   ✅ Verificações Firebase para sincronização:
