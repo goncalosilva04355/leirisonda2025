@@ -7298,6 +7298,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <span>Futuras Manutenções</span>
               </button>
             )}
+
+            {/* Administration Section - Only for super admin */}
+            {currentUser?.role === "super_admin" && (
+              <button
+                onClick={() => {
+                  setShowAdminLogin(true);
+                  setSidebarOpen(false);
+                }}
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 hover:bg-gray-100"
+              >
+                <Shield className="h-5 w-5" />
+                <span>Administração</span>
+              </button>
+            )}
           </nav>
 
           {/* User Section */}
