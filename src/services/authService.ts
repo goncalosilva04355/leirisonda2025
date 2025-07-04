@@ -208,10 +208,28 @@ class AuthService {
     email: string,
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-    if (!auth || !db) {
-      return { success: false, error: "Firebase não configurado" };
+    // Try Firebase first if available
+    if (auth && db) {
+      console.log("Attempting Firebase login...");
+      try {
+        return await this.loginWithFirebase(email, password);
+      } catch (error: any) {
+        console.error("Firebase login failed, falling back to mock:", error);
+        // Fall through to mock auth
+      }
+    } else {
+      console.log("Firebase not available, using mock auth directly");
     }
 
+    // Fallback to mock authentication
+    console.log("Using mock authentication...");
+    return await this.loginWithMock(email, password);
+  }
+
+  private async loginWithFirebase(
+    email: string,
+    password: string,
+  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -262,7 +280,7 @@ class AuthService {
 
       return { success: true, user: userProfile };
     } catch (error: any) {
-      console.error("Login error:", error);
+      console.error("Firebase login error:", error);
 
       let errorMessage = "Credenciais inválidas";
       if (error.code === "auth/user-not-found") {
@@ -274,6 +292,38 @@ class AuthService {
       }
 
       return { success: false, error: errorMessage };
+    }
+  }
+
+  private async loginWithMock(
+    email: string,
+    password: string,
+  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
+    try {
+      const mockResult = await mockAuthService.login(email, password);
+
+      if (mockResult.success && mockResult.user) {
+        // Convert mock user to UserProfile format
+        const userProfile: UserProfile = {
+          uid: mockResult.user.uid,
+          email: mockResult.user.email,
+          name: mockResult.user.name,
+          role: mockResult.user.role,
+          permissions: this.getDefaultPermissions(mockResult.user.role),
+          active: mockResult.user.active,
+          createdAt: mockResult.user.createdAt,
+        };
+
+        return { success: true, user: userProfile };
+      } else {
+        return {
+          success: false,
+          error: mockResult.error || "Credenciais inválidas",
+        };
+      }
+    } catch (error: any) {
+      console.error("Mock auth login failed:", error);
+      return { success: false, error: "Credenciais inválidas" };
     }
   }
 
