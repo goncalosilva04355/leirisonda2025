@@ -835,6 +835,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
               </div>
 
+              {/* Test Notification Button */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Teste de Notificações
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Simular atribuição de obra para testar notificações
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      const testWorkTitle = `Obra Teste ${new Date().toLocaleTimeString()}`;
+                      sendWorkAssignmentNotification(
+                        testWorkTitle,
+                        currentUser.name,
+                      );
+                    }}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2"
+                  >
+                    <AlertCircle className="h-4 w-4" />
+                    <span>Testar Atribuição</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Lista de Obras Atribuídas */}
               {assignedWorks.length > 0 && (
                 <div className="bg-white rounded-lg shadow-sm">
@@ -1650,7 +1677,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <textarea
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      placeholder="Notas adicionais, materiais especiais, considerações técnicas..."
+                      placeholder="Notas adicionais, materiais especiais, considerações t��cnicas..."
                     />
                   </div>
 
