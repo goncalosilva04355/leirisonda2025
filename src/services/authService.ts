@@ -352,6 +352,15 @@ class AuthService {
         errorMessage = "Password incorreta";
       } else if (error.code === "auth/too-many-requests") {
         errorMessage = "Muitas tentativas. Tente novamente mais tarde";
+      } else if (
+        error.code === "auth/network-request-failed" ||
+        error.message === "Firebase timeout"
+      ) {
+        // Network error - throw to trigger fallback to mock auth
+        throw error;
+      } else if (error.message && error.message.includes("fetch")) {
+        // General network fetch error - throw to trigger fallback
+        throw error;
       }
 
       return { success: false, error: errorMessage };
