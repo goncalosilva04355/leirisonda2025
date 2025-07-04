@@ -828,6 +828,50 @@ export function useDataSync(): SyncState & SyncActions {
     [syncWithFirebase],
   );
 
+  const cleanAllData = useCallback(async () => {
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
+
+    try {
+      // Clear local storage
+      localStorage.removeItem("pools");
+      localStorage.removeItem("works");
+      localStorage.removeItem("maintenance");
+      localStorage.removeItem("interventions");
+      localStorage.removeItem("clients");
+
+      // Reset state to only mock data
+      const today = new Date();
+      const future = mockMaintenance.filter(
+        (m) => new Date(m.scheduledDate) >= today,
+      );
+
+      setState((prev) => ({
+        ...prev,
+        pools: [...mockPools],
+        maintenance: [...mockMaintenance],
+        futureMaintenance: future,
+        works: [...mockWorks],
+        clients: [...mockClients],
+        isLoading: false,
+        lastSync: new Date(),
+        error: null,
+      }));
+
+      // Set cleanup flags
+      localStorage.setItem("app-cleaned", new Date().toISOString());
+      localStorage.setItem("last-cleanup", new Date().toISOString());
+
+      console.log("Data cleanup completed successfully");
+    } catch (error: any) {
+      console.error("Data cleanup failed:", error);
+      setState((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: `Cleanup failed: ${error.message}`,
+      }));
+    }
+  }, []);
+
   return {
     ...state,
     addPool,
