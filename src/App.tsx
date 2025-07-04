@@ -1262,16 +1262,233 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
+              {/* Header */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h1 className="text-2xl font-bold text-gray-900">Nova Obra</h1>
-                <p className="text-gray-600 text-sm">
-                  Criar uma nova obra no sistema
-                </p>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <Building2 className="h-4 w-4 text-orange-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Nova Obra
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Registar uma nova obra ou projeto
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <p className="text-gray-600">
-                  Formulário de nova obra em desenvolvimento
-                </p>
+
+              {/* Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-6">
+                  {/* Basic Information */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Título da Obra *
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        placeholder="Ex: Construção Piscina 8x4m"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Cliente *
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="">Selecionar cliente</option>
+                        {clients.map((client) => (
+                          <option key={client.id} value={client.id}>
+                            {client.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de Obra *
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="">Selecionar tipo</option>
+                        <option value="construcao">Construção Nova</option>
+                        <option value="renovacao">Renovação</option>
+                        <option value="manutencao-pesada">
+                          Manutenção Pesada
+                        </option>
+                        <option value="reparacao">Reparação</option>
+                        <option value="instalacao">
+                          Instalação Equipamentos
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Localização *
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        placeholder="Ex: Cascais, Vila Marina"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Dates and Budget */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Início *
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Fim Prevista
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Orçamento (€)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Descrição da Obra *
+                    </label>
+                    <textarea
+                      rows={4}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      placeholder="Descreva detalhadamente o trabalho a realizar..."
+                      required
+                    />
+                  </div>
+
+                  {/* Team Assignment */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Equipa Responsável *
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="">Selecionar equipa</option>
+                        <option value="equipa-a">Equipa Construção A</option>
+                        <option value="equipa-b">Equipa Construção B</option>
+                        <option value="equipa-manutencao">
+                          Equipa Manutenção
+                        </option>
+                        <option value="equipa-instalacao">
+                          Equipa Instalação
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Responsável do Projeto
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="">Selecionar responsável</option>
+                        {users
+                          .filter((user) => user.role !== "viewer")
+                          .map((user) => (
+                            <option key={user.id} value={user.id}>
+                              {user.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Priority and Status */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Prioridade
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="baixa">Baixa</option>
+                        <option value="media" selected>
+                          Média
+                        </option>
+                        <option value="alta">Alta</option>
+                        <option value="urgente">Urgente</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado Inicial
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="pending" selected>
+                          Pendente
+                        </option>
+                        <option value="approved">Aprovada</option>
+                        <option value="in_progress">Em Progresso</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Notes */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Observações
+                    </label>
+                    <textarea
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      placeholder="Notas adicionais, materiais especiais, considerações técnicas..."
+                    />
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection("dashboard")}
+                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        alert(
+                          "Obra criada com sucesso! (Função em desenvolvimento)",
+                        );
+                      }}
+                      className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Save className="h-4 w-4" />
+                      <span>Criar Obra</span>
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
