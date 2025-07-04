@@ -339,6 +339,11 @@ export const poolService = {
 export const maintenanceService = {
   // Listen to real-time changes
   subscribeToMaintenance(callback: (maintenance: Maintenance[]) => void) {
+    if (!isFirebaseAvailable()) {
+      callback([]);
+      return () => {};
+    }
+
     const q = query(
       collection(db, COLLECTIONS.MAINTENANCE),
       orderBy("scheduledDate", "desc"),
@@ -354,6 +359,11 @@ export const maintenanceService = {
 
   // Get future maintenance
   subscribeToFutureMaintenance(callback: (maintenance: Maintenance[]) => void) {
+    if (!isFirebaseAvailable()) {
+      callback([]);
+      return () => {};
+    }
+
     const today = new Date().toISOString().split("T")[0];
     const q = query(
       collection(db, COLLECTIONS.MAINTENANCE),
