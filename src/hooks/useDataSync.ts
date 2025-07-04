@@ -218,6 +218,7 @@ export interface SyncActions {
 
   syncWithFirebase: () => Promise<void>;
   enableSync: (enabled: boolean) => void;
+  cleanAllData: () => Promise<void>;
 }
 
 export function useDataSync(): SyncState & SyncActions {
