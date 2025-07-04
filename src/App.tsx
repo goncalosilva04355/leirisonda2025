@@ -907,7 +907,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS AÇ��ES:
+PRÓXIMAS AÇÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -1806,7 +1806,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           if (diffDays === 0) {
                             timeText = "Hoje";
                           } else if (diffDays === 1) {
-                            timeText = "Amanhã";
+                            timeText = "Amanh��";
                           } else if (diffDays > 0) {
                             timeText = `Em ${diffDays} dias`;
                           } else {
@@ -3477,7 +3477,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa����ões sobre a obra..."
+                            placeholder="Observações sobre a obra..."
                           />
                         </div>
 
@@ -5099,7 +5099,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relat����rios
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gere relat��rios detalhados em PDF
+                          Gere relatórios detalhados em PDF
                         </p>
                       </div>
                     </div>
@@ -5128,7 +5128,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Estado e localizaç��o</li>
+                        <li>�� Estado e localiza����o</li>
                         <li>• Informações de clientes</li>
                         <li>����� Histórico de manutenç����es</li>
                         <li>• Próximas intervenções</li>
