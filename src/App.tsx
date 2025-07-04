@@ -6137,7 +6137,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
                           ? "Não há obras registadas no sistema."
-                          : `Não há obras com o filtro "${
+                          : `N��o há obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
                                 : activeWorkFilter === "in_progress"
@@ -6974,7 +6974,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const type = inputs[2].value; // Tipo de Manutenção
                           const status = inputs[3].value; // Estado
                           const estimatedDuration = inputs[4].value; // Duração Estimada
-                          const actualDuration = inputs[5].value; // Dura��ão Real
+                          const actualDuration = inputs[5].value; // Duração Real
                           const cost = inputs[6].value; // Custo
                           const priority = inputs[7].value; // Prioridade
                           const completedDate = inputs[8].value; // Data de Conclusão
@@ -7247,7 +7247,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>✓</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -7260,7 +7260,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observa��ões e próxima manutenção</span>
+                  <span>Observações e próxima manutenção</span>
                 </div>
               </div>
             </div>
@@ -7273,7 +7273,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 }}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
               >
-                Agora N��o
+                Agora Não
               </button>
               <button
                 onClick={() => handleShare("preview")}
@@ -7358,7 +7358,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Shield className="h-8 w-8 text-red-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                ������rea Protegida
+                Área Protegida
               </h1>
               <p className="text-gray-600">
                 Insira a palavra-passe para aceder às configurações avan��adas
@@ -7516,7 +7516,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-gray-500">Gest��o de Serviços</p>
+                    <p className="text-sm text-gray-500">Gestão de Serviços</p>
                   </div>
                 </div>
                 {/* Sync Status Indicator */}
