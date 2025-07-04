@@ -97,8 +97,6 @@ function App() {
   const [showSettingsPage, setShowSettingsPage] = useState(false);
   const [settingsPassword, setSettingsPassword] = useState("");
   const [settingsPasswordError, setSettingsPasswordError] = useState("");
-  const [firebaseConfigured, setFirebaseConfigured] = useState(false);
-  const [syncEnabled, setSyncEnabled] = useState(false);
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 
   // Use local state for users (Firebase moved to login page)
