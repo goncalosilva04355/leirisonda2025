@@ -897,19 +897,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Push Notification functions
   const requestNotificationPermission = async () => {
+    console.log("🔔 Requesting notification permission...");
     if ("Notification" in window) {
-      const permission = await Notification.requestPermission();
-      setPushPermission(permission);
-      if (permission === "granted") {
-        setNotificationsEnabled(true);
-        showNotification(
-          "Notificações Ativadas",
-          "Agora vai receber notifica��ões de obras atribuídas",
-          "success",
-        );
+      try {
+        const permission = await Notification.requestPermission();
+        console.log("🔔 Permission result:", permission);
+        setPushPermission(permission);
+        if (permission === "granted") {
+          setNotificationsEnabled(true);
+          showNotification(
+            "Notificações Ativadas",
+            "Agora vai receber notificações de obras atribuídas",
+            "success",
+          );
+          console.log("✅ Notifications enabled successfully");
+        } else {
+          console.warn("❌ Notification permission denied or dismissed");
+        }
+        return permission;
+      } catch (error) {
+        console.error("❌ Error requesting notification permission:", error);
+        return "error";
       }
-      return permission;
     }
+    console.warn("❌ Notifications not supported in this browser");
     return "denied";
   };
 
@@ -5127,7 +5138,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="text-2xl font-bold text-green-600">
                         {maintenance.length}
                       </div>
-                      <div className="text-sm text-gray-600">Manuten��ões</div>
+                      <div className="text-sm text-gray-600">
+                        Manuten����ões
+                      </div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-orange-600">
