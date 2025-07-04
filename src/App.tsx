@@ -818,7 +818,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplica��ão agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -3887,6 +3887,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             createdAt: new Date().toISOString(),
                             startDate: new Date().toISOString(),
                           };
+
+                          // Debug: Log work creation details
+                          console.log(
+                            "🏗️ DEBUG: Criando obra com atribuições:",
+                            {
+                              title: workData.title,
+                              assignedTo: workData.assignedTo,
+                              assignedUsers: workData.assignedUsers,
+                              assignedUserIds: workData.assignedUserIds,
+                            },
+                          );
 
                           // Use sync system to add work (will handle Firebase and localStorage)
                           addWork(workData);
