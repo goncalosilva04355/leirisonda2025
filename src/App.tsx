@@ -967,24 +967,87 @@ function App() {
                 </div>
               </div>
 
-              {/* Estado Vazio */}
-              <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <BarChart3 className="h-8 w-8 text-gray-400" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Nenhuma manutenção agendada
-                </h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  As futuras manutenções aparecerão aqui quando forem agendadas
-                </p>
-                <button
-                  onClick={() => setActiveSection("nova-manutencao")}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>Agendar Manutenção</span>
-                </button>
+              {/* Future Maintenance List */}
+              <div className="space-y-4">
+                {futureMaintenance.length === 0 ? (
+                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <BarChart3 className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhuma manutenção agendada
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      As futuras manutenções aparecerão aqui quando forem
+                      agendadas
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("nova-manutencao")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Agendar Manutenção</span>
+                    </button>
+                  </div>
+                ) : (
+                  futureMaintenance.map((maint) => (
+                    <div
+                      key={maint.id}
+                      className="bg-white rounded-lg shadow-sm p-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {maint.poolName}
+                            </h3>
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full ${
+                                maint.status === "pending"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : maint.status === "in_progress"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-green-100 text-green-800"
+                              }`}
+                            >
+                              {maint.status === "pending"
+                                ? "Agendado"
+                                : maint.status === "in_progress"
+                                  ? "Em Progresso"
+                                  : "Concluído"}
+                            </span>
+                          </div>
+                          <p className="text-gray-600 mb-1">{maint.type}</p>
+                          <p className="text-sm text-gray-500 mb-2">
+                            {maint.description}
+                          </p>
+                          <div className="flex items-center space-x-4 text-sm">
+                            <span className="text-blue-600">
+                              📅{" "}
+                              {new Date(maint.scheduledDate).toLocaleDateString(
+                                "pt-PT",
+                              )}
+                            </span>
+                            <span className="text-gray-500">
+                              👨‍🔧 {maint.technician}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => dataSync.deleteMaintenance(maint.id)}
+                            className="p-2 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
