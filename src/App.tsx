@@ -783,22 +783,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
+    // Always add to assigned works regardless of notification settings
+    const newAssignedWork = {
+      id: Date.now(),
+      title: workTitle,
+      assignedTo: assignedTo,
+      dateAssigned: new Date().toISOString(),
+      status: "Nova",
+    };
+    setAssignedWorks((prev) => [newAssignedWork, ...prev]);
+
+    // Send notification if enabled and permission granted
     if (notificationsEnabled && Notification.permission === "granted") {
       showNotification(
         "Nova Obra Atribuída",
         `A obra "${workTitle}" foi-lhe atribuída`,
         "work-assignment",
       );
-
-      // Add to assigned works
-      const newAssignedWork = {
-        id: Date.now(),
-        title: workTitle,
-        assignedTo: assignedTo,
-        dateAssigned: new Date().toISOString(),
-        status: "Nova",
-      };
-      setAssignedWorks((prev) => [newAssignedWork, ...prev]);
     }
   };
 
@@ -2186,7 +2187,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => setActiveSection("manutencoes")}
                     className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                   >
-                    Manutenç��es
+                    Manutenções
                   </button>
                   <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
                     Futuras Manutenções
@@ -2721,7 +2722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Building2 className="h-4 w-4 text-blue-600" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Observações e Trabalho
+                        Observa��ões e Trabalho
                       </h3>
                     </div>
 
