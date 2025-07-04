@@ -4218,7 +4218,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="submit"
                         onClick={(e) => {
                           e.preventDefault();
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const formData = new FormData(form);
 
                           // Collect all form data
@@ -5453,7 +5455,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estatísticas Rápidas
+                    Estatísticas R��pidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
