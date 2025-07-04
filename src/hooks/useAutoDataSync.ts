@@ -69,6 +69,14 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
       return;
     }
 
+    // Circuit breaker - para completamente se quota foi excedido muitas vezes
+    if (circuitBreakerOpen.current) {
+      console.warn(
+        "⚡ Circuit breaker OPEN - Firebase sync stopped due to quota exceeded",
+      );
+      return;
+    }
+
     try {
       syncStatus.current.syncing = true;
       syncStatus.current.error = null;
