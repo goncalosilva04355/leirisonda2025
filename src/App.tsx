@@ -162,6 +162,9 @@ function App() {
     error: cleanupError,
   } = useDataCleanup();
 
+  // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
+  const { syncStatus, lastSync, isAutoSyncing } = useAutoSync();
+
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
   const [selectedWorkType, setSelectedWorkType] = useState("");
@@ -2652,7 +2655,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <div className="flex items-center space-x-4 text-sm">
                             <span className="text-blue-600">
-                              ������{" "}
+                              ��������{" "}
                               {new Date(maint.scheduledDate).toLocaleDateString(
                                 "pt-PT",
                               )}
@@ -6033,7 +6036,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="installation">Instalação</option>
-                        <option value="maintenance">Manutenção</option>
+                        <option value="maintenance">Manutenç��o</option>
                         <option value="repair">Reparação</option>
                         <option value="renovation">Renovação</option>
                         <option value="inspection">Inspeção</option>
