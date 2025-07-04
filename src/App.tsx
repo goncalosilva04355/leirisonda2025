@@ -4410,6 +4410,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           alert(
                             `Piscina "${poolData.name}" criada com sucesso!`,
                           );
+
+                          // Ensure we're not in editing mode
+                          setEditingPool(null);
                           setActiveSection("piscinas");
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
@@ -6338,7 +6341,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  €{work.budget}
+                                  ��{work.budget}
                                 </div>
                               )}
                             </div>
@@ -6725,7 +6728,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações Técnicas
+                        Observações T��cnicas
                       </label>
                       <textarea
                         defaultValue={editingWork?.technicalNotes}
