@@ -325,8 +325,11 @@ function App() {
     }
   }, [isAuthenticated]);
 
-  // Login form state
-  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  // Login form state - Pre-fill Gonçalo's email for convenience
+  const [loginForm, setLoginForm] = useState({
+    email: "gongonsilva@gmail.com",
+    password: "admin123",
+  });
   const [loginError, setLoginError] = useState("");
 
   // User form state
@@ -2147,7 +2150,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => setActiveSection("futuras-manutencoes")}
                     className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                   >
-                    Futuras Manutenções
+                    Futuras Manuten��ões
                   </button>
                 </div>
               </div>
@@ -3561,7 +3564,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar intervenção de manutenç����o
+                      Registar intervenção de manutenç�����o
                     </p>
                   </div>
                 </div>
@@ -4614,7 +4617,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       registadas
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Trabalhos realizados</li>
+                      <li>�� Trabalhos realizados</li>
                       <li>• T���cnicos responsáveis</li>
                       <li>• Datas e duraç��es</li>
                       <li>• Estados e observações</li>
