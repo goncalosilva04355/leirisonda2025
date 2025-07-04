@@ -67,7 +67,13 @@ export function useDataCleanup(): UseDataCleanupReturn {
         success: false,
         message: errorMessage,
         details: {
-          firestoreDeleted: { pools: 0, works: 0, maintenance: 0 },
+          firestoreDeleted: {
+            pools: 0,
+            works: 0,
+            maintenance: 0,
+            clients: 0,
+            interventions: 0,
+          },
           realtimeDbCleared: false,
           localStorageCleared: false,
         },
