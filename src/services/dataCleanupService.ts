@@ -165,14 +165,8 @@ class DataCleanupService {
    */
   async ensureUserSynchronization(): Promise<boolean> {
     try {
-      // Check if Firebase is properly configured
-      const firebaseConfig = localStorage.getItem("firebase-config");
-      if (!firebaseConfig) {
-        console.warn(
-          "Firebase not configured - user synchronization may be limited to local storage",
-        );
-        return false;
-      }
+      // Firebase is always configured with fixed settings
+      console.log("Firebase cleanup service using fixed configuration");
 
       // Initialize Firebase services if not already done
       if (db) {
