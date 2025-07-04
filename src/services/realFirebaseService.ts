@@ -30,12 +30,6 @@ class RealFirebaseService {
 
   // Initialize Firebase using existing app instance
   initialize(): boolean {
-    // TEMPORARILY DISABLED TO PREVENT FIREBASE QUOTA EXCEEDED ERRORS
-    console.warn(
-      "🛑 Firebase database service DISABLED to prevent quota exceeded",
-    );
-    return false;
-
     try {
       if (!firebaseApp) {
         console.error("Firebase app not available from config");
@@ -46,10 +40,10 @@ class RealFirebaseService {
       this.database = getDatabase(this.app);
       this.isInitialized = true;
 
-      console.log("Firebase database service initialized successfully");
+      console.log("✅ Firebase database service initialized successfully");
       return true;
     } catch (error) {
-      console.error("Firebase database initialization failed:", error);
+      console.error("❌ Firebase database initialization failed:", error);
       return false;
     }
   }
