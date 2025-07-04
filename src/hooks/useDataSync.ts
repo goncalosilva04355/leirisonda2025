@@ -454,13 +454,9 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Real Firebase sync
   const syncWithFirebase = useCallback(async () => {
-    // EMERGENCY STOP - Block ALL Firebase operations due to quota exceeded
-    console.error("🚨 EMERGENCY: Firebase sync BLOCKED due to quota exceeded");
-    setState((prev) => ({
-      ...prev,
-      isLoading: false,
-      error: "Firebase blocked - quota exceeded",
-    }));
+    // Firebase temporarily paused - running in offline mode
+    console.log("⏸️ Firebase sync paused - using local storage only");
+    setState((prev) => ({ ...prev, isLoading: false, error: null }));
     return;
 
     if (!syncEnabled) {
