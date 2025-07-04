@@ -212,12 +212,22 @@ class DataCleanupService {
       throw new Error("Realtime Database not initialized");
     }
 
+    console.log("🚀 Fetching all data from Realtime Database...");
+
     // Since realFirebaseService doesn't expose a direct delete all method,
     // we need to get all data and delete individually
     const allData = await realFirebaseService.syncAllData();
 
     if (allData) {
+      console.log(`Found data in Realtime DB:`, {
+        pools: allData.pools.length,
+        works: allData.works.length,
+        maintenance: allData.maintenance.length,
+        clients: allData.clients.length,
+      });
+
       // Delete all pools
+      console.log(`Deleting ${allData.pools.length} pools from Realtime DB...`);
       for (const pool of allData.pools) {
         if (pool.id) {
           await realFirebaseService.deletePool(pool.id);
@@ -225,6 +235,7 @@ class DataCleanupService {
       }
 
       // Delete all works
+      console.log(`Deleting ${allData.works.length} works from Realtime DB...`);
       for (const work of allData.works) {
         if (work.id) {
           await realFirebaseService.deleteWork(work.id);
@@ -232,6 +243,9 @@ class DataCleanupService {
       }
 
       // Delete all maintenance
+      console.log(
+        `Deleting ${allData.maintenance.length} maintenance records from Realtime DB...`,
+      );
       for (const maintenance of allData.maintenance) {
         if (maintenance.id) {
           await realFirebaseService.deleteMaintenance(maintenance.id);
@@ -239,6 +253,9 @@ class DataCleanupService {
       }
 
       // Delete all clients
+      console.log(
+        `Deleting ${allData.clients.length} clients from Realtime DB...`,
+      );
       for (const client of allData.clients) {
         if (client.id) {
           try {
@@ -248,6 +265,8 @@ class DataCleanupService {
           }
         }
       }
+    } else {
+      console.log("No data found in Realtime Database or failed to fetch data");
     }
   }
 
