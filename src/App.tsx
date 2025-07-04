@@ -722,7 +722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relatório PDF. Tente novamente.");
+      alert("Erro ao gerar o relat��rio PDF. Tente novamente.");
     }
   };
 
@@ -2233,16 +2233,69 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={(e) => {
                         e.preventDefault();
                         const form = e.target.closest("form");
+
+                        // Extract all form data
                         const workTitle =
                           form.querySelector('input[placeholder*="LS-"]')
-                            .value || "Nova Obra";
+                            ?.value || "Nova Obra";
+                        const workType =
+                          form.querySelector('select[name="workType"]')
+                            ?.value || selectedWorkType;
+                        const client =
+                          form.querySelector('input[placeholder*="Cliente"]')
+                            ?.value || "";
+                        const contact =
+                          form.querySelector('input[placeholder*="Contacto"]')
+                            ?.value || "";
+                        const location =
+                          form.querySelector('input[placeholder*="Morada"]')
+                            ?.value || "";
+                        const startTime =
+                          form.querySelector('input[placeholder*="Entrada"]')
+                            ?.value || "";
+                        const endTime =
+                          form.querySelector('input[placeholder*="Saída"]')
+                            ?.value || "";
+                        const status =
+                          form.querySelector('select[name="status"]')?.value ||
+                          "pending";
                         const responsibleUser = form.querySelector(
                           'select[aria-label="Usuários Atribuídos"]',
                         );
-                        const selectedUserId = responsibleUser
-                          ? responsibleUser.value
-                          : null;
+                        const selectedUserId = responsibleUser?.value || null;
 
+                        // Create complete work data object
+                        const workData = {
+                          id: Date.now(),
+                          title: workTitle,
+                          type: workType,
+                          client: client,
+                          contact: contact,
+                          location: location,
+                          startTime: startTime,
+                          endTime: endTime,
+                          status: status,
+                          assignedTo: selectedUserId
+                            ? users.find((u) => u.id == selectedUserId)?.name
+                            : "",
+                          assignedUserId: selectedUserId,
+                          photos: uploadedPhotos,
+                          photoCount: uploadedPhotos.length,
+                          createdAt: new Date().toISOString(),
+                          startDate: new Date().toISOString(),
+                        };
+
+                        // Save to localStorage
+                        const savedWorks = JSON.parse(
+                          localStorage.getItem("works") || "[]",
+                        );
+                        savedWorks.push(workData);
+                        localStorage.setItem(
+                          "works",
+                          JSON.stringify(savedWorks),
+                        );
+
+                        // Send notification if user assigned
                         if (selectedUserId) {
                           const selectedUser = users.find(
                             (u) => u.id == selectedUserId,
@@ -2274,16 +2327,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             "waterBores",
                             JSON.stringify(savedWaterBores),
                           );
-
-                          console.log(
-                            "Obra de furo salva com",
-                            uploadedPhotos.length,
-                            "fotos",
-                          );
                         }
 
                         alert(
-                          "Obra criada com sucesso! " +
+                          `Obra "${workTitle}" criada com sucesso! ` +
                             (selectedUserId
                               ? "Notificação enviada ao responsável."
                               : "") +
