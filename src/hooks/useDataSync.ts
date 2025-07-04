@@ -278,58 +278,6 @@ export function useDataSync(): SyncState & SyncActions {
       maintenance: savedMaintenance.length,
       clients: savedClients.length,
     });
-
-    // Load saved data from localStorage (normal behavior)
-    const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
-    const savedMaintenance = JSON.parse(
-      localStorage.getItem("maintenance") || "[]",
-    );
-    const savedInterventions = JSON.parse(
-      localStorage.getItem("interventions") || "[]",
-    );
-    const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
-    const savedClients = JSON.parse(localStorage.getItem("clients") || "[]");
-
-    // Convert interventions to maintenance format
-    const interventionsAsMaintenance = savedInterventions.map(
-      (intervention) => ({
-        id: intervention.id.toString(),
-        poolId: intervention.poolId || "unknown",
-        poolName: intervention.poolName || "Piscina",
-        type: "Manutenção",
-        status: intervention.status || "completed",
-        description: intervention.workPerformed || "Manutenção realizada",
-        scheduledDate: intervention.date,
-        completedDate: intervention.date,
-        technician: intervention.technician || "Técnico",
-        notes: intervention.observations,
-        createdAt: intervention.createdAt || new Date().toISOString(),
-      }),
-    );
-
-    // Combine all maintenance data
-    const allMaintenance = [
-      ...mockMaintenance,
-      ...savedMaintenance,
-      ...interventionsAsMaintenance,
-    ];
-    const future = allMaintenance.filter(
-      (m) => new Date(m.scheduledDate) >= today,
-    );
-
-    // Combine all data
-    const allPools = [...mockPools, ...savedPools];
-    const allWorks = [...mockWorks, ...savedWorks];
-    const allClients = [...mockClients, ...savedClients];
-
-    setState((prev) => ({
-      ...prev,
-      pools: allPools,
-      maintenance: allMaintenance,
-      futureMaintenance: future,
-      works: allWorks,
-      clients: allClients,
-    }));
   }, []);
 
   // Real Firebase sync
