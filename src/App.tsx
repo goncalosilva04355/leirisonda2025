@@ -725,7 +725,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
   }, [activeSection]);
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
 
