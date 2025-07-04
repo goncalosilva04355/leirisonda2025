@@ -103,7 +103,7 @@ function App() {
 
   // Debug logging for authentication state changes
   useEffect(() => {
-    console.log("🔍 Auth State Debug:", {
+    console.log("�� Auth State Debug:", {
       isAuthenticated,
       currentUser: currentUser
         ? `${currentUser.name} (${currentUser.email})`
@@ -590,7 +590,7 @@ function App() {
     }
 
     try {
-      console.log("🔐 Attempting login for:", loginForm.email);
+      console.log("���� Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -1695,7 +1695,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manuten����es
+                      Próximas Manuten������es
                     </h2>
                   </div>
 
@@ -5941,7 +5941,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  📍 {work.location}
+                                  ���� {work.location}
                                 </button>
                               </div>
                               <div>
@@ -7587,21 +7587,32 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           />
         )}
 
-        {/* Work View Modal */}
+        {/* Enhanced Work View Modal */}
         {viewingWork && selectedWork && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
               <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    Detalhes da Obra
-                  </h2>
+                {/* Enhanced Header */}
+                <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Detalhes Completos da Obra
+                      </h2>
+                      <p className="text-gray-600 text-sm">
+                        {selectedWork.id?.toUpperCase() || 'ID-' + Date.now().toString().slice(-6)} • {selectedWork.title}
+                      </p>
+                    </div>
+                  </div>
                   <button
                     onClick={() => {
                       setViewingWork(false);
                       setSelectedWork(null);
                     }}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
                   >
                     <X className="h-6 w-6" />
                   </button>
