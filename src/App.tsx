@@ -1100,7 +1100,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -4515,7 +4515,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 });
                               } else {
                                 alert(
-                                  "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                  "Notificaç��es foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                 );
                               }
                             } else {
@@ -6501,11 +6501,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
             <button
               onClick={() => {
-                navigateToSection("futuras-manutencoes");
+                navigateToSection("piscinas");
                 setSidebarOpen(false);
               }}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "futuras-manutencoes"
+                activeSection === "piscinas"
                   ? "bg-red-50 text-red-700 border-l-4 border-red-500"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
