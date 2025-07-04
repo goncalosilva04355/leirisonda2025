@@ -541,7 +541,9 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Configure o Firebase primeiro antes de testar</li>
                   <li>• Os testes verificam conectividade e funcionalidades</li>
-                  <li>• Resultados são apenas simulações para demonstração</li>
+                  <li>
+                    ��� Resultados são apenas simulações para demonstração
+                  </li>
                   <li>• Para uso real, implemente autenticação adequada</li>
                 </ul>
               </div>
@@ -734,6 +736,46 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                       </button>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Summary of Assigned Works */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h4 className="font-medium text-yellow-900 mb-3">
+                  📋 Resumo de Atribuições de Obra
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div className="text-center p-3 bg-white rounded border">
+                    <div className="text-2xl font-bold text-gray-900">
+                      {dataSync?.works?.length || 0}
+                    </div>
+                    <div className="text-sm text-gray-600">Total de Obras</div>
+                  </div>
+                  <div className="text-center p-3 bg-white rounded border">
+                    <div className="text-2xl font-bold text-orange-600">
+                      {dataSync?.works?.filter((work) => work.assignedTo)
+                        ?.length || 0}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Obras Atribuídas
+                    </div>
+                  </div>
+                  <div className="text-center p-3 bg-white rounded border">
+                    <div className="text-2xl font-bold text-green-600">
+                      {dataSync?.works?.filter(
+                        (work) => work.status === "completed",
+                      )?.length || 0}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Obras Concluídas
+                    </div>
+                  </div>
+                </div>
+                <div className="text-sm text-yellow-800">
+                  💡 Este resumo mostra o estado atual do sistema de atribuição
+                  de obras. Quando uma obra é atribuída, automaticamente aparece
+                  nas estatísticas e o utilizador responsável recebe uma
+                  notificação push.
                 </div>
               </div>
 
