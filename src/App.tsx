@@ -547,7 +547,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
+      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pr��-definidos por agora.",
     );
   };
 
@@ -2619,15 +2619,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             null,
                         };
 
-                        // Save to localStorage
-                        const savedPools = JSON.parse(
-                          localStorage.getItem("pools") || "[]",
-                        );
-                        savedPools.push(poolData);
-                        localStorage.setItem(
-                          "pools",
-                          JSON.stringify(savedPools),
-                        );
+                        // Use sync system to add pool (will handle Firebase and localStorage)
+                        addPool(poolData);
 
                         alert(`Piscina "${poolData.name}" criada com sucesso!`);
                         setActiveSection("piscinas");
@@ -2853,7 +2846,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Temperatura (°C)
+                          Temperatura (��C)
                         </label>
                         <input
                           type="number"
