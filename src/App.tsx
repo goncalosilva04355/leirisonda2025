@@ -99,6 +99,12 @@ function App() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
   // No auto-login - users must login manually
+  useEffect(() => {
+    // Clear any existing auth data on app start
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("mock-current-user");
+    console.log("🔒 SECURITY: Auth data cleared - manual login required");
+  }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
   // SECURITY: Register form removed - only super admin can create users
@@ -1579,7 +1585,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center p-4 border-b border-gray-100">
                     <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Minhas Obras Atribu����das
+                      Minhas Obras Atribu���das
                     </h2>
                   </div>
                   <div className="p-4 space-y-3">
@@ -1602,7 +1608,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span>Atribuída a: {work.assignedTo}</span>
                               </div>
                               <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                <span>������</span>
+                                <span>����</span>
                                 <span>
                                   Atribuída em:{" "}
                                   {new Date(
@@ -4572,7 +4578,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 });
                               } else {
                                 alert(
-                                  "Notificaç��es foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                  "Notificaç����es foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                 );
                               }
                             } else {
