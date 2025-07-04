@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Cloud, Save, AlertCircle, CheckCircle } from "lucide-react";
+import { Cloud, Save, AlertCircle, CheckCircle, RefreshCw } from "lucide-react";
+import { saveFirebaseConfig } from "../firebase/config";
 
 interface FirebaseConfigProps {
   onConfigured: () => void;
@@ -12,6 +13,7 @@ interface FirebaseSettings {
   storageBucket: string;
   messagingSenderId: string;
   appId: string;
+  measurementId?: string;
 }
 
 export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
@@ -24,24 +26,60 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     storageBucket: "",
     messagingSenderId: "",
     appId: "",
+    measurementId: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [isConfigLoaded, setIsConfigLoaded] = useState(false);
 
   useEffect(() => {
-    // Firebase is always configured with fixed settings
-    const fixedConfig = {
-      apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-      authDomain: "leirisonda-16f8b.firebaseapp.com",
-      projectId: "leirisonda-16f8b",
-      storageBucket: "leirisonda-16f8b.firebasestorage.app",
-      messagingSenderId: "540456875574",
-      appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+    // Load existing Firebase config from localStorage
+    const loadConfigFromStorage = () => {
+      try {
+        const storedConfig = localStorage.getItem("firebase-config");
+        if (storedConfig) {
+          const parsedConfig = JSON.parse(storedConfig);
+          setConfig(parsedConfig);
+          setIsConfigLoaded(true);
+          setSuccess(true);
+          console.log(
+            "🔧 FirebaseConfig: Loaded configuration from localStorage",
+          );
+          onConfigured();
+          return;
+        }
+      } catch (error) {
+        console.warn(
+          "🔧 FirebaseConfig: Error loading from localStorage:",
+          error,
+        );
+      }
+
+      // If no stored config, use the provided default config
+      const defaultConfig = {
+        apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+        authDomain: "leirisonda-16f8b.firebaseapp.com",
+        projectId: "leirisonda-16f8b",
+        storageBucket: "leirisonda-16f8b.firebasestorage.app",
+        messagingSenderId: "540456875574",
+        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+        measurementId: "G-R9W43EHH2C",
+      };
+
+      setConfig(defaultConfig);
+      setIsConfigLoaded(true);
+      setSuccess(true);
+
+      // Save default config to localStorage
+      saveFirebaseConfig(defaultConfig);
+      console.log(
+        "🔧 FirebaseConfig: Saved default configuration to localStorage",
+      );
+      onConfigured();
     };
-    setConfig(fixedConfig);
-    setSuccess(true);
-    onConfigured();
+
+    loadConfigFromStorage();
   }, [onConfigured]);
 
   const handleSave = async () => {
