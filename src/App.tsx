@@ -1508,8 +1508,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                         </div>
                       ) : (
-                      {/* Works Results */}
-                      {works.filter(
+                        <>
+                          {/* Works Results */}
+                          {works.filter(
                         (work) =>
                           work.title
                             .toLowerCase()
@@ -2002,7 +2003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Manutenções
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Histórico de manutenções realizadas
+                        Histórico de manutenç��es realizadas
                       </p>
                     </div>
                   </div>
@@ -4245,7 +4246,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <ul className="text-gray-700 text-sm space-y-1">
                           <li>• As notificações funcionam apenas com HTTPS</li>
                           <li>
-                            • Certifique-se de que permite notificações no seu
+                            • Certifique-se de que permite notificaç��es no seu
                             navegador
                           </li>
                           <li>
