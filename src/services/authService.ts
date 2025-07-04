@@ -113,6 +113,9 @@ class AuthService {
       return { success: true, user: userProfile };
     } catch (error: any) {
       console.error("Registration error:", error);
+      console.error("Error code:", error.code);
+      console.error("Error message:", error.message);
+      console.error("Full error:", JSON.stringify(error, null, 2));
 
       let errorMessage = "Erro ao criar conta";
       if (error.code === "auth/email-already-in-use") {
@@ -126,9 +129,14 @@ class AuthService {
       } else if (error.code === "auth/too-many-requests") {
         errorMessage = "Muitas tentativas. Tente novamente mais tarde";
       } else if (error.code === "auth/operation-not-allowed") {
-        errorMessage = "Registo não permitido. Contacte o administrador";
+        errorMessage =
+          "Email/Password authentication não está ativado no Firebase Console";
+      } else if (error.code === "auth/invalid-api-key") {
+        errorMessage = "Chave API Firebase inválida";
+      } else if (error.code === "auth/app-deleted") {
+        errorMessage = "Projeto Firebase foi removido";
       } else if (error.message) {
-        errorMessage = `Erro: ${error.message}`;
+        errorMessage = `Erro Firebase: ${error.code || "unknown"} - ${error.message}`;
       }
 
       return { success: false, error: errorMessage };
