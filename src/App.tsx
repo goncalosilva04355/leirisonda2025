@@ -197,8 +197,28 @@ function App() {
   };
 
   const handleSaveIntervention = () => {
+    // Save intervention with photos
+    const interventionData = {
+      id: Date.now(),
+      date: new Date().toISOString(),
+      photos: uploadedPhotos,
+      photoCount: uploadedPhotos.length,
+    };
+
+    // Store in localStorage for persistence (in real app, would save to backend)
+    const savedInterventions = JSON.parse(
+      localStorage.getItem("interventions") || "[]",
+    );
+    savedInterventions.push(interventionData);
+    localStorage.setItem("interventions", JSON.stringify(savedInterventions));
+
+    console.log("Intervenção salva com", uploadedPhotos.length, "fotos");
+
     setInterventionSaved(true);
     setShowShareModal(true);
+
+    // Clear photos after saving
+    setUploadedPhotos([]);
   };
 
   const handleShare = (platform) => {
@@ -332,7 +352,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or��amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
