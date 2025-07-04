@@ -1444,10 +1444,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Estado Inicial
                       </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-                        <option value="pending" selected>
-                          Pendente
-                        </option>
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        defaultValue="pending"
+                      >
+                        <option value="pending">Pendente</option>
                         <option value="approved">Aprovada</option>
                         <option value="in_progress">Em Progresso</option>
                       </select>
@@ -2011,7 +2012,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         "Limpeza de pré-filtro",
                         "Limpeza filtro areia/vidro",
                         "Verificação alimentação",
-                        "Enchimento autom��tico",
+                        "Enchimento automático",
                         "Limpeza linha de água",
                         "Limpeza do fundo",
                         "Limpeza das paredes",
