@@ -109,6 +109,28 @@ const mockMaintenance: Maintenance[] = [
     notes: "Bomba a precisar de revisão",
     createdAt: "2025-01-05",
   },
+  {
+    id: "maint-3",
+    poolId: "pool-1",
+    poolName: "Piscina Villa Marina",
+    type: "Limpeza",
+    status: "scheduled",
+    description: "Limpeza mensal programada",
+    scheduledDate: "2025-02-15",
+    technician: "Maria Santos",
+    createdAt: "2025-01-15",
+  },
+  {
+    id: "maint-4",
+    poolId: "pool-2",
+    poolName: "Piscina Condomínio Sol",
+    type: "Tratamento",
+    status: "scheduled",
+    description: "Tratamento químico e análise da água",
+    scheduledDate: "2025-02-10",
+    technician: "João Santos",
+    createdAt: "2025-01-10",
+  },
 ];
 
 // Mock works data
