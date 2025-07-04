@@ -657,7 +657,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      console.log("🔄 Initiating logout process...");
+      console.log("�� Initiating logout process...");
 
       // Close sidebar immediately
       setSidebarOpen(false);
@@ -2993,7 +2993,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Usu����rios Atribuídos
+                          Usu��rios Atribuídos
                         </label>
                         <p className="text-sm text-gray-600 mb-2">
                           Selecione os usuários responsáveis por esta obra
@@ -7177,20 +7177,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </button>
             )}
 
-            <button
-              onClick={() => {
-                navigateToSection("piscinas");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "piscinas"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Waves className="h-5 w-5" />
-              <span>Piscinas</span>
-            </button>
+            {hasPermission("piscinas", "view") && (
+              <button
+                onClick={() => {
+                  navigateToSection("piscinas");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "piscinas"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Waves className="h-5 w-5" />
+                <span>Piscinas</span>
+              </button>
+            )}
 
             {/* Only show Users button for super admins */}
             {currentUser?.role === "super_admin" && (
