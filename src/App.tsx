@@ -183,8 +183,8 @@ function App() {
       setIsAuthenticated(!!user);
     });
 
-    // Initialize default admin if needed
-    authService.initializeDefaultAdmin();
+    // DO NOT initialize default admin automatically - this was causing the security issue
+    // Users must always login manually for security
 
     return unsubscribe;
   }, []);
