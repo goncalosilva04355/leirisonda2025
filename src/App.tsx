@@ -321,7 +321,11 @@ function App() {
       type: "Manutenção Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
-      status: maintenanceForm.status,
+      status: maintenanceForm.status as
+        | "pending"
+        | "in_progress"
+        | "completed"
+        | "cancelled",
       description: maintenanceForm.workPerformed || "Manutenção realizada",
       notes: maintenanceForm.observations,
     };
@@ -3621,7 +3625,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Resumo executivo</li>
                       <li>• Estatísticas gerais</li>
                       <li>• Dados consolidados</li>
-                      <li>�� Análise de performance</li>
+                      <li>• Análise de performance</li>
                     </ul>
                   </div>
                   <button
@@ -4341,7 +4345,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>✓</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
