@@ -206,6 +206,60 @@ export function useDataSync(): SyncState & SyncActions {
     return !!localStorage.getItem("firebase-config");
   });
 
+  // Real-time listeners
+  useEffect(() => {
+    if (!syncEnabled || !realFirebaseService.isReady()) {
+      return;
+    }
+
+    // Set up real-time listeners
+    const unsubscribePools = realFirebaseService.onPoolsChange((pools) => {
+      setState((prev) => ({
+        ...prev,
+        pools: [...mockPools, ...pools],
+      }));
+    });
+
+    const unsubscribeWorks = realFirebaseService.onWorksChange((works) => {
+      setState((prev) => ({
+        ...prev,
+        works: [...mockWorks, ...works],
+      }));
+    });
+
+    const unsubscribeMaintenance = realFirebaseService.onMaintenanceChange(
+      (maintenance) => {
+        const today = new Date();
+        const futureMaintenance = maintenance.filter(
+          (m) => new Date(m.scheduledDate) >= today,
+        );
+
+        setState((prev) => ({
+          ...prev,
+          maintenance: [...mockMaintenance, ...maintenance],
+          futureMaintenance,
+        }));
+      },
+    );
+
+    const unsubscribeClients = realFirebaseService.onClientsChange(
+      (clients) => {
+        setState((prev) => ({
+          ...prev,
+          clients: [...mockClients, ...clients],
+        }));
+      },
+    );
+
+    // Cleanup listeners on unmount
+    return () => {
+      unsubscribePools();
+      unsubscribeWorks();
+      unsubscribeMaintenance();
+      unsubscribeClients();
+    };
+  }, [syncEnabled]);
+
   // Initialize with data from localStorage + mock data
   useEffect(() => {
     const today = new Date();
