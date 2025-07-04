@@ -3645,7 +3645,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="resistencia">
                           Resistência El��trica
                         </option>
-                        <option value="gas">Aquecimento a G��s</option>
+                        <option value="gas">Aquecimento a G����s</option>
                       </select>
                     </div>
                   </div>
@@ -5322,11 +5322,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div>
                               <p className="font-medium">Contactos:</p>
                               <p>{client.email}</p>
-                              <p>{client.phone}</p>
+                              <button
+                                onClick={() => handlePhoneClick(client.phone)}
+                                className={`text-left ${
+                                  enablePhoneDialer
+                                    ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                    : "text-gray-600"
+                                }`}
+                                disabled={!enablePhoneDialer}
+                              >
+                                📞 {client.phone}
+                              </button>
                             </div>
                             <div>
                               <p className="font-medium">Morada:</p>
-                              <p>{client.address}</p>
+                              <button
+                                onClick={() =>
+                                  handleAddressClick(client.address)
+                                }
+                                className={`text-left ${
+                                  enableMapsRedirect
+                                    ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                    : "text-gray-600"
+                                }`}
+                                disabled={!enableMapsRedirect}
+                              >
+                                📍 {client.address}
+                              </button>
                             </div>
                             <div>
                               <p className="font-medium">Informações:</p>
