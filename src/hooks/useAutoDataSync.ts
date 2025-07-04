@@ -307,38 +307,46 @@ export const useFirebaseRealtimeSync = () => {
   const { forceSyncNow } = useAutoDataSync();
 
   useEffect(() => {
-    // TEMPORARILY DISABLED to prevent Firebase quota exceeded
-    console.log(
-      "🛑 Firebase realtime listeners DISABLED to prevent quota exceeded",
-    );
-    return;
-
     if (!realFirebaseService.isReady()) {
       return;
     }
 
     console.log("📡 Configurando listeners em tempo real do Firebase");
 
+    // Throttle sync calls to prevent quota exceeded
+    let lastSyncTime = 0;
+    const MIN_SYNC_INTERVAL = 10000; // 10 seconds minimum between syncs
+
+    const throttledSync = () => {
+      const now = Date.now();
+      if (now - lastSyncTime > MIN_SYNC_INTERVAL) {
+        lastSyncTime = now;
+        forceSyncNow();
+      } else {
+        console.log("🚫 Sync throttled - too frequent");
+      }
+    };
+
     // Listeners para mudanças em tempo real no Firebase
     const unsubscribers = [
       realFirebaseService.onPoolsChange(() => {
         console.log("🔄 Mudança detectada em pools (Firebase)");
-        forceSyncNow();
+        throttledSync();
       }),
 
       realFirebaseService.onWorksChange(() => {
         console.log("🔄 Mudança detectada em works (Firebase)");
-        forceSyncNow();
+        throttledSync();
       }),
 
       realFirebaseService.onMaintenanceChange(() => {
         console.log("🔄 Mudança detectada em maintenance (Firebase)");
-        forceSyncNow();
+        throttledSync();
       }),
 
       realFirebaseService.onClientsChange(() => {
         console.log("🔄 Mudança detectada em clients (Firebase)");
-        forceSyncNow();
+        throttledSync();
       }),
     ];
 
