@@ -707,7 +707,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     });
   };
 
-  const removePhoto = (photoId) => {
+  const removePhoto = (photoId: any) => {
     setUploadedPhotos((prev) => prev.filter((photo) => photo.id !== photoId));
   };
 
