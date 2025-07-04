@@ -3895,15 +3895,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             startDate: new Date().toISOString(),
                           };
 
-                          // Debug: Log work creation details
+                          // Log work creation
                           console.log(
-                            "🏗️ DEBUG: Criando obra com atribuições:",
-                            {
-                              title: workData.title,
-                              assignedTo: workData.assignedTo,
-                              assignedUsers: workData.assignedUsers,
-                              assignedUserIds: workData.assignedUserIds,
-                            },
+                            `🏗️ Obra criada: "${workData.title}" → ${workData.assignedTo}`,
                           );
 
                           // Use sync system to add work (will handle Firebase and localStorage)
@@ -4480,7 +4474,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manutenção
+                        Nova Manuten��ão
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar intervenção de manutenção
