@@ -2145,7 +2145,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa��ões
+                          Observações
                         </label>
                         <textarea
                           rows={3}
@@ -3498,7 +3498,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Trabalhos realizados</li>
                       <li>• T���cnicos responsáveis</li>
                       <li>• Datas e durações</li>
-                      <li>�� Estados e observações</li>
+                      <li>• Estados e observações</li>
                     </ul>
                   </div>
                   <button
@@ -4328,7 +4328,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Produtos qu��micos utilizados</span>
+                  <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
@@ -4376,7 +4376,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              setActiveSection(section);
+              navigateToSection(section);
               setShowAdvancedSettings(false);
               setIsAdvancedUnlocked(false);
             }}
