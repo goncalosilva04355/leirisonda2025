@@ -165,6 +165,10 @@ function App() {
   const [uploadedPhotos, setUploadedPhotos] = useState<any[]>([]);
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
   const [selectedPhotos, setSelectedPhotos] = useState<any[]>([]);
+  const [workVehicles, setWorkVehicles] = useState<string[]>([]);
+  const [workTechnicians, setWorkTechnicians] = useState<string[]>([]);
+  const [currentVehicle, setCurrentVehicle] = useState("");
+  const [currentTechnician, setCurrentTechnician] = useState("");
 
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
@@ -2182,7 +2186,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => setActiveSection("manutencoes")}
                     className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                   >
-                    Manutenções
+                    Manutenç��es
                   </button>
                   <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
                     Futuras Manutenções
