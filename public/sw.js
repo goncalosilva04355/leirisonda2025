@@ -1,16 +1,55 @@
-// Service Worker for Push Notifications
-const CACHE_NAME = "leirisonda-v1";
+// Unified Service Worker for Leirisonda PWA
+const CACHE_NAME = "leirisonda-v4";
+const urlsToCache = ["/", "/manifest.json", "/index.html"];
 
 // Install event
 self.addEventListener("install", (event) => {
   console.log("Service Worker installing...");
-  self.skipWaiting();
+
+  event.waitUntil(
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => {
+        console.log("Opened cache");
+        return cache.addAll(urlsToCache);
+      })
+      .then(() => {
+        // Skip waiting to activate immediately
+        return self.skipWaiting();
+      }),
+  );
 });
 
 // Activate event
 self.addEventListener("activate", (event) => {
   console.log("Service Worker activating...");
-  event.waitUntil(self.clients.claim());
+
+  event.waitUntil(
+    // Clear old caches
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME) {
+              console.log("Deleting old cache:", cacheName);
+              return caches.delete(cacheName);
+            }
+          }),
+        );
+      })
+      .then(() => {
+        // Take control of all clients immediately
+        return self.clients.claim();
+      }),
+  );
+});
+
+// Message event for skip waiting
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 // Push event for notifications
@@ -69,7 +108,6 @@ self.addEventListener("sync", (event) => {
 
   if (event.tag === "background-sync") {
     event.waitUntil(
-      // Perform background sync operations
       Promise.resolve().then(() => {
         console.log("Performing background sync...");
       }),
@@ -77,22 +115,65 @@ self.addEventListener("sync", (event) => {
   }
 });
 
-// Fetch event for caching (optional)
+// Fetch event with smart caching strategy
 self.addEventListener("fetch", (event) => {
-  // Skip Firebase Auth and API requests to prevent interference
+  // Skip cross-origin requests and non-GET requests
   if (
-    event.request.url.includes("firebase") ||
-    event.request.url.includes("googleapis") ||
-    event.request.url.includes("identitytoolkit") ||
+    !event.request.url.startsWith(self.location.origin) ||
     event.request.method !== "GET"
   ) {
     return;
   }
 
-  // Basic caching strategy for offline support
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    }),
-  );
+  // Skip Firebase Auth and API requests to prevent interference
+  if (
+    event.request.url.includes("firebase") ||
+    event.request.url.includes("googleapis") ||
+    event.request.url.includes("identitytoolkit") ||
+    event.request.url.includes("firestore") ||
+    event.request.url.includes("cdn.builder.io")
+  ) {
+    return;
+  }
+
+  // Network first for HTML files, cache first for assets
+  if (event.request.headers.get("accept").includes("text/html")) {
+    // Network first strategy for HTML
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          // Cache successful responses
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cache if network fails
+          return caches.match(event.request);
+        }),
+    );
+  } else {
+    // Cache first strategy for assets
+    event.respondWith(
+      caches.match(event.request).then((response) => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request).then((response) => {
+          // Cache successful responses
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return response;
+        });
+      }),
+    );
+  }
 });
