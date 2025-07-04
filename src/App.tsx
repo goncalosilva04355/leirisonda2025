@@ -621,7 +621,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("🔄 Navigating to dashboard");
+            console.log("��� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -4925,7 +4925,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Estado e localizaç��o</li>
                         <li>• Informações de clientes</li>
-                        <li>��� Histórico de manutenç��es</li>
+                        <li>����� Histórico de manutenç��es</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -7130,7 +7130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   return (
     <AutoSyncProvider
-      enabled={true}
+      enabled={false}
       syncInterval={30000}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={false}
