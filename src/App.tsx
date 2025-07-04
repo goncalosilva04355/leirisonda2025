@@ -92,6 +92,13 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [showNewClientForm, setShowNewClientForm] = useState(false);
+  const [newClientForm, setNewClientForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
 
   // Custom setActiveSection that updates URL hash
   const navigateToSection = (section: string) => {
@@ -479,7 +486,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manuten��ões: ${maintenance.length}
+- Total de Manuten���ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -3339,7 +3346,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="super_admin">Super Admin</option>
                           <option value="manager">Gestor</option>
-                          <option value="technician">T���cnico</option>
+                          <option value="technician">T�����cnico</option>
                         </select>
                       </div>
                       <div className="flex items-center">
@@ -3625,7 +3632,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Trabalhos realizados</li>
                       <li>• T���cnicos responsáveis</li>
-                      <li>• Datas e durações</li>
+                      <li>• Datas e duraç��es</li>
                       <li>• Estados e observações</li>
                     </ul>
                   </div>
