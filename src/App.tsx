@@ -167,6 +167,19 @@ function App() {
     status: "completed",
   });
 
+  // Initialize authentication state
+  useEffect(() => {
+    const unsubscribe = authService.onAuthStateChanged((user) => {
+      setCurrentUser(user);
+      setIsAuthenticated(!!user);
+    });
+
+    // Initialize default admin if needed
+    authService.initializeDefaultAdmin();
+
+    return unsubscribe;
+  }, []);
+
   // Initialize notification permission state and register service worker
   useEffect(() => {
     if ("Notification" in window) {
