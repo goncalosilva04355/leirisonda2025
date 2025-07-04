@@ -79,13 +79,21 @@ export const UserDebugger: React.FC = () => {
           <Users className="w-4 h-4 mr-1" />
           Debug Utilizadores
         </h3>
-        <button
-          onClick={loadUsers}
-          disabled={loading}
-          className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
-        >
-          {loading ? "..." : "Atualizar"}
-        </button>
+        <div className="flex space-x-1">
+          <button
+            onClick={loadUsers}
+            disabled={loading}
+            className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+          >
+            {loading ? "..." : "Atualizar"}
+          </button>
+          <button
+            onClick={forceMigration}
+            className="px-2 py-1 bg-purple-500 text-white text-xs rounded hover:bg-purple-600"
+          >
+            Migrar
+          </button>
+        </div>
       </div>
 
       {/* Current User */}
