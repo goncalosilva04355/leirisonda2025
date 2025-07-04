@@ -170,6 +170,21 @@ function App() {
   const [currentVehicle, setCurrentVehicle] = useState("");
   const [currentTechnician, setCurrentTechnician] = useState("");
 
+  // Edit and view states
+  const [editingWork, setEditingWork] = useState(null);
+  const [editingPool, setEditingPool] = useState(null);
+  const [editingMaintenance, setEditingMaintenance] = useState(null);
+  const [selectedWork, setSelectedWork] = useState(null);
+  const [viewingWork, setViewingWork] = useState(false);
+
+  // Clickable links settings
+  const [enablePhoneDialer, setEnablePhoneDialer] = useState(() => {
+    return localStorage.getItem("enablePhoneDialer") === "true";
+  });
+  const [enableMapsRedirect, setEnableMapsRedirect] = useState(() => {
+    return localStorage.getItem("enableMapsRedirect") === "true";
+  });
+
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
     poolId: "",
@@ -372,7 +387,9 @@ function App() {
   const handleSaveIntervention = () => {
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigat��rios (Piscina e Técnico).");
+      alert(
+        "Por favor, preencha os campos obrigat����rios (Piscina e Técnico).",
+      );
       return;
     }
 
@@ -438,11 +455,44 @@ function App() {
     // Use sync system to add maintenance (will handle Firebase and localStorage)
     addMaintenance(newMaintenance);
 
+    // Create future maintenance if next maintenance date is selected
+    if (maintenanceForm.nextMaintenance) {
+      const nextMaintenanceDate = new Date(maintenanceForm.nextMaintenance);
+      const today = new Date();
+
+      // Only create future maintenance if the date is in the future
+      if (nextMaintenanceDate > today) {
+        const futureMaintenance = {
+          poolId: interventionData.poolId,
+          poolName: interventionData.poolName,
+          type: "Manutenção Programada",
+          scheduledDate: maintenanceForm.nextMaintenance,
+          technician: interventionData.technician,
+          status: "scheduled" as const,
+          description: "Manutenção programada automaticamente",
+          notes: "Agendada automaticamente após manutenção anterior",
+          clientName: selectedPool ? selectedPool.client : "",
+          clientContact: "", // Could be populated from client data if available
+          location: selectedPool ? selectedPool.location : "",
+        };
+
+        addMaintenance(futureMaintenance);
+        console.log("Futura manutenção criada:", futureMaintenance);
+      }
+    }
+
     console.log("Manuten��ão salva com sucesso:", interventionData);
 
-    alert(
-      `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`,
-    );
+    let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
+
+    if (maintenanceForm.nextMaintenance) {
+      const nextDate = new Date(
+        maintenanceForm.nextMaintenance,
+      ).toLocaleDateString("pt-PT");
+      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+    }
+
+    alert(alertMessage);
 
     // Clear form and photos after saving
     setMaintenanceForm({
@@ -484,7 +534,7 @@ function App() {
     setLoginError("");
 
     try {
-      // Quick bypass for Gonçalo's account
+      // Quick bypass for Gon��alo's account
       if (loginForm.email === "gongonsilva@gmail.com") {
         const gonçaloUser = {
           uid: "goncalo-1",
@@ -573,7 +623,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇ��O: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -782,7 +832,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat��rio personalizado em desenvolvimento. Use os relatórios pr���-definidos por agora.",
+      "Funcionalidade de relat����rio personalizado em desenvolvimento. Use os relatórios pr�����-definidos por agora.",
     );
   };
 
@@ -962,7 +1012,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relatório PDF. Tente novamente.");
+      alert("Erro ao gerar o relat��rio PDF. Tente novamente.");
     }
   };
 
@@ -1016,6 +1066,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const hasPermission = (module: string, action: string): boolean => {
     if (!currentUser || !currentUser.permissions) return false;
     return currentUser.permissions[module]?.[action] || false;
+  };
+
+  // Utility functions for clickable links
+  const handlePhoneClick = (phone: string) => {
+    if (enablePhoneDialer && phone) {
+      // Clean phone number (remove spaces, dashes, etc)
+      const cleanPhone = phone.replace(/[\s\-\(\)]/g, "");
+      window.location.href = `tel:${cleanPhone}`;
+    }
+  };
+
+  const handleAddressClick = (address: string) => {
+    if (enableMapsRedirect && address) {
+      // Open Google Maps with the address
+      const encodedAddress = encodeURIComponent(address);
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`,
+        "_blank",
+      );
+    }
+  };
+
+  // Settings persistence functions
+  const togglePhoneDialer = (enabled: boolean) => {
+    setEnablePhoneDialer(enabled);
+    localStorage.setItem("enablePhoneDialer", enabled.toString());
+  };
+
+  const toggleMapsRedirect = (enabled: boolean) => {
+    setEnableMapsRedirect(enabled);
+    localStorage.setItem("enableMapsRedirect", enabled.toString());
   };
 
   const handleDeleteUser = (userId) => {
@@ -1091,7 +1172,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -2048,7 +2129,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <h3 className="text-lg font-semibold text-gray-900">
                             {pool.name}
                           </h3>
-                          <p className="text-gray-600">{pool.location}</p>
+                          <button
+                            onClick={() => handleAddressClick(pool.location)}
+                            className={`text-left ${
+                              enableMapsRedirect
+                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                : "text-gray-600"
+                            }`}
+                            disabled={!enableMapsRedirect}
+                          >
+                            📍 {pool.location}
+                          </button>
                           <div className="flex items-center space-x-4 mt-2">
                             <span className="text-sm text-gray-500">
                               Cliente: {pool.client}
@@ -2077,7 +2168,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div className="flex items-center space-x-2">
                           {hasPermission("piscinas", "edit") && (
-                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <button
+                              onClick={() => {
+                                setEditingPool(pool);
+                                setActiveSection("editar-piscina");
+                              }}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
                               <Edit2 className="h-4 w-4" />
                             </button>
                           )}
@@ -2176,17 +2273,142 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               {/* Lista de Manutenções */}
               <div className="space-y-4">
-                <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <Wrench className="h-8 w-8 text-gray-400" />
+                {maintenance.length === 0 ? (
+                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Wrench className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhuma manutenção registada
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      As manutenções aparecerão aqui quando forem criadas
+                    </p>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Nenhuma manutenção registada
-                  </h3>
-                  <p className="text-gray-600 text-sm">
-                    As manutenções aparecerão aqui quando forem criadas
-                  </p>
-                </div>
+                ) : (
+                  maintenance.map((maint) => (
+                    <div
+                      key={maint.id}
+                      className="bg-white rounded-lg shadow-sm p-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {maint.poolName} - {maint.type}
+                            </h3>
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                maint.status === "scheduled"
+                                  ? "bg-blue-100 text-blue-700"
+                                  : maint.status === "in_progress"
+                                    ? "bg-orange-100 text-orange-700"
+                                    : maint.status === "completed"
+                                      ? "bg-green-100 text-green-700"
+                                      : "bg-gray-100 text-gray-700"
+                              }`}
+                            >
+                              {maint.status === "scheduled"
+                                ? "Agendado"
+                                : maint.status === "in_progress"
+                                  ? "Em Progresso"
+                                  : maint.status === "completed"
+                                    ? "Concluído"
+                                    : maint.status}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
+                            <div>
+                              <span className="font-medium">Data:</span>{" "}
+                              {new Date(maint.scheduledDate).toLocaleDateString(
+                                "pt-PT",
+                              )}
+                            </div>
+                            <div>
+                              <span className="font-medium">Técnico:</span>{" "}
+                              {maint.technician}
+                            </div>
+                            {maint.clientName && (
+                              <div>
+                                <span className="font-medium">Cliente:</span>{" "}
+                                {maint.clientName}
+                                {maint.clientContact && (
+                                  <div className="mt-1">
+                                    <button
+                                      onClick={() =>
+                                        handlePhoneClick(maint.clientContact)
+                                      }
+                                      className={`text-xs ${
+                                        enablePhoneDialer
+                                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                          : "text-gray-500"
+                                      }`}
+                                      disabled={!enablePhoneDialer}
+                                    >
+                                      📞 {maint.clientContact}
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {maint.location && (
+                              <div>
+                                <span className="font-medium">Local:</span>{" "}
+                                <button
+                                  onClick={() =>
+                                    handleAddressClick(maint.location)
+                                  }
+                                  className={`text-xs ${
+                                    enableMapsRedirect
+                                      ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                      : "text-gray-500"
+                                  }`}
+                                  disabled={!enableMapsRedirect}
+                                >
+                                  📍 {maint.location}
+                                </button>
+                              </div>
+                            )}
+                            {maint.observations && (
+                              <div className="col-span-2">
+                                <span className="font-medium">
+                                  Observações:
+                                </span>{" "}
+                                {maint.observations}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {hasPermission("manutencoes", "edit") && (
+                            <button
+                              onClick={() => {
+                                setEditingMaintenance(maint);
+                                setActiveSection("editar-manutencao");
+                              }}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("manutencoes", "delete") && (
+                            <button
+                              onClick={() =>
+                                confirmDelete(
+                                  `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                  () => dataSync.deleteMaintenance(maint.id),
+                                )
+                              }
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -2311,7 +2533,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div className="flex items-center space-x-2">
                           {hasPermission("manutencoes", "edit") && (
-                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <button
+                              onClick={() => {
+                                setEditingMaintenance(maint);
+                                setActiveSection("editar-manutencao");
+                              }}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
                               <Edit2 className="h-4 w-4" />
                             </button>
                           )}
@@ -2646,7 +2874,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          aria-label="Usuários Atribu��dos"
+                          aria-label="Usu��rios Atribu��dos"
                         >
                           <option value="">Selecionar usuário...</option>
                           {users
@@ -2849,7 +3077,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   )}
 
-                  {/* Observações e Trabalho */}
+                  {/* Observa��ões e Trabalho */}
                   <div>
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -2868,7 +3096,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={3}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Observa��ões sobre a obra..."
+                          placeholder="Observa����ões sobre a obra..."
                         />
                       </div>
 
@@ -3450,7 +3678,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="resistencia">
                           Resistência El��trica
                         </option>
-                        <option value="gas">Aquecimento a G��s</option>
+                        <option value="gas">Aquecimento a G����s</option>
                       </select>
                     </div>
                   </div>
@@ -3459,7 +3687,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Frequ��ncia de Manutenção
+                        Frequ���ncia de Manutenção
                       </label>
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="semanal">Semanal</option>
@@ -3470,7 +3698,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Próxima Manutenção
+                        Próxima Manuten��ão
                       </label>
                       <input
                         type="date"
@@ -3826,7 +4054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {/* Chemical Products */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Produtos Qu��micos Utilizados
+                      Produtos Qu����micos Utilizados
                     </h3>
                     <div className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -3908,6 +4136,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Descreva outros trabalhos realizados..."
+                        value={maintenanceForm.otherWork}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            otherWork: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -3922,6 +4157,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         rows={4}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Descreva problemas encontrados, se houver..."
+                        value={maintenanceForm.problems}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            problems: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
@@ -3932,6 +4174,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         rows={4}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Observações, recomendações, próxima manutenção..."
+                        value={maintenanceForm.observations}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            observations: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -3945,13 +4194,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <input
                         type="date"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.nextMaintenance}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            nextMaintenance: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Estado da Manutenção
                       </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.status}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            status: e.target.value,
+                          })
+                        }
+                      >
                         <option value="completed">Concluída</option>
                         <option value="pending">Pendente</option>
                         <option value="in_progress">Em Progresso</option>
@@ -4410,7 +4675,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 });
                               } else {
                                 alert(
-                                  "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                  "Notificaç��es foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                 );
                               }
                             } else {
@@ -4469,6 +4734,130 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
               </div>
 
+              {/* Mobile Interaction Settings */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <Settings className="h-6 w-6 text-blue-600 mr-3" />
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Interação Mobile
+                  </h3>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Configure o comportamento de cliques em contactos e moradas
+                </p>
+
+                <div className="space-y-4">
+                  {/* Phone Dialer Setting */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        📞
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium text-blue-900">
+                            Marcação Automática
+                          </h4>
+                          <button
+                            onClick={() =>
+                              togglePhoneDialer(!enablePhoneDialer)
+                            }
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                              enablePhoneDialer ? "bg-blue-600" : "bg-gray-300"
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                enablePhoneDialer
+                                  ? "translate-x-6"
+                                  : "translate-x-1"
+                              }`}
+                            />
+                          </button>
+                        </div>
+                        <p className="text-blue-700 text-sm mb-3">
+                          Quando ativado, clicar num número de telefone abrirá
+                          diretamente o marcador do telefone.
+                        </p>
+                        <p className="text-blue-600 text-xs">
+                          Estado:{" "}
+                          {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Maps Redirect Setting */}
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        📍
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium text-green-900">
+                            Navegação Maps
+                          </h4>
+                          <button
+                            onClick={() =>
+                              toggleMapsRedirect(!enableMapsRedirect)
+                            }
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                              enableMapsRedirect
+                                ? "bg-green-600"
+                                : "bg-gray-300"
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                enableMapsRedirect
+                                  ? "translate-x-6"
+                                  : "translate-x-1"
+                              }`}
+                            />
+                          </button>
+                        </div>
+                        <p className="text-green-700 text-sm mb-3">
+                          Quando ativado, clicar numa morada abrirá o Google
+                          Maps para navegação.
+                        </p>
+                        <p className="text-green-600 text-xs">
+                          Estado:{" "}
+                          {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Instructions */}
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900 mb-2">
+                          Instruções
+                        </h4>
+                        <ul className="text-gray-700 text-sm space-y-1">
+                          <li>
+                            • As definições são guardadas localmente no
+                            dispositivo
+                          </li>
+                          <li>
+                            • A marcação automática funciona melhor em
+                            dispositivos móveis
+                          </li>
+                          <li>• O Google Maps abre numa nova janela/tab</li>
+                          <li>
+                            • Pode ativar ou desativar cada funcionalidade
+                            independentemente
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Data Management Section - Only for Super Admin */}
               {currentUser.role === "super_admin" && (
                 <div className="bg-white rounded-lg p-6 shadow-sm">
@@ -4480,7 +4869,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                   <p className="text-gray-600 mb-6">
                     Elimine todos os dados de obras, manutenções e piscinas para
-                    começar com uma aplicação limpa. Os utilizadores s��o
+                    começar com uma aplicação limpa. Os utilizadores s����o
                     mantidos.
                   </p>
 
@@ -4618,7 +5007,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>�� Trabalhos realizados</li>
-                      <li>• T���cnicos responsáveis</li>
+                      <li>• T����cnicos responsáveis</li>
                       <li>• Datas e duraç��es</li>
                       <li>• Estados e observações</li>
                     </ul>
@@ -4640,7 +5029,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Relatório de Obras
+                        Relat��rio de Obras
                       </h3>
                       <p className="text-sm text-gray-600">
                         Projetos e construç��es
@@ -5003,11 +5392,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div>
                               <p className="font-medium">Contactos:</p>
                               <p>{client.email}</p>
-                              <p>{client.phone}</p>
+                              <button
+                                onClick={() => handlePhoneClick(client.phone)}
+                                className={`text-left ${
+                                  enablePhoneDialer
+                                    ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                    : "text-gray-600"
+                                }`}
+                                disabled={!enablePhoneDialer}
+                              >
+                                📞 {client.phone}
+                              </button>
                             </div>
                             <div>
                               <p className="font-medium">Morada:</p>
-                              <p>{client.address}</p>
+                              <button
+                                onClick={() =>
+                                  handleAddressClick(client.address)
+                                }
+                                className={`text-left ${
+                                  enableMapsRedirect
+                                    ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                    : "text-gray-600"
+                                }`}
+                                disabled={!enableMapsRedirect}
+                              >
+                                📍 {client.address}
+                              </button>
                             </div>
                             <div>
                               <p className="font-medium">Informações:</p>
@@ -5427,10 +5838,39 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div>
                               <span className="font-medium">Cliente:</span>{" "}
                               {work.client}
+                              {work.contact && (
+                                <div className="mt-1">
+                                  <button
+                                    onClick={() =>
+                                      handlePhoneClick(work.contact)
+                                    }
+                                    className={`text-xs ${
+                                      enablePhoneDialer
+                                        ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                        : "text-gray-500"
+                                    }`}
+                                    disabled={!enablePhoneDialer}
+                                  >
+                                    📞 {work.contact}
+                                  </button>
+                                </div>
+                              )}
                             </div>
                             <div>
                               <span className="font-medium">Local:</span>{" "}
-                              {work.location}
+                              <button
+                                onClick={() =>
+                                  handleAddressClick(work.location)
+                                }
+                                className={`text-xs ${
+                                  enableMapsRedirect
+                                    ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                    : "text-gray-500"
+                                }`}
+                                disabled={!enableMapsRedirect}
+                              >
+                                📍 {work.location}
+                              </button>
                             </div>
                             <div>
                               <span className="font-medium">Início:</span>{" "}
@@ -5452,12 +5892,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div className="flex items-center space-x-2 ml-4">
                           {hasPermission("obras", "view") && (
-                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <button
+                              onClick={() => {
+                                setSelectedWork(work);
+                                setViewingWork(true);
+                              }}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
                               <Eye className="h-4 w-4" />
                             </button>
                           )}
                           {hasPermission("obras", "edit") && (
-                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <button
+                              onClick={() => {
+                                setEditingWork(work);
+                                setActiveSection("editar-obra");
+                              }}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
                               <Edit2 className="h-4 w-4" />
                             </button>
                           )}
@@ -5513,6 +5965,407 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </button>
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+        );
+
+      case "editar-obra":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Building2 className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Editar Obra
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      {editingWork?.title}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Edit Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Título da Obra *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingWork?.title}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Instalação de Piscina"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Cliente *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingWork?.client}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Nome do cliente"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Local *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingWork?.location}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Morada da obra"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado
+                      </label>
+                      <select
+                        defaultValue={editingWork?.status}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="pending">Pendente</option>
+                        <option value="in_progress">Em Progresso</option>
+                        <option value="completed">Concluída</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Descrição
+                    </label>
+                    <textarea
+                      defaultValue={editingWork?.description}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={4}
+                      placeholder="Descrição detalhada da obra"
+                    />
+                  </div>
+
+                  <div className="flex space-x-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingWork(null);
+                        setActiveSection("obras");
+                      }}
+                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        const form = e.target.closest("form");
+                        const title = form.querySelector(
+                          'input[placeholder*="Título"]',
+                        ).value;
+                        const client = form.querySelector(
+                          'input[placeholder*="cliente"]',
+                        ).value;
+                        const location = form.querySelector(
+                          'input[placeholder*="Morada"]',
+                        ).value;
+                        const status = form.querySelector("select").value;
+                        const description =
+                          form.querySelector("textarea").value;
+
+                        dataSync.updateWork(editingWork.id, {
+                          title,
+                          client,
+                          location,
+                          status,
+                          description,
+                        });
+
+                        alert("Obra atualizada com sucesso!");
+                        setEditingWork(null);
+                        setActiveSection("obras");
+                      }}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      Guardar Alterações
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "editar-piscina":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Waves className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Editar Piscina
+                    </h1>
+                    <p className="text-gray-600 text-sm">{editingPool?.name}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Edit Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nome da Piscina *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingPool?.name}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Piscina Villa Marina"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Cliente *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingPool?.client}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Nome do cliente"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Local *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingPool?.location}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Localização da piscina"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado
+                      </label>
+                      <select
+                        defaultValue={editingPool?.status}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="Ativa">Ativa</option>
+                        <option value="Inativa">Inativa</option>
+                        <option value="Em Manutenção">Em Manutenção</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingPool(null);
+                        setActiveSection("piscinas");
+                      }}
+                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        const form = e.target.closest("form");
+                        const name = form.querySelector(
+                          'input[placeholder*="Piscina"]',
+                        ).value;
+                        const client = form.querySelector(
+                          'input[placeholder*="cliente"]',
+                        ).value;
+                        const location = form.querySelector(
+                          'input[placeholder*="Localização"]',
+                        ).value;
+                        const status = form.querySelector("select").value;
+
+                        dataSync.updatePool(editingPool.id, {
+                          name,
+                          client,
+                          location,
+                          status,
+                        });
+
+                        alert("Piscina atualizada com sucesso!");
+                        setEditingPool(null);
+                        setActiveSection("piscinas");
+                      }}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      Guardar Alterações
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "editar-manutencao":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Wrench className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Editar Manutenção
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      {editingMaintenance?.poolName} -{" "}
+                      {editingMaintenance?.type}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Edit Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data *
+                      </label>
+                      <input
+                        type="date"
+                        defaultValue={
+                          editingMaintenance?.scheduledDate?.split("T")[0]
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Técnico *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingMaintenance?.technician}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Nome do técnico"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de Manutenção
+                      </label>
+                      <select
+                        defaultValue={editingMaintenance?.type}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="Limpeza">Limpeza</option>
+                        <option value="Tratamento">Tratamento</option>
+                        <option value="Manutenção">Manutenção</option>
+                        <option value="Reparação">Reparação</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado
+                      </label>
+                      <select
+                        defaultValue={editingMaintenance?.status}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="scheduled">Agendado</option>
+                        <option value="in_progress">Em Progresso</option>
+                        <option value="completed">Concluído</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Observações
+                    </label>
+                    <textarea
+                      defaultValue={editingMaintenance?.observations}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={4}
+                      placeholder="Observações sobre a manutenção"
+                    />
+                  </div>
+
+                  <div className="flex space-x-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingMaintenance(null);
+                        setActiveSection("manutencoes");
+                      }}
+                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        const form = e.target.closest("form");
+                        const scheduledDate =
+                          form.querySelector('input[type="date"]').value;
+                        const technician = form.querySelector(
+                          'input[placeholder*="técnico"]',
+                        ).value;
+                        const type = form.querySelectorAll("select")[0].value;
+                        const status = form.querySelectorAll("select")[1].value;
+                        const observations =
+                          form.querySelector("textarea").value;
+
+                        dataSync.updateMaintenance(editingMaintenance.id, {
+                          scheduledDate: new Date(scheduledDate).toISOString(),
+                          technician,
+                          type,
+                          status,
+                          observations,
+                        });
+
+                        alert("Manutenção atualizada com sucesso!");
+                        setEditingMaintenance(null);
+                        setActiveSection("manutencoes");
+                      }}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      Guardar Alterações
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -5949,6 +6802,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <span>Dashboard</span>
             </button>
 
+            {hasPermission("obras", "view") && (
+              <button
+                onClick={() => {
+                  navigateToSection("obras");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "obras"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Building2 className="h-5 w-5" />
+                <span>Obras</span>
+              </button>
+            )}
+
             {hasPermission("obras", "create") && (
               <button
                 onClick={() => {
@@ -5966,6 +6836,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </button>
             )}
 
+            {hasPermission("manutencoes", "view") && (
+              <button
+                onClick={() => {
+                  navigateToSection("manutencoes");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "manutencoes"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Wrench className="h-5 w-5" />
+                <span>Manutenções</span>
+              </button>
+            )}
+
             <button
               onClick={() => {
                 navigateToSection("nova-manutencao");
@@ -5977,8 +6864,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   : "text-gray-700 hover:bg-gray-100"
               }`}
             >
-              <Wrench className="h-5 w-5" />
+              <Plus className="h-5 w-5" />
               <span>Nova Manutenção</span>
+            </button>
+
+            <button
+              onClick={() => {
+                navigateToSection("piscinas");
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                activeSection === "piscinas"
+                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Waves className="h-5 w-5" />
+              <span>Piscinas</span>
             </button>
 
             <button
@@ -5992,8 +6894,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   : "text-gray-700 hover:bg-gray-100"
               }`}
             >
-              <Waves className="h-5 w-5" />
-              <span>Piscinas</span>
+              <BarChart3 className="h-5 w-5" />
+              <span>Futuras Manutenções</span>
             </button>
           </nav>
 
@@ -6044,6 +6946,163 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
+      )}
+
+      {/* Work View Modal */}
+      {viewingWork && selectedWork && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Detalhes da Obra
+                </h2>
+                <button
+                  onClick={() => {
+                    setViewingWork(false);
+                    setSelectedWork(null);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Título
+                    </label>
+                    <p className="text-gray-900">{selectedWork.title}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Cliente
+                    </label>
+                    <p className="text-gray-900">{selectedWork.client}</p>
+                    {selectedWork.contact && (
+                      <button
+                        onClick={() => handlePhoneClick(selectedWork.contact)}
+                        className={`text-sm mt-1 ${
+                          enablePhoneDialer
+                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                            : "text-gray-500"
+                        }`}
+                        disabled={!enablePhoneDialer}
+                      >
+                        📞 {selectedWork.contact}
+                      </button>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Local
+                    </label>
+                    <button
+                      onClick={() => handleAddressClick(selectedWork.location)}
+                      className={`text-left ${
+                        enableMapsRedirect
+                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                          : "text-gray-900"
+                      }`}
+                      disabled={!enableMapsRedirect}
+                    >
+                      📍 {selectedWork.location}
+                    </button>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Estado
+                    </label>
+                    <span
+                      className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                        selectedWork.status === "pending"
+                          ? "bg-red-100 text-red-700"
+                          : selectedWork.status === "in_progress"
+                            ? "bg-orange-100 text-orange-700"
+                            : selectedWork.status === "completed"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {selectedWork.status === "pending"
+                        ? "Pendente"
+                        : selectedWork.status === "in_progress"
+                          ? "Em Progresso"
+                          : selectedWork.status === "completed"
+                            ? "Concluída"
+                            : selectedWork.status}
+                    </span>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Data de Início
+                    </label>
+                    <p className="text-gray-900">
+                      {new Date(selectedWork.startDate).toLocaleDateString(
+                        "pt-PT",
+                      )}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Atribuída a
+                    </label>
+                    <p className="text-gray-900">
+                      {selectedWork.assignedTo || "Não atribuída"}
+                    </p>
+                  </div>
+                </div>
+
+                {selectedWork.description && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Descrição
+                    </label>
+                    <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                      {selectedWork.description}
+                    </p>
+                  </div>
+                )}
+
+                {selectedWork.budget && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Orçamento
+                    </label>
+                    <p className="text-gray-900">€{selectedWork.budget}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-end space-x-3">
+                <button
+                  onClick={() => {
+                    setViewingWork(false);
+                    setSelectedWork(null);
+                  }}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                >
+                  Fechar
+                </button>
+                {hasPermission("obras", "edit") && (
+                  <button
+                    onClick={() => {
+                      setEditingWork(selectedWork);
+                      setViewingWork(false);
+                      setSelectedWork(null);
+                      setActiveSection("editar-obra");
+                    }}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Editar
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Main Content */}
