@@ -59,32 +59,8 @@ export interface Client {
 // User requested removal of old demo data
 const mockPools: Pool[] = [];
 
-const mockMaintenance: Maintenance[] = [
-  {
-    id: "1",
-    poolId: "1",
-    poolName: "Piscina Villa Marina",
-    type: "Limpeza Completa",
-    status: "completed",
-    description: "Limpeza completa da piscina, verificação química",
-    scheduledDate: "2024-01-15",
-    completedDate: "2024-01-15",
-    technician: "João Santos",
-    notes: "pH ajustado, cloro adicionado",
-    createdAt: "2024-01-14",
-  },
-  {
-    id: "2",
-    poolId: "2",
-    poolName: "Piscina Residencial Costa",
-    type: "Manutenção Preventiva",
-    status: "pending",
-    description: "Verificação dos sistemas de filtração",
-    scheduledDate: "2024-01-20",
-    technician: "Maria Silva",
-    createdAt: "2024-01-18",
-  },
-];
+// Mock maintenance data - DISABLED FOR PRODUCTION
+const mockMaintenance: Maintenance[] = [];
 
 const mockWorks: Work[] = [
   {
