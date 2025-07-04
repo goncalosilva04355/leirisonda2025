@@ -775,7 +775,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localiza��ão: ${work.location}
+   Localização: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -1403,13 +1403,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   ];
 
   const renderContent = () => {
-    // Add loading state check
+    // Add loading state check with timeout
     if (!currentUser || !isAuthenticated) {
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">A carregar...</p>
+            <p className="mt-4 text-gray-600">A carregar aplicação...</p>
+            <p className="mt-2 text-sm text-gray-500">
+              Se esta mensagem persistir, recarregue a página
+            </p>
           </div>
         </div>
       );
