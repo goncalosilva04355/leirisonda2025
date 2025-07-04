@@ -22,6 +22,7 @@ import {
   Check,
   AlertCircle,
   Download,
+  ArrowLeft,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
@@ -4679,12 +4680,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       </div>
 
       {/* Mobile Menu Button */}
-      <div className="lg:hidden fixed top-4 left-4 z-60">
+      <div className="lg:hidden fixed top-4 left-4 z-60 flex flex-col space-y-2">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="bg-white p-2 rounded-md shadow-md"
         >
           <Menu className="h-6 w-6 text-gray-600" />
+        </button>
+        <button
+          onClick={() => window.history.back()}
+          className="bg-white p-2 rounded-md shadow-md"
+        >
+          <ArrowLeft className="h-6 w-6 text-gray-600" />
         </button>
       </div>
 
