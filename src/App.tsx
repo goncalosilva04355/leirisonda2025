@@ -751,24 +751,78 @@ function App() {
 
               {/* Pools List */}
               <div className="space-y-4">
-                <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <Waves className="h-8 w-8 text-gray-400" />
+                {pools.length === 0 ? (
+                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Waves className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhuma piscina registada
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Comece por adicionar a primeira piscina ao sistema
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("nova-piscina")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Adicionar Piscina</span>
+                    </button>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Nenhuma piscina registada
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    Comece por adicionar a primeira piscina ao sistema
-                  </p>
-                  <button
-                    onClick={() => setActiveSection("nova-piscina")}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>Adicionar Piscina</span>
-                  </button>
-                </div>
+                ) : (
+                  pools.map((pool) => (
+                    <div
+                      key={pool.id}
+                      className="bg-white rounded-lg shadow-sm p-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {pool.name}
+                          </h3>
+                          <p className="text-gray-600">{pool.location}</p>
+                          <div className="flex items-center space-x-4 mt-2">
+                            <span className="text-sm text-gray-500">
+                              Cliente: {pool.client}
+                            </span>
+                            <span className="text-sm text-gray-500">
+                              Tipo: {pool.type}
+                            </span>
+                            <span
+                              className={`text-sm px-2 py-1 rounded-full ${
+                                pool.status === "Ativa"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
+                              {pool.status}
+                            </span>
+                          </div>
+                          {pool.nextMaintenance && (
+                            <p className="text-sm text-blue-600 mt-1">
+                              Próxima manutenção:{" "}
+                              {new Date(
+                                pool.nextMaintenance,
+                              ).toLocaleDateString("pt-PT")}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => dataSync.deletePool(pool.id)}
+                            className="p-2 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
