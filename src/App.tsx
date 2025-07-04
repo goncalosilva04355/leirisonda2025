@@ -977,7 +977,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+���� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -7080,7 +7080,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <button
                         type="button"
                         onClick={(e) => {
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const inputs = form.querySelectorAll(
                             "input, select, textarea",
                           );
