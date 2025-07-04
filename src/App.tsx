@@ -1039,7 +1039,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const testPushNotification = () => {
     if (Notification.permission === "granted") {
       showNotification(
-        "Teste de Notifica��ão",
+        "Teste de Notificação",
         "As notificações estão a funcionar corretamente!",
         "test",
       );
@@ -1437,7 +1437,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "relatorios",
       icon: BarChart3,
-      label: "Relat��rios",
+      label: "Relatórios",
       path: "/relatorios",
     },
     { id: "clientes", icon: Users, label: "Clientes", path: "/clientes" },
@@ -4749,7 +4749,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             dispositivo
                           </li>
                           <li>
-                            • A marcação automática funciona melhor em
+                            • A marcação autom��tica funciona melhor em
                             dispositivos móveis
                           </li>
                           <li>• O Google Maps abre numa nova janela/tab</li>
@@ -4913,7 +4913,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>�� Trabalhos realizados</li>
-                      <li>• T����cnicos responsáveis</li>
+                      <li>• T������cnicos responsáveis</li>
                       <li>• Datas e duraç��es</li>
                       <li>• Estados e observações</li>
                     </ul>
@@ -7506,7 +7506,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       {/* Auto-sync notification */}
       <AutoSyncNotification
         syncStatus={syncStatus}
-        lastSync={lastSync}
+        lastSync={autoSyncLastSync}
         onDismiss={syncStatus === "completed" ? () => {} : undefined}
       />
 
