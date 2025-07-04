@@ -86,24 +86,55 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     setLoading(true);
     setError("");
 
-    // Basic validation
-    const requiredFields = ["apiKey", "authDomain", "projectId"];
-    const missingFields = requiredFields.filter(
-      (field) => !config[field as keyof FirebaseSettings],
-    );
+    try {
+      // Basic validation
+      const requiredFields = ["apiKey", "authDomain", "projectId"];
+      const missingFields = requiredFields.filter(
+        (field) => !config[field as keyof FirebaseSettings],
+      );
 
-    if (missingFields.length > 0) {
-      setError(`Campos obrigatórios em falta: ${missingFields.join(", ")}`);
-      setLoading(false);
-      return;
+      if (missingFields.length > 0) {
+        setError(`Campos obrigatórios em falta: ${missingFields.join(", ")}`);
+        setLoading(false);
+        return;
+      }
+
+      // Save configuration to localStorage
+      const saveSuccess = saveFirebaseConfig(config);
+
+      if (saveSuccess) {
+        setSuccess(true);
+        console.log("🔧 FirebaseConfig: Configuration saved successfully");
+
+        setTimeout(() => {
+          onConfigured();
+        }, 1500);
+      } else {
+        setError("Erro ao guardar configuração. Tente novamente.");
+      }
+    } catch (error) {
+      console.error("🔧 FirebaseConfig: Error saving configuration:", error);
+      setError("Erro inesperado ao guardar configuração.");
     }
 
-    // Configuration is already fixed and active
-    setSuccess(true);
     setLoading(false);
-    setTimeout(() => {
-      onConfigured();
-    }, 1500);
+  };
+
+  const handleReset = () => {
+    const defaultConfig = {
+      apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+      authDomain: "leirisonda-16f8b.firebaseapp.com",
+      projectId: "leirisonda-16f8b",
+      storageBucket: "leirisonda-16f8b.firebasestorage.app",
+      messagingSenderId: "540456875574",
+      appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+      measurementId: "G-R9W43EHH2C",
+    };
+
+    setConfig(defaultConfig);
+    saveFirebaseConfig(defaultConfig);
+    setSuccess(true);
+    setError("");
   };
 
   const handleFieldChange = (field: keyof FirebaseSettings, value: string) => {
