@@ -454,17 +454,6 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Real Firebase sync
   const syncWithFirebase = useCallback(async () => {
-    // TEMPORARILY DISABLED TO PREVENT FIREBASE QUOTA EXCEEDED ERRORS
-    console.warn(
-      "🛑 Firebase sync in useDataSync DISABLED to prevent quota exceeded",
-    );
-    setState((prev) => ({
-      ...prev,
-      isLoading: false,
-      error: "Firebase sync disabled",
-    }));
-    return;
-
     if (!syncEnabled) {
       setState((prev) => ({ ...prev, error: "Firebase not configured" }));
       return;
