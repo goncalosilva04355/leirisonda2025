@@ -3197,7 +3197,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Trabalhos realizados</li>
-                      <li>• T��cnicos responsáveis</li>
+                      <li>• T���cnicos responsáveis</li>
                       <li>• Datas e durações</li>
                       <li>• Estados e observações</li>
                     </ul>
@@ -4076,6 +4076,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
+            onNavigateToSection={(section) => {
+              setActiveSection(section);
+              setShowAdvancedSettings(false);
+              setIsAdvancedUnlocked(false);
+            }}
             dataSync={{
               pools,
               maintenance,
