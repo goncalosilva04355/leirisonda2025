@@ -30,10 +30,8 @@ class RealFirebaseService {
 
   // Initialize Firebase using existing app instance
   initialize(): boolean {
-    // EMERGENCY STOP - Block ALL Firebase operations due to quota exceeded
-    console.error(
-      "🚨 EMERGENCY: Firebase initialization BLOCKED due to quota exceeded",
-    );
+    // Firebase temporarily paused - running in offline mode
+    console.log("⏸️ Firebase initialization paused - offline mode active");
     return false;
 
     try {
