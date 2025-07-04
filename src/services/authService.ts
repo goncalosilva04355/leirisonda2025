@@ -118,9 +118,17 @@ class AuthService {
       if (error.code === "auth/email-already-in-use") {
         errorMessage = "Este email já está em uso";
       } else if (error.code === "auth/weak-password") {
-        errorMessage = "Password muito fraca";
+        errorMessage = "Password muito fraca (mínimo 6 caracteres)";
       } else if (error.code === "auth/invalid-email") {
         errorMessage = "Email inválido";
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage = "Erro de rede. Verifique a conexão à internet";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMessage = "Muitas tentativas. Tente novamente mais tarde";
+      } else if (error.code === "auth/operation-not-allowed") {
+        errorMessage = "Registo não permitido. Contacte o administrador";
+      } else if (error.message) {
+        errorMessage = `Erro: ${error.message}`;
       }
 
       return { success: false, error: errorMessage };
