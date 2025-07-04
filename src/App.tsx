@@ -1644,7 +1644,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </span>
                                 </div>
                                 <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                  <span>�����</span>
+                                  <span>����</span>
                                   <span>
                                     Atribuída em:{" "}
                                     {new Date(
@@ -1765,7 +1765,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>📅</span>
+                                      <span>����</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -4242,7 +4242,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Temperatura (���C)
+                            Temperatura (��C)
                           </label>
                           <input
                             type="number"
@@ -4901,7 +4901,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-gray-600 mb-6">
                       Elimine todos os dados de obras, manutenções e piscinas
                       para começar com uma aplicação limpa. Os utilizadores
-                      s�����o mantidos.
+                      s����o mantidos.
                     </p>
 
                     <div className="space-y-4">
@@ -4971,7 +4971,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat��rios
+                          Relat����rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -6333,7 +6333,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             expectedEndDate: expectedEndDate
                               ? new Date(expectedEndDate).toISOString()
                               : undefined,
-                            assignedTo,
+                            assignedTo:
+                              editAssignedUsers.length > 0
+                                ? editAssignedUsers
+                                    .map((u) => u.name)
+                                    .join(", ")
+                                : "",
+                            assignedUsers: editAssignedUsers,
+                            assignedUserIds: editAssignedUsers.map((u) => u.id),
                             budgetValue: budgetValue
                               ? parseFloat(budgetValue)
                               : undefined,
