@@ -2973,7 +2973,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={3}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Observa��ões sobre a obra..."
+                          placeholder="Observa����ões sobre a obra..."
                         />
                       </div>
 
@@ -4585,7 +4585,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                   <p className="text-gray-600 mb-6">
                     Elimine todos os dados de obras, manutenções e piscinas para
-                    começar com uma aplicação limpa. Os utilizadores s��o
+                    começar com uma aplicação limpa. Os utilizadores s����o
                     mantidos.
                   </p>
 
@@ -5736,8 +5736,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </button>
                     <button
                       type="button"
-                      onClick={() => {
-                        // Update work logic here
+                      onClick={(e) => {
+                        const form = e.target.closest("form");
+                        const title = form.querySelector(
+                          'input[placeholder*="Título"]',
+                        ).value;
+                        const client = form.querySelector(
+                          'input[placeholder*="cliente"]',
+                        ).value;
+                        const location = form.querySelector(
+                          'input[placeholder*="Morada"]',
+                        ).value;
+                        const status = form.querySelector("select").value;
+                        const description =
+                          form.querySelector("textarea").value;
+
+                        dataSync.updateWork(editingWork.id, {
+                          title,
+                          client,
+                          location,
+                          status,
+                          description,
+                        });
+
                         alert("Obra atualizada com sucesso!");
                         setEditingWork(null);
                         setActiveSection("obras");
@@ -5840,8 +5861,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </button>
                     <button
                       type="button"
-                      onClick={() => {
-                        // Update pool logic here
+                      onClick={(e) => {
+                        const form = e.target.closest("form");
+                        const name = form.querySelector(
+                          'input[placeholder*="Piscina"]',
+                        ).value;
+                        const client = form.querySelector(
+                          'input[placeholder*="cliente"]',
+                        ).value;
+                        const location = form.querySelector(
+                          'input[placeholder*="Localização"]',
+                        ).value;
+                        const status = form.querySelector("select").value;
+
+                        dataSync.updatePool(editingPool.id, {
+                          name,
+                          client,
+                          location,
+                          status,
+                        });
+
                         alert("Piscina atualizada com sucesso!");
                         setEditingPool(null);
                         setActiveSection("piscinas");
@@ -5962,8 +6001,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </button>
                     <button
                       type="button"
-                      onClick={() => {
-                        // Update maintenance logic here
+                      onClick={(e) => {
+                        const form = e.target.closest("form");
+                        const scheduledDate =
+                          form.querySelector('input[type="date"]').value;
+                        const technician = form.querySelector(
+                          'input[placeholder*="técnico"]',
+                        ).value;
+                        const type = form.querySelectorAll("select")[0].value;
+                        const status = form.querySelectorAll("select")[1].value;
+                        const observations =
+                          form.querySelector("textarea").value;
+
+                        dataSync.updateMaintenance(editingMaintenance.id, {
+                          scheduledDate: new Date(scheduledDate).toISOString(),
+                          technician,
+                          type,
+                          status,
+                          observations,
+                        });
+
                         alert("Manutenção atualizada com sucesso!");
                         setEditingMaintenance(null);
                         setActiveSection("manutencoes");
