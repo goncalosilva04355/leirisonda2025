@@ -31,6 +31,7 @@ import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { InstallPrompt } from "./components/InstallPrompt";
 import { AuthSyncDiagnostic } from "./components/AuthSyncDiagnostic";
+import { UserPermissionsManager } from "./components/UserPermissionsManager";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
@@ -527,7 +528,7 @@ function App() {
         const futureMaintenance = {
           poolId: interventionData.poolId,
           poolName: interventionData.poolName,
-          type: "Manuten��ão Programada",
+          type: "Manutenção Programada",
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
@@ -923,7 +924,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat����rio personalizado em desenvolvimento. Use os relatórios pr������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr������-definidos por agora.",
     );
   };
 
@@ -3917,7 +3918,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar intervenção de manutenç�������o
+                      Registar intervenção de manutenç�����o
                     </p>
                   </div>
                 </div>
@@ -4179,7 +4180,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {/* Chemical Products */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Produtos Qu����micos Utilizados
+                      Produtos Qu�����micos Utilizados
                     </h3>
                     <div className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -4314,7 +4315,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Próxima Manuten��ão
+                        Próxima Manutenção
                       </label>
                       <input
                         type="date"
