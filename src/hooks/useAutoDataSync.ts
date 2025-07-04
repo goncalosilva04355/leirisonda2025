@@ -224,6 +224,10 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   useEffect(() => {
     if (!finalConfig.enabled) {
       syncStatus.current.isActive = false;
+      syncStatus.current.syncing = false;
+      syncStatus.current.lastSync = null;
+      syncStatus.current.error = "Auto-sync disabled";
+      console.log("🛑 Auto-sync disabled via config");
       return;
     }
 
