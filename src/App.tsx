@@ -586,7 +586,7 @@ function App() {
     }
 
     try {
-      console.log("���� Attempting login for:", loginForm.email);
+      console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -806,7 +806,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or���amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -1028,7 +1028,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
+        "As notificaç��es não estão ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -1079,6 +1079,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       setWorkTechnicians([]);
       setCurrentVehicle("");
       setCurrentTechnician("");
+      setAssignedUsers([]);
+      setCurrentAssignedUser("");
     }
   }, [activeSection]);
 
@@ -2038,7 +2040,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {maint.type}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {maint.poolName} •{" "}
+                                            {maint.poolName} ���{" "}
                                             {new Date(
                                               maint.scheduledDate,
                                             ).toLocaleDateString("pt-PT")}
