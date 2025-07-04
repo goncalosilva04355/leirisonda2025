@@ -197,12 +197,11 @@ function App() {
 
   // Notify Alexandre about assigned works when he logs in
   useEffect(() => {
-    const handleAlexandreWorks = async () => {
-      if (
-        currentUser?.name.toLowerCase().includes("alexandre") &&
-        works.length > 0
-      ) {
-        console.log("🔍 DEBUG Alexandre - Data loaded:", {
+    if (
+      currentUser?.name.toLowerCase().includes("alexandre") &&
+      works.length > 0
+    ) {
+      console.log("🔍 DEBUG Alexandre - Data loaded:", {
         currentUser: currentUser.name,
         worksCount: works.length,
         works: works.map((w) => ({
@@ -228,99 +227,6 @@ function App() {
           ),
       );
 
-      console.log("🔍 Alexandre works found:", alexandreWorks.length);
-
-      // If Alexandre has no works, check if we need to restore them
-      if (alexandreWorks.length === 0) {
-        console.log(
-          "⚠️ Alexandre has no works assigned. Checking if restoration is needed...",
-        );
-
-        // Check if the works exist in localStorage but not in state
-        const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
-        const savedAlexandreWorks = savedWorks.filter(
-          (work) =>
-            work.assignedTo &&
-            (work.assignedTo.toLowerCase().includes("alexandre") ||
-              work.assignedUsers?.some((user) =>
-                user.name.toLowerCase().includes("alexandre"),
-              )),
-        );
-
-        console.log(
-          "🔍 Saved Alexandre works in localStorage:",
-          savedAlexandreWorks.length,
-        );
-
-        if (savedAlexandreWorks.length === 0) {
-          console.log(
-            "🔧 No Alexandre works found in localStorage. Auto-creating works...",
-          );
-
-          // Create the missing works for Alexandre
-          const alexandre = users.find((u) =>
-            u.name.toLowerCase().includes("alexandre"),
-          );
-          if (alexandre) {
-            // Create sample works for Alexandre
-            const newWorks = [
-              {
-                id: `work-alexandre-${Date.now()}`,
-                title: "Manutenção Anual Piscina Premium",
-                description:
-                  "Serviço completo de manutenção anual com limpeza profunda",
-                client: "Hotel Quinta da Marinha",
-                contact: "214567890",
-                location: "Quinta da Marinha, Cascais",
-                type: "Manutenção",
-                status: "in_progress",
-                startDate: "2025-01-15",
-                budget: 3500,
-                assignedTo: "Alexandre",
-                assignedUsers: [
-                  { id: alexandre.id.toString(), name: alexandre.name },
-                ],
-                assignedUserIds: [alexandre.id.toString()],
-                folhaGerada: false,
-                createdAt: new Date().toISOString(),
-              },
-              {
-                id: `work-alexandre-${Date.now() + 1}`,
-                title: "Instalação Sistema Aquecimento Solar",
-                description:
-                  "Instalação de sistema de aquecimento solar para piscina residencial",
-                client: "Carlos Mendes",
-                contact: "965432187",
-                location: "Sintra",
-                type: "Instalação",
-                status: "pending",
-                startDate: "2025-02-01",
-                budget: 4200,
-                assignedTo: "Maria Silva, Alexandre",
-                assignedUsers: [
-                  { id: "2", name: "Maria Silva" },
-                  { id: alexandre.id.toString(), name: alexandre.name },
-                ],
-                assignedUserIds: ["2", alexandre.id.toString()],
-                folhaGerada: false,
-                createdAt: new Date().toISOString(),
-              },
-            ];
-
-            // Add the works asynchronously
-            try {
-              for (const work of newWorks) {
-                await addWork(work);
-                console.log("✅ Created work for Alexandre:", work.title);
-              }
-              console.log("🎉 Alexandre's works have been restored!");
-            } catch (error) {
-              console.error("❌ Error creating works for Alexandre:", error);
-            }
-          }
-        }
-      }
-
       // Notify Alexandre about his assigned works
       if (
         alexandreWorks.length > 0 &&
@@ -342,10 +248,8 @@ function App() {
       } else if (alexandreWorks.length > 0) {
         console.log("ℹ️ Alexandre has works but notifications are not enabled");
       }
-    };
-
-    handleAlexandreWorks();
-  }, [currentUser, works, notificationsEnabled, users, addWork]);
+    }
+  }, [currentUser, works, notificationsEnabled]);
 
   // Data cleanup hook
   const {
@@ -2937,7 +2841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <BarChart3 className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção agendada
+                        Nenhuma manuten��ão agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
                         As futuras manutenções aparecerão aqui quando forem
@@ -5192,7 +5096,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               dispositivo
                             </li>
                             <li>
-                              • A marcaç��o automática funciona melhor em
+                              • A marcação automática funciona melhor em
                               dispositivos móveis
                             </li>
                             <li>• O Google Maps abre numa nova janela/tab</li>
