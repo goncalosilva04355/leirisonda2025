@@ -30,10 +30,6 @@ class RealFirebaseService {
 
   // Initialize Firebase using existing app instance
   initialize(): boolean {
-    // Firebase temporarily paused - running in offline mode
-    console.log("⏸️ Firebase initialization paused - offline mode active");
-    return false;
-
     try {
       if (!firebaseApp) {
         console.error("Firebase app not available from config");
