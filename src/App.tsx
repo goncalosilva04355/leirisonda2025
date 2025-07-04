@@ -2640,7 +2640,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manuten�����ões aparecerão aqui quando forem
+                        As futuras manuten����ões aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -5599,7 +5599,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Nome da pessoa respons��vel"
+                            placeholder="Nome da pessoa respons����vel"
                           />
                         </div>
                         <div>
@@ -7547,9 +7547,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           lastSync={autoSyncLastSync}
           onDismiss={syncStatus === "completed" ? () => {} : undefined}
         />
-
-        {/* Firebase quota warning */}
-        <FirebaseQuotaWarning />
 
         {/* Admin Login Modal */}
         {showAdminLogin && !isAdminAuthenticated && (
