@@ -39,7 +39,7 @@ const getFirebaseApp = () => {
   }
 };
 
-// Initialize Firebase services
+// Initialize Firebase services with error handling
 let app: any = null;
 let db: any = null;
 let auth: any = null;
@@ -47,22 +47,39 @@ let auth: any = null;
 try {
   app = getFirebaseApp();
   if (app) {
-    db = getFirestore(app);
-    auth = getAuth(app);
+    try {
+      db = getFirestore(app);
+      console.log("Firestore initialized successfully");
+    } catch (error) {
+      console.warn("Firestore initialization failed:", error);
+      db = null;
+    }
 
-    // Set auth persistence to allow login across devices and browser sessions
-    if (auth) {
-      // Use local persistence to allow users to stay logged in across devices
-      // This is needed for users to login on different devices
-      console.log(
-        "Firebase Auth persistence set to local for cross-device login",
-      );
+    try {
+      auth = getAuth(app);
+      // Set auth persistence to allow login across devices and browser sessions
+      if (auth) {
+        // Use local persistence to allow users to stay logged in across devices
+        // This is needed for users to login on different devices
+        console.log(
+          "Firebase Auth persistence set to local for cross-device login",
+        );
+      }
+      console.log("Firebase Auth initialized successfully");
+    } catch (error) {
+      console.warn("Firebase Auth initialization failed:", error);
+      auth = null;
     }
 
     console.log("Firebase services initialized successfully");
+  } else {
+    console.warn("Firebase app not available, services will use fallback mode");
   }
 } catch (error) {
-  console.error("Firebase services initialization failed:", error);
+  console.warn(
+    "Firebase services initialization failed, using fallback mode:",
+    error,
+  );
   app = null;
   db = null;
   auth = null;
