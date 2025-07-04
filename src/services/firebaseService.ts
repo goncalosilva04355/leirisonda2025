@@ -498,6 +498,25 @@ export const syncService = {
     await userService.initializeDefaultUsers();
   },
 
+  // Trigger user synchronization after adding a new user
+  async triggerUserSync(userId: string) {
+    if (!isFirebaseAvailable()) {
+      console.log("Firebase not available - user sync limited to local");
+      return;
+    }
+
+    try {
+      // The real-time listeners will automatically pick up the new user
+      // This is just for logging and potential additional sync operations
+      console.log(`Triggered synchronization for user: ${userId}`);
+
+      // You could add additional sync logic here if needed
+      // For example, notifying other services or updating cache
+    } catch (error) {
+      console.error("Failed to trigger user sync:", error);
+    }
+  },
+
   // Subscribe to all data changes
   subscribeToAllData(callbacks: {
     onUsersChange: (users: User[]) => void;
