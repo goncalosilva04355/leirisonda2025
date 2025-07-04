@@ -696,6 +696,15 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                         </p>
                       </div>
                     </div>
+                    {notifications.pushPermission !== "granted" && (
+                      <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p className="text-sm text-yellow-800">
+                          ⚠️ <strong>Notificações não ativadas!</strong> Para
+                          receber notificações de obras, clique em "Ativar"
+                          acima primeiro.
+                        </p>
+                      </div>
+                    )}
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={() => {
