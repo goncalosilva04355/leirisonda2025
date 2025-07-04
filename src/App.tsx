@@ -129,6 +129,14 @@ function App() {
   const [pushPermission, setPushPermission] = useState("default");
   const [assignedWorks, setAssignedWorks] = useState([]);
 
+  // Initialize notification permission state
+  useEffect(() => {
+    if ("Notification" in window) {
+      setPushPermission(Notification.permission);
+      setNotificationsEnabled(Notification.permission === "granted");
+    }
+  }, []);
+
   // Login form state
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [loginError, setLoginError] = useState("");
@@ -1298,7 +1306,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Futuras Manutenções
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Manutenções agendadas e programadas
+                        Manutenç��es agendadas e programadas
                       </p>
                     </div>
                   </div>
@@ -2731,7 +2739,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório de Manutenções
                       </h3>
                       <p className="text-sm text-gray-600">
-                        Histórico de intervenções
+                        Histórico de interven��ões
                       </p>
                     </div>
                   </div>
