@@ -4614,6 +4614,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       {/* Main Content */}
       <main className="ml-80">{renderContent()}</main>
+
+      {/* Install Prompt for Mobile */}
+      <InstallPrompt />
     </div>
   );
 }
