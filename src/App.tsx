@@ -1032,7 +1032,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç��es não estão ativadas. Active-as primeiro nas configurações.",
+        "As notificaç��es não est��o ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -5903,10 +5903,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {work.description}
                               </p>
                             )}
-                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
-                              <div>
-                                <span className="font-medium">Cliente:</span>{" "}
-                                {work.client}
+                            {/* Enhanced Details Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                              <div className="space-y-2">
+                                {/* Client Info */}
+                                <div className="bg-gray-50 p-3 rounded-md">
+                                  <span className="font-semibold text-gray-700 block mb-1">👤 Cliente:</span>
+                                  <span className="text-gray-900 font-medium">{work.client}</span>
                                 {work.contact && (
                                   <div className="mt-1">
                                     <button
