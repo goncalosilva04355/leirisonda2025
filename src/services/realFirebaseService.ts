@@ -30,10 +30,6 @@ class RealFirebaseService {
 
   // Initialize Firebase using existing app instance
   initialize(): boolean {
-    // Firebase temporarily paused - running in offline mode
-    console.log("⏸️ Firebase initialization paused - offline mode active");
-    return false;
-
     try {
       if (!firebaseApp) {
         console.error("Firebase app not available from config");
@@ -252,6 +248,35 @@ class RealFirebaseService {
     } catch (error) {
       console.error("Failed to add client:", error);
       return null;
+    }
+  }
+
+  async updateClient(clientId: string, clientData: any): Promise<boolean> {
+    if (!this.isReady()) return false;
+
+    try {
+      const clientRef = ref(this.database!, `clients/${clientId}`);
+      await update(clientRef, {
+        ...clientData,
+        updatedAt: new Date().toISOString(),
+      });
+      return true;
+    } catch (error) {
+      console.error("Failed to update client:", error);
+      return false;
+    }
+  }
+
+  async deleteClient(clientId: string): Promise<boolean> {
+    if (!this.isReady()) return false;
+
+    try {
+      const clientRef = ref(this.database!, `clients/${clientId}`);
+      await remove(clientRef);
+      return true;
+    } catch (error) {
+      console.error("Failed to delete client:", error);
+      return false;
     }
   }
 

@@ -254,7 +254,7 @@ export function DataCleanupManager({
                 <div className="text-sm font-medium text-gray-700 mb-2">
                   Firestore (Eliminações)
                 </div>
-                <div className="grid grid-cols-3 gap-4 text-sm">
+                <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     Piscinas: {lastResult.details.firestoreDeleted.pools}
                   </div>
@@ -262,6 +262,13 @@ export function DataCleanupManager({
                   <div>
                     Manutenções:{" "}
                     {lastResult.details.firestoreDeleted.maintenance}
+                  </div>
+                  <div>
+                    Clientes: {lastResult.details.firestoreDeleted.clients}
+                  </div>
+                  <div>
+                    Intervenções:{" "}
+                    {lastResult.details.firestoreDeleted.interventions}
                   </div>
                 </div>
               </div>

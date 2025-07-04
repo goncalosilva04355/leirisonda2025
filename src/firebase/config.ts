@@ -6,6 +6,8 @@ import { getAuth } from "firebase/auth";
 const defaultFirebaseConfig = {
   apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
   authDomain: "leirisonda-16f8b.firebaseapp.com",
+  databaseURL:
+    "https://leirisonda-16f8b-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "leirisonda-16f8b",
   storageBucket: "leirisonda-16f8b.firebasestorage.app",
   messagingSenderId: "540456875574",

@@ -15,6 +15,8 @@ export interface CleanupResult {
       pools: number;
       works: number;
       maintenance: number;
+      clients: number;
+      interventions: number;
     };
     realtimeDbCleared: boolean;
     localStorageCleared: boolean;
@@ -38,6 +40,8 @@ class DataCleanupService {
           pools: 0,
           works: 0,
           maintenance: 0,
+          clients: 0,
+          interventions: 0,
         },
         realtimeDbCleared: false,
         localStorageCleared: false,
@@ -47,60 +51,146 @@ class DataCleanupService {
     try {
       // 1. Clean Firestore data (if Firebase is configured)
       if (db) {
-        console.log("Cleaning Firestore data...");
+        console.log("🔥 Starting Firestore data cleanup...");
 
         // Delete all pools
-        const poolsSnapshot = await getDocs(collection(db, "pools"));
-        for (const poolDoc of poolsSnapshot.docs) {
-          await deleteDoc(doc(db, "pools", poolDoc.id));
-          result.details.firestoreDeleted.pools++;
+        try {
+          const poolsSnapshot = await getDocs(collection(db, "pools"));
+          console.log(`Found ${poolsSnapshot.docs.length} pools to delete`);
+          for (const poolDoc of poolsSnapshot.docs) {
+            await deleteDoc(doc(db, "pools", poolDoc.id));
+            result.details.firestoreDeleted.pools++;
+          }
+        } catch (error) {
+          console.error("Failed to delete pools from Firestore:", error);
         }
 
         // Delete all works
-        const worksSnapshot = await getDocs(collection(db, "works"));
-        for (const workDoc of worksSnapshot.docs) {
-          await deleteDoc(doc(db, "works", workDoc.id));
-          result.details.firestoreDeleted.works++;
+        try {
+          const worksSnapshot = await getDocs(collection(db, "works"));
+          console.log(`Found ${worksSnapshot.docs.length} works to delete`);
+          for (const workDoc of worksSnapshot.docs) {
+            await deleteDoc(doc(db, "works", workDoc.id));
+            result.details.firestoreDeleted.works++;
+          }
+        } catch (error) {
+          console.error("Failed to delete works from Firestore:", error);
         }
 
         // Delete all maintenance
-        const maintenanceSnapshot = await getDocs(
-          collection(db, "maintenance"),
-        );
-        for (const maintenanceDoc of maintenanceSnapshot.docs) {
-          await deleteDoc(doc(db, "maintenance", maintenanceDoc.id));
-          result.details.firestoreDeleted.maintenance++;
+        try {
+          const maintenanceSnapshot = await getDocs(
+            collection(db, "maintenance"),
+          );
+          console.log(
+            `Found ${maintenanceSnapshot.docs.length} maintenance records to delete`,
+          );
+          for (const maintenanceDoc of maintenanceSnapshot.docs) {
+            await deleteDoc(doc(db, "maintenance", maintenanceDoc.id));
+            result.details.firestoreDeleted.maintenance++;
+          }
+        } catch (error) {
+          console.error("Failed to delete maintenance from Firestore:", error);
+        }
+
+        // Delete all clients
+        try {
+          const clientsSnapshot = await getDocs(collection(db, "clients"));
+          console.log(`Found ${clientsSnapshot.docs.length} clients to delete`);
+          for (const clientDoc of clientsSnapshot.docs) {
+            await deleteDoc(doc(db, "clients", clientDoc.id));
+            result.details.firestoreDeleted.clients++;
+          }
+        } catch (error) {
+          console.warn("Failed to delete clients from Firestore:", error);
+        }
+
+        // Delete all interventions (if they exist as a separate collection)
+        try {
+          const interventionsSnapshot = await getDocs(
+            collection(db, "interventions"),
+          );
+          console.log(
+            `Found ${interventionsSnapshot.docs.length} interventions to delete`,
+          );
+          for (const interventionDoc of interventionsSnapshot.docs) {
+            await deleteDoc(doc(db, "interventions", interventionDoc.id));
+            result.details.firestoreDeleted.interventions++;
+          }
+        } catch (error) {
+          console.warn("Failed to delete interventions from Firestore:", error);
         }
 
         console.log(
-          `Firestore cleanup complete: ${result.details.firestoreDeleted.pools} pools, ${result.details.firestoreDeleted.works} works, ${result.details.firestoreDeleted.maintenance} maintenance deleted`,
+          `✅ Firestore cleanup complete: ${result.details.firestoreDeleted.pools} pools, ${result.details.firestoreDeleted.works} works, ${result.details.firestoreDeleted.maintenance} maintenance, ${result.details.firestoreDeleted.clients} clients, ${result.details.firestoreDeleted.interventions} interventions deleted`,
         );
+      } else {
+        console.warn("🔥 Firestore not available - skipping Firestore cleanup");
       }
 
       // 2. Clean Realtime Database data (if configured)
-      if (realFirebaseService.isReady()) {
-        console.log("Cleaning Realtime Database data...");
+      const realtimeInitialized =
+        realFirebaseService.isReady() || realFirebaseService.initialize();
+      if (realtimeInitialized) {
+        console.log("🚀 Starting Realtime Database cleanup...");
 
         try {
           // The realFirebaseService uses different collection structure
           // We need to delete data from pools, works, maintenance, clients collections
           await this.clearRealtimeDatabase();
           result.details.realtimeDbCleared = true;
-          console.log("Realtime Database cleanup complete");
+          console.log("✅ Realtime Database cleanup complete");
         } catch (error) {
-          console.error("Failed to clean Realtime Database:", error);
+          console.error("❌ Failed to clean Realtime Database:", error);
         }
+      } else {
+        console.warn(
+          "🚀 Realtime Database not available - skipping Realtime DB cleanup",
+        );
       }
 
       // 3. Clean Local Storage data
-      console.log("Cleaning Local Storage data...");
+      console.log("💾 Starting Local Storage cleanup...");
+
+      // Count existing data before cleanup
+      const existingData = {
+        pools: localStorage.getItem("pools"),
+        works: localStorage.getItem("works"),
+        maintenance: localStorage.getItem("maintenance"),
+        interventions: localStorage.getItem("interventions"),
+        clients: localStorage.getItem("clients"),
+      };
+
+      Object.entries(existingData).forEach(([key, value]) => {
+        if (value) {
+          const parsedData = JSON.parse(value);
+          console.log(
+            `Found ${Array.isArray(parsedData) ? parsedData.length : "some"} ${key} in localStorage`,
+          );
+        }
+      });
+
+      // Remove main data collections
       localStorage.removeItem("pools");
       localStorage.removeItem("works");
       localStorage.removeItem("maintenance");
       localStorage.removeItem("interventions");
       localStorage.removeItem("clients");
+
+      // Remove cleanup and sync flags
+      localStorage.removeItem("demo-data-cleaned");
+      localStorage.removeItem("auto-sync-completed");
+      localStorage.removeItem("last-full-sync");
+
+      // Remove any cached/temporary data
+      localStorage.removeItem("mock-users");
+      localStorage.removeItem("mock-current-user");
+
+      // Clear session storage as well
+      sessionStorage.clear();
+
       result.details.localStorageCleared = true;
-      console.log("Local Storage cleanup complete");
+      console.log("✅ Local Storage and Session Storage cleanup complete");
 
       result.success = true;
       result.message =
@@ -122,12 +212,22 @@ class DataCleanupService {
       throw new Error("Realtime Database not initialized");
     }
 
+    console.log("🚀 Fetching all data from Realtime Database...");
+
     // Since realFirebaseService doesn't expose a direct delete all method,
     // we need to get all data and delete individually
     const allData = await realFirebaseService.syncAllData();
 
     if (allData) {
+      console.log(`Found data in Realtime DB:`, {
+        pools: allData.pools.length,
+        works: allData.works.length,
+        maintenance: allData.maintenance.length,
+        clients: allData.clients.length,
+      });
+
       // Delete all pools
+      console.log(`Deleting ${allData.pools.length} pools from Realtime DB...`);
       for (const pool of allData.pools) {
         if (pool.id) {
           await realFirebaseService.deletePool(pool.id);
@@ -135,6 +235,7 @@ class DataCleanupService {
       }
 
       // Delete all works
+      console.log(`Deleting ${allData.works.length} works from Realtime DB...`);
       for (const work of allData.works) {
         if (work.id) {
           await realFirebaseService.deleteWork(work.id);
@@ -142,6 +243,9 @@ class DataCleanupService {
       }
 
       // Delete all maintenance
+      console.log(
+        `Deleting ${allData.maintenance.length} maintenance records from Realtime DB...`,
+      );
       for (const maintenance of allData.maintenance) {
         if (maintenance.id) {
           await realFirebaseService.deleteMaintenance(maintenance.id);
@@ -149,13 +253,20 @@ class DataCleanupService {
       }
 
       // Delete all clients
+      console.log(
+        `Deleting ${allData.clients.length} clients from Realtime DB...`,
+      );
       for (const client of allData.clients) {
         if (client.id) {
-          // Note: realFirebaseService doesn't have deleteClient method,
-          // so we need to implement it or skip clients for now
-          console.log("Skipping client deletion - method not available");
+          try {
+            await realFirebaseService.deleteClient(client.id);
+          } catch (error) {
+            console.warn(`Failed to delete client ${client.id}:`, error);
+          }
         }
       }
+    } else {
+      console.log("No data found in Realtime Database or failed to fetch data");
     }
   }
 
@@ -265,12 +376,14 @@ class DataCleanupService {
     const works = localStorage.getItem("works");
     const maintenance = localStorage.getItem("maintenance");
     const interventions = localStorage.getItem("interventions");
+    const clients = localStorage.getItem("clients");
 
     const localStorageEmpty =
       (!pools || pools === "[]") &&
       (!works || works === "[]") &&
       (!maintenance || maintenance === "[]") &&
-      (!interventions || interventions === "[]");
+      (!interventions || interventions === "[]") &&
+      (!clients || clients === "[]");
 
     return {
       lastCleanup,
