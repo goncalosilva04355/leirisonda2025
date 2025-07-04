@@ -1553,7 +1553,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <span className="text-gray-600 text-lg">→</span>
                   </button>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Próximas Manuten��ões
+                    Próximas Manuten����es
                   </h2>
                 </div>
 
@@ -6621,6 +6621,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
+              console.log(`🔄 Navegando para seção: ${section}`);
               navigateToSection(section);
               setShowAdvancedSettings(false);
               setIsAdvancedUnlocked(false);
