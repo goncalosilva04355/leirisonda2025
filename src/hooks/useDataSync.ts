@@ -491,13 +491,44 @@ export function useDataSync(): SyncState & SyncActions {
     // Normal startup - load existing data from localStorage
     console.log("📂 Loading saved data from localStorage");
 
-    // Clear any existing mock data and only use real user data
-    const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
-    const savedMaintenance = JSON.parse(
+    // Clean any mock/fictitious data that might exist
+    const cleanMockData = (data: any[], type: string) => {
+      if (!Array.isArray(data)) return [];
+      // Filter out known mock IDs and names
+      return data.filter((item) => {
+        if (!item || !item.id) return false;
+        const isMockId =
+          item.id.includes("pool-") ||
+          item.id.includes("maint-") ||
+          item.id.includes("work-") ||
+          item.id.includes("client-");
+        const isMockName =
+          item.name?.includes("Villa Marina") ||
+          item.name?.includes("Condomínio Sol") ||
+          item.title?.includes("Instalação Nova Piscina") ||
+          item.name?.includes("João Silva");
+        return !isMockId && !isMockName;
+      });
+    };
+
+    const rawPools = JSON.parse(localStorage.getItem("pools") || "[]");
+    const rawMaintenance = JSON.parse(
       localStorage.getItem("maintenance") || "[]",
     );
-    const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
-    const savedClients = JSON.parse(localStorage.getItem("clients") || "[]");
+    const rawWorks = JSON.parse(localStorage.getItem("works") || "[]");
+    const rawClients = JSON.parse(localStorage.getItem("clients") || "[]");
+
+    // Clean mock data from localStorage
+    const savedPools = cleanMockData(rawPools, "pools");
+    const savedMaintenance = cleanMockData(rawMaintenance, "maintenance");
+    const savedWorks = cleanMockData(rawWorks, "works");
+    const savedClients = cleanMockData(rawClients, "clients");
+
+    // Save cleaned data back to localStorage
+    localStorage.setItem("pools", JSON.stringify(savedPools));
+    localStorage.setItem("maintenance", JSON.stringify(savedMaintenance));
+    localStorage.setItem("works", JSON.stringify(savedWorks));
+    localStorage.setItem("clients", JSON.stringify(savedClients));
 
     // Always use only saved data, never add mock data automatically
     const finalPools = savedPools;
