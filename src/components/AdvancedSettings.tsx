@@ -24,6 +24,16 @@ interface AdvancedSettingsProps {
     syncWithFirebase: () => Promise<void>;
     enableSync: (enabled: boolean) => void;
   };
+  notifications?: {
+    pushPermission: string;
+    notificationsEnabled: boolean;
+    requestNotificationPermission: () => Promise<string>;
+    testPushNotification: () => void;
+    sendWorkAssignmentNotification: (
+      workTitle: string,
+      assignedTo: string,
+    ) => void;
+  };
 }
 
 export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
