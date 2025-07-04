@@ -604,7 +604,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pr��-definidos por agora.",
+      "Funcionalidade de relat��rio personalizado em desenvolvimento. Use os relatórios pr��-definidos por agora.",
     );
   };
 
@@ -681,7 +681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   // Photo management functions
-  const handlePhotoUpload = (event) => {
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files);
     if (files.length + uploadedPhotos.length > 20) {
       alert("Máximo de 20 fotografias permitidas");
@@ -2619,7 +2619,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {/* Additional Information */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Observaç��es e Características Especiais
+                      Observações e Características Especiais
                     </label>
                     <textarea
                       rows={3}
