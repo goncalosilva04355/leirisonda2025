@@ -2581,7 +2581,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manuten��ão</span>
+                      <span>Agendar Manuten���ão</span>
                     </button>
                   </div>
                 ) : (
@@ -6518,22 +6518,38 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       type="button"
                       onClick={(e) => {
                         const form = e.target.closest("form");
-                        const name = form.querySelector(
-                          'input[placeholder*="Piscina"]',
-                        ).value;
-                        const client = form.querySelector(
-                          'input[placeholder*="cliente"]',
-                        ).value;
-                        const location = form.querySelector(
-                          'input[placeholder*="Localização"]',
-                        ).value;
-                        const status = form.querySelector("select").value;
+                        const inputs = form.querySelectorAll(
+                          "input, select, textarea",
+                        );
+
+                        const name = inputs[0].value; // Nome da Piscina
+                        const client = inputs[1].value; // Cliente
+                        const location = inputs[2].value; // Local
+                        const status = inputs[3].value; // Estado
+                        const poolType = inputs[4].value; // Tipo de Piscina
+                        const dimensions = inputs[5].value; // Dimensões
+                        const volume = inputs[6].value; // Volume
+                        const filtrationSystem = inputs[7].value; // Sistema de Filtração
+                        const installationDate = inputs[8].value; // Data de Instalação
+                        const clientPhone = inputs[9].value; // Telefone do Cliente
+                        const clientEmail = inputs[10].value; // Email do Cliente
+                        const observations = inputs[11].value; // Observações
 
                         dataSync.updatePool(editingPool.id, {
                           name,
                           client,
                           location,
                           status,
+                          poolType,
+                          dimensions,
+                          volume: volume ? parseInt(volume) : undefined,
+                          filtrationSystem,
+                          installationDate: installationDate
+                            ? new Date(installationDate).toISOString()
+                            : undefined,
+                          clientPhone,
+                          clientEmail,
+                          observations,
                         });
 
                         alert("Piscina atualizada com sucesso!");
