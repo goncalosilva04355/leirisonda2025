@@ -527,7 +527,7 @@ function App() {
         const futureMaintenance = {
           poolId: interventionData.poolId,
           poolName: interventionData.poolName,
-          type: "Manutenção Programada",
+          type: "Manuten��ão Programada",
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
@@ -3917,7 +3917,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar intervenção de manutenç�����o
+                      Registar intervenção de manutenç�������o
                     </p>
                   </div>
                 </div>
@@ -4314,7 +4314,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Próxima Manutenção
+                        Próxima Manuten��ão
                       </label>
                       <input
                         type="date"
@@ -7066,6 +7066,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
+            onShowAuthDiagnostic={() => setShowAuthDiagnostic(true)}
             onNavigateToSection={(section) => {
               console.log(`🔄 Navegando para seção: ${section}`);
 
