@@ -10,6 +10,9 @@ import {
   TestTube,
   Shield,
   ArrowLeft,
+  UserCheck,
+  BarChart3,
+  Users,
 } from "lucide-react";
 import { FirebaseConfig } from "./FirebaseConfig";
 
