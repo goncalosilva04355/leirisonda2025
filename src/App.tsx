@@ -23,6 +23,7 @@ import {
   AlertCircle,
   Download,
 } from "lucide-react";
+import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { useDataSync } from "./hooks/useDataSync";
@@ -1820,7 +1821,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Nível da Água (m) *
+                                Nível da ��gua (m) *
                               </label>
                               <input
                                 type="number"
