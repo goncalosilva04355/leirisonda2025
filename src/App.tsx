@@ -487,7 +487,7 @@ function App() {
   });
 
   // Settings functions
-  const handleSettingsPasswordSubmit = (e) => {
+  const handleSettingsPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (settingsPassword === "19867") {
       setShowSettingsPasswordModal(false);
@@ -7936,7 +7936,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ? selectedWork.assignedUsers
                               .map((u) => u.name)
                               .join(", ")
-                          : selectedWork.assignedTo || "Não atribuída"}
+                          : selectedWork.assignedTo || "Não atribu��da"}
                       </p>
                     </div>
                   </div>
