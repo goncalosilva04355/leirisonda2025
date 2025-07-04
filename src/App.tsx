@@ -2132,7 +2132,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <div className="flex items-center space-x-4 text-sm">
                             <span className="text-blue-600">
-                              ��������{" "}
+                              ������{" "}
                               {new Date(maint.scheduledDate).toLocaleDateString(
                                 "pt-PT",
                               )}
@@ -4221,7 +4221,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                   <p className="text-gray-600 mb-6">
                     Elimine todos os dados de obras, manutenções e piscinas para
-                    começar com uma aplicação limpa. Os utilizadores são
+                    começar com uma aplicação limpa. Os utilizadores s��o
                     mantidos.
                   </p>
 
@@ -5460,10 +5460,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // SECURITY: Triple check - never allow access without proper authentication
   if (!isAuthenticated || !currentUser) {
     console.log(
-      "Security check: Blocking access - isAuthenticated:",
+      "🔒 SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
       "currentUser:",
       !!currentUser,
+      "timestamp:",
+      new Date().toISOString(),
     );
     if (showAdvancedSettings) {
       if (isAdvancedUnlocked) {
