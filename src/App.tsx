@@ -2077,7 +2077,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div className="flex items-center space-x-2">
                           {hasPermission("piscinas", "edit") && (
-                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <button
+                              onClick={() => {
+                                setEditingPool(pool);
+                                setActiveSection("editar-piscina");
+                              }}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
                               <Edit2 className="h-4 w-4" />
                             </button>
                           )}
@@ -2311,7 +2317,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div className="flex items-center space-x-2">
                           {hasPermission("manutencoes", "edit") && (
-                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <button
+                              onClick={() => {
+                                setEditingMaintenance(maint);
+                                setActiveSection("editar-manutencao");
+                              }}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
                               <Edit2 className="h-4 w-4" />
                             </button>
                           )}
@@ -5452,12 +5464,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div className="flex items-center space-x-2 ml-4">
                           {hasPermission("obras", "view") && (
-                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <button
+                              onClick={() => {
+                                setSelectedWork(work);
+                                setViewingWork(true);
+                              }}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
                               <Eye className="h-4 w-4" />
                             </button>
                           )}
                           {hasPermission("obras", "edit") && (
-                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <button
+                              onClick={() => {
+                                setEditingWork(work);
+                                setActiveSection("editar-obra");
+                              }}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
                               <Edit2 className="h-4 w-4" />
                             </button>
                           )}
