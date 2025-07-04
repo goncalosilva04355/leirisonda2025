@@ -913,7 +913,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr����������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relat��rios pr����������-definidos por agora.",
     );
   };
 
@@ -5029,7 +5029,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Estado e localizaç��o</li>
                         <li>• Informações de clientes</li>
-                        <li>������� Histórico de manutenç����es</li>
+                        <li>����� Histórico de manutenç����es</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -5242,7 +5242,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estatísticas R����pidas
+                    Estatísticas R������pidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
@@ -5861,19 +5861,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <div className="flex items-center space-x-3 mb-2">
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                {work.title}
-                              </h3>
+                            {/* Enhanced Header with Work ID */}
+                            <div className="flex items-center space-x-3 mb-3">
+                              <div className="flex items-center space-x-2">
+                                <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                  {work.id?.toUpperCase() ||
+                                    "ID-" + Date.now().toString().slice(-6)}
+                                </span>
+                                <h3 className="text-lg font-bold text-gray-900">
+                                  {work.title}
+                                </h3>
+                              </div>
                               <span
-                                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                   work.status === "pending"
-                                    ? "bg-red-100 text-red-700"
+                                    ? "bg-red-100 text-red-700 border border-red-200"
                                     : work.status === "in_progress"
-                                      ? "bg-orange-100 text-orange-700"
+                                      ? "bg-orange-100 text-orange-700 border border-orange-200"
                                       : work.status === "completed"
-                                        ? "bg-green-100 text-green-700"
-                                        : "bg-gray-100 text-gray-700"
+                                        ? "bg-green-100 text-green-700 border border-green-200"
+                                        : "bg-gray-100 text-gray-700 border border-gray-200"
                                 }`}
                               >
                                 {work.status === "pending"
@@ -5885,7 +5892,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       : work.status}
                               </span>
                               {!work.folhaGerada && (
-                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200">
                                   Sem Folha de Obra
                                 </span>
                               )}
@@ -6516,7 +6523,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="sand">Areia</option>
                           <option value="cartridge">Cartucho</option>
-                          <option value="diatomaceous">Terra Diatomácea</option>
+                          <option value="diatomaceous">
+                            Terra Diatom��cea
+                          </option>
                           <option value="other">Outro</option>
                         </select>
                       </div>
@@ -7355,7 +7364,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-gray-500">Gest��o de Serviços</p>
+                    <p className="text-sm text-gray-500">
+                      Gest��o de Servi��os
+                    </p>
                   </div>
                 </div>
                 {/* Sync Status Indicator */}
