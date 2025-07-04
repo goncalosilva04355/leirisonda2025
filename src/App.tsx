@@ -3929,7 +3929,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência El��trica
                           </option>
-                          <option value="gas">Aquecimento a G����s</option>
+                          <option value="gas">Aquecimento a G������s</option>
                         </select>
                       </div>
                     </div>
@@ -6354,6 +6354,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           alert("Obra atualizada com sucesso!");
                           setEditingWork(null);
+                          setEditAssignedUsers([]);
+                          setCurrentEditAssignedUser("");
                           setActiveSection("obras");
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
