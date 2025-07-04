@@ -1310,7 +1310,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+              `���️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -6882,29 +6882,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       new Date().toISOString(),
     );
 
-    // Show Auth Diagnostic if requested
-    if (showAuthDiagnostic) {
-      return (
-        <div className="min-h-screen bg-gray-50">
-          <div className="max-w-4xl mx-auto py-8">
-            <button
-              onClick={() => setShowAuthDiagnostic(false)}
-              className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-            >
-              ← Voltar
-            </button>
-            <AuthSyncDiagnostic />
-          </div>
-        </div>
-      );
-    }
-
     if (showAdvancedSettings) {
       if (isAdvancedUnlocked) {
         return (
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
-            onShowAuthDiagnostic={() => setShowAuthDiagnostic(true)}
             onNavigateToSection={(section) => {
               console.log(`🔄 Navegando para seção: ${section}`);
 
