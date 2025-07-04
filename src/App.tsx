@@ -1035,6 +1035,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     return currentUser.permissions[module]?.[action] || false;
   };
 
+  // Utility functions for clickable links
+  const handlePhoneClick = (phone: string) => {
+    if (enablePhoneDialer && phone) {
+      // Clean phone number (remove spaces, dashes, etc)
+      const cleanPhone = phone.replace(/[\s\-\(\)]/g, "");
+      window.location.href = `tel:${cleanPhone}`;
+    }
+  };
+
+  const handleAddressClick = (address: string) => {
+    if (enableMapsRedirect && address) {
+      // Open Google Maps with the address
+      const encodedAddress = encodeURIComponent(address);
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`,
+        "_blank",
+      );
+    }
+  };
+
+  // Settings persistence functions
+  const togglePhoneDialer = (enabled: boolean) => {
+    setEnablePhoneDialer(enabled);
+    localStorage.setItem("enablePhoneDialer", enabled.toString());
+  };
+
+  const toggleMapsRedirect = (enabled: boolean) => {
+    setEnableMapsRedirect(enabled);
+    localStorage.setItem("enableMapsRedirect", enabled.toString());
+  };
+
   const handleDeleteUser = (userId) => {
     // Check if it's the main user
     const user = users.find(
@@ -1408,7 +1439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span>Atribuída a: {work.assignedTo}</span>
                               </div>
                               <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                <span>����</span>
+                                <span>�����</span>
                                 <span>
                                   Atribuída em:{" "}
                                   {new Date(
