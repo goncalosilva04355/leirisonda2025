@@ -200,8 +200,10 @@ function App() {
       }
     };
 
-    // Check initial hash on load
-    handleHashChange();
+    // Check initial hash on load if authenticated
+    if (isAuthenticated) {
+      handleHashChange();
+    }
 
     // Listen for hash changes
     window.addEventListener("hashchange", handleHashChange);
@@ -1771,7 +1773,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="">Selecionar tipo</option>
                           <option value="piscina">Piscina</option>
                           <option value="manutencao">Manutenção</option>
-                          <option value="instalacao">Instalação</option>
+                          <option value="instalacao">Instala��ão</option>
                           <option value="reparacao">Reparação</option>
                           <option value="limpeza">Limpeza</option>
                           <option value="furo">Furo de Água</option>
