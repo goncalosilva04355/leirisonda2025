@@ -28,6 +28,7 @@ interface AdvancedSettingsProps {
 
 export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
   onBack,
+  dataSync,
 }) => {
   const [activeTab, setActiveTab] = useState<"firebase" | "sync-test">(
     "firebase",
