@@ -188,24 +188,33 @@ function App() {
 
   // Initialize authentication state with security checks
   useEffect(() => {
-    // SECURITY: Clear any potential auto-login data on app start
+    // SECURITY: Clear ALL potential auto-login data on app start
     localStorage.removeItem("mock-current-user");
+    sessionStorage.clear(); // Clear any session data
+
+    // Force clear authentication state
+    setIsAuthenticated(false);
+    setCurrentUser(null);
 
     // Force logout on app start for security
     authService.logout().then(() => {
       console.log("Security: Forced logout on app initialization");
-    });
 
-    const unsubscribe = authService.onAuthStateChanged((user) => {
-      console.log("Auth state changed:", user ? "User logged in" : "No user");
-      setCurrentUser(user);
-      setIsAuthenticated(!!user);
+      // Set up auth state listener only AFTER forced logout
+      const unsubscribe = authService.onAuthStateChanged((user) => {
+        console.log("Auth state changed:", user ? "User logged in" : "No user");
+        setCurrentUser(user);
+        setIsAuthenticated(!!user);
+      });
+
+      return unsubscribe;
     });
 
     // DO NOT initialize default admin automatically - this was causing the security issue
     // Users must always login manually for security
 
-    return unsubscribe;
+    // Return empty cleanup function since unsubscribe is handled inside the promise
+    return () => {};
   }, []);
 
   // SECURITY: Additional check to prevent bypass
