@@ -426,6 +426,11 @@ export const maintenanceService = {
 export const workService = {
   // Listen to real-time changes
   subscribeToWorks(callback: (works: Work[]) => void) {
+    if (!isFirebaseAvailable()) {
+      callback([]);
+      return () => {};
+    }
+
     const q = query(
       collection(db, COLLECTIONS.WORKS),
       orderBy("createdAt", "desc"),
@@ -441,6 +446,10 @@ export const workService = {
 
   // Add new work
   async addWork(workData: Omit<Work, "id" | "createdAt" | "updatedAt">) {
+    if (!isFirebaseAvailable()) {
+      throw new Error("Firebase not configured");
+    }
+
     const docRef = await addDoc(collection(db, COLLECTIONS.WORKS), {
       ...workData,
       createdAt: Timestamp.now(),
@@ -451,6 +460,10 @@ export const workService = {
 
   // Update work
   async updateWork(workId: string, workData: Partial<Work>) {
+    if (!isFirebaseAvailable()) {
+      throw new Error("Firebase not configured");
+    }
+
     const workRef = doc(db, COLLECTIONS.WORKS, workId);
     await updateDoc(workRef, {
       ...workData,
@@ -460,6 +473,10 @@ export const workService = {
 
   // Delete work
   async deleteWork(workId: string) {
+    if (!isFirebaseAvailable()) {
+      throw new Error("Firebase not configured");
+    }
+
     const workRef = doc(db, COLLECTIONS.WORKS, workId);
     await deleteDoc(workRef);
   },
