@@ -5653,7 +5653,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Basic Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informa��ões Básicas
+                        Informações Básicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -6745,7 +6745,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const dimensions = inputs[5].value; // Dimensões
                           const volume = inputs[6].value; // Volume
                           const filtrationSystem = inputs[7].value; // Sistema de Filtração
-                          const installationDate = inputs[8].value; // Data de Instala��ão
+                          const installationDate = inputs[8].value; // Data de Instalação
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente
                           const observations = inputs[11].value; // Observações
@@ -6863,7 +6863,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dura��ão Estimada (horas)
+                          Duração Estimada (horas)
                         </label>
                         <input
                           type="number"
@@ -6973,8 +6973,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const technician = inputs[1].value; // Técnico
                           const type = inputs[2].value; // Tipo de Manutenção
                           const status = inputs[3].value; // Estado
-                          const estimatedDuration = inputs[4].value; // Dura��ão Estimada
-                          const actualDuration = inputs[5].value; // Duração Real
+                          const estimatedDuration = inputs[4].value; // Duração Estimada
+                          const actualDuration = inputs[5].value; // Dura��ão Real
                           const cost = inputs[6].value; // Custo
                           const priority = inputs[7].value; // Prioridade
                           const completedDate = inputs[8].value; // Data de Conclusão
@@ -7009,7 +7009,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        Guardar Alteraç��es
+                        Guardar Alterações
                       </button>
                     </div>
                   </form>
@@ -7150,7 +7150,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                Partilhar Relat����rio
+                Partilhar Relatório
               </h2>
               <button
                 onClick={() => {
