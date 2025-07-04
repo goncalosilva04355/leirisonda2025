@@ -20,6 +20,7 @@ import { FirebaseConfig } from "./FirebaseConfig";
 interface AdvancedSettingsProps {
   onBack: () => void;
   onNavigateToSection?: (section: string) => void;
+  onShowAuthDiagnostic?: () => void;
   dataSync?: {
     pools: any[];
     maintenance: any[];
@@ -178,7 +179,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       await new Promise((resolve) => setTimeout(resolve, 800));
       tests.push("✅ Sincroniza��ão de piscinas: Operacional");
 
-      tests.push("��� Testando sincronização de manutenções...");
+      tests.push("🔄 Testando sincronização de manutenções...");
       await new Promise((resolve) => setTimeout(resolve, 600));
       tests.push("✅ Sincronização de manutenções: Operacional");
 
