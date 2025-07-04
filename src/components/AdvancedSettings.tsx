@@ -15,6 +15,7 @@ import { FirebaseConfig } from "./FirebaseConfig";
 
 interface AdvancedSettingsProps {
   onBack: () => void;
+  onNavigateToSection?: (section: string) => void;
   dataSync?: {
     pools: any[];
     maintenance: any[];
@@ -38,11 +39,18 @@ interface AdvancedSettingsProps {
 
 export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
   onBack,
+  onNavigateToSection,
   dataSync,
   notifications,
 }) => {
   const [activeTab, setActiveTab] = useState<
-    "firebase" | "sync-test" | "notifications"
+    | "firebase"
+    | "sync-test"
+    | "notifications"
+    | "utilizadores"
+    | "relatorios"
+    | "clientes"
+    | "configuracoes"
   >("firebase");
   const [syncTest, setSyncTest] = useState({
     status: "idle", // idle, testing, success, error
