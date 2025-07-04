@@ -50,7 +50,7 @@ class RealFirebaseService {
 
   // Check if Firebase is ready
   isReady(): boolean {
-    return this.isInitialized && this.database !== null;
+    return this.isInitialized && this.database !== null && this.app !== null;
   }
 
   // Test connection
