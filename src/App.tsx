@@ -799,7 +799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat��rio personalizado em desenvolvimento. Use os relatórios pr�����-definidos por agora.",
+      "Funcionalidade de relat����rio personalizado em desenvolvimento. Use os relatórios pr�����-definidos por agora.",
     );
   };
 
@@ -2096,7 +2096,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <h3 className="text-lg font-semibold text-gray-900">
                             {pool.name}
                           </h3>
-                          <p className="text-gray-600">{pool.location}</p>
+                          <button
+                            onClick={() => handleAddressClick(pool.location)}
+                            className={`text-left ${
+                              enableMapsRedirect
+                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                : "text-gray-600"
+                            }`}
+                            disabled={!enableMapsRedirect}
+                          >
+                            📍 {pool.location}
+                          </button>
                           <div className="flex items-center space-x-4 mt-2">
                             <span className="text-sm text-gray-500">
                               Cliente: {pool.client}
@@ -2993,7 +3003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   )}
 
-                  {/* Observações e Trabalho */}
+                  {/* Observa��ões e Trabalho */}
                   <div>
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
