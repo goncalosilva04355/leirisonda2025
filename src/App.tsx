@@ -186,6 +186,24 @@ function App() {
     setActiveSection("dashboard");
   };
 
+  // Advanced settings functions
+  const handleAdvancedPasswordSubmit = (e) => {
+    e.preventDefault();
+    if (advancedPassword === "19867") {
+      setIsAdvancedUnlocked(true);
+      setAdvancedPasswordError("");
+    } else {
+      setAdvancedPasswordError("Palavra-passe incorreta");
+    }
+  };
+
+  const handleAdvancedSettingsBack = () => {
+    setShowAdvancedSettings(false);
+    setIsAdvancedUnlocked(false);
+    setAdvancedPassword("");
+    setAdvancedPasswordError("");
+  };
+
   // User management functions
   const handleAddUser = () => {
     setEditingUser(null);
@@ -1426,7 +1444,7 @@ function App() {
               }`}
             >
               <Settings className="h-5 w-5" />
-              <span>Configurações</span>
+              <span>Configuraç��es</span>
             </button>
           </nav>
 
