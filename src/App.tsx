@@ -3098,7 +3098,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         alert(
                           `Obra "${workTitle}" criada com sucesso! ` +
                             (selectedUserId
-                              ? "Notificação enviada ao responsável."
+                              ? "Notifica��ão enviada ao responsável."
                               : "") +
                             (selectedWorkType === "furo"
                               ? " Dados do furo registados."
@@ -5544,6 +5544,350 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </button>
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+        );
+
+      case "editar-obra":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Building2 className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Editar Obra
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      {editingWork?.title}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Edit Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Título da Obra *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingWork?.title}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Instalação de Piscina"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Cliente *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingWork?.client}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Nome do cliente"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Local *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingWork?.location}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Morada da obra"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado
+                      </label>
+                      <select
+                        defaultValue={editingWork?.status}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="pending">Pendente</option>
+                        <option value="in_progress">Em Progresso</option>
+                        <option value="completed">Concluída</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Descrição
+                    </label>
+                    <textarea
+                      defaultValue={editingWork?.description}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={4}
+                      placeholder="Descrição detalhada da obra"
+                    />
+                  </div>
+
+                  <div className="flex space-x-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingWork(null);
+                        setActiveSection("obras");
+                      }}
+                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // Update work logic here
+                        alert("Obra atualizada com sucesso!");
+                        setEditingWork(null);
+                        setActiveSection("obras");
+                      }}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      Guardar Alterações
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "editar-piscina":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Waves className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Editar Piscina
+                    </h1>
+                    <p className="text-gray-600 text-sm">{editingPool?.name}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Edit Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nome da Piscina *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingPool?.name}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Piscina Villa Marina"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Cliente *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingPool?.client}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Nome do cliente"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Local *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingPool?.location}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Localização da piscina"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado
+                      </label>
+                      <select
+                        defaultValue={editingPool?.status}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="Ativa">Ativa</option>
+                        <option value="Inativa">Inativa</option>
+                        <option value="Em Manutenção">Em Manutenção</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingPool(null);
+                        setActiveSection("piscinas");
+                      }}
+                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // Update pool logic here
+                        alert("Piscina atualizada com sucesso!");
+                        setEditingPool(null);
+                        setActiveSection("piscinas");
+                      }}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      Guardar Alterações
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "editar-manutencao":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Wrench className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Editar Manutenção
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      {editingMaintenance?.poolName} -{" "}
+                      {editingMaintenance?.type}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Edit Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data *
+                      </label>
+                      <input
+                        type="date"
+                        defaultValue={
+                          editingMaintenance?.scheduledDate?.split("T")[0]
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Técnico *
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingMaintenance?.technician}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Nome do técnico"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de Manutenção
+                      </label>
+                      <select
+                        defaultValue={editingMaintenance?.type}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="Limpeza">Limpeza</option>
+                        <option value="Tratamento">Tratamento</option>
+                        <option value="Manutenção">Manutenção</option>
+                        <option value="Reparação">Reparação</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado
+                      </label>
+                      <select
+                        defaultValue={editingMaintenance?.status}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="scheduled">Agendado</option>
+                        <option value="in_progress">Em Progresso</option>
+                        <option value="completed">Concluído</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Observações
+                    </label>
+                    <textarea
+                      defaultValue={editingMaintenance?.observations}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={4}
+                      placeholder="Observações sobre a manutenção"
+                    />
+                  </div>
+
+                  <div className="flex space-x-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingMaintenance(null);
+                        setActiveSection("manutencoes");
+                      }}
+                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // Update maintenance logic here
+                        alert("Manutenção atualizada com sucesso!");
+                        setEditingMaintenance(null);
+                        setActiveSection("manutencoes");
+                      }}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      Guardar Alterações
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
