@@ -81,9 +81,9 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
       };
     }
 
-    if (error) {
+    if (syncError) {
       const isQuotaError =
-        error.includes("quota") || error.includes("resource-exhausted");
+        syncError.includes("quota") || syncError.includes("resource-exhausted");
       return {
         icon: AlertCircle,
         color: isQuotaError ? "text-orange-500" : "text-red-500",
