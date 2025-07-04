@@ -60,14 +60,33 @@ class AuthService {
     role: "super_admin" | "manager" | "technician" = "technician",
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     if (!auth || !db) {
-      return { success: false, error: "Firebase não configurado" };
+      return {
+        success: false,
+        error: "Firebase não configurado. Verifique a configuração.",
+      };
+    }
+
+    // Validate inputs
+    if (!email || !email.trim()) {
+      return { success: false, error: "Email é obrigatório" };
+    }
+
+    if (!password || password.length < 6) {
+      return {
+        success: false,
+        error: "Password deve ter pelo menos 6 caracteres",
+      };
+    }
+
+    if (!name || !name.trim()) {
+      return { success: false, error: "Nome é obrigatório" };
     }
 
     try {
       // Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
+        email.trim(),
         password,
       );
       const firebaseUser = userCredential.user;
