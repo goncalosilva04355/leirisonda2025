@@ -1641,9 +1641,38 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       type="submit"
                       onClick={(e) => {
                         e.preventDefault();
-                        alert(
-                          "Obra criada com sucesso! (Função em desenvolvimento)",
+                        const form = e.target.closest("form");
+                        const formData = new FormData(form);
+                        const workTitle =
+                          form.querySelector(
+                            'input[placeholder*="Construção Piscina"]',
+                          ).value || "Nova Obra";
+                        const responsibleUser = form.querySelector(
+                          'select[aria-label="Responsável do Projeto"]',
                         );
+                        const selectedUserId = responsibleUser
+                          ? responsibleUser.value
+                          : null;
+
+                        if (selectedUserId) {
+                          const selectedUser = users.find(
+                            (u) => u.id == selectedUserId,
+                          );
+                          if (selectedUser) {
+                            sendWorkAssignmentNotification(
+                              workTitle,
+                              selectedUser.name,
+                            );
+                          }
+                        }
+
+                        alert(
+                          "Obra criada com sucesso! " +
+                            (selectedUserId
+                              ? "Notificação enviada ao responsável."
+                              : ""),
+                        );
+                        setActiveSection("dashboard");
                       }}
                       className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors flex items-center space-x-2"
                     >
@@ -2814,7 +2843,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Relatório consolidado de todo o sistema
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Resumo executivo</li>
+                      <li>��� Resumo executivo</li>
                       <li>• Estatísticas gerais</li>
                       <li>• Dados consolidados</li>
                       <li>• Análise de performance</li>
