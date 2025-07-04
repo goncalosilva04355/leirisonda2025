@@ -968,7 +968,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
-    console.log("�� DEBUG: sendWorkAssignmentNotification called with:", {
+    console.log("🔍 DEBUG: sendWorkAssignmentNotification called with:", {
       workTitle,
       assignedTo,
       currentUser: currentUser?.name,
@@ -2823,7 +2823,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             placeholder="Deixe vazio se ainda não terminou"
                           />
                           <p className="text-xs text-gray-500 mt-1">
-                            Deixe vazio se ainda n��o terminou
+                            Deixe vazio se ainda não terminou
                           </p>
                         </div>
                       </div>
@@ -7125,7 +7125,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     isLoading={syncLoading}
                     lastSync={lastSync}
                     error={syncError}
-                    syncEnabled={!!localStorage.getItem("firebase-config")}
+                    syncEnabled={true}
                   />
                 </div>
               </div>
