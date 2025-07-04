@@ -898,15 +898,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Funcionalidades de Fotos */}
+                {/* Funcionalidades Avançadas */}
                 <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        📸 Fotos nas Obras
+                        🚀 Funcionalidades Avançadas
                       </h3>
                       <p className="text-sm text-gray-500">
-                        Funcionalidade ativa! Upload e gestão de fotos
+                        📸 Fotos • 💧 Furo de Água • 🔧 Gestão Completa
                       </p>
                     </div>
                     <div className="flex space-x-2">
