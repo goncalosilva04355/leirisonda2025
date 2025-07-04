@@ -3842,8 +3842,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 ))}
               </div>
 
-              {/* User Form Modal */}
-              {showUserForm && (
+              {/* User Form Modal - SECURITY: Only super admin can access */}
+              {showUserForm && currentUser?.role === "super_admin" && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                   <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
                     <h3 className="text-lg font-semibold mb-4">
@@ -4386,7 +4386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="text-2xl font-bold text-green-600">
                       {maintenance.length}
                     </div>
-                    <div className="text-sm text-gray-600">Manuten����ões</div>
+                    <div className="text-sm text-gray-600">Manuten��ões</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-orange-600">
