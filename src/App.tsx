@@ -781,7 +781,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇ��O: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -823,7 +823,7 @@ ${index + 1}. ${pool.name}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
-   ${pool.nextMaintenance ? `Pr��xima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
+   ${pool.nextMaintenance ? `Próxima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
 `,
   )
   .join("\n")}
@@ -2855,7 +2855,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <BarChart3 className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manuten��ão agendada
+                        Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
                         As futuras manutenções aparecerão aqui quando forem
@@ -5052,7 +5052,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-blue-600 text-xs">
                             Estado:{" "}
-                            {enablePhoneDialer ? "��� Ativo" : "⭕ Inativo"}
+                            {enablePhoneDialer ? "����� Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
