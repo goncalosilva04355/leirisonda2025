@@ -298,7 +298,7 @@ ${index + 1}. ${pool.name}
     `;
     downloadPDF(
       content,
-      `Piscinas_${new Date().toISOString().split("T")[0]}.txt`,
+      `Piscinas_${new Date().toISOString().split("T")[0]}.pdf`,
     );
   };
 
