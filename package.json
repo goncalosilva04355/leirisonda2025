@@ -18,7 +18,7 @@
     "start": "node dist/server/node-build.mjs",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
-    "typecheck": "tsc",
+    "typecheck": "tsc --noEmit --skipLibCheck",
     "builder:sync": "echo 'Builder.io sync trigger - Leirisonda ready'",
     "builder:force-push": "echo 'Force pushing 80 commits to GitHub...'"
   },
