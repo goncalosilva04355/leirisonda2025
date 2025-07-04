@@ -7,6 +7,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useAutoSync } from "./AutoSyncProvider";
+import { SyncErrorBoundary } from "./SyncErrorBoundary";
 
 interface SyncStatusIndicatorProps {
   position?: "fixed" | "relative";
