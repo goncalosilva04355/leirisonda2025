@@ -100,6 +100,7 @@ function App() {
     address: "",
   });
   const [activeWorkFilter, setActiveWorkFilter] = useState("all");
+  const [globalSearchTerm, setGlobalSearchTerm] = useState("");
 
   // Custom setActiveSection that updates URL hash
   const navigateToSection = (section: string) => {
@@ -4220,7 +4221,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Dados de contacto</li>
                       <li>• Piscinas associadas</li>
                       <li>• Histórico de servi��os</li>
-                      <li>• Informações contratuais</li>
+                      <li>��� Informações contratuais</li>
                     </ul>
                   </div>
                   <button
