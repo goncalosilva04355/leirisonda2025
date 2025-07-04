@@ -455,11 +455,44 @@ function App() {
     // Use sync system to add maintenance (will handle Firebase and localStorage)
     addMaintenance(newMaintenance);
 
+    // Create future maintenance if next maintenance date is selected
+    if (maintenanceForm.nextMaintenance) {
+      const nextMaintenanceDate = new Date(maintenanceForm.nextMaintenance);
+      const today = new Date();
+
+      // Only create future maintenance if the date is in the future
+      if (nextMaintenanceDate > today) {
+        const futureMaintenance = {
+          poolId: interventionData.poolId,
+          poolName: interventionData.poolName,
+          type: "Manutenção Programada",
+          scheduledDate: maintenanceForm.nextMaintenance,
+          technician: interventionData.technician,
+          status: "scheduled" as const,
+          description: "Manutenção programada automaticamente",
+          notes: "Agendada automaticamente após manutenção anterior",
+          clientName: selectedPool ? selectedPool.client : "",
+          clientContact: "", // Could be populated from client data if available
+          location: selectedPool ? selectedPool.location : "",
+        };
+
+        addMaintenance(futureMaintenance);
+        console.log("Futura manutenção criada:", futureMaintenance);
+      }
+    }
+
     console.log("Manuten��ão salva com sucesso:", interventionData);
 
-    alert(
-      `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`,
-    );
+    let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
+
+    if (maintenanceForm.nextMaintenance) {
+      const nextDate = new Date(
+        maintenanceForm.nextMaintenance,
+      ).toLocaleDateString("pt-PT");
+      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+    }
+
+    alert(alertMessage);
 
     // Clear form and photos after saving
     setMaintenanceForm({
