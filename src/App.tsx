@@ -633,7 +633,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         icon: "/icon-192x192.png",
         badge: "/icon-192x192.png",
         tag: type,
-        timestamp: Date.now(),
         requireInteraction: true,
       });
 
