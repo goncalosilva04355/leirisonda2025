@@ -69,8 +69,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     }
 
     try {
-      console.log("Attempting Firebase registration...");
-
       const result = await authService.register(
         formData.email.trim(),
         formData.password,
@@ -78,63 +76,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         formData.role,
       );
 
-      console.log("Firebase registration result:", result);
-
       if (result.success) {
         onRegisterSuccess();
-        return;
       } else {
-        // If Firebase returns an error result, try mock auth
-        console.log("Firebase returned error, trying mock auth...");
-
-        const mockResult = await mockAuthService.register(
-          formData.email.trim(),
-          formData.password,
-          formData.name.trim(),
-          formData.role,
-        );
-
-        if (mockResult.success) {
-          setError("✅ Conta criada com sucesso (modo local)");
-          setTimeout(() => {
-            setError("");
-            onRegisterSuccess();
-          }, 1500);
-        } else {
-          setError(mockResult.error || "Erro ao criar conta");
-        }
+        setError(result.error || "Erro ao criar conta");
       }
     } catch (error: any) {
-      console.error("Firebase registration exception:", error);
-      console.log("Error code:", error.code);
-      console.log("Error message:", error.message);
-
-      // Always fallback to mock authentication for any Firebase error
-      console.log("Using mock authentication fallback...");
-
-      try {
-        const mockResult = await mockAuthService.register(
-          formData.email.trim(),
-          formData.password,
-          formData.name.trim(),
-          formData.role,
-        );
-
-        if (mockResult.success) {
-          setError(
-            "✅ Conta criada com sucesso (Firebase indisponível - modo local ativo)",
-          );
-          setTimeout(() => {
-            setError("");
-            onRegisterSuccess();
-          }, 2000);
-        } else {
-          setError(mockResult.error || "Erro ao criar conta local");
-        }
-      } catch (mockError) {
-        console.error("Mock auth also failed:", mockError);
-        setError("Erro em todos os sistemas de autenticação");
-      }
+      console.error("Registration error:", error);
+      setError("Erro inesperado. Tente novamente.");
     } finally {
       setLoading(false);
     }
