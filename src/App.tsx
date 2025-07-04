@@ -4039,7 +4039,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <Edit2 className="h-4 w-4" />
                           </button>
                           <button
-                            onClick={() => dataSync.deleteClient(client.id)}
+                            onClick={() =>
+                              confirmDelete(
+                                `Tem a certeza que deseja apagar o cliente "${client.name}"?`,
+                                () => dataSync.deleteClient(client.id),
+                              )
+                            }
                             className="p-2 text-gray-400 hover:text-red-600"
                           >
                             <Trash2 className="h-4 w-4" />
