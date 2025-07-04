@@ -143,18 +143,37 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     setSuccess(false);
   };
 
-  if (success) {
+  if (success && isConfigLoaded) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Firebase Sempre Ativo!
+            Firebase Ativo!
           </h2>
-          <p className="text-gray-600">
-            Configuração permanente ativa em todos os dispositivos. A
-            sincronização está sempre disponível.
+          <p className="text-gray-600 mb-6">
+            Configuração persistente guardada localmente.
+            <br />
+            Sincronização ativa em todos os dispositivos.
           </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => {
+                setSuccess(false);
+                setError("");
+              }}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Editar Configuração
+            </button>
+            <button
+              onClick={handleReset}
+              className="w-full bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Restaurar Padrão
+            </button>
+          </div>
         </div>
       </div>
     );
