@@ -568,7 +568,7 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Pool actions
   const addPool = useCallback(
-    async (poolData: Omit<Pool, "id" | "createdAt">) => {
+    withAutoSync(async (poolData: Omit<Pool, "id" | "createdAt">) => {
       const newPool: Pool = {
         ...poolData,
         id: Date.now().toString(),
@@ -595,8 +595,8 @@ export function useDataSync(): SyncState & SyncActions {
           console.error("Failed to add pool to Firebase:", error);
         }
       }
-    },
-    [syncEnabled],
+    }),
+    [syncEnabled, withAutoSync],
   );
 
   const updatePool = useCallback(
