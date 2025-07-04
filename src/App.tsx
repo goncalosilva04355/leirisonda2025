@@ -3149,7 +3149,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
                   <button
-                    onClick={() => setShowUserForm(true)}
+                    onClick={() => {
+                      setUserForm({
+                        name: "",
+                        email: "",
+                        role: "technician",
+                        active: true,
+                        permissions: {},
+                      });
+                      setEditingUser(null);
+                      setShowUserForm(true);
+                    }}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                   >
                     <UserPlus className="h-4 w-4" />
@@ -3521,7 +3531,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Dados de contacto</li>
                       <li>• Piscinas associadas</li>
-                      <li>• Histórico de serviços</li>
+                      <li>• Histórico de servi��os</li>
                       <li>• Informações contratuais</li>
                     </ul>
                   </div>
