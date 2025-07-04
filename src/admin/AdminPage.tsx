@@ -91,6 +91,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       icon: Settings,
       color: "bg-gray-500",
     },
+    {
+      id: "cross-device-users" as AdminSection,
+      title: "Acesso Multi-Dispositivo",
+      description: "Gestão de utilizadores para acesso universal",
+      icon: Wifi,
+      color: "bg-cyan-500",
+    },
   ];
 
   const renderCurrentSection = () => {
