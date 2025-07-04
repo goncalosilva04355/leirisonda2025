@@ -213,6 +213,16 @@ function App() {
     };
   }, [isAuthenticated]);
 
+  // Handle hash routing when authentication state changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      const hash = window.location.hash.substring(1);
+      if (hash) {
+        setActiveSection(hash);
+      }
+    }
+  }, [isAuthenticated]);
+
   // Login form state
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [loginError, setLoginError] = useState("");
@@ -1773,7 +1783,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="">Selecionar tipo</option>
                           <option value="piscina">Piscina</option>
                           <option value="manutencao">Manutenção</option>
-                          <option value="instalacao">Instala��ão</option>
+                          <option value="instalacao">Instalação</option>
                           <option value="reparacao">Reparação</option>
                           <option value="limpeza">Limpeza</option>
                           <option value="furo">Furo de Água</option>
