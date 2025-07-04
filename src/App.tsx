@@ -4140,13 +4140,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <input
                         type="date"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.nextMaintenance}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            nextMaintenance: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Estado da Manutenção
                       </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.status}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            status: e.target.value,
+                          })
+                        }
+                      >
                         <option value="completed">Concluída</option>
                         <option value="pending">Pendente</option>
                         <option value="in_progress">Em Progresso</option>
