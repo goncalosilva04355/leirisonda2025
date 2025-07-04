@@ -36,6 +36,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { FirebaseStatus } from "./components/FirebaseStatus";
 import { UserDebugger } from "./components/UserDebugger";
 import { FullSyncManager } from "./components/FullSyncManager";
+import { AutoSyncNotification } from "./components/AutoSyncNotification";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
@@ -2655,7 +2656,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <div className="flex items-center space-x-4 text-sm">
                             <span className="text-blue-600">
-                              ��������{" "}
+                              ������{" "}
                               {new Date(maint.scheduledDate).toLocaleDateString(
                                 "pt-PT",
                               )}
@@ -3230,7 +3231,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={3}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Observa����ões sobre a obra..."
+                          placeholder="Observa������ões sobre a obra..."
                         />
                       </div>
 
@@ -6036,7 +6037,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="installation">Instalação</option>
-                        <option value="maintenance">Manutenç��o</option>
+                        <option value="maintenance">Manutenção</option>
                         <option value="repair">Reparação</option>
                         <option value="renovation">Renovação</option>
                         <option value="inspection">Inspeção</option>
