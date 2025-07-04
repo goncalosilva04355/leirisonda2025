@@ -295,9 +295,25 @@ function App() {
   useEffect(() => {
     const authCheckInterval = setInterval(() => {
       if (isAuthenticated && !currentUser) {
+        // Try to restore user before forcing logout
+        const storedUser =
+          localStorage.getItem("currentUser") ||
+          localStorage.getItem("mock-current-user");
+        if (storedUser) {
+          try {
+            const user = JSON.parse(storedUser);
+            console.log("🔄 Restoring user from periodic check:", user.email);
+            setCurrentUser(user);
+            return;
+          } catch (e) {
+            console.warn("Error parsing stored user in periodic check:", e);
+          }
+        }
+
         console.warn("SECURITY: Auth state compromised, forcing logout");
         setIsAuthenticated(false);
         setCurrentUser(null);
+        localStorage.removeItem("currentUser");
         authService.logout();
       }
     }, 5000); // Check every 5 seconds
@@ -3675,7 +3691,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="ativa">Ativa</option>
                         <option value="inativa">Inativa</option>
-                        <option value="manutencao">Em Manutenç��o</option>
+                        <option value="manutencao">Em Manutenção</option>
                         <option value="construcao">Em Construção</option>
                       </select>
                     </div>
