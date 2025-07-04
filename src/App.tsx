@@ -188,6 +188,7 @@ function App() {
     });
 
     const unsubscribe = authService.onAuthStateChanged((user) => {
+      console.log("Auth state changed:", user ? "User logged in" : "No user");
       setCurrentUser(user);
       setIsAuthenticated(!!user);
     });
@@ -197,6 +198,19 @@ function App() {
 
     return unsubscribe;
   }, []);
+
+  // SECURITY: Additional check to prevent bypass
+  useEffect(() => {
+    // Double check - if somehow authentication state is true but no user, force logout
+    if (isAuthenticated && !currentUser) {
+      console.warn(
+        "SECURITY: Inconsistent auth state detected, forcing logout",
+      );
+      setIsAuthenticated(false);
+      setCurrentUser(null);
+      authService.logout();
+    }
+  }, [isAuthenticated, currentUser]);
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
@@ -483,7 +497,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest����o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
