@@ -1176,7 +1176,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relatório PDF. Tente novamente.");
+      alert("Erro ao gerar o relat��rio PDF. Tente novamente.");
     }
   };
 
@@ -2346,7 +2346,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manuten��ões
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
@@ -2518,7 +2518,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manuten��ões
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
@@ -4556,7 +4556,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendaç��es, próxima manutenção..."
+                          placeholder="Observações, recomendaç����es, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5054,7 +5054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <li>• Dados do Firebase e armazenamento local</li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠��� ATENÇÃO: Esta operação é irreversível!
+                              ⚠��� ATEN��ÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
