@@ -3240,7 +3240,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <input
                           type="text"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          defaultValue={editingUser?.name || ""}
+                          value={userForm.name}
+                          onChange={(e) =>
+                            setUserForm({ ...userForm, name: e.target.value })
+                          }
                         />
                       </div>
                       <div>
@@ -3250,7 +3253,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <input
                           type="email"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          defaultValue={editingUser?.email || ""}
+                          value={userForm.email}
+                          onChange={(e) =>
+                            setUserForm({ ...userForm, email: e.target.value })
+                          }
                         />
                       </div>
                       <div>
