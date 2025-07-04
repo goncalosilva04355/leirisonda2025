@@ -40,6 +40,7 @@ import { FullSyncManager } from "./components/FullSyncManager";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
+import { useAutoSync } from "./hooks/useAutoSync";
 
 // Mock users database
 const initialUsers = [
@@ -3922,7 +3923,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar interven��ão de manutenç�������o
+                      Registar interven��ão de manutenç�����o
                     </p>
                   </div>
                 </div>
@@ -4615,9 +4616,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Instruções
                         </h4>
                         <ul className="text-gray-700 text-sm space-y-1">
-                          <li>
-                            ��� As notificações funcionam apenas com HTTPS
-                          </li>
+                          <li>• As notificações funcionam apenas com HTTPS</li>
                           <li>
                             • Certifique-se de que permite notificaç��es no seu
                             navegador
@@ -4943,7 +4942,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Orçamentos e custos</li>
                       <li>• Prazos e cronogramas</li>
                       <li>• Equipas respons��veis</li>
-                      <li>����� Estados de progresso</li>
+                      <li>������� Estados de progresso</li>
                     </ul>
                   </div>
                   <button
@@ -6206,7 +6205,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       >
                         <option value="Ativa">Ativa</option>
                         <option value="Inativa">Inativa</option>
-                        <option value="Em Manutenç��o">Em Manutenção</option>
+                        <option value="Em Manutenç��o">Em Manutenç��o</option>
                       </select>
                     </div>
                     <div>
@@ -6450,7 +6449,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Duração Estimada (horas)
+                        Dura��ão Estimada (horas)
                       </label>
                       <input
                         type="number"
