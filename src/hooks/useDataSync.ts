@@ -251,10 +251,8 @@ export function useDataSync(): SyncState & SyncActions {
     error: null,
   });
 
-  // Check if Firebase sync is configured
-  const [syncEnabled, setSyncEnabled] = useState(() => {
-    return !!localStorage.getItem("firebase-config");
-  });
+  // Firebase sync is always enabled with fixed configuration
+  const [syncEnabled, setSyncEnabled] = useState(true);
 
   // Initial sync when enabled
   useEffect(() => {
