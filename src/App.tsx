@@ -4660,7 +4660,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="super_admin">Super Admin</option>
                           <option value="manager">Gestor</option>
-                          <option value="technician">T�����cnico</option>
+                          <option value="technician">T�������cnico</option>
                         </select>
                       </div>
                       <div className="flex items-center">
