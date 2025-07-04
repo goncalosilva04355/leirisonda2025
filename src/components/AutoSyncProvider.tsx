@@ -3,6 +3,7 @@ import {
   useAutoDataSync,
   useFirebaseRealtimeSync,
 } from "../hooks/useAutoDataSync";
+import { SyncErrorBoundary } from "./SyncErrorBoundary";
 
 interface AutoSyncContextType {
   isActive: boolean;
