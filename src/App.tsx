@@ -3846,29 +3846,53 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Extract all form data
                           const workTitle =
-                            form.querySelector('input[placeholder*="LS-"]')
-                              ?.value || "Nova Obra";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="LS-"]',
+                              ) as HTMLInputElement
+                            )?.value || "Nova Obra";
                           const workType =
-                            form.querySelector('select[name="workType"]')
-                              ?.value || selectedWorkType;
+                            (
+                              form.querySelector(
+                                'select[name="workType"]',
+                              ) as HTMLSelectElement
+                            )?.value || selectedWorkType;
                           const client =
-                            form.querySelector('input[placeholder*="Cliente"]')
-                              ?.value || "";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Cliente"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const contact =
-                            form.querySelector('input[placeholder*="Contacto"]')
-                              ?.value || "";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Contacto"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const location =
-                            form.querySelector('input[placeholder*="Morada"]')
-                              ?.value || "";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Morada"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const startTime =
-                            form.querySelector('input[placeholder*="Entrada"]')
-                              ?.value || "";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Entrada"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const endTime =
-                            form.querySelector('input[placeholder*="Saída"]')
-                              ?.value || "";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Saída"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const status =
-                            form.querySelector('select[name="status"]')
-                              ?.value || "pending";
+                            (
+                              form.querySelector(
+                                'select[name="status"]',
+                              ) as HTMLSelectElement
+                            )?.value || "pending";
                           // Create complete work data object
                           const workData = {
                             id: Date.now(),
