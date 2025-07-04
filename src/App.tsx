@@ -103,8 +103,17 @@ function App() {
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
 
-  // Use local state for users (Firebase moved to login page)
+  // Data states - can sync with Firebase when enabled
   const [users, setUsers] = useState(initialUsers);
+  const [pools, setPools] = useState([]);
+  const [maintenance, setMaintenance] = useState([]);
+  const [futureMaintenance, setFutureMaintenance] = useState([]);
+  const [works, setWorks] = useState([]);
+  const [clients, setClients] = useState([]);
+
+  // Sync control
+  const [syncActive, setSyncActive] = useState(false);
+  const [syncEnabled, setSyncEnabled] = useState(false);
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
