@@ -67,8 +67,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       } else {
         setError(result.error || "Erro ao criar conta");
       }
-    } catch (error) {
-      setError("Erro inesperado. Tente novamente.");
+    } catch (error: any) {
+      console.error("Unexpected registration error:", error);
+      if (error.message && error.message.includes("Firebase")) {
+        setError("Erro de configuração Firebase. Contacte o administrador.");
+      } else {
+        setError("Erro inesperado. Verifique a conexão e tente novamente.");
+      }
     } finally {
       setLoading(false);
     }
