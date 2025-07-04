@@ -20,6 +20,7 @@ class MockAuthService {
     },
   ];
 
+  // SECURITY: Always start with no user logged in
   private currentUser: MockUser | null = null;
 
   async register(
