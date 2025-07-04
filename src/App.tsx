@@ -1429,17 +1429,13 @@ function App() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <div className="text-center mb-8">
-            <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1 mx-auto mb-4">
+            <div className="w-32 h-20 bg-white rounded-lg shadow-md p-2 mx-auto">
               <img
                 src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                 alt="Leirisonda Logo"
                 className="w-full h-full object-contain"
               />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              Leirisonda
-            </h1>
-            <p className="text-gray-600">Sistema de Gestão</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
