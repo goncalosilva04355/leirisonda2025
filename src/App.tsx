@@ -450,7 +450,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     `;
     downloadPDF(
       content,
-      `Relatorio_Completo_${new Date().toISOString().split("T")[0]}.txt`,
+      `Relatorio_Completo_${new Date().toISOString().split("T")[0]}.pdf`,
     );
   };
 
