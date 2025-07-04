@@ -1594,7 +1594,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {work.title}
                               </h3>
                               <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                <span>👤</span>
+                                <span>����</span>
                                 <span>Atribuída a: {work.assignedTo}</span>
                               </div>
                               <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -4485,7 +4485,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
               <UserPermissionsManager />
-                              Perfil: {user.role}
                             </span>
                             <span
                               className={`text-sm px-2 py-1 rounded-full ${
@@ -4653,7 +4652,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Header */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
                 <h1 className="text-2xl font-bold text-gray-900">
-                  Configurações
+                  Configuraç��es
                 </h1>
                 <p className="text-gray-600 text-sm">
                   Gerir definições do sistema
