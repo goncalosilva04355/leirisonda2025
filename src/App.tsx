@@ -882,7 +882,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS A��ÕES:
+PRÓXIMAS A���ÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -6588,7 +6588,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }}
                       className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                     >
-                      Guardar Alterações
+                      Guardar Alteraç��es
                     </button>
                   </div>
                 </form>
@@ -7212,20 +7212,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </button>
             )}
 
-            <button
-              onClick={() => {
-                navigateToSection("futuras-manutencoes");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "futuras-manutencoes"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <BarChart3 className="h-5 w-5" />
-              <span>Futuras Manutenções</span>
-            </button>
+            {hasPermission("manutencoes", "view") && (
+              <button
+                onClick={() => {
+                  navigateToSection("futuras-manutencoes");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "futuras-manutencoes"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <BarChart3 className="h-5 w-5" />
+                <span>Futuras Manutenções</span>
+              </button>
+            )}
           </nav>
 
           {/* User Section */}
