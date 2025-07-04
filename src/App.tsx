@@ -5349,7 +5349,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{clients.length}</strong> clientes registados
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Dados de contacto</li>
+                        <li>�� Dados de contacto</li>
                         <li>• Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
@@ -7372,7 +7372,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��</span>
+                  <span>✓</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -7439,7 +7439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   "❌ Access denied: User management requires authentication",
                 );
                 setLoginError(
-                  "Por favor, faça login primeiro para aceder à gest��o de utilizadores",
+                  "Por favor, faça login primeiro para aceder à gestão de utilizadores",
                 );
                 setShowAdvancedSettings(false);
                 setIsAdvancedUnlocked(false);
@@ -7482,7 +7482,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configurações avan��adas
+                Insira a palavra-passe para aceder às configurações avançadas
               </p>
             </div>
 
