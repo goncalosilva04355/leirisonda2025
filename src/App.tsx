@@ -6558,7 +6558,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         const dimensions = inputs[5].value; // Dimensões
                         const volume = inputs[6].value; // Volume
                         const filtrationSystem = inputs[7].value; // Sistema de Filtração
-                        const installationDate = inputs[8].value; // Data de Instalação
+                        const installationDate = inputs[8].value; // Data de Instala��ão
                         const clientPhone = inputs[9].value; // Telefone do Cliente
                         const clientEmail = inputs[10].value; // Email do Cliente
                         const observations = inputs[11].value; // Observações
@@ -7043,6 +7043,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       "timestamp:",
       new Date().toISOString(),
     );
+
+    // Show Auth Diagnostic if requested
+    if (showAuthDiagnostic) {
+      return (
+        <div className="min-h-screen bg-gray-50">
+          <div className="max-w-4xl mx-auto py-8">
+            <button
+              onClick={() => setShowAuthDiagnostic(false)}
+              className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+            >
+              ← Voltar
+            </button>
+            <AuthSyncDiagnostic />
+          </div>
+        </div>
+      );
+    }
+
     if (showAdvancedSettings) {
       if (isAdvancedUnlocked) {
         return (
