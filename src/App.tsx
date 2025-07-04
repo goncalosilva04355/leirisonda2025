@@ -620,6 +620,7 @@ function App() {
       setSidebarOpen(false);
       setCurrentUser(null);
       setIsAuthenticated(false);
+      localStorage.removeItem("currentUser");
       setLoginForm({ email: "", password: "" });
       navigateToSection("dashboard");
 
@@ -6688,7 +6689,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Shield className="h-8 w-8 text-red-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                �����rea Protegida
+                ����rea Protegida
               </h1>
               <p className="text-gray-600">
                 Insira a palavra-passe para aceder às configurações avançadas
