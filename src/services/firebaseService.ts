@@ -116,6 +116,12 @@ const COLLECTIONS = {
 export const userService = {
   // Listen to real-time changes
   subscribeToUsers(callback: (users: User[]) => void) {
+    if (!db) {
+      // Return empty unsubscribe function if db is not available
+      callback([]);
+      return () => {};
+    }
+
     const q = query(
       collection(db, COLLECTIONS.USERS),
       orderBy("createdAt", "desc"),
