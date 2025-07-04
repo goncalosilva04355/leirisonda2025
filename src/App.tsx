@@ -859,6 +859,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
   };
 
+  // Permission check function
+  const hasPermission = (module: string, action: string): boolean => {
+    if (!currentUser || !currentUser.permissions) return false;
+    return currentUser.permissions[module]?.[action] || false;
+  };
+
   const handleDeleteUser = (userId) => {
     // Check if it's the main user
     const user = users.find(
@@ -1166,7 +1172,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center p-4 border-b border-gray-100">
                     <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Minhas Obras Atribu��das
+                      Minhas Obras Atribu���das
                     </h2>
                   </div>
                   <div className="p-4 space-y-3">
@@ -4221,7 +4227,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Dados de contacto</li>
                       <li>• Piscinas associadas</li>
                       <li>• Histórico de servi��os</li>
-                      <li>��� Informações contratuais</li>
+                      <li>• Informações contratuais</li>
                     </ul>
                   </div>
                   <button
