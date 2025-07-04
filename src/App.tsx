@@ -100,6 +100,17 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
+  // Debug logging for authentication state changes
+  useEffect(() => {
+    console.log("🔍 Auth State Debug:", {
+      isAuthenticated,
+      currentUser: currentUser
+        ? `${currentUser.name} (${currentUser.email})`
+        : null,
+      timestamp: new Date().toISOString(),
+    });
+  }, [isAuthenticated, currentUser]);
+
   // No auto-login - users must login manually
   useEffect(() => {
     // Clear any existing auth data on app start
@@ -238,6 +249,7 @@ function App() {
     const storedUser =
       localStorage.getItem("currentUser") ||
       localStorage.getItem("mock-current-user");
+
     if (storedUser) {
       try {
         const user = JSON.parse(storedUser);
@@ -247,24 +259,23 @@ function App() {
         );
         setCurrentUser(user);
         setIsAuthenticated(true);
-
-        // Firebase auth listener temporarily disabled to avoid errors
-        // const unsubscribe = authService.onAuthStateChanged((authUser) => {
-        //   console.log("🔒 AUTH STATE CHANGE (restored user):", authUser);
-        // });
-        // return () => unsubscribe();
+        console.log("✅ User session restored successfully");
+        return; // Exit early if user is restored
       } catch (e) {
-        console.warn("App init: Error parsing stored user:", e);
+        console.warn(
+          "App init: Error parsing stored user, clearing localStorage:",
+          e,
+        );
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("mock-current-user");
       }
     }
 
-    // If no stored user, clear session data and force logout for security
+    // Only clear auth state if no valid stored user found
+    console.log("🔒 No valid stored user found, ensuring clean state");
     sessionStorage.clear(); // Clear any session data
-
-    // Force clear authentication state
     setIsAuthenticated(false);
     setCurrentUser(null);
-    console.log("🔒 SECURITY: Auth state cleared");
 
     // Firebase auth disabled to prevent crashes
     console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
@@ -487,7 +498,7 @@ function App() {
           technician: interventionData.technician,
           status: "scheduled" as const,
           description: "Manutenção programada automaticamente",
-          notes: "Agendada automaticamente após manutenção anterior",
+          notes: "Agendada automaticamente após manutenç��o anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
           location: selectedPool ? selectedPool.location : "",
@@ -550,71 +561,56 @@ function App() {
     e.preventDefault();
     setLoginError("");
 
+    // Validate input first
+    if (!loginForm.email || !loginForm.password) {
+      setLoginError("Por favor, preencha todos os campos");
+      return;
+    }
+
     try {
-      // Quick bypass for Gon���alo's account
-      if (loginForm.email === "gongonsilva@gmail.com") {
-        const gonçaloUser = {
-          uid: "goncalo-1",
-          email: "gongonsilva@gmail.com",
-          name: "Gonçalo Fonseca",
-          role: "super_admin" as const,
-          permissions: {
-            obras: { view: true, create: true, edit: true, delete: true },
-            manutencoes: { view: true, create: true, edit: true, delete: true },
-            piscinas: { view: true, create: true, edit: true, delete: true },
-            utilizadores: {
-              view: true,
-              create: true,
-              edit: true,
-              delete: true,
-            },
-            relatorios: { view: true, create: true, edit: true, delete: true },
-            clientes: { view: true, create: true, edit: true, delete: true },
-          },
-          active: true,
-          createdAt: "2024-01-01",
-        };
+      console.log("🔐 Attempting login for:", loginForm.email);
+      console.log("🔐 Email:", loginForm.email);
+      console.log("🔐 Password length:", loginForm.password?.length || 0);
 
-        setCurrentUser(gonçaloUser);
+      const result = await authService.login(
+        loginForm.email,
+        loginForm.password,
+      );
+
+      console.log("🔐 Auth result:", result);
+
+      if (result.success && result.user) {
+        console.log("✅ Login successful for:", result.user.email);
+
+        // Clear any previous auth state
+        setLoginError("");
+
+        // Set user state and authentication
+        setCurrentUser(result.user);
         setIsAuthenticated(true);
-        localStorage.setItem("currentUser", JSON.stringify(gonçaloUser));
+        localStorage.setItem("currentUser", JSON.stringify(result.user));
+
+        // Clear login form
         setLoginForm({ email: "", password: "" });
-        navigateToSection("dashboard");
-        return;
-      }
 
-      try {
-        const result = await authService.login(
-          loginForm.email,
-          loginForm.password,
-        );
-
-        if (result.success && result.user) {
-          // Set user state directly
-          setCurrentUser(result.user);
-          setIsAuthenticated(true);
-          localStorage.setItem("currentUser", JSON.stringify(result.user));
-          setLoginForm({ email: "", password: "" });
-
+        // Use setTimeout to ensure state is set before navigation
+        setTimeout(() => {
           // Handle any pending hash navigation after login
           const hash = window.location.hash.substring(1);
-          if (hash) {
+          if (hash && hash !== "login") {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
             navigateToSection("dashboard");
           }
-        } else {
-          setLoginError(result.error || "Credenciais inválidas");
-        }
-      } catch (authError) {
-        console.error("Auth service error:", authError);
-        // Try to recover with local state
-        setLoginError("Erro temporário. Tente novamente em alguns segundos.");
+        }, 100);
+      } else {
+        console.warn("❌ Login failed:", result.error);
+        setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
-      console.error("Login error:", error);
-      setLoginError("Erro de sistema. Contacte o administrador.");
+      console.error("❌ Login error:", error);
+      setLoginError("Erro de sistema. Por favor, tente novamente.");
     }
   };
 
@@ -845,7 +841,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS A���ÕES:
+PRÓXIMAS A����ÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -1369,7 +1365,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "nova-manutencao",
       icon: Wrench,
-      label: "Nova Manutenção",
+      label: "Nova Manutenç��o",
       path: "/manutencao/nova",
     },
     {
@@ -1407,663 +1403,477 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   ];
 
   const renderContent = () => {
-    switch (activeSection) {
-      case "dashboard":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            {/* Dashboard Content - Mobile First Design */}
-            <div className="px-4 py-4 space-y-4">
-              {/* Header Card */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                    <div className="w-8 h-8 bg-white rounded-lg shadow-md p-1">
-                      <img
-                        src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                        alt="Leirisonda Logo"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <h1 className="text-lg font-semibold text-gray-900">
-                      Olá, Gonçalo Fonseca
-                    </h1>
-                    <p className="text-gray-600 text-sm">
-                      Bem-vindo ao sistema Leirisonda
-                    </p>
-                  </div>
-                </div>
-              </div>
+    // Add loading state check with timeout
+    if (!currentUser || !isAuthenticated) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">A carregar aplicação...</p>
+            <p className="mt-2 text-sm text-gray-500">
+              Se esta mensagem persistir, recarregue a página
+            </p>
+          </div>
+        </div>
+      );
+    }
 
-              {/* Status Cards */}
-              <div className="space-y-3">
-                {/* Pendentes */}
-                <button
-                  onClick={() => navigateToSection("obras")}
-                  className="w-full bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="text-left">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Pendentes
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        Obras necessitam atenç��o
-                      </p>
-                    </div>
-                    <div className="text-4xl font-bold text-gray-900">
-                      {works.filter((w) => w.status === "pending").length}
-                    </div>
-                  </div>
-                </button>
-
-                {/* Em Progresso */}
-                <button
-                  onClick={() => navigateToSection("obras")}
-                  className="w-full bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="text-left">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Em Progresso
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        Obras em andamento
-                      </p>
-                    </div>
-                    <div className="text-4xl font-bold text-gray-900">
-                      {works.filter((w) => w.status === "in_progress").length}
-                    </div>
-                  </div>
-                </button>
-
-                {/* Concluídas */}
-                <button
-                  onClick={() => navigateToSection("obras")}
-                  className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="text-left">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Concluídas
-                      </h3>
-                      <p className="text-sm text-gray-500">Obras finalizadas</p>
-                    </div>
-                    <div className="text-4xl font-bold text-gray-900">
-                      {works.filter((w) => w.status === "completed").length}
-                    </div>
-                  </div>
-                </button>
-
-                {/* Falta de Folhas de Obra */}
-                <button
-                  onClick={() => navigateToSection("obras")}
-                  className="w-full bg-white rounded-lg border-l-4 border-blue-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="text-left">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Falta de Folhas de Obra
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        Folhas não geradas
-                      </p>
-                    </div>
-                    <div className="text-4xl font-bold text-gray-900">
-                      {
-                        works.filter(
-                          (w) => !w.folhaGerada && w.status !== "completed",
-                        ).length
-                      }
-                    </div>
-                  </div>
-                </button>
-
-                {/* Obras Atribuídas */}
-                <button
-                  onClick={() => navigateToSection("obras")}
-                  className="w-full bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="text-left">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Obras Atribuídas
-                      </h3>
-                      <p className="text-sm text-gray-500">Atribuídas a si</p>
-                    </div>
-                    <div className="text-4xl font-bold text-gray-900">
-                      {assignedWorks.length}
-                    </div>
-                  </div>
-                </button>
-              </div>
-
-              {/* Lista de Obras Atribuídas */}
-              {assignedWorks.length > 0 && (
-                <div className="bg-white rounded-lg shadow-sm">
-                  <div className="flex items-center p-4 border-b border-gray-100">
-                    <Building2 className="h-5 w-5 text-purple-600 mr-3" />
-                    <h2 className="text-lg font-semibold text-gray-900">
-                      Minhas Obras Atribu���das
-                    </h2>
-                  </div>
-                  <div className="p-4 space-y-3">
-                    {assignedWorks.map((work) => (
-                      <div
-                        key={work.id}
-                        className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4"
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-start space-x-3">
-                            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                              <Building2 className="h-5 w-5 text-purple-600" />
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-gray-900">
-                                {work.title}
-                              </h3>
-                              <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                <span>👤</span>
-                                <span>Atribuída a: {work.assignedTo}</span>
-                              </div>
-                              <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                <span>����</span>
-                                <span>
-                                  Atribuída em:{" "}
-                                  {new Date(
-                                    work.dateAssigned,
-                                  ).toLocaleDateString("pt-PT")}
-                                </span>
-                              </div>
-                              <span
-                                className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
-                                  work.status === "Nova"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : "bg-gray-100 text-gray-800"
-                                }`}
-                              >
-                                {work.status}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={() => {
-                                const updatedWorks = assignedWorks.map((w) =>
-                                  w.id === work.id
-                                    ? { ...w, status: "Em Progresso" }
-                                    : w,
-                                );
-                                setAssignedWorks(updatedWorks);
-                              }}
-                              className="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700"
-                            >
-                              Iniciar
-                            </button>
-                          </div>
-                        </div>
+    // Add error boundary
+    try {
+      switch (activeSection) {
+        case "dashboard":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              {/* Dashboard Content - Mobile First Design */}
+              <div className="px-4 py-4 space-y-4">
+                {/* Header Card */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-white rounded-lg shadow-md p-1">
+                        <img
+                          src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                          alt="Leirisonda Logo"
+                          className="w-full h-full object-contain"
+                        />
                       </div>
-                    ))}
+                    </div>
+                    <div>
+                      <h1 className="text-lg font-semibold text-gray-900">
+                        Olá, {currentUser?.name || "Utilizador"}
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Bem-vindo ao sistema Leirisonda
+                      </p>
+                    </div>
                   </div>
                 </div>
-              )}
 
-              {/* Próximas Manutenções */}
-              <div className="bg-white rounded-lg shadow-sm">
-                <div className="flex items-center p-4 border-b border-gray-100">
+                {/* Status Cards */}
+                <div className="space-y-3">
+                  {/* Pendentes */}
                   <button
-                    onClick={() => navigateToSection("futuras-manutencoes")}
-                    className="p-1 mr-3 hover:bg-gray-100 rounded"
+                    onClick={() => navigateToSection("obras")}
+                    className="w-full bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
                   >
-                    <span className="text-gray-600 text-lg">→</span>
+                    <div className="flex items-center justify-between">
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Pendentes
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Obras necessitam atenç��o
+                        </p>
+                      </div>
+                      <div className="text-4xl font-bold text-gray-900">
+                        {works.filter((w) => w.status === "pending").length}
+                      </div>
+                    </div>
                   </button>
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Próximas Manuten����es
-                  </h2>
+
+                  {/* Em Progresso */}
+                  <button
+                    onClick={() => navigateToSection("obras")}
+                    className="w-full bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Em Progresso
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Obras em andamento
+                        </p>
+                      </div>
+                      <div className="text-4xl font-bold text-gray-900">
+                        {works.filter((w) => w.status === "in_progress").length}
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Concluídas */}
+                  <button
+                    onClick={() => navigateToSection("obras")}
+                    className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Concluídas
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Obras finalizadas
+                        </p>
+                      </div>
+                      <div className="text-4xl font-bold text-gray-900">
+                        {works.filter((w) => w.status === "completed").length}
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Falta de Folhas de Obra */}
+                  <button
+                    onClick={() => navigateToSection("obras")}
+                    className="w-full bg-white rounded-lg border-l-4 border-blue-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Falta de Folhas de Obra
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Folhas não geradas
+                        </p>
+                      </div>
+                      <div className="text-4xl font-bold text-gray-900">
+                        {
+                          works.filter(
+                            (w) => !w.folhaGerada && w.status !== "completed",
+                          ).length
+                        }
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Obras Atribuídas */}
+                  <button
+                    onClick={() => navigateToSection("obras")}
+                    className="w-full bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Obras Atribuídas
+                        </h3>
+                        <p className="text-sm text-gray-500">Atribuídas a si</p>
+                      </div>
+                      <div className="text-4xl font-bold text-gray-900">
+                        {assignedWorks.length}
+                      </div>
+                    </div>
+                  </button>
                 </div>
 
-                <div className="p-4 space-y-3">
-                  {futureMaintenance.length === 0 ? (
-                    <div className="text-center py-8">
-                      <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                        <Waves className="h-6 w-6 text-cyan-600" />
-                      </div>
-                      <p className="text-gray-500 text-sm font-medium">
-                        Nenhuma manutenção agendada
-                      </p>
-                      <p className="text-gray-400 text-xs mt-1">
-                        As futuras manutenções aparecerão aqui
-                      </p>
-                      <button
-                        onClick={() => navigateToSection("nova-manutencao")}
-                        className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
-                      >
-                        Agendar Manutenção
-                      </button>
+                {/* Lista de Obras Atribuídas */}
+                {assignedWorks.length > 0 && (
+                  <div className="bg-white rounded-lg shadow-sm">
+                    <div className="flex items-center p-4 border-b border-gray-100">
+                      <Building2 className="h-5 w-5 text-purple-600 mr-3" />
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Minhas Obras Atribu���das
+                      </h2>
                     </div>
-                  ) : (
-                    futureMaintenance
-                      .sort(
-                        (a, b) =>
-                          new Date(a.scheduledDate).getTime() -
-                          new Date(b.scheduledDate).getTime(),
-                      )
-                      .slice(0, 4)
-                      .map((maint) => {
-                        const scheduledDate = new Date(maint.scheduledDate);
-                        const today = new Date();
-                        const diffTime =
-                          scheduledDate.getTime() - today.getTime();
-                        const diffDays = Math.ceil(
-                          diffTime / (1000 * 60 * 60 * 24),
-                        );
-
-                        let timeText = "";
-                        if (diffDays === 0) {
-                          timeText = "Hoje";
-                        } else if (diffDays === 1) {
-                          timeText = "Amanhã";
-                        } else if (diffDays > 0) {
-                          timeText = `Em ${diffDays} dias`;
-                        } else {
-                          timeText = "Atrasada";
-                        }
-
-                        return (
-                          <div
-                            key={maint.id}
-                            className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4"
-                          >
-                            <div className="flex items-start justify-between">
-                              <div className="flex items-start space-x-3">
-                                <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
-                                  <Waves className="h-5 w-5 text-cyan-600" />
-                                </div>
-                                <div>
-                                  <h3 className="font-semibold text-gray-900">
-                                    {maint.poolName}
-                                  </h3>
-                                  <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                    <span>🔧</span>
-                                    <span>{maint.type}</span>
-                                  </div>
-                                  <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                    <span>📅</span>
-                                    <span>{timeText}</span>
-                                  </div>
-                                  <p className="text-xs text-gray-400 mt-1">
-                                    Data:{" "}
-                                    {scheduledDate.toLocaleDateString("pt-PT")}
-                                  </p>
-                                </div>
+                    <div className="p-4 space-y-3">
+                      {assignedWorks.map((work) => (
+                        <div
+                          key={work.id}
+                          className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4"
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <Building2 className="h-5 w-5 text-purple-600" />
                               </div>
-                              <div className="flex items-start space-x-2">
+                              <div>
+                                <h3 className="font-semibold text-gray-900">
+                                  {work.title}
+                                </h3>
+                                <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                                  <span>👤</span>
+                                  <span>Atribuída a: {work.assignedTo}</span>
+                                </div>
+                                <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                                  <span>����</span>
+                                  <span>
+                                    Atribuída em:{" "}
+                                    {new Date(
+                                      work.dateAssigned,
+                                    ).toLocaleDateString("pt-PT")}
+                                  </span>
+                                </div>
                                 <span
-                                  className={`text-xs px-2 py-1 rounded-full font-medium ${
-                                    diffDays < 0
-                                      ? "bg-red-200 text-red-800"
-                                      : diffDays <= 3
-                                        ? "bg-yellow-200 text-yellow-800"
-                                        : "bg-cyan-200 text-cyan-800"
+                                  className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
+                                    work.status === "Nova"
+                                      ? "bg-blue-100 text-blue-800"
+                                      : "bg-gray-100 text-gray-800"
                                   }`}
                                 >
-                                  {diffDays < 0 ? "Atrasada" : "Agendada"}
+                                  {work.status}
                                 </span>
-                                <button
-                                  onClick={() =>
-                                    navigateToSection("futuras-manutencoes")
-                                  }
-                                  className="p-1 text-gray-400 hover:text-gray-600"
-                                >
-                                  <Eye className="h-4 w-4" />
-                                </button>
                               </div>
                             </div>
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => {
+                                  const updatedWorks = assignedWorks.map((w) =>
+                                    w.id === work.id
+                                      ? { ...w, status: "Em Progresso" }
+                                      : w,
+                                  );
+                                  setAssignedWorks(updatedWorks);
+                                }}
+                                className="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700"
+                              >
+                                Iniciar
+                              </button>
+                            </div>
                           </div>
-                        );
-                      })
-                  )}
-                </div>
-              </div>
-
-              {/* Pesquisa Global */}
-              <div className="bg-white rounded-lg shadow-sm p-4">
-                <div className="flex items-center space-x-2 mb-4">
-                  <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-blue-600">🔍</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Pesquisa Global
-                  </h2>
-                </div>
+                )}
 
-                <div className="space-y-4">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={globalSearchTerm}
-                      onChange={(e) => setGlobalSearchTerm(e.target.value)}
-                      placeholder="Pesquisar por cliente, obra, piscina, data..."
-                      className="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
-                    />
-                    {globalSearchTerm && (
-                      <button
-                        onClick={() => setGlobalSearchTerm("")}
-                        className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
+                {/* Próximas Manutenç��es */}
+                <div className="bg-white rounded-lg shadow-sm">
+                  <div className="flex items-center p-4 border-b border-gray-100">
+                    <button
+                      onClick={() => navigateToSection("futuras-manutencoes")}
+                      className="p-1 mr-3 hover:bg-gray-100 rounded"
+                    >
+                      <span className="text-gray-600 text-lg">→</span>
+                    </button>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Próximas Manuten����es
+                    </h2>
+                  </div>
+
+                  <div className="p-4 space-y-3">
+                    {futureMaintenance.length === 0 ? (
+                      <div className="text-center py-8">
+                        <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                          <Waves className="h-6 w-6 text-cyan-600" />
+                        </div>
+                        <p className="text-gray-500 text-sm font-medium">
+                          Nenhuma manutenção agendada
+                        </p>
+                        <p className="text-gray-400 text-xs mt-1">
+                          As futuras manutenções aparecerão aqui
+                        </p>
+                        <button
+                          onClick={() => navigateToSection("nova-manutencao")}
+                          className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
+                        >
+                          Agendar Manutenção
+                        </button>
+                      </div>
+                    ) : (
+                      futureMaintenance
+                        .sort(
+                          (a, b) =>
+                            new Date(a.scheduledDate).getTime() -
+                            new Date(b.scheduledDate).getTime(),
+                        )
+                        .slice(0, 4)
+                        .map((maint) => {
+                          const scheduledDate = new Date(maint.scheduledDate);
+                          const today = new Date();
+                          const diffTime =
+                            scheduledDate.getTime() - today.getTime();
+                          const diffDays = Math.ceil(
+                            diffTime / (1000 * 60 * 60 * 24),
+                          );
+
+                          let timeText = "";
+                          if (diffDays === 0) {
+                            timeText = "Hoje";
+                          } else if (diffDays === 1) {
+                            timeText = "Amanhã";
+                          } else if (diffDays > 0) {
+                            timeText = `Em ${diffDays} dias`;
+                          } else {
+                            timeText = "Atrasada";
+                          }
+
+                          return (
+                            <div
+                              key={maint.id}
+                              className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4"
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex items-start space-x-3">
+                                  <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                                    <Waves className="h-5 w-5 text-cyan-600" />
+                                  </div>
+                                  <div>
+                                    <h3 className="font-semibold text-gray-900">
+                                      {maint.poolName}
+                                    </h3>
+                                    <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                                      <span>🔧</span>
+                                      <span>{maint.type}</span>
+                                    </div>
+                                    <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                                      <span>📅</span>
+                                      <span>{timeText}</span>
+                                    </div>
+                                    <p className="text-xs text-gray-400 mt-1">
+                                      Data:{" "}
+                                      {scheduledDate.toLocaleDateString(
+                                        "pt-PT",
+                                      )}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <span
+                                    className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                      diffDays < 0
+                                        ? "bg-red-200 text-red-800"
+                                        : diffDays <= 3
+                                          ? "bg-yellow-200 text-yellow-800"
+                                          : "bg-cyan-200 text-cyan-800"
+                                    }`}
+                                  >
+                                    {diffDays < 0 ? "Atrasada" : "Agendada"}
+                                  </span>
+                                  <button
+                                    onClick={() =>
+                                      navigateToSection("futuras-manutencoes")
+                                    }
+                                    className="p-1 text-gray-400 hover:text-gray-600"
+                                  >
+                                    <Eye className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })
                     )}
                   </div>
+                </div>
 
-                  {/* Search Results */}
-                  {globalSearchTerm && (
-                    <div className="space-y-3 max-h-96 overflow-y-auto">
-                      {/* Check if there's any data to search */}
-                      {works.length === 0 &&
-                      pools.length === 0 &&
-                      maintenance.length === 0 &&
-                      clients.length === 0 ? (
-                        <div className="text-center py-8">
-                          <div className="text-gray-400 mb-2">���</div>
-                          <p className="text-gray-500 text-sm font-medium">
-                            Não há dados para pesquisar
-                          </p>
-                          <p className="text-gray-400 text-xs mt-1">
-                            Adicione obras, piscinas, manutenções ou clientes
-                            primeiro
-                          </p>
-                        </div>
-                      ) : (
-                        <>
-                          {/* Works Results */}
-                          {works.filter(
-                            (work) =>
-                              work.title
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              work.client
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              work.location
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              work.assignedTo
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              work.description
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()),
-                          ).length > 0 && (
-                            <div>
-                              <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                Obras
-                              </h4>
-                              {works
-                                .filter(
-                                  (work) =>
-                                    work.title
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    work.client
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    work.location
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    work.assignedTo
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    work.description
-                                      .toLowerCase()
-                                      .includes(globalSearchTerm.toLowerCase()),
-                                )
-                                .slice(0, 3)
-                                .map((work) => (
-                                  <button
-                                    key={work.id}
-                                    onClick={() => {
-                                      navigateToSection("obras");
-                                      setGlobalSearchTerm("");
-                                    }}
-                                    className="w-full text-left p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors mb-2"
-                                  >
-                                    <div className="flex items-center space-x-2">
-                                      <Building2 className="h-4 w-4 text-blue-600" />
-                                      <div>
-                                        <p className="font-medium text-gray-900">
-                                          {work.title}
-                                        </p>
-                                        <p className="text-sm text-gray-600">
-                                          {work.client} • {work.location}
-                                        </p>
+                {/* Pesquisa Global */}
+                <div className="bg-white rounded-lg shadow-sm p-4">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <span className="text-blue-600">🔍</span>
+                    </div>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Pesquisa Global
+                    </h2>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={globalSearchTerm}
+                        onChange={(e) => setGlobalSearchTerm(e.target.value)}
+                        placeholder="Pesquisar por cliente, obra, piscina, data..."
+                        className="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                      />
+                      {globalSearchTerm && (
+                        <button
+                          onClick={() => setGlobalSearchTerm("")}
+                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Search Results */}
+                    {globalSearchTerm && (
+                      <div className="space-y-3 max-h-96 overflow-y-auto">
+                        {/* Check if there's any data to search */}
+                        {works.length === 0 &&
+                        pools.length === 0 &&
+                        maintenance.length === 0 &&
+                        clients.length === 0 ? (
+                          <div className="text-center py-8">
+                            <div className="text-gray-400 mb-2">���</div>
+                            <p className="text-gray-500 text-sm font-medium">
+                              Não há dados para pesquisar
+                            </p>
+                            <p className="text-gray-400 text-xs mt-1">
+                              Adicione obras, piscinas, manutenções ou clientes
+                              primeiro
+                            </p>
+                          </div>
+                        ) : (
+                          <>
+                            {/* Works Results */}
+                            {works.filter(
+                              (work) =>
+                                work.title
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.client
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.location
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.assignedTo
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.description
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()),
+                            ).length > 0 && (
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                                  Obras
+                                </h4>
+                                {works
+                                  .filter(
+                                    (work) =>
+                                      work.title
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      work.client
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      work.location
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      work.assignedTo
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      work.description
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ),
+                                  )
+                                  .slice(0, 3)
+                                  .map((work) => (
+                                    <button
+                                      key={work.id}
+                                      onClick={() => {
+                                        navigateToSection("obras");
+                                        setGlobalSearchTerm("");
+                                      }}
+                                      className="w-full text-left p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors mb-2"
+                                    >
+                                      <div className="flex items-center space-x-2">
+                                        <Building2 className="h-4 w-4 text-blue-600" />
+                                        <div>
+                                          <p className="font-medium text-gray-900">
+                                            {work.title}
+                                          </p>
+                                          <p className="text-sm text-gray-600">
+                                            {work.client} • {work.location}
+                                          </p>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </button>
-                                ))}
-                            </div>
-                          )}
+                                    </button>
+                                  ))}
+                              </div>
+                            )}
 
-                          {/* Pools Results */}
-                          {pools.filter(
-                            (pool) =>
-                              pool.name
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              pool.client
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              pool.location
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()),
-                          ).length > 0 && (
-                            <div>
-                              <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                Piscinas
-                              </h4>
-                              {pools
-                                .filter(
-                                  (pool) =>
-                                    pool.name
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    pool.client
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    pool.location
-                                      .toLowerCase()
-                                      .includes(globalSearchTerm.toLowerCase()),
-                                )
-                                .slice(0, 3)
-                                .map((pool) => (
-                                  <button
-                                    key={pool.id}
-                                    onClick={() => {
-                                      navigateToSection("piscinas");
-                                      setGlobalSearchTerm("");
-                                    }}
-                                    className="w-full text-left p-3 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors mb-2"
-                                  >
-                                    <div className="flex items-center space-x-2">
-                                      <Waves className="h-4 w-4 text-cyan-600" />
-                                      <div>
-                                        <p className="font-medium text-gray-900">
-                                          {pool.name}
-                                        </p>
-                                        <p className="text-sm text-gray-600">
-                                          {pool.client} • {pool.location}
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </button>
-                                ))}
-                            </div>
-                          )}
-
-                          {/* Maintenance Results */}
-                          {maintenance.filter(
-                            (maint) =>
-                              maint.poolName
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              maint.type
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              maint.technician
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              maint.scheduledDate.includes(globalSearchTerm),
-                          ).length > 0 && (
-                            <div>
-                              <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                Manutenções
-                              </h4>
-                              {maintenance
-                                .filter(
-                                  (maint) =>
-                                    maint.poolName
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    maint.type
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    maint.technician
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    maint.scheduledDate.includes(
-                                      globalSearchTerm,
-                                    ),
-                                )
-                                .slice(0, 3)
-                                .map((maint) => (
-                                  <button
-                                    key={maint.id}
-                                    onClick={() => {
-                                      navigateToSection("manutencoes");
-                                      setGlobalSearchTerm("");
-                                    }}
-                                    className="w-full text-left p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors mb-2"
-                                  >
-                                    <div className="flex items-center space-x-2">
-                                      <Wrench className="h-4 w-4 text-orange-600" />
-                                      <div>
-                                        <p className="font-medium text-gray-900">
-                                          {maint.type}
-                                        </p>
-                                        <p className="text-sm text-gray-600">
-                                          {maint.poolName} •{" "}
-                                          {new Date(
-                                            maint.scheduledDate,
-                                          ).toLocaleDateString("pt-PT")}
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </button>
-                                ))}
-                            </div>
-                          )}
-
-                          {/* Clients Results */}
-                          {clients.filter(
-                            (client) =>
-                              client.name
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              client.email
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              client.phone.includes(globalSearchTerm) ||
-                              client.address
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()),
-                          ).length > 0 && (
-                            <div>
-                              <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                Clientes
-                              </h4>
-                              {clients
-                                .filter(
-                                  (client) =>
-                                    client.name
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    client.email
-                                      .toLowerCase()
-                                      .includes(
-                                        globalSearchTerm.toLowerCase(),
-                                      ) ||
-                                    client.phone.includes(globalSearchTerm) ||
-                                    client.address
-                                      .toLowerCase()
-                                      .includes(globalSearchTerm.toLowerCase()),
-                                )
-                                .slice(0, 3)
-                                .map((client) => (
-                                  <button
-                                    key={client.id}
-                                    onClick={() => {
-                                      navigateToSection("clientes");
-                                      setGlobalSearchTerm("");
-                                    }}
-                                    className="w-full text-left p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors mb-2"
-                                  >
-                                    <div className="flex items-center space-x-2">
-                                      <Users className="h-4 w-4 text-purple-600" />
-                                      <div>
-                                        <p className="font-medium text-gray-900">
-                                          {client.name}
-                                        </p>
-                                        <p className="text-sm text-gray-600">
-                                          {client.email} • {client.phone}
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </button>
-                                ))}
-                            </div>
-                          )}
-
-                          {/* No Results */}
-                          {works.filter(
-                            (work) =>
-                              work.title
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              work.client
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              work.location
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              work.assignedTo
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()) ||
-                              work.description
-                                .toLowerCase()
-                                .includes(globalSearchTerm.toLowerCase()),
-                          ).length === 0 &&
-                            pools.filter(
+                            {/* Pools Results */}
+                            {pools.filter(
                               (pool) =>
                                 pool.name
                                   .toLowerCase()
@@ -2074,8 +1884,58 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 pool.location
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()),
-                            ).length === 0 &&
-                            maintenance.filter(
+                            ).length > 0 && (
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                                  Piscinas
+                                </h4>
+                                {pools
+                                  .filter(
+                                    (pool) =>
+                                      pool.name
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      pool.client
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      pool.location
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ),
+                                  )
+                                  .slice(0, 3)
+                                  .map((pool) => (
+                                    <button
+                                      key={pool.id}
+                                      onClick={() => {
+                                        navigateToSection("piscinas");
+                                        setGlobalSearchTerm("");
+                                      }}
+                                      className="w-full text-left p-3 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors mb-2"
+                                    >
+                                      <div className="flex items-center space-x-2">
+                                        <Waves className="h-4 w-4 text-cyan-600" />
+                                        <div>
+                                          <p className="font-medium text-gray-900">
+                                            {pool.name}
+                                          </p>
+                                          <p className="text-sm text-gray-600">
+                                            {pool.client} • {pool.location}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </button>
+                                  ))}
+                              </div>
+                            )}
+
+                            {/* Maintenance Results */}
+                            {maintenance.filter(
                               (maint) =>
                                 maint.poolName
                                   .toLowerCase()
@@ -2087,8 +1947,64 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()) ||
                                 maint.scheduledDate.includes(globalSearchTerm),
-                            ).length === 0 &&
-                            clients.filter(
+                            ).length > 0 && (
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                                  Manutenções
+                                </h4>
+                                {maintenance
+                                  .filter(
+                                    (maint) =>
+                                      maint.poolName
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      maint.type
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      maint.technician
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      maint.scheduledDate.includes(
+                                        globalSearchTerm,
+                                      ),
+                                  )
+                                  .slice(0, 3)
+                                  .map((maint) => (
+                                    <button
+                                      key={maint.id}
+                                      onClick={() => {
+                                        navigateToSection("manutencoes");
+                                        setGlobalSearchTerm("");
+                                      }}
+                                      className="w-full text-left p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors mb-2"
+                                    >
+                                      <div className="flex items-center space-x-2">
+                                        <Wrench className="h-4 w-4 text-orange-600" />
+                                        <div>
+                                          <p className="font-medium text-gray-900">
+                                            {maint.type}
+                                          </p>
+                                          <p className="text-sm text-gray-600">
+                                            {maint.poolName} •{" "}
+                                            {new Date(
+                                              maint.scheduledDate,
+                                            ).toLocaleDateString("pt-PT")}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </button>
+                                  ))}
+                              </div>
+                            )}
+
+                            {/* Clients Results */}
+                            {clients.filter(
                               (client) =>
                                 client.name
                                   .toLowerCase()
@@ -2100,339 +2016,3744 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 client.address
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()),
-                            ).length === 0 && (
-                              <div className="text-center py-8">
-                                <div className="text-gray-400 mb-2">🔍</div>
-                                <p className="text-gray-500 text-sm">
-                                  Nenhum resultado encontrado para "
-                                  {globalSearchTerm}"
-                                </p>
-                                <p className="text-gray-400 text-xs mt-1">
-                                  Tente pesquisar por cliente, obra, piscina,
-                                  data ou técnico
-                                </p>
+                            ).length > 0 && (
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                                  Clientes
+                                </h4>
+                                {clients
+                                  .filter(
+                                    (client) =>
+                                      client.name
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      client.email
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ) ||
+                                      client.phone.includes(globalSearchTerm) ||
+                                      client.address
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ),
+                                  )
+                                  .slice(0, 3)
+                                  .map((client) => (
+                                    <button
+                                      key={client.id}
+                                      onClick={() => {
+                                        navigateToSection("clientes");
+                                        setGlobalSearchTerm("");
+                                      }}
+                                      className="w-full text-left p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors mb-2"
+                                    >
+                                      <div className="flex items-center space-x-2">
+                                        <Users className="h-4 w-4 text-purple-600" />
+                                        <div>
+                                          <p className="font-medium text-gray-900">
+                                            {client.name}
+                                          </p>
+                                          <p className="text-sm text-gray-600">
+                                            {client.email} • {client.phone}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </button>
+                                  ))}
                               </div>
                             )}
-                        </>
-                      )}
+
+                            {/* No Results */}
+                            {works.filter(
+                              (work) =>
+                                work.title
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.client
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.location
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.assignedTo
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.description
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()),
+                            ).length === 0 &&
+                              pools.filter(
+                                (pool) =>
+                                  pool.name
+                                    .toLowerCase()
+                                    .includes(globalSearchTerm.toLowerCase()) ||
+                                  pool.client
+                                    .toLowerCase()
+                                    .includes(globalSearchTerm.toLowerCase()) ||
+                                  pool.location
+                                    .toLowerCase()
+                                    .includes(globalSearchTerm.toLowerCase()),
+                              ).length === 0 &&
+                              maintenance.filter(
+                                (maint) =>
+                                  maint.poolName
+                                    .toLowerCase()
+                                    .includes(globalSearchTerm.toLowerCase()) ||
+                                  maint.type
+                                    .toLowerCase()
+                                    .includes(globalSearchTerm.toLowerCase()) ||
+                                  maint.technician
+                                    .toLowerCase()
+                                    .includes(globalSearchTerm.toLowerCase()) ||
+                                  maint.scheduledDate.includes(
+                                    globalSearchTerm,
+                                  ),
+                              ).length === 0 &&
+                              clients.filter(
+                                (client) =>
+                                  client.name
+                                    .toLowerCase()
+                                    .includes(globalSearchTerm.toLowerCase()) ||
+                                  client.email
+                                    .toLowerCase()
+                                    .includes(globalSearchTerm.toLowerCase()) ||
+                                  client.phone.includes(globalSearchTerm) ||
+                                  client.address
+                                    .toLowerCase()
+                                    .includes(globalSearchTerm.toLowerCase()),
+                              ).length === 0 && (
+                                <div className="text-center py-8">
+                                  <div className="text-gray-400 mb-2">🔍</div>
+                                  <p className="text-gray-500 text-sm">
+                                    Nenhum resultado encontrado para "
+                                    {globalSearchTerm}"
+                                  </p>
+                                  <p className="text-gray-400 text-xs mt-1">
+                                    Tente pesquisar por cliente, obra, piscina,
+                                    data ou técnico
+                                  </p>
+                                </div>
+                              )}
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+
+        case "piscinas":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Waves className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                          Piscinas
+                        </h1>
+                        <p className="text-gray-600 text-sm">
+                          Gestão de piscinas no sistema
+                        </p>
+                      </div>
                     </div>
+                    {hasPermission("piscinas", "create") && (
+                      <button
+                        onClick={() => setActiveSection("nova-piscina")}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                      >
+                        <Plus className="h-4 w-4" />
+                        <span>Nova Piscina</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Submenu */}
+                <div className="bg-white rounded-lg shadow-sm p-1">
+                  <div className="grid grid-cols-3 gap-1">
+                    <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
+                      Piscinas
+                    </button>
+                    <button
+                      onClick={() => setActiveSection("manutencoes")}
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                    >
+                      Manutenções
+                    </button>
+                    <button
+                      onClick={() => setActiveSection("futuras-manutencoes")}
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                    >
+                      Futuras Manutenções
+                    </button>
+                  </div>
+                </div>
+
+                {/* Search and Filters */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex space-x-3">
+                    <input
+                      type="text"
+                      placeholder="Pesquisar piscinas..."
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>Todos os estados</option>
+                      <option>Ativa</option>
+                      <option>Inativa</option>
+                      <option>Em Manutenção</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Pools List */}
+                <div className="space-y-4">
+                  {pools.length === 0 ? (
+                    <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                      <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <Waves className="h-8 w-8 text-gray-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        Nenhuma piscina registada
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-4">
+                        Comece por adicionar a primeira piscina ao sistema
+                      </p>
+                      <button
+                        onClick={() => setActiveSection("nova-piscina")}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
+                      >
+                        <Plus className="h-4 w-4" />
+                        <span>Adicionar Piscina</span>
+                      </button>
+                    </div>
+                  ) : (
+                    pools.map((pool) => (
+                      <div
+                        key={pool.id}
+                        className="bg-white rounded-lg shadow-sm p-6"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {pool.name}
+                            </h3>
+                            <button
+                              onClick={() => handleAddressClick(pool.location)}
+                              className={`text-left ${
+                                enableMapsRedirect
+                                  ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                  : "text-gray-600"
+                              }`}
+                              disabled={!enableMapsRedirect}
+                            >
+                              📍 {pool.location}
+                            </button>
+                            <div className="flex items-center space-x-4 mt-2">
+                              <span className="text-sm text-gray-500">
+                                Cliente: {pool.client}
+                              </span>
+                              <span className="text-sm text-gray-500">
+                                Tipo: {pool.type}
+                              </span>
+                              <span
+                                className={`text-sm px-2 py-1 rounded-full ${
+                                  pool.status === "Ativa"
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {pool.status}
+                              </span>
+                            </div>
+                            {pool.nextMaintenance && (
+                              <p className="text-sm text-blue-600 mt-1">
+                                Próxima manutenção:{" "}
+                                {new Date(
+                                  pool.nextMaintenance,
+                                ).toLocaleDateString("pt-PT")}
+                              </p>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {hasPermission("piscinas", "edit") && (
+                              <button
+                                onClick={() => {
+                                  setEditingPool(pool);
+                                  setActiveSection("editar-piscina");
+                                }}
+                                className="p-2 text-gray-400 hover:text-gray-600"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                            )}
+                            {hasPermission("piscinas", "delete") && (
+                              <button
+                                onClick={() =>
+                                  confirmDelete(
+                                    `Tem a certeza que deseja apagar a piscina "${pool.name}"?`,
+                                    () => dataSync.deletePool(pool.id),
+                                  )
+                                }
+                                className="p-2 text-gray-400 hover:text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
                   )}
                 </div>
               </div>
             </div>
-          </div>
-        );
+          );
 
-      case "piscinas":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between">
+        case "manutencoes":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Wrench className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                          Manutenções
+                        </h1>
+                        <p className="text-gray-600 text-sm">
+                          Histórico de manutenç��es realizadas
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setActiveSection("nova-manutencao")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Nova Manutenção</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Submenu */}
+                <div className="bg-white rounded-lg shadow-sm p-1">
+                  <div className="grid grid-cols-3 gap-1">
+                    <button
+                      onClick={() => setActiveSection("piscinas")}
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                    >
+                      Piscinas
+                    </button>
+                    <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
+                      Manutenções
+                    </button>
+                    <button
+                      onClick={() => setActiveSection("futuras-manutencoes")}
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                    >
+                      Futuras Manuten��ões
+                    </button>
+                  </div>
+                </div>
+
+                {/* Filtros */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input
+                      type="text"
+                      placeholder="Pesquisar manutenções..."
+                      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>Todas as piscinas</option>
+                    </select>
+                    <input
+                      type="month"
+                      defaultValue="2025-01"
+                      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Lista de Manutenções */}
+                <div className="space-y-4">
+                  {maintenance.length === 0 ? (
+                    <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                      <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <Wrench className="h-8 w-8 text-gray-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        Nenhuma manutenção registada
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        As manutenções aparecerão aqui quando forem criadas
+                      </p>
+                    </div>
+                  ) : (
+                    maintenance.map((maint) => (
+                      <div
+                        key={maint.id}
+                        className="bg-white rounded-lg shadow-sm p-6"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {maint.poolName} - {maint.type}
+                              </h3>
+                              <span
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                  maint.status === "scheduled"
+                                    ? "bg-blue-100 text-blue-700"
+                                    : maint.status === "in_progress"
+                                      ? "bg-orange-100 text-orange-700"
+                                      : maint.status === "completed"
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-gray-100 text-gray-700"
+                                }`}
+                              >
+                                {maint.status === "scheduled"
+                                  ? "Agendado"
+                                  : maint.status === "in_progress"
+                                    ? "Em Progresso"
+                                    : maint.status === "completed"
+                                      ? "Concluído"
+                                      : maint.status}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
+                              <div>
+                                <span className="font-medium">Data:</span>{" "}
+                                {new Date(
+                                  maint.scheduledDate,
+                                ).toLocaleDateString("pt-PT")}
+                              </div>
+                              <div>
+                                <span className="font-medium">Técnico:</span>{" "}
+                                {maint.technician}
+                              </div>
+                              {maint.clientName && (
+                                <div>
+                                  <span className="font-medium">Cliente:</span>{" "}
+                                  {maint.clientName}
+                                  {maint.clientContact && (
+                                    <div className="mt-1">
+                                      <button
+                                        onClick={() =>
+                                          handlePhoneClick(maint.clientContact)
+                                        }
+                                        className={`text-xs ${
+                                          enablePhoneDialer
+                                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                            : "text-gray-500"
+                                        }`}
+                                        disabled={!enablePhoneDialer}
+                                      >
+                                        📞 {maint.clientContact}
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                              {maint.location && (
+                                <div>
+                                  <span className="font-medium">Local:</span>{" "}
+                                  <button
+                                    onClick={() =>
+                                      handleAddressClick(maint.location)
+                                    }
+                                    className={`text-xs ${
+                                      enableMapsRedirect
+                                        ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                        : "text-gray-500"
+                                    }`}
+                                    disabled={!enableMapsRedirect}
+                                  >
+                                    📍 {maint.location}
+                                  </button>
+                                </div>
+                              )}
+                              {maint.observations && (
+                                <div className="col-span-2">
+                                  <span className="font-medium">
+                                    Observações:
+                                  </span>{" "}
+                                  {maint.observations}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {hasPermission("manutencoes", "edit") && (
+                              <button
+                                onClick={() => {
+                                  setEditingMaintenance(maint);
+                                  setActiveSection("editar-manutencao");
+                                }}
+                                className="p-2 text-gray-400 hover:text-gray-600"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                            )}
+                            {hasPermission("manutencoes", "delete") && (
+                              <button
+                                onClick={() =>
+                                  confirmDelete(
+                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    () => dataSync.deleteMaintenance(maint.id),
+                                  )
+                                }
+                                className="p-2 text-gray-400 hover:text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+
+        case "futuras-manutencoes":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <BarChart3 className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                          Futuras Manutenç��es
+                        </h1>
+                        <p className="text-gray-600 text-sm">
+                          Manutenções agendadas e programadas
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setActiveSection("nova-manutencao")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Agendar Manutenção</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Submenu */}
+                <div className="bg-white rounded-lg shadow-sm p-1">
+                  <div className="grid grid-cols-3 gap-1">
+                    <button
+                      onClick={() => setActiveSection("piscinas")}
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                    >
+                      Piscinas
+                    </button>
+                    <button
+                      onClick={() => setActiveSection("manutencoes")}
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                    >
+                      Manutenções
+                    </button>
+                    <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
+                      Futuras Manuten��ões
+                    </button>
+                  </div>
+                </div>
+
+                {/* Future Maintenance List */}
+                <div className="space-y-4">
+                  {futureMaintenance.length === 0 ? (
+                    <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                      <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <BarChart3 className="h-8 w-8 text-gray-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        Nenhuma manutenção agendada
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-4">
+                        As futuras manuten����ões aparecerão aqui quando forem
+                        agendadas
+                      </p>
+                      <button
+                        onClick={() => setActiveSection("nova-manutencao")}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
+                      >
+                        <Plus className="h-4 w-4" />
+                        <span>Agendar Manuten���ão</span>
+                      </button>
+                    </div>
+                  ) : (
+                    futureMaintenance.map((maint) => (
+                      <div
+                        key={maint.id}
+                        className="bg-white rounded-lg shadow-sm p-6"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {maint.poolName}
+                              </h3>
+                              <span
+                                className={`text-xs px-2 py-1 rounded-full ${
+                                  maint.status === "pending"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : maint.status === "in_progress"
+                                      ? "bg-blue-100 text-blue-800"
+                                      : "bg-green-100 text-green-800"
+                                }`}
+                              >
+                                {maint.status === "pending"
+                                  ? "Agendado"
+                                  : maint.status === "in_progress"
+                                    ? "Em Progresso"
+                                    : "Concluído"}
+                              </span>
+                            </div>
+                            <p className="text-gray-600 mb-1">{maint.type}</p>
+                            <p className="text-sm text-gray-500 mb-2">
+                              {maint.description}
+                            </p>
+                            <div className="flex items-center space-x-4 text-sm">
+                              <span className="text-blue-600">
+                                ������{" "}
+                                {new Date(
+                                  maint.scheduledDate,
+                                ).toLocaleDateString("pt-PT")}
+                              </span>
+                              <span className="text-gray-500">
+                                👨‍🔧 {maint.technician}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {hasPermission("manutencoes", "edit") && (
+                              <button
+                                onClick={() => {
+                                  setEditingMaintenance(maint);
+                                  setActiveSection("editar-manutencao");
+                                }}
+                                className="p-2 text-gray-400 hover:text-gray-600"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                            )}
+                            {hasPermission("manutencoes", "delete") && (
+                              <button
+                                onClick={() =>
+                                  confirmDelete(
+                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    () => dataSync.deleteMaintenance(maint.id),
+                                  )
+                                }
+                                className="p-2 text-gray-400 hover:text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+
+        case "nova-obra":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Nova Obra
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Criar uma nova obra no sistema Leirisonda
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Form */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <form className="space-y-8">
+                    {/* Informa��ões Básicas */}
+                    <div>
+                      <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Building2 className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Informações Básicas
+                        </h3>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Folha de Obra *
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="LS-2025-163"
+                            defaultValue={`LS-${new Date().getFullYear()}-${Math.floor(
+                              Math.random() * 1000,
+                            )
+                              .toString()
+                              .padStart(3, "0")}`}
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Tipo de Trabalho *
+                          </label>
+                          <select
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            onChange={(e) =>
+                              setSelectedWorkType(e.target.value)
+                            }
+                            value={selectedWorkType}
+                          >
+                            <option value="">Selecionar tipo</option>
+                            <option value="piscina">Piscina</option>
+                            <option value="manutencao">Manutenção</option>
+                            <option value="instalacao">Instala��ão</option>
+                            <option value="reparacao">Reparação</option>
+                            <option value="limpeza">Limpeza</option>
+                            <option value="furo">Furo de Água</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Nome do Cliente *
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Ex: João Silva"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Contacto *
+                          </label>
+                          <input
+                            type="tel"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Ex: 244 123 456"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Morada *
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Ex: Rua das Flores, 123, Leiria"
+                            required
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Hora de Entrada *
+                            </label>
+                            <input
+                              type="datetime-local"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              defaultValue={new Date()
+                                .toISOString()
+                                .slice(0, 16)}
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Hora de Saída
+                            </label>
+                            <input
+                              type="datetime-local"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Deixe vazio se ainda não terminou"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">
+                              Deixe vazio se ainda não terminou
+                            </p>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Estado da Obra *
+                          </label>
+                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="pendente">Pendente</option>
+                            <option value="em-progresso">Em Progresso</option>
+                            <option value="concluida">Concluída</option>
+                            <option value="cancelada">Cancelada</option>
+                          </select>
+                        </div>
+
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id="folha-preenchida"
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <label
+                            htmlFor="folha-preenchida"
+                            className="ml-2 text-sm text-gray-700"
+                          >
+                            Folha de obra preenchida/feita
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Viaturas e Técnicos */}
+                    <div>
+                      <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Users className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Viaturas e Técnicos
+                        </h3>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Viaturas Utilizadas
+                          </label>
+                          <div className="flex space-x-2">
+                            <input
+                              type="text"
+                              value={currentVehicle}
+                              onChange={(e) =>
+                                setCurrentVehicle(e.target.value)
+                              }
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: Carrinha Leirisonda 1"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (
+                                  currentVehicle.trim() &&
+                                  !workVehicles.includes(currentVehicle.trim())
+                                ) {
+                                  setWorkVehicles([
+                                    ...workVehicles,
+                                    currentVehicle.trim(),
+                                  ]);
+                                  setCurrentVehicle("");
+                                }
+                              }}
+                              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            >
+                              Adicionar
+                            </button>
+                          </div>
+                          {workVehicles.length > 0 && (
+                            <div className="mt-2 space-y-1">
+                              {workVehicles.map((vehicle, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
+                                >
+                                  <span className="text-sm text-gray-700">
+                                    {vehicle}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setWorkVehicles(
+                                        workVehicles.filter(
+                                          (_, i) => i !== index,
+                                        ),
+                                      )
+                                    }
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Técnicos
+                          </label>
+                          <div className="flex space-x-2">
+                            <input
+                              type="text"
+                              value={currentTechnician}
+                              onChange={(e) =>
+                                setCurrentTechnician(e.target.value)
+                              }
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: João Santos"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (
+                                  currentTechnician.trim() &&
+                                  !workTechnicians.includes(
+                                    currentTechnician.trim(),
+                                  )
+                                ) {
+                                  setWorkTechnicians([
+                                    ...workTechnicians,
+                                    currentTechnician.trim(),
+                                  ]);
+                                  setCurrentTechnician("");
+                                }
+                              }}
+                              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            >
+                              Adicionar
+                            </button>
+                          </div>
+                          {workTechnicians.length > 0 && (
+                            <div className="mt-2 space-y-1">
+                              {workTechnicians.map((technician, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
+                                >
+                                  <span className="text-sm text-gray-700">
+                                    {technician}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setWorkTechnicians(
+                                        workTechnicians.filter(
+                                          (_, i) => i !== index,
+                                        ),
+                                      )
+                                    }
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Usu��rios Atribuídos
+                          </label>
+                          <p className="text-sm text-gray-600 mb-2">
+                            Selecione os usuários responsáveis por esta obra
+                          </p>
+                          <select
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-label="Usu��rios Atribu��dos"
+                          >
+                            <option value="">Selecionar usuário...</option>
+                            {users
+                              .filter((user) => user.role !== "viewer")
+                              .map((user) => (
+                                <option key={user.id} value={user.id}>
+                                  {user.name}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Detalhes do Furo de Água - Conditional */}
+                    {selectedWorkType === "furo" && (
+                      <div>
+                        <div className="flex items-center space-x-3 mb-6">
+                          <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
+                            <Waves className="h-4 w-4 text-cyan-600" />
+                          </div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            Detalhes do Furo de Água
+                          </h3>
+                        </div>
+
+                        <div className="space-y-6">
+                          {/* Medições do Furo */}
+                          <div>
+                            <h4 className="text-md font-medium text-gray-900 mb-4">
+                              Medições do Furo
+                            </h4>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Profundidade do Furo (m) *
+                                </label>
+                                <input
+                                  type="number"
+                                  step="0.1"
+                                  min="0"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  placeholder="Ex: 120.5"
+                                  required
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  N��vel da Água (m) *
+                                </label>
+                                <input
+                                  type="number"
+                                  step="0.1"
+                                  min="0"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  placeholder="Ex: 15.2"
+                                  required
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Profundidade da Bomba (m) *
+                                </label>
+                                <input
+                                  type="number"
+                                  step="0.1"
+                                  min="0"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  placeholder="Ex: 80.0"
+                                  required
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Capacidade e Coluna */}
+                          <div>
+                            <h4 className="text-md font-medium text-gray-900 mb-4">
+                              Capacidade e Coluna
+                            </h4>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Caudal do Furo (m³/h) *
+                                </label>
+                                <input
+                                  type="number"
+                                  step="0.1"
+                                  min="0"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  placeholder="Ex: 5.5"
+                                  required
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Tipo de Coluna *
+                                </label>
+                                <select
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  required
+                                >
+                                  <option value="">Selecionar tipo</option>
+                                  <option value="PEAD">PEAD</option>
+                                  <option value="HIDROROSCADO">
+                                    HIDROROSCADO
+                                  </option>
+                                </select>
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Di��metro da Coluna *
+                                </label>
+                                <select
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  required
+                                >
+                                  <option value="">Selecionar diâmetro</option>
+                                  <option value="1">1 polegada</option>
+                                  <option value="1.25">1¼ polegadas</option>
+                                  <option value="1.5">1½ polegadas</option>
+                                  <option value="2">2 polegadas</option>
+                                  <option value="2.5">2½ polegadas</option>
+                                  <option value="3">3 polegadas</option>
+                                  <option value="4">4 polegadas</option>
+                                  <option value="5">5 polegadas</option>
+                                  <option value="6">6 polegadas</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Detalhes da Bomba */}
+                          <div>
+                            <h4 className="text-md font-medium text-gray-900 mb-4">
+                              Detalhes da Bomba
+                            </h4>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Modelo da Bomba Instalada *
+                                </label>
+                                <input
+                                  type="text"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  placeholder="Ex: Grundfos SQ3-105"
+                                  required
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Potência do Motor (HP) *
+                                </label>
+                                <select
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  required
+                                >
+                                  <option value="">Selecionar potência</option>
+                                  <option value="0.5">0.5 HP</option>
+                                  <option value="0.75">0.75 HP</option>
+                                  <option value="1">1 HP</option>
+                                  <option value="1.5">1.5 HP</option>
+                                  <option value="2">2 HP</option>
+                                  <option value="3">3 HP</option>
+                                  <option value="5">5 HP</option>
+                                  <option value="7.5">7.5 HP</option>
+                                  <option value="10">10 HP</option>
+                                  <option value="15">15 HP</option>
+                                  <option value="20">20 HP</option>
+                                </select>
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Voltagem da Bomba *
+                                </label>
+                                <select
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  required
+                                >
+                                  <option value="">Selecionar voltagem</option>
+                                  <option value="230V">
+                                    230V (monofásico)
+                                  </option>
+                                  <option value="400V">400V (trifásico)</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Observaç��es Específicas do Furo */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Observações Específicas do Furo
+                            </label>
+                            <textarea
+                              rows={3}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                              placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Observa����es e Trabalho */}
+                    <div>
+                      <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Building2 className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Observações e Trabalho
+                        </h3>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Observações
+                          </label>
+                          <textarea
+                            rows={3}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Observa����ões sobre a obra..."
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Trabalho Realizado
+                          </label>
+                          <textarea
+                            rows={4}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Descrição do trabalho realizado..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Fotografias da Obra */}
+                    <div>
+                      <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Eye className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Fotografias da Obra
+                        </h3>
+                      </div>
+
+                      {/* Upload Area */}
+                      <div
+                        className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors"
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                      >
+                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                          <Plus className="h-6 w-6 text-gray-400" />
+                        </div>
+                        <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                          Carregar Fotografias
+                        </h4>
+                        <p className="text-gray-600 text-sm mb-4">
+                          Arraste e solte ou clique para selecionar
+                        </p>
+                        <p className="text-gray-500 text-xs mb-4">
+                          {uploadedPhotos.length}/20 fotografias
+                        </p>
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={handlePhotoUpload}
+                          className="hidden"
+                          id="photo-upload"
+                        />
+                        <label
+                          htmlFor="photo-upload"
+                          className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2 mx-auto cursor-pointer"
+                        >
+                          <Eye className="h-4 w-4" />
+                          <span>Escolher Fotografias</span>
+                        </label>
+                      </div>
+
+                      {/* Photo Preview Grid */}
+                      {uploadedPhotos.length > 0 && (
+                        <div className="mt-6">
+                          <div className="flex items-center justify-between mb-4">
+                            <h5 className="font-medium text-gray-900">
+                              Fotografias Carregadas ({uploadedPhotos.length})
+                            </h5>
+                            <button
+                              type="button"
+                              onClick={clearAllPhotos}
+                              className="text-red-600 hover:text-red-800 text-sm"
+                            >
+                              Limpar Todas
+                            </button>
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {uploadedPhotos.map((photo) => (
+                              <div key={photo.id} className="relative group">
+                                <img
+                                  src={photo.data}
+                                  alt={photo.name}
+                                  className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removePhoto(photo.id)}
+                                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                                <p className="text-xs text-gray-500 mt-1 truncate">
+                                  {photo.name}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection("dashboard")}
+                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="submit"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const form = e.target.closest("form");
+
+                          // Extract all form data
+                          const workTitle =
+                            form.querySelector('input[placeholder*="LS-"]')
+                              ?.value || "Nova Obra";
+                          const workType =
+                            form.querySelector('select[name="workType"]')
+                              ?.value || selectedWorkType;
+                          const client =
+                            form.querySelector('input[placeholder*="Cliente"]')
+                              ?.value || "";
+                          const contact =
+                            form.querySelector('input[placeholder*="Contacto"]')
+                              ?.value || "";
+                          const location =
+                            form.querySelector('input[placeholder*="Morada"]')
+                              ?.value || "";
+                          const startTime =
+                            form.querySelector('input[placeholder*="Entrada"]')
+                              ?.value || "";
+                          const endTime =
+                            form.querySelector('input[placeholder*="Saída"]')
+                              ?.value || "";
+                          const status =
+                            form.querySelector('select[name="status"]')
+                              ?.value || "pending";
+                          const responsibleUser = form.querySelector(
+                            'select[aria-label="Usuários Atribuídos"]',
+                          );
+                          const selectedUserId = responsibleUser?.value || null;
+
+                          // Create complete work data object
+                          const workData = {
+                            id: Date.now(),
+                            title: workTitle,
+                            type: workType,
+                            client: client,
+                            contact: contact,
+                            location: location,
+                            startTime: startTime,
+                            endTime: endTime,
+                            status: status,
+                            assignedTo: selectedUserId
+                              ? users.find((u) => u.id == selectedUserId)?.name
+                              : "",
+                            assignedUserId: selectedUserId,
+                            vehicles: workVehicles,
+                            technicians: workTechnicians,
+                            photos: uploadedPhotos,
+                            photoCount: uploadedPhotos.length,
+                            createdAt: new Date().toISOString(),
+                            startDate: new Date().toISOString(),
+                          };
+
+                          // Use sync system to add work (will handle Firebase and localStorage)
+                          addWork(workData);
+
+                          // Send notification if user assigned
+                          if (selectedUserId) {
+                            const selectedUser = users.find(
+                              (u) => u.id == selectedUserId,
+                            );
+                            if (selectedUser) {
+                              sendWorkAssignmentNotification(
+                                workTitle,
+                                selectedUser.name,
+                              );
+                            }
+                          }
+
+                          // Save water bore data if work type is "furo"
+                          if (selectedWorkType === "furo") {
+                            const waterBoreData = {
+                              id: Date.now(),
+                              workTitle: workTitle,
+                              date: new Date().toISOString(),
+                              photos: uploadedPhotos,
+                              photoCount: uploadedPhotos.length,
+                              workType: "furo",
+                            };
+
+                            const savedWaterBores = JSON.parse(
+                              localStorage.getItem("waterBores") || "[]",
+                            );
+                            savedWaterBores.push(waterBoreData);
+                            localStorage.setItem(
+                              "waterBores",
+                              JSON.stringify(savedWaterBores),
+                            );
+                          }
+
+                          alert(
+                            `Obra "${workTitle}" criada com sucesso! ` +
+                              (selectedUserId
+                                ? "Notificação enviada ao responsável."
+                                : "") +
+                              (selectedWorkType === "furo"
+                                ? " Dados do furo registados."
+                                : ""),
+                          );
+
+                          // Clear form data
+                          setSelectedWorkType("");
+                          setUploadedPhotos([]);
+                          setWorkVehicles([]);
+                          setWorkTechnicians([]);
+                          setCurrentVehicle("");
+                          setCurrentTechnician("");
+                          setActiveSection("dashboard");
+                        }}
+                        className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+                      >
+                        <Building2 className="h-4 w-4" />
+                        <span>Criar Obra</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          );
+        case "nova-piscina":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                       <Waves className="h-4 w-4 text-blue-600" />
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Piscinas
+                        Nova Piscina
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Gestão de piscinas no sistema
+                        Registar uma nova piscina no sistema
                       </p>
                     </div>
                   </div>
-                  {hasPermission("piscinas", "create") && (
-                    <button
-                      onClick={() => setActiveSection("nova-piscina")}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      <span>Nova Piscina</span>
-                    </button>
-                  )}
                 </div>
-              </div>
 
-              {/* Submenu */}
-              <div className="bg-white rounded-lg shadow-sm p-1">
-                <div className="grid grid-cols-3 gap-1">
-                  <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                    Piscinas
-                  </button>
-                  <button
-                    onClick={() => setActiveSection("manutencoes")}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
-                  >
-                    Manutenções
-                  </button>
-                  <button
-                    onClick={() => setActiveSection("futuras-manutencoes")}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
-                  >
-                    Futuras Manutenções
-                  </button>
-                </div>
-              </div>
-
-              {/* Search and Filters */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex space-x-3">
-                  <input
-                    type="text"
-                    placeholder="Pesquisar piscinas..."
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Todos os estados</option>
-                    <option>Ativa</option>
-                    <option>Inativa</option>
-                    <option>Em Manutenção</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Pools List */}
-              <div className="space-y-4">
-                {pools.length === 0 ? (
-                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <Waves className="h-8 w-8 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Nenhuma piscina registada
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4">
-                      Comece por adicionar a primeira piscina ao sistema
-                    </p>
-                    <button
-                      onClick={() => setActiveSection("nova-piscina")}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
-                    >
-                      <Plus className="h-4 w-4" />
-                      <span>Adicionar Piscina</span>
-                    </button>
-                  </div>
-                ) : (
-                  pools.map((pool) => (
-                    <div
-                      key={pool.id}
-                      className="bg-white rounded-lg shadow-sm p-6"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {pool.name}
-                          </h3>
-                          <button
-                            onClick={() => handleAddressClick(pool.location)}
-                            className={`text-left ${
-                              enableMapsRedirect
-                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                : "text-gray-600"
-                            }`}
-                            disabled={!enableMapsRedirect}
-                          >
-                            📍 {pool.location}
-                          </button>
-                          <div className="flex items-center space-x-4 mt-2">
-                            <span className="text-sm text-gray-500">
-                              Cliente: {pool.client}
-                            </span>
-                            <span className="text-sm text-gray-500">
-                              Tipo: {pool.type}
-                            </span>
-                            <span
-                              className={`text-sm px-2 py-1 rounded-full ${
-                                pool.status === "Ativa"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-gray-100 text-gray-800"
-                              }`}
-                            >
-                              {pool.status}
-                            </span>
-                          </div>
-                          {pool.nextMaintenance && (
-                            <p className="text-sm text-blue-600 mt-1">
-                              Próxima manutenção:{" "}
-                              {new Date(
-                                pool.nextMaintenance,
-                              ).toLocaleDateString("pt-PT")}
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {hasPermission("piscinas", "edit") && (
-                            <button
-                              onClick={() => {
-                                setEditingPool(pool);
-                                setActiveSection("editar-piscina");
-                              }}
-                              className="p-2 text-gray-400 hover:text-gray-600"
-                            >
-                              <Edit2 className="h-4 w-4" />
-                            </button>
-                          )}
-                          {hasPermission("piscinas", "delete") && (
-                            <button
-                              onClick={() =>
-                                confirmDelete(
-                                  `Tem a certeza que deseja apagar a piscina "${pool.name}"?`,
-                                  () => dataSync.deletePool(pool.id),
-                                )
-                              }
-                              className="p-2 text-gray-400 hover:text-red-600"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          )}
-                        </div>
+                {/* Form */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <form className="space-y-6">
+                    {/* Basic Information */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Nome da Piscina *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ex: Piscina Villa Marina"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Cliente Proprietário *
+                        </label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onChange={(e) => {
+                            if (e.target.value === "novo") {
+                              setShowNewClientForm(true);
+                            }
+                          }}
+                        >
+                          <option value="">Selecionar cliente</option>
+                          {clients.map((client) => (
+                            <option key={client.id} value={client.id}>
+                              {client.name}
+                            </option>
+                          ))}
+                          <option value="novo">+ Adicionar Novo Cliente</option>
+                        </select>
                       </div>
                     </div>
-                  ))
-                )}
+
+                    {/* New Client Form */}
+                    {showNewClientForm && (
+                      <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-medium text-gray-900">
+                            Novo Cliente
+                          </h3>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowNewClientForm(false);
+                              setNewClientForm({
+                                name: "",
+                                email: "",
+                                phone: "",
+                                address: "",
+                              });
+                            }}
+                            className="text-gray-400 hover:text-gray-600"
+                          >
+                            <X className="h-5 w-5" />
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Nome Completo *
+                            </label>
+                            <input
+                              type="text"
+                              value={newClientForm.name}
+                              onChange={(e) =>
+                                setNewClientForm({
+                                  ...newClientForm,
+                                  name: e.target.value,
+                                })
+                              }
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Nome do cliente"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Email
+                            </label>
+                            <input
+                              type="email"
+                              value={newClientForm.email}
+                              onChange={(e) =>
+                                setNewClientForm({
+                                  ...newClientForm,
+                                  email: e.target.value,
+                                })
+                              }
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="email@exemplo.com"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Telefone
+                            </label>
+                            <input
+                              type="tel"
+                              value={newClientForm.phone}
+                              onChange={(e) =>
+                                setNewClientForm({
+                                  ...newClientForm,
+                                  phone: e.target.value,
+                                })
+                              }
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="+351 XXX XXX XXX"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Morada
+                            </label>
+                            <input
+                              type="text"
+                              value={newClientForm.address}
+                              onChange={(e) =>
+                                setNewClientForm({
+                                  ...newClientForm,
+                                  address: e.target.value,
+                                })
+                              }
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Morada completa"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-end space-x-3 mt-4">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowNewClientForm(false);
+                              setNewClientForm({
+                                name: "",
+                                email: "",
+                                phone: "",
+                                address: "",
+                              });
+                            }}
+                            className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (newClientForm.name.trim()) {
+                                // Add client to the system
+                                const newClient = {
+                                  name: newClientForm.name,
+                                  email: newClientForm.email,
+                                  phone: newClientForm.phone,
+                                  address: newClientForm.address,
+                                  pools: [],
+                                };
+                                dataSync.addClient(newClient);
+
+                                // Reset form and close
+                                setNewClientForm({
+                                  name: "",
+                                  email: "",
+                                  phone: "",
+                                  address: "",
+                                });
+                                setShowNewClientForm(false);
+
+                                // Show success message
+                                alert(
+                                  `Cliente "${newClient.name}" adicionado com sucesso!`,
+                                );
+                              } else {
+                                alert(
+                                  "Por favor, preencha pelo menos o nome do cliente.",
+                                );
+                              }
+                            }}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                          >
+                            Guardar Cliente
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Location */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Localização Completa *
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Cascais, Villa Marina Resort, Edifício A, Apartamento 205"
+                        required
+                      />
+                    </div>
+
+                    {/* Pool Specifications */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tipo de Piscina *
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option value="">Selecionar tipo</option>
+                          <option value="residencial">Residencial</option>
+                          <option value="comercial">Comercial</option>
+                          <option value="hotel">Hotel/Resort</option>
+                          <option value="condominio">Condomínio</option>
+                          <option value="spa">SPA/Wellness</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Formato
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option value="retangular">Retangular</option>
+                          <option value="oval">Oval</option>
+                          <option value="redonda">Redonda</option>
+                          <option value="kidney">Kidney</option>
+                          <option value="irregular">Irregular</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Estado Atual
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option value="ativa">Ativa</option>
+                          <option value="inativa">Inativa</option>
+                          <option value="manutencao">Em Manutenção</option>
+                          <option value="construcao">Em Construção</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Dimensions */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Comprimento (m)
+                        </label>
+                        <input
+                          type="number"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="8.0"
+                          min="0"
+                          step="0.1"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Largura (m)
+                        </label>
+                        <input
+                          type="number"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="4.0"
+                          min="0"
+                          step="0.1"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Profundidade Min (m)
+                        </label>
+                        <input
+                          type="number"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="1.2"
+                          min="0"
+                          step="0.1"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Profundidade Max (m)
+                        </label>
+                        <input
+                          type="number"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="2.0"
+                          min="0"
+                          step="0.1"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Equipment and Features */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Sistema de Filtração
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option value="">Selecionar sistema</option>
+                          <option value="areia">Filtro de Areia</option>
+                          <option value="cartucho">Filtro de Cartucho</option>
+                          <option value="diatomaceas">Terra Diatomáceas</option>
+                          <option value="uv">Sistema UV</option>
+                          <option value="sal">Eletrólise de Sal</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Aquecimento
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option value="nao">Sem Aquecimento</option>
+                          <option value="solar">Aquecimento Solar</option>
+                          <option value="bomba-calor">Bomba de Calor</option>
+                          <option value="resistencia">
+                            Resistência El��trica
+                          </option>
+                          <option value="gas">Aquecimento a G����s</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Maintenance Schedule */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Frequ���ncia de Manutenção
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option value="semanal">Semanal</option>
+                          <option value="quinzenal">Quinzenal</option>
+                          <option value="mensal">Mensal</option>
+                          <option value="trimestral">Trimestral</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Próxima Manuten��ão
+                        </label>
+                        <input
+                          type="date"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Additional Information */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Observações e Características Especiais
+                      </label>
+                      <textarea
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Características especiais, equipamentos adicionais, notas importantes..."
+                      />
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection("piscinas")}
+                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="submit"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const form = e.target.closest("form");
+                          const formData = new FormData(form);
+
+                          // Collect all form data
+                          const poolData = {
+                            id: Date.now(),
+                            name:
+                              form.querySelector('input[placeholder*="Nome"]')
+                                ?.value || "Nova Piscina",
+                            client:
+                              form.querySelector(
+                                'input[placeholder*="Cliente"]',
+                              )?.value || "Cliente",
+                            location:
+                              form.querySelector('input[placeholder*="Morada"]')
+                                ?.value || "",
+                            contact:
+                              form.querySelector(
+                                'input[placeholder*="Contacto"]',
+                              )?.value || "",
+                            type:
+                              form.querySelector("select").value ||
+                              "residencial",
+                            status: "Ativa",
+                            createdAt: new Date().toISOString(),
+                            nextMaintenance:
+                              form.querySelector('input[type="date"]')?.value ||
+                              null,
+                          };
+
+                          // Use sync system to add pool (will handle Firebase and localStorage)
+                          addPool(poolData);
+
+                          alert(
+                            `Piscina "${poolData.name}" criada com sucesso!`,
+                          );
+                          setActiveSection("piscinas");
+                        }}
+                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                      >
+                        <Save className="h-4 w-4" />
+                        <span>Criar Piscina</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
-        );
+          );
 
-      case "manutencoes":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between">
+        case "nova-manutencao":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Wrench className="h-4 w-4 text-blue-600" />
+                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <Wrench className="h-4 w-4 text-green-600" />
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Manutenções
+                        Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Histórico de manutenç��es realizadas
+                        Registar interven��ão de manutenç�����o
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setActiveSection("nova-manutencao")}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>Nova Manutenção</span>
-                  </button>
                 </div>
-              </div>
 
-              {/* Submenu */}
-              <div className="bg-white rounded-lg shadow-sm p-1">
-                <div className="grid grid-cols-3 gap-1">
-                  <button
-                    onClick={() => setActiveSection("piscinas")}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
-                  >
-                    Piscinas
-                  </button>
-                  <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                    Manutenções
-                  </button>
-                  <button
-                    onClick={() => setActiveSection("futuras-manutencoes")}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
-                  >
-                    Futuras Manuten��ões
-                  </button>
-                </div>
-              </div>
-
-              {/* Filtros */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <input
-                    type="text"
-                    placeholder="Pesquisar manutenções..."
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Todas as piscinas</option>
-                  </select>
-                  <input
-                    type="month"
-                    defaultValue="2025-01"
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-
-              {/* Lista de Manutenções */}
-              <div className="space-y-4">
-                {maintenance.length === 0 ? (
-                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <Wrench className="h-8 w-8 text-gray-400" />
+                {/* Form */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <form className="space-y-8">
+                    {/* Pool Selection */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Piscina *
+                        </label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          value={maintenanceForm.poolId}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              poolId: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="">Selecionar piscina</option>
+                          {pools.map((pool) => (
+                            <option key={pool.id} value={pool.id}>
+                              {pool.name} - {pool.client}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Data da Interven��ão *
+                        </label>
+                        <input
+                          type="date"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          value={maintenanceForm.date}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              date: e.target.value,
+                            })
+                          }
+                          required
+                        />
+                      </div>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Nenhuma manutenção registada
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      As manutenções aparecerão aqui quando forem criadas
-                    </p>
-                  </div>
-                ) : (
-                  maintenance.map((maint) => (
-                    <div
-                      key={maint.id}
-                      className="bg-white rounded-lg shadow-sm p-6"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {maint.poolName} - {maint.type}
-                            </h3>
-                            <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                maint.status === "scheduled"
-                                  ? "bg-blue-100 text-blue-700"
-                                  : maint.status === "in_progress"
-                                    ? "bg-orange-100 text-orange-700"
-                                    : maint.status === "completed"
-                                      ? "bg-green-100 text-green-700"
-                                      : "bg-gray-100 text-gray-700"
-                              }`}
+
+                    {/* Time and Team */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Hora In���cio
+                        </label>
+                        <input
+                          type="time"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          value={maintenanceForm.startTime}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              startTime: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Hora Fim
+                        </label>
+                        <input
+                          type="time"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          value={maintenanceForm.endTime}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              endTime: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Técnico Responsável *
+                        </label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          value={maintenanceForm.technician}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              technician: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="">Selecionar técnico</option>
+                          {users
+                            .filter((user) => user.role !== "super_admin")
+                            .map((user) => (
+                              <option key={user.id} value={user.id}>
+                                {user.name}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Viatura Utilizada
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="Ex: Furgão 1, Carrinha 2"
+                          value={maintenanceForm.vehicle}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              vehicle: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    {/* Water Values */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Valores da Água
+                      </h3>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            pH
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            max="14"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="7.2"
+                            value={maintenanceForm.pH}
+                            onChange={(e) =>
+                              setMaintenanceForm({
+                                ...maintenanceForm,
+                                pH: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Cloro (mg/l)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="1.0"
+                            value={maintenanceForm.chlorine}
+                            onChange={(e) =>
+                              setMaintenanceForm({
+                                ...maintenanceForm,
+                                chlorine: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Alcalinidade
+                          </label>
+                          <input
+                            type="number"
+                            min="0"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="120"
+                            value={maintenanceForm.alkalinity}
+                            onChange={(e) =>
+                              setMaintenanceForm({
+                                ...maintenanceForm,
+                                alkalinity: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Temperatura (��C)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="25.0"
+                            value={maintenanceForm.temperature}
+                            onChange={(e) =>
+                              setMaintenanceForm({
+                                ...maintenanceForm,
+                                temperature: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Sal (g/l)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="4.0"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Bromo (mg/l)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="0.0"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Dureza
+                          </label>
+                          <input
+                            type="number"
+                            min="0"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="200"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Estabilizador
+                          </label>
+                          <input
+                            type="number"
+                            min="0"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="30"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Chemical Products */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Produtos Qu�����micos Utilizados
+                      </h3>
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Produto
+                            </label>
+                            <input
+                              type="text"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                              placeholder="Ex: Cloro líquido"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Quantidade
+                            </label>
+                            <input
+                              type="number"
+                              step="0.1"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                              placeholder="2.5"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Unidade
+                            </label>
+                            <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                              <option value="l">Litros (l)</option>
+                              <option value="kg">Quilogramas (kg)</option>
+                              <option value="g">Gramas (g)</option>
+                              <option value="ml">Mililitros (ml)</option>
+                            </select>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          className="text-green-600 hover:text-green-700 text-sm font-medium flex items-center space-x-1"
+                        >
+                          <Plus className="h-4 w-4" />
+                          <span>Adicionar Produto</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Work Performed */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Trabalho Realizado
+                      </h3>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {[
+                          "Limpeza de filtros",
+                          "Limpeza de pré-filtro",
+                          "Limpeza filtro areia/vidro",
+                          "Verificação alimentação",
+                          "Enchimento autom��tico",
+                          "Limpeza linha de ���gua",
+                          "Limpeza do fundo",
+                          "Limpeza das paredes",
+                          "Limpeza skimmers",
+                          "Verificação equipamentos",
+                        ].map((task, index) => (
+                          <label key={index} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              className="mr-2 text-green-600 focus:ring-green-500"
+                            />
+                            <span className="text-sm text-gray-700">
+                              {task}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                      <div className="mt-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Outros trabalhos realizados
+                        </label>
+                        <textarea
+                          rows={3}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="Descreva outros trabalhos realizados..."
+                          value={maintenanceForm.otherWork}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              otherWork: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    {/* Problems and Observations */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Problemas Encontrados
+                        </label>
+                        <textarea
+                          rows={4}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="Descreva problemas encontrados, se houver..."
+                          value={maintenanceForm.problems}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              problems: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Observações Gerais
+                        </label>
+                        <textarea
+                          rows={4}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="Observações, recomendações, próxima manutenção..."
+                          value={maintenanceForm.observations}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              observations: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    {/* Next Maintenance */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Próxima Manutenção
+                        </label>
+                        <input
+                          type="date"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          value={maintenanceForm.nextMaintenance}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              nextMaintenance: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Estado da Manuten��ão
+                        </label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          value={maintenanceForm.status}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              status: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="completed">Concluída</option>
+                          <option value="pending">Pendente</option>
+                          <option value="in_progress">Em Progresso</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Fotografias da Manutenção */}
+                    <div>
+                      <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                          <Eye className="h-4 w-4 text-green-600" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Fotografias da Manutenção
+                        </h3>
+                      </div>
+
+                      {/* Upload Area */}
+                      <div
+                        className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-400 transition-colors"
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                      >
+                        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                          <Plus className="h-6 w-6 text-gray-400" />
+                        </div>
+                        <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                          Carregar Fotografias
+                        </h4>
+                        <p className="text-gray-600 text-sm mb-4">
+                          Arraste e solte ou clique para selecionar fotos da
+                          manutenção
+                        </p>
+                        <p className="text-gray-500 text-xs mb-4">
+                          {uploadedPhotos.length}/20 fotografias
+                        </p>
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={handlePhotoUpload}
+                          className="hidden"
+                          id="maintenance-photo-upload"
+                        />
+                        <label
+                          htmlFor="maintenance-photo-upload"
+                          className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2 mx-auto cursor-pointer"
+                        >
+                          <Eye className="h-4 w-4" />
+                          <span>Escolher Fotografias</span>
+                        </label>
+                      </div>
+
+                      {/* Photo Preview Grid */}
+                      {uploadedPhotos.length > 0 && (
+                        <div className="mt-6">
+                          <div className="flex items-center justify-between mb-4">
+                            <h5 className="font-medium text-gray-900">
+                              Fotografias Carregadas ({uploadedPhotos.length})
+                            </h5>
+                            <button
+                              type="button"
+                              onClick={clearAllPhotos}
+                              className="text-red-600 hover:text-red-800 text-sm"
                             >
-                              {maint.status === "scheduled"
-                                ? "Agendado"
-                                : maint.status === "in_progress"
-                                  ? "Em Progresso"
-                                  : maint.status === "completed"
-                                    ? "Concluído"
-                                    : maint.status}
+                              Limpar Todas
+                            </button>
+                          </div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {uploadedPhotos.map((photo) => (
+                              <div key={photo.id} className="relative group">
+                                <img
+                                  src={photo.data}
+                                  alt={photo.name}
+                                  className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removePhoto(photo.id)}
+                                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                                <p className="text-xs text-gray-500 mt-1 truncate">
+                                  {photo.name}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection("manutencoes")}
+                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="submit"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSaveIntervention();
+                        }}
+                        className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
+                      >
+                        <Save className="h-4 w-4" />
+                        <span>Guardar Intervenção</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          );
+
+        case "utilizadores":
+          // SECURITY: Only super admin can access user management
+          if (currentUser?.role !== "super_admin") {
+            return (
+              <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                  <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                    Acesso Restrito
+                  </h2>
+                  <p className="text-gray-500">
+                    Apenas super administradores podem gerir utilizadores.
+                  </p>
+                </div>
+              </div>
+            );
+          }
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                <UserPermissionsManager />
+              </div>
+            </div>
+          );
+
+        case "configuracoes":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* System Information */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Informações do Sistema
+                  </h3>
+                  <div className="grid gap-3">
+                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="text-gray-600">Versão</span>
+                      <span className="font-medium">1.0.0</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="text-gray-600">Utilizador Ativo</span>
+                      <span className="font-medium">{currentUser.name}</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="text-gray-600">Perfil</span>
+                      <span className="font-medium capitalize">
+                        {currentUser.role.replace("_", " ")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between py-2">
+                      <span className="text-gray-600">Modo de Dados</span>
+                      <span className="font-medium">Armazenamento Local</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Notifications Section */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Notificações Push
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 mb-6">
+                    Ative as notificações para receber alertas sobre novas obras
+                    atribuídas e atualizações importantes.
+                  </p>
+
+                  <div className="space-y-4">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-blue-900 mb-2">
+                            Notificações de Obras
+                          </h4>
+                          <p className="text-blue-700 text-sm mb-3">
+                            Receba notificações quando uma nova obra for
+                            atribuída a si.
+                          </p>
+                          <button
+                            onClick={() => {
+                              if ("Notification" in window) {
+                                if (Notification.permission === "default") {
+                                  Notification.requestPermission().then(
+                                    (permission) => {
+                                      if (permission === "granted") {
+                                        new Notification("Leirisonda", {
+                                          body: "Notificações ativadas com sucesso!",
+                                          icon: "/icon.svg",
+                                        });
+                                      }
+                                    },
+                                  );
+                                } else if (
+                                  Notification.permission === "granted"
+                                ) {
+                                  new Notification("Leirisonda", {
+                                    body: "Notificações já estão ativadas!",
+                                    icon: "/icon.svg",
+                                  });
+                                } else {
+                                  alert(
+                                    "Notificaç����es foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                  );
+                                }
+                              } else {
+                                alert(
+                                  "Este navegador não suporta notificações.",
+                                );
+                              }
+                            }}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                          >
+                            Ativar Notificações
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <Check className="h-5 w-5 text-green-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-green-900 mb-2">
+                            Notificações de Sistema
+                          </h4>
+                          <p className="text-green-700 text-sm mb-3">
+                            Receba alertas sobre atualizações do sistema e
+                            manuten��ões programadas.
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-green-800 text-sm font-medium">
+                              Status: Ativo
                             </span>
                           </div>
-                          <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
-                            <div>
-                              <span className="font-medium">Data:</span>{" "}
-                              {new Date(maint.scheduledDate).toLocaleDateString(
-                                "pt-PT",
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900 mb-2">
+                            Instruções
+                          </h4>
+                          <ul className="text-gray-700 text-sm space-y-1">
+                            <li>
+                              • As notificações funcionam apenas com HTTPS
+                            </li>
+                            <li>
+                              • Certifique-se de que permite notificaç��es no
+                              seu navegador
+                            </li>
+                            <li>
+                              • Em dispositivos móveis, adicione a app ao ecrã
+                              inicial
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile Interaction Settings */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <Settings className="h-6 w-6 text-blue-600 mr-3" />
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Interaç��o Mobile
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 mb-6">
+                    Configure o comportamento de cliques em contactos e moradas
+                  </p>
+
+                  <div className="space-y-4">
+                    {/* Phone Dialer Setting */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          📞
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium text-blue-900">
+                              Marcação Automática
+                            </h4>
+                            <button
+                              onClick={() =>
+                                togglePhoneDialer(!enablePhoneDialer)
+                              }
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                enablePhoneDialer
+                                  ? "bg-blue-600"
+                                  : "bg-gray-300"
+                              }`}
+                            >
+                              <span
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                  enablePhoneDialer
+                                    ? "translate-x-6"
+                                    : "translate-x-1"
+                                }`}
+                              />
+                            </button>
+                          </div>
+                          <p className="text-blue-700 text-sm mb-3">
+                            Quando ativado, clicar num número de telefone abrirá
+                            diretamente o marcador do telefone.
+                          </p>
+                          <p className="text-blue-600 text-xs">
+                            Estado:{" "}
+                            {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Maps Redirect Setting */}
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                          ����
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium text-green-900">
+                              Navegação Maps
+                            </h4>
+                            <button
+                              onClick={() =>
+                                toggleMapsRedirect(!enableMapsRedirect)
+                              }
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                enableMapsRedirect
+                                  ? "bg-green-600"
+                                  : "bg-gray-300"
+                              }`}
+                            >
+                              <span
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                  enableMapsRedirect
+                                    ? "translate-x-6"
+                                    : "translate-x-1"
+                                }`}
+                              />
+                            </button>
+                          </div>
+                          <p className="text-green-700 text-sm mb-3">
+                            Quando ativado, clicar numa morada abrirá o Google
+                            Maps para navegação.
+                          </p>
+                          <p className="text-green-600 text-xs">
+                            Estado:{" "}
+                            {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Instructions */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900 mb-2">
+                            Instruções
+                          </h4>
+                          <ul className="text-gray-700 text-sm space-y-1">
+                            <li>
+                              • As definições são guardadas localmente no
+                              dispositivo
+                            </li>
+                            <li>
+                              • A marcação autom��tica funciona melhor em
+                              dispositivos móveis
+                            </li>
+                            <li>• O Google Maps abre numa nova janela/tab</li>
+                            <li>
+                              • Pode ativar ou desativar cada funcionalidade
+                              independentemente
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Data Management Section - Only for Super Admin */}
+                {currentUser.role === "super_admin" && (
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <div className="flex items-center mb-4">
+                      <Trash2 className="h-6 w-6 text-red-600 mr-3" />
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Gestão de Dados
+                      </h3>
+                    </div>
+                    <p className="text-gray-600 mb-6">
+                      Elimine todos os dados de obras, manutenções e piscinas
+                      para começar com uma aplicação limpa. Os utilizadores
+                      s����o mantidos.
+                    </p>
+
+                    <div className="space-y-4">
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div className="flex items-start space-x-3">
+                          <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                          <div className="flex-1">
+                            <h4 className="font-medium text-red-900 mb-2">
+                              Limpar Dados do Sistema
+                            </h4>
+                            <p className="text-red-700 text-sm mb-3">
+                              Esta ação eliminar��� permanentemente:
+                            </p>
+                            <ul className="text-red-700 text-sm space-y-1 mb-4">
+                              <li>
+                                • Todas as obras ({works.length} registos)
+                              </li>
+                              <li>
+                                • Todas as manutenções ({maintenance.length}{" "}
+                                registos)
+                              </li>
+                              <li>
+                                • Todas as piscinas ({pools.length} registos)
+                              </li>
+                              <li>• Dados do Firebase e armazenamento local</li>
+                            </ul>
+                            <p className="text-red-700 text-sm font-medium mb-3">
+                              ⚠️ ATENÇÃO: Esta operação é irreversível!
+                            </p>
+                            <button
+                              onClick={handleDataCleanup}
+                              disabled={cleanupLoading}
+                              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span>
+                                {cleanupLoading
+                                  ? "A Eliminar..."
+                                  : "Eliminar Todos os Dados"}
+                              </span>
+                            </button>
+                            {cleanupError && (
+                              <p className="text-red-600 text-sm mt-2">
+                                {cleanupError}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+
+        case "relatorios":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <BarChart3 className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                          Relat��rios
+                        </h1>
+                        <p className="text-gray-600 text-sm">
+                          Gere relatórios detalhados em PDF
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Report Types */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* Pool Reports */}
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Waves className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Relatório de Piscinas
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Lista completa de piscinas
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-3 mb-4">
+                      <p className="text-sm text-gray-600">
+                        <strong>{pools.length}</strong> piscinas registadas
+                      </p>
+                      <ul className="text-xs text-gray-500 space-y-1">
+                        <li>�� Estado e localizaç��o</li>
+                        <li>• Informações de clientes</li>
+                        <li>��� Histórico de manutenç��es</li>
+                        <li>• Próximas intervenções</li>
+                      </ul>
+                    </div>
+                    <button
+                      onClick={() => generatePoolsPDF()}
+                      className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                    >
+                      <Download className="h-4 w-4" />
+                      <span>Gerar PDF</span>
+                    </button>
+                  </div>
+
+                  {/* Maintenance Reports */}
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <Wrench className="h-6 w-6 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Relatório de Manutenções
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Histórico de intervenções
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-3 mb-4">
+                      <p className="text-sm text-gray-600">
+                        <strong>{maintenance.length}</strong> manutenções
+                        registadas
+                      </p>
+                      <ul className="text-xs text-gray-500 space-y-1">
+                        <li>�� Trabalhos realizados</li>
+                        <li>• T������cnicos responsáveis</li>
+                        <li>• Datas e duraç��es</li>
+                        <li>• Estados e observações</li>
+                      </ul>
+                    </div>
+                    <button
+                      onClick={() => generateMaintenancePDF()}
+                      className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                    >
+                      <Download className="h-4 w-4" />
+                      <span>Gerar PDF</span>
+                    </button>
+                  </div>
+
+                  {/* Works Reports */}
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <Building2 className="h-6 w-6 text-orange-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Relat��rio de Obras
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Projetos e construç��es
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-3 mb-4">
+                      <p className="text-sm text-gray-600">
+                        <strong>{works.length}</strong> obras registadas
+                      </p>
+                      <ul className="text-xs text-gray-500 space-y-1">
+                        <li>• Orçamentos e custos</li>
+                        <li>• Prazos e cronogramas</li>
+                        <li>• Equipas respons��veis</li>
+                        <li>������� Estados de progresso</li>
+                      </ul>
+                    </div>
+                    <button
+                      onClick={() => generateWorksPDF()}
+                      className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
+                    >
+                      <Download className="h-4 w-4" />
+                      <span>Gerar PDF</span>
+                    </button>
+                  </div>
+
+                  {/* Clients Reports */}
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <Users className="h-6 w-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Relatório de Clientes
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Base de dados de clientes
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-3 mb-4">
+                      <p className="text-sm text-gray-600">
+                        <strong>{clients.length}</strong> clientes registados
+                      </p>
+                      <ul className="text-xs text-gray-500 space-y-1">
+                        <li>• Dados de contacto</li>
+                        <li>• Piscinas associadas</li>
+                        <li>• Histórico de servi��os</li>
+                        <li>• Informaç��es contratuais</li>
+                      </ul>
+                    </div>
+                    <button
+                      onClick={() => generateClientsPDF()}
+                      className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+                    >
+                      <Download className="h-4 w-4" />
+                      <span>Gerar PDF</span>
+                    </button>
+                  </div>
+
+                  {/* Complete Report */}
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <BarChart3 className="h-6 w-6 text-gray-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Relat��rio Completo
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Todas as informações
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-3 mb-4">
+                      <p className="text-sm text-gray-600">
+                        Relat��rio consolidado de todo o sistema
+                      </p>
+                      <ul className="text-xs text-gray-500 space-y-1">
+                        <li>• Resumo executivo</li>
+                        <li>• Estatísticas gerais</li>
+                        <li>• Dados consolidados</li>
+                        <li>��� Análise de performance</li>
+                      </ul>
+                    </div>
+                    <button
+                      onClick={() => generateCompletePDF()}
+                      className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors flex items-center justify-center space-x-2"
+                    >
+                      <Download className="h-4 w-4" />
+                      <span>Gerar PDF Completo</span>
+                    </button>
+                  </div>
+
+                  {/* Custom Report */}
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                        <Settings className="h-6 w-6 text-indigo-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Relat��rio Personalizado
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Configure os dados
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-3 mb-4">
+                      <p className="text-sm text-gray-600">
+                        Crie relatórios com filtros específicos
+                      </p>
+                      <div className="space-y-2">
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            className="mr-2"
+                            defaultChecked
+                          />
+                          <span className="text-xs">Piscinas</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            className="mr-2"
+                            defaultChecked
+                          />
+                          <span className="text-xs">Manutenções</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" />
+                          <span className="text-xs">Obras</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="checkbox" className="mr-2" />
+                          <span className="text-xs">Clientes</span>
+                        </label>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => generateCustomPDF()}
+                      className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center space-x-2"
+                    >
+                      <Settings className="h-4 w-4" />
+                      <span>Configurar PDF</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Quick Stats */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Estatísticas R����pidas
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600">
+                        {pools.length}
+                      </div>
+                      <div className="text-sm text-gray-600">Piscinas</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">
+                        {maintenance.length}
+                      </div>
+                      <div className="text-sm text-gray-600">Manuten��ões</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-orange-600">
+                        {works.length}
+                      </div>
+                      <div className="text-sm text-gray-600">Obras</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-600">
+                        {clients.length}
+                      </div>
+                      <div className="text-sm text-gray-600">Clientes</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-cyan-600">
+                        {(() => {
+                          const waterBores = JSON.parse(
+                            localStorage.getItem("waterBores") || "[]",
+                          );
+                          return waterBores.length;
+                        })()}
+                      </div>
+                      <div className="text-sm text-gray-600">Furos de Água</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+
+        case "clientes":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <Users className="h-4 w-4 text-purple-600" />
+                      </div>
+                      <div>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                          Clientes
+                        </h1>
+                        <p className="text-gray-600 text-sm">
+                          Gestão da base de dados de clientes
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setActiveSection("novo-cliente")}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Novo Cliente</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Search and Filters */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex space-x-3">
+                    <input
+                      type="text"
+                      placeholder="Pesquisar clientes..."
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                      <option>Todos os tipos</option>
+                      <option>Particular</option>
+                      <option>Empresa</option>
+                      <option>Condomínio</option>
+                    </select>
+                    <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                      <option>Todos os estados</option>
+                      <option>Ativo</option>
+                      <option>Inativo</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Statistics */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <Users className="h-4 w-4 text-purple-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">
+                          Total Clientes
+                        </p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {clients.length}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                        <Check className="h-4 w-4 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">
+                          Clientes Ativos
+                        </p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {clients.filter((c) => c.status === "Ativo").length}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Waves className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">
+                          Com Piscinas
+                        </p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {pools.length}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <Building2 className="h-4 w-4 text-orange-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">
+                          Com Obras
+                        </p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {works.length}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Clients List */}
+                <div className="space-y-4">
+                  {clients.length === 0 ? (
+                    <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                      <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <Users className="h-8 w-8 text-gray-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        Nenhum cliente registado
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-4">
+                        Comece por adicionar o primeiro cliente ao sistema
+                      </p>
+                      <button
+                        onClick={() => setActiveSection("novo-cliente")}
+                        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2 mx-auto"
+                      >
+                        <Plus className="h-4 w-4" />
+                        <span>Adicionar Cliente</span>
+                      </button>
+                    </div>
+                  ) : (
+                    clients.map((client) => (
+                      <div
+                        key={client.id}
+                        className="bg-white rounded-lg shadow-sm p-6"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {client.name}
+                              </h3>
+                              <span
+                                className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                  client.status === "Ativo"
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {client.status}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                              <div>
+                                <p className="font-medium">Contactos:</p>
+                                <p>{client.email}</p>
+                                <button
+                                  onClick={() => handlePhoneClick(client.phone)}
+                                  className={`text-left ${
+                                    enablePhoneDialer
+                                      ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                      : "text-gray-600"
+                                  }`}
+                                  disabled={!enablePhoneDialer}
+                                >
+                                  �� {client.phone}
+                                </button>
+                              </div>
+                              <div>
+                                <p className="font-medium">Morada:</p>
+                                <button
+                                  onClick={() =>
+                                    handleAddressClick(client.address)
+                                  }
+                                  className={`text-left ${
+                                    enableMapsRedirect
+                                      ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                      : "text-gray-600"
+                                  }`}
+                                  disabled={!enableMapsRedirect}
+                                >
+                                  📍 {client.address}
+                                </button>
+                              </div>
+                              <div>
+                                <p className="font-medium">Informações:</p>
+                                <p>Tipo: {client.type}</p>
+                                <p>
+                                  Cliente desde:{" "}
+                                  {new Date(
+                                    client.createdAt,
+                                  ).toLocaleDateString("pt-PT")}
+                                </p>
+                              </div>
+                            </div>
+                            {client.notes && (
+                              <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                                <p className="text-sm text-gray-600">
+                                  <strong>Notas:</strong> {client.notes}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {hasPermission("clientes", "edit") && (
+                              <button className="p-2 text-gray-400 hover:text-gray-600">
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                            )}
+                            {hasPermission("clientes", "delete") && (
+                              <button
+                                onClick={() =>
+                                  confirmDelete(
+                                    `Tem a certeza que deseja apagar o cliente "${client.name}"?`,
+                                    () => dataSync.deleteClient(client.id),
+                                  )
+                                }
+                                className="p-2 text-gray-400 hover:text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+
+        case "novo-cliente":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <Users className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Novo Cliente
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Adicionar cliente à base de dados
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Form */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <form className="space-y-8">
+                    {/* Basic Information */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Informações Básicas
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Nome / Razão Social *
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Nome completo ou razão social"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Tipo de Cliente *
+                          </label>
+                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option value="">Selecionar tipo</option>
+                            <option value="particular">Particular</option>
+                            <option value="empresa">Empresa</option>
+                            <option value="condominio">Condomínio</option>
+                            <option value="hotel">Hotel / Turismo</option>
+                            <option value="publico">Entidade Pública</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Contact Information */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Contactos
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Email Principal *
+                          </label>
+                          <input
+                            type="email"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="email@exemplo.com"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Telefone Principal *
+                          </label>
+                          <input
+                            type="tel"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="+351 XXX XXX XXX"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Email Secund��rio
+                          </label>
+                          <input
+                            type="email"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="email2@exemplo.com"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Telefone Secundário
+                          </label>
+                          <input
+                            type="tel"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="+351 XXX XXX XXX"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Address */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Morada
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Morada Completa *
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Rua, n��mero, andar, etc."
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Código Postal *
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="XXXX-XXX"
+                            pattern="[0-9]{4}-[0-9]{3}"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Localidade *
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Cidade/Vila"
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Additional Information */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Informações Adicionais
+                      </h3>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            NIF / NIPC
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="123456789"
+                            pattern="[0-9]{9}"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Pessoa de Contacto (se aplicável)
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Nome da pessoa responsável"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Notas e Observações
+                          </label>
+                          <textarea
+                            rows={4}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Informa��ões relevantes sobre o cliente, preferências, histórico, etc."
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection("clientes")}
+                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="submit"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          alert(
+                            "Cliente criado com sucesso! (Função em desenvolvimento)",
+                          );
+                          setActiveSection("clientes");
+                        }}
+                        className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center space-x-2"
+                      >
+                        <Save className="h-4 w-4" />
+                        <span>Criar Cliente</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          );
+
+        case "obras":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Building2 className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <h1 className="text-2xl font-bold text-gray-900">
+                          Obras
+                        </h1>
+                        <p className="text-gray-600 text-sm">
+                          Gestão de obras e projetos
+                        </p>
+                      </div>
+                    </div>
+                    {hasPermission("obras", "create") && (
+                      <button
+                        onClick={() => navigateToSection("nova-obra")}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                      >
+                        <Plus className="h-4 w-4" />
+                        <span>Nova Obra</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Filter Tabs */}
+                <div className="bg-white rounded-lg shadow-sm">
+                  <div className="flex border-b border-gray-200">
+                    <button
+                      onClick={() => setActiveWorkFilter("all")}
+                      className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                        activeWorkFilter === "all"
+                          ? "border-blue-500 text-blue-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      Todas ({works.length})
+                    </button>
+                    <button
+                      onClick={() => setActiveWorkFilter("pending")}
+                      className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                        activeWorkFilter === "pending"
+                          ? "border-red-500 text-red-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      Pendentes (
+                      {works.filter((w) => w.status === "pending").length})
+                    </button>
+                    <button
+                      onClick={() => setActiveWorkFilter("in_progress")}
+                      className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                        activeWorkFilter === "in_progress"
+                          ? "border-orange-500 text-orange-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      Em Progresso (
+                      {works.filter((w) => w.status === "in_progress").length})
+                    </button>
+                    <button
+                      onClick={() => setActiveWorkFilter("completed")}
+                      className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                        activeWorkFilter === "completed"
+                          ? "border-green-500 text-green-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      Concluídas (
+                      {works.filter((w) => w.status === "completed").length})
+                    </button>
+                    <button
+                      onClick={() => setActiveWorkFilter("no_sheet")}
+                      className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                        activeWorkFilter === "no_sheet"
+                          ? "border-blue-500 text-blue-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      Sem Folha de Obra (
+                      {
+                        works.filter(
+                          (w) => !w.folhaGerada && w.status !== "completed",
+                        ).length
+                      }
+                      )
+                    </button>
+                  </div>
+                </div>
+
+                {/* Works List */}
+                <div className="space-y-4">
+                  {works
+                    .filter((work) => {
+                      if (activeWorkFilter === "all") return true;
+                      if (activeWorkFilter === "no_sheet")
+                        return !work.folhaGerada && work.status !== "completed";
+                      return work.status === activeWorkFilter;
+                    })
+                    .map((work) => (
+                      <div
+                        key={work.id}
+                        className="bg-white rounded-lg p-4 shadow-sm"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {work.title}
+                              </h3>
+                              <span
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                  work.status === "pending"
+                                    ? "bg-red-100 text-red-700"
+                                    : work.status === "in_progress"
+                                      ? "bg-orange-100 text-orange-700"
+                                      : work.status === "completed"
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-gray-100 text-gray-700"
+                                }`}
+                              >
+                                {work.status === "pending"
+                                  ? "Pendente"
+                                  : work.status === "in_progress"
+                                    ? "Em Progresso"
+                                    : work.status === "completed"
+                                      ? "Concluída"
+                                      : work.status}
+                              </span>
+                              {!work.folhaGerada && (
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                  Sem Folha de Obra
+                                </span>
                               )}
                             </div>
-                            <div>
-                              <span className="font-medium">Técnico:</span>{" "}
-                              {maint.technician}
-                            </div>
-                            {maint.clientName && (
+                            <p className="text-gray-600 mb-2">
+                              {work.description}
+                            </p>
+                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
                               <div>
                                 <span className="font-medium">Cliente:</span>{" "}
-                                {maint.clientName}
-                                {maint.clientContact && (
+                                {work.client}
+                                {work.contact && (
                                   <div className="mt-1">
                                     <button
                                       onClick={() =>
-                                        handlePhoneClick(maint.clientContact)
+                                        handlePhoneClick(work.contact)
                                       }
                                       className={`text-xs ${
                                         enablePhoneDialer
@@ -2441,18 +5762,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       }`}
                                       disabled={!enablePhoneDialer}
                                     >
-                                      📞 {maint.clientContact}
+                                      📞 {work.contact}
                                     </button>
                                   </div>
                                 )}
                               </div>
-                            )}
-                            {maint.location && (
                               <div>
                                 <span className="font-medium">Local:</span>{" "}
                                 <button
                                   onClick={() =>
-                                    handleAddressClick(maint.location)
+                                    handleAddressClick(work.location)
                                   }
                                   className={`text-xs ${
                                     enableMapsRedirect
@@ -2461,4171 +5780,930 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  📍 {maint.location}
+                                  📍 {work.location}
                                 </button>
                               </div>
-                            )}
-                            {maint.observations && (
-                              <div className="col-span-2">
+                              <div>
+                                <span className="font-medium">Início:</span>{" "}
+                                {new Date(work.startDate).toLocaleDateString(
+                                  "pt-PT",
+                                )}
+                              </div>
+                              <div>
                                 <span className="font-medium">
-                                  Observações:
+                                  Atribuída a:
                                 </span>{" "}
-                                {maint.observations}
+                                {work.assignedTo}
                               </div>
+                              {work.budget && (
+                                <div>
+                                  <span className="font-medium">
+                                    Orçamento:
+                                  </span>{" "}
+                                  ��{work.budget}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2 ml-4">
+                            {hasPermission("obras", "view") && (
+                              <button
+                                onClick={() => {
+                                  setSelectedWork(work);
+                                  setViewingWork(true);
+                                }}
+                                className="p-2 text-gray-400 hover:text-gray-600"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </button>
+                            )}
+                            {hasPermission("obras", "edit") && (
+                              <button
+                                onClick={() => {
+                                  setEditingWork(work);
+                                  setActiveSection("editar-obra");
+                                }}
+                                className="p-2 text-gray-400 hover:text-gray-600"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                            )}
+                            {hasPermission("obras", "delete") && (
+                              <button
+                                onClick={() =>
+                                  confirmDelete(
+                                    `Tem a certeza que deseja apagar a obra "${work.title}"?`,
+                                    () => dataSync.deleteWork(work.id),
+                                  )
+                                }
+                                className="p-2 text-gray-400 hover:text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          {hasPermission("manutencoes", "edit") && (
-                            <button
-                              onClick={() => {
-                                setEditingMaintenance(maint);
-                                setActiveSection("editar-manutencao");
-                              }}
-                              className="p-2 text-gray-400 hover:text-gray-600"
-                            >
-                              <Edit2 className="h-4 w-4" />
-                            </button>
-                          )}
-                          {hasPermission("manutencoes", "delete") && (
-                            <button
-                              onClick={() =>
-                                confirmDelete(
-                                  `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
-                                  () => dataSync.deleteMaintenance(maint.id),
-                                )
-                              }
-                              className="p-2 text-gray-400 hover:text-red-600"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          )}
-                        </div>
                       </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-        );
+                    ))}
 
-      case "futuras-manutencoes":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <BarChart3 className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-2xl font-bold text-gray-900">
-                        Futuras Manutenç��es
-                      </h1>
-                      <p className="text-gray-600 text-sm">
-                        Manutenções agendadas e programadas
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setActiveSection("nova-manutencao")}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>Agendar Manutenção</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Submenu */}
-              <div className="bg-white rounded-lg shadow-sm p-1">
-                <div className="grid grid-cols-3 gap-1">
-                  <button
-                    onClick={() => setActiveSection("piscinas")}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
-                  >
-                    Piscinas
-                  </button>
-                  <button
-                    onClick={() => setActiveSection("manutencoes")}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
-                  >
-                    Manutenções
-                  </button>
-                  <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                    Futuras Manuten��ões
-                  </button>
-                </div>
-              </div>
-
-              {/* Future Maintenance List */}
-              <div className="space-y-4">
-                {futureMaintenance.length === 0 ? (
-                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <BarChart3 className="h-8 w-8 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Nenhuma manutenção agendada
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4">
-                      As futuras manuten����ões aparecerão aqui quando forem
-                      agendadas
-                    </p>
-                    <button
-                      onClick={() => setActiveSection("nova-manutencao")}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
-                    >
-                      <Plus className="h-4 w-4" />
-                      <span>Agendar Manuten���ão</span>
-                    </button>
-                  </div>
-                ) : (
-                  futureMaintenance.map((maint) => (
-                    <div
-                      key={maint.id}
-                      className="bg-white rounded-lg shadow-sm p-6"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {maint.poolName}
-                            </h3>
-                            <span
-                              className={`text-xs px-2 py-1 rounded-full ${
-                                maint.status === "pending"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : maint.status === "in_progress"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : "bg-green-100 text-green-800"
-                              }`}
-                            >
-                              {maint.status === "pending"
-                                ? "Agendado"
-                                : maint.status === "in_progress"
+                  {works.filter((work) => {
+                    if (activeWorkFilter === "all") return true;
+                    if (activeWorkFilter === "no_sheet")
+                      return !work.folhaGerada && work.status !== "completed";
+                    return work.status === activeWorkFilter;
+                  }).length === 0 && (
+                    <div className="bg-white rounded-lg p-8 shadow-sm text-center">
+                      <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        Nenhuma obra encontrada
+                      </h3>
+                      <p className="text-gray-500 mb-4">
+                        {activeWorkFilter === "all"
+                          ? "Não há obras registadas no sistema."
+                          : `Não h��� obras com o filtro "${
+                              activeWorkFilter === "pending"
+                                ? "Pendentes"
+                                : activeWorkFilter === "in_progress"
                                   ? "Em Progresso"
-                                  : "Concluído"}
-                            </span>
-                          </div>
-                          <p className="text-gray-600 mb-1">{maint.type}</p>
-                          <p className="text-sm text-gray-500 mb-2">
-                            {maint.description}
-                          </p>
-                          <div className="flex items-center space-x-4 text-sm">
-                            <span className="text-blue-600">
-                              ������{" "}
-                              {new Date(maint.scheduledDate).toLocaleDateString(
-                                "pt-PT",
-                              )}
-                            </span>
-                            <span className="text-gray-500">
-                              👨‍🔧 {maint.technician}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {hasPermission("manutencoes", "edit") && (
-                            <button
-                              onClick={() => {
-                                setEditingMaintenance(maint);
-                                setActiveSection("editar-manutencao");
-                              }}
-                              className="p-2 text-gray-400 hover:text-gray-600"
-                            >
-                              <Edit2 className="h-4 w-4" />
-                            </button>
-                          )}
-                          {hasPermission("manutencoes", "delete") && (
-                            <button
-                              onClick={() =>
-                                confirmDelete(
-                                  `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
-                                  () => dataSync.deleteMaintenance(maint.id),
-                                )
-                              }
-                              className="p-2 text-gray-400 hover:text-red-600"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-        );
-
-      case "nova-obra":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Building2 className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                      Nova Obra
-                    </h1>
-                    <p className="text-gray-600 text-sm">
-                      Criar uma nova obra no sistema Leirisonda
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Form */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <form className="space-y-8">
-                  {/* Informa��ões Básicas */}
-                  <div>
-                    <div className="flex items-center space-x-3 mb-6">
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Building2 className="h-4 w-4 text-blue-600" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Informações Básicas
-                      </h3>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Folha de Obra *
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="LS-2025-163"
-                          defaultValue={`LS-${new Date().getFullYear()}-${Math.floor(
-                            Math.random() * 1000,
-                          )
-                            .toString()
-                            .padStart(3, "0")}`}
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Trabalho *
-                        </label>
-                        <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          onChange={(e) => setSelectedWorkType(e.target.value)}
-                          value={selectedWorkType}
-                        >
-                          <option value="">Selecionar tipo</option>
-                          <option value="piscina">Piscina</option>
-                          <option value="manutencao">Manutenção</option>
-                          <option value="instalacao">Instala��ão</option>
-                          <option value="reparacao">Reparação</option>
-                          <option value="limpeza">Limpeza</option>
-                          <option value="furo">Furo de Água</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Nome do Cliente *
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Ex: João Silva"
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Contacto *
-                        </label>
-                        <input
-                          type="tel"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Ex: 244 123 456"
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Morada *
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Ex: Rua das Flores, 123, Leiria"
-                          required
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Hora de Entrada *
-                          </label>
-                          <input
-                            type="datetime-local"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            defaultValue={new Date().toISOString().slice(0, 16)}
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Hora de Saída
-                          </label>
-                          <input
-                            type="datetime-local"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Deixe vazio se ainda não terminou"
-                          />
-                          <p className="text-xs text-gray-500 mt-1">
-                            Deixe vazio se ainda não terminou
-                          </p>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado da Obra *
-                        </label>
-                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                          <option value="pendente">Pendente</option>
-                          <option value="em-progresso">Em Progresso</option>
-                          <option value="concluida">Concluída</option>
-                          <option value="cancelada">Cancelada</option>
-                        </select>
-                      </div>
-
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id="folha-preenchida"
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        <label
-                          htmlFor="folha-preenchida"
-                          className="ml-2 text-sm text-gray-700"
-                        >
-                          Folha de obra preenchida/feita
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Viaturas e Técnicos */}
-                  <div>
-                    <div className="flex items-center space-x-3 mb-6">
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Users className="h-4 w-4 text-blue-600" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Viaturas e Técnicos
-                      </h3>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Viaturas Utilizadas
-                        </label>
-                        <div className="flex space-x-2">
-                          <input
-                            type="text"
-                            value={currentVehicle}
-                            onChange={(e) => setCurrentVehicle(e.target.value)}
-                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: Carrinha Leirisonda 1"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (
-                                currentVehicle.trim() &&
-                                !workVehicles.includes(currentVehicle.trim())
-                              ) {
-                                setWorkVehicles([
-                                  ...workVehicles,
-                                  currentVehicle.trim(),
-                                ]);
-                                setCurrentVehicle("");
-                              }
-                            }}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                          >
-                            Adicionar
-                          </button>
-                        </div>
-                        {workVehicles.length > 0 && (
-                          <div className="mt-2 space-y-1">
-                            {workVehicles.map((vehicle, index) => (
-                              <div
-                                key={index}
-                                className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
-                              >
-                                <span className="text-sm text-gray-700">
-                                  {vehicle}
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setWorkVehicles(
-                                      workVehicles.filter(
-                                        (_, i) => i !== index,
-                                      ),
-                                    )
-                                  }
-                                  className="text-red-600 hover:text-red-800"
-                                >
-                                  <X className="h-4 w-4" />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnicos
-                        </label>
-                        <div className="flex space-x-2">
-                          <input
-                            type="text"
-                            value={currentTechnician}
-                            onChange={(e) =>
-                              setCurrentTechnician(e.target.value)
-                            }
-                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: João Santos"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (
-                                currentTechnician.trim() &&
-                                !workTechnicians.includes(
-                                  currentTechnician.trim(),
-                                )
-                              ) {
-                                setWorkTechnicians([
-                                  ...workTechnicians,
-                                  currentTechnician.trim(),
-                                ]);
-                                setCurrentTechnician("");
-                              }
-                            }}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                          >
-                            Adicionar
-                          </button>
-                        </div>
-                        {workTechnicians.length > 0 && (
-                          <div className="mt-2 space-y-1">
-                            {workTechnicians.map((technician, index) => (
-                              <div
-                                key={index}
-                                className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
-                              >
-                                <span className="text-sm text-gray-700">
-                                  {technician}
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setWorkTechnicians(
-                                      workTechnicians.filter(
-                                        (_, i) => i !== index,
-                                      ),
-                                    )
-                                  }
-                                  className="text-red-600 hover:text-red-800"
-                                >
-                                  <X className="h-4 w-4" />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Usu��rios Atribuídos
-                        </label>
-                        <p className="text-sm text-gray-600 mb-2">
-                          Selecione os usuários responsáveis por esta obra
-                        </p>
-                        <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          aria-label="Usu��rios Atribu��dos"
-                        >
-                          <option value="">Selecionar usuário...</option>
-                          {users
-                            .filter((user) => user.role !== "viewer")
-                            .map((user) => (
-                              <option key={user.id} value={user.id}>
-                                {user.name}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Detalhes do Furo de Água - Conditional */}
-                  {selectedWorkType === "furo" && (
-                    <div>
-                      <div className="flex items-center space-x-3 mb-6">
-                        <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
-                          <Waves className="h-4 w-4 text-cyan-600" />
-                        </div>
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Detalhes do Furo de Água
-                        </h3>
-                      </div>
-
-                      <div className="space-y-6">
-                        {/* Medições do Furo */}
-                        <div>
-                          <h4 className="text-md font-medium text-gray-900 mb-4">
-                            Medições do Furo
-                          </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Profundidade do Furo (m) *
-                              </label>
-                              <input
-                                type="number"
-                                step="0.1"
-                                min="0"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                placeholder="Ex: 120.5"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                N��vel da Água (m) *
-                              </label>
-                              <input
-                                type="number"
-                                step="0.1"
-                                min="0"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                placeholder="Ex: 15.2"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Profundidade da Bomba (m) *
-                              </label>
-                              <input
-                                type="number"
-                                step="0.1"
-                                min="0"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                placeholder="Ex: 80.0"
-                                required
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Capacidade e Coluna */}
-                        <div>
-                          <h4 className="text-md font-medium text-gray-900 mb-4">
-                            Capacidade e Coluna
-                          </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Caudal do Furo (m³/h) *
-                              </label>
-                              <input
-                                type="number"
-                                step="0.1"
-                                min="0"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                placeholder="Ex: 5.5"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Tipo de Coluna *
-                              </label>
-                              <select
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                required
-                              >
-                                <option value="">Selecionar tipo</option>
-                                <option value="PEAD">PEAD</option>
-                                <option value="HIDROROSCADO">
-                                  HIDROROSCADO
-                                </option>
-                              </select>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Di��metro da Coluna *
-                              </label>
-                              <select
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                required
-                              >
-                                <option value="">Selecionar diâmetro</option>
-                                <option value="1">1 polegada</option>
-                                <option value="1.25">1¼ polegadas</option>
-                                <option value="1.5">1½ polegadas</option>
-                                <option value="2">2 polegadas</option>
-                                <option value="2.5">2½ polegadas</option>
-                                <option value="3">3 polegadas</option>
-                                <option value="4">4 polegadas</option>
-                                <option value="5">5 polegadas</option>
-                                <option value="6">6 polegadas</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Detalhes da Bomba */}
-                        <div>
-                          <h4 className="text-md font-medium text-gray-900 mb-4">
-                            Detalhes da Bomba
-                          </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Modelo da Bomba Instalada *
-                              </label>
-                              <input
-                                type="text"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                placeholder="Ex: Grundfos SQ3-105"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Potência do Motor (HP) *
-                              </label>
-                              <select
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                required
-                              >
-                                <option value="">Selecionar potência</option>
-                                <option value="0.5">0.5 HP</option>
-                                <option value="0.75">0.75 HP</option>
-                                <option value="1">1 HP</option>
-                                <option value="1.5">1.5 HP</option>
-                                <option value="2">2 HP</option>
-                                <option value="3">3 HP</option>
-                                <option value="5">5 HP</option>
-                                <option value="7.5">7.5 HP</option>
-                                <option value="10">10 HP</option>
-                                <option value="15">15 HP</option>
-                                <option value="20">20 HP</option>
-                              </select>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Voltagem da Bomba *
-                              </label>
-                              <select
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                required
-                              >
-                                <option value="">Selecionar voltagem</option>
-                                <option value="230V">230V (monofásico)</option>
-                                <option value="400V">400V (trifásico)</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Observaç��es Específicas do Furo */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações Específicas do Furo
-                          </label>
-                          <textarea
-                            rows={3}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Observa����es e Trabalho */}
-                  <div>
-                    <div className="flex items-center space-x-3 mb-6">
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Building2 className="h-4 w-4 text-blue-600" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Observações e Trabalho
-                      </h3>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações
-                        </label>
-                        <textarea
-                          rows={3}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Observa����ões sobre a obra..."
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Trabalho Realizado
-                        </label>
-                        <textarea
-                          rows={4}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Descrição do trabalho realizado..."
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Fotografias da Obra */}
-                  <div>
-                    <div className="flex items-center space-x-3 mb-6">
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Eye className="h-4 w-4 text-blue-600" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Fotografias da Obra
-                      </h3>
-                    </div>
-
-                    {/* Upload Area */}
-                    <div
-                      className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors"
-                      onDragOver={handleDragOver}
-                      onDrop={handleDrop}
-                    >
-                      <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                        <Plus className="h-6 w-6 text-gray-400" />
-                      </div>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                        Carregar Fotografias
-                      </h4>
-                      <p className="text-gray-600 text-sm mb-4">
-                        Arraste e solte ou clique para selecionar
+                                  : activeWorkFilter === "completed"
+                                    ? "Concluídas"
+                                    : activeWorkFilter === "no_sheet"
+                                      ? "Sem Folha de Obra"
+                                      : activeWorkFilter
+                            }" aplicado.`}
                       </p>
-                      <p className="text-gray-500 text-xs mb-4">
-                        {uploadedPhotos.length}/20 fotografias
-                      </p>
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={handlePhotoUpload}
-                        className="hidden"
-                        id="photo-upload"
-                      />
-                      <label
-                        htmlFor="photo-upload"
-                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2 mx-auto cursor-pointer"
-                      >
-                        <Eye className="h-4 w-4" />
-                        <span>Escolher Fotografias</span>
-                      </label>
-                    </div>
-
-                    {/* Photo Preview Grid */}
-                    {uploadedPhotos.length > 0 && (
-                      <div className="mt-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <h5 className="font-medium text-gray-900">
-                            Fotografias Carregadas ({uploadedPhotos.length})
-                          </h5>
-                          <button
-                            type="button"
-                            onClick={clearAllPhotos}
-                            className="text-red-600 hover:text-red-800 text-sm"
-                          >
-                            Limpar Todas
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          {uploadedPhotos.map((photo) => (
-                            <div key={photo.id} className="relative group">
-                              <img
-                                src={photo.data}
-                                alt={photo.name}
-                                className="w-full h-24 object-cover rounded-lg border border-gray-200"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => removePhoto(photo.id)}
-                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <X className="h-3 w-3" />
-                              </button>
-                              <p className="text-xs text-gray-500 mt-1 truncate">
-                                {photo.name}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
-                    <button
-                      type="button"
-                      onClick={() => setActiveSection("dashboard")}
-                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const form = e.target.closest("form");
-
-                        // Extract all form data
-                        const workTitle =
-                          form.querySelector('input[placeholder*="LS-"]')
-                            ?.value || "Nova Obra";
-                        const workType =
-                          form.querySelector('select[name="workType"]')
-                            ?.value || selectedWorkType;
-                        const client =
-                          form.querySelector('input[placeholder*="Cliente"]')
-                            ?.value || "";
-                        const contact =
-                          form.querySelector('input[placeholder*="Contacto"]')
-                            ?.value || "";
-                        const location =
-                          form.querySelector('input[placeholder*="Morada"]')
-                            ?.value || "";
-                        const startTime =
-                          form.querySelector('input[placeholder*="Entrada"]')
-                            ?.value || "";
-                        const endTime =
-                          form.querySelector('input[placeholder*="Saída"]')
-                            ?.value || "";
-                        const status =
-                          form.querySelector('select[name="status"]')?.value ||
-                          "pending";
-                        const responsibleUser = form.querySelector(
-                          'select[aria-label="Usuários Atribuídos"]',
-                        );
-                        const selectedUserId = responsibleUser?.value || null;
-
-                        // Create complete work data object
-                        const workData = {
-                          id: Date.now(),
-                          title: workTitle,
-                          type: workType,
-                          client: client,
-                          contact: contact,
-                          location: location,
-                          startTime: startTime,
-                          endTime: endTime,
-                          status: status,
-                          assignedTo: selectedUserId
-                            ? users.find((u) => u.id == selectedUserId)?.name
-                            : "",
-                          assignedUserId: selectedUserId,
-                          vehicles: workVehicles,
-                          technicians: workTechnicians,
-                          photos: uploadedPhotos,
-                          photoCount: uploadedPhotos.length,
-                          createdAt: new Date().toISOString(),
-                          startDate: new Date().toISOString(),
-                        };
-
-                        // Use sync system to add work (will handle Firebase and localStorage)
-                        addWork(workData);
-
-                        // Send notification if user assigned
-                        if (selectedUserId) {
-                          const selectedUser = users.find(
-                            (u) => u.id == selectedUserId,
-                          );
-                          if (selectedUser) {
-                            sendWorkAssignmentNotification(
-                              workTitle,
-                              selectedUser.name,
-                            );
-                          }
-                        }
-
-                        // Save water bore data if work type is "furo"
-                        if (selectedWorkType === "furo") {
-                          const waterBoreData = {
-                            id: Date.now(),
-                            workTitle: workTitle,
-                            date: new Date().toISOString(),
-                            photos: uploadedPhotos,
-                            photoCount: uploadedPhotos.length,
-                            workType: "furo",
-                          };
-
-                          const savedWaterBores = JSON.parse(
-                            localStorage.getItem("waterBores") || "[]",
-                          );
-                          savedWaterBores.push(waterBoreData);
-                          localStorage.setItem(
-                            "waterBores",
-                            JSON.stringify(savedWaterBores),
-                          );
-                        }
-
-                        alert(
-                          `Obra "${workTitle}" criada com sucesso! ` +
-                            (selectedUserId
-                              ? "Notificação enviada ao responsável."
-                              : "") +
-                            (selectedWorkType === "furo"
-                              ? " Dados do furo registados."
-                              : ""),
-                        );
-
-                        // Clear form data
-                        setSelectedWorkType("");
-                        setUploadedPhotos([]);
-                        setWorkVehicles([]);
-                        setWorkTechnicians([]);
-                        setCurrentVehicle("");
-                        setCurrentTechnician("");
-                        setActiveSection("dashboard");
-                      }}
-                      className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
-                    >
-                      <Building2 className="h-4 w-4" />
-                      <span>Criar Obra</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        );
-      case "nova-piscina":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Waves className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                      Nova Piscina
-                    </h1>
-                    <p className="text-gray-600 text-sm">
-                      Registar uma nova piscina no sistema
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Form */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <form className="space-y-6">
-                  {/* Basic Information */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Nome da Piscina *
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: Piscina Villa Marina"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cliente Proprietário *
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        onChange={(e) => {
-                          if (e.target.value === "novo") {
-                            setShowNewClientForm(true);
-                          }
-                        }}
-                      >
-                        <option value="">Selecionar cliente</option>
-                        {clients.map((client) => (
-                          <option key={client.id} value={client.id}>
-                            {client.name}
-                          </option>
-                        ))}
-                        <option value="novo">+ Adicionar Novo Cliente</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* New Client Form */}
-                  {showNewClientForm && (
-                    <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-medium text-gray-900">
-                          Novo Cliente
-                        </h3>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowNewClientForm(false);
-                            setNewClientForm({
-                              name: "",
-                              email: "",
-                              phone: "",
-                              address: "",
-                            });
-                          }}
-                          className="text-gray-400 hover:text-gray-600"
-                        >
-                          <X className="h-5 w-5" />
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nome Completo *
-                          </label>
-                          <input
-                            type="text"
-                            value={newClientForm.name}
-                            onChange={(e) =>
-                              setNewClientForm({
-                                ...newClientForm,
-                                name: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Nome do cliente"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email
-                          </label>
-                          <input
-                            type="email"
-                            value={newClientForm.email}
-                            onChange={(e) =>
-                              setNewClientForm({
-                                ...newClientForm,
-                                email: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="email@exemplo.com"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Telefone
-                          </label>
-                          <input
-                            type="tel"
-                            value={newClientForm.phone}
-                            onChange={(e) =>
-                              setNewClientForm({
-                                ...newClientForm,
-                                phone: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="+351 XXX XXX XXX"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Morada
-                          </label>
-                          <input
-                            type="text"
-                            value={newClientForm.address}
-                            onChange={(e) =>
-                              setNewClientForm({
-                                ...newClientForm,
-                                address: e.target.value,
-                              })
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Morada completa"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-end space-x-3 mt-4">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowNewClientForm(false);
-                            setNewClientForm({
-                              name: "",
-                              email: "",
-                              phone: "",
-                              address: "",
-                            });
-                          }}
-                          className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
-                        >
-                          Cancelar
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (newClientForm.name.trim()) {
-                              // Add client to the system
-                              const newClient = {
-                                name: newClientForm.name,
-                                email: newClientForm.email,
-                                phone: newClientForm.phone,
-                                address: newClientForm.address,
-                                pools: [],
-                              };
-                              dataSync.addClient(newClient);
-
-                              // Reset form and close
-                              setNewClientForm({
-                                name: "",
-                                email: "",
-                                phone: "",
-                                address: "",
-                              });
-                              setShowNewClientForm(false);
-
-                              // Show success message
-                              alert(
-                                `Cliente "${newClient.name}" adicionado com sucesso!`,
-                              );
-                            } else {
-                              alert(
-                                "Por favor, preencha pelo menos o nome do cliente.",
-                              );
-                            }
-                          }}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                        >
-                          Guardar Cliente
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Location */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Localização Completa *
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Ex: Cascais, Villa Marina Resort, Edifício A, Apartamento 205"
-                      required
-                    />
-                  </div>
-
-                  {/* Pool Specifications */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Tipo de Piscina *
-                      </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Selecionar tipo</option>
-                        <option value="residencial">Residencial</option>
-                        <option value="comercial">Comercial</option>
-                        <option value="hotel">Hotel/Resort</option>
-                        <option value="condominio">Condomínio</option>
-                        <option value="spa">SPA/Wellness</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Formato
-                      </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="retangular">Retangular</option>
-                        <option value="oval">Oval</option>
-                        <option value="redonda">Redonda</option>
-                        <option value="kidney">Kidney</option>
-                        <option value="irregular">Irregular</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Estado Atual
-                      </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="ativa">Ativa</option>
-                        <option value="inativa">Inativa</option>
-                        <option value="manutencao">Em Manutenção</option>
-                        <option value="construcao">Em Construção</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Dimensions */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Comprimento (m)
-                      </label>
-                      <input
-                        type="number"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="8.0"
-                        min="0"
-                        step="0.1"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Largura (m)
-                      </label>
-                      <input
-                        type="number"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="4.0"
-                        min="0"
-                        step="0.1"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Profundidade Min (m)
-                      </label>
-                      <input
-                        type="number"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="1.2"
-                        min="0"
-                        step="0.1"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Profundidade Max (m)
-                      </label>
-                      <input
-                        type="number"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="2.0"
-                        min="0"
-                        step="0.1"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Equipment and Features */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Sistema de Filtração
-                      </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Selecionar sistema</option>
-                        <option value="areia">Filtro de Areia</option>
-                        <option value="cartucho">Filtro de Cartucho</option>
-                        <option value="diatomaceas">Terra Diatomáceas</option>
-                        <option value="uv">Sistema UV</option>
-                        <option value="sal">Eletrólise de Sal</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Aquecimento
-                      </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="nao">Sem Aquecimento</option>
-                        <option value="solar">Aquecimento Solar</option>
-                        <option value="bomba-calor">Bomba de Calor</option>
-                        <option value="resistencia">
-                          Resistência El��trica
-                        </option>
-                        <option value="gas">Aquecimento a G����s</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Maintenance Schedule */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Frequ���ncia de Manutenção
-                      </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="semanal">Semanal</option>
-                        <option value="quinzenal">Quinzenal</option>
-                        <option value="mensal">Mensal</option>
-                        <option value="trimestral">Trimestral</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Próxima Manuten��ão
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Additional Information */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Observações e Características Especiais
-                    </label>
-                    <textarea
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Características especiais, equipamentos adicionais, notas importantes..."
-                    />
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
-                    <button
-                      type="button"
-                      onClick={() => setActiveSection("piscinas")}
-                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const form = e.target.closest("form");
-                        const formData = new FormData(form);
-
-                        // Collect all form data
-                        const poolData = {
-                          id: Date.now(),
-                          name:
-                            form.querySelector('input[placeholder*="Nome"]')
-                              ?.value || "Nova Piscina",
-                          client:
-                            form.querySelector('input[placeholder*="Cliente"]')
-                              ?.value || "Cliente",
-                          location:
-                            form.querySelector('input[placeholder*="Morada"]')
-                              ?.value || "",
-                          contact:
-                            form.querySelector('input[placeholder*="Contacto"]')
-                              ?.value || "",
-                          type:
-                            form.querySelector("select").value || "residencial",
-                          status: "Ativa",
-                          createdAt: new Date().toISOString(),
-                          nextMaintenance:
-                            form.querySelector('input[type="date"]')?.value ||
-                            null,
-                        };
-
-                        // Use sync system to add pool (will handle Firebase and localStorage)
-                        addPool(poolData);
-
-                        alert(`Piscina "${poolData.name}" criada com sucesso!`);
-                        setActiveSection("piscinas");
-                      }}
-                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
-                    >
-                      <Save className="h-4 w-4" />
-                      <span>Criar Piscina</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "nova-manutencao":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                    <Wrench className="h-4 w-4 text-green-600" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                      Nova Manutenção
-                    </h1>
-                    <p className="text-gray-600 text-sm">
-                      Registar interven��ão de manutenç�����o
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Form */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <form className="space-y-8">
-                  {/* Pool Selection */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Piscina *
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        value={maintenanceForm.poolId}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            poolId: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="">Selecionar piscina</option>
-                        {pools.map((pool) => (
-                          <option key={pool.id} value={pool.id}>
-                            {pool.name} - {pool.client}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Data da Interven��ão *
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        value={maintenanceForm.date}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            date: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  {/* Time and Team */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Hora In���cio
-                      </label>
-                      <input
-                        type="time"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        value={maintenanceForm.startTime}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            startTime: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Hora Fim
-                      </label>
-                      <input
-                        type="time"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        value={maintenanceForm.endTime}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            endTime: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Técnico Responsável *
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        value={maintenanceForm.technician}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            technician: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="">Selecionar técnico</option>
-                        {users
-                          .filter((user) => user.role !== "super_admin")
-                          .map((user) => (
-                            <option key={user.id} value={user.id}>
-                              {user.name}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Viatura Utilizada
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        placeholder="Ex: Furgão 1, Carrinha 2"
-                        value={maintenanceForm.vehicle}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            vehicle: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  {/* Water Values */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Valores da Água
-                    </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          pH
-                        </label>
-                        <input
-                          type="number"
-                          step="0.1"
-                          min="0"
-                          max="14"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="7.2"
-                          value={maintenanceForm.pH}
-                          onChange={(e) =>
-                            setMaintenanceForm({
-                              ...maintenanceForm,
-                              pH: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Cloro (mg/l)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.1"
-                          min="0"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="1.0"
-                          value={maintenanceForm.chlorine}
-                          onChange={(e) =>
-                            setMaintenanceForm({
-                              ...maintenanceForm,
-                              chlorine: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Alcalinidade
-                        </label>
-                        <input
-                          type="number"
-                          min="0"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="120"
-                          value={maintenanceForm.alkalinity}
-                          onChange={(e) =>
-                            setMaintenanceForm({
-                              ...maintenanceForm,
-                              alkalinity: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Temperatura (��C)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.1"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="25.0"
-                          value={maintenanceForm.temperature}
-                          onChange={(e) =>
-                            setMaintenanceForm({
-                              ...maintenanceForm,
-                              temperature: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Sal (g/l)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.1"
-                          min="0"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="4.0"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Bromo (mg/l)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.1"
-                          min="0"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="0.0"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Dureza
-                        </label>
-                        <input
-                          type="number"
-                          min="0"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="200"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Estabilizador
-                        </label>
-                        <input
-                          type="number"
-                          min="0"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="30"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Chemical Products */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Produtos Qu�����micos Utilizados
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Produto
-                          </label>
-                          <input
-                            type="text"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                            placeholder="Ex: Cloro líquido"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Quantidade
-                          </label>
-                          <input
-                            type="number"
-                            step="0.1"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                            placeholder="2.5"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Unidade
-                          </label>
-                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option value="l">Litros (l)</option>
-                            <option value="kg">Quilogramas (kg)</option>
-                            <option value="g">Gramas (g)</option>
-                            <option value="ml">Mililitros (ml)</option>
-                          </select>
-                        </div>
-                      </div>
                       <button
-                        type="button"
-                        className="text-green-600 hover:text-green-700 text-sm font-medium flex items-center space-x-1"
+                        onClick={() => navigateToSection("nova-obra")}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        <Plus className="h-4 w-4" />
-                        <span>Adicionar Produto</span>
+                        Criar Nova Obra
                       </button>
                     </div>
-                  </div>
-
-                  {/* Work Performed */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Trabalho Realizado
-                    </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {[
-                        "Limpeza de filtros",
-                        "Limpeza de pré-filtro",
-                        "Limpeza filtro areia/vidro",
-                        "Verificação alimentação",
-                        "Enchimento autom��tico",
-                        "Limpeza linha de ���gua",
-                        "Limpeza do fundo",
-                        "Limpeza das paredes",
-                        "Limpeza skimmers",
-                        "Verificação equipamentos",
-                      ].map((task, index) => (
-                        <label key={index} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            className="mr-2 text-green-600 focus:ring-green-500"
-                          />
-                          <span className="text-sm text-gray-700">{task}</span>
-                        </label>
-                      ))}
-                    </div>
-                    <div className="mt-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Outros trabalhos realizados
-                      </label>
-                      <textarea
-                        rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        placeholder="Descreva outros trabalhos realizados..."
-                        value={maintenanceForm.otherWork}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            otherWork: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  {/* Problems and Observations */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Problemas Encontrados
-                      </label>
-                      <textarea
-                        rows={4}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        placeholder="Descreva problemas encontrados, se houver..."
-                        value={maintenanceForm.problems}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            problems: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações Gerais
-                      </label>
-                      <textarea
-                        rows={4}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        placeholder="Observações, recomendações, próxima manutenção..."
-                        value={maintenanceForm.observations}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            observations: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  {/* Next Maintenance */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Próxima Manutenção
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        value={maintenanceForm.nextMaintenance}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            nextMaintenance: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Estado da Manuten��ão
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        value={maintenanceForm.status}
-                        onChange={(e) =>
-                          setMaintenanceForm({
-                            ...maintenanceForm,
-                            status: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="completed">Concluída</option>
-                        <option value="pending">Pendente</option>
-                        <option value="in_progress">Em Progresso</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Fotografias da Manutenção */}
-                  <div>
-                    <div className="flex items-center space-x-3 mb-6">
-                      <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                        <Eye className="h-4 w-4 text-green-600" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Fotografias da Manutenção
-                      </h3>
-                    </div>
-
-                    {/* Upload Area */}
-                    <div
-                      className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-400 transition-colors"
-                      onDragOver={handleDragOver}
-                      onDrop={handleDrop}
-                    >
-                      <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                        <Plus className="h-6 w-6 text-gray-400" />
-                      </div>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                        Carregar Fotografias
-                      </h4>
-                      <p className="text-gray-600 text-sm mb-4">
-                        Arraste e solte ou clique para selecionar fotos da
-                        manutenção
-                      </p>
-                      <p className="text-gray-500 text-xs mb-4">
-                        {uploadedPhotos.length}/20 fotografias
-                      </p>
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={handlePhotoUpload}
-                        className="hidden"
-                        id="maintenance-photo-upload"
-                      />
-                      <label
-                        htmlFor="maintenance-photo-upload"
-                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2 mx-auto cursor-pointer"
-                      >
-                        <Eye className="h-4 w-4" />
-                        <span>Escolher Fotografias</span>
-                      </label>
-                    </div>
-
-                    {/* Photo Preview Grid */}
-                    {uploadedPhotos.length > 0 && (
-                      <div className="mt-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <h5 className="font-medium text-gray-900">
-                            Fotografias Carregadas ({uploadedPhotos.length})
-                          </h5>
-                          <button
-                            type="button"
-                            onClick={clearAllPhotos}
-                            className="text-red-600 hover:text-red-800 text-sm"
-                          >
-                            Limpar Todas
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          {uploadedPhotos.map((photo) => (
-                            <div key={photo.id} className="relative group">
-                              <img
-                                src={photo.data}
-                                alt={photo.name}
-                                className="w-full h-24 object-cover rounded-lg border border-gray-200"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => removePhoto(photo.id)}
-                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <X className="h-3 w-3" />
-                              </button>
-                              <p className="text-xs text-gray-500 mt-1 truncate">
-                                {photo.name}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
-                    <button
-                      type="button"
-                      onClick={() => setActiveSection("manutencoes")}
-                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleSaveIntervention();
-                      }}
-                      className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
-                    >
-                      <Save className="h-4 w-4" />
-                      <span>Guardar Intervenção</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "utilizadores":
-        // SECURITY: Only super admin can access user management
-        if (currentUser?.role !== "super_admin") {
-          return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-              <div className="text-center">
-                <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold text-gray-700 mb-2">
-                  Acesso Restrito
-                </h2>
-                <p className="text-gray-500">
-                  Apenas super administradores podem gerir utilizadores.
-                </p>
+                  )}
+                </div>
               </div>
             </div>
           );
-        }
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              <UserPermissionsManager />
-            </div>
-          </div>
-        );
 
-      case "configuracoes":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* System Information */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Informações do Sistema
-                </h3>
-                <div className="grid gap-3">
-                  <div className="flex justify-between py-2 border-b border-gray-100">
-                    <span className="text-gray-600">Versão</span>
-                    <span className="font-medium">1.0.0</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-gray-100">
-                    <span className="text-gray-600">Utilizador Ativo</span>
-                    <span className="font-medium">{currentUser.name}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-gray-100">
-                    <span className="text-gray-600">Perfil</span>
-                    <span className="font-medium capitalize">
-                      {currentUser.role.replace("_", " ")}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <span className="text-gray-600">Modo de Dados</span>
-                    <span className="font-medium">Armazenamento Local</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Notifications Section */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <div className="flex items-center mb-4">
-                  <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Notificações Push
-                  </h3>
-                </div>
-                <p className="text-gray-600 mb-6">
-                  Ative as notificações para receber alertas sobre novas obras
-                  atribuídas e atualizações importantes.
-                </p>
-
-                <div className="space-y-4">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <div className="flex items-start space-x-3">
-                      <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-blue-900 mb-2">
-                          Notificações de Obras
-                        </h4>
-                        <p className="text-blue-700 text-sm mb-3">
-                          Receba notificações quando uma nova obra for atribuída
-                          a si.
-                        </p>
-                        <button
-                          onClick={() => {
-                            if ("Notification" in window) {
-                              if (Notification.permission === "default") {
-                                Notification.requestPermission().then(
-                                  (permission) => {
-                                    if (permission === "granted") {
-                                      new Notification("Leirisonda", {
-                                        body: "Notificações ativadas com sucesso!",
-                                        icon: "/icon.svg",
-                                      });
-                                    }
-                                  },
-                                );
-                              } else if (
-                                Notification.permission === "granted"
-                              ) {
-                                new Notification("Leirisonda", {
-                                  body: "Notificações já estão ativadas!",
-                                  icon: "/icon.svg",
-                                });
-                              } else {
-                                alert(
-                                  "Notificaç����es foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
-                                );
-                              }
-                            } else {
-                              alert("Este navegador não suporta notificações.");
-                            }
-                          }}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                        >
-                          Ativar Notificações
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-start space-x-3">
-                      <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-green-900 mb-2">
-                          Notificações de Sistema
-                        </h4>
-                        <p className="text-green-700 text-sm mb-3">
-                          Receba alertas sobre atualizações do sistema e
-                          manutenções programadas.
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-green-800 text-sm font-medium">
-                            Status: Ativo
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-start space-x-3">
-                      <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 mb-2">
-                          Instruções
-                        </h4>
-                        <ul className="text-gray-700 text-sm space-y-1">
-                          <li>• As notificações funcionam apenas com HTTPS</li>
-                          <li>
-                            • Certifique-se de que permite notificaç��es no seu
-                            navegador
-                          </li>
-                          <li>
-                            • Em dispositivos móveis, adicione a app ao ecrã
-                            inicial
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Mobile Interaction Settings */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <div className="flex items-center mb-4">
-                  <Settings className="h-6 w-6 text-blue-600 mr-3" />
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Interaç��o Mobile
-                  </h3>
-                </div>
-                <p className="text-gray-600 mb-6">
-                  Configure o comportamento de cliques em contactos e moradas
-                </p>
-
-                <div className="space-y-4">
-                  {/* Phone Dialer Setting */}
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                        📞
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-medium text-blue-900">
-                            Marcação Automática
-                          </h4>
-                          <button
-                            onClick={() =>
-                              togglePhoneDialer(!enablePhoneDialer)
-                            }
-                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                              enablePhoneDialer ? "bg-blue-600" : "bg-gray-300"
-                            }`}
-                          >
-                            <span
-                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                enablePhoneDialer
-                                  ? "translate-x-6"
-                                  : "translate-x-1"
-                              }`}
-                            />
-                          </button>
-                        </div>
-                        <p className="text-blue-700 text-sm mb-3">
-                          Quando ativado, clicar num número de telefone abrirá
-                          diretamente o marcador do telefone.
-                        </p>
-                        <p className="text-blue-600 text-xs">
-                          Estado:{" "}
-                          {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Maps Redirect Setting */}
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        ����
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-medium text-green-900">
-                            Navegação Maps
-                          </h4>
-                          <button
-                            onClick={() =>
-                              toggleMapsRedirect(!enableMapsRedirect)
-                            }
-                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                              enableMapsRedirect
-                                ? "bg-green-600"
-                                : "bg-gray-300"
-                            }`}
-                          >
-                            <span
-                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                enableMapsRedirect
-                                  ? "translate-x-6"
-                                  : "translate-x-1"
-                              }`}
-                            />
-                          </button>
-                        </div>
-                        <p className="text-green-700 text-sm mb-3">
-                          Quando ativado, clicar numa morada abrirá o Google
-                          Maps para navegação.
-                        </p>
-                        <p className="text-green-600 text-xs">
-                          Estado:{" "}
-                          {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Instructions */}
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-start space-x-3">
-                      <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 mb-2">
-                          Instruções
-                        </h4>
-                        <ul className="text-gray-700 text-sm space-y-1">
-                          <li>
-                            • As definições são guardadas localmente no
-                            dispositivo
-                          </li>
-                          <li>
-                            • A marcação autom��tica funciona melhor em
-                            dispositivos móveis
-                          </li>
-                          <li>• O Google Maps abre numa nova janela/tab</li>
-                          <li>
-                            • Pode ativar ou desativar cada funcionalidade
-                            independentemente
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Data Management Section - Only for Super Admin */}
-              {currentUser.role === "super_admin" && (
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <div className="flex items-center mb-4">
-                    <Trash2 className="h-6 w-6 text-red-600 mr-3" />
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Gestão de Dados
-                    </h3>
-                  </div>
-                  <p className="text-gray-600 mb-6">
-                    Elimine todos os dados de obras, manutenções e piscinas para
-                    começar com uma aplicação limpa. Os utilizadores s����o
-                    mantidos.
-                  </p>
-
-                  <div className="space-y-4">
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-red-900 mb-2">
-                            Limpar Dados do Sistema
-                          </h4>
-                          <p className="text-red-700 text-sm mb-3">
-                            Esta ação eliminar��� permanentemente:
-                          </p>
-                          <ul className="text-red-700 text-sm space-y-1 mb-4">
-                            <li>• Todas as obras ({works.length} registos)</li>
-                            <li>
-                              • Todas as manutenções ({maintenance.length}{" "}
-                              registos)
-                            </li>
-                            <li>
-                              • Todas as piscinas ({pools.length} registos)
-                            </li>
-                            <li>• Dados do Firebase e armazenamento local</li>
-                          </ul>
-                          <p className="text-red-700 text-sm font-medium mb-3">
-                            ⚠️ ATENÇÃO: Esta operação é irreversível!
-                          </p>
-                          <button
-                            onClick={handleDataCleanup}
-                            disabled={cleanupLoading}
-                            className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                            <span>
-                              {cleanupLoading
-                                ? "A Eliminar..."
-                                : "Eliminar Todos os Dados"}
-                            </span>
-                          </button>
-                          {cleanupError && (
-                            <p className="text-red-600 text-sm mt-2">
-                              {cleanupError}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        );
-
-      case "relatorios":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <BarChart3 className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-2xl font-bold text-gray-900">
-                        Relat��rios
-                      </h1>
-                      <p className="text-gray-600 text-sm">
-                        Gere relatórios detalhados em PDF
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Report Types */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Pool Reports */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Waves className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Relatório de Piscinas
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        Lista completa de piscinas
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-3 mb-4">
-                    <p className="text-sm text-gray-600">
-                      <strong>{pools.length}</strong> piscinas registadas
-                    </p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>�� Estado e localizaç��o</li>
-                      <li>• Informações de clientes</li>
-                      <li>��� Histórico de manutenç��es</li>
-                      <li>• Próximas intervenções</li>
-                    </ul>
-                  </div>
-                  <button
-                    onClick={() => generatePoolsPDF()}
-                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
-                  >
-                    <Download className="h-4 w-4" />
-                    <span>Gerar PDF</span>
-                  </button>
-                </div>
-
-                {/* Maintenance Reports */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                      <Wrench className="h-6 w-6 text-green-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Relatório de Manutenções
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        Histórico de intervenções
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-3 mb-4">
-                    <p className="text-sm text-gray-600">
-                      <strong>{maintenance.length}</strong> manutenções
-                      registadas
-                    </p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>�� Trabalhos realizados</li>
-                      <li>• T������cnicos responsáveis</li>
-                      <li>• Datas e duraç��es</li>
-                      <li>• Estados e observações</li>
-                    </ul>
-                  </div>
-                  <button
-                    onClick={() => generateMaintenancePDF()}
-                    className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
-                  >
-                    <Download className="h-4 w-4" />
-                    <span>Gerar PDF</span>
-                  </button>
-                </div>
-
-                {/* Works Reports */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                      <Building2 className="h-6 w-6 text-orange-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Relat��rio de Obras
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        Projetos e construç��es
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-3 mb-4">
-                    <p className="text-sm text-gray-600">
-                      <strong>{works.length}</strong> obras registadas
-                    </p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Orçamentos e custos</li>
-                      <li>• Prazos e cronogramas</li>
-                      <li>• Equipas respons��veis</li>
-                      <li>������� Estados de progresso</li>
-                    </ul>
-                  </div>
-                  <button
-                    onClick={() => generateWorksPDF()}
-                    className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
-                  >
-                    <Download className="h-4 w-4" />
-                    <span>Gerar PDF</span>
-                  </button>
-                </div>
-
-                {/* Clients Reports */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <Users className="h-6 w-6 text-purple-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Relatório de Clientes
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        Base de dados de clientes
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-3 mb-4">
-                    <p className="text-sm text-gray-600">
-                      <strong>{clients.length}</strong> clientes registados
-                    </p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Dados de contacto</li>
-                      <li>• Piscinas associadas</li>
-                      <li>• Histórico de servi��os</li>
-                      <li>• Informaç��es contratuais</li>
-                    </ul>
-                  </div>
-                  <button
-                    onClick={() => generateClientsPDF()}
-                    className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
-                  >
-                    <Download className="h-4 w-4" />
-                    <span>Gerar PDF</span>
-                  </button>
-                </div>
-
-                {/* Complete Report */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                      <BarChart3 className="h-6 w-6 text-gray-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Relat��rio Completo
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        Todas as informações
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-3 mb-4">
-                    <p className="text-sm text-gray-600">
-                      Relat��rio consolidado de todo o sistema
-                    </p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Resumo executivo</li>
-                      <li>• Estatísticas gerais</li>
-                      <li>• Dados consolidados</li>
-                      <li>• Análise de performance</li>
-                    </ul>
-                  </div>
-                  <button
-                    onClick={() => generateCompletePDF()}
-                    className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors flex items-center justify-center space-x-2"
-                  >
-                    <Download className="h-4 w-4" />
-                    <span>Gerar PDF Completo</span>
-                  </button>
-                </div>
-
-                {/* Custom Report */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                      <Settings className="h-6 w-6 text-indigo-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Relat��rio Personalizado
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        Configure os dados
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-3 mb-4">
-                    <p className="text-sm text-gray-600">
-                      Crie relatórios com filtros específicos
-                    </p>
-                    <div className="space-y-2">
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          className="mr-2"
-                          defaultChecked
-                        />
-                        <span className="text-xs">Piscinas</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          className="mr-2"
-                          defaultChecked
-                        />
-                        <span className="text-xs">Manutenções</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2" />
-                        <span className="text-xs">Obras</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2" />
-                        <span className="text-xs">Clientes</span>
-                      </label>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => generateCustomPDF()}
-                    className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center space-x-2"
-                  >
-                    <Settings className="h-4 w-4" />
-                    <span>Configurar PDF</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Quick Stats */}
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Estatísticas R����pidas
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">
-                      {pools.length}
-                    </div>
-                    <div className="text-sm text-gray-600">Piscinas</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">
-                      {maintenance.length}
-                    </div>
-                    <div className="text-sm text-gray-600">Manuten��ões</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-orange-600">
-                      {works.length}
-                    </div>
-                    <div className="text-sm text-gray-600">Obras</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600">
-                      {clients.length}
-                    </div>
-                    <div className="text-sm text-gray-600">Clientes</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-cyan-600">
-                      {(() => {
-                        const waterBores = JSON.parse(
-                          localStorage.getItem("waterBores") || "[]",
-                        );
-                        return waterBores.length;
-                      })()}
-                    </div>
-                    <div className="text-sm text-gray-600">Furos de Água</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "clientes":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <Users className="h-4 w-4 text-purple-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-2xl font-bold text-gray-900">
-                        Clientes
-                      </h1>
-                      <p className="text-gray-600 text-sm">
-                        Gestão da base de dados de clientes
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setActiveSection("novo-cliente")}
-                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>Novo Cliente</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Search and Filters */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex space-x-3">
-                  <input
-                    type="text"
-                    placeholder="Pesquisar clientes..."
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    <option>Todos os tipos</option>
-                    <option>Particular</option>
-                    <option>Empresa</option>
-                    <option>Condomínio</option>
-                  </select>
-                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    <option>Todos os estados</option>
-                    <option>Ativo</option>
-                    <option>Inativo</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Statistics */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        case "editar-obra":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
                 <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <Users className="h-4 w-4 text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">
-                        Total Clientes
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {clients.length}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                      <Check className="h-4 w-4 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">
-                        Clientes Ativos
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {clients.filter((c) => c.status === "Ativo").length}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Waves className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">
-                        Com Piscinas
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {pools.length}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                      <Building2 className="h-4 w-4 text-orange-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">
-                        Com Obras
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {works.length}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Clients List */}
-              <div className="space-y-4">
-                {clients.length === 0 ? (
-                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <Users className="h-8 w-8 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Nenhum cliente registado
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4">
-                      Comece por adicionar o primeiro cliente ao sistema
-                    </p>
-                    <button
-                      onClick={() => setActiveSection("novo-cliente")}
-                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2 mx-auto"
-                    >
-                      <Plus className="h-4 w-4" />
-                      <span>Adicionar Cliente</span>
-                    </button>
-                  </div>
-                ) : (
-                  clients.map((client) => (
-                    <div
-                      key={client.id}
-                      className="bg-white rounded-lg shadow-sm p-6"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {client.name}
-                            </h3>
-                            <span
-                              className={`text-xs px-2 py-1 rounded-full font-medium ${
-                                client.status === "Ativo"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-gray-100 text-gray-800"
-                              }`}
-                            >
-                              {client.status}
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
-                            <div>
-                              <p className="font-medium">Contactos:</p>
-                              <p>{client.email}</p>
-                              <button
-                                onClick={() => handlePhoneClick(client.phone)}
-                                className={`text-left ${
-                                  enablePhoneDialer
-                                    ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                    : "text-gray-600"
-                                }`}
-                                disabled={!enablePhoneDialer}
-                              >
-                                📞 {client.phone}
-                              </button>
-                            </div>
-                            <div>
-                              <p className="font-medium">Morada:</p>
-                              <button
-                                onClick={() =>
-                                  handleAddressClick(client.address)
-                                }
-                                className={`text-left ${
-                                  enableMapsRedirect
-                                    ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                    : "text-gray-600"
-                                }`}
-                                disabled={!enableMapsRedirect}
-                              >
-                                📍 {client.address}
-                              </button>
-                            </div>
-                            <div>
-                              <p className="font-medium">Informações:</p>
-                              <p>Tipo: {client.type}</p>
-                              <p>
-                                Cliente desde:{" "}
-                                {new Date(client.createdAt).toLocaleDateString(
-                                  "pt-PT",
-                                )}
-                              </p>
-                            </div>
-                          </div>
-                          {client.notes && (
-                            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                              <p className="text-sm text-gray-600">
-                                <strong>Notas:</strong> {client.notes}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {hasPermission("clientes", "edit") && (
-                            <button className="p-2 text-gray-400 hover:text-gray-600">
-                              <Edit2 className="h-4 w-4" />
-                            </button>
-                          )}
-                          {hasPermission("clientes", "delete") && (
-                            <button
-                              onClick={() =>
-                                confirmDelete(
-                                  `Tem a certeza que deseja apagar o cliente "${client.name}"?`,
-                                  () => dataSync.deleteClient(client.id),
-                                )
-                              }
-                              className="p-2 text-gray-400 hover:text-red-600"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-        );
-
-      case "novo-cliente":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <Users className="h-4 w-4 text-purple-600" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                      Novo Cliente
-                    </h1>
-                    <p className="text-gray-600 text-sm">
-                      Adicionar cliente à base de dados
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Form */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <form className="space-y-8">
-                  {/* Basic Information */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Informações Básicas
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Nome / Razão Social *
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Nome completo ou razão social"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Cliente *
-                        </label>
-                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
-                          <option value="">Selecionar tipo</option>
-                          <option value="particular">Particular</option>
-                          <option value="empresa">Empresa</option>
-                          <option value="condominio">Condomínio</option>
-                          <option value="hotel">Hotel / Turismo</option>
-                          <option value="publico">Entidade Pública</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Contact Information */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Contactos
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email Principal *
-                        </label>
-                        <input
-                          type="email"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="email@exemplo.com"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Telefone Principal *
-                        </label>
-                        <input
-                          type="tel"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="+351 XXX XXX XXX"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email Secund��rio
-                        </label>
-                        <input
-                          type="email"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="email2@exemplo.com"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Telefone Secundário
-                        </label>
-                        <input
-                          type="tel"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="+351 XXX XXX XXX"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Address */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Morada
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Morada Completa *
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Rua, n��mero, andar, etc."
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Código Postal *
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="XXXX-XXX"
-                          pattern="[0-9]{4}-[0-9]{3}"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Localidade *
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Cidade/Vila"
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Additional Information */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Informações Adicionais
-                    </h3>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          NIF / NIPC
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="123456789"
-                          pattern="[0-9]{9}"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Pessoa de Contacto (se aplicável)
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Nome da pessoa responsável"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Notas e Observações
-                        </label>
-                        <textarea
-                          rows={4}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Informa��ões relevantes sobre o cliente, preferências, histórico, etc."
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
-                    <button
-                      type="button"
-                      onClick={() => setActiveSection("clientes")}
-                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        alert(
-                          "Cliente criado com sucesso! (Função em desenvolvimento)",
-                        );
-                        setActiveSection("clientes");
-                      }}
-                      className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center space-x-2"
-                    >
-                      <Save className="h-4 w-4" />
-                      <span>Criar Cliente</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "obras":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                       <Building2 className="h-4 w-4 text-blue-600" />
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Obras
+                        Editar Obra
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Gestão de obras e projetos
+                        {editingWork?.title}
                       </p>
                     </div>
                   </div>
-                  {hasPermission("obras", "create") && (
-                    <button
-                      onClick={() => navigateToSection("nova-obra")}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      <span>Nova Obra</span>
-                    </button>
-                  )}
                 </div>
-              </div>
 
-              {/* Filter Tabs */}
-              <div className="bg-white rounded-lg shadow-sm">
-                <div className="flex border-b border-gray-200">
-                  <button
-                    onClick={() => setActiveWorkFilter("all")}
-                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                      activeWorkFilter === "all"
-                        ? "border-blue-500 text-blue-600"
-                        : "border-transparent text-gray-500 hover:text-gray-700"
-                    }`}
-                  >
-                    Todas ({works.length})
-                  </button>
-                  <button
-                    onClick={() => setActiveWorkFilter("pending")}
-                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                      activeWorkFilter === "pending"
-                        ? "border-red-500 text-red-600"
-                        : "border-transparent text-gray-500 hover:text-gray-700"
-                    }`}
-                  >
-                    Pendentes (
-                    {works.filter((w) => w.status === "pending").length})
-                  </button>
-                  <button
-                    onClick={() => setActiveWorkFilter("in_progress")}
-                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                      activeWorkFilter === "in_progress"
-                        ? "border-orange-500 text-orange-600"
-                        : "border-transparent text-gray-500 hover:text-gray-700"
-                    }`}
-                  >
-                    Em Progresso (
-                    {works.filter((w) => w.status === "in_progress").length})
-                  </button>
-                  <button
-                    onClick={() => setActiveWorkFilter("completed")}
-                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                      activeWorkFilter === "completed"
-                        ? "border-green-500 text-green-600"
-                        : "border-transparent text-gray-500 hover:text-gray-700"
-                    }`}
-                  >
-                    Concluídas (
-                    {works.filter((w) => w.status === "completed").length})
-                  </button>
-                  <button
-                    onClick={() => setActiveWorkFilter("no_sheet")}
-                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                      activeWorkFilter === "no_sheet"
-                        ? "border-blue-500 text-blue-600"
-                        : "border-transparent text-gray-500 hover:text-gray-700"
-                    }`}
-                  >
-                    Sem Folha de Obra (
-                    {
-                      works.filter(
-                        (w) => !w.folhaGerada && w.status !== "completed",
-                      ).length
-                    }
-                    )
-                  </button>
-                </div>
-              </div>
-
-              {/* Works List */}
-              <div className="space-y-4">
-                {works
-                  .filter((work) => {
-                    if (activeWorkFilter === "all") return true;
-                    if (activeWorkFilter === "no_sheet")
-                      return !work.folhaGerada && work.status !== "completed";
-                    return work.status === activeWorkFilter;
-                  })
-                  .map((work) => (
-                    <div
-                      key={work.id}
-                      className="bg-white rounded-lg p-4 shadow-sm"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {work.title}
-                            </h3>
-                            <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                work.status === "pending"
-                                  ? "bg-red-100 text-red-700"
-                                  : work.status === "in_progress"
-                                    ? "bg-orange-100 text-orange-700"
-                                    : work.status === "completed"
-                                      ? "bg-green-100 text-green-700"
-                                      : "bg-gray-100 text-gray-700"
-                              }`}
-                            >
-                              {work.status === "pending"
-                                ? "Pendente"
-                                : work.status === "in_progress"
-                                  ? "Em Progresso"
-                                  : work.status === "completed"
-                                    ? "Concluída"
-                                    : work.status}
-                            </span>
-                            {!work.folhaGerada && (
-                              <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-                                Sem Folha de Obra
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-gray-600 mb-2">
-                            {work.description}
-                          </p>
-                          <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
-                            <div>
-                              <span className="font-medium">Cliente:</span>{" "}
-                              {work.client}
-                              {work.contact && (
-                                <div className="mt-1">
-                                  <button
-                                    onClick={() =>
-                                      handlePhoneClick(work.contact)
-                                    }
-                                    className={`text-xs ${
-                                      enablePhoneDialer
-                                        ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                        : "text-gray-500"
-                                    }`}
-                                    disabled={!enablePhoneDialer}
-                                  >
-                                    📞 {work.contact}
-                                  </button>
-                                </div>
-                              )}
-                            </div>
-                            <div>
-                              <span className="font-medium">Local:</span>{" "}
-                              <button
-                                onClick={() =>
-                                  handleAddressClick(work.location)
-                                }
-                                className={`text-xs ${
-                                  enableMapsRedirect
-                                    ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                    : "text-gray-500"
-                                }`}
-                                disabled={!enableMapsRedirect}
-                              >
-                                📍 {work.location}
-                              </button>
-                            </div>
-                            <div>
-                              <span className="font-medium">Início:</span>{" "}
-                              {new Date(work.startDate).toLocaleDateString(
-                                "pt-PT",
-                              )}
-                            </div>
-                            <div>
-                              <span className="font-medium">Atribuída a:</span>{" "}
-                              {work.assignedTo}
-                            </div>
-                            {work.budget && (
-                              <div>
-                                <span className="font-medium">Orçamento:</span>{" "}
-                                ��{work.budget}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2 ml-4">
-                          {hasPermission("obras", "view") && (
-                            <button
-                              onClick={() => {
-                                setSelectedWork(work);
-                                setViewingWork(true);
-                              }}
-                              className="p-2 text-gray-400 hover:text-gray-600"
-                            >
-                              <Eye className="h-4 w-4" />
-                            </button>
-                          )}
-                          {hasPermission("obras", "edit") && (
-                            <button
-                              onClick={() => {
-                                setEditingWork(work);
-                                setActiveSection("editar-obra");
-                              }}
-                              className="p-2 text-gray-400 hover:text-gray-600"
-                            >
-                              <Edit2 className="h-4 w-4" />
-                            </button>
-                          )}
-                          {hasPermission("obras", "delete") && (
-                            <button
-                              onClick={() =>
-                                confirmDelete(
-                                  `Tem a certeza que deseja apagar a obra "${work.title}"?`,
-                                  () => dataSync.deleteWork(work.id),
-                                )
-                              }
-                              className="p-2 text-gray-400 hover:text-red-600"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          )}
-                        </div>
+                {/* Edit Form */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <form className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Título da Obra *
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingWork?.title}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ex: Instalação de Piscina"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Cliente *
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingWork?.client}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Nome do cliente"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Local *
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingWork?.location}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Morada da obra"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Estado
+                        </label>
+                        <select
+                          defaultValue={editingWork?.status}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="pending">Pendente</option>
+                          <option value="in_progress">Em Progresso</option>
+                          <option value="completed">Concluída</option>
+                          <option value="cancelled">Cancelada</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Data de Início
+                        </label>
+                        <input
+                          type="date"
+                          defaultValue={editingWork?.startDate?.split("T")[0]}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Data de Conclusão Prevista
+                        </label>
+                        <input
+                          type="date"
+                          defaultValue={
+                            editingWork?.expectedEndDate?.split("T")[0]
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Responsável
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingWork?.assignedTo}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Técnico responsável"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Valor Orçamentado (€)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          defaultValue={editingWork?.budgetValue}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Telefone do Cliente
+                        </label>
+                        <input
+                          type="tel"
+                          defaultValue={editingWork?.clientPhone}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="+351 912 345 678"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email do Cliente
+                        </label>
+                        <input
+                          type="email"
+                          defaultValue={editingWork?.clientEmail}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="cliente@email.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Prioridade
+                        </label>
+                        <select
+                          defaultValue={editingWork?.priority || "medium"}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="low">Baixa</option>
+                          <option value="medium">Média</option>
+                          <option value="high">Alta</option>
+                          <option value="urgent">Urgente</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tipo de Obra
+                        </label>
+                        <select
+                          defaultValue={editingWork?.workType || "installation"}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="installation">Instalação</option>
+                          <option value="maintenance">Manutenção</option>
+                          <option value="repair">Reparação</option>
+                          <option value="renovation">Renovação</option>
+                          <option value="inspection">Inspeção</option>
+                        </select>
                       </div>
                     </div>
-                  ))}
 
-                {works.filter((work) => {
-                  if (activeWorkFilter === "all") return true;
-                  if (activeWorkFilter === "no_sheet")
-                    return !work.folhaGerada && work.status !== "completed";
-                  return work.status === activeWorkFilter;
-                }).length === 0 && (
-                  <div className="bg-white rounded-lg p-8 shadow-sm text-center">
-                    <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                      Nenhuma obra encontrada
-                    </h3>
-                    <p className="text-gray-500 mb-4">
-                      {activeWorkFilter === "all"
-                        ? "Não há obras registadas no sistema."
-                        : `Não h��� obras com o filtro "${
-                            activeWorkFilter === "pending"
-                              ? "Pendentes"
-                              : activeWorkFilter === "in_progress"
-                                ? "Em Progresso"
-                                : activeWorkFilter === "completed"
-                                  ? "Concluídas"
-                                  : activeWorkFilter === "no_sheet"
-                                    ? "Sem Folha de Obra"
-                                    : activeWorkFilter
-                          }" aplicado.`}
-                    </p>
-                    <button
-                      onClick={() => navigateToSection("nova-obra")}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                    >
-                      Criar Nova Obra
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        );
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Descrição
+                      </label>
+                      <textarea
+                        defaultValue={editingWork?.description}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={4}
+                        placeholder="Descrição detalhada da obra"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Observações Técnicas
+                      </label>
+                      <textarea
+                        defaultValue={editingWork?.technicalNotes}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={3}
+                        placeholder="Observações técnicas, materiais necessários, etc."
+                      />
+                    </div>
 
-      case "editar-obra":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Building2 className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                      Editar Obra
-                    </h1>
-                    <p className="text-gray-600 text-sm">
-                      {editingWork?.title}
-                    </p>
-                  </div>
+                    <div className="flex space-x-4">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingWork(null);
+                          setActiveSection("obras");
+                        }}
+                        className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          const form = e.target.closest("form");
+                          const inputs = form.querySelectorAll(
+                            "input, select, textarea",
+                          );
+
+                          const title = inputs[0].value; // Título da Obra
+                          const client = inputs[1].value; // Cliente
+                          const location = inputs[2].value; // Local
+                          const status = inputs[3].value; // Estado
+                          const startDate = inputs[4].value; // Data de Início
+                          const expectedEndDate = inputs[5].value; // Data de Conclusão Prevista
+                          const assignedTo = inputs[6].value; // Responsável
+                          const budgetValue = inputs[7].value; // Valor Orçamentado
+                          const clientPhone = inputs[8].value; // Telefone do Cliente
+                          const clientEmail = inputs[9].value; // Email do Cliente
+                          const priority = inputs[10].value; // Prioridade
+                          const workType = inputs[11].value; // Tipo de Obra
+                          const description = inputs[12].value; // Descri��ão
+                          const technicalNotes = inputs[13].value; // Observações Técnicas
+
+                          dataSync.updateWork(editingWork.id, {
+                            title,
+                            client,
+                            location,
+                            status,
+                            startDate: startDate
+                              ? new Date(startDate).toISOString()
+                              : undefined,
+                            expectedEndDate: expectedEndDate
+                              ? new Date(expectedEndDate).toISOString()
+                              : undefined,
+                            assignedTo,
+                            budgetValue: budgetValue
+                              ? parseFloat(budgetValue)
+                              : undefined,
+                            clientPhone,
+                            clientEmail,
+                            priority,
+                            workType,
+                            description,
+                            technicalNotes,
+                          });
+
+                          alert("Obra atualizada com sucesso!");
+                          setEditingWork(null);
+                          setActiveSection("obras");
+                        }}
+                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                      >
+                        Guardar Alterações
+                      </button>
+                    </div>
+                  </form>
                 </div>
-              </div>
-
-              {/* Edit Form */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <form className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Título da Obra *
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue={editingWork?.title}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: Instalação de Piscina"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cliente *
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue={editingWork?.client}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Nome do cliente"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Local *
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue={editingWork?.location}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Morada da obra"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Estado
-                      </label>
-                      <select
-                        defaultValue={editingWork?.status}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="pending">Pendente</option>
-                        <option value="in_progress">Em Progresso</option>
-                        <option value="completed">Concluída</option>
-                        <option value="cancelled">Cancelada</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Data de Início
-                      </label>
-                      <input
-                        type="date"
-                        defaultValue={editingWork?.startDate?.split("T")[0]}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Data de Conclusão Prevista
-                      </label>
-                      <input
-                        type="date"
-                        defaultValue={
-                          editingWork?.expectedEndDate?.split("T")[0]
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Responsável
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue={editingWork?.assignedTo}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Técnico responsável"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Valor Orçamentado (€)
-                      </label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        defaultValue={editingWork?.budgetValue}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="0.00"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Telefone do Cliente
-                      </label>
-                      <input
-                        type="tel"
-                        defaultValue={editingWork?.clientPhone}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="+351 912 345 678"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email do Cliente
-                      </label>
-                      <input
-                        type="email"
-                        defaultValue={editingWork?.clientEmail}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="cliente@email.com"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Prioridade
-                      </label>
-                      <select
-                        defaultValue={editingWork?.priority || "medium"}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="low">Baixa</option>
-                        <option value="medium">Média</option>
-                        <option value="high">Alta</option>
-                        <option value="urgent">Urgente</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Tipo de Obra
-                      </label>
-                      <select
-                        defaultValue={editingWork?.workType || "installation"}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="installation">Instalação</option>
-                        <option value="maintenance">Manutenção</option>
-                        <option value="repair">Reparação</option>
-                        <option value="renovation">Renovação</option>
-                        <option value="inspection">Inspeção</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Descrição
-                    </label>
-                    <textarea
-                      defaultValue={editingWork?.description}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      rows={4}
-                      placeholder="Descrição detalhada da obra"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Observações Técnicas
-                    </label>
-                    <textarea
-                      defaultValue={editingWork?.technicalNotes}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      rows={3}
-                      placeholder="Observações técnicas, materiais necessários, etc."
-                    />
-                  </div>
-
-                  <div className="flex space-x-4">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingWork(null);
-                        setActiveSection("obras");
-                      }}
-                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        const form = e.target.closest("form");
-                        const inputs = form.querySelectorAll(
-                          "input, select, textarea",
-                        );
-
-                        const title = inputs[0].value; // Título da Obra
-                        const client = inputs[1].value; // Cliente
-                        const location = inputs[2].value; // Local
-                        const status = inputs[3].value; // Estado
-                        const startDate = inputs[4].value; // Data de Início
-                        const expectedEndDate = inputs[5].value; // Data de Conclusão Prevista
-                        const assignedTo = inputs[6].value; // Responsável
-                        const budgetValue = inputs[7].value; // Valor Orçamentado
-                        const clientPhone = inputs[8].value; // Telefone do Cliente
-                        const clientEmail = inputs[9].value; // Email do Cliente
-                        const priority = inputs[10].value; // Prioridade
-                        const workType = inputs[11].value; // Tipo de Obra
-                        const description = inputs[12].value; // Descrição
-                        const technicalNotes = inputs[13].value; // Observações Técnicas
-
-                        dataSync.updateWork(editingWork.id, {
-                          title,
-                          client,
-                          location,
-                          status,
-                          startDate: startDate
-                            ? new Date(startDate).toISOString()
-                            : undefined,
-                          expectedEndDate: expectedEndDate
-                            ? new Date(expectedEndDate).toISOString()
-                            : undefined,
-                          assignedTo,
-                          budgetValue: budgetValue
-                            ? parseFloat(budgetValue)
-                            : undefined,
-                          clientPhone,
-                          clientEmail,
-                          priority,
-                          workType,
-                          description,
-                          technicalNotes,
-                        });
-
-                        alert("Obra atualizada com sucesso!");
-                        setEditingWork(null);
-                        setActiveSection("obras");
-                      }}
-                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                    >
-                      Guardar Alterações
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "editar-piscina":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Waves className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                      Editar Piscina
-                    </h1>
-                    <p className="text-gray-600 text-sm">{editingPool?.name}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Edit Form */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <form className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Nome da Piscina *
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue={editingPool?.name}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: Piscina Villa Marina"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cliente *
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue={editingPool?.client}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Nome do cliente"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Local *
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue={editingPool?.location}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Localização da piscina"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Estado
-                      </label>
-                      <select
-                        defaultValue={editingPool?.status}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="Ativa">Ativa</option>
-                        <option value="Inativa">Inativa</option>
-                        <option value="Em Manutenç��o">Em Manutenç��o</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Tipo de Piscina
-                      </label>
-                      <select
-                        defaultValue={editingPool?.poolType || "outdoor"}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="outdoor">Exterior</option>
-                        <option value="indoor">Interior</option>
-                        <option value="semi_covered">Semi-coberta</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Dimensões (m)
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue={editingPool?.dimensions}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: 8x4x1.5"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Volume (L)
-                      </label>
-                      <input
-                        type="number"
-                        defaultValue={editingPool?.volume}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="48000"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Sistema de Filtração
-                      </label>
-                      <select
-                        defaultValue={editingPool?.filtrationSystem || "sand"}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="sand">Areia</option>
-                        <option value="cartridge">Cartucho</option>
-                        <option value="diatomaceous">Terra Diatomácea</option>
-                        <option value="other">Outro</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Data de Instalação
-                      </label>
-                      <input
-                        type="date"
-                        defaultValue={
-                          editingPool?.installationDate?.split("T")[0]
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Telefone do Cliente
-                      </label>
-                      <input
-                        type="tel"
-                        defaultValue={editingPool?.clientPhone}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="+351 912 345 678"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email do Cliente
-                      </label>
-                      <input
-                        type="email"
-                        defaultValue={editingPool?.clientEmail}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="cliente@email.com"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Observações
-                    </label>
-                    <textarea
-                      defaultValue={editingPool?.observations}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      rows={3}
-                      placeholder="Observações sobre a piscina, equipamentos instalados, etc."
-                    />
-                  </div>
-
-                  <div className="flex space-x-4">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingPool(null);
-                        setActiveSection("piscinas");
-                      }}
-                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        const form = e.target.closest("form");
-                        const inputs = form.querySelectorAll(
-                          "input, select, textarea",
-                        );
-
-                        const name = inputs[0].value; // Nome da Piscina
-                        const client = inputs[1].value; // Cliente
-                        const location = inputs[2].value; // Local
-                        const status = inputs[3].value; // Estado
-                        const poolType = inputs[4].value; // Tipo de Piscina
-                        const dimensions = inputs[5].value; // Dimensões
-                        const volume = inputs[6].value; // Volume
-                        const filtrationSystem = inputs[7].value; // Sistema de Filtração
-                        const installationDate = inputs[8].value; // Data de Instala��ão
-                        const clientPhone = inputs[9].value; // Telefone do Cliente
-                        const clientEmail = inputs[10].value; // Email do Cliente
-                        const observations = inputs[11].value; // Observações
-
-                        dataSync.updatePool(editingPool.id, {
-                          name,
-                          client,
-                          location,
-                          status,
-                          poolType,
-                          dimensions,
-                          volume: volume ? parseInt(volume) : undefined,
-                          filtrationSystem,
-                          installationDate: installationDate
-                            ? new Date(installationDate).toISOString()
-                            : undefined,
-                          clientPhone,
-                          clientEmail,
-                          observations,
-                        });
-
-                        alert("Piscina atualizada com sucesso!");
-                        setEditingPool(null);
-                        setActiveSection("piscinas");
-                      }}
-                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                    >
-                      Guardar Alterações
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "editar-manutencao":
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Wrench className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                      Editar Manutenção
-                    </h1>
-                    <p className="text-gray-600 text-sm">
-                      {editingMaintenance?.poolName} -{" "}
-                      {editingMaintenance?.type}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Edit Form */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <form className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Data *
-                      </label>
-                      <input
-                        type="date"
-                        defaultValue={
-                          editingMaintenance?.scheduledDate?.split("T")[0]
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Técnico *
-                      </label>
-                      <input
-                        type="text"
-                        defaultValue={editingMaintenance?.technician}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Nome do técnico"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Tipo de Manutenção
-                      </label>
-                      <select
-                        defaultValue={editingMaintenance?.type}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="Limpeza">Limpeza</option>
-                        <option value="Tratamento">Tratamento</option>
-                        <option value="Manutenção">Manutenção</option>
-                        <option value="Reparação">Reparação</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Estado
-                      </label>
-                      <select
-                        defaultValue={editingMaintenance?.status}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="scheduled">Agendado</option>
-                        <option value="in_progress">Em Progresso</option>
-                        <option value="completed">Concluído</option>
-                        <option value="cancelled">Cancelado</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Dura��ão Estimada (horas)
-                      </label>
-                      <input
-                        type="number"
-                        step="0.5"
-                        defaultValue={editingMaintenance?.estimatedDuration}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="2.5"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Duração Real (horas)
-                      </label>
-                      <input
-                        type="number"
-                        step="0.5"
-                        defaultValue={editingMaintenance?.actualDuration}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="3.0"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Custo (€)
-                      </label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        defaultValue={editingMaintenance?.cost}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="0.00"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Prioridade
-                      </label>
-                      <select
-                        defaultValue={editingMaintenance?.priority || "medium"}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="low">Baixa</option>
-                        <option value="medium">Média</option>
-                        <option value="high">Alta</option>
-                        <option value="urgent">Urgente</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Data de Conclusão
-                      </label>
-                      <input
-                        type="date"
-                        defaultValue={
-                          editingMaintenance?.completedDate?.split("T")[0]
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Materiais Utilizados
-                    </label>
-                    <textarea
-                      defaultValue={editingMaintenance?.materialsUsed}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      rows={3}
-                      placeholder="Lista de materiais e produtos utilizados"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Observações
-                    </label>
-                    <textarea
-                      defaultValue={editingMaintenance?.observations}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      rows={4}
-                      placeholder="Observações sobre a manutenção"
-                    />
-                  </div>
-
-                  <div className="flex space-x-4">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingMaintenance(null);
-                        setActiveSection("manutencoes");
-                      }}
-                      className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        const form = e.target.closest("form");
-                        const inputs = form.querySelectorAll(
-                          "input, select, textarea",
-                        );
-
-                        const scheduledDate = inputs[0].value; // Data
-                        const technician = inputs[1].value; // Técnico
-                        const type = inputs[2].value; // Tipo de Manutenção
-                        const status = inputs[3].value; // Estado
-                        const estimatedDuration = inputs[4].value; // Duração Estimada
-                        const actualDuration = inputs[5].value; // Duração Real
-                        const cost = inputs[6].value; // Custo
-                        const priority = inputs[7].value; // Prioridade
-                        const completedDate = inputs[8].value; // Data de Conclusão
-                        const materialsUsed = inputs[9].value; // Materiais Utilizados
-                        const observations = inputs[10].value; // Observações
-
-                        dataSync.updateMaintenance(editingMaintenance.id, {
-                          scheduledDate: scheduledDate
-                            ? new Date(scheduledDate).toISOString()
-                            : undefined,
-                          technician,
-                          type,
-                          status,
-                          estimatedDuration: estimatedDuration
-                            ? parseFloat(estimatedDuration)
-                            : undefined,
-                          actualDuration: actualDuration
-                            ? parseFloat(actualDuration)
-                            : undefined,
-                          cost: cost ? parseFloat(cost) : undefined,
-                          priority,
-                          completedDate: completedDate
-                            ? new Date(completedDate).toISOString()
-                            : undefined,
-                          materialsUsed,
-                          observations,
-                        });
-
-                        alert("Manutenção atualizada com sucesso!");
-                        setEditingMaintenance(null);
-                        setActiveSection("manutencoes");
-                      }}
-                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                    >
-                      Guardar Alteraç��es
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "register":
-        // SECURITY: Only super admin can register new users
-        if (currentUser?.role !== "super_admin") {
-          return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-              <div className="text-center">
-                <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold text-gray-700 mb-2">
-                  Acesso Restrito
-                </h2>
-                <p className="text-gray-500">
-                  Apenas super administradores podem criar utilizadores.
-                </p>
-                <button
-                  onClick={() => navigateToSection("dashboard")}
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                  Voltar ao Dashboard
-                </button>
               </div>
             </div>
           );
-        }
-        return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="px-4 py-4 space-y-6">
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <button
-                  onClick={() => navigateToSection("utilizadores")}
-                  className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-                >
-                  ← Voltar aos Utilizadores
-                </button>
-                <RegisterForm
-                  onRegisterSuccess={() => {
-                    navigateToSection("utilizadores");
-                  }}
-                  onBackToLogin={() => {
-                    navigateToSection("utilizadores");
-                  }}
-                />
+
+        case "editar-piscina":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Waves className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Editar Piscina
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        {editingPool?.name}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Edit Form */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <form className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Nome da Piscina *
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingPool?.name}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ex: Piscina Villa Marina"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Cliente *
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingPool?.client}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Nome do cliente"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Local *
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingPool?.location}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Localização da piscina"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Estado
+                        </label>
+                        <select
+                          defaultValue={editingPool?.status}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="Ativa">Ativa</option>
+                          <option value="Inativa">Inativa</option>
+                          <option value="Em Manutenç��o">Em Manutenç��o</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tipo de Piscina
+                        </label>
+                        <select
+                          defaultValue={editingPool?.poolType || "outdoor"}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="outdoor">Exterior</option>
+                          <option value="indoor">Interior</option>
+                          <option value="semi_covered">Semi-coberta</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Dimensões (m)
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingPool?.dimensions}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ex: 8x4x1.5"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Volume (L)
+                        </label>
+                        <input
+                          type="number"
+                          defaultValue={editingPool?.volume}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="48000"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Sistema de Filtração
+                        </label>
+                        <select
+                          defaultValue={editingPool?.filtrationSystem || "sand"}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="sand">Areia</option>
+                          <option value="cartridge">Cartucho</option>
+                          <option value="diatomaceous">Terra Diatomácea</option>
+                          <option value="other">Outro</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Data de Instalação
+                        </label>
+                        <input
+                          type="date"
+                          defaultValue={
+                            editingPool?.installationDate?.split("T")[0]
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Telefone do Cliente
+                        </label>
+                        <input
+                          type="tel"
+                          defaultValue={editingPool?.clientPhone}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="+351 912 345 678"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email do Cliente
+                        </label>
+                        <input
+                          type="email"
+                          defaultValue={editingPool?.clientEmail}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="cliente@email.com"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Observações
+                      </label>
+                      <textarea
+                        defaultValue={editingPool?.observations}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={3}
+                        placeholder="Observações sobre a piscina, equipamentos instalados, etc."
+                      />
+                    </div>
+
+                    <div className="flex space-x-4">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingPool(null);
+                          setActiveSection("piscinas");
+                        }}
+                        className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          const form = e.target.closest("form");
+                          const inputs = form.querySelectorAll(
+                            "input, select, textarea",
+                          );
+
+                          const name = inputs[0].value; // Nome da Piscina
+                          const client = inputs[1].value; // Cliente
+                          const location = inputs[2].value; // Local
+                          const status = inputs[3].value; // Estado
+                          const poolType = inputs[4].value; // Tipo de Piscina
+                          const dimensions = inputs[5].value; // Dimensões
+                          const volume = inputs[6].value; // Volume
+                          const filtrationSystem = inputs[7].value; // Sistema de Filtração
+                          const installationDate = inputs[8].value; // Data de Instala��ão
+                          const clientPhone = inputs[9].value; // Telefone do Cliente
+                          const clientEmail = inputs[10].value; // Email do Cliente
+                          const observations = inputs[11].value; // Observações
+
+                          dataSync.updatePool(editingPool.id, {
+                            name,
+                            client,
+                            location,
+                            status,
+                            poolType,
+                            dimensions,
+                            volume: volume ? parseInt(volume) : undefined,
+                            filtrationSystem,
+                            installationDate: installationDate
+                              ? new Date(installationDate).toISOString()
+                              : undefined,
+                            clientPhone,
+                            clientEmail,
+                            observations,
+                          });
+
+                          alert("Piscina atualizada com sucesso!");
+                          setEditingPool(null);
+                          setActiveSection("piscinas");
+                        }}
+                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                      >
+                        Guardar Alterações
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
-        );
+          );
 
-      default:
-        return (
-          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                Página não encontrada
-              </h1>
-              <p className="text-gray-600">
-                A seção solicitada não foi encontrada.
-              </p>
+        case "editar-manutencao":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Wrench className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Editar Manutenção
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        {editingMaintenance?.poolName} -{" "}
+                        {editingMaintenance?.type}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Edit Form */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <form className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Data *
+                        </label>
+                        <input
+                          type="date"
+                          defaultValue={
+                            editingMaintenance?.scheduledDate?.split("T")[0]
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Técnico *
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingMaintenance?.technician}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Nome do técnico"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tipo de Manutenção
+                        </label>
+                        <select
+                          defaultValue={editingMaintenance?.type}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="Limpeza">Limpeza</option>
+                          <option value="Tratamento">Tratamento</option>
+                          <option value="Manutenção">Manutenção</option>
+                          <option value="Reparação">Reparação</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Estado
+                        </label>
+                        <select
+                          defaultValue={editingMaintenance?.status}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="scheduled">Agendado</option>
+                          <option value="in_progress">Em Progresso</option>
+                          <option value="completed">Concluído</option>
+                          <option value="cancelled">Cancelado</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Dura��ão Estimada (horas)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.5"
+                          defaultValue={editingMaintenance?.estimatedDuration}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="2.5"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Duração Real (horas)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.5"
+                          defaultValue={editingMaintenance?.actualDuration}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="3.0"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Custo (€)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          defaultValue={editingMaintenance?.cost}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Prioridade
+                        </label>
+                        <select
+                          defaultValue={
+                            editingMaintenance?.priority || "medium"
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="low">Baixa</option>
+                          <option value="medium">Média</option>
+                          <option value="high">Alta</option>
+                          <option value="urgent">Urgente</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Data de Conclusão
+                        </label>
+                        <input
+                          type="date"
+                          defaultValue={
+                            editingMaintenance?.completedDate?.split("T")[0]
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Materiais Utilizados
+                      </label>
+                      <textarea
+                        defaultValue={editingMaintenance?.materialsUsed}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={3}
+                        placeholder="Lista de materiais e produtos utilizados"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Observações
+                      </label>
+                      <textarea
+                        defaultValue={editingMaintenance?.observations}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={4}
+                        placeholder="Observações sobre a manutenção"
+                      />
+                    </div>
+
+                    <div className="flex space-x-4">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingMaintenance(null);
+                          setActiveSection("manutencoes");
+                        }}
+                        className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          const form = e.target.closest("form");
+                          const inputs = form.querySelectorAll(
+                            "input, select, textarea",
+                          );
+
+                          const scheduledDate = inputs[0].value; // Data
+                          const technician = inputs[1].value; // Técnico
+                          const type = inputs[2].value; // Tipo de Manutenção
+                          const status = inputs[3].value; // Estado
+                          const estimatedDuration = inputs[4].value; // Duração Estimada
+                          const actualDuration = inputs[5].value; // Duração Real
+                          const cost = inputs[6].value; // Custo
+                          const priority = inputs[7].value; // Prioridade
+                          const completedDate = inputs[8].value; // Data de Conclusão
+                          const materialsUsed = inputs[9].value; // Materiais Utilizados
+                          const observations = inputs[10].value; // Observações
+
+                          dataSync.updateMaintenance(editingMaintenance.id, {
+                            scheduledDate: scheduledDate
+                              ? new Date(scheduledDate).toISOString()
+                              : undefined,
+                            technician,
+                            type,
+                            status,
+                            estimatedDuration: estimatedDuration
+                              ? parseFloat(estimatedDuration)
+                              : undefined,
+                            actualDuration: actualDuration
+                              ? parseFloat(actualDuration)
+                              : undefined,
+                            cost: cost ? parseFloat(cost) : undefined,
+                            priority,
+                            completedDate: completedDate
+                              ? new Date(completedDate).toISOString()
+                              : undefined,
+                            materialsUsed,
+                            observations,
+                          });
+
+                          alert("Manutenção atualizada com sucesso!");
+                          setEditingMaintenance(null);
+                          setActiveSection("manutencoes");
+                        }}
+                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                      >
+                        Guardar Alteraç��es
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
+          );
+
+        case "register":
+          // SECURITY: Only super admin can register new users
+          if (currentUser?.role !== "super_admin") {
+            return (
+              <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                  <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                    Acesso Restrito
+                  </h2>
+                  <p className="text-gray-500">
+                    Apenas super administradores podem criar utilizadores.
+                  </p>
+                  <button
+                    onClick={() => navigateToSection("dashboard")}
+                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Voltar ao Dashboard
+                  </button>
+                </div>
+              </div>
+            );
+          }
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <button
+                    onClick={() => navigateToSection("utilizadores")}
+                    className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                  >
+                    ← Voltar aos Utilizadores
+                  </button>
+                  <RegisterForm
+                    onRegisterSuccess={() => {
+                      navigateToSection("utilizadores");
+                    }}
+                    onBackToLogin={() => {
+                      navigateToSection("utilizadores");
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+
+        default:
+          return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+              <div className="text-center">
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                  Página não encontrada
+                </h1>
+                <p className="text-gray-600">
+                  A seção solicitada não foi encontrada.
+                </p>
+              </div>
+            </div>
+          );
+      }
+    } catch (error) {
+      console.error("Error rendering content:", error);
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-red-600 mb-2">
+              Erro de Sistema
+            </h1>
+            <p className="text-gray-600 mb-4">
+              Ocorreu um erro ao carregar o conteúdo. Por favor, tente
+              novamente.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Recarregar Página
+            </button>
           </div>
-        );
+        </div>
+      );
     }
   };
 
@@ -6774,7 +6852,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>���</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -6836,64 +6914,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             onNavigateToSection={(section) => {
               console.log(`🔄 Navegando para seção: ${section}`);
 
-              // Special handling for user management - auto-login as admin
-              if (section === "utilizadores") {
-                const gonçaloUser = {
-                  uid: "goncalo-1",
-                  email: "gongonsilva@gmail.com",
-                  name: "Gonçalo Fonseca",
-                  role: "super_admin" as const,
-                  permissions: {
-                    obras: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                    manutencoes: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                    piscinas: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                    utilizadores: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                    relatorios: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                    clientes: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                  },
-                  active: true,
-                  createdAt: "2024-01-01",
-                };
-
-                setCurrentUser(gonçaloUser);
-                setIsAuthenticated(true);
-                localStorage.setItem(
-                  "currentUser",
-                  JSON.stringify(gonçaloUser),
-                );
+              // Navigation to user management section only allowed if authenticated
+              if (
+                section === "utilizadores" &&
+                (!isAuthenticated || !currentUser)
+              ) {
                 console.log(
-                  "🔐 Auto-login de admin para gestão de utilizadores",
+                  "❌ Access denied: User management requires authentication",
                 );
+                setLoginError(
+                  "Por favor, faça login primeiro para aceder à gestão de utilizadores",
+                );
+                setShowAdvancedSettings(false);
+                setIsAdvancedUnlocked(false);
+                return;
               }
 
               navigateToSection(section);
@@ -7037,6 +7071,48 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </form>
 
           {/* SECURITY: Only super admin can create new accounts - removed public registration */}
+
+          {/* Login instructions for Gonçalo */}
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-sm text-blue-800 font-medium">
+              Credenciais de administração:
+            </p>
+            <p className="text-xs text-blue-600 mt-1">
+              Email: gongonsilva@gmail.com
+              <br />
+              Password: 19867gsf
+            </p>
+          </div>
+
+          {/* Notification activation instructions */}
+          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+            <p className="text-sm text-green-800 font-medium mb-2">
+              Como ativar notificações:
+            </p>
+
+            <div className="text-xs text-green-700 space-y-2">
+              <div>
+                <p className="font-semibold">📱 iPhone/iPad:</p>
+                <p>1. Definições → Notificações → Leirisonda</p>
+                <p>2. Ativar "Permitir Notificações"</p>
+                <p>3. Escolher estilo de alerta</p>
+              </div>
+
+              <div>
+                <p className="font-semibold">🤖 Android:</p>
+                <p>1. Definições → Apps → Leirisonda</p>
+                <p>2. Notificações → Ativar</p>
+                <p>3. Permitir todas as categorias</p>
+              </div>
+
+              <div>
+                <p className="font-semibold">🌐 Chrome/Safari:</p>
+                <p>1. Clicar no ícone 🔒 na barra de endereço</p>
+                <p>2. Notificações → Permitir</p>
+                <p>3. Recarregar a página</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Floating Advanced Settings Button */}
@@ -7045,6 +7121,21 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           className="fixed bottom-4 right-4 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 hover:shadow-xl transition-all duration-200"
         >
           <Settings className="h-5 w-5" />
+        </button>
+
+        {/* Debug button for clearing auth data (remove in production) */}
+        <button
+          onClick={() => {
+            localStorage.removeItem("currentUser");
+            localStorage.removeItem("mock-current-user");
+            localStorage.removeItem("mock-users");
+            sessionStorage.clear();
+            window.location.reload();
+          }}
+          className="fixed bottom-4 left-4 w-12 h-12 bg-red-100 border border-red-200 rounded-full shadow-lg flex items-center justify-center text-red-500 hover:text-red-700 hover:shadow-xl transition-all duration-200"
+          title="Clear Auth Data (Debug)"
+        >
+          <X className="h-4 w-4" />
         </button>
       </div>
     );
@@ -7077,7 +7168,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-gray-500">Gestão de Serviços</p>
+                    <p className="text-sm text-gray-500">Gest��o de Serviços</p>
                   </div>
                 </div>
                 {/* Sync Status Indicator */}
