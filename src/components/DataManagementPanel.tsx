@@ -17,7 +17,6 @@ import {
   Users,
   Trash2,
   RefreshCw,
-  Sync,
   CheckCircle,
   AlertTriangle,
   Info,
