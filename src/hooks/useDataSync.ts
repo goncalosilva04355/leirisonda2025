@@ -37,6 +37,7 @@ export interface Work {
   title: string;
   description: string;
   client: string;
+  contact?: string;
   location: string;
   type: string;
   status: "pending" | "in_progress" | "completed" | "cancelled";
