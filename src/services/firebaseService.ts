@@ -137,6 +137,10 @@ export const userService = {
 
   // Add new user
   async addUser(userData: Omit<User, "id" | "createdAt" | "updatedAt">) {
+    if (!db) {
+      throw new Error("Firebase not configured");
+    }
+
     const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
       ...userData,
       createdAt: new Date().toISOString(),
