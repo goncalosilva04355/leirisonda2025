@@ -1497,105 +1497,309 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {globalSearchTerm && (
                     <div className="space-y-3 max-h-96 overflow-y-auto">
                       {/* Check if there's any data to search */}
-                      {works.length === 0 && pools.length === 0 && maintenance.length === 0 && clients.length === 0 ? (
+                      {works.length === 0 &&
+                      pools.length === 0 &&
+                      maintenance.length === 0 &&
+                      clients.length === 0 ? (
                         <div className="text-center py-8">
                           <div className="text-gray-400 mb-2">📋</div>
                           <p className="text-gray-500 text-sm font-medium">
                             Não há dados para pesquisar
                           </p>
                           <p className="text-gray-400 text-xs mt-1">
-                            Adicione obras, piscinas, manutenções ou clientes primeiro
+                            Adicione obras, piscinas, manutenções ou clientes
+                            primeiro
                           </p>
                         </div>
                       ) : (
                         <>
                           {/* Works Results */}
                           {works.filter(
-                        (work) =>
-                          work.title
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          work.client
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          work.location
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          work.assignedTo
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          work.description
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()),
-                      ).length > 0 && (
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">
-                            Obras
-                          </h4>
-                          {works
-                            .filter(
-                              (work) =>
-                                work.title
-                                  .toLowerCase()
-                                  .includes(globalSearchTerm.toLowerCase()) ||
-                                work.client
-                                  .toLowerCase()
-                                  .includes(globalSearchTerm.toLowerCase()) ||
-                                work.location
-                                  .toLowerCase()
-                                  .includes(globalSearchTerm.toLowerCase()) ||
-                                work.assignedTo
-                                  .toLowerCase()
-                                  .includes(globalSearchTerm.toLowerCase()) ||
-                                work.description
-                                  .toLowerCase()
-                                  .includes(globalSearchTerm.toLowerCase()),
-                            )
-                            .slice(0, 3)
-                            .map((work) => (
-                              <button
-                                key={work.id}
-                                onClick={() => {
-                                  navigateToSection("obras");
-                                  setGlobalSearchTerm("");
-                                }}
-                                className="w-full text-left p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors mb-2"
-                              >
-                                <div className="flex items-center space-x-2">
-                                  <Building2 className="h-4 w-4 text-blue-600" />
-                                  <div>
-                                    <p className="font-medium text-gray-900">
-                                      {work.title}
-                                    </p>
-                                    <p className="text-sm text-gray-600">
-                                      {work.client} • {work.location}
-                                    </p>
-                                  </div>
-                                </div>
-                              </button>
-                            ))}
-                        </div>
-                      )}
+                            (work) =>
+                              work.title
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              work.client
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              work.location
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              work.assignedTo
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              work.description
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()),
+                          ).length > 0 && (
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                                Obras
+                              </h4>
+                              {works
+                                .filter(
+                                  (work) =>
+                                    work.title
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    work.client
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    work.location
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    work.assignedTo
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    work.description
+                                      .toLowerCase()
+                                      .includes(globalSearchTerm.toLowerCase()),
+                                )
+                                .slice(0, 3)
+                                .map((work) => (
+                                  <button
+                                    key={work.id}
+                                    onClick={() => {
+                                      navigateToSection("obras");
+                                      setGlobalSearchTerm("");
+                                    }}
+                                    className="w-full text-left p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors mb-2"
+                                  >
+                                    <div className="flex items-center space-x-2">
+                                      <Building2 className="h-4 w-4 text-blue-600" />
+                                      <div>
+                                        <p className="font-medium text-gray-900">
+                                          {work.title}
+                                        </p>
+                                        <p className="text-sm text-gray-600">
+                                          {work.client} • {work.location}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </button>
+                                ))}
+                            </div>
+                          )}
 
-                      {/* Pools Results */}
-                      {pools.filter(
-                        (pool) =>
-                          pool.name
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          pool.client
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          pool.location
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()),
-                      ).length > 0 && (
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">
-                            Piscinas
-                          </h4>
-                          {pools
-                            .filter(
+                          {/* Pools Results */}
+                          {pools.filter(
+                            (pool) =>
+                              pool.name
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              pool.client
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              pool.location
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()),
+                          ).length > 0 && (
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                                Piscinas
+                              </h4>
+                              {pools
+                                .filter(
+                                  (pool) =>
+                                    pool.name
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    pool.client
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    pool.location
+                                      .toLowerCase()
+                                      .includes(globalSearchTerm.toLowerCase()),
+                                )
+                                .slice(0, 3)
+                                .map((pool) => (
+                                  <button
+                                    key={pool.id}
+                                    onClick={() => {
+                                      navigateToSection("piscinas");
+                                      setGlobalSearchTerm("");
+                                    }}
+                                    className="w-full text-left p-3 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors mb-2"
+                                  >
+                                    <div className="flex items-center space-x-2">
+                                      <Waves className="h-4 w-4 text-cyan-600" />
+                                      <div>
+                                        <p className="font-medium text-gray-900">
+                                          {pool.name}
+                                        </p>
+                                        <p className="text-sm text-gray-600">
+                                          {pool.client} • {pool.location}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </button>
+                                ))}
+                            </div>
+                          )}
+
+                          {/* Maintenance Results */}
+                          {maintenance.filter(
+                            (maint) =>
+                              maint.poolName
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              maint.type
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              maint.technician
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              maint.scheduledDate.includes(globalSearchTerm),
+                          ).length > 0 && (
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                                Manutenções
+                              </h4>
+                              {maintenance
+                                .filter(
+                                  (maint) =>
+                                    maint.poolName
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    maint.type
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    maint.technician
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    maint.scheduledDate.includes(
+                                      globalSearchTerm,
+                                    ),
+                                )
+                                .slice(0, 3)
+                                .map((maint) => (
+                                  <button
+                                    key={maint.id}
+                                    onClick={() => {
+                                      navigateToSection("manutencoes");
+                                      setGlobalSearchTerm("");
+                                    }}
+                                    className="w-full text-left p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors mb-2"
+                                  >
+                                    <div className="flex items-center space-x-2">
+                                      <Wrench className="h-4 w-4 text-orange-600" />
+                                      <div>
+                                        <p className="font-medium text-gray-900">
+                                          {maint.type}
+                                        </p>
+                                        <p className="text-sm text-gray-600">
+                                          {maint.poolName} •{" "}
+                                          {new Date(
+                                            maint.scheduledDate,
+                                          ).toLocaleDateString("pt-PT")}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </button>
+                                ))}
+                            </div>
+                          )}
+
+                          {/* Clients Results */}
+                          {clients.filter(
+                            (client) =>
+                              client.name
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              client.email
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              client.phone.includes(globalSearchTerm) ||
+                              client.address
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()),
+                          ).length > 0 && (
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                                Clientes
+                              </h4>
+                              {clients
+                                .filter(
+                                  (client) =>
+                                    client.name
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    client.email
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      ) ||
+                                    client.phone.includes(globalSearchTerm) ||
+                                    client.address
+                                      .toLowerCase()
+                                      .includes(globalSearchTerm.toLowerCase()),
+                                )
+                                .slice(0, 3)
+                                .map((client) => (
+                                  <button
+                                    key={client.id}
+                                    onClick={() => {
+                                      navigateToSection("clientes");
+                                      setGlobalSearchTerm("");
+                                    }}
+                                    className="w-full text-left p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors mb-2"
+                                  >
+                                    <div className="flex items-center space-x-2">
+                                      <Users className="h-4 w-4 text-purple-600" />
+                                      <div>
+                                        <p className="font-medium text-gray-900">
+                                          {client.name}
+                                        </p>
+                                        <p className="text-sm text-gray-600">
+                                          {client.email} • {client.phone}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </button>
+                                ))}
+                            </div>
+                          )}
+
+                          {/* No Results */}
+                          {works.filter(
+                            (work) =>
+                              work.title
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              work.client
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              work.location
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              work.assignedTo
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()) ||
+                              work.description
+                                .toLowerCase()
+                                .includes(globalSearchTerm.toLowerCase()),
+                          ).length === 0 &&
+                            pools.filter(
                               (pool) =>
                                 pool.name
                                   .toLowerCase()
@@ -1606,53 +1810,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 pool.location
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()),
-                            )
-                            .slice(0, 3)
-                            .map((pool) => (
-                              <button
-                                key={pool.id}
-                                onClick={() => {
-                                  navigateToSection("piscinas");
-                                  setGlobalSearchTerm("");
-                                }}
-                                className="w-full text-left p-3 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors mb-2"
-                              >
-                                <div className="flex items-center space-x-2">
-                                  <Waves className="h-4 w-4 text-cyan-600" />
-                                  <div>
-                                    <p className="font-medium text-gray-900">
-                                      {pool.name}
-                                    </p>
-                                    <p className="text-sm text-gray-600">
-                                      {pool.client} • {pool.location}
-                                    </p>
-                                  </div>
-                                </div>
-                              </button>
-                            ))}
-                        </div>
-                      )}
-
-                      {/* Maintenance Results */}
-                      {maintenance.filter(
-                        (maint) =>
-                          maint.poolName
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          maint.type
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          maint.technician
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          maint.scheduledDate.includes(globalSearchTerm),
-                      ).length > 0 && (
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">
-                            Manutenções
-                          </h4>
-                          {maintenance
-                            .filter(
+                            ).length === 0 &&
+                            maintenance.filter(
                               (maint) =>
                                 maint.poolName
                                   .toLowerCase()
@@ -1664,56 +1823,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()) ||
                                 maint.scheduledDate.includes(globalSearchTerm),
-                            )
-                            .slice(0, 3)
-                            .map((maint) => (
-                              <button
-                                key={maint.id}
-                                onClick={() => {
-                                  navigateToSection("manutencoes");
-                                  setGlobalSearchTerm("");
-                                }}
-                                className="w-full text-left p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors mb-2"
-                              >
-                                <div className="flex items-center space-x-2">
-                                  <Wrench className="h-4 w-4 text-orange-600" />
-                                  <div>
-                                    <p className="font-medium text-gray-900">
-                                      {maint.type}
-                                    </p>
-                                    <p className="text-sm text-gray-600">
-                                      {maint.poolName} •{" "}
-                                      {new Date(
-                                        maint.scheduledDate,
-                                      ).toLocaleDateString("pt-PT")}
-                                    </p>
-                                  </div>
-                                </div>
-                              </button>
-                            ))}
-                        </div>
-                      )}
-
-                      {/* Clients Results */}
-                      {clients.filter(
-                        (client) =>
-                          client.name
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          client.email
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          client.phone.includes(globalSearchTerm) ||
-                          client.address
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()),
-                      ).length > 0 && (
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">
-                            Clientes
-                          </h4>
-                          {clients
-                            .filter(
+                            ).length === 0 &&
+                            clients.filter(
                               (client) =>
                                 client.name
                                   .toLowerCase()
@@ -1725,102 +1836,21 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 client.address
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()),
-                            )
-                            .slice(0, 3)
-                            .map((client) => (
-                              <button
-                                key={client.id}
-                                onClick={() => {
-                                  navigateToSection("clientes");
-                                  setGlobalSearchTerm("");
-                                }}
-                                className="w-full text-left p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors mb-2"
-                              >
-                                <div className="flex items-center space-x-2">
-                                  <Users className="h-4 w-4 text-purple-600" />
-                                  <div>
-                                    <p className="font-medium text-gray-900">
-                                      {client.name}
-                                    </p>
-                                    <p className="text-sm text-gray-600">
-                                      {client.email} • {client.phone}
-                                    </p>
-                                  </div>
-                                </div>
-                              </button>
-                            ))}
-                        </div>
+                            ).length === 0 && (
+                              <div className="text-center py-8">
+                                <div className="text-gray-400 mb-2">🔍</div>
+                                <p className="text-gray-500 text-sm">
+                                  Nenhum resultado encontrado para "
+                                  {globalSearchTerm}"
+                                </p>
+                                <p className="text-gray-400 text-xs mt-1">
+                                  Tente pesquisar por cliente, obra, piscina,
+                                  data ou técnico
+                                </p>
+                              </div>
+                            )}
+                        </>
                       )}
-
-                      {/* No Results */}
-                      {works.filter(
-                        (work) =>
-                          work.title
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          work.client
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          work.location
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          work.assignedTo
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()) ||
-                          work.description
-                            .toLowerCase()
-                            .includes(globalSearchTerm.toLowerCase()),
-                      ).length === 0 &&
-                        pools.filter(
-                          (pool) =>
-                            pool.name
-                              .toLowerCase()
-                              .includes(globalSearchTerm.toLowerCase()) ||
-                            pool.client
-                              .toLowerCase()
-                              .includes(globalSearchTerm.toLowerCase()) ||
-                            pool.location
-                              .toLowerCase()
-                              .includes(globalSearchTerm.toLowerCase()),
-                        ).length === 0 &&
-                        maintenance.filter(
-                          (maint) =>
-                            maint.poolName
-                              .toLowerCase()
-                              .includes(globalSearchTerm.toLowerCase()) ||
-                            maint.type
-                              .toLowerCase()
-                              .includes(globalSearchTerm.toLowerCase()) ||
-                            maint.technician
-                              .toLowerCase()
-                              .includes(globalSearchTerm.toLowerCase()) ||
-                            maint.scheduledDate.includes(globalSearchTerm),
-                        ).length === 0 &&
-                        clients.filter(
-                          (client) =>
-                            client.name
-                              .toLowerCase()
-                              .includes(globalSearchTerm.toLowerCase()) ||
-                            client.email
-                              .toLowerCase()
-                              .includes(globalSearchTerm.toLowerCase()) ||
-                            client.phone.includes(globalSearchTerm) ||
-                            client.address
-                              .toLowerCase()
-                              .includes(globalSearchTerm.toLowerCase()),
-                        ).length === 0 && (
-                          <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">🔍</div>
-                            <p className="text-gray-500 text-sm">
-                              Nenhum resultado encontrado para "
-                              {globalSearchTerm}"
-                            </p>
-                            <p className="text-gray-400 text-xs mt-1">
-                              Tente pesquisar por cliente, obra, piscina, data
-                              ou técnico
-                            </p>
-                          </div>
-                        )}
                     </div>
                   )}
                 </div>
@@ -5284,7 +5314,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-gray-500 mb-4">
                       {activeWorkFilter === "all"
                         ? "Não há obras registadas no sistema."
-                        : `Não h�� obras com o filtro "${
+                        : `Não h��� obras com o filtro "${
                             activeWorkFilter === "pending"
                               ? "Pendentes"
                               : activeWorkFilter === "in_progress"
