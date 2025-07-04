@@ -300,10 +300,15 @@ class AuthService {
               const userProfile = userDoc.data() as UserProfile;
               callback(userProfile.active ? userProfile : null);
             } else {
+              // Force logout if no valid user profile found
+              console.log("No valid user profile found, forcing logout");
+              await this.logout();
               callback(null);
             }
           } catch (error) {
             console.error("Error getting user profile:", error);
+            // Force logout on error for security
+            await this.logout();
             callback(null);
           }
         } else {
