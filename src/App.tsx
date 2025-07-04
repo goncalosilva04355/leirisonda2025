@@ -188,6 +188,8 @@ function App() {
 
   // Initialize authentication state with security checks
   useEffect(() => {
+    console.log("🔒 SECURITY: App initialization started");
+
     // SECURITY: Clear ALL potential auto-login data on app start
     localStorage.removeItem("mock-current-user");
     sessionStorage.clear(); // Clear any session data
@@ -195,16 +197,35 @@ function App() {
     // Force clear authentication state
     setIsAuthenticated(false);
     setCurrentUser(null);
+    console.log("🔒 SECURITY: Auth state cleared");
 
     // Force logout on app start for security
     authService.logout().then(() => {
-      console.log("Security: Forced logout on app initialization");
+      console.log("🔒 SECURITY: Forced logout completed on app initialization");
 
       // Set up auth state listener only AFTER forced logout
       const unsubscribe = authService.onAuthStateChanged((user) => {
-        console.log("Auth state changed:", user ? "User logged in" : "No user");
-        setCurrentUser(user);
-        setIsAuthenticated(!!user);
+        console.log(
+          "🔒 AUTH STATE CHANGE:",
+          user ? `User ${user.email} logged in` : "No user - login required",
+        );
+
+        // Only accept authentication if user actually exists and is active
+        if (user && user.active) {
+          console.log(
+            "✅ Valid user authenticated:",
+            user.email,
+            "Role:",
+            user.role,
+          );
+          setCurrentUser(user);
+          setIsAuthenticated(true);
+        } else {
+          console.log("❌ Invalid or inactive user, forcing logout");
+          setCurrentUser(null);
+          setIsAuthenticated(false);
+          authService.logout(); // Force logout if invalid user
+        }
       });
 
       return unsubscribe;
@@ -212,6 +233,9 @@ function App() {
 
     // DO NOT initialize default admin automatically - this was causing the security issue
     // Users must always login manually for security
+    console.log(
+      "🔒 SECURITY: No automatic admin initialization - manual login required",
+    );
 
     // Return empty cleanup function since unsubscribe is handled inside the promise
     return () => {};
