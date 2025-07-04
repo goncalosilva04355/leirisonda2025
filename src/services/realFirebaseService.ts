@@ -27,30 +27,21 @@ class RealFirebaseService {
   private database: Database | null = null;
   private isInitialized = false;
 
-  // Initialize Firebase with config from localStorage
+  // Initialize Firebase with fixed config
   initialize(): boolean {
     try {
-      const configData = localStorage.getItem("firebase-config");
-      if (!configData) {
-        console.log("No Firebase config found in localStorage");
-        return false;
-      }
+      // Fixed Firebase configuration - always available
+      const config: FirebaseConfig = {
+        apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+        authDomain: "leirisonda-16f8b.firebaseapp.com",
+        databaseURL: "https://leirisonda-16f8b-default-rtdb.firebaseio.com/",
+        projectId: "leirisonda-16f8b",
+        storageBucket: "leirisonda-16f8b.firebasestorage.app",
+        messagingSenderId: "540456875574",
+        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+      };
 
-      const config: FirebaseConfig = JSON.parse(configData);
-
-      // Validate required fields
-      const requiredFields = ["apiKey", "authDomain", "projectId"];
-      const missingFields = requiredFields.filter((field) => !config[field]);
-
-      if (missingFields.length > 0) {
-        console.error("Missing Firebase config fields:", missingFields);
-        return false;
-      }
-
-      // Set default databaseURL if not provided
-      if (!config.databaseURL) {
-        config.databaseURL = `https://${config.projectId}-default-rtdb.firebaseio.com/`;
-      }
+      console.log("Using fixed Firebase configuration - always available");
 
       this.app = initializeApp(config);
       this.database = getDatabase(this.app);
