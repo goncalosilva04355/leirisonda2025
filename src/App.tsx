@@ -2836,7 +2836,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manuten��ão</option>
+                            <option value="manutencao">Manuten���ão</option>
                             <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -5908,25 +5908,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="space-y-2">
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
-                                  <span className="font-semibold text-gray-700 block mb-1">👤 Cliente:</span>
-                                  <span className="text-gray-900 font-medium">{work.client}</span>
-                                {work.contact && (
-                                  <div className="mt-1">
-                                    <button
-                                      onClick={() =>
-                                        handlePhoneClick(work.contact)
-                                      }
-                                      className={`text-xs ${
-                                        enablePhoneDialer
-                                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                          : "text-gray-500"
-                                      }`}
-                                      disabled={!enablePhoneDialer}
-                                    >
-                                      📞 {work.contact}
-                                    </button>
-                                  </div>
-                                )}
+                                  <span className="font-semibold text-gray-700 block mb-1">
+                                    👤 Cliente:
+                                  </span>
+                                  <span className="text-gray-900 font-medium">
+                                    {work.client}
+                                  </span>
+                                  {work.contact && (
+                                    <div className="mt-1">
+                                      <button
+                                        onClick={() =>
+                                          handlePhoneClick(work.contact)
+                                        }
+                                        className={`text-xs ${
+                                          enablePhoneDialer
+                                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                            : "text-gray-500"
+                                        }`}
+                                        disabled={!enablePhoneDialer}
+                                      >
+                                        📞 {work.contact}
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                               <div>
                                 <span className="font-medium">Local:</span>{" "}
@@ -5989,7 +5994,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() => {
                                   setEditingWork(work);
-                                  setEditAssignedUsers(work.assignedUsers || []);
+                                  setEditAssignedUsers(
+                                    work.assignedUsers || [],
+                                  );
                                   setActiveSection("editar-obra");
                                 }}
                                 className="p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg border border-gray-200 transition-colors"
@@ -7603,7 +7610,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Detalhes Completos da Obra
                       </h2>
                       <p className="text-gray-600 text-sm">
-                        {selectedWork.id?.toUpperCase() || 'ID-' + Date.now().toString().slice(-6)} • {selectedWork.title}
+                        {selectedWork.id?.toUpperCase() ||
+                          "ID-" + Date.now().toString().slice(-6)}{" "}
+                        • {selectedWork.title}
                       </p>
                     </div>
                   </div>
