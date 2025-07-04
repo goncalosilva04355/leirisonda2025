@@ -1363,7 +1363,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <Wrench className="h-8 w-8 text-gray-400" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Nenhuma manutenç��o registada
+                    Nenhuma manutenção registada
                   </h3>
                   <p className="text-gray-600 text-sm">
                     As manutenções aparecerão aqui quando forem criadas
@@ -2214,7 +2214,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Data da Intervenção *
+                        Data da Interven��ão *
                       </label>
                       <input
                         type="date"
