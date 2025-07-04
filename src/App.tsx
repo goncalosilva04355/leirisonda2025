@@ -195,9 +195,12 @@ function App() {
     addClient,
   } = dataSync;
 
-  // Debug logging for Alexandre issue
+  // Notify Alexandre about assigned works when he logs in
   useEffect(() => {
-    if (currentUser?.name.toLowerCase().includes("alexandre")) {
+    if (
+      currentUser?.name.toLowerCase().includes("alexandre") &&
+      works.length > 0
+    ) {
       console.log("🔍 DEBUG Alexandre - Data loaded:", {
         currentUser: currentUser.name,
         worksCount: works.length,
@@ -214,8 +217,37 @@ function App() {
             .length,
         },
       });
+
+      // Find works assigned to Alexandre
+      const alexandreWorks = works.filter(
+        (work) =>
+          work.assignedTo.toLowerCase().includes("alexandre") ||
+          work.assignedUsers?.some((user) =>
+            user.name.toLowerCase().includes("alexandre"),
+          ),
+      );
+
+      // Notify Alexandre about his assigned works
+      if (
+        alexandreWorks.length > 0 &&
+        notificationsEnabled &&
+        Notification.permission === "granted"
+      ) {
+        console.log(
+          "🔔 Sending notification to Alexandre about assigned works:",
+          alexandreWorks.length,
+        );
+
+        setTimeout(() => {
+          showNotification(
+            "Obras Atribuídas",
+            `Olá Alexandre! Tens ${alexandreWorks.length} obra${alexandreWorks.length > 1 ? "s" : ""} atribuída${alexandreWorks.length > 1 ? "s" : ""}.`,
+            "work",
+          );
+        }, 2000); // Delay to ensure notification system is ready
+      }
     }
-  }, [currentUser, works]);
+  }, [currentUser, works, notificationsEnabled]);
 
   // Data cleanup hook
   const {
