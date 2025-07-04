@@ -559,42 +559,40 @@ function App() {
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
 
-      try {
-        const result = await authService.login(
-          loginForm.email,
-          loginForm.password,
-        );
+      const result = await authService.login(
+        loginForm.email,
+        loginForm.password,
+      );
 
-        if (result.success && result.user) {
-          console.log("✅ Login successful for:", result.user.email);
+      if (result.success && result.user) {
+        console.log("✅ Login successful for:", result.user.email);
 
-          // Clear any previous auth state
-          setLoginError("");
+        // Clear any previous auth state
+        setLoginError("");
 
-          // Set user state and authentication
-          setCurrentUser(result.user);
-          setIsAuthenticated(true);
-          localStorage.setItem("currentUser", JSON.stringify(result.user));
+        // Set user state and authentication
+        setCurrentUser(result.user);
+        setIsAuthenticated(true);
+        localStorage.setItem("currentUser", JSON.stringify(result.user));
 
-          // Clear login form
-          setLoginForm({ email: "", password: "" });
+        // Clear login form
+        setLoginForm({ email: "", password: "" });
 
-          // Use setTimeout to ensure state is set before navigation
-          setTimeout(() => {
-            // Handle any pending hash navigation after login
-            const hash = window.location.hash.substring(1);
-            if (hash && hash !== "login") {
-              setActiveSection(hash);
-            } else {
-              // Default to dashboard when no hash is present
-              navigateToSection("dashboard");
-            }
-          }, 100);
-
-        } else {
-          console.warn("❌ Login failed:", result.error);
-          setLoginError(result.error || "Credenciais inválidas");
-        }
+        // Use setTimeout to ensure state is set before navigation
+        setTimeout(() => {
+          // Handle any pending hash navigation after login
+          const hash = window.location.hash.substring(1);
+          if (hash && hash !== "login") {
+            setActiveSection(hash);
+          } else {
+            // Default to dashboard when no hash is present
+            navigateToSection("dashboard");
+          }
+        }, 100);
+      } else {
+        console.warn("❌ Login failed:", result.error);
+        setLoginError(result.error || "Credenciais inválidas");
+      }
     } catch (error) {
       console.error("❌ Login error:", error);
       setLoginError("Erro de sistema. Por favor, tente novamente.");
@@ -6055,7 +6053,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações Técnicas
+                        Observações T��cnicas
                       </label>
                       <textarea
                         defaultValue={editingWork?.technicalNotes}
