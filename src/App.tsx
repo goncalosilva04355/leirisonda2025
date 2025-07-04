@@ -3265,7 +3265,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          defaultValue={editingUser?.role || "technician"}
+                          value={userForm.role}
+                          onChange={(e) =>
+                            setUserForm({ ...userForm, role: e.target.value })
+                          }
                         >
                           <option value="super_admin">Super Admin</option>
                           <option value="manager">Gestor</option>
