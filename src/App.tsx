@@ -1444,7 +1444,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "nova-manutencao",
       icon: Wrench,
-      label: "Nova Manutenç��o",
+      label: "Nova Manutenção",
       path: "/manutencao/nova",
     },
     {
@@ -1582,7 +1582,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenç��o
+                          Obras necessitam atenção
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -1680,7 +1680,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center p-4 border-b border-gray-100">
                       <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                       <h2 className="text-lg font-semibold text-gray-900">
-                        Minhas Obras Atribu���das
+                        Minhas Obras Atribuídas
                       </h2>
                     </div>
                     <div className="p-4 space-y-3">
@@ -1752,7 +1752,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 )}
 
-                {/* Próximas Manutenç��es */}
+                {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
                   <div className="flex items-center p-4 border-b border-gray-100">
                     <button
@@ -2130,7 +2130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {maint.type}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {maint.poolName} ���{" "}
+                                            {maint.poolName} em{" "}
                                             {new Date(
                                               maint.scheduledDate,
                                             ).toLocaleDateString("pt-PT")}
@@ -2666,7 +2666,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manuten��ão "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -4173,7 +4173,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenção
+                        Registar intervenção de manuten��ão
                       </p>
                     </div>
                   </div>
