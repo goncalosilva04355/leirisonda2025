@@ -107,6 +107,7 @@ function App() {
   const [settingsPasswordError, setSettingsPasswordError] = useState("");
   const [firebaseConfigured, setFirebaseConfigured] = useState(false);
   const [syncEnabled, setSyncEnabled] = useState(false);
+  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 
   // Check if Firebase is configured
   useEffect(() => {
@@ -642,7 +643,7 @@ function App() {
                   >
                     <Wrench className="h-5 w-5 text-gray-600" />
                     <span className="font-medium text-gray-900">
-                      Manutenção Piscinas
+                      Manutenç��o Piscinas
                     </span>
                   </button>
 
