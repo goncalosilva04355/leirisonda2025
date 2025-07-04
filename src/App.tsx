@@ -2369,7 +2369,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="resistencia">
                           Resistência Elétrica
                         </option>
-                        <option value="gas">Aquecimento a Gás</option>
+                        <option value="gas">Aquecimento a G��s</option>
                       </select>
                     </div>
                   </div>
@@ -3234,7 +3234,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Orçamentos e custos</li>
                       <li>• Prazos e cronogramas</li>
                       <li>• Equipas respons��veis</li>
-                      <li>• Estados de progresso</li>
+                      <li>��� Estados de progresso</li>
                     </ul>
                   </div>
                   <button
@@ -4209,18 +4209,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Entrar
             </button>
           </form>
-
-          {/* Advanced Settings Button */}
-          <div className="mt-6 pt-4 border-t border-gray-200">
-            <button
-              onClick={() => setShowAdvancedSettings(true)}
-              className="w-full flex items-center justify-center space-x-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              <Settings className="h-4 w-4" />
-              <span>Configura��ões Avançadas</span>
-            </button>
-          </div>
         </div>
+
+        {/* Floating Advanced Settings Button */}
+        <button
+          onClick={() => setShowAdvancedSettings(true)}
+          className="fixed bottom-4 right-4 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 hover:shadow-xl transition-all duration-200"
+        >
+          <Settings className="h-5 w-5" />
+        </button>
       </div>
     );
   }
