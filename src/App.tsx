@@ -7075,13 +7075,43 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           {/* Login instructions for Gonçalo */}
           <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
             <p className="text-sm text-blue-800 font-medium">
-              Credenciais para teste:
+              Credenciais de administração:
             </p>
             <p className="text-xs text-blue-600 mt-1">
               Email: gongonsilva@gmail.com
               <br />
-              Password: admin123
+              Password: 19867gsf
             </p>
+          </div>
+
+          {/* Notification activation instructions */}
+          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+            <p className="text-sm text-green-800 font-medium mb-2">
+              Como ativar notificações:
+            </p>
+
+            <div className="text-xs text-green-700 space-y-2">
+              <div>
+                <p className="font-semibold">📱 iPhone/iPad:</p>
+                <p>1. Definições → Notificações → Leirisonda</p>
+                <p>2. Ativar "Permitir Notificações"</p>
+                <p>3. Escolher estilo de alerta</p>
+              </div>
+
+              <div>
+                <p className="font-semibold">🤖 Android:</p>
+                <p>1. Definições → Apps → Leirisonda</p>
+                <p>2. Notificações → Ativar</p>
+                <p>3. Permitir todas as categorias</p>
+              </div>
+
+              <div>
+                <p className="font-semibold">🌐 Chrome/Safari:</p>
+                <p>1. Clicar no ícone 🔒 na barra de endereço</p>
+                <p>2. Notificações → Permitir</p>
+                <p>3. Recarregar a página</p>
+              </div>
+            </div>
           </div>
         </div>
 
