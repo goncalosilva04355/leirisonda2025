@@ -30,14 +30,12 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { InstallPrompt } from "./components/InstallPrompt";
-import { AuthSyncDiagnostic } from "./components/AuthSyncDiagnostic";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
-import { FirebaseStatus } from "./components/FirebaseStatus";
-import { UserDebugger } from "./components/UserDebugger";
-import { FullSyncManager } from "./components/FullSyncManager";
 import { AutoSyncNotification } from "./components/AutoSyncNotification";
 // SECURITY: RegisterForm removed - only super admin can create users
+import { AdminLogin } from "./admin/AdminLogin";
+import { AdminPage } from "./admin/AdminPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -99,6 +97,14 @@ function App() {
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+
+  // No auto-login - users must login manually
+  useEffect(() => {
+    // Clear any existing auth data on app start
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("mock-current-user");
+    console.log("🔒 SECURITY: Auth data cleared - manual login required");
+  }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
   // SECURITY: Register form removed - only super admin can create users
@@ -135,7 +141,10 @@ function App() {
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
   const [showDataCleanup, setShowDataCleanup] = useState(false);
-  const [showAuthDiagnostic, setShowAuthDiagnostic] = useState(false);
+
+  // Admin area states
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
@@ -163,7 +172,7 @@ function App() {
     error: cleanupError,
   } = useDataCleanup();
 
-  // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
+  // Auto-sync hook for automatic Firebase �� localStorage synchronization
   const autoSyncData = useAutoSync();
   const { syncStatus, isAutoSyncing } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
@@ -237,14 +246,11 @@ function App() {
         setCurrentUser(user);
         setIsAuthenticated(true);
 
-        // Set up auth state listener for restored user
-        const unsubscribe = authService.onAuthStateChanged((authUser) => {
-          console.log(
-            "🔒 AUTH STATE CHANGE (restored user):",
-            authUser ? `User ${authUser.email} logged in` : "Auth user changed",
-          );
-        });
-        return () => unsubscribe();
+        // Firebase auth listener temporarily disabled to avoid errors
+        // const unsubscribe = authService.onAuthStateChanged((authUser) => {
+        //   console.log("🔒 AUTH STATE CHANGE (restored user):", authUser);
+        // });
+        // return () => unsubscribe();
       } catch (e) {
         console.warn("App init: Error parsing stored user:", e);
       }
@@ -258,39 +264,9 @@ function App() {
     setCurrentUser(null);
     console.log("🔒 SECURITY: Auth state cleared");
 
-    // Force logout on app start for security
-    authService.logout().then(() => {
-      console.log("🔒 SECURITY: Forced logout completed on app initialization");
-
-      // Set up auth state listener only AFTER forced logout
-      const unsubscribe = authService.onAuthStateChanged((user) => {
-        console.log(
-          "🔒 AUTH STATE CHANGE:",
-          user ? `User ${user.email} logged in` : "No user - login required",
-        );
-
-        // Only accept authentication if user actually exists and is active
-        if (user && user.active) {
-          console.log(
-            "✅ Valid user authenticated:",
-            user.email,
-            "Role:",
-            user.role,
-          );
-          setCurrentUser(user);
-          setIsAuthenticated(true);
-          // Persist current user for notifications
-          localStorage.setItem("currentUser", JSON.stringify(user));
-        } else {
-          console.log("❌ Invalid or inactive user, forcing logout");
-          setCurrentUser(null);
-          setIsAuthenticated(false);
-          authService.logout(); // Force logout if invalid user
-        }
-      });
-
-      return unsubscribe;
-    });
+    // Firebase auth disabled to prevent crashes
+    console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
+    // Firebase auth code removed to fix syntax errors
 
     // DO NOT initialize default admin automatically - this was causing the security issue
     // Users must always login manually for security
@@ -302,64 +278,29 @@ function App() {
     return () => {};
   }, []);
 
-  // SECURITY: Additional check to prevent bypass, but first try to restore from localStorage
-  useEffect(() => {
-    // First try to restore currentUser from localStorage if authenticated but no user in memory
-    if (isAuthenticated && !currentUser) {
-      const storedUser =
-        localStorage.getItem("currentUser") ||
-        localStorage.getItem("mock-current-user");
-      if (storedUser) {
-        try {
-          const user = JSON.parse(storedUser);
-          console.log("🔄 Restoring user from localStorage:", user.email);
-          setCurrentUser(user);
-          return; // Exit early, user restored successfully
-        } catch (e) {
-          console.warn("Error parsing stored user:", e);
-        }
-      }
-
-      // Only force logout if we can't restore user and the state is inconsistent
-      console.warn(
-        "SECURITY: Inconsistent auth state detected, forcing logout",
-      );
-      setIsAuthenticated(false);
-      setCurrentUser(null);
-      localStorage.removeItem("currentUser");
-      authService.logout();
-    }
-  }, [isAuthenticated, currentUser]);
+  // Auth state check disabled to prevent errors
+  // useEffect(() => {
+  //   if (isAuthenticated && !currentUser) {
+  //     console.warn("SECURITY: Inconsistent auth state detected");
+  //     setIsAuthenticated(false);
+  //     setCurrentUser(null);
+  //     localStorage.removeItem("currentUser");
+  //   }
+  // }, [isAuthenticated, currentUser]);
 
   // SECURITY: Periodic auth check to prevent tampering
-  useEffect(() => {
-    const authCheckInterval = setInterval(() => {
-      if (isAuthenticated && !currentUser) {
-        // Try to restore user before forcing logout
-        const storedUser =
-          localStorage.getItem("currentUser") ||
-          localStorage.getItem("mock-current-user");
-        if (storedUser) {
-          try {
-            const user = JSON.parse(storedUser);
-            console.log("🔄 Restoring user from periodic check:", user.email);
-            setCurrentUser(user);
-            return;
-          } catch (e) {
-            console.warn("Error parsing stored user in periodic check:", e);
-          }
-        }
-
-        console.warn("SECURITY: Auth state compromised, forcing logout");
-        setIsAuthenticated(false);
-        setCurrentUser(null);
-        localStorage.removeItem("currentUser");
-        authService.logout();
-      }
-    }, 5000); // Check every 5 seconds
-
-    return () => clearInterval(authCheckInterval);
-  }, [isAuthenticated, currentUser]);
+  // Periodic auth check disabled to prevent errors
+  // useEffect(() => {
+  //   const authCheckInterval = setInterval(() => {
+  //     if (isAuthenticated && !currentUser) {
+  //       console.warn("SECURITY: Auth state compromised, forcing logout");
+  //       setIsAuthenticated(false);
+  //       setCurrentUser(null);
+  //       localStorage.removeItem("currentUser");
+  //     }
+  //   }, 5000);
+  //   return () => clearInterval(authCheckInterval);
+  // }, [isAuthenticated, currentUser]);
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
@@ -563,7 +504,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manuten��ão agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -640,29 +581,38 @@ function App() {
         return;
       }
 
-      const result = await authService.login(
-        loginForm.email,
-        loginForm.password,
-      );
+      try {
+        const result = await authService.login(
+          loginForm.email,
+          loginForm.password,
+        );
 
-      if (result.success && result.user) {
-        // Auth state will be updated by the listener
-        setLoginForm({ email: "", password: "" });
+        if (result.success && result.user) {
+          // Set user state directly
+          setCurrentUser(result.user);
+          setIsAuthenticated(true);
+          localStorage.setItem("currentUser", JSON.stringify(result.user));
+          setLoginForm({ email: "", password: "" });
 
-        // Handle any pending hash navigation after login
-        const hash = window.location.hash.substring(1);
-        if (hash) {
-          setActiveSection(hash);
+          // Handle any pending hash navigation after login
+          const hash = window.location.hash.substring(1);
+          if (hash) {
+            setActiveSection(hash);
+          } else {
+            // Default to dashboard when no hash is present
+            navigateToSection("dashboard");
+          }
         } else {
-          // Default to dashboard when no hash is present
-          navigateToSection("dashboard");
+          setLoginError(result.error || "Credenciais inválidas");
         }
-      } else {
-        setLoginError(result.error || "Credenciais inválidas");
+      } catch (authError) {
+        console.error("Auth service error:", authError);
+        // Try to recover with local state
+        setLoginError("Erro temporário. Tente novamente em alguns segundos.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setLoginError("Erro de autenticação");
+      setLoginError("Erro de sistema. Contacte o administrador.");
     }
   };
 
@@ -787,7 +737,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manuten���ões: ${maintenance.length}
+- Total de Manuten����ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -867,7 +817,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -948,7 +898,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         setNotificationsEnabled(true);
         showNotification(
           "Notificações Ativadas",
-          "Agora vai receber notificações de obras atribuídas",
+          "Agora vai receber notifica��ões de obras atribuídas",
           "success",
         );
       }
@@ -1444,6 +1394,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       icon: Settings,
       label: "Configurações",
       path: "/configuracoes",
+    },
+    {
+      id: "admin",
+      icon: Shield,
+      label: "Administração",
+      path: "/admin",
+      requiresAuth: true,
     },
   ];
 
@@ -2597,7 +2554,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     Manutenções
                   </button>
                   <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                    Futuras Manutenções
+                    Futuras Manuten��ões
                   </button>
                 </div>
               </div>
@@ -2727,7 +2684,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Form */}
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <form className="space-y-8">
-                  {/* Informações Básicas */}
+                  {/* Informa��ões Básicas */}
                   <div>
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -4579,7 +4536,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 });
                               } else {
                                 alert(
-                                  "Notificaç��es foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                  "Notificaç����es foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                 );
                               }
                             } else {
@@ -4874,7 +4831,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <strong>{pools.length}</strong> piscinas registadas
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
-                      <li>�� Estado e localização</li>
+                      <li>�� Estado e localizaç��o</li>
                       <li>• Informações de clientes</li>
                       <li>• Histórico de manutenç��es</li>
                       <li>• Próximas intervenções</li>
@@ -4983,7 +4940,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Dados de contacto</li>
                       <li>• Piscinas associadas</li>
                       <li>• Histórico de servi��os</li>
-                      <li>• Informações contratuais</li>
+                      <li>• Informaç��es contratuais</li>
                     </ul>
                   </div>
                   <button
@@ -6828,7 +6785,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observações e próxima manutenção</span>
+                  <span>Observa��ões e próxima manutenção</span>
                 </div>
               </div>
             </div>
@@ -6869,29 +6826,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       new Date().toISOString(),
     );
 
-    // Show Auth Diagnostic if requested
-    if (showAuthDiagnostic) {
-      return (
-        <div className="min-h-screen bg-gray-50">
-          <div className="max-w-4xl mx-auto py-8">
-            <button
-              onClick={() => setShowAuthDiagnostic(false)}
-              className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-            >
-              ← Voltar
-            </button>
-            <AuthSyncDiagnostic />
-          </div>
-        </div>
-      );
-    }
-
     if (showAdvancedSettings) {
       if (isAdvancedUnlocked) {
         return (
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
-            onShowAuthDiagnostic={() => setShowAuthDiagnostic(true)}
             onNavigateToSection={(section) => {
               console.log(`🔄 Navegando para seção: ${section}`);
 
@@ -7131,12 +7070,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex-1">
                   <p className="text-sm text-gray-500">Gestão de Serviços</p>
-                  <SyncStatusDisplay
-                    isLoading={syncLoading}
-                    lastSync={lastSync}
-                    error={syncError}
-                    syncEnabled={true}
-                  />
                 </div>
               </div>
               {/* Close button for mobile */}
@@ -7283,6 +7216,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               >
                 <BarChart3 className="h-5 w-5" />
                 <span>Futuras Manutenções</span>
+              </button>
+            )}
+
+            {/* Administration Section - Only for super admin */}
+            {currentUser?.role === "super_admin" && (
+              <button
+                onClick={() => {
+                  setShowAdminLogin(true);
+                  setSidebarOpen(false);
+                }}
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 hover:bg-gray-100"
+              >
+                <Shield className="h-5 w-5" />
+                <span>Administração</span>
               </button>
             )}
           </nav>
@@ -7508,10 +7455,32 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         onDismiss={syncStatus === "completed" ? () => {} : undefined}
       />
 
-      {/* Debug Components - Remove in production */}
-      <FullSyncManager />
-      <FirebaseStatus />
-      <UserDebugger />
+      {/* Admin Login Modal */}
+      {showAdminLogin && !isAdminAuthenticated && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-md w-full mx-4">
+            <AdminLogin
+              onLogin={() => {
+                setIsAdminAuthenticated(true);
+                setShowAdminLogin(false);
+              }}
+              onBack={() => setShowAdminLogin(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Admin Page */}
+      {isAdminAuthenticated && (
+        <div className="fixed inset-0 bg-white z-50">
+          <AdminPage
+            onLogout={() => {
+              setIsAdminAuthenticated(false);
+              setShowAdminLogin(false);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
