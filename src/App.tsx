@@ -210,6 +210,10 @@ function App() {
   const [assignedUsers, setAssignedUsers] = useState<
     Array<{ id: string; name: string }>
   >([]);
+  const [editAssignedUsers, setEditAssignedUsers] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
+  const [currentEditAssignedUser, setCurrentEditAssignedUser] = useState("");
 
   // Edit and view states
   const [editingWork, setEditingWork] = useState(null);
@@ -277,7 +281,7 @@ function App() {
     }
 
     // Only clear auth state if no valid stored user found
-    console.log("🔒 No valid stored user found, ensuring clean state");
+    console.log("���� No valid stored user found, ensuring clean state");
     sessionStorage.clear(); // Clear any session data
     setIsAuthenticated(false);
     setCurrentUser(null);
@@ -1291,7 +1295,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+              `���️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -3957,7 +3961,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Additional Information */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações e Características Especiais
+                        Observa��ões e Características Especiais
                       </label>
                       <textarea
                         rows={3}
@@ -4895,7 +4899,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manutenções e piscinas
+                      Elimine todos os dados de obras, manuten��ões e piscinas
                       para começar com uma aplicação limpa. Os utilizadores
                       s����o mantidos.
                     </p>
