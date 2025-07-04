@@ -249,6 +249,7 @@ function App() {
     const storedUser =
       localStorage.getItem("currentUser") ||
       localStorage.getItem("mock-current-user");
+
     if (storedUser) {
       try {
         const user = JSON.parse(storedUser);
@@ -258,24 +259,23 @@ function App() {
         );
         setCurrentUser(user);
         setIsAuthenticated(true);
-
-        // Firebase auth listener temporarily disabled to avoid errors
-        // const unsubscribe = authService.onAuthStateChanged((authUser) => {
-        //   console.log("🔒 AUTH STATE CHANGE (restored user):", authUser);
-        // });
-        // return () => unsubscribe();
+        console.log("✅ User session restored successfully");
+        return; // Exit early if user is restored
       } catch (e) {
-        console.warn("App init: Error parsing stored user:", e);
+        console.warn(
+          "App init: Error parsing stored user, clearing localStorage:",
+          e,
+        );
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("mock-current-user");
       }
     }
 
-    // If no stored user, clear session data and force logout for security
+    // Only clear auth state if no valid stored user found
+    console.log("🔒 No valid stored user found, ensuring clean state");
     sessionStorage.clear(); // Clear any session data
-
-    // Force clear authentication state
     setIsAuthenticated(false);
     setCurrentUser(null);
-    console.log("🔒 SECURITY: Auth state cleared");
 
     // Firebase auth disabled to prevent crashes
     console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
@@ -3716,7 +3716,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
-                          <option value="manutencao">Em Manutenção</option>
+                          <option value="manutencao">Em Manutenç��o</option>
                           <option value="construcao">Em Construção</option>
                         </select>
                       </div>
