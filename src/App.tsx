@@ -384,15 +384,15 @@ function App() {
   };
 
   // Authentication functions
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (
-      loginForm.email === ADMIN_USER.email &&
-      loginForm.password === ADMIN_USER.password
-    ) {
-      setIsAuthenticated(true);
-      setCurrentUser(ADMIN_USER);
-      setLoginError("");
+    setLoginError("");
+
+    const result = await authService.login(loginForm.email, loginForm.password);
+
+    if (result.success && result.user) {
+      // Auth state will be updated by the listener
+      setLoginForm({ email: "", password: "" });
 
       // Handle any pending hash navigation after login
       const hash = window.location.hash.substring(1);
@@ -403,13 +403,13 @@ function App() {
         navigateToSection("dashboard");
       }
     } else {
-      setLoginError("Credenciais inválidas");
+      setLoginError(result.error || "Credenciais inválidas");
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setCurrentUser(ADMIN_USER);
+  const handleLogout = async () => {
+    await authService.logout();
+    // Auth state will be updated by the listener
     setLoginForm({ email: "", password: "" });
     navigateToSection("dashboard");
   };
