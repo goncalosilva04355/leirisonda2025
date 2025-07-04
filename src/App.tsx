@@ -1428,7 +1428,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const setRolePermissions = (role) => {
-<<<<<<< HEAD
     let permissions = {
       obras: { view: false, create: false, edit: false, delete: false },
       manutencoes: { view: false, create: false, edit: false, delete: false },
@@ -1437,9 +1436,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       relatorios: { view: false, create: false, edit: false, delete: false },
       clientes: { view: false, create: false, edit: false, delete: false },
     };
-=======
-    let permissions = userForm.permissions;
->>>>>>> origin/main
 
     switch (role) {
       case "super_admin":
@@ -2524,7 +2520,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                               disabled={!enableMapsRedirect}
                             >
-                              📍 {pool.location}
+                              ��� {pool.location}
                             </button>
                             <div className="flex items-center space-x-4 mt-2">
                               <span className="text-sm text-gray-500">
