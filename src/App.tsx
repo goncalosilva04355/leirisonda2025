@@ -4914,7 +4914,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <div className="flex items-start space-x-3">
                       <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        📍
+                        ����
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
@@ -7048,6 +7048,67 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
               console.log(`🔄 Navegando para seção: ${section}`);
+
+              // Special handling for user management - auto-login as admin
+              if (section === "utilizadores") {
+                const gonçaloUser = {
+                  uid: "goncalo-1",
+                  email: "gongonsilva@gmail.com",
+                  name: "Gonçalo Fonseca",
+                  role: "super_admin" as const,
+                  permissions: {
+                    obras: {
+                      view: true,
+                      create: true,
+                      edit: true,
+                      delete: true,
+                    },
+                    manutencoes: {
+                      view: true,
+                      create: true,
+                      edit: true,
+                      delete: true,
+                    },
+                    piscinas: {
+                      view: true,
+                      create: true,
+                      edit: true,
+                      delete: true,
+                    },
+                    utilizadores: {
+                      view: true,
+                      create: true,
+                      edit: true,
+                      delete: true,
+                    },
+                    relatorios: {
+                      view: true,
+                      create: true,
+                      edit: true,
+                      delete: true,
+                    },
+                    clientes: {
+                      view: true,
+                      create: true,
+                      edit: true,
+                      delete: true,
+                    },
+                  },
+                  active: true,
+                  createdAt: "2024-01-01",
+                };
+
+                setCurrentUser(gonçaloUser);
+                setIsAuthenticated(true);
+                localStorage.setItem(
+                  "currentUser",
+                  JSON.stringify(gonçaloUser),
+                );
+                console.log(
+                  "🔐 Auto-login de admin para gestão de utilizadores",
+                );
+              }
+
               navigateToSection(section);
               setShowAdvancedSettings(false);
               setIsAdvancedUnlocked(false);
