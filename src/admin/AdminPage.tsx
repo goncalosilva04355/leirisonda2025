@@ -36,7 +36,8 @@ type AdminSection =
   | "data-cleanup"
   | "data-management"
   | "firebase-config"
-  | "cross-device-users";
+  | "cross-device-users"
+  | "auto-sync-demo";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
