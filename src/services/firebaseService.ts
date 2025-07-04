@@ -383,6 +383,10 @@ export const maintenanceService = {
   async addMaintenance(
     maintenanceData: Omit<Maintenance, "id" | "createdAt" | "updatedAt">,
   ) {
+    if (!isFirebaseAvailable()) {
+      throw new Error("Firebase not configured");
+    }
+
     const docRef = await addDoc(collection(db, COLLECTIONS.MAINTENANCE), {
       ...maintenanceData,
       createdAt: Timestamp.now(),
@@ -396,6 +400,10 @@ export const maintenanceService = {
     maintenanceId: string,
     maintenanceData: Partial<Maintenance>,
   ) {
+    if (!isFirebaseAvailable()) {
+      throw new Error("Firebase not configured");
+    }
+
     const maintenanceRef = doc(db, COLLECTIONS.MAINTENANCE, maintenanceId);
     await updateDoc(maintenanceRef, {
       ...maintenanceData,
@@ -405,6 +413,10 @@ export const maintenanceService = {
 
   // Delete maintenance
   async deleteMaintenance(maintenanceId: string) {
+    if (!isFirebaseAvailable()) {
+      throw new Error("Firebase not configured");
+    }
+
     const maintenanceRef = doc(db, COLLECTIONS.MAINTENANCE, maintenanceId);
     await deleteDoc(maintenanceRef);
   },
