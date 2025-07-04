@@ -1784,39 +1784,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           </div>
         );
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Orçamento (€)
-                      </label>
-                      <input
-                        type="number"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        placeholder="0.00"
-                        min="0"
-                        step="0.01"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Description */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Descrição da Obra *
-                    </label>
-                    <textarea
-                      rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      placeholder="Descreva detalhadamente o trabalho a realizar..."
-                      required
-                    />
-                  </div>
-
-                  {/* Team Assignment */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Equipa Responsável *
-                      </label>
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
                         <option value="">Selecionar equipa</option>
                         <option value="equipa-a">Equipa Construção A</option>
@@ -2702,7 +2669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="super_admin">Super Admin</option>
                           <option value="manager">Gestor</option>
-                          <option value="technician">Técnico</option>
+                          <option value="technician">T��cnico</option>
                         </select>
                       </div>
                       <div className="flex items-center">
@@ -2874,7 +2841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Trabalhos realizados</li>
-                      <li>• Técnicos responsáveis</li>
+                      <li>• T��cnicos responsáveis</li>
                       <li>• Datas e durações</li>
                       <li>• Estados e observações</li>
                     </ul>
