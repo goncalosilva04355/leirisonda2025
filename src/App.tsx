@@ -768,7 +768,7 @@ ${index + 1}. ${pool.name}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
-   ${pool.nextMaintenance ? `Pr��xima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
+   ${pool.nextMaintenance ? `Pr��xima Manuten��ão: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
 `,
   )
   .join("\n")}
@@ -2416,7 +2416,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Próxima manutenção:{" "}
+                                Próxima manutenç��o:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -7898,13 +7898,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Install Prompt for Mobile */}
         <InstallPrompt />
-
-        {/* Auto-sync notification */}
-        <AutoSyncNotification
-          syncStatus={syncStatus}
-          lastSync={autoSyncLastSync}
-          onDismiss={syncStatus === "completed" ? () => {} : undefined}
-        />
 
         {/* Admin Login Modal */}
         {showAdminLogin && !isAdminAuthenticated && (
