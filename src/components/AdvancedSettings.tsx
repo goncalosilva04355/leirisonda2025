@@ -575,7 +575,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   Notificações Push
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Configure e teste notificações push para atribuição de obras
+                  Configure e teste notificações push para atribui��ão de obras
                 </p>
               </div>
 
@@ -900,7 +900,8 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   Diagnóstico de Autenticação
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Ferramenta de diagnóstico para problemas de login entre dispositivos
+                  Ferramenta de diagnóstico para problemas de login entre
+                  dispositivos
                 </p>
               </div>
 
@@ -909,9 +910,19 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   🔧 Problema Identificado e Corrigido
                 </h4>
                 <div className="text-sm text-orange-800 space-y-2">
-                  <p><strong>Problema:</strong> A configuração anterior usava 'browserSessionPersistence' que só mantinha a sessão no mesmo navegador/dispositivo.</p>
-                  <p><strong>Solução:</strong> Removida a limitação de persistência para permitir login entre dispositivos.</p>
-                  <p><strong>Status:</strong> ✅ Corrigido - Utilizadores devem conseguir fazer login noutro dispositivo agora.</p>
+                  <p>
+                    <strong>Problema:</strong> A configuração anterior usava
+                    'browserSessionPersistence' que só mantinha a sessão no
+                    mesmo navegador/dispositivo.
+                  </p>
+                  <p>
+                    <strong>Solução:</strong> Removida a limitação de
+                    persistência para permitir login entre dispositivos.
+                  </p>
+                  <p>
+                    <strong>Status:</strong> ✅ Corrigido - Utilizadores devem
+                    conseguir fazer login noutro dispositivo agora.
+                  </p>
                 </div>
               </div>
 
@@ -924,7 +935,10 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   <li>2. Abra a aplicação noutro dispositivo/navegador</li>
                   <li>3. Use o mesmo email e password</li>
                   <li>4. O login deve funcionar normalmente</li>
-                  <li>5. Os dados devem estar sincronizados (se Firebase configurado)</li>
+                  <li>
+                    5. Os dados devem estar sincronizados (se Firebase
+                    configurado)
+                  </li>
                 </ol>
               </div>
 
@@ -947,10 +961,17 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   ✅ Verificações Firebase para sincronização:
                 </h4>
                 <ul className="text-sm text-green-800 space-y-1">
-                  <li>• Authentication > Sign-in method > Email/Password deve estar ativado</li>
+                  <li>
+                    • Authentication → Sign-in method → Email/Password deve
+                    estar ativado
+                  </li>
                   <li>• Firestore Database deve estar configurado</li>
-                  <li>• Utilizadores criados aparecem em Authentication > Users</li>
-                  <li>• As regras de segurança devem permitir acesso autenticado</li>
+                  <li>
+                    • Utilizadores criados aparecem em Authentication → Users
+                  </li>
+                  <li>
+                    • As regras de segurança devem permitir acesso autenticado
+                  </li>
                 </ul>
               </div>
 
@@ -959,8 +980,13 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   ⚠️ Se ainda houver problemas:
                 </h4>
                 <ul className="text-sm text-yellow-800 space-y-1">
-                  <li>• Verifique se o Firebase Console tem Email/Password ativado</li>
-                  <li>• Confirme que o utilizador foi criado no Firebase Authentication</li>
+                  <li>
+                    • Verifique se o Firebase Console tem Email/Password ativado
+                  </li>
+                  <li>
+                    • Confirme que o utilizador foi criado no Firebase
+                    Authentication
+                  </li>
                   <li>• Teste com incógnito/modo privado primeiro</li>
                   <li>• Limpe cache e cookies do navegador</li>
                   <li>• Execute o diagnóstico detalhado acima</li>
