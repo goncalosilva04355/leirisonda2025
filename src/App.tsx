@@ -2723,6 +2723,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           max="14"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="7.2"
+                          value={maintenanceForm.pH}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              pH: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
