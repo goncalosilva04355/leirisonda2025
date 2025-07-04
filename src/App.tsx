@@ -2592,7 +2592,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       {hasPermission("piscinas", "create") && (
                         <button
-                          onClick={() => setActiveSection("nova-piscina")}
+                          onClick={() => {
+                            setEditingPool(null);
+                            setActiveSection("nova-piscina");
+                          }}
                           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                         >
                           <Plus className="h-4 w-4" />
@@ -3646,7 +3649,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monofásico)
+                                    230V (monof��sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -7103,7 +7106,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico *
+                          T��cnico *
                         </label>
                         <input
                           type="text"
