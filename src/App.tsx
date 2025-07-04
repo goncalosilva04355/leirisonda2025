@@ -6643,8 +6643,82 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="scheduled">Agendado</option>
                         <option value="in_progress">Em Progresso</option>
                         <option value="completed">Concluído</option>
+                        <option value="cancelled">Cancelado</option>
                       </select>
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Duração Estimada (horas)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.5"
+                        defaultValue={editingMaintenance?.estimatedDuration}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="2.5"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Duração Real (horas)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.5"
+                        defaultValue={editingMaintenance?.actualDuration}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="3.0"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Custo (€)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        defaultValue={editingMaintenance?.cost}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0.00"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Prioridade
+                      </label>
+                      <select
+                        defaultValue={editingMaintenance?.priority || "medium"}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="low">Baixa</option>
+                        <option value="medium">Média</option>
+                        <option value="high">Alta</option>
+                        <option value="urgent">Urgente</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Conclusão
+                      </label>
+                      <input
+                        type="date"
+                        defaultValue={
+                          editingMaintenance?.completedDate?.split("T")[0]
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Materiais Utilizados
+                    </label>
+                    <textarea
+                      defaultValue={editingMaintenance?.materialsUsed}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={3}
+                      placeholder="Lista de materiais e produtos utilizados"
+                    />
                   </div>
 
                   <div>
