@@ -4631,6 +4631,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Entrar
             </button>
           </form>
+
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={() => setShowRegisterForm(true)}
+              className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+            >
+              Não tem conta? Criar nova conta
+            </button>
+          </div>
         </div>
 
         {/* Floating Advanced Settings Button */}
