@@ -106,15 +106,17 @@ export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
   };
 
   return (
-    <AutoSyncContext.Provider value={contextValue}>
-      {children}
-      {/* Indicador visual opcional */}
-      {showNotifications && autoSync.syncing && (
-        <div className="fixed bottom-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm shadow-lg z-50">
-          🔄 Sincronizando...
-        </div>
-      )}
-    </AutoSyncContext.Provider>
+    <SyncErrorBoundary>
+      <AutoSyncContext.Provider value={contextValue}>
+        {children}
+        {/* Indicador visual opcional */}
+        {showNotifications && autoSync.syncing && (
+          <div className="fixed bottom-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm shadow-lg z-50">
+            🔄 Sincronizando...
+          </div>
+        )}
+      </AutoSyncContext.Provider>
+    </SyncErrorBoundary>
   );
 };
 
