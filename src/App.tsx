@@ -129,11 +129,26 @@ function App() {
   const [pushPermission, setPushPermission] = useState("default");
   const [assignedWorks, setAssignedWorks] = useState([]);
 
-  // Initialize notification permission state
+  // Initialize notification permission state and register service worker
   useEffect(() => {
     if ("Notification" in window) {
       setPushPermission(Notification.permission);
       setNotificationsEnabled(Notification.permission === "granted");
+    }
+
+    // Register service worker for better push notification support
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          console.log(
+            "Service Worker registered successfully:",
+            registration.scope,
+          );
+        })
+        .catch((error) => {
+          console.log("Service Worker registration failed:", error);
+        });
     }
   }, []);
 
@@ -1306,7 +1321,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Futuras Manutenções
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Manutenç��es agendadas e programadas
+                        Manutenções agendadas e programadas
                       </p>
                     </div>
                   </div>
@@ -2739,7 +2754,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório de Manutenções
                       </h3>
                       <p className="text-sm text-gray-600">
-                        Histórico de interven��ões
+                        Histórico de intervenções
                       </p>
                     </div>
                   </div>
