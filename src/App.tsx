@@ -2422,7 +2422,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão de piscinas no sistema
+                          Gest��o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -3701,7 +3701,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="submit"
                         onClick={(e) => {
                           e.preventDefault();
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
 
                           // Extract all form data
                           const workTitle =
