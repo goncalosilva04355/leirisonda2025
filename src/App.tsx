@@ -3092,14 +3092,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             >
                               <option value="">Selecionar usuário...</option>
                               {users
-                                .filter(
-                                  (user) =>
+                                .filter((user) => {
+                                  console.log(
+                                    "Nova obra - User:",
+                                    user.name,
+                                    "Role:",
+                                    user.role,
+                                    "Active:",
+                                    user.active,
+                                  );
+                                  return (
                                     user.role !== "viewer" &&
+                                    user.active !== false &&
                                     !assignedUsers.some(
                                       (assigned) =>
                                         assigned.id === String(user.id),
-                                    ),
-                                )
+                                    )
+                                  );
+                                })
                                 .map((user) => (
                                   <option key={user.id} value={user.id}>
                                     {user.name}
