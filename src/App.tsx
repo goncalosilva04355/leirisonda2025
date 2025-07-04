@@ -22,6 +22,8 @@ import {
   Check,
   AlertCircle,
   Download,
+  ArrowLeft,
+  Bell,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
@@ -94,7 +96,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(ADMIN_USER);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("futuras-manutencoes");
+  const [activeSection, setActiveSection] = useState("dashboard");
 
   // Custom setActiveSection that updates URL hash
   const navigateToSection = (section: string) => {
@@ -388,6 +390,9 @@ function App() {
       const hash = window.location.hash.substring(1);
       if (hash) {
         setActiveSection(hash);
+      } else {
+        // Default to dashboard when no hash is present
+        navigateToSection("dashboard");
       }
     } else {
       setLoginError("Credenciais inválidas");
@@ -456,7 +461,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manutenções: ${maintenance.length}
+- Total de Manuten��ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -836,7 +841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleSaveUser = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     if (editingUser) {
       // Update existing user
@@ -1076,34 +1081,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Funcionalidades Avançadas */}
-                <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        🚀 Funcionalidades Avançadas
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        📸 Fotos • 💧 Furo de Água • 🔧 Gestão Completa
-                      </p>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => setActiveSection("nova-obra")}
-                        className="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700"
-                      >
-                        Testar Obras
-                      </button>
-                      <button
-                        onClick={() => setActiveSection("nova-manutencao")}
-                        className="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700"
-                      >
-                        Testar Manutenções
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Obras Atribuídas */}
                 <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
                   <div className="flex items-center justify-between">
@@ -1271,64 +1248,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Ações Rápidas */}
-              <div className="bg-white rounded-lg shadow-sm p-4">
-                <div className="flex items-center space-x-2 mb-4">
-                  <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
-                    <Plus className="h-4 w-4 text-green-600" />
-                  </div>
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Ações Rápidas
-                  </h2>
-                </div>
-
-                <div className="space-y-3">
-                  <button
-                    onClick={() => setActiveSection("nova-obra")}
-                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
-                  >
-                    <Plus className="h-5 w-5 text-gray-600" />
-                    <span className="font-medium text-gray-900">Nova Obra</span>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveSection("nova-manutencao")}
-                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
-                  >
-                    <Wrench className="h-5 w-5 text-gray-600" />
-                    <span className="font-medium text-gray-900">
-                      Manutenç��o Piscinas
-                    </span>
-                  </button>
-
-                  <button className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left">
-                    <Building2 className="h-5 w-5 text-gray-600" />
-                    <span className="font-medium text-gray-900">
-                      Todas as Obras
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveSection("utilizadores")}
-                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
-                  >
-                    <UserPlus className="h-5 w-5 text-gray-600" />
-                    <span className="font-medium text-gray-900">
-                      Novo Utilizador
-                    </span>
-                  </button>
-
-                  <button className="w-full flex items-center space-x-3 p-3 border border-blue-200 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors text-left">
-                    <div className="w-5 h-5 flex items-center justify-center">
-                      <span className="text-blue-600">���</span>
-                    </div>
-                    <span className="font-medium text-blue-900">
-                      Diagnóstico de Sincronização
-                    </span>
-                  </button>
                 </div>
               </div>
 
@@ -2701,7 +2620,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar intervenção de manutenção
+                      Registar intervenção de manutenç��o
                     </p>
                   </div>
                 </div>
@@ -3231,7 +3150,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
                   <button
-                    onClick={() => setShowUserForm(true)}
+                    onClick={() => {
+                      setUserForm({
+                        name: "",
+                        email: "",
+                        role: "technician",
+                        active: true,
+                        permissions: {},
+                      });
+                      setEditingUser(null);
+                      setShowUserForm(true);
+                    }}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                   >
                     <UserPlus className="h-4 w-4" />
@@ -3287,10 +3216,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => {
-                            setEditingUser(user);
-                            setShowUserForm(true);
-                          }}
+                          onClick={() => handleEditUser(user)}
                           className="p-2 text-gray-400 hover:text-gray-600"
                         >
                           <Edit2 className="h-4 w-4" />
@@ -3322,7 +3248,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <input
                           type="text"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          defaultValue={editingUser?.name || ""}
+                          value={userForm.name}
+                          onChange={(e) =>
+                            setUserForm({ ...userForm, name: e.target.value })
+                          }
                         />
                       </div>
                       <div>
@@ -3332,7 +3261,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <input
                           type="email"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          defaultValue={editingUser?.email || ""}
+                          value={userForm.email}
+                          onChange={(e) =>
+                            setUserForm({ ...userForm, email: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Password
+                        </label>
+                        <input
+                          type="password"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          value={userForm.password}
+                          onChange={(e) =>
+                            setUserForm({
+                              ...userForm,
+                              password: e.target.value,
+                            })
+                          }
+                          placeholder={
+                            editingUser
+                              ? "Deixe vazio para manter a senha atual"
+                              : "Digite a senha"
+                          }
                         />
                       </div>
                       <div>
@@ -3341,7 +3294,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          defaultValue={editingUser?.role || "technician"}
+                          value={userForm.role}
+                          onChange={(e) =>
+                            setUserForm({ ...userForm, role: e.target.value })
+                          }
                         >
                           <option value="super_admin">Super Admin</option>
                           <option value="manager">Gestor</option>
@@ -3353,7 +3309,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="checkbox"
                           id="active"
                           className="mr-2"
-                          defaultChecked={editingUser?.active ?? true}
+                          checked={userForm.active}
+                          onChange={(e) =>
+                            setUserForm({
+                              ...userForm,
+                              active: e.target.checked,
+                            })
+                          }
                         />
                         <label
                           htmlFor="active"
@@ -3428,6 +3390,113 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex justify-between py-2">
                     <span className="text-gray-600">Modo de Dados</span>
                     <span className="font-medium">Armazenamento Local</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notifications Section */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Notificações Push
+                  </h3>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Ative as notificações para receber alertas sobre novas obras
+                  atribuídas e atualizações importantes.
+                </p>
+
+                <div className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-blue-900 mb-2">
+                          Notificações de Obras
+                        </h4>
+                        <p className="text-blue-700 text-sm mb-3">
+                          Receba notificações quando uma nova obra for atribuída
+                          a si.
+                        </p>
+                        <button
+                          onClick={() => {
+                            if ("Notification" in window) {
+                              if (Notification.permission === "default") {
+                                Notification.requestPermission().then(
+                                  (permission) => {
+                                    if (permission === "granted") {
+                                      new Notification("Leirisonda", {
+                                        body: "Notificações ativadas com sucesso!",
+                                        icon: "/icon.svg",
+                                      });
+                                    }
+                                  },
+                                );
+                              } else if (
+                                Notification.permission === "granted"
+                              ) {
+                                new Notification("Leirisonda", {
+                                  body: "Notificações já estão ativadas!",
+                                  icon: "/icon.svg",
+                                });
+                              } else {
+                                alert(
+                                  "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                );
+                              }
+                            } else {
+                              alert("Este navegador não suporta notificações.");
+                            }
+                          }}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                        >
+                          Ativar Notificações
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <Check className="h-5 w-5 text-green-600 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-green-900 mb-2">
+                          Notificações de Sistema
+                        </h4>
+                        <p className="text-green-700 text-sm mb-3">
+                          Receba alertas sobre atualizações do sistema e
+                          manutenções programadas.
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-green-800 text-sm font-medium">
+                            Status: Ativo
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900 mb-2">
+                          Instruções
+                        </h4>
+                        <ul className="text-gray-700 text-sm space-y-1">
+                          <li>• As notificações funcionam apenas com HTTPS</li>
+                          <li>
+                            • Certifique-se de que permite notificações no seu
+                            navegador
+                          </li>
+                          <li>
+                            • Em dispositivos móveis, adicione a app ao ecrã
+                            inicial
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -3588,7 +3657,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Dados de contacto</li>
                       <li>• Piscinas associadas</li>
-                      <li>• Histórico de serviços</li>
+                      <li>• Histórico de servi��os</li>
                       <li>• Informações contratuais</li>
                     </ul>
                   </div>
@@ -4034,7 +4103,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email Secundário
+                          Email Secund��rio
                         </label>
                         <input
                           type="email"
@@ -4430,7 +4499,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Shield className="h-8 w-8 text-red-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                Área Protegida
+                ��rea Protegida
               </h1>
               <p className="text-gray-600">
                 Insira a palavra-passe para aceder às configurações avançadas
@@ -4676,12 +4745,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       </div>
 
       {/* Mobile Menu Button */}
-      <div className="lg:hidden fixed top-4 left-4 z-60">
+      <div className="lg:hidden fixed top-4 left-4 z-60 flex flex-col space-y-2">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="bg-white p-2 rounded-md shadow-md"
         >
           <Menu className="h-6 w-6 text-gray-600" />
+        </button>
+        <button
+          onClick={() => window.history.back()}
+          className="bg-white p-2 rounded-md shadow-md"
+        >
+          <ArrowLeft className="h-6 w-6 text-gray-600" />
         </button>
       </div>
 
