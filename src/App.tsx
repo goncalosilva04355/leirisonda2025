@@ -1080,29 +1080,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Funcionalidades Avançadas */}
-                <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        🚀 Funcionalidades Avançadas
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        📸 Fotos • �� Furo de Água • 🔧 Gestão Completa
-                      </p>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => setActiveSection("nova-obra")}
-                        className="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700"
-                      >
-                        Testar Obras
-                      </button>
-                      <button
-                        onClick={() => setActiveSection("nova-manutencao")}
-                        className="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700"
-                      >
-                        Testar Manutenções
                       </button>
                     </div>
                   </div>
