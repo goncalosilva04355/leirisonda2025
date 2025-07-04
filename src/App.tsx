@@ -197,10 +197,11 @@ function App() {
 
   // Notify Alexandre about assigned works when he logs in
   useEffect(() => {
-    if (
-      currentUser?.name.toLowerCase().includes("alexandre") &&
-      works.length > 0
-    ) {
+    const handleAlexandreWorks = async () => {
+      if (
+        currentUser?.name.toLowerCase().includes("alexandre") &&
+        works.length > 0
+      ) {
       console.log("🔍 DEBUG Alexandre - Data loaded:", {
         currentUser: currentUser.name,
         worksCount: works.length,
@@ -1219,7 +1220,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç��es não est���o ativadas. Active-as primeiro nas configurações.",
+        "As notificaç���es não est���o ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
