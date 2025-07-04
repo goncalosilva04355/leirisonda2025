@@ -926,7 +926,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr��������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr���������-definidos por agora.",
     );
   };
 
@@ -7491,6 +7491,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       {/* Install Prompt for Mobile */}
       <InstallPrompt />
+
+      {/* Firebase Status - Debug only */}
+      <FirebaseStatus />
     </div>
   );
 }
