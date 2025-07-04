@@ -775,7 +775,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localização: ${work.location}
+   Localiza��ão: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -7068,6 +7068,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </form>
 
           {/* SECURITY: Only super admin can create new accounts - removed public registration */}
+
+          {/* Login instructions for Gonçalo */}
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-sm text-blue-800 font-medium">
+              Credenciais para teste:
+            </p>
+            <p className="text-xs text-blue-600 mt-1">
+              Email: gongonsilva@gmail.com
+              <br />
+              Password: admin123
+            </p>
+          </div>
         </div>
 
         {/* Floating Advanced Settings Button */}
