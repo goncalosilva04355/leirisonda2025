@@ -1198,8 +1198,6 @@ function App() {
       return (
         <FirebaseConfig
           onConfigured={() => {
-            setFirebaseConfigured(true);
-            setSyncEnabled(true);
             setShowAdvancedSettings(false);
           }}
         />
