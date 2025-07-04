@@ -178,7 +178,7 @@ const mockWorks: Work[] = [
   {
     id: "work-2",
     title: "Reparação Sistema Filtração",
-    description: "Substituição de bomba e filtros",
+    description: "Substituiç��o de bomba e filtros",
     client: "Pedro Almeida",
     contact: "934567890",
     location: "Cascais",
@@ -625,11 +625,11 @@ export function useDataSync(): SyncState & SyncActions {
 
           setState((prev) => ({
             ...prev,
-            pools: [...mockPools, ...updatedData.pools],
-            works: [...mockWorks, ...updatedData.works],
-            maintenance: [...mockMaintenance, ...updatedData.maintenance],
+            pools: updatedData.pools,
+            works: updatedData.works,
+            maintenance: updatedData.maintenance,
             futureMaintenance,
-            clients: [...mockClients, ...updatedData.clients],
+            clients: updatedData.clients,
             isLoading: false,
             lastSync: new Date(),
             error: null,
