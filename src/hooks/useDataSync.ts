@@ -41,6 +41,7 @@ export interface Work {
   budget?: number;
   actualCost?: number;
   assignedTo: string;
+  folhaGerada?: boolean;
   createdAt: string;
 }
 
@@ -119,6 +120,7 @@ const mockWorks: Work[] = [
     startDate: "2024-01-10",
     budget: 5000,
     assignedTo: "Equipa Técnica A",
+    folhaGerada: true,
     createdAt: "2024-01-08",
   },
   {
@@ -132,7 +134,36 @@ const mockWorks: Work[] = [
     startDate: "2024-02-01",
     budget: 25000,
     assignedTo: "Equipa Construção",
+    folhaGerada: false,
     createdAt: "2024-01-20",
+  },
+  {
+    id: "3",
+    title: "Manutenção Piscina Municipal",
+    description: "Limpeza e tratamento químico da piscina municipal",
+    client: "Câmara Municipal",
+    location: "Lisboa, Centro Desportivo",
+    type: "Manutenção",
+    status: "completed",
+    startDate: "2024-01-05",
+    budget: 1500,
+    assignedTo: "João Santos",
+    folhaGerada: true,
+    createdAt: "2024-01-03",
+  },
+  {
+    id: "4",
+    title: "Reparação Bomba de Calor",
+    description: "Substituição de componentes da bomba de calor",
+    client: "Condomínio Bela Vista",
+    location: "Porto, Foz do Douro",
+    type: "Reparação",
+    status: "pending",
+    startDate: "2024-01-25",
+    budget: 800,
+    assignedTo: "Maria Silva",
+    folhaGerada: false,
+    createdAt: "2024-01-22",
   },
 ];
 
@@ -205,6 +236,47 @@ export function useDataSync(): SyncState & SyncActions {
   const [syncEnabled, setSyncEnabled] = useState(() => {
     return !!localStorage.getItem("firebase-config");
   });
+
+  // Initial sync when enabled
+  useEffect(() => {
+    if (syncEnabled) {
+      const performInitialSync = async () => {
+        const initialized = realFirebaseService.initialize();
+        if (initialized) {
+          setState((prev) => ({ ...prev, isLoading: true, error: null }));
+
+          try {
+            const connectionOk = await realFirebaseService.testConnection();
+            if (!connectionOk) {
+              throw new Error("Firebase connection test failed");
+            }
+
+            // Set successful sync immediately to remove "waiting" status
+            setState((prev) => ({
+              ...prev,
+              isLoading: false,
+              lastSync: new Date(),
+              error: null,
+            }));
+          } catch (error: any) {
+            console.error("Initial Firebase sync failed:", error);
+            setState((prev) => ({
+              ...prev,
+              isLoading: false,
+              error: `Sync failed: ${error.message}`,
+            }));
+          }
+        } else {
+          setState((prev) => ({
+            ...prev,
+            error: "Firebase configuration invalid",
+          }));
+        }
+      };
+
+      performInitialSync();
+    }
+  }, [syncEnabled]);
 
   // Real-time listeners
   useEffect(() => {

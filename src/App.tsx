@@ -30,15 +30,9 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { InstallPrompt } from "./components/InstallPrompt";
+import { RegisterForm } from "./components/RegisterForm";
 import { useDataSync } from "./hooks/useDataSync";
-
-// Mock authentication and user data
-const ADMIN_USER = {
-  email: "gongonsilva@gmail.com",
-  password: "19867gsf",
-  name: "Gonçalo Fonseca",
-  role: "super_admin",
-};
+import { authService, UserProfile } from "./services/authService";
 
 // Mock users database
 const initialUsers = [
@@ -94,9 +88,19 @@ const initialUsers = [
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(ADMIN_USER);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [showNewClientForm, setShowNewClientForm] = useState(false);
+  const [newClientForm, setNewClientForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+  const [activeWorkFilter, setActiveWorkFilter] = useState("all");
+  const [globalSearchTerm, setGlobalSearchTerm] = useState("");
 
   // Custom setActiveSection that updates URL hash
   const navigateToSection = (section: string) => {
@@ -171,6 +175,19 @@ function App() {
     nextMaintenance: "",
     status: "completed",
   });
+
+  // Initialize authentication state
+  useEffect(() => {
+    const unsubscribe = authService.onAuthStateChanged((user) => {
+      setCurrentUser(user);
+      setIsAuthenticated(!!user);
+    });
+
+    // Initialize default admin if needed
+    authService.initializeDefaultAdmin();
+
+    return unsubscribe;
+  }, []);
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
@@ -376,15 +393,15 @@ function App() {
   };
 
   // Authentication functions
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (
-      loginForm.email === ADMIN_USER.email &&
-      loginForm.password === ADMIN_USER.password
-    ) {
-      setIsAuthenticated(true);
-      setCurrentUser(ADMIN_USER);
-      setLoginError("");
+    setLoginError("");
+
+    const result = await authService.login(loginForm.email, loginForm.password);
+
+    if (result.success && result.user) {
+      // Auth state will be updated by the listener
+      setLoginForm({ email: "", password: "" });
 
       // Handle any pending hash navigation after login
       const hash = window.location.hash.substring(1);
@@ -395,15 +412,25 @@ function App() {
         navigateToSection("dashboard");
       }
     } else {
-      setLoginError("Credenciais inválidas");
+      setLoginError(result.error || "Credenciais inválidas");
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setCurrentUser(ADMIN_USER);
+  const handleLogout = async () => {
+    await authService.logout();
+    // Auth state will be updated by the listener
     setLoginForm({ email: "", password: "" });
     navigateToSection("dashboard");
+  };
+
+  // Register functions
+  const handleRegisterSuccess = () => {
+    setShowRegisterForm(false);
+    // User will be automatically logged in by the auth state listener
+  };
+
+  const handleBackToLogin = () => {
+    setShowRegisterForm(false);
   };
 
   // Advanced settings functions
@@ -461,7 +488,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manuten��ões: ${maintenance.length}
+- Total de Manuten���ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -825,6 +852,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     setShowUserForm(true);
   };
 
+  // Confirmation function for deletions
+  const confirmDelete = (message: string, onConfirm: () => void) => {
+    if (window.confirm(message)) {
+      onConfirm();
+    }
+  };
+
+  // Permission check function
+  const hasPermission = (module: string, action: string): boolean => {
+    if (!currentUser || !currentUser.permissions) return false;
+    return currentUser.permissions[module]?.[action] || false;
+  };
+
   const handleDeleteUser = (userId) => {
     // Check if it's the main user
     const user = users.find(
@@ -835,9 +875,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       return;
     }
 
-    if (confirm("Tem a certeza que quer eliminar este utilizador?")) {
-      setUsers(users.filter((u) => u.id !== userId));
-    }
+    confirmDelete(
+      `Tem a certeza que deseja apagar o utilizador "${user?.name}"?`,
+      () => {
+        setUsers(users.filter((u) => u.id !== userId));
+      },
+    );
   };
 
   const handleSaveUser = (e) => {
@@ -959,6 +1002,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const menuItems = [
     { id: "dashboard", icon: Home, label: "Dashboard", path: "/dashboard" },
+    { id: "obras", icon: Building2, label: "Obras", path: "/obras" },
     { id: "nova-obra", icon: Plus, label: "Nova Obra", path: "/obras/nova" },
     {
       id: "nova-manutencao",
@@ -1026,24 +1070,32 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Status Cards */}
               <div className="space-y-3">
                 {/* Pendentes */}
-                <div className="bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm">
+                <button
+                  onClick={() => navigateToSection("obras")}
+                  className="w-full bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="text-left">
                       <h3 className="text-lg font-semibold text-gray-900">
                         Pendentes
                       </h3>
                       <p className="text-sm text-gray-500">
-                        Necessitam atenção
+                        Obras necessitam atenção
                       </p>
                     </div>
-                    <div className="text-4xl font-bold text-gray-900">0</div>
+                    <div className="text-4xl font-bold text-gray-900">
+                      {works.filter((w) => w.status === "pending").length}
+                    </div>
                   </div>
-                </div>
+                </button>
 
                 {/* Em Progresso */}
-                <div className="bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm">
+                <button
+                  onClick={() => navigateToSection("obras")}
+                  className="w-full bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="text-left">
                       <h3 className="text-lg font-semibold text-gray-900">
                         Em Progresso
                       </h3>
@@ -1051,40 +1103,57 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Obras em andamento
                       </p>
                     </div>
-                    <div className="text-4xl font-bold text-gray-900">0</div>
+                    <div className="text-4xl font-bold text-gray-900">
+                      {works.filter((w) => w.status === "in_progress").length}
+                    </div>
                   </div>
-                </div>
+                </button>
 
                 {/* Concluídas */}
-                <div className="bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm">
+                <button
+                  onClick={() => navigateToSection("obras")}
+                  className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="text-left">
                       <h3 className="text-lg font-semibold text-gray-900">
                         Concluídas
                       </h3>
-                      <p className="text-sm text-gray-500">Finalizadas</p>
+                      <p className="text-sm text-gray-500">Obras finalizadas</p>
                     </div>
-                    <div className="text-4xl font-bold text-gray-900">0</div>
+                    <div className="text-4xl font-bold text-gray-900">
+                      {works.filter((w) => w.status === "completed").length}
+                    </div>
                   </div>
-                </div>
+                </button>
 
-                {/* Folhas por Fazer */}
-                <div className="bg-white rounded-lg border-l-4 border-blue-500 p-4 shadow-sm">
+                {/* Falta de Folhas de Obra */}
+                <button
+                  onClick={() => navigateToSection("obras")}
+                  className="w-full bg-white rounded-lg border-l-4 border-blue-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="text-left">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Folhas por Fazer
+                        Falta de Folhas de Obra
                       </h3>
-                      <p className="text-sm text-gray-500">A processar</p>
+                      <p className="text-sm text-gray-500">
+                        Folhas não geradas
+                      </p>
                     </div>
-                    <div className="text-4xl font-bold text-gray-900">0</div>
+                    <div className="text-4xl font-bold text-gray-900">
+                      {works.filter((w) => !w.folhaGerada).length}
+                    </div>
                   </div>
-                </div>
+                </button>
 
                 {/* Obras Atribuídas */}
-                <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
+                <button
+                  onClick={() => navigateToSection("obras")}
+                  className="w-full bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="text-left">
                       <h3 className="text-lg font-semibold text-gray-900">
                         Obras Atribuídas
                       </h3>
@@ -1094,7 +1163,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {assignedWorks.length}
                     </div>
                   </div>
-                </div>
+                </button>
               </div>
 
               {/* Lista de Obras Atribuídas */}
@@ -1103,7 +1172,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center p-4 border-b border-gray-100">
                     <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Minhas Obras Atribuídas
+                      Minhas Obras Atribu���das
                     </h2>
                   </div>
                   <div className="p-4 space-y-3">
@@ -1126,7 +1195,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span>Atribuída a: {work.assignedTo}</span>
                               </div>
                               <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                <span>📅</span>
+                                <span>����</span>
                                 <span>
                                   Atribuída em:{" "}
                                   {new Date(
@@ -1251,23 +1320,353 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
               </div>
 
-              {/* Pesquisar Obras */}
+              {/* Pesquisa Global */}
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center space-x-2 mb-4">
                   <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
                     <span className="text-blue-600">🔍</span>
                   </div>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Pesquisar Obras
+                    Pesquisa Global
                   </h2>
                 </div>
 
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Cliente, folha obra, morada..."
-                    className="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 placeholder-gray-400 text-sm"
-                  />
+                <div className="space-y-4">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={globalSearchTerm}
+                      onChange={(e) => setGlobalSearchTerm(e.target.value)}
+                      placeholder="Pesquisar por cliente, obra, piscina, data..."
+                      className="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                    />
+                    {globalSearchTerm && (
+                      <button
+                        onClick={() => setGlobalSearchTerm("")}
+                        className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Search Results */}
+                  {globalSearchTerm && (
+                    <div className="space-y-3 max-h-96 overflow-y-auto">
+                      {/* Works Results */}
+                      {works.filter(
+                        (work) =>
+                          work.title
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          work.client
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          work.location
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          work.assignedTo
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          work.description
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()),
+                      ).length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">
+                            Obras
+                          </h4>
+                          {works
+                            .filter(
+                              (work) =>
+                                work.title
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.client
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.location
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.assignedTo
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                work.description
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()),
+                            )
+                            .slice(0, 3)
+                            .map((work) => (
+                              <button
+                                key={work.id}
+                                onClick={() => {
+                                  navigateToSection("obras");
+                                  setGlobalSearchTerm("");
+                                }}
+                                className="w-full text-left p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors mb-2"
+                              >
+                                <div className="flex items-center space-x-2">
+                                  <Building2 className="h-4 w-4 text-blue-600" />
+                                  <div>
+                                    <p className="font-medium text-gray-900">
+                                      {work.title}
+                                    </p>
+                                    <p className="text-sm text-gray-600">
+                                      {work.client} • {work.location}
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                        </div>
+                      )}
+
+                      {/* Pools Results */}
+                      {pools.filter(
+                        (pool) =>
+                          pool.name
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          pool.client
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          pool.location
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()),
+                      ).length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">
+                            Piscinas
+                          </h4>
+                          {pools
+                            .filter(
+                              (pool) =>
+                                pool.name
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                pool.client
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                pool.location
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()),
+                            )
+                            .slice(0, 3)
+                            .map((pool) => (
+                              <button
+                                key={pool.id}
+                                onClick={() => {
+                                  navigateToSection("piscinas");
+                                  setGlobalSearchTerm("");
+                                }}
+                                className="w-full text-left p-3 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors mb-2"
+                              >
+                                <div className="flex items-center space-x-2">
+                                  <Waves className="h-4 w-4 text-cyan-600" />
+                                  <div>
+                                    <p className="font-medium text-gray-900">
+                                      {pool.name}
+                                    </p>
+                                    <p className="text-sm text-gray-600">
+                                      {pool.client} • {pool.location}
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                        </div>
+                      )}
+
+                      {/* Maintenance Results */}
+                      {maintenance.filter(
+                        (maint) =>
+                          maint.poolName
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          maint.type
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          maint.technician
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          maint.scheduledDate.includes(globalSearchTerm),
+                      ).length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">
+                            Manutenções
+                          </h4>
+                          {maintenance
+                            .filter(
+                              (maint) =>
+                                maint.poolName
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                maint.type
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                maint.technician
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                maint.scheduledDate.includes(globalSearchTerm),
+                            )
+                            .slice(0, 3)
+                            .map((maint) => (
+                              <button
+                                key={maint.id}
+                                onClick={() => {
+                                  navigateToSection("manutencoes");
+                                  setGlobalSearchTerm("");
+                                }}
+                                className="w-full text-left p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors mb-2"
+                              >
+                                <div className="flex items-center space-x-2">
+                                  <Wrench className="h-4 w-4 text-orange-600" />
+                                  <div>
+                                    <p className="font-medium text-gray-900">
+                                      {maint.type}
+                                    </p>
+                                    <p className="text-sm text-gray-600">
+                                      {maint.poolName} •{" "}
+                                      {new Date(
+                                        maint.scheduledDate,
+                                      ).toLocaleDateString("pt-PT")}
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                        </div>
+                      )}
+
+                      {/* Clients Results */}
+                      {clients.filter(
+                        (client) =>
+                          client.name
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          client.email
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          client.phone.includes(globalSearchTerm) ||
+                          client.address
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()),
+                      ).length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">
+                            Clientes
+                          </h4>
+                          {clients
+                            .filter(
+                              (client) =>
+                                client.name
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                client.email
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                client.phone.includes(globalSearchTerm) ||
+                                client.address
+                                  .toLowerCase()
+                                  .includes(globalSearchTerm.toLowerCase()),
+                            )
+                            .slice(0, 3)
+                            .map((client) => (
+                              <button
+                                key={client.id}
+                                onClick={() => {
+                                  navigateToSection("clientes");
+                                  setGlobalSearchTerm("");
+                                }}
+                                className="w-full text-left p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors mb-2"
+                              >
+                                <div className="flex items-center space-x-2">
+                                  <Users className="h-4 w-4 text-purple-600" />
+                                  <div>
+                                    <p className="font-medium text-gray-900">
+                                      {client.name}
+                                    </p>
+                                    <p className="text-sm text-gray-600">
+                                      {client.email} • {client.phone}
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                        </div>
+                      )}
+
+                      {/* No Results */}
+                      {works.filter(
+                        (work) =>
+                          work.title
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          work.client
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          work.location
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          work.assignedTo
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()) ||
+                          work.description
+                            .toLowerCase()
+                            .includes(globalSearchTerm.toLowerCase()),
+                      ).length === 0 &&
+                        pools.filter(
+                          (pool) =>
+                            pool.name
+                              .toLowerCase()
+                              .includes(globalSearchTerm.toLowerCase()) ||
+                            pool.client
+                              .toLowerCase()
+                              .includes(globalSearchTerm.toLowerCase()) ||
+                            pool.location
+                              .toLowerCase()
+                              .includes(globalSearchTerm.toLowerCase()),
+                        ).length === 0 &&
+                        maintenance.filter(
+                          (maint) =>
+                            maint.poolName
+                              .toLowerCase()
+                              .includes(globalSearchTerm.toLowerCase()) ||
+                            maint.type
+                              .toLowerCase()
+                              .includes(globalSearchTerm.toLowerCase()) ||
+                            maint.technician
+                              .toLowerCase()
+                              .includes(globalSearchTerm.toLowerCase()) ||
+                            maint.scheduledDate.includes(globalSearchTerm),
+                        ).length === 0 &&
+                        clients.filter(
+                          (client) =>
+                            client.name
+                              .toLowerCase()
+                              .includes(globalSearchTerm.toLowerCase()) ||
+                            client.email
+                              .toLowerCase()
+                              .includes(globalSearchTerm.toLowerCase()) ||
+                            client.phone.includes(globalSearchTerm) ||
+                            client.address
+                              .toLowerCase()
+                              .includes(globalSearchTerm.toLowerCase()),
+                        ).length === 0 && (
+                          <div className="text-center py-8">
+                            <div className="text-gray-400 mb-2">🔍</div>
+                            <p className="text-gray-500 text-sm">
+                              Nenhum resultado encontrado para "
+                              {globalSearchTerm}"
+                            </p>
+                            <p className="text-gray-400 text-xs mt-1">
+                              Tente pesquisar por cliente, obra, piscina, data
+                              ou técnico
+                            </p>
+                          </div>
+                        )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1294,13 +1693,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setActiveSection("nova-piscina")}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>Nova Piscina</span>
-                  </button>
+                  {hasPermission("piscinas", "create") && (
+                    <button
+                      onClick={() => setActiveSection("nova-piscina")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Nova Piscina</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -1402,15 +1803,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           )}
                         </div>
                         <div className="flex items-center space-x-2">
-                          <button className="p-2 text-gray-400 hover:text-gray-600">
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => dataSync.deletePool(pool.id)}
-                            className="p-2 text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                          {hasPermission("piscinas", "edit") && (
+                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("piscinas", "delete") && (
+                            <button
+                              onClick={() =>
+                                confirmDelete(
+                                  `Tem a certeza que deseja apagar a piscina "${pool.name}"?`,
+                                  () => dataSync.deletePool(pool.id),
+                                )
+                              }
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1522,7 +1932,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Futuras Manutenções
+                        Futuras Manutenç��es
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Manutenções agendadas e programadas
@@ -1579,7 +1989,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenção</span>
+                      <span>Agendar Manuten��ão</span>
                     </button>
                   </div>
                 ) : (
@@ -1616,7 +2026,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <div className="flex items-center space-x-4 text-sm">
                             <span className="text-blue-600">
-                              📅{" "}
+                              ����{" "}
                               {new Date(maint.scheduledDate).toLocaleDateString(
                                 "pt-PT",
                               )}
@@ -1627,15 +2037,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <button className="p-2 text-gray-400 hover:text-gray-600">
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => dataSync.deleteMaintenance(maint.id)}
-                            className="p-2 text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                          {hasPermission("manutencoes", "edit") && (
+                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("manutencoes", "delete") && (
+                            <button
+                              onClick={() =>
+                                confirmDelete(
+                                  `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                  () => dataSync.deleteMaintenance(maint.id),
+                                )
+                              }
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1868,7 +2287,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          aria-label="Usuários Atribuídos"
+                          aria-label="Usuários Atribu��dos"
                         >
                           <option value="">Selecionar usuário...</option>
                           {users
@@ -1917,7 +2336,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Nível da Água (m) *
+                                N��vel da Água (m) *
                               </label>
                               <input
                                 type="number"
@@ -2363,7 +2782,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Cliente Proprietário *
                       </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onChange={(e) => {
+                          if (e.target.value === "novo") {
+                            setShowNewClientForm(true);
+                          }
+                        }}
+                      >
                         <option value="">Selecionar cliente</option>
                         {clients.map((client) => (
                           <option key={client.id} value={client.id}>
@@ -2374,6 +2800,159 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </select>
                     </div>
                   </div>
+
+                  {/* New Client Form */}
+                  {showNewClientForm && (
+                    <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-medium text-gray-900">
+                          Novo Cliente
+                        </h3>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowNewClientForm(false);
+                            setNewClientForm({
+                              name: "",
+                              email: "",
+                              phone: "",
+                              address: "",
+                            });
+                          }}
+                          className="text-gray-400 hover:text-gray-600"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Nome Completo *
+                          </label>
+                          <input
+                            type="text"
+                            value={newClientForm.name}
+                            onChange={(e) =>
+                              setNewClientForm({
+                                ...newClientForm,
+                                name: e.target.value,
+                              })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Nome do cliente"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Email
+                          </label>
+                          <input
+                            type="email"
+                            value={newClientForm.email}
+                            onChange={(e) =>
+                              setNewClientForm({
+                                ...newClientForm,
+                                email: e.target.value,
+                              })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="email@exemplo.com"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Telefone
+                          </label>
+                          <input
+                            type="tel"
+                            value={newClientForm.phone}
+                            onChange={(e) =>
+                              setNewClientForm({
+                                ...newClientForm,
+                                phone: e.target.value,
+                              })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="+351 XXX XXX XXX"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Morada
+                          </label>
+                          <input
+                            type="text"
+                            value={newClientForm.address}
+                            onChange={(e) =>
+                              setNewClientForm({
+                                ...newClientForm,
+                                address: e.target.value,
+                              })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Morada completa"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-end space-x-3 mt-4">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowNewClientForm(false);
+                            setNewClientForm({
+                              name: "",
+                              email: "",
+                              phone: "",
+                              address: "",
+                            });
+                          }}
+                          className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (newClientForm.name.trim()) {
+                              // Add client to the system
+                              const newClient = {
+                                name: newClientForm.name,
+                                email: newClientForm.email,
+                                phone: newClientForm.phone,
+                                address: newClientForm.address,
+                                pools: [],
+                              };
+                              dataSync.addClient(newClient);
+
+                              // Reset form and close
+                              setNewClientForm({
+                                name: "",
+                                email: "",
+                                phone: "",
+                                address: "",
+                              });
+                              setShowNewClientForm(false);
+
+                              // Show success message
+                              alert(
+                                `Cliente "${newClient.name}" adicionado com sucesso!`,
+                              );
+                            } else {
+                              alert(
+                                "Por favor, preencha pelo menos o nome do cliente.",
+                              );
+                            }
+                          }}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        >
+                          Guardar Cliente
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Location */}
                   <div>
@@ -2515,7 +3094,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Frequência de Manutenção
+                        Frequ��ncia de Manutenção
                       </label>
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="semanal">Semanal</option>
@@ -2620,7 +3199,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar intervenção de manutenç��o
+                      Registar intervenção de manutenç����o
                     </p>
                   </div>
                 </div>
@@ -2676,7 +3255,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Hora In��cio
+                        Hora In���cio
                       </label>
                       <input
                         type="time"
@@ -3215,18 +3794,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <button
-                          onClick={() => handleEditUser(user)}
-                          className="p-2 text-gray-400 hover:text-gray-600"
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="p-2 text-gray-400 hover:text-red-600"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {hasPermission("utilizadores", "edit") && (
+                          <button
+                            onClick={() => handleEditUser(user)}
+                            className="p-2 text-gray-400 hover:text-gray-600"
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                        )}
+                        {hasPermission("utilizadores", "delete") && (
+                          <button
+                            onClick={() => handleDeleteUser(user.id)}
+                            className="p-2 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -3301,7 +3884,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="super_admin">Super Admin</option>
                           <option value="manager">Gestor</option>
-                          <option value="technician">T���cnico</option>
+                          <option value="technician">T�����cnico</option>
                         </select>
                       </div>
                       <div className="flex items-center">
@@ -3587,7 +4170,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Trabalhos realizados</li>
                       <li>• T���cnicos responsáveis</li>
-                      <li>• Datas e durações</li>
+                      <li>• Datas e duraç��es</li>
                       <li>• Estados e observações</li>
                     </ul>
                   </div>
@@ -3611,7 +4194,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório de Obras
                       </h3>
                       <p className="text-sm text-gray-600">
-                        Projetos e construções
+                        Projetos e construç��es
                       </p>
                     </div>
                   </div>
@@ -3997,15 +4580,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           )}
                         </div>
                         <div className="flex items-center space-x-2">
-                          <button className="p-2 text-gray-400 hover:text-gray-600">
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => dataSync.deleteClient(client.id)}
-                            className="p-2 text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                          {hasPermission("clientes", "edit") && (
+                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("clientes", "delete") && (
+                            <button
+                              onClick={() =>
+                                confirmDelete(
+                                  `Tem a certeza que deseja apagar o cliente "${client.name}"?`,
+                                  () => dataSync.deleteClient(client.id),
+                                )
+                              }
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -4241,16 +4833,231 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
+              {/* Header */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h1 className="text-2xl font-bold text-gray-900">Obras</h1>
-                <p className="text-gray-600 text-sm">
-                  Gestão de obras e projetos
-                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Obras
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gestão de obras e projetos
+                      </p>
+                    </div>
+                  </div>
+                  {hasPermission("obras", "create") && (
+                    <button
+                      onClick={() => navigateToSection("nova-obra")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Nova Obra</span>
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <p className="text-gray-600">
-                  Sistema de obras em desenvolvimento
-                </p>
+
+              {/* Filter Tabs */}
+              <div className="bg-white rounded-lg shadow-sm">
+                <div className="flex border-b border-gray-200">
+                  <button
+                    onClick={() => setActiveWorkFilter("all")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeWorkFilter === "all"
+                        ? "border-blue-500 text-blue-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Todas ({works.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveWorkFilter("pending")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeWorkFilter === "pending"
+                        ? "border-red-500 text-red-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Pendentes (
+                    {works.filter((w) => w.status === "pending").length})
+                  </button>
+                  <button
+                    onClick={() => setActiveWorkFilter("in_progress")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeWorkFilter === "in_progress"
+                        ? "border-orange-500 text-orange-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Em Progresso (
+                    {works.filter((w) => w.status === "in_progress").length})
+                  </button>
+                  <button
+                    onClick={() => setActiveWorkFilter("completed")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeWorkFilter === "completed"
+                        ? "border-green-500 text-green-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Concluídas (
+                    {works.filter((w) => w.status === "completed").length})
+                  </button>
+                  <button
+                    onClick={() => setActiveWorkFilter("no_sheet")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeWorkFilter === "no_sheet"
+                        ? "border-blue-500 text-blue-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Sem Folha de Obra (
+                    {works.filter((w) => !w.folhaGerada).length})
+                  </button>
+                </div>
+              </div>
+
+              {/* Works List */}
+              <div className="space-y-4">
+                {works
+                  .filter((work) => {
+                    if (activeWorkFilter === "all") return true;
+                    if (activeWorkFilter === "no_sheet")
+                      return !work.folhaGerada;
+                    return work.status === activeWorkFilter;
+                  })
+                  .map((work) => (
+                    <div
+                      key={work.id}
+                      className="bg-white rounded-lg p-4 shadow-sm"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {work.title}
+                            </h3>
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                work.status === "pending"
+                                  ? "bg-red-100 text-red-700"
+                                  : work.status === "in_progress"
+                                    ? "bg-orange-100 text-orange-700"
+                                    : work.status === "completed"
+                                      ? "bg-green-100 text-green-700"
+                                      : "bg-gray-100 text-gray-700"
+                              }`}
+                            >
+                              {work.status === "pending"
+                                ? "Pendente"
+                                : work.status === "in_progress"
+                                  ? "Em Progresso"
+                                  : work.status === "completed"
+                                    ? "Concluída"
+                                    : work.status}
+                            </span>
+                            {!work.folhaGerada && (
+                              <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                Sem Folha de Obra
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-gray-600 mb-2">
+                            {work.description}
+                          </p>
+                          <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
+                            <div>
+                              <span className="font-medium">Cliente:</span>{" "}
+                              {work.client}
+                            </div>
+                            <div>
+                              <span className="font-medium">Local:</span>{" "}
+                              {work.location}
+                            </div>
+                            <div>
+                              <span className="font-medium">Início:</span>{" "}
+                              {new Date(work.startDate).toLocaleDateString(
+                                "pt-PT",
+                              )}
+                            </div>
+                            <div>
+                              <span className="font-medium">Atribuída a:</span>{" "}
+                              {work.assignedTo}
+                            </div>
+                            {work.budget && (
+                              <div>
+                                <span className="font-medium">Orçamento:</span>{" "}
+                                €{work.budget}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2 ml-4">
+                          {hasPermission("obras", "view") && (
+                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                              <Eye className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("obras", "edit") && (
+                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("obras", "delete") && (
+                            <button
+                              onClick={() =>
+                                confirmDelete(
+                                  `Tem a certeza que deseja apagar a obra "${work.title}"?`,
+                                  () => dataSync.deleteWork(work.id),
+                                )
+                              }
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                {works.filter((work) => {
+                  if (activeWorkFilter === "all") return true;
+                  if (activeWorkFilter === "no_sheet") return !work.folhaGerada;
+                  return work.status === activeWorkFilter;
+                }).length === 0 && (
+                  <div className="bg-white rounded-lg p-8 shadow-sm text-center">
+                    <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      Nenhuma obra encontrada
+                    </h3>
+                    <p className="text-gray-500 mb-4">
+                      {activeWorkFilter === "all"
+                        ? "Não há obras registadas no sistema."
+                        : `Não h�� obras com o filtro "${
+                            activeWorkFilter === "pending"
+                              ? "Pendentes"
+                              : activeWorkFilter === "in_progress"
+                                ? "Em Progresso"
+                                : activeWorkFilter === "completed"
+                                  ? "Concluídas"
+                                  : activeWorkFilter === "no_sheet"
+                                    ? "Sem Folha de Obra"
+                                    : activeWorkFilter
+                          }" aplicado.`}
+                    </p>
+                    <button
+                      onClick={() => navigateToSection("nova-obra")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      Criar Nova Obra
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -4320,7 +5127,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                Partilhar Relatório
+                Partilhar Relat��rio
               </h2>
               <button
                 onClick={() => {
@@ -4458,6 +5265,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   }
 
+  // Show register form
+  if (showRegisterForm) {
+    return (
+      <RegisterForm
+        onRegisterSuccess={handleRegisterSuccess}
+        onBackToLogin={handleBackToLogin}
+      />
+    );
+  }
+
   // Show login page if not authenticated
   if (!isAuthenticated) {
     if (showAdvancedSettings) {
@@ -4499,7 +5316,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Shield className="h-8 w-8 text-red-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                ��rea Protegida
+                ����rea Protegida
               </h1>
               <p className="text-gray-600">
                 Insira a palavra-passe para aceder às configurações avançadas
@@ -4603,6 +5420,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Entrar
             </button>
           </form>
+
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={() => setShowRegisterForm(true)}
+              className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+            >
+              Não tem conta? Criar nova conta
+            </button>
+          </div>
         </div>
 
         {/* Floating Advanced Settings Button */}
@@ -4673,20 +5500,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <span>Dashboard</span>
             </button>
 
-            <button
-              onClick={() => {
-                navigateToSection("nova-obra");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "nova-obra"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Plus className="h-5 w-5" />
-              <span>Nova Obra</span>
-            </button>
+            {hasPermission("obras", "create") && (
+              <button
+                onClick={() => {
+                  navigateToSection("nova-obra");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "nova-obra"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Plus className="h-5 w-5" />
+                <span>Nova Obra</span>
+              </button>
+            )}
 
             <button
               onClick={() => {

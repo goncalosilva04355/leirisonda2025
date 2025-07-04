@@ -18,7 +18,7 @@ export const SyncStatusDisplay: React.FC<SyncStatusDisplayProps> = ({
     return (
       <div className="flex items-center space-x-2 text-gray-500 text-xs">
         <WifiOff className="w-3 h-3" />
-        <span>Offline</span>
+        <span>Modo Local</span>
       </div>
     );
   }
@@ -36,7 +36,7 @@ export const SyncStatusDisplay: React.FC<SyncStatusDisplayProps> = ({
     return (
       <div className="flex items-center space-x-2 text-red-600 text-xs">
         <AlertCircle className="w-3 h-3" />
-        <span>Erro: {error}</span>
+        <span>Erro de sync</span>
       </div>
     );
   }
@@ -45,7 +45,7 @@ export const SyncStatusDisplay: React.FC<SyncStatusDisplayProps> = ({
     return (
       <div className="flex items-center space-x-2 text-green-600 text-xs">
         <CheckCircle className="w-3 h-3" />
-        <span>Sincronizado: {lastSync.toLocaleTimeString("pt-PT")}</span>
+        <span>Sincronizado</span>
       </div>
     );
   }
@@ -53,7 +53,7 @@ export const SyncStatusDisplay: React.FC<SyncStatusDisplayProps> = ({
   return (
     <div className="flex items-center space-x-2 text-yellow-600 text-xs">
       <Wifi className="w-3 h-3" />
-      <span>Aguardando sincronização</span>
+      <span>Conectando...</span>
     </div>
   );
 };
