@@ -36,6 +36,8 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   const isInitialized = useRef(false);
   const backoffMultiplier = useRef(1);
   const isQuotaExceeded = useRef(false);
+  const quotaExceededCount = useRef(0);
+  const circuitBreakerOpen = useRef(false);
 
   // Função para gerar hash dos dados para detectar mudanças
   const generateDataHash = useCallback((data: any): string => {
