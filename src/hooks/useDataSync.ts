@@ -217,31 +217,67 @@ export function useDataSync(): SyncState & SyncActions {
   useEffect(() => {
     const today = new Date();
 
-    // FORCE CLEANUP: User requested removal of all old demo data
-    // Clear all localStorage data on every startup
-    console.log("🧹 FORCE CLEANUP: Removing all old demo data");
-    localStorage.removeItem("pools");
-    localStorage.removeItem("works");
-    localStorage.removeItem("maintenance");
-    localStorage.removeItem("interventions");
-    localStorage.removeItem("clients");
+    // Check if we need to do a one-time cleanup
+    const hasBeenCleaned = localStorage.getItem("demo-data-cleaned");
 
-    // Set cleanup flags to indicate fresh start
-    localStorage.setItem("app-cleaned", new Date().toISOString());
-    localStorage.setItem("last-cleanup", new Date().toISOString());
+    if (!hasBeenCleaned) {
+      // ONE-TIME CLEANUP: Remove old demo data only once
+      console.log("🧹 ONE-TIME CLEANUP: Removing old demo data");
+      localStorage.removeItem("pools");
+      localStorage.removeItem("works");
+      localStorage.removeItem("maintenance");
+      localStorage.removeItem("interventions");
+      localStorage.removeItem("clients");
 
-    // Start with completely empty data (no mock data)
+      // Mark as cleaned so this doesn't happen again
+      localStorage.setItem("demo-data-cleaned", "true");
+      localStorage.setItem("app-cleaned", new Date().toISOString());
+      localStorage.setItem("last-cleanup", new Date().toISOString());
+
+      // Start with empty data after cleanup
+      setState((prev) => ({
+        ...prev,
+        pools: [],
+        maintenance: [],
+        futureMaintenance: [],
+        works: [],
+        clients: [],
+      }));
+
+      console.log("✅ Demo data cleaned - new data will be saved normally");
+      return;
+    }
+
+    // Normal startup - load existing data from localStorage
+    console.log("📂 Loading saved data from localStorage");
+    const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
+    const savedMaintenance = JSON.parse(
+      localStorage.getItem("maintenance") || "[]",
+    );
+    const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
+    const savedClients = JSON.parse(localStorage.getItem("clients") || "[]");
+
+    // Calculate future maintenance
+    const future = savedMaintenance.filter(
+      (m) => new Date(m.scheduledDate) >= today,
+    );
+
+    // Set the loaded data
     setState((prev) => ({
       ...prev,
-      pools: [],
-      maintenance: [],
-      futureMaintenance: [],
-      works: [],
-      clients: [],
+      pools: savedPools,
+      maintenance: savedMaintenance,
+      futureMaintenance: future,
+      works: savedWorks,
+      clients: savedClients,
     }));
 
-    console.log("✅ Fresh start: All demo data removed, ready for new data");
-    return;
+    console.log("✅ Data loaded:", {
+      pools: savedPools.length,
+      works: savedWorks.length,
+      maintenance: savedMaintenance.length,
+      clients: savedClients.length,
+    });
 
     // Load saved data from localStorage (normal behavior)
     const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
