@@ -93,7 +93,7 @@ const initialUsers = [
 ];
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Temporarily hidden login page
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(ADMIN_USER);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("futuras-manutencoes");
@@ -938,7 +938,7 @@ function App() {
                   Nenhuma manutenção agendada
                 </h3>
                 <p className="text-gray-600 text-sm mb-4">
-                  As futuras manutenç��es aparecerão aqui quando forem agendadas
+                  As futuras manutenções aparecerão aqui quando forem agendadas
                 </p>
                 <button
                   onClick={() => setActiveSection("nova-manutencao")}
