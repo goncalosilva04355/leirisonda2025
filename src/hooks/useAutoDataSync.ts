@@ -303,6 +303,12 @@ export const useFirebaseRealtimeSync = () => {
   const { forceSyncNow } = useAutoDataSync();
 
   useEffect(() => {
+    // TEMPORARILY DISABLED to prevent Firebase quota exceeded
+    console.log(
+      "🛑 Firebase realtime listeners DISABLED to prevent quota exceeded",
+    );
+    return;
+
     if (!realFirebaseService.isReady()) {
       return;
     }
