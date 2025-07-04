@@ -1644,7 +1644,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </span>
                                 </div>
                                 <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                  <span>����</span>
+                                  <span>�����</span>
                                   <span>
                                     Atribuída em:{" "}
                                     {new Date(
@@ -4242,7 +4242,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Temperatura (��C)
+                            Temperatura (���C)
                           </label>
                           <input
                             type="number"
@@ -4901,7 +4901,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-gray-600 mb-6">
                       Elimine todos os dados de obras, manutenções e piscinas
                       para começar com uma aplicação limpa. Os utilizadores
-                      s����o mantidos.
+                      s�����o mantidos.
                     </p>
 
                     <div className="space-y-4">
@@ -6313,14 +6313,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const status = inputs[3].value; // Estado
                           const startDate = inputs[4].value; // Data de Início
                           const expectedEndDate = inputs[5].value; // Data de Conclusão Prevista
-                          const assignedTo = inputs[6].value; // Responsável
-                          const budgetValue = inputs[7].value; // Valor Orçamentado
-                          const clientPhone = inputs[8].value; // Telefone do Cliente
-                          const clientEmail = inputs[9].value; // Email do Cliente
-                          const priority = inputs[10].value; // Prioridade
-                          const workType = inputs[11].value; // Tipo de Obra
+                          // assignedTo now comes from editAssignedUsers state
+                          const budgetValue = inputs[6].value; // Valor Orçamentado
+                          const clientPhone = inputs[7].value; // Telefone do Cliente
+                          const clientEmail = inputs[8].value; // Email do Cliente
+                          const priority = inputs[9].value; // Prioridade
+                          const workType = inputs[10].value; // Tipo de Obra
                           const description = inputs[12].value; // Descri��ão
-                          const technicalNotes = inputs[13].value; // Observações Técnicas
+                          const technicalNotes = inputs[12].value; // Observações Técnicas
 
                           dataSync.updateWork(editingWork.id, {
                             title,
