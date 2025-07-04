@@ -1053,7 +1053,7 @@ function App() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Potência do Motor (HP)
+                        Pot��ncia do Motor (HP)
                       </label>
                       <input
                         type="number"
@@ -2341,24 +2341,7 @@ function App() {
             </div>
           </div>
         );
-      case "nova-piscina":
-        return (
-          <div className="leirisonda-main">
-            <div className="dashboard-hero">
-              <h1 className="text-3xl font-bold mb-2">Nova Piscina</h1>
-              <p className="text-white/90">Registar uma nova piscina</p>
-            </div>
-            <div className="card-leirisonda">
-              <h2 className="text-lg font-semibold mb-4">
-                Detalhes da Piscina
-              </h2>
-              <p className="text-gray-600">
-                Formulário para registar uma nova piscina será implementado
-                aqui.
-              </p>
-            </div>
-          </div>
-        );
+
       case "utilizadores":
         return (
           <div className="leirisonda-main">
