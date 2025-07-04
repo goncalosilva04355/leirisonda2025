@@ -1784,7 +1784,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           </div>
         );
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
       case "nova-piscina":
         return (
           <div className="min-h-screen bg-gray-50">
