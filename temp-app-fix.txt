@@ -1,0 +1,20 @@
+// If no stored user, clear session data and force logout for security
+    sessionStorage.clear(); // Clear any session data
+
+    // Force clear authentication state
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    console.log("🔒 SECURITY: Auth state cleared");
+
+    // Firebase listeners disabled to prevent crashes
+    console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
+
+    // DO NOT initialize default admin automatically - this was causing the security issue
+    // Users must always login manually for security
+    console.log(
+      "🔒 SECURITY: No automatic admin initialization - manual login required",
+    );
+
+    // Return empty cleanup function
+    return () => {};
+  }, []);
