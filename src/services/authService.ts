@@ -60,11 +60,18 @@ class AuthService {
     role: "super_admin" | "manager" | "technician" = "technician",
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     if (!auth || !db) {
+      console.error("Firebase Auth or Firestore not initialized");
+      console.error("Auth:", !!auth);
+      console.error("DB:", !!db);
       return {
         success: false,
         error: "Firebase não configurado. Verifique a configuração.",
       };
     }
+
+    // Log Firebase app configuration (without sensitive data)
+    console.log("Firebase Auth Domain:", auth.config?.authDomain);
+    console.log("Firebase Project ID:", auth.config?.projectId);
 
     // Validate inputs
     if (!email || !email.trim()) {
