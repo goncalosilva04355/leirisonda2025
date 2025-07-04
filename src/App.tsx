@@ -379,17 +379,32 @@ function App() {
 
     // Register service worker for better push notification support
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/sw.js")
-        .then((registration) => {
-          console.log(
-            "✅ Service Worker registered successfully:",
-            registration.scope,
-          );
-        })
-        .catch((error) => {
-          console.error("❌ Service Worker registration failed:", error);
+      // Clear any existing service workers first to prevent conflicts
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => {
+          registration.unregister();
         });
+      });
+
+      // Register the service worker with a delay to ensure cleanup
+      setTimeout(() => {
+        navigator.serviceWorker
+          .register("/sw.js", { updateViaCache: "none" })
+          .then((registration) => {
+            console.log(
+              "✅ Service Worker registered successfully:",
+              registration.scope,
+            );
+
+            // Force update if there's a waiting service worker
+            if (registration.waiting) {
+              registration.waiting.postMessage({ type: "SKIP_WAITING" });
+            }
+          })
+          .catch((error) => {
+            console.error("❌ Service Worker registration failed:", error);
+          });
+      }, 1000);
     }
 
     // Handle URL hash for PWA shortcuts
@@ -2411,7 +2426,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">🔍</div>
+                                  <div className="text-gray-400 mb-2">���</div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -7461,7 +7476,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // SECURITY: Triple check - never allow access without proper authentication
   if (!isAuthenticated || !currentUser) {
     console.log(
-      "🔒 SECURITY: Blocking access - isAuthenticated:",
+      "�� SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
       "currentUser:",
       !!currentUser,
