@@ -87,7 +87,7 @@ const initialUsers = [
 ];
 
 function App() {
-  // SECURITY: Always start as not authenticated
+  // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
