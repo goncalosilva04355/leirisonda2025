@@ -100,6 +100,17 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
+  // Debug logging for authentication state changes
+  useEffect(() => {
+    console.log("🔍 Auth State Debug:", {
+      isAuthenticated,
+      currentUser: currentUser
+        ? `${currentUser.name} (${currentUser.email})`
+        : null,
+      timestamp: new Date().toISOString(),
+    });
+  }, [isAuthenticated, currentUser]);
+
   // No auto-login - users must login manually
   useEffect(() => {
     // Clear any existing auth data on app start
@@ -487,7 +498,7 @@ function App() {
           technician: interventionData.technician,
           status: "scheduled" as const,
           description: "Manutenção programada automaticamente",
-          notes: "Agendada automaticamente após manutenção anterior",
+          notes: "Agendada automaticamente após manutenç��o anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
           location: selectedPool ? selectedPool.location : "",
@@ -5294,7 +5305,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enablePhoneDialer}
                                 >
-                                  📞 {client.phone}
+                                  �� {client.phone}
                                 </button>
                               </div>
                               <div>
@@ -6053,7 +6064,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações T��cnicas
+                        Observações Técnicas
                       </label>
                       <textarea
                         defaultValue={editingWork?.technicalNotes}
