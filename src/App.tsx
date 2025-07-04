@@ -94,6 +94,22 @@ const initialUsers = [
     active: true,
     createdAt: "2024-02-01",
   },
+  {
+    id: 4,
+    name: "Alexandre",
+    email: "alexandre@leirisonda.pt",
+    role: "technician",
+    permissions: {
+      obras: { view: true, create: false, edit: true, delete: false },
+      manutencoes: { view: true, create: true, edit: true, delete: false },
+      piscinas: { view: true, create: false, edit: true, delete: false },
+      utilizadores: { view: false, create: false, edit: false, delete: false },
+      relatorios: { view: true, create: false, edit: false, delete: false },
+      clientes: { view: true, create: false, edit: false, delete: false },
+    },
+    active: true,
+    createdAt: "2024-02-15",
+  },
 ];
 
 function App() {
@@ -363,7 +379,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("�� Notifications not supported in this browser");
+      console.warn("��� Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
