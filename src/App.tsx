@@ -879,7 +879,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localização: ${work.location}
+   Localizaç��o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -1666,7 +1666,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }}
                             className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
                           >
-                            Testar Notificação
+                            Testar Notificaç��o
                           </button>
                         </div>
                       )}
@@ -6593,7 +6593,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <button
                         type="button"
                         onClick={(e) => {
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const inputs = form.querySelectorAll(
                             "input, select, textarea",
                           );
