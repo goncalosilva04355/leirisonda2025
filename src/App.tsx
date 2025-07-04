@@ -2731,7 +2731,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manuten����ões aparecerão aqui quando forem
+                        As futuras manutenções aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -3430,7 +3430,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observaç��es Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observa��ões Específicas do Furo
+                              Observações Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -6605,7 +6605,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenç��o">Em Manutenç��o</option>
+                          <option value="Em Manutenç��o">
+                            Em Manuten����o
+                          </option>
                         </select>
                       </div>
                       <div>
@@ -6995,7 +6997,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        Guardar Alteraç��es
+                        Guardar Alteraç���es
                       </button>
                     </div>
                   </form>
