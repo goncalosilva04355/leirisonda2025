@@ -81,19 +81,9 @@ class MockAuthService {
   }
 
   getCurrentUser(): MockUser | null {
-    if (this.currentUser) return this.currentUser;
-
-    try {
-      const stored = localStorage.getItem("mock-current-user");
-      if (stored) {
-        this.currentUser = JSON.parse(stored);
-        return this.currentUser;
-      }
-    } catch (error) {
-      console.warn("Error loading mock user from localStorage");
-    }
-
-    return null;
+    // DO NOT restore user from localStorage automatically - security risk
+    // Users must login manually every time for security
+    return this.currentUser; // Only return if currently logged in this session
   }
 
   onAuthStateChanged(callback: (user: MockUser | null) => void): () => void {
