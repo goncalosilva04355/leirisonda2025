@@ -45,6 +45,7 @@ interface AdvancedSettingsProps {
 export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
   onBack,
   onNavigateToSection,
+  onShowAuthDiagnostic,
   dataSync,
   notifications,
 }) => {
