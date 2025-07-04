@@ -279,6 +279,11 @@ export const userService = {
 export const poolService = {
   // Listen to real-time changes
   subscribeToPools(callback: (pools: Pool[]) => void) {
+    if (!isFirebaseAvailable()) {
+      callback([]);
+      return () => {};
+    }
+
     const q = query(
       collection(db, COLLECTIONS.POOLS),
       orderBy("createdAt", "desc"),
@@ -294,6 +299,10 @@ export const poolService = {
 
   // Add new pool
   async addPool(poolData: Omit<Pool, "id" | "createdAt" | "updatedAt">) {
+    if (!isFirebaseAvailable()) {
+      throw new Error("Firebase not configured");
+    }
+
     const docRef = await addDoc(collection(db, COLLECTIONS.POOLS), {
       ...poolData,
       createdAt: Timestamp.now(),
@@ -304,6 +313,10 @@ export const poolService = {
 
   // Update pool
   async updatePool(poolId: string, poolData: Partial<Pool>) {
+    if (!isFirebaseAvailable()) {
+      throw new Error("Firebase not configured");
+    }
+
     const poolRef = doc(db, COLLECTIONS.POOLS, poolId);
     await updateDoc(poolRef, {
       ...poolData,
@@ -313,6 +326,10 @@ export const poolService = {
 
   // Delete pool
   async deletePool(poolId: string) {
+    if (!isFirebaseAvailable()) {
+      throw new Error("Firebase not configured");
+    }
+
     const poolRef = doc(db, COLLECTIONS.POOLS, poolId);
     await deleteDoc(poolRef);
   },
