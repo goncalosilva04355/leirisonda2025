@@ -32,7 +32,7 @@ import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { InstallPrompt } from "./components/InstallPrompt";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
-import { AutoSyncNotification } from "./components/AutoSyncNotification";
+
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { SyncStatusIcon } from "./components/SyncStatusIndicator";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
@@ -103,7 +103,7 @@ function App() {
 
   // Debug logging for authentication state changes
   useEffect(() => {
-    console.log("🔍 Auth State Debug:", {
+    console.log("�� Auth State Debug:", {
       isAuthenticated,
       currentUser: currentUser
         ? `${currentUser.name} (${currentUser.email})`
@@ -178,6 +178,28 @@ function App() {
     addMaintenance,
     addClient,
   } = dataSync;
+
+  // Debug logging for Alexandre issue
+  useEffect(() => {
+    if (currentUser?.name.toLowerCase().includes("alexandre")) {
+      console.log("🔍 DEBUG Alexandre - Data loaded:", {
+        currentUser: currentUser.name,
+        worksCount: works.length,
+        works: works.map((w) => ({
+          id: w.id,
+          title: w.title,
+          assignedTo: w.assignedTo,
+          assignedUsers: w.assignedUsers,
+        })),
+        localStorage: {
+          pools: JSON.parse(localStorage.getItem("pools") || "[]").length,
+          works: JSON.parse(localStorage.getItem("works") || "[]").length,
+          maintenance: JSON.parse(localStorage.getItem("maintenance") || "[]")
+            .length,
+        },
+      });
+    }
+  }, [currentUser, works]);
 
   // Data cleanup hook
   const {
@@ -590,7 +612,7 @@ function App() {
     }
 
     try {
-      console.log("🔐 Attempting login for:", loginForm.email);
+      console.log("���� Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -1032,7 +1054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç��es não estão ativadas. Active-as primeiro nas configurações.",
+        "As notificaç��es não est��o ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -1495,6 +1517,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <h1 className="text-lg font-semibold text-gray-900">
                         Olá, {currentUser?.name || "Utilizador"}
                       </h1>
+                      {currentUser?.name
+                        .toLowerCase()
+                        .includes("alexandre") && (
+                        <button
+                          onClick={() => {
+                            const debugInfo = {
+                              currentUser: currentUser.name,
+                              worksCount: works.length,
+                              worksData: works,
+                              localStorage: {
+                                pools: JSON.parse(
+                                  localStorage.getItem("pools") || "[]",
+                                ),
+                                works: JSON.parse(
+                                  localStorage.getItem("works") || "[]",
+                                ),
+                                maintenance: JSON.parse(
+                                  localStorage.getItem("maintenance") || "[]",
+                                ),
+                              },
+                            };
+                            console.log("🔍 Alexandre Debug Info:", debugInfo);
+                            alert(
+                              `Debug Alexandre:\nObras no sistema: ${works.length}\nVer console para mais detalhes`,
+                            );
+                          }}
+                          className="mt-2 px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600"
+                        >
+                          Debug Dados Alexandre
+                        </button>
+                      )}
                       <p className="text-gray-600 text-sm">
                         Bem-vindo ao sistema Leirisonda
                       </p>
@@ -1695,7 +1748,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manuten����es
+                      Próximas Manuten��������es
                     </h2>
                   </div>
 
@@ -2279,7 +2332,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -2836,7 +2889,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manuten��ão</option>
+                            <option value="manutencao">Manuten���ão</option>
                             <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -3077,7 +3130,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usuários Atribuídos
+                            Usuários Atribuídos ({users.length} utilizadores
+                            disponíveis)
                           </label>
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra
@@ -3090,16 +3144,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                              <option value="">Selecionar usuário...</option>
+                              <option value="">
+                                {users.length > 0
+                                  ? "Selecionar usuário..."
+                                  : "Nenhum utilizador disponível"}
+                              </option>
                               {users
-                                .filter(
-                                  (user) =>
+                                .filter((user) => {
+                                  console.log(
+                                    "Nova obra - User:",
+                                    user.name,
+                                    "Role:",
+                                    user.role,
+                                    "Active:",
+                                    user.active,
+                                  );
+                                  return (
                                     user.role !== "viewer" &&
+                                    user.active !== false &&
                                     !assignedUsers.some(
                                       (assigned) =>
                                         assigned.id === String(user.id),
-                                    ),
-                                )
+                                    )
+                                  );
+                                })
                                 .map((user) => (
                                   <option key={user.id} value={user.id}>
                                     {user.name}
@@ -3113,21 +3181,40 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   const selectedUser = users.find(
                                     (u) => String(u.id) === currentAssignedUser,
                                   );
-                                  if (
-                                    selectedUser &&
-                                    !assignedUsers.some(
-                                      (assigned) =>
-                                        assigned.id === String(selectedUser.id),
-                                    )
-                                  ) {
-                                    setAssignedUsers([
-                                      ...assignedUsers,
-                                      {
-                                        id: String(selectedUser.id),
-                                        name: selectedUser.name,
-                                      },
-                                    ]);
-                                    setCurrentAssignedUser("");
+
+                                  if (selectedUser) {
+                                    const userIdStr = String(selectedUser.id);
+                                    const isAlreadyAssigned =
+                                      assignedUsers.some(
+                                        (assigned) => assigned.id === userIdStr,
+                                      );
+
+                                    console.log(
+                                      "Nova obra - Attempting to assign user:",
+                                      selectedUser.name,
+                                      "ID:",
+                                      userIdStr,
+                                      "Already assigned:",
+                                      isAlreadyAssigned,
+                                    );
+
+                                    if (!isAlreadyAssigned) {
+                                      setAssignedUsers([
+                                        ...assignedUsers,
+                                        {
+                                          id: userIdStr,
+                                          name: selectedUser.name,
+                                        },
+                                      ]);
+                                      setCurrentAssignedUser("");
+                                      console.log(
+                                        "Nova obra - User assigned successfully!",
+                                      );
+                                    } else {
+                                      console.log(
+                                        "Nova obra - User already assigned, skipping",
+                                      );
+                                    }
                                   }
                                 }
                               }}
@@ -4851,7 +4938,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-green-900">
-                              Navegação Maps
+                              Navega��ão Maps
                             </h4>
                             <button
                               onClick={() =>
@@ -4953,7 +5040,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <li>• Dados do Firebase e armazenamento local</li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠️ ATENÇÃO: Esta operação é irreversível!
+                              ⚠��� ATENÇÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -5098,7 +5185,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Orçamentos e custos</li>
+                        <li>��� Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>• Equipas respons��veis</li>
                         <li>������� Estados de progresso</li>
@@ -5857,23 +5944,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     .map((work) => (
                       <div
                         key={work.id}
-                        className="bg-white rounded-lg p-4 shadow-sm"
+                        className="bg-white rounded-lg p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <div className="flex items-center space-x-3 mb-2">
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                {work.title}
-                              </h3>
+                            {/* Enhanced Header with Work ID */}
+                            <div className="flex items-center space-x-3 mb-3">
+                              <div className="flex items-center space-x-2">
+                                <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                  {work.id?.toUpperCase() ||
+                                    "ID-" + Date.now().toString().slice(-6)}
+                                </span>
+                                <h3 className="text-lg font-bold text-gray-900">
+                                  {work.title}
+                                </h3>
+                              </div>
                               <span
-                                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                   work.status === "pending"
-                                    ? "bg-red-100 text-red-700"
+                                    ? "bg-red-100 text-red-700 border border-red-200"
                                     : work.status === "in_progress"
-                                      ? "bg-orange-100 text-orange-700"
+                                      ? "bg-orange-100 text-orange-700 border border-orange-200"
                                       : work.status === "completed"
-                                        ? "bg-green-100 text-green-700"
-                                        : "bg-gray-100 text-gray-700"
+                                        ? "bg-green-100 text-green-700 border border-green-200"
+                                        : "bg-gray-100 text-gray-700 border border-gray-200"
                                 }`}
                               >
                                 {work.status === "pending"
@@ -5885,35 +5979,46 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       : work.status}
                               </span>
                               {!work.folhaGerada && (
-                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200">
                                   Sem Folha de Obra
                                 </span>
                               )}
                             </div>
-                            <p className="text-gray-600 mb-2">
-                              {work.description}
-                            </p>
-                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
-                              <div>
-                                <span className="font-medium">Cliente:</span>{" "}
-                                {work.client}
-                                {work.contact && (
-                                  <div className="mt-1">
-                                    <button
-                                      onClick={() =>
-                                        handlePhoneClick(work.contact)
-                                      }
-                                      className={`text-xs ${
-                                        enablePhoneDialer
-                                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                          : "text-gray-500"
-                                      }`}
-                                      disabled={!enablePhoneDialer}
-                                    >
-                                      📞 {work.contact}
-                                    </button>
-                                  </div>
-                                )}
+                            {/* Enhanced Description */}
+                            {work.description && (
+                              <p className="text-gray-700 mb-3 bg-gray-50 p-3 rounded-md border-l-4 border-blue-200">
+                                {work.description}
+                              </p>
+                            )}
+                            {/* Enhanced Details Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                              <div className="space-y-2">
+                                {/* Client Info */}
+                                <div className="bg-gray-50 p-3 rounded-md">
+                                  <span className="font-semibold text-gray-700 block mb-1">
+                                    👤 Cliente:
+                                  </span>
+                                  <span className="text-gray-900 font-medium">
+                                    {work.client}
+                                  </span>
+                                  {work.contact && (
+                                    <div className="mt-1">
+                                      <button
+                                        onClick={() =>
+                                          handlePhoneClick(work.contact)
+                                        }
+                                        className={`text-xs ${
+                                          enablePhoneDialer
+                                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                            : "text-gray-500"
+                                        }`}
+                                        disabled={!enablePhoneDialer}
+                                      >
+                                        📞 {work.contact}
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                               <div>
                                 <span className="font-medium">Local:</span>{" "}
@@ -5928,7 +6033,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  📍 {work.location}
+                                  ���� {work.location}
                                 </button>
                               </div>
                               <div>
@@ -5958,6 +6063,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               )}
                             </div>
                           </div>
+                          {/* Enhanced Action Buttons */}
                           <div className="flex items-center space-x-2 ml-4">
                             {hasPermission("obras", "view") && (
                               <button
@@ -5965,24 +6071,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   setSelectedWork(work);
                                   setViewingWork(true);
                                 }}
-                                className="p-2 text-gray-400 hover:text-gray-600"
+                                className="p-3 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors"
+                                title="Ver todos os detalhes"
                               >
-                                <Eye className="h-4 w-4" />
+                                <Eye className="h-5 w-5" />
                               </button>
                             )}
                             {hasPermission("obras", "edit") && (
                               <button
                                 onClick={() => {
                                   setEditingWork(work);
-                                  // Initialize edit assigned users
                                   setEditAssignedUsers(
                                     work.assignedUsers || [],
                                   );
                                   setActiveSection("editar-obra");
                                 }}
-                                className="p-2 text-gray-400 hover:text-gray-600"
+                                className="p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg border border-gray-200 transition-colors"
+                                title="Editar obra"
                               >
-                                <Edit2 className="h-4 w-4" />
+                                <Edit2 className="h-5 w-5" />
                               </button>
                             )}
                             {hasPermission("obras", "delete") && (
@@ -5993,9 +6100,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     () => dataSync.deleteWork(work.id),
                                   )
                                 }
-                                className="p-2 text-gray-400 hover:text-red-600"
+                                className="p-3 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg border border-red-200 transition-colors"
+                                title="Eliminar obra"
                               >
-                                <Trash2 className="h-4 w-4" />
+                                <Trash2 className="h-5 w-5" />
                               </button>
                             )}
                           </div>
@@ -6017,7 +6125,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
                           ? "Não há obras registadas no sistema."
-                          : `Não h��� obras com o filtro "${
+                          : `Não h���� obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
                                 : activeWorkFilter === "in_progress"
@@ -6141,7 +6249,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Usuários Atribuídos
+                          Usuários Atribuídos ({users.length} utilizadores
+                          disponíveis)
                         </label>
                         <div className="flex space-x-2">
                           <select
@@ -6151,16 +6260,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
-                            <option value="">Selecionar usuário...</option>
+                            <option value="">
+                              {users.length > 0
+                                ? "Selecionar usuário..."
+                                : "Nenhum utilizador disponível"}
+                            </option>
                             {users
-                              .filter(
-                                (user) =>
+                              .filter((user) => {
+                                console.log(
+                                  "User:",
+                                  user.name,
+                                  "Role:",
+                                  user.role,
+                                  "Active:",
+                                  user.active,
+                                );
+                                return (
                                   user.role !== "viewer" &&
+                                  user.active !== false &&
                                   !editAssignedUsers.some(
                                     (assigned) =>
                                       assigned.id === String(user.id),
-                                  ),
-                              )
+                                  )
+                                );
+                              })
                               .map((user) => (
                                 <option key={user.id} value={user.id}>
                                   {user.name}
@@ -6175,21 +6298,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   (u) =>
                                     String(u.id) === currentEditAssignedUser,
                                 );
-                                if (
-                                  selectedUser &&
-                                  !editAssignedUsers.some(
-                                    (assigned) =>
-                                      assigned.id === String(selectedUser.id),
-                                  )
-                                ) {
-                                  setEditAssignedUsers([
-                                    ...editAssignedUsers,
-                                    {
-                                      id: String(selectedUser.id),
-                                      name: selectedUser.name,
-                                    },
-                                  ]);
-                                  setCurrentEditAssignedUser("");
+                                if (selectedUser) {
+                                  const userIdStr = String(selectedUser.id);
+                                  const isAlreadyAssigned =
+                                    editAssignedUsers.some(
+                                      (assigned) => assigned.id === userIdStr,
+                                    );
+
+                                  console.log(
+                                    "Attempting to assign user:",
+                                    selectedUser.name,
+                                    "ID:",
+                                    userIdStr,
+                                    "Already assigned:",
+                                    isAlreadyAssigned,
+                                  );
+
+                                  if (!isAlreadyAssigned) {
+                                    setEditAssignedUsers([
+                                      ...editAssignedUsers,
+                                      {
+                                        id: userIdStr,
+                                        name: selectedUser.name,
+                                      },
+                                    ]);
+                                    setCurrentEditAssignedUser("");
+                                    console.log("User assigned successfully!");
+                                  } else {
+                                    console.log(
+                                      "User already assigned, skipping",
+                                    );
+                                  }
                                 }
                               }
                             }}
@@ -6282,7 +6421,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           defaultValue={editingWork?.workType || "installation"}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                          <option value="installation">Instalação</option>
+                          <option value="installation">Instala��ão</option>
                           <option value="maintenance">Manutenção</option>
                           <option value="repair">Reparação</option>
                           <option value="renovation">Renova��ão</option>
@@ -6822,7 +6961,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const technician = inputs[1].value; // Técnico
                           const type = inputs[2].value; // Tipo de Manutenção
                           const status = inputs[3].value; // Estado
-                          const estimatedDuration = inputs[4].value; // Duração Estimada
+                          const estimatedDuration = inputs[4].value; // Dura��ão Estimada
                           const actualDuration = inputs[5].value; // Duração Real
                           const cost = inputs[6].value; // Custo
                           const priority = inputs[7].value; // Prioridade
@@ -7573,21 +7712,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           />
         )}
 
-        {/* Work View Modal */}
+        {/* Enhanced Work View Modal */}
         {viewingWork && selectedWork && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
               <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    Detalhes da Obra
-                  </h2>
+                {/* Enhanced Header */}
+                <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Detalhes Completos da Obra
+                      </h2>
+                      <p className="text-gray-600 text-sm">
+                        {selectedWork.id?.toUpperCase() ||
+                          "ID-" + Date.now().toString().slice(-6)}{" "}
+                        • {selectedWork.title}
+                      </p>
+                    </div>
+                  </div>
                   <button
                     onClick={() => {
                       setViewingWork(false);
                       setSelectedWork(null);
                     }}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
                   >
                     <X className="h-6 w-6" />
                   </button>
@@ -7746,13 +7898,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Install Prompt for Mobile */}
         <InstallPrompt />
-
-        {/* Auto-sync notification */}
-        <AutoSyncNotification
-          syncStatus={syncStatus}
-          lastSync={autoSyncLastSync}
-          onDismiss={syncStatus === "completed" ? () => {} : undefined}
-        />
 
         {/* Admin Login Modal */}
         {showAdminLogin && !isAdminAuthenticated && (
