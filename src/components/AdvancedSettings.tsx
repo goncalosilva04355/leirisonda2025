@@ -75,7 +75,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       if (!savedConfig) {
         setSyncTest({
           status: "error",
-          message: "Firebase não configurado",
+          message: "Firebase n��o configurado",
           details: ["Configure as credenciais Firebase primeiro"],
         });
         return;
@@ -956,13 +956,16 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                     <button
                       onClick={() => {
                         if (onNavigateToSection) {
+                          console.log(
+                            "🔄 Redirecionando para Configurações...",
+                          );
                           onNavigateToSection("configuracoes");
                           onBack();
                         }
                       }}
-                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center space-x-2"
                     >
-                      Aceder às Configurações
+                      <span>⚙️ Aceder às Configurações</span>
                     </button>
                   </div>
                 )}
