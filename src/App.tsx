@@ -146,7 +146,7 @@ function App() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [pushPermission, setPushPermission] = useState("default");
   const [assignedWorks, setAssignedWorks] = useState<any[]>([]);
-  const [uploadedPhotos, setUploadedPhotos] = useState([]);
+  const [uploadedPhotos, setUploadedPhotos] = useState<any[]>([]);
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
   const [selectedPhotos, setSelectedPhotos] = useState([]);
 
@@ -2156,7 +2156,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Building2 className="h-4 w-4 text-blue-600" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Observações e Trabalho
+                        Observaç��es e Trabalho
                       </h3>
                     </div>
 
