@@ -33,6 +33,15 @@ class FullSyncService {
       clientsSync: { local: 0, firebase: 0, merged: 0 },
     };
 
+    // TEMPORARILY DISABLED TO PREVENT FIREBASE QUOTA EXCEEDED ERRORS
+    console.warn("🛑 Firebase sync DISABLED to prevent quota exceeded");
+    return {
+      success: true,
+      message: "Firebase sync temporarily disabled",
+      details: ["Firebase sync disabled to prevent quota exceeded errors"],
+      stats,
+    };
+
     if (!db) {
       return {
         success: false,
@@ -203,9 +212,7 @@ class FullSyncService {
     }
   }
 
-  private async syncCollection(
-    collectionName: string,
-  ): Promise<{
+  private async syncCollection(collectionName: string): Promise<{
     details: string[];
     stats: { local: number; firebase: number; merged: number };
   }> {
