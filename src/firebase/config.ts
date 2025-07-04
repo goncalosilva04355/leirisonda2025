@@ -34,12 +34,32 @@ let auth: any = null;
 
 try {
   if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "demo") {
+    // Validate required config fields
+    const requiredFields = ["apiKey", "authDomain", "projectId"];
+    const missingFields = requiredFields.filter(
+      (field) => !firebaseConfig[field],
+    );
+
+    if (missingFields.length > 0) {
+      console.error("Missing Firebase config fields:", missingFields);
+      throw new Error(
+        `Missing Firebase configuration: ${missingFields.join(", ")}`,
+      );
+    }
+
     app = initializeApp(firebaseConfig);
     db = getFirestore(app);
     auth = getAuth(app);
+
+    console.log("Firebase initialized successfully");
+  } else {
+    console.warn("Firebase not initialized - demo mode");
   }
 } catch (error) {
-  console.warn("Firebase initialization failed:", error);
+  console.error("Firebase initialization failed:", error);
+  app = null;
+  db = null;
+  auth = null;
 }
 
 export { app, db, auth };
