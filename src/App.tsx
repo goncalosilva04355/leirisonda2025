@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Building2,
   Menu,
@@ -21,7 +21,16 @@ import {
   Shield,
   Check,
   AlertCircle,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
+import { FirebaseConfig } from "./components/FirebaseConfig";
+import {
+  useRealtimeSync,
+  useUsers,
+  usePools,
+  useMaintenance,
+} from "./hooks/useRealtimeSync";
 
 // Mock authentication and user data
 const ADMIN_USER = {
