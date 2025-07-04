@@ -1108,7 +1108,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribu��da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1647,7 +1647,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 `Debug Alexandre:\n` +
                                   `Obras no sistema: ${works.length}\n` +
                                   `Obras atribuídas ao Alexandre: ${alexandreWorks.length}\n` +
-                                  `Notifica��ões ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
+                                  `Notificações ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
                                   `Permissão notificações: ${Notification.permission}\n\n` +
                                   `Ver console para mais detalhes`,
                               );
@@ -5052,7 +5052,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-blue-600 text-xs">
                             Estado:{" "}
-                            {enablePhoneDialer ? "����� Ativo" : "⭕ Inativo"}
+                            {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
@@ -5280,7 +5280,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Trabalhos realizados</li>
-                        <li>• Técnicos responsáveis</li>
+                        <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -5458,7 +5458,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estatísticas R��pidas
+                    Estatísticas Rápidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
@@ -5978,7 +5978,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Obras
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o de obras e projetos
+                          Gestão de obras e projetos
                         </p>
                       </div>
                     </div>
@@ -6549,7 +6549,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                           <option value="installation">Instalação</option>
-                          <option value="maintenance">Manutenç��o</option>
+                          <option value="maintenance">Manutenção</option>
                           <option value="repair">Reparação</option>
                           <option value="renovation">Renovação</option>
                           <option value="inspection">Inspeção</option>
@@ -6863,7 +6863,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const poolType = inputs[4].value; // Tipo de Piscina
                           const dimensions = inputs[5].value; // Dimensões
                           const volume = inputs[6].value; // Volume
-                          const filtrationSystem = inputs[7].value; // Sistema de Filtra��ão
+                          const filtrationSystem = inputs[7].value; // Sistema de Filtração
                           const installationDate = inputs[8].value; // Data de Instalação
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente
