@@ -1,4 +1,4 @@
-import { initializeApp, FirebaseApp } from "firebase/app";
+import { FirebaseApp } from "firebase/app";
 import {
   getDatabase,
   Database,
@@ -11,6 +11,7 @@ import {
   remove,
   update,
 } from "firebase/database";
+import { app as firebaseApp } from "../firebase/config";
 
 interface FirebaseConfig {
   apiKey: string;
