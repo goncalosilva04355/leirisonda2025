@@ -2427,6 +2427,159 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
 
+                  {/* New Client Form */}
+                  {showNewClientForm && (
+                    <div className="border border-blue-200 rounded-lg p-4 bg-blue-50">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-medium text-gray-900">
+                          Novo Cliente
+                        </h3>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowNewClientForm(false);
+                            setNewClientForm({
+                              name: "",
+                              email: "",
+                              phone: "",
+                              address: "",
+                            });
+                          }}
+                          className="text-gray-400 hover:text-gray-600"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Nome Completo *
+                          </label>
+                          <input
+                            type="text"
+                            value={newClientForm.name}
+                            onChange={(e) =>
+                              setNewClientForm({
+                                ...newClientForm,
+                                name: e.target.value,
+                              })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Nome do cliente"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Email
+                          </label>
+                          <input
+                            type="email"
+                            value={newClientForm.email}
+                            onChange={(e) =>
+                              setNewClientForm({
+                                ...newClientForm,
+                                email: e.target.value,
+                              })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="email@exemplo.com"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Telefone
+                          </label>
+                          <input
+                            type="tel"
+                            value={newClientForm.phone}
+                            onChange={(e) =>
+                              setNewClientForm({
+                                ...newClientForm,
+                                phone: e.target.value,
+                              })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="+351 XXX XXX XXX"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Morada
+                          </label>
+                          <input
+                            type="text"
+                            value={newClientForm.address}
+                            onChange={(e) =>
+                              setNewClientForm({
+                                ...newClientForm,
+                                address: e.target.value,
+                              })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Morada completa"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-end space-x-3 mt-4">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowNewClientForm(false);
+                            setNewClientForm({
+                              name: "",
+                              email: "",
+                              phone: "",
+                              address: "",
+                            });
+                          }}
+                          className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (newClientForm.name.trim()) {
+                              // Add client to the system
+                              const newClient = {
+                                name: newClientForm.name,
+                                email: newClientForm.email,
+                                phone: newClientForm.phone,
+                                address: newClientForm.address,
+                                pools: [],
+                              };
+                              dataSync.addClient(newClient);
+
+                              // Reset form and close
+                              setNewClientForm({
+                                name: "",
+                                email: "",
+                                phone: "",
+                                address: "",
+                              });
+                              setShowNewClientForm(false);
+
+                              // Show success message
+                              alert(
+                                `Cliente "${newClient.name}" adicionado com sucesso!`,
+                              );
+                            } else {
+                              alert(
+                                "Por favor, preencha pelo menos o nome do cliente.",
+                              );
+                            }
+                          }}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        >
+                          Guardar Cliente
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Location */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
