@@ -91,7 +91,9 @@ class MockAuthService {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const user = this.users.find((u) => u.email === email && u.active);
+    const user = this.users.find(
+      (u) => u.email === email && u.password === password && u.active,
+    );
     if (!user) {
       return { success: false, error: "Credenciais inválidas" };
     }
