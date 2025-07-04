@@ -68,12 +68,21 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     }
 
     try {
-      const result = await authService.register(
-        formData.email.trim(),
-        formData.password,
-        formData.name.trim(),
-        formData.role,
-      );
+      // Create a timeout promise
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error("Request timeout")), 30000); // 30 second timeout
+      });
+
+      // Race between the registration and timeout
+      const result = (await Promise.race([
+        authService.register(
+          formData.email.trim(),
+          formData.password,
+          formData.name.trim(),
+          formData.role,
+        ),
+        timeoutPromise,
+      ])) as any;
 
       if (result.success) {
         onRegisterSuccess();
@@ -82,8 +91,12 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       }
     } catch (error: any) {
       console.error("Unexpected registration error:", error);
-      if (error.message && error.message.includes("Firebase")) {
+      if (error.message === "Request timeout") {
+        setError("Pedido expirou. Verifique a conexão e tente novamente.");
+      } else if (error.message && error.message.includes("Firebase")) {
         setError("Erro de configuração Firebase. Contacte o administrador.");
+      } else if (error.message && error.message.includes("Body is disturbed")) {
+        setError("Erro de rede. Aguarde um momento e tente novamente.");
       } else {
         setError("Erro inesperado. Verifique a conexão e tente novamente.");
       }
