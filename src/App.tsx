@@ -3921,7 +3921,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar interven��ão de manutenç�����o
+                      Registar interven��ão de manutenç������o
                     </p>
                   </div>
                 </div>
@@ -4778,7 +4778,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Limpar Dados do Sistema
                           </h4>
                           <p className="text-red-700 text-sm mb-3">
-                            Esta ação eliminar�� permanentemente:
+                            Esta ação eliminar��� permanentemente:
                           </p>
                           <ul className="text-red-700 text-sm space-y-1 mb-4">
                             <li>• Todas as obras ({works.length} registos)</li>
@@ -7493,8 +7493,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       {/* Install Prompt for Mobile */}
       <InstallPrompt />
 
-      {/* Firebase Status - Debug only */}
+      {/* Debug Components - Remove in production */}
       <FirebaseStatus />
+      <UserDebugger />
     </div>
   );
 }
