@@ -3448,7 +3448,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Relatórios
+                        Relat��rios
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Gere relatórios detalhados em PDF
@@ -4558,23 +4558,32 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         <div className="flex flex-col h-full">
           {/* Logo Header */}
           <div className="px-6 py-6 border-b border-gray-200">
-            <div className="flex items-center space-x-3">
-              <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                  alt="Leirisonda Logo"
-                  className="w-full h-full object-contain"
-                />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                    alt="Leirisonda Logo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-500">Gestão de Serviços</p>
+                  <SyncStatusDisplay
+                    isLoading={syncLoading}
+                    lastSync={lastSync}
+                    error={syncError}
+                    syncEnabled={!!localStorage.getItem("firebase-config")}
+                  />
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="text-sm text-gray-500">Gestão de Serviços</p>
-                <SyncStatusDisplay
-                  isLoading={syncLoading}
-                  lastSync={lastSync}
-                  error={syncError}
-                  syncEnabled={!!localStorage.getItem("firebase-config")}
-                />
-              </div>
+              {/* Close button for mobile */}
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="lg:hidden p-1 rounded-md hover:bg-gray-100"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
             </div>
           </div>
 
