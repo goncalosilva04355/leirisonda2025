@@ -34,6 +34,8 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   const lastDataSnapshot = useRef<Record<string, string>>({});
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isInitialized = useRef(false);
+  const backoffMultiplier = useRef(1);
+  const isQuotaExceeded = useRef(false);
 
   // Função para gerar hash dos dados para detectar mudanças
   const generateDataHash = useCallback((data: any): string => {
@@ -147,7 +149,7 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   const handleStorageChange = useCallback(
     (event: StorageEvent) => {
       if (finalConfig.collections.includes(event.key || "")) {
-        console.log(`📢 Storage event detectado: ${event.key}`);
+        console.log(`�� Storage event detectado: ${event.key}`);
         // Força sincronização quando localStorage muda
         forceSyncNow();
       }
