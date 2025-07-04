@@ -501,7 +501,7 @@ function App() {
     setLoginError("");
 
     try {
-      // Quick bypass for Gonçalo's account
+      // Quick bypass for Gon��alo's account
       if (loginForm.email === "gongonsilva@gmail.com") {
         const gonçaloUser = {
           uid: "goncalo-1",
@@ -3970,7 +3970,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {/* Chemical Products */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Produtos Qu��micos Utilizados
+                      Produtos Qu����micos Utilizados
                     </h3>
                     <div className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -4605,6 +4605,130 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <li>
                             • Em dispositivos móveis, adicione a app ao ecrã
                             inicial
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mobile Interaction Settings */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <Settings className="h-6 w-6 text-blue-600 mr-3" />
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Interação Mobile
+                  </h3>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Configure o comportamento de cliques em contactos e moradas
+                </p>
+
+                <div className="space-y-4">
+                  {/* Phone Dialer Setting */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        📞
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium text-blue-900">
+                            Marcação Automática
+                          </h4>
+                          <button
+                            onClick={() =>
+                              togglePhoneDialer(!enablePhoneDialer)
+                            }
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                              enablePhoneDialer ? "bg-blue-600" : "bg-gray-300"
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                enablePhoneDialer
+                                  ? "translate-x-6"
+                                  : "translate-x-1"
+                              }`}
+                            />
+                          </button>
+                        </div>
+                        <p className="text-blue-700 text-sm mb-3">
+                          Quando ativado, clicar num número de telefone abrirá
+                          diretamente o marcador do telefone.
+                        </p>
+                        <p className="text-blue-600 text-xs">
+                          Estado:{" "}
+                          {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Maps Redirect Setting */}
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        📍
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-medium text-green-900">
+                            Navegação Maps
+                          </h4>
+                          <button
+                            onClick={() =>
+                              toggleMapsRedirect(!enableMapsRedirect)
+                            }
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                              enableMapsRedirect
+                                ? "bg-green-600"
+                                : "bg-gray-300"
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                enableMapsRedirect
+                                  ? "translate-x-6"
+                                  : "translate-x-1"
+                              }`}
+                            />
+                          </button>
+                        </div>
+                        <p className="text-green-700 text-sm mb-3">
+                          Quando ativado, clicar numa morada abrirá o Google
+                          Maps para navegação.
+                        </p>
+                        <p className="text-green-600 text-xs">
+                          Estado:{" "}
+                          {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Instructions */}
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900 mb-2">
+                          Instruções
+                        </h4>
+                        <ul className="text-gray-700 text-sm space-y-1">
+                          <li>
+                            • As definições são guardadas localmente no
+                            dispositivo
+                          </li>
+                          <li>
+                            • A marcação automática funciona melhor em
+                            dispositivos móveis
+                          </li>
+                          <li>• O Google Maps abre numa nova janela/tab</li>
+                          <li>
+                            • Pode ativar ou desativar cada funcionalidade
+                            independentemente
                           </li>
                         </ul>
                       </div>
