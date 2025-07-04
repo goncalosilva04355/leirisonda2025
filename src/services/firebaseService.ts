@@ -112,6 +112,11 @@ const COLLECTIONS = {
   CLIENTS: "clients",
 };
 
+// Helper function to check if Firebase is available
+const isFirebaseAvailable = () => {
+  return db !== null;
+};
+
 // User Services
 export const userService = {
   // Listen to real-time changes
