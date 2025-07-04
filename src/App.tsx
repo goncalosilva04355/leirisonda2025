@@ -700,7 +700,7 @@ function App() {
       console.log("🔐 Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("✅ Login successful for:", result.user.email);
+        console.log("�� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -3725,6 +3725,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="submit"
                         onClick={(e) => {
                           e.preventDefault();
+
+                          // SECURITY: Check if user has permission to create works
+                          if (!currentUser?.permissions?.obras?.create) {
+                            alert(
+                              "Não tem permissão para criar obras. Contacte o administrador.",
+                            );
+                            return;
+                          }
+
                           const form = (e.target as HTMLElement).closest(
                             "form",
                           );
@@ -4242,6 +4251,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="submit"
                         onClick={(e) => {
                           e.preventDefault();
+
+                          // SECURITY: Check if user has permission to create pools
+                          if (!currentUser?.permissions?.piscinas?.create) {
+                            alert(
+                              "Não tem permissão para criar piscinas. Contacte o administrador.",
+                            );
+                            return;
+                          }
+
                           const form = (e.target as HTMLElement).closest(
                             "form",
                           );
@@ -5264,7 +5282,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Estado e localização</li>
+                        <li>�� Estado e localização</li>
                         <li>• Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
