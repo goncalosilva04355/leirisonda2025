@@ -631,45 +631,47 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Maintenance actions
   const addMaintenance = useCallback(
-    async (maintenanceData: Omit<Maintenance, "id" | "createdAt">) => {
-      const newMaintenance: Maintenance = {
-        ...maintenanceData,
-        id: Date.now().toString(),
-        createdAt: new Date().toISOString(),
-      };
-
-      // Add to local state immediately
-      setState((prev) => {
-        const updated = [...prev.maintenance, newMaintenance];
-        const future = updated.filter(
-          (m) => new Date(m.scheduledDate) >= new Date(),
-        );
-
-        return {
-          ...prev,
-          maintenance: updated,
-          futureMaintenance: future,
+    withAutoSync(
+      async (maintenanceData: Omit<Maintenance, "id" | "createdAt">) => {
+        const newMaintenance: Maintenance = {
+          ...maintenanceData,
+          id: Date.now().toString(),
+          createdAt: new Date().toISOString(),
         };
-      });
 
-      // Add to localStorage for backup
-      const savedMaintenance = JSON.parse(
-        localStorage.getItem("maintenance") || "[]",
-      );
-      savedMaintenance.push(newMaintenance);
-      localStorage.setItem("maintenance", JSON.stringify(savedMaintenance));
+        // Add to local state immediately
+        setState((prev) => {
+          const updated = [...prev.maintenance, newMaintenance];
+          const future = updated.filter(
+            (m) => new Date(m.scheduledDate) >= new Date(),
+          );
 
-      // Add to Firebase if sync is enabled
-      if (syncEnabled && realFirebaseService.isReady()) {
-        try {
-          await realFirebaseService.addMaintenance(newMaintenance);
-          console.log("Maintenance added to Firebase successfully");
-        } catch (error) {
-          console.error("Failed to add maintenance to Firebase:", error);
+          return {
+            ...prev,
+            maintenance: updated,
+            futureMaintenance: future,
+          };
+        });
+
+        // Add to localStorage for backup
+        const savedMaintenance = JSON.parse(
+          localStorage.getItem("maintenance") || "[]",
+        );
+        savedMaintenance.push(newMaintenance);
+        localStorage.setItem("maintenance", JSON.stringify(savedMaintenance));
+
+        // Add to Firebase if sync is enabled
+        if (syncEnabled && realFirebaseService.isReady()) {
+          try {
+            await realFirebaseService.addMaintenance(newMaintenance);
+            console.log("Maintenance added to Firebase successfully");
+          } catch (error) {
+            console.error("Failed to add maintenance to Firebase:", error);
+          }
         }
-      }
-    },
-    [syncEnabled],
+      },
+    ),
+    [syncEnabled, withAutoSync],
   );
 
   const updateMaintenance = useCallback(
