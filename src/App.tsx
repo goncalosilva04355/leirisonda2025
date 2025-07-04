@@ -266,30 +266,7 @@ function App() {
 
     // Firebase auth disabled to prevent crashes
     console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
-    console.log(
-      "AUTH STATE CHANGE:",
-      user ? `User ${user.email} logged in` : "No user - login required",
-    );
-
-    // Only accept authentication if user actually exists and is active
-    if (user && user.active) {
-      console.log(
-        "✅ Valid user authenticated:",
-        user.email,
-        "Role:",
-        user.role,
-      );
-      setCurrentUser(user);
-      setIsAuthenticated(true);
-      // Persist current user for notifications
-      localStorage.setItem("currentUser", JSON.stringify(user));
-    } else {
-      console.log("❌ Invalid or inactive user, forcing logout");
-      setCurrentUser(null);
-      setIsAuthenticated(false);
-      authService.logout(); // Force logout if invalid user
-    }
-    // Firebase code removed to fix syntax errors
+    // Firebase auth code removed to fix syntax errors
 
     // DO NOT initialize default admin automatically - this was causing the security issue
     // Users must always login manually for security
@@ -921,7 +898,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         setNotificationsEnabled(true);
         showNotification(
           "Notificações Ativadas",
-          "Agora vai receber notificações de obras atribuídas",
+          "Agora vai receber notifica��ões de obras atribuídas",
           "success",
         );
       }
