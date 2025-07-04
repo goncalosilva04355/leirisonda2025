@@ -69,21 +69,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     }
 
     try {
-      // Create a timeout promise
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error("Request timeout")), 30000); // 30 second timeout
-      });
-
-      // Race between the registration and timeout
-      const result = (await Promise.race([
-        authService.register(
-          formData.email.trim(),
-          formData.password,
-          formData.name.trim(),
-          formData.role,
-        ),
-        timeoutPromise,
-      ])) as any;
+      // Try Firebase first
+      const result = await authService.register(
+        formData.email.trim(),
+        formData.password,
+        formData.name.trim(),
+        formData.role,
+      );
 
       if (result.success) {
         onRegisterSuccess();
@@ -91,13 +83,36 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         setError(result.error || "Erro ao criar conta");
       }
     } catch (error: any) {
-      console.error("Unexpected registration error:", error);
-      if (error.message === "Request timeout") {
-        setError("Pedido expirou. Verifique a conexão e tente novamente.");
-      } else if (error.message && error.message.includes("Firebase")) {
-        setError("Erro de configuração Firebase. Contacte o administrador.");
-      } else if (error.message && error.message.includes("Body is disturbed")) {
-        setError("Erro de rede. Aguarde um momento e tente novamente.");
+      console.error("Firebase registration failed:", error);
+
+      // Fallback to mock authentication for Firebase issues
+      if (
+        error.code === "auth/network-request-failed" ||
+        error.message?.includes("Body is disturbed")
+      ) {
+        console.log("Using mock authentication as fallback...");
+
+        try {
+          const mockResult = await mockAuthService.register(
+            formData.email.trim(),
+            formData.password,
+            formData.name.trim(),
+            formData.role,
+          );
+
+          if (mockResult.success) {
+            setError(
+              "Conta criada com autenticação local (Firebase indisponível)",
+            );
+            setTimeout(() => {
+              onRegisterSuccess();
+            }, 2000);
+          } else {
+            setError(mockResult.error || "Erro ao criar conta");
+          }
+        } catch (mockError) {
+          setError("Erro em ambos os sistemas de autenticação");
+        }
       } else {
         setError("Erro inesperado. Verifique a conexão e tente novamente.");
       }
