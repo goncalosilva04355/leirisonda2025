@@ -375,7 +375,7 @@ function App() {
     // Use sync system to add maintenance (will handle Firebase and localStorage)
     addMaintenance(newMaintenance);
 
-    console.log("Manutenção salva com sucesso:", interventionData);
+    console.log("Manuten��ão salva com sucesso:", interventionData);
 
     alert(
       `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`,
@@ -3820,21 +3820,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
-                        {hasPermission("utilizadores", "edit") && (
-                          <button
-                            onClick={() => handleEditUser(user)}
-                            className="p-2 text-gray-400 hover:text-gray-600"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                        )}
-                        {hasPermission("utilizadores", "delete") && (
-                          <button
-                            onClick={() => handleDeleteUser(user.id)}
-                            className="p-2 text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                        {/* SECURITY: Only super admin can edit/delete users */}
+                        {currentUser?.role === "super_admin" && (
+                          <>
+                            <button
+                              onClick={() => handleEditUser(user)}
+                              className="p-2 text-gray-400 hover:text-gray-600"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteUser(user.id)}
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </>
                         )}
                       </div>
                     </div>
