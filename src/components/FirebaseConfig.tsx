@@ -323,7 +323,17 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
             Como obter as credenciais:
           </h3>
           <ol className="text-sm text-blue-700 space-y-1">
-            <li>1. Aceda a console.firebase.google.com</li>
+            <li>
+              1. Aceda a{" "}
+              <a
+                href="https://console.firebase.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                console.firebase.google.com
+              </a>
+            </li>
             <li>2. Selecione o seu projeto</li>
             <li>3. Vá a Project Settings → General</li>
             <li>4. Na secção "Your apps", encontre as configurações</li>
