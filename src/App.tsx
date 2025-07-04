@@ -1987,7 +1987,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenção</span>
+                      <span>Agendar Manuten��ão</span>
                     </button>
                   </div>
                 ) : (
@@ -3792,18 +3792,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <button
-                          onClick={() => handleEditUser(user)}
-                          className="p-2 text-gray-400 hover:text-gray-600"
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="p-2 text-gray-400 hover:text-red-600"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {hasPermission("utilizadores", "edit") && (
+                          <button
+                            onClick={() => handleEditUser(user)}
+                            className="p-2 text-gray-400 hover:text-gray-600"
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                        )}
+                        {hasPermission("utilizadores", "delete") && (
+                          <button
+                            onClick={() => handleDeleteUser(user.id)}
+                            className="p-2 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
