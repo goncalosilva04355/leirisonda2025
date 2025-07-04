@@ -281,7 +281,7 @@ function App() {
     }
 
     // Only clear auth state if no valid stored user found
-    console.log("���� No valid stored user found, ensuring clean state");
+    console.log("🔒 No valid stored user found, ensuring clean state");
     sessionStorage.clear(); // Clear any session data
     setIsAuthenticated(false);
     setCurrentUser(null);
@@ -1295,7 +1295,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `���️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -3961,7 +3961,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Additional Information */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa��ões e Características Especiais
+                        Observações e Características Especiais
                       </label>
                       <textarea
                         rows={3}
@@ -4899,7 +4899,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manuten��ões e piscinas
+                      Elimine todos os dados de obras, manutenções e piscinas
                       para começar com uma aplicação limpa. Os utilizadores
                       s����o mantidos.
                     </p>
@@ -5950,6 +5950,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() => {
                                   setEditingWork(work);
+                                  // Initialize edit assigned users
+                                  setEditAssignedUsers(
+                                    work.assignedUsers || [],
+                                  );
                                   setActiveSection("editar-obra");
                                 }}
                                 className="p-2 text-gray-400 hover:text-gray-600"
@@ -7607,6 +7611,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <button
                       onClick={() => {
                         setEditingWork(selectedWork);
+                        // Initialize edit assigned users
+                        setEditAssignedUsers(selectedWork.assignedUsers || []);
                         setViewingWork(false);
                         setSelectedWork(null);
                         setActiveSection("editar-obra");
