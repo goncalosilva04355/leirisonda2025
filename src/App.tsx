@@ -843,6 +843,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     setShowUserForm(true);
   };
 
+  // Confirmation function for deletions
+  const confirmDelete = (message: string, onConfirm: () => void) => {
+    if (window.confirm(message)) {
+      onConfirm();
+    }
+  };
+
   const handleDeleteUser = (userId) => {
     // Check if it's the main user
     const user = users.find(
@@ -853,9 +860,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       return;
     }
 
-    if (confirm("Tem a certeza que quer eliminar este utilizador?")) {
-      setUsers(users.filter((u) => u.id !== userId));
-    }
+    confirmDelete(
+      `Tem a certeza que deseja apagar o utilizador "${user?.name}"?`,
+      () => {
+        setUsers(users.filter((u) => u.id !== userId));
+      },
+    );
   };
 
   const handleSaveUser = (e) => {
