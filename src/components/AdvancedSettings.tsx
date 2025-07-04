@@ -892,6 +892,83 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
             </div>
           )}
 
+          {activeTab === "auth-diagnostic" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <Key className="w-16 h-16 text-orange-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Diagnóstico de Autenticação
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Ferramenta de diagnóstico para problemas de login entre dispositivos
+                </p>
+              </div>
+
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-6">
+                <h4 className="font-medium text-orange-900 mb-3">
+                  🔧 Problema Identificado e Corrigido
+                </h4>
+                <div className="text-sm text-orange-800 space-y-2">
+                  <p><strong>Problema:</strong> A configuração anterior usava 'browserSessionPersistence' que só mantinha a sessão no mesmo navegador/dispositivo.</p>
+                  <p><strong>Solução:</strong> Removida a limitação de persistência para permitir login entre dispositivos.</p>
+                  <p><strong>Status:</strong> ✅ Corrigido - Utilizadores devem conseguir fazer login noutro dispositivo agora.</p>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h4 className="font-medium text-blue-900 mb-3">
+                  📱 Como testar o login noutro dispositivo:
+                </h4>
+                <ol className="text-sm text-blue-800 space-y-2">
+                  <li>1. Faça login neste dispositivo normalmente</li>
+                  <li>2. Abra a aplicação noutro dispositivo/navegador</li>
+                  <li>3. Use o mesmo email e password</li>
+                  <li>4. O login deve funcionar normalmente</li>
+                  <li>5. Os dados devem estar sincronizados (se Firebase configurado)</li>
+                </ol>
+              </div>
+
+              {onShowAuthDiagnostic && (
+                <div className="text-center">
+                  <button
+                    onClick={onShowAuthDiagnostic}
+                    className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium"
+                  >
+                    🔍 Executar Diagnóstico Detalhado
+                  </button>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Executa testes de autenticação e verifica configurações
+                  </p>
+                </div>
+              )}
+
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h4 className="font-medium text-green-900 mb-2">
+                  ✅ Verificações Firebase para sincronização:
+                </h4>
+                <ul className="text-sm text-green-800 space-y-1">
+                  <li>• Authentication > Sign-in method > Email/Password deve estar ativado</li>
+                  <li>• Firestore Database deve estar configurado</li>
+                  <li>• Utilizadores criados aparecem em Authentication > Users</li>
+                  <li>• As regras de segurança devem permitir acesso autenticado</li>
+                </ul>
+              </div>
+
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h4 className="font-medium text-yellow-900 mb-2">
+                  ⚠️ Se ainda houver problemas:
+                </h4>
+                <ul className="text-sm text-yellow-800 space-y-1">
+                  <li>• Verifique se o Firebase Console tem Email/Password ativado</li>
+                  <li>• Confirme que o utilizador foi criado no Firebase Authentication</li>
+                  <li>• Teste com incógnito/modo privado primeiro</li>
+                  <li>• Limpe cache e cookies do navegador</li>
+                  <li>• Execute o diagnóstico detalhado acima</li>
+                </ul>
+              </div>
+            </div>
+          )}
+
           {activeTab === "utilizadores" && (
             <div className="space-y-6">
               <div className="text-center">
