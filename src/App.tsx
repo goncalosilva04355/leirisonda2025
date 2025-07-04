@@ -1613,11 +1613,6 @@ function App() {
                             </p>
                             <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
                               <span>📅 28/01/2025</span>
-                              <span>⏰ 09:00</span>
-
-              </div>
-            </div>
-          </div>
         );
       case "nova-manutencao":
         return (
