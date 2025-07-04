@@ -1968,7 +1968,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={work.status === "in_progress"}
                                   >
-                                    {work.status === "Em Progresso"
+                                    {work.status === "in_progress"
                                       ? "Em Progresso"
                                       : "Iniciar"}
                                   </button>
@@ -3684,7 +3684,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observações Específicas do Furo
+                              Observaç��es Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -5360,7 +5360,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠️ ATENÇÃO: Esta operação é irreversível!
+                              ��️ ATENÇÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
