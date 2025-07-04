@@ -519,13 +519,25 @@ export const UserPermissionsManager: React.FC = () => {
             </p>
           </div>
         </div>
-        <button
-          onClick={loadUsers}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center space-x-2"
-        >
-          <UserCheck className="w-4 h-4" />
-          <span>Atualizar</span>
-        </button>
+        <div className="flex space-x-3">
+          <button
+            onClick={loadUsers}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center space-x-2"
+          >
+            <UserCheck className="w-4 h-4" />
+            <span>Atualizar</span>
+          </button>
+          <button
+            onClick={() => {
+              // Navigate to register form or show modal
+              window.location.hash = "#register";
+            }}
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center space-x-2"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Novo Utilizador</span>
+          </button>
+        </div>
       </div>
 
       {/* Messages */}
