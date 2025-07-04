@@ -2295,6 +2295,47 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <span className="font-medium">Técnico:</span>{" "}
                               {maint.technician}
                             </div>
+                            {maint.clientName && (
+                              <div>
+                                <span className="font-medium">Cliente:</span>{" "}
+                                {maint.clientName}
+                                {maint.clientContact && (
+                                  <div className="mt-1">
+                                    <button
+                                      onClick={() =>
+                                        handlePhoneClick(maint.clientContact)
+                                      }
+                                      className={`text-xs ${
+                                        enablePhoneDialer
+                                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                          : "text-gray-500"
+                                      }`}
+                                      disabled={!enablePhoneDialer}
+                                    >
+                                      📞 {maint.clientContact}
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {maint.location && (
+                              <div>
+                                <span className="font-medium">Local:</span>{" "}
+                                <button
+                                  onClick={() =>
+                                    handleAddressClick(maint.location)
+                                  }
+                                  className={`text-xs ${
+                                    enableMapsRedirect
+                                      ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                      : "text-gray-500"
+                                  }`}
+                                  disabled={!enableMapsRedirect}
+                                >
+                                  📍 {maint.location}
+                                </button>
+                              </div>
+                            )}
                             {maint.observations && (
                               <div className="col-span-2">
                                 <span className="font-medium">
