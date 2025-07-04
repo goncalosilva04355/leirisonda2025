@@ -104,17 +104,23 @@ function App() {
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
 
-  // Data states - can sync with Firebase when enabled
-  const [users, setUsers] = useState(initialUsers);
-  const [pools, setPools] = useState([]);
-  const [maintenance, setMaintenance] = useState([]);
-  const [futureMaintenance, setFutureMaintenance] = useState([]);
-  const [works, setWorks] = useState([]);
-  const [clients, setClients] = useState([]);
+  // Data sync hook - manages all data with optional Firebase sync
+  const dataSync = useDataSync();
+  const {
+    pools,
+    maintenance,
+    futureMaintenance,
+    works,
+    clients,
+    isLoading: syncLoading,
+    lastSync,
+    error: syncError,
+    syncWithFirebase,
+    enableSync,
+  } = dataSync;
 
-  // Sync control
-  const [syncActive, setSyncActive] = useState(false);
-  const [syncEnabled, setSyncEnabled] = useState(false);
+  // Keep local users state for user management
+  const [users, setUsers] = useState(initialUsers);
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
