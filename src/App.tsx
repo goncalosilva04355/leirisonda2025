@@ -2472,16 +2472,57 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex space-x-2">
                           <input
                             type="text"
+                            value={currentVehicle}
+                            onChange={(e) => setCurrentVehicle(e.target.value)}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Ex: Carrinha Leirisonda 1"
                           />
                           <button
                             type="button"
+                            onClick={() => {
+                              if (
+                                currentVehicle.trim() &&
+                                !workVehicles.includes(currentVehicle.trim())
+                              ) {
+                                setWorkVehicles([
+                                  ...workVehicles,
+                                  currentVehicle.trim(),
+                                ]);
+                                setCurrentVehicle("");
+                              }
+                            }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                           >
                             Adicionar
                           </button>
                         </div>
+                        {workVehicles.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            {workVehicles.map((vehicle, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
+                              >
+                                <span className="text-sm text-gray-700">
+                                  {vehicle}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setWorkVehicles(
+                                      workVehicles.filter(
+                                        (_, i) => i !== index,
+                                      ),
+                                    )
+                                  }
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       <div>
@@ -2491,16 +2532,61 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex space-x-2">
                           <input
                             type="text"
+                            value={currentTechnician}
+                            onChange={(e) =>
+                              setCurrentTechnician(e.target.value)
+                            }
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Ex: João Santos"
                           />
                           <button
                             type="button"
+                            onClick={() => {
+                              if (
+                                currentTechnician.trim() &&
+                                !workTechnicians.includes(
+                                  currentTechnician.trim(),
+                                )
+                              ) {
+                                setWorkTechnicians([
+                                  ...workTechnicians,
+                                  currentTechnician.trim(),
+                                ]);
+                                setCurrentTechnician("");
+                              }
+                            }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                           >
                             Adicionar
                           </button>
                         </div>
+                        {workTechnicians.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            {workTechnicians.map((technician, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
+                              >
+                                <span className="text-sm text-gray-700">
+                                  {technician}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setWorkTechnicians(
+                                      workTechnicians.filter(
+                                        (_, i) => i !== index,
+                                      ),
+                                    )
+                                  }
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       <div>
@@ -2722,7 +2808,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Building2 className="h-4 w-4 text-blue-600" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Observa��ões e Trabalho
+                        Observações e Trabalho
                       </h3>
                     </div>
 
@@ -3319,7 +3405,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Frequ��ncia de Manutenção
+                        Frequ��ncia de Manutenç��o
                       </label>
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="semanal">Semanal</option>
