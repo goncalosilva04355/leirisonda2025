@@ -80,10 +80,11 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Configura��ão Guardada!
+            Firebase Sempre Ativo!
           </h2>
           <p className="text-gray-600">
-            Firebase configurado com sucesso. A sincronização será ativada.
+            Configuração permanente ativa em todos os dispositivos. A
+            sincronização está sempre disponível.
           </p>
         </div>
       </div>
