@@ -4947,12 +4947,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                          �����
+                          🗺️
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-green-900">
-                              Navega��ão Maps
+                              Navegação Maps
                             </h4>
                             <button
                               onClick={() =>
@@ -4999,7 +4999,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               dispositivo
                             </li>
                             <li>
-                              • A marcação autom��tica funciona melhor em
+                              • A marcação automática funciona melhor em
                               dispositivos móveis
                             </li>
                             <li>• O Google Maps abre numa nova janela/tab</li>
@@ -5025,8 +5025,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <p className="text-gray-600 mb-6">
                       Elimine todos os dados de obras, manutenções e piscinas
-                      para começar com uma aplicação limpa. Os utilizadores
-                      s����o mantidos.
+                      para começar com uma aplicação limpa. Os utilizadores são
+                      mantidos.
                     </p>
 
                     <div className="space-y-4">
@@ -5038,7 +5038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Limpar Dados do Sistema
                             </h4>
                             <p className="text-red-700 text-sm mb-3">
-                              Esta ação eliminar��� permanentemente:
+                              Esta ação eliminará permanentemente:
                             </p>
                             <ul className="text-red-700 text-sm space-y-1 mb-4">
                               <li>
