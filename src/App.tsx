@@ -6117,14 +6117,88 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Responsável
+                          Usuários Atribuídos
                         </label>
-                        <input
-                          type="text"
-                          defaultValue={editingWork?.assignedTo}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Técnico responsável"
-                        />
+                        <div className="flex space-x-2">
+                          <select
+                            value={currentEditAssignedUser}
+                            onChange={(e) =>
+                              setCurrentEditAssignedUser(e.target.value)
+                            }
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">Selecionar usuário...</option>
+                            {users
+                              .filter(
+                                (user) =>
+                                  user.role !== "viewer" &&
+                                  !editAssignedUsers.some(
+                                    (assigned) => assigned.id === user.id,
+                                  ),
+                              )
+                              .map((user) => (
+                                <option key={user.id} value={user.id}>
+                                  {user.name}
+                                </option>
+                              ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (currentEditAssignedUser) {
+                                const selectedUser = users.find(
+                                  (u) => u.id == currentEditAssignedUser,
+                                );
+                                if (
+                                  selectedUser &&
+                                  !editAssignedUsers.some(
+                                    (assigned) =>
+                                      assigned.id === selectedUser.id,
+                                  )
+                                ) {
+                                  setEditAssignedUsers([
+                                    ...editAssignedUsers,
+                                    {
+                                      id: selectedUser.id,
+                                      name: selectedUser.name,
+                                    },
+                                  ]);
+                                  setCurrentEditAssignedUser("");
+                                }
+                              }
+                            }}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                          >
+                            Atribuir
+                          </button>
+                        </div>
+                        {editAssignedUsers.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            {editAssignedUsers.map((assignedUser, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
+                              >
+                                <span className="text-sm text-blue-700 font-medium">
+                                  👤 {assignedUser.name}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setEditAssignedUsers(
+                                      editAssignedUsers.filter(
+                                        (_, i) => i !== index,
+                                      ),
+                                    )
+                                  }
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
