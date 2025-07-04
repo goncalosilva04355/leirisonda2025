@@ -3812,7 +3812,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Informações relevantes sobre o cliente, preferências, histórico, etc."
+                          placeholder="Informa��ões relevantes sobre o cliente, preferências, histórico, etc."
                         />
                       </div>
                     </div>
@@ -4219,9 +4219,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <Settings className="h-4 w-4" />
               <span>Configura��ões Avançadas</span>
             </button>
-            <p className="text-xs text-gray-400 text-center mt-2">
-              Configure sincronização Firebase
-            </p>
           </div>
         </div>
       </div>
