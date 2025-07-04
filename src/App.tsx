@@ -1335,6 +1335,19 @@ function App() {
     );
   }
 
+  // Show Firebase configuration if not configured and user clicked to configure
+  if (!firebaseConfigured && activeSection === "configuracoes") {
+    return (
+      <FirebaseConfig
+        onConfigured={() => {
+          setFirebaseConfigured(true);
+          setSyncEnabled(true);
+          setActiveSection("configuracoes"); // Stay on settings page
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile Sidebar */}
