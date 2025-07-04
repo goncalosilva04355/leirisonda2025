@@ -1160,7 +1160,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relat����rio PDF. Tente novamente.");
+      alert("Erro ao gerar o relatório PDF. Tente novamente.");
     }
   };
 
@@ -2114,7 +2114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {maint.type}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {maint.poolName} �����{" "}
+                                            {maint.poolName} ���{" "}
                                             {new Date(
                                               maint.scheduledDate,
                                             ).toLocaleDateString("pt-PT")}
@@ -3456,7 +3456,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações
+                            Observa��ões
                           </label>
                           <textarea
                             rows={3}
@@ -5149,7 +5149,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
-                        <li>• T�������cnicos responsáveis</li>
+                        <li>• T������cnicos responsáveis</li>
                         <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
