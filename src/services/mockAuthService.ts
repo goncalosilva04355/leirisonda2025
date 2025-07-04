@@ -9,19 +9,42 @@ export interface MockUser {
 }
 
 class MockAuthService {
-  private users: MockUser[] = [
-    {
-      uid: "mock-admin-1",
-      email: "gongonsilva@gmail.com",
-      name: "Gonçalo Fonseca",
-      role: "super_admin",
-      active: true,
-      createdAt: new Date().toISOString(),
-    },
-  ];
+  private users: MockUser[] = [];
 
   // SECURITY: Always start with no user logged in
   private currentUser: MockUser | null = null;
+
+  constructor() {
+    this.loadUsers();
+  }
+
+  private loadUsers() {
+    // Load users from localStorage or initialize with default admin
+    const savedUsers = localStorage.getItem("mock-users");
+
+    if (savedUsers) {
+      this.users = JSON.parse(savedUsers);
+    } else {
+      // Initialize with default admin user
+      this.users = [
+        {
+          uid: "mock-admin-1",
+          email: "gongonsilva@gmail.com",
+          name: "Gonçalo Fonseca",
+          role: "super_admin",
+          active: true,
+          createdAt: new Date().toISOString(),
+        },
+      ];
+      // Save default users
+      localStorage.setItem("mock-users", JSON.stringify(this.users));
+    }
+
+    console.log(
+      "MockAuthService loaded users:",
+      this.users.map((u) => u.email),
+    );
+  }
 
   async register(
     email: string,
