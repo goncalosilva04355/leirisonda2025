@@ -18,7 +18,7 @@ interface SyncStatus {
 export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   const defaultConfig: AutoSyncConfig = {
     enabled: true,
-    syncInterval: 60000, // 60 segundos para evitar quota exceeded
+    syncInterval: 5000, // 5 segundos para sync responsivo
     collections: ["users", "pools", "maintenance", "works", "clients"],
   };
 
@@ -213,7 +213,7 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
       }
     };
 
-    // Fun��ão para restaurar métodos originais
+    // Função para restaurar métodos originais
     return () => {
       localStorage.setItem = originalSetItem;
       localStorage.removeItem = originalRemoveItem;
@@ -315,7 +315,7 @@ export const useFirebaseRealtimeSync = () => {
 
     // Throttle sync calls to prevent quota exceeded
     let lastSyncTime = 0;
-    const MIN_SYNC_INTERVAL = 10000; // 10 seconds minimum between syncs
+    const MIN_SYNC_INTERVAL = 5000; // 5 seconds minimum between syncs
 
     const throttledSync = () => {
       const now = Date.now();
