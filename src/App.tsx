@@ -221,6 +221,210 @@ function App() {
     setAdvancedPasswordError("");
   };
 
+  // PDF Generation Functions
+  const generatePoolsPDF = () => {
+    const content = `
+LEIRISONDA - RELATÓRIO DE PISCINAS
+Data: ${new Date().toLocaleDateString("pt-PT")}
+
+RESUMO:
+- Total de Piscinas: ${pools.length}
+
+DETALHES:
+${pools
+  .map(
+    (pool, index) => `
+${index + 1}. ${pool.name}
+   Localização: ${pool.location}
+   Cliente: ${pool.client}
+   Tipo: ${pool.type}
+   Estado: ${pool.status}
+   ${pool.nextMaintenance ? `Próxima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
+`,
+  )
+  .join("\n")}
+
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+    `;
+    downloadPDF(
+      content,
+      `Piscinas_${new Date().toISOString().split("T")[0]}.txt`,
+    );
+  };
+
+  const generateMaintenancePDF = () => {
+    const content = `
+LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
+Data: ${new Date().toLocaleDateString("pt-PT")}
+
+RESUMO:
+- Total de Manutenções: ${maintenance.length}
+- Futuras Manutenções: ${futureMaintenance.length}
+
+MANUTENÇÕES REALIZADAS:
+${maintenance
+  .map(
+    (maint, index) => `
+${index + 1}. ${maint.poolName}
+   Tipo: ${maint.type}
+   Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
+   Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
+   Técnico: ${maint.technician}
+   Descrição: ${maint.description}
+   ${maint.notes ? `Observações: ${maint.notes}` : ""}
+`,
+  )
+  .join("\n")}
+
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+    `;
+    downloadPDF(
+      content,
+      `Manutencoes_${new Date().toISOString().split("T")[0]}.txt`,
+    );
+  };
+
+  const generateWorksPDF = () => {
+    const content = `
+LEIRISONDA - RELATÓRIO DE OBRAS
+Data: ${new Date().toLocaleDateString("pt-PT")}
+
+RESUMO:
+- Total de Obras: ${works.length}
+
+OBRAS REGISTADAS:
+${works
+  .map(
+    (work, index) => `
+${index + 1}. ${work.title}
+   Cliente: ${work.client}
+   Localização: ${work.location}
+   Tipo: ${work.type}
+   Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
+   ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   Responsável: ${work.assignedTo}
+   Descrição: ${work.description}
+`,
+  )
+  .join("\n")}
+
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+    `;
+    downloadPDF(content, `Obras_${new Date().toISOString().split("T")[0]}.txt`);
+  };
+
+  const generateClientsPDF = () => {
+    const content = `
+LEIRISONDA - RELATÓRIO DE CLIENTES
+Data: ${new Date().toLocaleDateString("pt-PT")}
+
+RESUMO:
+- Total de Clientes: ${clients.length}
+
+CLIENTES REGISTADOS:
+${clients
+  .map(
+    (client, index) => `
+${index + 1}. ${client.name}
+   Email: ${client.email}
+   Telefone: ${client.phone}
+   Morada: ${client.address}
+   Piscinas: ${client.pools.length} associadas
+   Data Registo: ${new Date(client.createdAt).toLocaleDateString("pt-PT")}
+`,
+  )
+  .join("\n")}
+
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+    `;
+    downloadPDF(
+      content,
+      `Clientes_${new Date().toISOString().split("T")[0]}.txt`,
+    );
+  };
+
+  const generateCompletePDF = () => {
+    const content = `
+LEIRISONDA - RELATÓRIO COMPLETO DO SISTEMA
+Data: ${new Date().toLocaleDateString("pt-PT")}
+
+RESUMO EXECUTIVO:
+- Piscinas Registadas: ${pools.length}
+- Manutenções Realizadas: ${maintenance.length}
+- Futuras Manutenções: ${futureMaintenance.length}
+- Obras em Curso: ${works.length}
+- Clientes Ativos: ${clients.length}
+- Utilizadores do Sistema: ${users.length}
+
+ESTATÍSTICAS:
+- Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
+- Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
+- Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
+
+PRÓXIMAS AÇÕES:
+${futureMaintenance
+  .slice(0, 5)
+  .map(
+    (maint) =>
+      `- ${maint.poolName}: ${maint.type} em ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}`,
+  )
+  .join("\n")}
+
+DADOS DETALHADOS:
+
+=== PISCINAS ===
+${pools
+  .map(
+    (pool, index) => `
+${index + 1}. ${pool.name} (${pool.client})
+   Status: ${pool.status} | Local: ${pool.location}
+`,
+  )
+  .join("")}
+
+=== MANUTENÇÕES RECENTES ===
+${maintenance
+  .slice(-5)
+  .map(
+    (maint, index) => `
+${index + 1}. ${maint.poolName} - ${maint.type}
+   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | Técnico: ${maint.technician}
+`,
+  )
+  .join("")}
+
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+    `;
+    downloadPDF(
+      content,
+      `Relatorio_Completo_${new Date().toISOString().split("T")[0]}.txt`,
+    );
+  };
+
+  const generateCustomPDF = () => {
+    alert(
+      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
+    );
+  };
+
+  const downloadPDF = (content: string, filename: string) => {
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    // Show success message
+    alert(`Relatório "${filename}" gerado com sucesso!`);
+  };
+
   // User management functions
   const handleAddUser = () => {
     setEditingUser(null);
