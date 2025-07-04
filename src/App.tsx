@@ -663,7 +663,7 @@ function App() {
       // Perform actual logout
       await authService.logout();
 
-      console.log("✅ Logout completed successfully");
+      console.log("��� Logout completed successfully");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -6293,6 +6293,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="button"
                         onClick={() => {
                           setEditingWork(null);
+                          setEditAssignedUsers([]);
+                          setCurrentEditAssignedUser("");
                           setActiveSection("obras");
                         }}
                         className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
