@@ -665,29 +665,38 @@ function App() {
         return;
       }
 
-      const result = await authService.login(
-        loginForm.email,
-        loginForm.password,
-      );
+      try {
+        const result = await authService.login(
+          loginForm.email,
+          loginForm.password,
+        );
 
-      if (result.success && result.user) {
-        // Auth state will be updated by the listener
-        setLoginForm({ email: "", password: "" });
+        if (result.success && result.user) {
+          // Set user state directly
+          setCurrentUser(result.user);
+          setIsAuthenticated(true);
+          localStorage.setItem("currentUser", JSON.stringify(result.user));
+          setLoginForm({ email: "", password: "" });
 
-        // Handle any pending hash navigation after login
-        const hash = window.location.hash.substring(1);
-        if (hash) {
-          setActiveSection(hash);
+          // Handle any pending hash navigation after login
+          const hash = window.location.hash.substring(1);
+          if (hash) {
+            setActiveSection(hash);
+          } else {
+            // Default to dashboard when no hash is present
+            navigateToSection("dashboard");
+          }
         } else {
-          // Default to dashboard when no hash is present
-          navigateToSection("dashboard");
+          setLoginError(result.error || "Credenciais inválidas");
         }
-      } else {
-        setLoginError(result.error || "Credenciais inválidas");
+      } catch (authError) {
+        console.error("Auth service error:", authError);
+        // Try to recover with local state
+        setLoginError("Erro temporário. Tente novamente em alguns segundos.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setLoginError("Erro de autenticação");
+      setLoginError("Erro de sistema. Contacte o administrador.");
     }
   };
 
