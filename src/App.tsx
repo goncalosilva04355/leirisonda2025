@@ -280,13 +280,8 @@ function App() {
     setCurrentUser(null);
     console.log("🔒 SECURITY: Auth state cleared");
 
-    // Force logout on app start for security
-    authService.logout().then(() => {
-      console.log("🔒 SECURITY: Forced logout completed on app initialization");
-
-      // Set up auth state listener only AFTER forced logout
-      // Temporarily disable Firebase listener to prevent crashes
-      // const unsubscribe = authService.onAuthStateChanged((user) => {
+    // Firebase auth disabled to prevent crashes
+    console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
         console.log(
           "���� AUTH STATE CHANGE:",
           user ? `User ${user.email} logged in` : "No user - login required",
@@ -4913,7 +4908,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <strong>{pools.length}</strong> piscinas registadas
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
-                      <li>�� Estado e localização</li>
+                      <li>�� Estado e localizaç��o</li>
                       <li>• Informações de clientes</li>
                       <li>• Histórico de manutenç��es</li>
                       <li>• Próximas intervenções</li>
@@ -5022,7 +5017,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Dados de contacto</li>
                       <li>• Piscinas associadas</li>
                       <li>• Histórico de servi��os</li>
-                      <li>• Informações contratuais</li>
+                      <li>• Informaç��es contratuais</li>
                     </ul>
                   </div>
                   <button
