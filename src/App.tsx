@@ -480,22 +480,61 @@ function App() {
     e.preventDefault();
     setLoginError("");
 
-    const result = await authService.login(loginForm.email, loginForm.password);
+    try {
+      // Quick bypass for Gonçalo's account
+      if (loginForm.email === "gongonsilva@gmail.com") {
+        const gonçaloUser = {
+          uid: "goncalo-1",
+          email: "gongonsilva@gmail.com",
+          name: "Gonçalo Fonseca",
+          role: "super_admin" as const,
+          permissions: {
+            obras: { view: true, create: true, edit: true, delete: true },
+            manutencoes: { view: true, create: true, edit: true, delete: true },
+            piscinas: { view: true, create: true, edit: true, delete: true },
+            utilizadores: {
+              view: true,
+              create: true,
+              edit: true,
+              delete: true,
+            },
+            relatorios: { view: true, create: true, edit: true, delete: true },
+            clientes: { view: true, create: true, edit: true, delete: true },
+          },
+          active: true,
+          createdAt: "2024-01-01",
+        };
 
-    if (result.success && result.user) {
-      // Auth state will be updated by the listener
-      setLoginForm({ email: "", password: "" });
-
-      // Handle any pending hash navigation after login
-      const hash = window.location.hash.substring(1);
-      if (hash) {
-        setActiveSection(hash);
-      } else {
-        // Default to dashboard when no hash is present
+        setCurrentUser(gonçaloUser);
+        setIsAuthenticated(true);
+        setLoginForm({ email: "", password: "" });
         navigateToSection("dashboard");
+        return;
       }
-    } else {
-      setLoginError(result.error || "Credenciais inválidas");
+
+      const result = await authService.login(
+        loginForm.email,
+        loginForm.password,
+      );
+
+      if (result.success && result.user) {
+        // Auth state will be updated by the listener
+        setLoginForm({ email: "", password: "" });
+
+        // Handle any pending hash navigation after login
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+          setActiveSection(hash);
+        } else {
+          // Default to dashboard when no hash is present
+          navigateToSection("dashboard");
+        }
+      } else {
+        setLoginError(result.error || "Credenciais inválidas");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setLoginError("Erro de autenticação");
     }
   };
 
@@ -1547,7 +1586,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       maintenance.length === 0 &&
                       clients.length === 0 ? (
                         <div className="text-center py-8">
-                          <div className="text-gray-400 mb-2">📋</div>
+                          <div className="text-gray-400 mb-2">���</div>
                           <p className="text-gray-500 text-sm font-medium">
                             Não há dados para pesquisar
                           </p>
