@@ -175,7 +175,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       // Test sync functionality
       tests.push("🔄 Testando sincronização de piscinas...");
       await new Promise((resolve) => setTimeout(resolve, 800));
-      tests.push("✅ Sincronização de piscinas: Operacional");
+      tests.push("✅ Sincroniza��ão de piscinas: Operacional");
 
       tests.push("🔄 Testando sincronização de manutenções...");
       await new Promise((resolve) => setTimeout(resolve, 600));
@@ -751,6 +751,142 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   <li>5. Teste com o botão "Testar" ou "Simular"</li>
                   <li>6. Adicione a app ao ecrã inicial (opcional)</li>
                 </ol>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "utilizadores" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <UserCheck className="w-16 h-16 text-blue-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Utilizadores
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Gestão de utilizadores do sistema
+                </p>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <p className="text-blue-800 text-center">
+                  Esta funcionalidade foi movida para as configurações
+                  avançadas.
+                </p>
+                {onNavigateToSection && (
+                  <div className="mt-4 text-center">
+                    <button
+                      onClick={() => {
+                        onNavigateToSection("utilizadores");
+                        onBack();
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Aceder aos Utilizadores
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "relatorios" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <BarChart3 className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Relatórios
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Gere relatórios detalhados em PDF
+                </p>
+              </div>
+
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+                <p className="text-green-800 text-center">
+                  Esta funcionalidade foi movida para as configurações
+                  avançadas.
+                </p>
+                {onNavigateToSection && (
+                  <div className="mt-4 text-center">
+                    <button
+                      onClick={() => {
+                        onNavigateToSection("relatorios");
+                        onBack();
+                      }}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    >
+                      Aceder aos Relatórios
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "clientes" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <Users className="w-16 h-16 text-purple-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Clientes
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Gestão da base de dados de clientes
+                </p>
+              </div>
+
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                <p className="text-purple-800 text-center">
+                  Esta funcionalidade foi movida para as configurações
+                  avançadas.
+                </p>
+                {onNavigateToSection && (
+                  <div className="mt-4 text-center">
+                    <button
+                      onClick={() => {
+                        onNavigateToSection("clientes");
+                        onBack();
+                      }}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                    >
+                      Aceder aos Clientes
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "configuracoes" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <Settings className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Configurações
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Configurações gerais da aplicação
+                </p>
+              </div>
+
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                <p className="text-gray-800 text-center">
+                  Esta funcionalidade foi movida para as configurações
+                  avançadas.
+                </p>
+                {onNavigateToSection && (
+                  <div className="mt-4 text-center">
+                    <button
+                      onClick={() => {
+                        onNavigateToSection("configuracoes");
+                        onBack();
+                      }}
+                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    >
+                      Aceder às Configurações
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}
