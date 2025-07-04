@@ -497,32 +497,11 @@ export function useDataSync(): SyncState & SyncActions {
     const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
     const savedClients = JSON.parse(localStorage.getItem("clients") || "[]");
 
-    // If no data exists, initialize with mock data and save it
-    const finalPools = savedPools.length > 0 ? savedPools : mockPools;
-    const finalMaintenance =
-      savedMaintenance.length > 0 ? savedMaintenance : mockMaintenance;
-    const finalWorks = savedWorks.length > 0 ? savedWorks : mockWorks;
-    const finalClients = savedClients.length > 0 ? savedClients : mockClients;
-
-    // Save mock data to localStorage if it was used
-    if (savedPools.length === 0) {
-      localStorage.setItem("pools", JSON.stringify(mockPools));
-      console.log("💾 Mock pools data saved to localStorage");
-    }
-    if (savedMaintenance.length === 0) {
-      localStorage.setItem("maintenance", JSON.stringify(mockMaintenance));
-      console.log("💾 Mock maintenance data saved to localStorage");
-    }
-    if (savedWorks.length === 0) {
-      localStorage.setItem("works", JSON.stringify(mockWorks));
-      console.log(
-        "💾 Mock works data saved to localStorage (including Alexandre's works)",
-      );
-    }
-    if (savedClients.length === 0) {
-      localStorage.setItem("clients", JSON.stringify(mockClients));
-      console.log("💾 Mock clients data saved to localStorage");
-    }
+    // Always use only saved data, never add mock data automatically
+    const finalPools = savedPools;
+    const finalMaintenance = savedMaintenance;
+    const finalWorks = savedWorks;
+    const finalClients = savedClients;
 
     // Calculate future maintenance
     const future = finalMaintenance.filter(
