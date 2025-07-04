@@ -228,11 +228,23 @@ class AuthService {
     email: string,
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-    // Try Firebase first for cross-device access
+    // Validate inputs first
+    if (!email || !password) {
+      return { success: false, error: "Email e password são obrigatórios" };
+    }
+
+    // Try Firebase first for cross-device access, but with timeout
     if (auth && db) {
       console.log("Attempting Firebase login for cross-device access...");
       try {
-        const result = await this.loginWithFirebase(email, password);
+        // Set a timeout to prevent hanging
+        const result = await Promise.race([
+          this.loginWithFirebase(email, password),
+          new Promise<{ success: boolean; error: string }>((_, reject) =>
+            setTimeout(() => reject(new Error("Firebase timeout")), 5000),
+          ),
+        ]);
+
         if (result.success) {
           console.log(
             "✅ Firebase login successful - cross-device access enabled",
@@ -240,8 +252,13 @@ class AuthService {
           return result;
         }
       } catch (error: any) {
-        console.warn("Firebase login failed, trying local auth:", error);
+        console.warn(
+          "Firebase login failed, trying local auth:",
+          error.message || error,
+        );
       }
+    } else {
+      console.log("Firebase not available, using local authentication");
     }
 
     // Fallback to mock auth for local-only users
@@ -250,13 +267,15 @@ class AuthService {
       const result = await this.loginWithMock(email, password);
       if (result.success) {
         console.log("⚠️ Local login successful - device-specific access only");
+        return result;
+      } else {
+        return result;
       }
-      return result;
     } catch (mockError: any) {
       console.error("Local auth failed:", mockError);
       return {
         success: false,
-        error: "Credenciais inválidas ou sistema indisponível",
+        error: "Credenciais inválidas",
       };
     }
   }
