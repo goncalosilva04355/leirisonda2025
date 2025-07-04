@@ -54,15 +54,14 @@ try {
     console.log("✅ Updated dist/spa/manifest.json");
   }
 
-  // Update deployment directory
-  const deployPath = path.join(__dirname, "leirisonda-deploy");
-  if (fs.existsSync(deployPath)) {
-    const deployManifestPath = path.join(deployPath, "manifest.json");
+  // Update public manifest
+  const publicManifestPath = path.join(__dirname, "public", "manifest.json");
+  if (fs.existsSync(publicManifestPath)) {
     fs.writeFileSync(
-      deployManifestPath,
+      publicManifestPath,
       JSON.stringify(deployManifest, null, 2),
     );
-    console.log("✅ Updated leirisonda-deploy/manifest.json");
+    console.log("✅ Updated public/manifest.json");
   }
 
   // Create deployment trigger file
