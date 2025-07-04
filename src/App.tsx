@@ -2255,7 +2255,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         "Limpeza de pré-filtro",
                         "Limpeza filtro areia/vidro",
                         "Verificação alimentação",
-                        "Enchimento automático",
+                        "Enchimento autom��tico",
                         "Limpeza linha de água",
                         "Limpeza do fundo",
                         "Limpeza das paredes",
@@ -2550,134 +2550,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <p className="text-gray-600 text-sm">
                   Gerir definições do sistema
                 </p>
-              </div>
-
-              {/* Push Notifications Settings */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Notificações Push
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
-                      <h4 className="font-medium text-gray-900">
-                        Ativar Notificações
-                      </h4>
-                      <p className="text-sm text-gray-600">
-                        Receba notificações quando obras lhe forem atribuídas
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          pushPermission === "granted"
-                            ? "bg-green-100 text-green-800"
-                            : pushPermission === "denied"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {pushPermission === "granted"
-                          ? "Ativadas"
-                          : pushPermission === "denied"
-                            ? "Negadas"
-                            : "Pendente"}
-                      </span>
-                      <button
-                        onClick={requestNotificationPermission}
-                        disabled={pushPermission === "granted"}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                          pushPermission === "granted"
-                            ? "bg-gray-100 text-gray-500 cursor-not-allowed"
-                            : "bg-blue-600 text-white hover:bg-blue-700"
-                        }`}
-                      >
-                        {pushPermission === "granted" ? "Ativadas" : "Ativar"}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
-                      <h4 className="font-medium text-gray-900">
-                        Teste de Notificação
-                      </h4>
-                      <p className="text-sm text-gray-600">
-                        Verifique se as notificações estão a funcionar
-                      </p>
-                    </div>
-                    <button
-                      onClick={testPushNotification}
-                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-medium"
-                    >
-                      Testar
-                    </button>
-                  </div>
-
-                  {/* Notification Status */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-3 border border-gray-200 rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <div
-                          className={`w-3 h-3 rounded-full ${
-                            "Notification" in window
-                              ? "bg-green-500"
-                              : "bg-red-500"
-                          }`}
-                        ></div>
-                        <span className="text-sm font-medium">
-                          Suporte do Browser
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-600 mt-1">
-                        {"Notification" in window
-                          ? "Suportado"
-                          : "Não suportado"}
-                      </p>
-                    </div>
-                    <div className="p-3 border border-gray-200 rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <div
-                          className={`w-3 h-3 rounded-full ${
-                            notificationsEnabled
-                              ? "bg-green-500"
-                              : "bg-yellow-500"
-                          }`}
-                        ></div>
-                        <span className="text-sm font-medium">
-                          Estado Atual
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-600 mt-1">
-                        {notificationsEnabled ? "Ativas" : "Inativas"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h5 className="text-sm font-medium text-blue-900 mb-2">
-                      Como funciona:
-                    </h5>
-                    <ul className="text-xs text-blue-800 space-y-1">
-                      <li>
-                        • Quando uma obra lhe for atribuída, receberá uma
-                        notificação push
-                      </li>
-                      <li>
-                        • As obras atribuídas aparecem no dashboard na seção
-                        "Obras Atribuídas"
-                      </li>
-                      <li>
-                        • Pode testar as notificações usando o botão "Testar"
-                        acima
-                      </li>
-                      <li>
-                        • As notificações funcionam mesmo com a app fechada (no
-                        telemóvel)
-                      </li>
-                    </ul>
-                  </div>
-                </div>
               </div>
 
               {/* System Information */}
