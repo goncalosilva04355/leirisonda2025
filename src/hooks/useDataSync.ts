@@ -19,12 +19,13 @@ export interface Maintenance {
   poolId: string;
   poolName: string;
   type: string;
-  status: "pending" | "in_progress" | "completed" | "cancelled";
+  status: "pending" | "in_progress" | "completed" | "cancelled" | "scheduled";
   description: string;
   scheduledDate: string;
   completedDate?: string;
   technician: string;
   notes?: string;
+  observations?: string;
   createdAt: string;
 }
 
