@@ -837,7 +837,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS A���ÕES:
+PRÓXIMAS A����ÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -1361,7 +1361,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "nova-manutencao",
       icon: Wrench,
-      label: "Nova Manutenção",
+      label: "Nova Manutenç��o",
       path: "/manutencao/nova",
     },
     {
@@ -6907,64 +6907,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             onNavigateToSection={(section) => {
               console.log(`🔄 Navegando para seção: ${section}`);
 
-              // Special handling for user management - auto-login as admin
-              if (section === "utilizadores") {
-                const gonçaloUser = {
-                  uid: "goncalo-1",
-                  email: "gongonsilva@gmail.com",
-                  name: "Gonçalo Fonseca",
-                  role: "super_admin" as const,
-                  permissions: {
-                    obras: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                    manutencoes: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                    piscinas: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                    utilizadores: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                    relatorios: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                    clientes: {
-                      view: true,
-                      create: true,
-                      edit: true,
-                      delete: true,
-                    },
-                  },
-                  active: true,
-                  createdAt: "2024-01-01",
-                };
-
-                setCurrentUser(gonçaloUser);
-                setIsAuthenticated(true);
-                localStorage.setItem(
-                  "currentUser",
-                  JSON.stringify(gonçaloUser),
-                );
+              // Navigation to user management section only allowed if authenticated
+              if (
+                section === "utilizadores" &&
+                (!isAuthenticated || !currentUser)
+              ) {
                 console.log(
-                  "🔐 Auto-login de admin para gestão de utilizadores",
+                  "❌ Access denied: User management requires authentication",
                 );
+                setLoginError(
+                  "Por favor, faça login primeiro para aceder à gestão de utilizadores",
+                );
+                setShowAdvancedSettings(false);
+                setIsAdvancedUnlocked(false);
+                return;
               }
 
               navigateToSection(section);
