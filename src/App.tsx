@@ -7145,12 +7145,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex-1">
                   <p className="text-sm text-gray-500">Gestão de Serviços</p>
-                  <SyncStatusDisplay
-                    isLoading={syncLoading}
-                    lastSync={lastSync}
-                    error={syncError}
-                    syncEnabled={true}
-                  />
                 </div>
               </div>
               {/* Close button for mobile */}
