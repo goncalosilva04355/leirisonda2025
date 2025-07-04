@@ -176,8 +176,16 @@ function App() {
     status: "completed",
   });
 
-  // Initialize authentication state
+  // Initialize authentication state with security checks
   useEffect(() => {
+    // SECURITY: Clear any potential auto-login data on app start
+    localStorage.removeItem("mock-current-user");
+
+    // Force logout on app start for security
+    authService.logout().then(() => {
+      console.log("Security: Forced logout on app initialization");
+    });
+
     const unsubscribe = authService.onAuthStateChanged((user) => {
       setCurrentUser(user);
       setIsAuthenticated(!!user);
@@ -5529,7 +5537,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               }`}
             >
               <Wrench className="h-5 w-5" />
-              <span>Nova Manutenção</span>
+              <span>Nova Manutenç��o</span>
             </button>
 
             <button
