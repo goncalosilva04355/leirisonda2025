@@ -1801,20 +1801,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           )}
                         </div>
                         <div className="flex items-center space-x-2">
-                          <button className="p-2 text-gray-400 hover:text-gray-600">
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() =>
-                              confirmDelete(
-                                `Tem a certeza que deseja apagar a piscina "${pool.name}"?`,
-                                () => dataSync.deletePool(pool.id),
-                              )
-                            }
-                            className="p-2 text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                          {hasPermission("piscinas", "edit") && (
+                            <button className="p-2 text-gray-400 hover:text-gray-600">
+                              <Edit2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {hasPermission("piscinas", "delete") && (
+                            <button
+                              onClick={() =>
+                                confirmDelete(
+                                  `Tem a certeza que deseja apagar a piscina "${pool.name}"?`,
+                                  () => dataSync.deletePool(pool.id),
+                                )
+                              }
+                              className="p-2 text-gray-400 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
