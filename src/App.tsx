@@ -262,14 +262,11 @@ function App() {
         setCurrentUser(user);
         setIsAuthenticated(true);
 
-        // Set up auth state listener for restored user
-        const unsubscribe = authService.onAuthStateChanged((authUser) => {
-          console.log(
-            "🔒 AUTH STATE CHANGE (restored user):",
-            authUser ? `User ${authUser.email} logged in` : "Auth user changed",
-          );
-        });
-        return () => unsubscribe();
+        // Firebase auth listener temporarily disabled to avoid errors
+        // const unsubscribe = authService.onAuthStateChanged((authUser) => {
+        //   console.log("🔒 AUTH STATE CHANGE (restored user):", authUser);
+        // });
+        // return () => unsubscribe();
       } catch (e) {
         console.warn("App init: Error parsing stored user:", e);
       }
@@ -2768,7 +2765,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Form */}
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <form className="space-y-8">
-                  {/* Informações Básicas */}
+                  {/* Informa��ões Básicas */}
                   <div>
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
