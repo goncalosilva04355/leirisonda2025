@@ -317,9 +317,22 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
+    console.log("🔔 Initializing notifications...");
     if ("Notification" in window) {
-      setPushPermission(Notification.permission);
-      setNotificationsEnabled(Notification.permission === "granted");
+      const permission = Notification.permission;
+      console.log("🔔 Current notification permission:", permission);
+      setPushPermission(permission);
+      setNotificationsEnabled(permission === "granted");
+
+      if (permission === "granted") {
+        console.log("✅ Notifications already granted");
+      } else if (permission === "denied") {
+        console.warn("❌ Notifications denied by user");
+      } else {
+        console.log("⏳ Notifications permission not yet requested");
+      }
+    } else {
+      console.warn("❌ Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -328,12 +341,12 @@ function App() {
         .register("/sw.js")
         .then((registration) => {
           console.log(
-            "Service Worker registered successfully:",
+            "✅ Service Worker registered successfully:",
             registration.scope,
           );
         })
         .catch((error) => {
-          console.log("Service Worker registration failed:", error);
+          console.error("❌ Service Worker registration failed:", error);
         });
     }
 
@@ -891,7 +904,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr��������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr����������-definidos por agora.",
     );
   };
 
@@ -5585,7 +5598,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Nome da pessoa responsável"
+                            placeholder="Nome da pessoa respons��vel"
                           />
                         </div>
                         <div>
