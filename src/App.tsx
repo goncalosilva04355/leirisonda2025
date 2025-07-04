@@ -125,6 +125,9 @@ function App() {
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [pushPermission, setPushPermission] = useState("default");
+  const [assignedWorks, setAssignedWorks] = useState([]);
 
   // Login form state
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
@@ -1110,7 +1113,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <Wrench className="h-8 w-8 text-gray-400" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Nenhuma manutenção registada
+                    Nenhuma manutenç��o registada
                   </h3>
                   <p className="text-gray-600 text-sm">
                     As manutenções aparecerão aqui quando forem criadas
@@ -2457,7 +2460,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Orçamentos e custos</li>
                       <li>• Prazos e cronogramas</li>
-                      <li>• Equipas responsáveis</li>
+                      <li>• Equipas respons��veis</li>
                       <li>• Estados de progresso</li>
                     </ul>
                   </div>
