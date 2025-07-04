@@ -402,7 +402,7 @@ function App() {
   };
 
   // Advanced settings functions
-  const handleAdvancedPasswordSubmit = (e) => {
+  const handleAdvancedPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (advancedPassword === "19867") {
       setIsAdvancedUnlocked(true);
@@ -2585,7 +2585,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="solar">Aquecimento Solar</option>
                         <option value="bomba-calor">Bomba de Calor</option>
                         <option value="resistencia">
-                          Resistência Elétrica
+                          Resistência El��trica
                         </option>
                         <option value="gas">Aquecimento a G��s</option>
                       </select>
