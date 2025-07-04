@@ -74,9 +74,9 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
       // 1. Verifica se há mudanças locais
       const hasLocalChanges = checkForLocalChanges();
 
-      // 2. Sincroniza dados se há mudanças ou se é a primeira vez
+      // 2. Sincroniza dados APENAS se há mudanças ou se é a primeira vez
       if (hasLocalChanges || !isInitialized.current) {
-        console.log("🔄 Iniciando sincronização automática...");
+        console.log("🔄 Mudanças detectadas - iniciando sincronização...");
 
         // Sincronização completa bidirecional
         const result = await fullSyncService.syncAllData();
@@ -100,10 +100,12 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
         }
 
         isInitialized.current = true;
+      } else {
+        console.log("✅ Nenhuma mudança detectada - skip sync");
       }
 
-      // 3. Agenda próxima verificação (apenas se não estamos em erro)
-      if (finalConfig.enabled && !syncStatus.current.error) {
+      // 3. Agenda próxima verificação SEMPRE (mas só sync se houver mudanças)
+      if (finalConfig.enabled) {
         syncTimeoutRef.current = setTimeout(
           performAutoSync,
           finalConfig.syncInterval,
