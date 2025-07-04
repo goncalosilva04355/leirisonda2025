@@ -342,8 +342,10 @@ function App() {
       } else if (alexandreWorks.length > 0) {
         console.log("ℹ️ Alexandre has works but notifications are not enabled");
       }
-    }
-  }, [currentUser, works, notificationsEnabled]);
+    };
+
+    handleAlexandreWorks();
+  }, [currentUser, works, notificationsEnabled, users, addWork]);
 
   // Data cleanup hook
   const {
@@ -2827,7 +2829,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    📍 {maint.location}
+                                    �� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -6810,7 +6812,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenção">Em Manutenção</option>
+                          <option value="Em Manutenção">Em Manuten��ão</option>
                         </select>
                       </div>
                       <div>
