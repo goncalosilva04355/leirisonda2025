@@ -2573,7 +2573,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nenhuma manutenção agendada
                     </h3>
                     <p className="text-gray-600 text-sm mb-4">
-                      As futuras manuten��ões aparecerão aqui quando forem
+                      As futuras manuten����ões aparecerão aqui quando forem
                       agendadas
                     </p>
                     <button
@@ -4979,7 +4979,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Limpar Dados do Sistema
                           </h4>
                           <p className="text-red-700 text-sm mb-3">
-                            Esta ação eliminará permanentemente:
+                            Esta ação eliminar�� permanentemente:
                           </p>
                           <ul className="text-red-700 text-sm space-y-1 mb-4">
                             <li>• Todas as obras ({works.length} registos)</li>
@@ -5282,7 +5282,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Quick Stats */}
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Estatísticas R��pidas
+                  Estatísticas R����pidas
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
@@ -6278,25 +6278,46 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       type="button"
                       onClick={(e) => {
                         const form = e.target.closest("form");
-                        const title = form.querySelector(
-                          'input[placeholder*="Título"]',
-                        ).value;
-                        const client = form.querySelector(
-                          'input[placeholder*="cliente"]',
-                        ).value;
-                        const location = form.querySelector(
-                          'input[placeholder*="Morada"]',
-                        ).value;
-                        const status = form.querySelector("select").value;
-                        const description =
-                          form.querySelector("textarea").value;
+                        const inputs = form.querySelectorAll(
+                          "input, select, textarea",
+                        );
+
+                        const title = inputs[0].value; // Título da Obra
+                        const client = inputs[1].value; // Cliente
+                        const location = inputs[2].value; // Local
+                        const status = inputs[3].value; // Estado
+                        const startDate = inputs[4].value; // Data de Início
+                        const expectedEndDate = inputs[5].value; // Data de Conclusão Prevista
+                        const assignedTo = inputs[6].value; // Responsável
+                        const budgetValue = inputs[7].value; // Valor Orçamentado
+                        const clientPhone = inputs[8].value; // Telefone do Cliente
+                        const clientEmail = inputs[9].value; // Email do Cliente
+                        const priority = inputs[10].value; // Prioridade
+                        const workType = inputs[11].value; // Tipo de Obra
+                        const description = inputs[12].value; // Descrição
+                        const technicalNotes = inputs[13].value; // Observações Técnicas
 
                         dataSync.updateWork(editingWork.id, {
                           title,
                           client,
                           location,
                           status,
+                          startDate: startDate
+                            ? new Date(startDate).toISOString()
+                            : undefined,
+                          expectedEndDate: expectedEndDate
+                            ? new Date(expectedEndDate).toISOString()
+                            : undefined,
+                          assignedTo,
+                          budgetValue: budgetValue
+                            ? parseFloat(budgetValue)
+                            : undefined,
+                          clientPhone,
+                          clientEmail,
+                          priority,
+                          workType,
                           description,
+                          technicalNotes,
                         });
 
                         alert("Obra atualizada com sucesso!");
