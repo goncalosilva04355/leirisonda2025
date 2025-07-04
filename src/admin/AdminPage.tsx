@@ -124,7 +124,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       case "data-management":
         return <DataManagementPanel />;
       case "firebase-config":
-        return <FirebaseConfig />;
+        return <FirebaseConfig onConfigured={() => {}} />;
       case "cross-device-users":
         return <CrossDeviceUserManager />;
       case "auto-sync-demo":

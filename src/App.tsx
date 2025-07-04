@@ -436,10 +436,13 @@ function App() {
       // Find works assigned to Alexandre
       const alexandreWorks = works.filter(
         (work) =>
-          work.assignedTo.toLowerCase().includes("alexandre") ||
-          work.assignedUsers?.some((user) =>
-            user.name.toLowerCase().includes("alexandre"),
-          ),
+          work &&
+          work.assignedTo &&
+          (work.assignedTo.toLowerCase().includes("alexandre") ||
+            work.assignedUsers?.some(
+              (user) =>
+                user.name && user.name.toLowerCase().includes("alexandre"),
+            )),
       );
 
       // Notify Alexandre about his assigned works
@@ -1072,6 +1075,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Check if current user is the one assigned (exact match or partial match for combined assignments)
     const isAssignedToCurrentUser =
       currentUser &&
+      assignedTo &&
       (assignedTo === currentUser.name ||
         assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
         currentUser.name.toLowerCase().includes(assignedTo.toLowerCase()));
@@ -1130,7 +1134,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç���es não est���o ativadas. Active-as primeiro nas configurações.",
+        "As notificaç����es não est���o ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -1355,7 +1359,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               ? {
                   ...u,
                   ...userForm,
-                  password: userForm.password || u.password,
                 }
               : u,
           ),
@@ -1425,6 +1428,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const setRolePermissions = (role) => {
+<<<<<<< HEAD
     let permissions = {
       obras: { view: false, create: false, edit: false, delete: false },
       manutencoes: { view: false, create: false, edit: false, delete: false },
@@ -1433,6 +1437,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       relatorios: { view: false, create: false, edit: false, delete: false },
       clientes: { view: false, create: false, edit: false, delete: false },
     };
+=======
+    let permissions = userForm.permissions;
+>>>>>>> origin/main
 
     switch (role) {
       case "super_admin":
@@ -5049,7 +5056,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-blue-600 text-xs">
                             Estado:{" "}
-                            {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
+                            {enablePhoneDialer ? "��� Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
@@ -6860,7 +6867,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const poolType = inputs[4].value; // Tipo de Piscina
                           const dimensions = inputs[5].value; // Dimensões
                           const volume = inputs[6].value; // Volume
-                          const filtrationSystem = inputs[7].value; // Sistema de Filtração
+                          const filtrationSystem = inputs[7].value; // Sistema de Filtra��ão
                           const installationDate = inputs[8].value; // Data de Instalação
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente

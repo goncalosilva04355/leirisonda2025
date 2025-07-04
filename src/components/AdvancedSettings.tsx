@@ -806,8 +806,9 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   </div>
                   <div className="text-center p-3 bg-white rounded border">
                     <div className="text-2xl font-bold text-orange-600">
-                      {dataSync?.works?.filter((work) => work.assignedTo)
-                        ?.length || 0}
+                      {dataSync?.works?.filter(
+                        (work) => work && work.assignedTo,
+                      )?.length || 0}
                     </div>
                     <div className="text-sm text-gray-600">
                       Obras Atribuídas
