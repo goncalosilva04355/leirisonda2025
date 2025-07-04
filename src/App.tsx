@@ -3402,6 +3402,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="text-sm text-gray-600">Clientes</div>
                   </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-cyan-600">
+                      {(() => {
+                        const waterBores = JSON.parse(
+                          localStorage.getItem("waterBores") || "[]",
+                        );
+                        return waterBores.length;
+                      })()}
+                    </div>
+                    <div className="text-sm text-gray-600">Furos de Água</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4017,7 +4028,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>✓</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
