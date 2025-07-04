@@ -2623,7 +2623,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manuten����ões
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -4003,7 +4003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data da Interven����o *
+                          Data da Interven��ão *
                         </label>
                         <input
                           type="date"
@@ -7131,7 +7131,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   return (
     <AutoSyncProvider
       enabled={true}
-      syncInterval={1000}
+      syncInterval={30000}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={false}
     >
