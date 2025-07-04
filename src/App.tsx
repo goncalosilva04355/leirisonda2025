@@ -119,6 +119,10 @@ function App() {
     error: syncError,
     syncWithFirebase,
     enableSync,
+    addPool,
+    addWork,
+    addMaintenance,
+    addClient,
   } = dataSync;
 
   // Keep local users state for user management
@@ -902,7 +906,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "nova-manutencao",
       icon: Wrench,
-      label: "Nova Manutenção",
+      label: "Nova Manuten��ão",
       path: "/manutencao/nova",
     },
     {
@@ -4304,7 +4308,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Fotografias</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>��</span>
                   <span>Observações e próxima manutenção</span>
                 </div>
               </div>
