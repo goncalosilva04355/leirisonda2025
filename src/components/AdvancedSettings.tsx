@@ -290,7 +290,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
         {/* Tab Navigation */}
         <div className="border-b border-gray-200">
-          <div className="grid grid-cols-7 text-sm">
+          <div className="grid grid-cols-8 text-sm">
             <button
               onClick={() => setActiveTab("firebase")}
               className={`py-4 px-3 text-center font-medium transition-colors ${
@@ -856,7 +856,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                     melhor experiência
                   </li>
                   <li>
-                    �� O service worker garante que as notificações funcionem em
+                    • O service worker garante que as notificações funcionem em
                     background
                   </li>
                 </ul>
