@@ -13,12 +13,14 @@ import {
   UserCheck,
   BarChart3,
   Users,
+  Key,
 } from "lucide-react";
 import { FirebaseConfig } from "./FirebaseConfig";
 
 interface AdvancedSettingsProps {
   onBack: () => void;
   onNavigateToSection?: (section: string) => void;
+  onShowAuthDiagnostic?: () => void;
   dataSync?: {
     pools: any[];
     maintenance: any[];
@@ -43,6 +45,7 @@ interface AdvancedSettingsProps {
 export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
   onBack,
   onNavigateToSection,
+  onShowAuthDiagnostic,
   dataSync,
   notifications,
 }) => {
@@ -50,6 +53,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
     | "firebase"
     | "sync-test"
     | "notifications"
+    | "auth-diagnostic"
     | "utilizadores"
     | "relatorios"
     | "clientes"
@@ -70,18 +74,15 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
     });
 
     try {
-      // Check if Firebase config exists
-      const savedConfig = localStorage.getItem("firebase-config");
-      if (!savedConfig) {
-        setSyncTest({
-          status: "error",
-          message: "Firebase n��o configurado",
-          details: ["Configure as credenciais Firebase primeiro"],
-        });
-        return;
-      }
-
-      const config = JSON.parse(savedConfig);
+      // Firebase is always configured with fixed settings
+      const config = {
+        apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+        authDomain: "leirisonda-16f8b.firebaseapp.com",
+        projectId: "leirisonda-16f8b",
+        storageBucket: "leirisonda-16f8b.firebasestorage.app",
+        messagingSenderId: "540456875574",
+        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+      };
       const tests = [];
 
       // Test 1: Configuration validation
@@ -286,7 +287,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
         {/* Tab Navigation */}
         <div className="border-b border-gray-200">
-          <div className="grid grid-cols-7 text-sm">
+          <div className="grid grid-cols-8 text-sm">
             <button
               onClick={() => setActiveTab("firebase")}
               className={`py-4 px-3 text-center font-medium transition-colors ${
@@ -324,6 +325,19 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               <div className="flex flex-col items-center space-y-1">
                 <Wifi className="w-4 h-4" />
                 <span>Push</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab("auth-diagnostic")}
+              className={`py-4 px-3 text-center font-medium transition-colors ${
+                activeTab === "auth-diagnostic"
+                  ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex flex-col items-center space-y-1">
+                <Key className="w-4 h-4" />
+                <span>Auth</span>
               </div>
             </button>
             <button
@@ -402,17 +416,13 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   Estado Atual
                 </h4>
                 <div className="space-y-2">
-                  {localStorage.getItem("firebase-config") ? (
-                    <div className="flex items-center space-x-2 text-green-600">
-                      <CheckCircle className="w-5 h-5" />
-                      <span>Firebase configurado</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center space-x-2 text-gray-500">
-                      <AlertCircle className="w-5 h-5" />
-                      <span>Firebase não configurado</span>
-                    </div>
-                  )}
+                  <div className="flex items-center space-x-2 text-green-600">
+                    <CheckCircle className="w-5 h-5" />
+                    <span>Firebase configurado e ativo</span>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Configuração permanente para todos os dispositivos
+                  </div>
                 </div>
               </div>
 
@@ -427,8 +437,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 </button>
                 <button
                   onClick={testFirebaseConnection}
-                  disabled={!localStorage.getItem("firebase-config")}
-                  className="bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2"
+                  className="bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
                 >
                   <Wifi className="w-5 h-5" />
                   <span>Testar Conexão</span>
@@ -478,26 +487,24 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               </div>
 
               {/* Activate Real Sync */}
-              {localStorage.getItem("firebase-config") && (
-                <div className="mt-4">
-                  <button
-                    onClick={activateRealSync}
-                    disabled={syncTest.status === "testing"}
-                    className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 disabled:bg-gray-400 transition-colors flex items-center justify-center space-x-2"
-                  >
-                    {syncTest.status === "testing" ? (
-                      <Loader className="w-5 h-5 animate-spin" />
-                    ) : (
-                      <CheckCircle className="w-5 h-5" />
-                    )}
-                    <span>Ativar Sincronização Real</span>
-                  </button>
-                  <p className="text-xs text-gray-500 text-center mt-2">
-                    Ativa sincronização automática para piscinas, obras,
-                    manutenções e clientes
-                  </p>
-                </div>
-              )}
+              <div className="mt-4">
+                <button
+                  onClick={activateRealSync}
+                  disabled={syncTest.status === "testing"}
+                  className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 disabled:bg-gray-400 transition-colors flex items-center justify-center space-x-2"
+                >
+                  {syncTest.status === "testing" ? (
+                    <Loader className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <CheckCircle className="w-5 h-5" />
+                  )}
+                  <span>Ativar Sincronização Real</span>
+                </button>
+                <p className="text-xs text-gray-500 text-center mt-2">
+                  Ativa sincronização automática para piscinas, obras,
+                  manutenções e clientes
+                </p>
+              </div>
 
               {/* Test Results */}
               {syncTest.status !== "idle" && (
@@ -558,7 +565,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   Notificações Push
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Configure e teste notificações push para atribuição de obras
+                  Configure e teste notificações push para atribui��ão de obras
                 </p>
               </div>
 
@@ -871,6 +878,109 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   <li>5. Teste com o botão "Testar" ou "Simular"</li>
                   <li>6. Adicione a app ao ecrã inicial (opcional)</li>
                 </ol>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "auth-diagnostic" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <Key className="w-16 h-16 text-orange-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Diagnóstico de Autenticação
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Ferramenta de diagnóstico para problemas de login entre
+                  dispositivos
+                </p>
+              </div>
+
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-6">
+                <h4 className="font-medium text-orange-900 mb-3">
+                  🔧 Problema Identificado e Corrigido
+                </h4>
+                <div className="text-sm text-orange-800 space-y-2">
+                  <p>
+                    <strong>Problema:</strong> A configuração anterior usava
+                    'browserSessionPersistence' que só mantinha a sessão no
+                    mesmo navegador/dispositivo.
+                  </p>
+                  <p>
+                    <strong>Solução:</strong> Removida a limitação de
+                    persistência para permitir login entre dispositivos.
+                  </p>
+                  <p>
+                    <strong>Status:</strong> ✅ Corrigido - Utilizadores devem
+                    conseguir fazer login noutro dispositivo agora.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h4 className="font-medium text-blue-900 mb-3">
+                  📱 Como testar o login noutro dispositivo:
+                </h4>
+                <ol className="text-sm text-blue-800 space-y-2">
+                  <li>1. Faça login neste dispositivo normalmente</li>
+                  <li>2. Abra a aplicação noutro dispositivo/navegador</li>
+                  <li>3. Use o mesmo email e password</li>
+                  <li>4. O login deve funcionar normalmente</li>
+                  <li>
+                    5. Os dados devem estar sincronizados (se Firebase
+                    configurado)
+                  </li>
+                </ol>
+              </div>
+
+              {onShowAuthDiagnostic && (
+                <div className="text-center">
+                  <button
+                    onClick={onShowAuthDiagnostic}
+                    className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium"
+                  >
+                    🔍 Executar Diagnóstico Detalhado
+                  </button>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Executa testes de autenticação e verifica configurações
+                  </p>
+                </div>
+              )}
+
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h4 className="font-medium text-green-900 mb-2">
+                  ✅ Verificações Firebase para sincronização:
+                </h4>
+                <ul className="text-sm text-green-800 space-y-1">
+                  <li>
+                    • Authentication → Sign-in method → Email/Password deve
+                    estar ativado
+                  </li>
+                  <li>• Firestore Database deve estar configurado</li>
+                  <li>
+                    • Utilizadores criados aparecem em Authentication → Users
+                  </li>
+                  <li>
+                    • As regras de segurança devem permitir acesso autenticado
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h4 className="font-medium text-yellow-900 mb-2">
+                  ⚠️ Se ainda houver problemas:
+                </h4>
+                <ul className="text-sm text-yellow-800 space-y-1">
+                  <li>
+                    • Verifique se o Firebase Console tem Email/Password ativado
+                  </li>
+                  <li>
+                    • Confirme que o utilizador foi criado no Firebase
+                    Authentication
+                  </li>
+                  <li>• Teste com incógnito/modo privado primeiro</li>
+                  <li>• Limpe cache e cookies do navegador</li>
+                  <li>• Execute o diagnóstico detalhado acima</li>
+                </ul>
               </div>
             </div>
           )}

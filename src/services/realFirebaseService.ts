@@ -1,4 +1,4 @@
-import { initializeApp, FirebaseApp } from "firebase/app";
+import { FirebaseApp } from "firebase/app";
 import {
   getDatabase,
   Database,
@@ -11,6 +11,7 @@ import {
   remove,
   update,
 } from "firebase/database";
+import { app as firebaseApp } from "../firebase/config";
 
 interface FirebaseConfig {
   apiKey: string;
@@ -27,51 +28,35 @@ class RealFirebaseService {
   private database: Database | null = null;
   private isInitialized = false;
 
-  // Initialize Firebase with config from localStorage
+  // Initialize Firebase using existing app instance
   initialize(): boolean {
     try {
-      const configData = localStorage.getItem("firebase-config");
-      if (!configData) {
-        console.log("No Firebase config found in localStorage");
+      if (!firebaseApp) {
+        console.error("Firebase app not available from config");
         return false;
       }
 
-      const config: FirebaseConfig = JSON.parse(configData);
-
-      // Validate required fields
-      const requiredFields = ["apiKey", "authDomain", "projectId"];
-      const missingFields = requiredFields.filter((field) => !config[field]);
-
-      if (missingFields.length > 0) {
-        console.error("Missing Firebase config fields:", missingFields);
-        return false;
-      }
-
-      // Set default databaseURL if not provided
-      if (!config.databaseURL) {
-        config.databaseURL = `https://${config.projectId}-default-rtdb.firebaseio.com/`;
-      }
-
-      this.app = initializeApp(config);
+      this.app = firebaseApp;
       this.database = getDatabase(this.app);
       this.isInitialized = true;
 
-      console.log("Firebase initialized successfully");
+      console.log("Firebase database service initialized successfully");
       return true;
     } catch (error) {
-      console.error("Firebase initialization failed:", error);
+      console.error("Firebase database initialization failed:", error);
       return false;
     }
   }
 
   // Check if Firebase is ready
   isReady(): boolean {
-    return this.isInitialized && this.database !== null;
+    return this.isInitialized && this.database !== null && this.app !== null;
   }
 
   // Test connection
   async testConnection(): Promise<boolean> {
     if (!this.isReady()) {
+      console.warn("Firebase service not ready for connection test");
       return false;
     }
 
@@ -79,9 +64,13 @@ class RealFirebaseService {
       const testRef = ref(this.database!, "test");
       await set(testRef, { timestamp: Date.now() });
       await remove(testRef);
+      console.log("Firebase connection test successful");
       return true;
     } catch (error) {
-      console.error("Firebase connection test failed:", error);
+      console.warn(
+        "Firebase connection test failed, will use local mode:",
+        error,
+      );
       return false;
     }
   }

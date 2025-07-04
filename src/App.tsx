@@ -30,10 +30,18 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { InstallPrompt } from "./components/InstallPrompt";
+import { AuthSyncDiagnostic } from "./components/AuthSyncDiagnostic";
+import { UserPermissionsManager } from "./components/UserPermissionsManager";
+import { RegisterForm } from "./components/RegisterForm";
+import { FirebaseStatus } from "./components/FirebaseStatus";
+import { UserDebugger } from "./components/UserDebugger";
+import { FullSyncManager } from "./components/FullSyncManager";
+import { AutoSyncNotification } from "./components/AutoSyncNotification";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
+import { useAutoSync } from "./hooks/useAutoSync";
 
 // Mock users database
 const initialUsers = [
@@ -127,6 +135,7 @@ function App() {
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
   const [showDataCleanup, setShowDataCleanup] = useState(false);
+  const [showAuthDiagnostic, setShowAuthDiagnostic] = useState(false);
 
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
@@ -153,6 +162,11 @@ function App() {
     isLoading: cleanupLoading,
     error: cleanupError,
   } = useDataCleanup();
+
+  // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
+  const autoSyncData = useAutoSync();
+  const { syncStatus, isAutoSyncing } = autoSyncData;
+  const autoSyncLastSync = autoSyncData.lastSync;
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -654,7 +668,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      console.log("🔄 Initiating logout process...");
+      console.log("�� Initiating logout process...");
 
       // Close sidebar immediately
       setSidebarOpen(false);
@@ -879,7 +893,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS A��ÕES:
+PRÓXIMAS A���ÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -911,7 +925,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -921,7 +935,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat����rio personalizado em desenvolvimento. Use os relatórios pr������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr��������-definidos por agora.",
     );
   };
 
@@ -1135,7 +1149,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relat��rio PDF. Tente novamente.");
+      alert("Erro ao gerar o relat����rio PDF. Tente novamente.");
     }
   };
 
@@ -3915,7 +3929,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar intervenção de manutenç�����o
+                      Registar interven��ão de manutenç�����o
                     </p>
                   </div>
                 </div>
@@ -4177,7 +4191,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {/* Chemical Products */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Produtos Qu����micos Utilizados
+                      Produtos Qu�����micos Utilizados
                     </h3>
                     <div className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -4481,230 +4495,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <UserCheck className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-2xl font-bold text-gray-900">
-                        Utilizadores
-                      </h1>
-                      <p className="text-gray-600 text-sm">
-                        Gestão de utilizadores do sistema
-                      </p>
-                    </div>
-                  </div>
-                  {/* SECURITY: Only super admin can create new users */}
-                  {currentUser?.role === "super_admin" && (
-                    <button
-                      onClick={() => {
-                        setUserForm({
-                          name: "",
-                          email: "",
-                          role: "technician",
-                          active: true,
-                          permissions: {},
-                        });
-                        setEditingUser(null);
-                        setShowUserForm(true);
-                      }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                    >
-                      <UserPlus className="h-4 w-4" />
-                      <span>Novo Utilizador</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Search */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <input
-                  type="text"
-                  placeholder="Pesquisar utilizadores..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Users List */}
-              <div className="space-y-4">
-                {users.map((user) => (
-                  <div
-                    key={user.id}
-                    className="bg-white rounded-lg shadow-sm p-6"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                          <UserCheck className="h-6 w-6 text-gray-600" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {user.name}
-                          </h3>
-                          <p className="text-gray-600">{user.email}</p>
-                          <div className="flex items-center space-x-4 mt-2">
-                            <span className="text-sm text-gray-500">
-                              Perfil: {user.role}
-                            </span>
-                            <span
-                              className={`text-sm px-2 py-1 rounded-full ${
-                                user.active
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-red-100 text-red-800"
-                              }`}
-                            >
-                              {user.active ? "Ativo" : "Inativo"}
-                            </span>
-                            <span className="text-sm text-gray-500">
-                              Criado: {user.createdAt}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        {/* SECURITY: Only super admin can edit/delete users */}
-                        {currentUser?.role === "super_admin" && (
-                          <>
-                            <button
-                              onClick={() => handleEditUser(user)}
-                              className="p-2 text-gray-400 hover:text-gray-600"
-                            >
-                              <Edit2 className="h-4 w-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteUser(user.id)}
-                              className="p-2 text-gray-400 hover:text-red-600"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* User Form Modal - SECURITY: Only super admin can access */}
-              {showUserForm && currentUser?.role === "super_admin" && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                  <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-                    <h3 className="text-lg font-semibold mb-4">
-                      {editingUser ? "Editar Utilizador" : "Novo Utilizador"}
-                    </h3>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Nome
-                        </label>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          value={userForm.name}
-                          onChange={(e) =>
-                            setUserForm({ ...userForm, name: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          value={userForm.email}
-                          onChange={(e) =>
-                            setUserForm({ ...userForm, email: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Password
-                        </label>
-                        <input
-                          type="password"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          value={userForm.password}
-                          onChange={(e) =>
-                            setUserForm({
-                              ...userForm,
-                              password: e.target.value,
-                            })
-                          }
-                          placeholder={
-                            editingUser
-                              ? "Deixe vazio para manter a senha atual"
-                              : "Digite a senha"
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Perfil
-                        </label>
-                        <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          value={userForm.role}
-                          onChange={(e) =>
-                            setUserForm({ ...userForm, role: e.target.value })
-                          }
-                        >
-                          <option value="super_admin">Super Admin</option>
-                          <option value="manager">Gestor</option>
-                          <option value="technician">T�����cnico</option>
-                        </select>
-                      </div>
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id="active"
-                          className="mr-2"
-                          checked={userForm.active}
-                          onChange={(e) =>
-                            setUserForm({
-                              ...userForm,
-                              active: e.target.checked,
-                            })
-                          }
-                        />
-                        <label
-                          htmlFor="active"
-                          className="text-sm text-gray-700"
-                        >
-                          Utilizador ativo
-                        </label>
-                      </div>
-                    </div>
-                    <div className="flex justify-end space-x-3 mt-6">
-                      <button
-                        onClick={() => {
-                          setShowUserForm(false);
-                          setEditingUser(null);
-                        }}
-                        className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        onClick={() => {
-                          handleSaveUser();
-                          setShowUserForm(false);
-                          setEditingUser(null);
-                        }}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                      >
-                        Guardar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <UserPermissionsManager />
             </div>
           </div>
         );
@@ -4713,16 +4504,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Configurações
-                </h1>
-                <p className="text-gray-600 text-sm">
-                  Gerir definições do sistema
-                </p>
-              </div>
-
               {/* System Information */}
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -4966,7 +4747,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             dispositivo
                           </li>
                           <li>
-                            • A marcação automática funciona melhor em
+                            • A marcação autom��tica funciona melhor em
                             dispositivos móveis
                           </li>
                           <li>• O Google Maps abre numa nova janela/tab</li>
@@ -5130,7 +4911,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>�� Trabalhos realizados</li>
-                      <li>• T����cnicos responsáveis</li>
+                      <li>• T������cnicos responsáveis</li>
                       <li>• Datas e duraç��es</li>
                       <li>• Estados e observações</li>
                     </ul>
@@ -5167,7 +4948,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Orçamentos e custos</li>
                       <li>• Prazos e cronogramas</li>
                       <li>• Equipas respons��veis</li>
-                      <li>����� Estados de progresso</li>
+                      <li>������� Estados de progresso</li>
                     </ul>
                   </div>
                   <button
@@ -5257,7 +5038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Relatório Personalizado
+                        Relat��rio Personalizado
                       </h3>
                       <p className="text-sm text-gray-600">
                         Configure os dados
@@ -6430,7 +6211,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       >
                         <option value="Ativa">Ativa</option>
                         <option value="Inativa">Inativa</option>
-                        <option value="Em Manutenção">Em Manutenção</option>
+                        <option value="Em Manutenç��o">Em Manutenç��o</option>
                       </select>
                     </div>
                     <div>
@@ -6556,7 +6337,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         const dimensions = inputs[5].value; // Dimensões
                         const volume = inputs[6].value; // Volume
                         const filtrationSystem = inputs[7].value; // Sistema de Filtração
-                        const installationDate = inputs[8].value; // Data de Instalação
+                        const installationDate = inputs[8].value; // Data de Instala��ão
                         const clientPhone = inputs[9].value; // Telefone do Cliente
                         const clientEmail = inputs[10].value; // Email do Cliente
                         const observations = inputs[11].value; // Observações
@@ -6674,7 +6455,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Duração Estimada (horas)
+                        Dura��ão Estimada (horas)
                       </label>
                       <input
                         type="number"
@@ -6818,10 +6599,56 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }}
                       className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                     >
-                      Guardar Alterações
+                      Guardar Alteraç��es
                     </button>
                   </div>
                 </form>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "register":
+        // SECURITY: Only super admin can register new users
+        if (currentUser?.role !== "super_admin") {
+          return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+              <div className="text-center">
+                <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                  Acesso Restrito
+                </h2>
+                <p className="text-gray-500">
+                  Apenas super administradores podem criar utilizadores.
+                </p>
+                <button
+                  onClick={() => navigateToSection("dashboard")}
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Voltar ao Dashboard
+                </button>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <button
+                  onClick={() => navigateToSection("utilizadores")}
+                  className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                >
+                  ← Voltar aos Utilizadores
+                </button>
+                <RegisterForm
+                  onRegisterSuccess={() => {
+                    navigateToSection("utilizadores");
+                  }}
+                  onBackToLogin={() => {
+                    navigateToSection("utilizadores");
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -7041,11 +6868,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       "timestamp:",
       new Date().toISOString(),
     );
+
+    // Show Auth Diagnostic if requested
+    if (showAuthDiagnostic) {
+      return (
+        <div className="min-h-screen bg-gray-50">
+          <div className="max-w-4xl mx-auto py-8">
+            <button
+              onClick={() => setShowAuthDiagnostic(false)}
+              className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+            >
+              ← Voltar
+            </button>
+            <AuthSyncDiagnostic />
+          </div>
+        </div>
+      );
+    }
+
     if (showAdvancedSettings) {
       if (isAdvancedUnlocked) {
         return (
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
+            onShowAuthDiagnostic={() => setShowAuthDiagnostic(true)}
             onNavigateToSection={(section) => {
               console.log(`🔄 Navegando para seção: ${section}`);
 
@@ -7289,7 +7135,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     isLoading={syncLoading}
                     lastSync={lastSync}
                     error={syncError}
-                    syncEnabled={!!localStorage.getItem("firebase-config")}
+                    syncEnabled={true}
                   />
                 </div>
               </div>
@@ -7371,50 +7217,74 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </button>
             )}
 
-            <button
-              onClick={() => {
-                navigateToSection("nova-manutencao");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "nova-manutencao"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Plus className="h-5 w-5" />
-              <span>Nova Manutenção</span>
-            </button>
+            {hasPermission("manutencoes", "create") && (
+              <button
+                onClick={() => {
+                  navigateToSection("nova-manutencao");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "nova-manutencao"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Plus className="h-5 w-5" />
+                <span>Nova Manutenção</span>
+              </button>
+            )}
 
-            <button
-              onClick={() => {
-                navigateToSection("piscinas");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "piscinas"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Waves className="h-5 w-5" />
-              <span>Piscinas</span>
-            </button>
+            {hasPermission("piscinas", "view") && (
+              <button
+                onClick={() => {
+                  navigateToSection("piscinas");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "piscinas"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Waves className="h-5 w-5" />
+                <span>Piscinas</span>
+              </button>
+            )}
 
-            <button
-              onClick={() => {
-                navigateToSection("futuras-manutencoes");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "futuras-manutencoes"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <BarChart3 className="h-5 w-5" />
-              <span>Futuras Manutenções</span>
-            </button>
+            {/* Only show Users button for super admins */}
+            {currentUser?.role === "super_admin" && (
+              <button
+                onClick={() => {
+                  navigateToSection("utilizadores");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "utilizadores"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Users className="h-5 w-5" />
+                <span>Utilizadores</span>
+              </button>
+            )}
+
+            {hasPermission("manutencoes", "view") && (
+              <button
+                onClick={() => {
+                  navigateToSection("futuras-manutencoes");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "futuras-manutencoes"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <BarChart3 className="h-5 w-5" />
+                <span>Futuras Manutenções</span>
+              </button>
+            )}
           </nav>
 
           {/* User Section */}
@@ -7526,7 +7396,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                       disabled={!enableMapsRedirect}
                     >
-                      📍 {selectedWork.location}
+                      ��� {selectedWork.location}
                     </button>
                   </div>
                   <div>
@@ -7630,6 +7500,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       {/* Install Prompt for Mobile */}
       <InstallPrompt />
+
+      {/* Auto-sync notification */}
+      <AutoSyncNotification
+        syncStatus={syncStatus}
+        lastSync={autoSyncLastSync}
+        onDismiss={syncStatus === "completed" ? () => {} : undefined}
+      />
+
+      {/* Debug Components - Remove in production */}
+      <FullSyncManager />
+      <FirebaseStatus />
+      <UserDebugger />
     </div>
   );
 }

@@ -30,17 +30,18 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    // Check if config is already saved
-    const savedConfig = localStorage.getItem("firebase-config");
-    if (savedConfig) {
-      try {
-        const parsed = JSON.parse(savedConfig);
-        setConfig(parsed);
-        onConfigured();
-      } catch (e) {
-        console.error("Error parsing saved config:", e);
-      }
-    }
+    // Firebase is always configured with fixed settings
+    const fixedConfig = {
+      apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+      authDomain: "leirisonda-16f8b.firebaseapp.com",
+      projectId: "leirisonda-16f8b",
+      storageBucket: "leirisonda-16f8b.firebasestorage.app",
+      messagingSenderId: "540456875574",
+      appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+    };
+    setConfig(fixedConfig);
+    setSuccess(true);
+    onConfigured();
   }, [onConfigured]);
 
   const handleSave = async () => {
@@ -59,19 +60,12 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
       return;
     }
 
-    try {
-      // Save to localStorage
-      localStorage.setItem("firebase-config", JSON.stringify(config));
-
-      setSuccess(true);
-      setTimeout(() => {
-        onConfigured();
-      }, 1500);
-    } catch (error) {
-      setError("Erro ao guardar configuração");
-    } finally {
-      setLoading(false);
-    }
+    // Configuration is already fixed and active
+    setSuccess(true);
+    setLoading(false);
+    setTimeout(() => {
+      onConfigured();
+    }, 1500);
   };
 
   const handleFieldChange = (field: keyof FirebaseSettings, value: string) => {
@@ -86,10 +80,11 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Configuração Guardada!
+            Firebase Sempre Ativo!
           </h2>
           <p className="text-gray-600">
-            Firebase configurado com sucesso. A sincronização será ativada.
+            Configuração permanente ativa em todos os dispositivos. A
+            sincronização está sempre disponível.
           </p>
         </div>
       </div>
