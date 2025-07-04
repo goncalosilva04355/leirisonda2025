@@ -4617,7 +4617,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Quick Stats */}
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Estatísticas Rápidas
+                  Estatísticas R��pidas
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
@@ -5717,7 +5717,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       <div
         className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo Header */}
