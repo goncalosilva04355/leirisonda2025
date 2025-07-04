@@ -18,7 +18,7 @@
     "start": "node dist/server/node-build.mjs",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
-    "typecheck": "tsc",
+    "typecheck": "tsc --noEmit --skipLibCheck",
     "builder:sync": "echo 'Builder.io sync trigger - Leirisonda ready'",
     "builder:force-push": "echo 'Force pushing 80 commits to GitHub...'"
   },
@@ -31,6 +31,7 @@
     "@capacitor/status-bar": "^7.0.1",
     "archiver": "^7.0.1",
     "express": "^4.18.2",
+    "firebase": "^11.10.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
     "xlsx": "^0.18.5",

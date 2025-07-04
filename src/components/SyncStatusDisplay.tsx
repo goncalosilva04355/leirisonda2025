@@ -1,0 +1,59 @@
+import React from "react";
+import { Wifi, WifiOff, CheckCircle, AlertCircle, Loader } from "lucide-react";
+
+interface SyncStatusDisplayProps {
+  isLoading: boolean;
+  lastSync: Date | null;
+  error: string | null;
+  syncEnabled: boolean;
+}
+
+export const SyncStatusDisplay: React.FC<SyncStatusDisplayProps> = ({
+  isLoading,
+  lastSync,
+  error,
+  syncEnabled,
+}) => {
+  if (!syncEnabled) {
+    return (
+      <div className="flex items-center space-x-2 text-gray-500 text-xs">
+        <WifiOff className="w-3 h-3" />
+        <span>Offline</span>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center space-x-2 text-blue-600 text-xs">
+        <Loader className="w-3 h-3 animate-spin" />
+        <span>Sincronizando...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center space-x-2 text-red-600 text-xs">
+        <AlertCircle className="w-3 h-3" />
+        <span>Erro: {error}</span>
+      </div>
+    );
+  }
+
+  if (lastSync) {
+    return (
+      <div className="flex items-center space-x-2 text-green-600 text-xs">
+        <CheckCircle className="w-3 h-3" />
+        <span>Sincronizado: {lastSync.toLocaleTimeString("pt-PT")}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center space-x-2 text-yellow-600 text-xs">
+      <Wifi className="w-3 h-3" />
+      <span>Aguardando sincronização</span>
+    </div>
+  );
+};

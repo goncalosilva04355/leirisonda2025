@@ -1,70 +1,90 @@
-const CACHE_NAME = "leirisonda-v1.0.0";
-const urlsToCache = [
-  "/",
-  "/static/js/bundle.js",
-  "/static/css/main.css",
-  "/manifest.json",
-];
+// Service Worker for Push Notifications
+const CACHE_NAME = "leirisonda-v1";
 
 // Install event
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => {
-        console.log("Leirisonda cache opened");
-        return cache.addAll(urlsToCache);
-      })
-      .then(() => {
-        console.log("Leirisonda files cached");
-        return self.skipWaiting();
-      }),
-  );
-});
-
-// Fetch event
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Return cached version or fetch from network
-      return response || fetch(event.request);
-    }),
-  );
+  console.log("Service Worker installing...");
+  self.skipWaiting();
 });
 
 // Activate event
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches
-      .keys()
-      .then((cacheNames) => {
-        return Promise.all(
-          cacheNames.map((cacheName) => {
-            if (cacheName !== CACHE_NAME) {
-              console.log("Deleting old cache:", cacheName);
-              return caches.delete(cacheName);
-            }
-          }),
-        );
-      })
-      .then(() => {
-        return self.clients.claim();
-      }),
-  );
+  console.log("Service Worker activating...");
+  event.waitUntil(self.clients.claim());
 });
 
-// Push notification event (for future use)
+// Push event for notifications
 self.addEventListener("push", (event) => {
+  console.log("Push event received:", event);
+
   const options = {
-    body: event.data ? event.data.text() : "Nova notificação da Leirisonda",
-    icon: "/manifest-icon-192.png",
-    badge: "/manifest-icon-192.png",
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1,
-    },
+    body: event.data ? event.data.text() : "Nova notificação Leirisonda",
+    icon: "https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=192",
+    badge:
+      "https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=96",
+    tag: "leirisonda-notification",
+    timestamp: Date.now(),
+    requireInteraction: true,
+    actions: [
+      {
+        action: "view",
+        title: "Ver Detalhes",
+      },
+      {
+        action: "dismiss",
+        title: "Dispensar",
+      },
+    ],
   };
 
   event.waitUntil(self.registration.showNotification("Leirisonda", options));
+});
+
+// Notification click event
+self.addEventListener("notificationclick", (event) => {
+  console.log("Notification clicked:", event);
+
+  event.notification.close();
+
+  if (event.action === "view") {
+    // Open or focus the app
+    event.waitUntil(
+      self.clients.matchAll({ type: "window" }).then((clientList) => {
+        for (const client of clientList) {
+          if (client.url.includes("leirisonda") && "focus" in client) {
+            return client.focus();
+          }
+        }
+        if (self.clients.openWindow) {
+          return self.clients.openWindow("/");
+        }
+      }),
+    );
+  }
+});
+
+// Background sync for offline functionality
+self.addEventListener("sync", (event) => {
+  console.log("Background sync:", event.tag);
+
+  if (event.tag === "background-sync") {
+    event.waitUntil(
+      // Perform background sync operations
+      Promise.resolve().then(() => {
+        console.log("Performing background sync...");
+      }),
+    );
+  }
+});
+
+// Fetch event for caching (optional)
+self.addEventListener("fetch", (event) => {
+  // Basic caching strategy for offline support
+  if (event.request.method === "GET") {
+    event.respondWith(
+      caches.match(event.request).then((response) => {
+        return response || fetch(event.request);
+      }),
+    );
+  }
 });

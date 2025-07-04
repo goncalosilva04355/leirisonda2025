@@ -1,0 +1,4707 @@
+import React, { useState, useEffect } from "react";
+import {
+  Building2,
+  Menu,
+  X,
+  Home,
+  Plus,
+  Wrench,
+  Waves,
+  BarChart3,
+  Users,
+  UserCheck,
+  Settings,
+  LogOut,
+  Eye,
+  EyeOff,
+  Edit2,
+  Trash2,
+  Save,
+  UserPlus,
+  Shield,
+  Check,
+  AlertCircle,
+  Download,
+} from "lucide-react";
+import jsPDF from "jspdf";
+import { FirebaseConfig } from "./components/FirebaseConfig";
+import { AdvancedSettings } from "./components/AdvancedSettings";
+import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
+import { InstallPrompt } from "./components/InstallPrompt";
+import { useDataSync } from "./hooks/useDataSync";
+
+// Mock authentication and user data
+const ADMIN_USER = {
+  email: "gongonsilva@gmail.com",
+  password: "19867gsf",
+  name: "Gonçalo Fonseca",
+  role: "super_admin",
+};
+
+// Mock users database
+const initialUsers = [
+  {
+    id: 1,
+    name: "Gonçalo Fonseca",
+    email: "gongonsilva@gmail.com",
+    role: "super_admin",
+    permissions: {
+      obras: { view: true, create: true, edit: true, delete: true },
+      manutencoes: { view: true, create: true, edit: true, delete: true },
+      piscinas: { view: true, create: true, edit: true, delete: true },
+      utilizadores: { view: true, create: true, edit: true, delete: true },
+      relatorios: { view: true, create: true, edit: true, delete: true },
+      clientes: { view: true, create: true, edit: true, delete: true },
+    },
+    active: true,
+    createdAt: "2024-01-01",
+  },
+  {
+    id: 2,
+    name: "Maria Silva",
+    email: "maria.silva@leirisonda.pt",
+    role: "manager",
+    permissions: {
+      obras: { view: true, create: true, edit: true, delete: false },
+      manutencoes: { view: true, create: true, edit: true, delete: false },
+      piscinas: { view: true, create: true, edit: true, delete: false },
+      utilizadores: { view: true, create: false, edit: false, delete: false },
+      relatorios: { view: true, create: true, edit: false, delete: false },
+      clientes: { view: true, create: true, edit: true, delete: false },
+    },
+    active: true,
+    createdAt: "2024-01-15",
+  },
+  {
+    id: 3,
+    name: "João Santos",
+    email: "joao.santos@leirisonda.pt",
+    role: "technician",
+    permissions: {
+      obras: { view: true, create: false, edit: true, delete: false },
+      manutencoes: { view: true, create: true, edit: true, delete: false },
+      piscinas: { view: true, create: false, edit: true, delete: false },
+      utilizadores: { view: false, create: false, edit: false, delete: false },
+      relatorios: { view: true, create: false, edit: false, delete: false },
+      clientes: { view: true, create: false, edit: false, delete: false },
+    },
+    active: true,
+    createdAt: "2024-02-01",
+  },
+];
+
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(ADMIN_USER);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("futuras-manutencoes");
+
+  // Custom setActiveSection that updates URL hash
+  const navigateToSection = (section: string) => {
+    setActiveSection(section);
+    // Update URL hash for PWA support
+    if (section !== "futuras-manutencoes") {
+      window.history.replaceState(null, "", `#${section}`);
+    } else {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  };
+  const [showUserForm, setShowUserForm] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showSettingsPasswordModal, setShowSettingsPasswordModal] =
+    useState(false);
+  const [showSettingsPage, setShowSettingsPage] = useState(false);
+  const [settingsPassword, setSettingsPassword] = useState("");
+  const [settingsPasswordError, setSettingsPasswordError] = useState("");
+  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
+  const [advancedPassword, setAdvancedPassword] = useState("");
+  const [advancedPasswordError, setAdvancedPasswordError] = useState("");
+  const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
+
+  // Data sync hook - manages all data with optional Firebase sync
+  const dataSync = useDataSync();
+  const {
+    pools,
+    maintenance,
+    futureMaintenance,
+    works,
+    clients,
+    isLoading: syncLoading,
+    lastSync,
+    error: syncError,
+    syncWithFirebase,
+    enableSync,
+    addPool,
+    addWork,
+    addMaintenance,
+    addClient,
+  } = dataSync;
+
+  // Keep local users state for user management
+  const [users, setUsers] = useState(initialUsers);
+  const [selectedWorkType, setSelectedWorkType] = useState("");
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [interventionSaved, setInterventionSaved] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [pushPermission, setPushPermission] = useState("default");
+  const [assignedWorks, setAssignedWorks] = useState<any[]>([]);
+  const [uploadedPhotos, setUploadedPhotos] = useState<any[]>([]);
+  const [showPhotoGallery, setShowPhotoGallery] = useState(false);
+  const [selectedPhotos, setSelectedPhotos] = useState<any[]>([]);
+
+  // Maintenance form state
+  const [maintenanceForm, setMaintenanceForm] = useState({
+    poolId: "",
+    date: new Date().toISOString().split("T")[0],
+    startTime: "",
+    endTime: "",
+    technician: "",
+    vehicle: "",
+    pH: "",
+    chlorine: "",
+    alkalinity: "",
+    temperature: "",
+    workPerformed: "",
+    otherWork: "",
+    problems: "",
+    observations: "",
+    nextMaintenance: "",
+    status: "completed",
+  });
+
+  // Initialize notification permission state and register service worker
+  useEffect(() => {
+    if ("Notification" in window) {
+      setPushPermission(Notification.permission);
+      setNotificationsEnabled(Notification.permission === "granted");
+    }
+
+    // Register service worker for better push notification support
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          console.log(
+            "Service Worker registered successfully:",
+            registration.scope,
+          );
+        })
+        .catch((error) => {
+          console.log("Service Worker registration failed:", error);
+        });
+    }
+
+    // Handle URL hash for PWA shortcuts
+    const handleHashChange = () => {
+      const hash = window.location.hash.substring(1); // Remove the '#'
+      if (hash && isAuthenticated) {
+        setActiveSection(hash);
+      }
+    };
+
+    // Check initial hash on load if authenticated
+    if (isAuthenticated) {
+      handleHashChange();
+    }
+
+    // Listen for hash changes
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, [isAuthenticated]);
+
+  // Handle hash routing when authentication state changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      const hash = window.location.hash.substring(1);
+      if (hash) {
+        setActiveSection(hash);
+      }
+    }
+  }, [isAuthenticated]);
+
+  // Login form state
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  const [loginError, setLoginError] = useState("");
+
+  // User form state
+  const [userForm, setUserForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "technician",
+    permissions: {
+      obras: { view: false, create: false, edit: false, delete: false },
+      manutencoes: { view: false, create: false, edit: false, delete: false },
+      piscinas: { view: false, create: false, edit: false, delete: false },
+      utilizadores: { view: false, create: false, edit: false, delete: false },
+      relatorios: { view: false, create: false, edit: false, delete: false },
+      clientes: { view: false, create: false, edit: false, delete: false },
+    },
+    active: true,
+  });
+
+  // Settings functions
+  const handleSettingsPasswordSubmit = (e) => {
+    e.preventDefault();
+    if (settingsPassword === "19867") {
+      setShowSettingsPasswordModal(false);
+      setShowSettingsPage(true);
+      setSettingsPassword("");
+      setSettingsPasswordError("");
+    } else {
+      setSettingsPasswordError("Palavra-passe incorreta");
+    }
+  };
+
+  const closeSettings = () => {
+    setShowSettingsPage(false);
+    setShowSettingsPasswordModal(false);
+    setSettingsPassword("");
+    setSettingsPasswordError("");
+  };
+
+  const handleSaveIntervention = () => {
+    // Validate required fields
+    if (!maintenanceForm.poolId || !maintenanceForm.technician) {
+      alert("Por favor, preencha os campos obrigat��rios (Piscina e Técnico).");
+      return;
+    }
+
+    // Get pool and technician names for display
+    const selectedPool = pools.find((p) => p.id === maintenanceForm.poolId);
+    const selectedTechnician = users.find(
+      (u) => u.id === parseInt(maintenanceForm.technician),
+    );
+
+    // Save complete intervention data
+    const interventionData = {
+      id: Date.now(),
+      poolId: maintenanceForm.poolId,
+      poolName: selectedPool ? selectedPool.name : "Piscina Desconhecida",
+      client: selectedPool ? selectedPool.client : "",
+      date: maintenanceForm.date,
+      startTime: maintenanceForm.startTime,
+      endTime: maintenanceForm.endTime,
+      technician: selectedTechnician
+        ? selectedTechnician.name
+        : maintenanceForm.technician,
+      vehicle: maintenanceForm.vehicle,
+      waterValues: {
+        pH: maintenanceForm.pH,
+        chlorine: maintenanceForm.chlorine,
+        alkalinity: maintenanceForm.alkalinity,
+        temperature: maintenanceForm.temperature,
+      },
+      workPerformed: maintenanceForm.workPerformed,
+      otherWork: maintenanceForm.otherWork,
+      problems: maintenanceForm.problems,
+      observations: maintenanceForm.observations,
+      nextMaintenance: maintenanceForm.nextMaintenance,
+      status: maintenanceForm.status,
+      photos: uploadedPhotos,
+      photoCount: uploadedPhotos.length,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Store in localStorage for persistence (in real app, would save to backend)
+    const savedInterventions = JSON.parse(
+      localStorage.getItem("interventions") || "[]",
+    );
+    savedInterventions.push(interventionData);
+    localStorage.setItem("interventions", JSON.stringify(savedInterventions));
+
+    // Add to maintenance sync system
+    const newMaintenance = {
+      poolId: interventionData.poolId,
+      poolName: interventionData.poolName,
+      type: "Manutenção Regular",
+      scheduledDate: maintenanceForm.date,
+      technician: interventionData.technician,
+      status: maintenanceForm.status as
+        | "pending"
+        | "in_progress"
+        | "completed"
+        | "cancelled",
+      description: maintenanceForm.workPerformed || "Manutenção realizada",
+      notes: maintenanceForm.observations,
+    };
+
+    // Use sync system to add maintenance (will handle Firebase and localStorage)
+    addMaintenance(newMaintenance);
+
+    console.log("Manutenção salva com sucesso:", interventionData);
+
+    alert(
+      `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`,
+    );
+
+    // Clear form and photos after saving
+    setMaintenanceForm({
+      poolId: "",
+      date: new Date().toISOString().split("T")[0],
+      startTime: "",
+      endTime: "",
+      technician: "",
+      vehicle: "",
+      pH: "",
+      chlorine: "",
+      alkalinity: "",
+      temperature: "",
+      workPerformed: "",
+      otherWork: "",
+      problems: "",
+      observations: "",
+      nextMaintenance: "",
+      status: "completed",
+    });
+    setUploadedPhotos([]);
+
+    // Navigate back to maintenance list
+    setActiveSection("manutencoes");
+  };
+
+  const handleShare = (platform) => {
+    // Generate PDF and share logic would go here
+    console.log(`Sharing via ${platform}`);
+    // For demo purposes, just close modal and go back to piscinas
+    setShowShareModal(false);
+    setInterventionSaved(false);
+    setActiveSection("piscinas");
+  };
+
+  // Authentication functions
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (
+      loginForm.email === ADMIN_USER.email &&
+      loginForm.password === ADMIN_USER.password
+    ) {
+      setIsAuthenticated(true);
+      setCurrentUser(ADMIN_USER);
+      setLoginError("");
+
+      // Handle any pending hash navigation after login
+      const hash = window.location.hash.substring(1);
+      if (hash) {
+        setActiveSection(hash);
+      }
+    } else {
+      setLoginError("Credenciais inválidas");
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setCurrentUser(ADMIN_USER);
+    setLoginForm({ email: "", password: "" });
+    navigateToSection("dashboard");
+  };
+
+  // Advanced settings functions
+  const handleAdvancedPasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (advancedPassword === "19867") {
+      setIsAdvancedUnlocked(true);
+      setAdvancedPasswordError("");
+    } else {
+      setAdvancedPasswordError("Palavra-passe incorreta");
+    }
+  };
+
+  const handleAdvancedSettingsBack = () => {
+    setShowAdvancedSettings(false);
+    setIsAdvancedUnlocked(false);
+    setAdvancedPassword("");
+    setAdvancedPasswordError("");
+  };
+
+  // PDF Generation Functions
+  const generatePoolsPDF = () => {
+    const content = `
+LEIRISONDA - RELATÓRIO DE PISCINAS
+Data: ${new Date().toLocaleDateString("pt-PT")}
+
+RESUMO:
+- Total de Piscinas: ${pools.length}
+
+DETALHES:
+${pools
+  .map(
+    (pool, index) => `
+${index + 1}. ${pool.name}
+   Localização: ${pool.location}
+   Cliente: ${pool.client}
+   Tipo: ${pool.type}
+   Estado: ${pool.status}
+   ${pool.nextMaintenance ? `Próxima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
+`,
+  )
+  .join("\n")}
+
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+    `;
+    downloadPDF(
+      content,
+      `Piscinas_${new Date().toISOString().split("T")[0]}.pdf`,
+    );
+  };
+
+  const generateMaintenancePDF = () => {
+    const content = `
+LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
+Data: ${new Date().toLocaleDateString("pt-PT")}
+
+RESUMO:
+- Total de Manutenções: ${maintenance.length}
+- Futuras Manutenções: ${futureMaintenance.length}
+
+MANUTENÇÕES REALIZADAS:
+${maintenance
+  .map(
+    (maint, index) => `
+${index + 1}. ${maint.poolName}
+   Tipo: ${maint.type}
+   Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
+   Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
+   Técnico: ${maint.technician}
+   Descrição: ${maint.description}
+   ${maint.notes ? `Observações: ${maint.notes}` : ""}
+`,
+  )
+  .join("\n")}
+
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+    `;
+    downloadPDF(
+      content,
+      `Manutencoes_${new Date().toISOString().split("T")[0]}.pdf`,
+    );
+  };
+
+  const generateWorksPDF = () => {
+    const content = `
+LEIRISONDA - RELATÓRIO DE OBRAS
+Data: ${new Date().toLocaleDateString("pt-PT")}
+
+RESUMO:
+- Total de Obras: ${works.length}
+
+OBRAS REGISTADAS:
+${works
+  .map(
+    (work, index) => `
+${index + 1}. ${work.title}
+   Cliente: ${work.client}
+   Localização: ${work.location}
+   Tipo: ${work.type}
+   Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
+   ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
+   ${work.budget ? `Or��amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   Responsável: ${work.assignedTo}
+   Descrição: ${work.description}
+`,
+  )
+  .join("\n")}
+
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+    `;
+    downloadPDF(content, `Obras_${new Date().toISOString().split("T")[0]}.pdf`);
+  };
+
+  const generateClientsPDF = () => {
+    const content = `
+LEIRISONDA - RELATÓRIO DE CLIENTES
+Data: ${new Date().toLocaleDateString("pt-PT")}
+
+RESUMO:
+- Total de Clientes: ${clients.length}
+
+CLIENTES REGISTADOS:
+${clients
+  .map(
+    (client, index) => `
+${index + 1}. ${client.name}
+   Email: ${client.email}
+   Telefone: ${client.phone}
+   Morada: ${client.address}
+   Piscinas: ${client.pools.length} associadas
+   Data Registo: ${new Date(client.createdAt).toLocaleDateString("pt-PT")}
+`,
+  )
+  .join("\n")}
+
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+    `;
+    downloadPDF(
+      content,
+      `Clientes_${new Date().toISOString().split("T")[0]}.pdf`,
+    );
+  };
+
+  const generateCompletePDF = () => {
+    const content = `
+LEIRISONDA - RELATÓRIO COMPLETO DO SISTEMA
+Data: ${new Date().toLocaleDateString("pt-PT")}
+
+RESUMO EXECUTIVO:
+- Piscinas Registadas: ${pools.length}
+- Manutenções Realizadas: ${maintenance.length}
+- Futuras Manutenções: ${futureMaintenance.length}
+- Obras em Curso: ${works.length}
+- Clientes Ativos: ${clients.length}
+- Utilizadores do Sistema: ${users.length}
+
+ESTATÍSTICAS:
+- Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
+- Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
+- Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
+
+PRÓXIMAS A��ÕES:
+${futureMaintenance
+  .slice(0, 5)
+  .map(
+    (maint) =>
+      `- ${maint.poolName}: ${maint.type} em ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}`,
+  )
+  .join("\n")}
+
+DADOS DETALHADOS:
+
+=== PISCINAS ===
+${pools
+  .map(
+    (pool, index) => `
+${index + 1}. ${pool.name} (${pool.client})
+   Status: ${pool.status} | Local: ${pool.location}
+`,
+  )
+  .join("")}
+
+=== MANUTENÇÕES RECENTES ===
+${maintenance
+  .slice(-5)
+  .map(
+    (maint, index) => `
+${index + 1}. ${maint.poolName} - ${maint.type}
+   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | Técnico: ${maint.technician}
+`,
+  )
+  .join("")}
+
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+    `;
+    downloadPDF(
+      content,
+      `Relatorio_Completo_${new Date().toISOString().split("T")[0]}.pdf`,
+    );
+  };
+
+  const generateCustomPDF = () => {
+    alert(
+      "Funcionalidade de relat��rio personalizado em desenvolvimento. Use os relatórios pr���-definidos por agora.",
+    );
+  };
+
+  // Push Notification functions
+  const requestNotificationPermission = async () => {
+    if ("Notification" in window) {
+      const permission = await Notification.requestPermission();
+      setPushPermission(permission);
+      if (permission === "granted") {
+        setNotificationsEnabled(true);
+        showNotification(
+          "Notificações Ativadas",
+          "Agora vai receber notificações de obras atribuídas",
+          "success",
+        );
+      }
+      return permission;
+    }
+    return "denied";
+  };
+
+  const showNotification = (title: string, body: string, type = "info") => {
+    if (Notification.permission === "granted") {
+      const notification = new Notification(title, {
+        body: body,
+        icon: "/icon-192x192.png",
+        badge: "/icon-192x192.png",
+        tag: type,
+        requireInteraction: true,
+      });
+
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+      };
+    }
+  };
+
+  const sendWorkAssignmentNotification = (
+    workTitle: string,
+    assignedTo: string,
+  ) => {
+    if (notificationsEnabled && Notification.permission === "granted") {
+      showNotification(
+        "Nova Obra Atribuída",
+        `A obra "${workTitle}" foi-lhe atribuída`,
+        "work-assignment",
+      );
+
+      // Add to assigned works
+      const newAssignedWork = {
+        id: Date.now(),
+        title: workTitle,
+        assignedTo: assignedTo,
+        dateAssigned: new Date().toISOString(),
+        status: "Nova",
+      };
+      setAssignedWorks((prev) => [newAssignedWork, ...prev]);
+    }
+  };
+
+  const testPushNotification = () => {
+    if (Notification.permission === "granted") {
+      showNotification(
+        "Teste de Notificação",
+        "As notificações estão a funcionar corretamente!",
+        "test",
+      );
+    } else {
+      alert(
+        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
+      );
+    }
+  };
+
+  // Photo management functions
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length + uploadedPhotos.length > 20) {
+      alert("Máximo de 20 fotografias permitidas");
+      return;
+    }
+
+    files.forEach((file: File) => {
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          const newPhoto = {
+            id: Date.now() + Math.random(),
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            data: e.target?.result,
+            timestamp: new Date().toISOString(),
+          };
+          setUploadedPhotos((prev) => [...prev, newPhoto]);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
+  const removePhoto = (photoId: any) => {
+    setUploadedPhotos((prev) => prev.filter((photo) => photo.id !== photoId));
+  };
+
+  const clearAllPhotos = () => {
+    setUploadedPhotos([]);
+  };
+
+  // Clear photos and work type when changing sections
+  useEffect(() => {
+    if (activeSection !== "nova-obra" && activeSection !== "nova-manutencao") {
+      setUploadedPhotos([]);
+    }
+    if (activeSection !== "nova-obra") {
+      setSelectedWorkType("");
+    }
+  }, [activeSection]);
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    const fakeEvent = { target: { files } };
+    handlePhotoUpload(fakeEvent);
+  };
+
+  const downloadPDF = (content: string, filename: string) => {
+    try {
+      const pdf = new jsPDF();
+
+      // Set font size and line height
+      pdf.setFontSize(12);
+      const lineHeight = 6;
+
+      // Split content into lines and handle page breaks
+      const lines = content.split("\n");
+      let yPosition = 20;
+
+      lines.forEach((line) => {
+        // Check if we need a new page
+        if (yPosition > 270) {
+          pdf.addPage();
+          yPosition = 20;
+        }
+
+        // Handle long lines by splitting them
+        const maxWidth = 180;
+        const splitLines = pdf.splitTextToSize(line, maxWidth);
+
+        splitLines.forEach((splitLine: string) => {
+          if (yPosition > 270) {
+            pdf.addPage();
+            yPosition = 20;
+          }
+          pdf.text(splitLine, 10, yPosition);
+          yPosition += lineHeight;
+        });
+      });
+
+      // Save the PDF
+      const pdfFilename = filename.replace(".txt", ".pdf");
+      pdf.save(pdfFilename);
+
+      // Show success message
+      alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      alert("Erro ao gerar o relatório PDF. Tente novamente.");
+    }
+  };
+
+  // User management functions
+  const handleAddUser = () => {
+    setEditingUser(null);
+    setUserForm({
+      name: "",
+      email: "",
+      password: "",
+      role: "technician",
+      permissions: {
+        obras: { view: false, create: false, edit: false, delete: false },
+        manutencoes: { view: false, create: false, edit: false, delete: false },
+        piscinas: { view: false, create: false, edit: false, delete: false },
+        utilizadores: {
+          view: false,
+          create: false,
+          edit: false,
+          delete: false,
+        },
+        relatorios: { view: false, create: false, edit: false, delete: false },
+        clientes: { view: false, create: false, edit: false, delete: false },
+      },
+      active: true,
+    });
+    setShowUserForm(true);
+  };
+
+  const handleEditUser = (user) => {
+    setEditingUser(user);
+    setUserForm({
+      name: user.name,
+      email: user.email,
+      password: "",
+      role: user.role,
+      permissions: { ...user.permissions },
+      active: user.active,
+    });
+    setShowUserForm(true);
+  };
+
+  const handleDeleteUser = (userId) => {
+    // Check if it's the main user
+    const user = users.find(
+      (u) => u.id === userId || u.id === parseInt(userId),
+    );
+    if (user && user.email === "gongonsilva@gmail.com") {
+      alert("Não pode eliminar o utilizador principal!");
+      return;
+    }
+
+    if (confirm("Tem a certeza que quer eliminar este utilizador?")) {
+      setUsers(users.filter((u) => u.id !== userId));
+    }
+  };
+
+  const handleSaveUser = (e) => {
+    e.preventDefault();
+
+    if (editingUser) {
+      // Update existing user
+      setUsers(
+        users.map((u) =>
+          u.id === editingUser.id
+            ? {
+                ...u,
+                ...userForm,
+                password: userForm.password || u.password,
+              }
+            : u,
+        ),
+      );
+    } else {
+      // Add new user
+      const newUser = {
+        id: Math.max(...users.map((u) => u.id)) + 1,
+        ...userForm,
+        createdAt: new Date().toISOString().split("T")[0],
+      };
+      setUsers([...users, newUser]);
+    }
+
+    setShowUserForm(false);
+  };
+
+  const handlePermissionChange = (module, permission, value) => {
+    setUserForm({
+      ...userForm,
+      permissions: {
+        ...userForm.permissions,
+        [module]: {
+          ...userForm.permissions[module],
+          [permission]: value,
+        },
+      },
+    });
+  };
+
+  const setRolePermissions = (role) => {
+    let permissions = {};
+
+    switch (role) {
+      case "super_admin":
+        permissions = {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
+        };
+        break;
+      case "manager":
+        permissions = {
+          obras: { view: true, create: true, edit: true, delete: false },
+          manutencoes: { view: true, create: true, edit: true, delete: false },
+          piscinas: { view: true, create: true, edit: true, delete: false },
+          utilizadores: {
+            view: true,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: true, edit: false, delete: false },
+          clientes: { view: true, create: true, edit: true, delete: false },
+        };
+        break;
+      case "technician":
+        permissions = {
+          obras: { view: true, create: false, edit: true, delete: false },
+          manutencoes: { view: true, create: true, edit: true, delete: false },
+          piscinas: { view: true, create: false, edit: true, delete: false },
+          utilizadores: {
+            view: false,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: false, edit: false, delete: false },
+          clientes: { view: true, create: false, edit: false, delete: false },
+        };
+        break;
+      case "viewer":
+        permissions = {
+          obras: { view: true, create: false, edit: false, delete: false },
+          manutencoes: {
+            view: true,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          piscinas: { view: true, create: false, edit: false, delete: false },
+          utilizadores: {
+            view: false,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: false, edit: false, delete: false },
+          clientes: { view: true, create: false, edit: false, delete: false },
+        };
+        break;
+      default:
+        permissions = userForm.permissions;
+    }
+
+    setUserForm({
+      ...userForm,
+      role,
+      permissions,
+    });
+  };
+
+  const menuItems = [
+    { id: "dashboard", icon: Home, label: "Dashboard", path: "/dashboard" },
+    { id: "nova-obra", icon: Plus, label: "Nova Obra", path: "/obras/nova" },
+    {
+      id: "nova-manutencao",
+      icon: Wrench,
+      label: "Nova Manutenção",
+      path: "/manutencao/nova",
+    },
+    {
+      id: "futuras-manutencoes",
+      icon: Waves,
+      label: "Piscinas",
+      path: "/piscinas",
+    },
+    {
+      id: "utilizadores",
+      icon: UserCheck,
+      label: "Utilizadores",
+      path: "/utilizadores",
+    },
+    {
+      id: "relatorios",
+      icon: BarChart3,
+      label: "Relatórios",
+      path: "/relatorios",
+    },
+    { id: "clientes", icon: Users, label: "Clientes", path: "/clientes" },
+    {
+      id: "configuracoes",
+      icon: Settings,
+      label: "Configurações",
+      path: "/configuracoes",
+    },
+  ];
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case "dashboard":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            {/* Dashboard Content - Mobile First Design */}
+            <div className="px-4 py-4 space-y-4">
+              {/* Header Card */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-white rounded-lg shadow-md p-1">
+                      <img
+                        src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                        alt="Leirisonda Logo"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <h1 className="text-lg font-semibold text-gray-900">
+                      Olá, Gonçalo Fonseca
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Bem-vindo ao sistema Leirisonda
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Cards */}
+              <div className="space-y-3">
+                {/* Pendentes */}
+                <div className="bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Pendentes
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        Necessitam atenção
+                      </p>
+                    </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+
+                {/* Em Progresso */}
+                <div className="bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Em Progresso
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        Obras em andamento
+                      </p>
+                    </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+
+                {/* Concluídas */}
+                <div className="bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Concluídas
+                      </h3>
+                      <p className="text-sm text-gray-500">Finalizadas</p>
+                    </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+
+                {/* Folhas por Fazer */}
+                <div className="bg-white rounded-lg border-l-4 border-blue-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Folhas por Fazer
+                      </h3>
+                      <p className="text-sm text-gray-500">A processar</p>
+                    </div>
+                    <div className="text-4xl font-bold text-gray-900">0</div>
+                  </div>
+                </div>
+
+                {/* Funcionalidades Avançadas */}
+                <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        🚀 Funcionalidades Avançadas
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        📸 Fotos • 💧 Furo de Água • 🔧 Gestão Completa
+                      </p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => setActiveSection("nova-obra")}
+                        className="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700"
+                      >
+                        Testar Obras
+                      </button>
+                      <button
+                        onClick={() => setActiveSection("nova-manutencao")}
+                        className="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700"
+                      >
+                        Testar Manutenções
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Obras Atribuídas */}
+                <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Obras Atribuídas
+                      </h3>
+                      <p className="text-sm text-gray-500">Atribuídas a si</p>
+                    </div>
+                    <div className="text-4xl font-bold text-gray-900">
+                      {assignedWorks.length}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Lista de Obras Atribuídas */}
+              {assignedWorks.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm">
+                  <div className="flex items-center p-4 border-b border-gray-100">
+                    <Building2 className="h-5 w-5 text-purple-600 mr-3" />
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Minhas Obras Atribuídas
+                    </h2>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    {assignedWorks.map((work) => (
+                      <div
+                        key={work.id}
+                        className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                              <Building2 className="h-5 w-5 text-purple-600" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-gray-900">
+                                {work.title}
+                              </h3>
+                              <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                                <span>👤</span>
+                                <span>Atribuída a: {work.assignedTo}</span>
+                              </div>
+                              <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                                <span>📅</span>
+                                <span>
+                                  Atribuída em:{" "}
+                                  {new Date(
+                                    work.dateAssigned,
+                                  ).toLocaleDateString("pt-PT")}
+                                </span>
+                              </div>
+                              <span
+                                className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
+                                  work.status === "Nova"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-gray-100 text-gray-800"
+                                }`}
+                              >
+                                {work.status}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => {
+                                const updatedWorks = assignedWorks.map((w) =>
+                                  w.id === work.id
+                                    ? { ...w, status: "Em Progresso" }
+                                    : w,
+                                );
+                                setAssignedWorks(updatedWorks);
+                              }}
+                              className="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700"
+                            >
+                              Iniciar
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Próximas Manutenções */}
+              <div className="bg-white rounded-lg shadow-sm">
+                <div className="flex items-center p-4 border-b border-gray-100">
+                  <button className="p-1 mr-3">
+                    <span className="text-gray-600 text-lg">←</span>
+                  </button>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Próximas Manuten��ões
+                  </h2>
+                </div>
+
+                <div className="p-4 space-y-3">
+                  {/* Piscina Magnolia 1 */}
+                  <div className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                          <Waves className="h-5 w-5 text-cyan-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">
+                            Piscina Magnolia
+                          </h3>
+                          <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                            <span>📍</span>
+                            <span>Vieira de Leiria</span>
+                          </div>
+                          <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                            <span>�������</span>
+                            <span>Em 28 dias</span>
+                          </div>
+                          <p className="text-xs text-gray-400 mt-1">
+                            Próxima: 31/07/2025
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <span className="bg-cyan-200 text-cyan-800 text-xs px-2 py-1 rounded-full font-medium">
+                          Agendada
+                        </span>
+                        <button className="p-1 text-gray-400">
+                          <Eye className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Piscina Magnolia 2 */}
+                  <div className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                          <Waves className="h-5 w-5 text-cyan-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">
+                            Piscina Magnolia
+                          </h3>
+                          <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                            <span>📍</span>
+                            <span>Vieira de Leiria</span>
+                          </div>
+                          <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                            <span>📅</span>
+                            <span>Em 28 dias</span>
+                          </div>
+                          <p className="text-xs text-gray-400 mt-1">
+                            Próxima: 31/07/2025
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <span className="bg-cyan-200 text-cyan-800 text-xs px-2 py-1 rounded-full font-medium">
+                          Agendada
+                        </span>
+                        <button className="p-1 text-gray-400">
+                          <Eye className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Ações Rápidas */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
+                    <Plus className="h-4 w-4 text-green-600" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Ações Rápidas
+                  </h2>
+                </div>
+
+                <div className="space-y-3">
+                  <button
+                    onClick={() => setActiveSection("nova-obra")}
+                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
+                  >
+                    <Plus className="h-5 w-5 text-gray-600" />
+                    <span className="font-medium text-gray-900">Nova Obra</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveSection("nova-manutencao")}
+                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
+                  >
+                    <Wrench className="h-5 w-5 text-gray-600" />
+                    <span className="font-medium text-gray-900">
+                      Manutenç��o Piscinas
+                    </span>
+                  </button>
+
+                  <button className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left">
+                    <Building2 className="h-5 w-5 text-gray-600" />
+                    <span className="font-medium text-gray-900">
+                      Todas as Obras
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveSection("utilizadores")}
+                    className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
+                  >
+                    <UserPlus className="h-5 w-5 text-gray-600" />
+                    <span className="font-medium text-gray-900">
+                      Novo Utilizador
+                    </span>
+                  </button>
+
+                  <button className="w-full flex items-center space-x-3 p-3 border border-blue-200 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors text-left">
+                    <div className="w-5 h-5 flex items-center justify-center">
+                      <span className="text-blue-600">���</span>
+                    </div>
+                    <span className="font-medium text-blue-900">
+                      Diagnóstico de Sincronização
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Pesquisar Obras */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600">🔍</span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Pesquisar Obras
+                  </h2>
+                </div>
+
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Cliente, folha obra, morada..."
+                    className="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 placeholder-gray-400 text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "piscinas":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Waves className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Piscinas
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gestão de piscinas no sistema
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection("nova-piscina")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Nova Piscina</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Submenu */}
+              <div className="bg-white rounded-lg shadow-sm p-1">
+                <div className="grid grid-cols-3 gap-1">
+                  <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
+                    Piscinas
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("manutencoes")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Manutenções
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("futuras-manutencoes")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Futuras Manutenções
+                  </button>
+                </div>
+              </div>
+
+              {/* Search and Filters */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex space-x-3">
+                  <input
+                    type="text"
+                    placeholder="Pesquisar piscinas..."
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>Todos os estados</option>
+                    <option>Ativa</option>
+                    <option>Inativa</option>
+                    <option>Em Manutenção</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Pools List */}
+              <div className="space-y-4">
+                {pools.length === 0 ? (
+                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Waves className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhuma piscina registada
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Comece por adicionar a primeira piscina ao sistema
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("nova-piscina")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Adicionar Piscina</span>
+                    </button>
+                  </div>
+                ) : (
+                  pools.map((pool) => (
+                    <div
+                      key={pool.id}
+                      className="bg-white rounded-lg shadow-sm p-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {pool.name}
+                          </h3>
+                          <p className="text-gray-600">{pool.location}</p>
+                          <div className="flex items-center space-x-4 mt-2">
+                            <span className="text-sm text-gray-500">
+                              Cliente: {pool.client}
+                            </span>
+                            <span className="text-sm text-gray-500">
+                              Tipo: {pool.type}
+                            </span>
+                            <span
+                              className={`text-sm px-2 py-1 rounded-full ${
+                                pool.status === "Ativa"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
+                              {pool.status}
+                            </span>
+                          </div>
+                          {pool.nextMaintenance && (
+                            <p className="text-sm text-blue-600 mt-1">
+                              Próxima manutenção:{" "}
+                              {new Date(
+                                pool.nextMaintenance,
+                              ).toLocaleDateString("pt-PT")}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => dataSync.deletePool(pool.id)}
+                            className="p-2 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        );
+
+      case "manutencoes":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Wrench className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Manutenções
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Histórico de manutenções realizadas
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection("nova-manutencao")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Nova Manutenção</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Submenu */}
+              <div className="bg-white rounded-lg shadow-sm p-1">
+                <div className="grid grid-cols-3 gap-1">
+                  <button
+                    onClick={() => setActiveSection("piscinas")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Piscinas
+                  </button>
+                  <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
+                    Manutenções
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("futuras-manutencoes")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Futuras Manutenções
+                  </button>
+                </div>
+              </div>
+
+              {/* Filtros */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <input
+                    type="text"
+                    placeholder="Pesquisar manutenções..."
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>Todas as piscinas</option>
+                  </select>
+                  <input
+                    type="month"
+                    defaultValue="2025-01"
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Lista de Manutenções */}
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Wrench className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Nenhuma manutenção registada
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    As manutenções aparecerão aqui quando forem criadas
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "futuras-manutencoes":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <BarChart3 className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Futuras Manutenções
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Manutenções agendadas e programadas
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection("nova-manutencao")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Agendar Manutenção</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Submenu */}
+              <div className="bg-white rounded-lg shadow-sm p-1">
+                <div className="grid grid-cols-3 gap-1">
+                  <button
+                    onClick={() => setActiveSection("piscinas")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Piscinas
+                  </button>
+                  <button
+                    onClick={() => setActiveSection("manutencoes")}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
+                  >
+                    Manutenções
+                  </button>
+                  <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
+                    Futuras Manutenções
+                  </button>
+                </div>
+              </div>
+
+              {/* Future Maintenance List */}
+              <div className="space-y-4">
+                {futureMaintenance.length === 0 ? (
+                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <BarChart3 className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhuma manutenção agendada
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      As futuras manuten��ões aparecerão aqui quando forem
+                      agendadas
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("nova-manutencao")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Agendar Manutenção</span>
+                    </button>
+                  </div>
+                ) : (
+                  futureMaintenance.map((maint) => (
+                    <div
+                      key={maint.id}
+                      className="bg-white rounded-lg shadow-sm p-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {maint.poolName}
+                            </h3>
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full ${
+                                maint.status === "pending"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : maint.status === "in_progress"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-green-100 text-green-800"
+                              }`}
+                            >
+                              {maint.status === "pending"
+                                ? "Agendado"
+                                : maint.status === "in_progress"
+                                  ? "Em Progresso"
+                                  : "Concluído"}
+                            </span>
+                          </div>
+                          <p className="text-gray-600 mb-1">{maint.type}</p>
+                          <p className="text-sm text-gray-500 mb-2">
+                            {maint.description}
+                          </p>
+                          <div className="flex items-center space-x-4 text-sm">
+                            <span className="text-blue-600">
+                              📅{" "}
+                              {new Date(maint.scheduledDate).toLocaleDateString(
+                                "pt-PT",
+                              )}
+                            </span>
+                            <span className="text-gray-500">
+                              👨‍🔧 {maint.technician}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => dataSync.deleteMaintenance(maint.id)}
+                            className="p-2 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        );
+
+      case "nova-obra":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Building2 className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Nova Obra
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Criar uma nova obra no sistema Leirisonda
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-8">
+                  {/* Informações Básicas */}
+                  <div>
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Building2 className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Informações Básicas
+                      </h3>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Folha de Obra *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="LS-2025-163"
+                          defaultValue={`LS-${new Date().getFullYear()}-${Math.floor(
+                            Math.random() * 1000,
+                          )
+                            .toString()
+                            .padStart(3, "0")}`}
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tipo de Trabalho *
+                        </label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onChange={(e) => setSelectedWorkType(e.target.value)}
+                          value={selectedWorkType}
+                        >
+                          <option value="">Selecionar tipo</option>
+                          <option value="piscina">Piscina</option>
+                          <option value="manutencao">Manutenção</option>
+                          <option value="instalacao">Instalação</option>
+                          <option value="reparacao">Reparação</option>
+                          <option value="limpeza">Limpeza</option>
+                          <option value="furo">Furo de Água</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Nome do Cliente *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ex: João Silva"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Contacto *
+                        </label>
+                        <input
+                          type="tel"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ex: 244 123 456"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Morada *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ex: Rua das Flores, 123, Leiria"
+                          required
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Hora de Entrada *
+                          </label>
+                          <input
+                            type="datetime-local"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            defaultValue={new Date().toISOString().slice(0, 16)}
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Hora de Saída
+                          </label>
+                          <input
+                            type="datetime-local"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Deixe vazio se ainda não terminou"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Deixe vazio se ainda não terminou
+                          </p>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Estado da Obra *
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          <option value="pendente">Pendente</option>
+                          <option value="em-progresso">Em Progresso</option>
+                          <option value="concluida">Concluída</option>
+                          <option value="cancelada">Cancelada</option>
+                        </select>
+                      </div>
+
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="folha-preenchida"
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label
+                          htmlFor="folha-preenchida"
+                          className="ml-2 text-sm text-gray-700"
+                        >
+                          Folha de obra preenchida/feita
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Viaturas e Técnicos */}
+                  <div>
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Users className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Viaturas e Técnicos
+                      </h3>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Viaturas Utilizadas
+                        </label>
+                        <div className="flex space-x-2">
+                          <input
+                            type="text"
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Ex: Carrinha Leirisonda 1"
+                          />
+                          <button
+                            type="button"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                          >
+                            Adicionar
+                          </button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Técnicos
+                        </label>
+                        <div className="flex space-x-2">
+                          <input
+                            type="text"
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Ex: João Santos"
+                          />
+                          <button
+                            type="button"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                          >
+                            Adicionar
+                          </button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Usuários Atribuídos
+                        </label>
+                        <p className="text-sm text-gray-600 mb-2">
+                          Selecione os usuários responsáveis por esta obra
+                        </p>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          aria-label="Usuários Atribuídos"
+                        >
+                          <option value="">Selecionar usuário...</option>
+                          {users
+                            .filter((user) => user.role !== "viewer")
+                            .map((user) => (
+                              <option key={user.id} value={user.id}>
+                                {user.name}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Detalhes do Furo de Água - Conditional */}
+                  {selectedWorkType === "furo" && (
+                    <div>
+                      <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
+                          <Waves className="h-4 w-4 text-cyan-600" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Detalhes do Furo de Água
+                        </h3>
+                      </div>
+
+                      <div className="space-y-6">
+                        {/* Medições do Furo */}
+                        <div>
+                          <h4 className="text-md font-medium text-gray-900 mb-4">
+                            Medições do Furo
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Profundidade do Furo (m) *
+                              </label>
+                              <input
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                placeholder="Ex: 120.5"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Nível da Água (m) *
+                              </label>
+                              <input
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                placeholder="Ex: 15.2"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Profundidade da Bomba (m) *
+                              </label>
+                              <input
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                placeholder="Ex: 80.0"
+                                required
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Capacidade e Coluna */}
+                        <div>
+                          <h4 className="text-md font-medium text-gray-900 mb-4">
+                            Capacidade e Coluna
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Caudal do Furo (m³/h) *
+                              </label>
+                              <input
+                                type="number"
+                                step="0.1"
+                                min="0"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                placeholder="Ex: 5.5"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Tipo de Coluna *
+                              </label>
+                              <select
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                required
+                              >
+                                <option value="">Selecionar tipo</option>
+                                <option value="PEAD">PEAD</option>
+                                <option value="HIDROROSCADO">
+                                  HIDROROSCADO
+                                </option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Di��metro da Coluna *
+                              </label>
+                              <select
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                required
+                              >
+                                <option value="">Selecionar diâmetro</option>
+                                <option value="1">1 polegada</option>
+                                <option value="1.25">1¼ polegadas</option>
+                                <option value="1.5">1½ polegadas</option>
+                                <option value="2">2 polegadas</option>
+                                <option value="2.5">2½ polegadas</option>
+                                <option value="3">3 polegadas</option>
+                                <option value="4">4 polegadas</option>
+                                <option value="5">5 polegadas</option>
+                                <option value="6">6 polegadas</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Detalhes da Bomba */}
+                        <div>
+                          <h4 className="text-md font-medium text-gray-900 mb-4">
+                            Detalhes da Bomba
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Modelo da Bomba Instalada *
+                              </label>
+                              <input
+                                type="text"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                placeholder="Ex: Grundfos SQ3-105"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Potência do Motor (HP) *
+                              </label>
+                              <select
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                required
+                              >
+                                <option value="">Selecionar potência</option>
+                                <option value="0.5">0.5 HP</option>
+                                <option value="0.75">0.75 HP</option>
+                                <option value="1">1 HP</option>
+                                <option value="1.5">1.5 HP</option>
+                                <option value="2">2 HP</option>
+                                <option value="3">3 HP</option>
+                                <option value="5">5 HP</option>
+                                <option value="7.5">7.5 HP</option>
+                                <option value="10">10 HP</option>
+                                <option value="15">15 HP</option>
+                                <option value="20">20 HP</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Voltagem da Bomba *
+                              </label>
+                              <select
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                required
+                              >
+                                <option value="">Selecionar voltagem</option>
+                                <option value="230V">230V (monofásico)</option>
+                                <option value="400V">400V (trifásico)</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Observaç��es Específicas do Furo */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Observações Específicas do Furo
+                          </label>
+                          <textarea
+                            rows={3}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Observações e Trabalho */}
+                  <div>
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Building2 className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Observações e Trabalho
+                      </h3>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Observações
+                        </label>
+                        <textarea
+                          rows={3}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Observa��ões sobre a obra..."
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Trabalho Realizado
+                        </label>
+                        <textarea
+                          rows={4}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Descrição do trabalho realizado..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Fotografias da Obra */}
+                  <div>
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Eye className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Fotografias da Obra
+                      </h3>
+                    </div>
+
+                    {/* Upload Area */}
+                    <div
+                      className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors"
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                    >
+                      <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <Plus className="h-6 w-6 text-gray-400" />
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                        Carregar Fotografias
+                      </h4>
+                      <p className="text-gray-600 text-sm mb-4">
+                        Arraste e solte ou clique para selecionar
+                      </p>
+                      <p className="text-gray-500 text-xs mb-4">
+                        {uploadedPhotos.length}/20 fotografias
+                      </p>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                        id="photo-upload"
+                      />
+                      <label
+                        htmlFor="photo-upload"
+                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2 mx-auto cursor-pointer"
+                      >
+                        <Eye className="h-4 w-4" />
+                        <span>Escolher Fotografias</span>
+                      </label>
+                    </div>
+
+                    {/* Photo Preview Grid */}
+                    {uploadedPhotos.length > 0 && (
+                      <div className="mt-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h5 className="font-medium text-gray-900">
+                            Fotografias Carregadas ({uploadedPhotos.length})
+                          </h5>
+                          <button
+                            type="button"
+                            onClick={clearAllPhotos}
+                            className="text-red-600 hover:text-red-800 text-sm"
+                          >
+                            Limpar Todas
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {uploadedPhotos.map((photo) => (
+                            <div key={photo.id} className="relative group">
+                              <img
+                                src={photo.data}
+                                alt={photo.name}
+                                className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removePhoto(photo.id)}
+                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                              <p className="text-xs text-gray-500 mt-1 truncate">
+                                {photo.name}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection("dashboard")}
+                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const form = e.target.closest("form");
+
+                        // Extract all form data
+                        const workTitle =
+                          form.querySelector('input[placeholder*="LS-"]')
+                            ?.value || "Nova Obra";
+                        const workType =
+                          form.querySelector('select[name="workType"]')
+                            ?.value || selectedWorkType;
+                        const client =
+                          form.querySelector('input[placeholder*="Cliente"]')
+                            ?.value || "";
+                        const contact =
+                          form.querySelector('input[placeholder*="Contacto"]')
+                            ?.value || "";
+                        const location =
+                          form.querySelector('input[placeholder*="Morada"]')
+                            ?.value || "";
+                        const startTime =
+                          form.querySelector('input[placeholder*="Entrada"]')
+                            ?.value || "";
+                        const endTime =
+                          form.querySelector('input[placeholder*="Saída"]')
+                            ?.value || "";
+                        const status =
+                          form.querySelector('select[name="status"]')?.value ||
+                          "pending";
+                        const responsibleUser = form.querySelector(
+                          'select[aria-label="Usuários Atribuídos"]',
+                        );
+                        const selectedUserId = responsibleUser?.value || null;
+
+                        // Create complete work data object
+                        const workData = {
+                          id: Date.now(),
+                          title: workTitle,
+                          type: workType,
+                          client: client,
+                          contact: contact,
+                          location: location,
+                          startTime: startTime,
+                          endTime: endTime,
+                          status: status,
+                          assignedTo: selectedUserId
+                            ? users.find((u) => u.id == selectedUserId)?.name
+                            : "",
+                          assignedUserId: selectedUserId,
+                          photos: uploadedPhotos,
+                          photoCount: uploadedPhotos.length,
+                          createdAt: new Date().toISOString(),
+                          startDate: new Date().toISOString(),
+                        };
+
+                        // Use sync system to add work (will handle Firebase and localStorage)
+                        addWork(workData);
+
+                        // Send notification if user assigned
+                        if (selectedUserId) {
+                          const selectedUser = users.find(
+                            (u) => u.id == selectedUserId,
+                          );
+                          if (selectedUser) {
+                            sendWorkAssignmentNotification(
+                              workTitle,
+                              selectedUser.name,
+                            );
+                          }
+                        }
+
+                        // Save water bore data if work type is "furo"
+                        if (selectedWorkType === "furo") {
+                          const waterBoreData = {
+                            id: Date.now(),
+                            workTitle: workTitle,
+                            date: new Date().toISOString(),
+                            photos: uploadedPhotos,
+                            photoCount: uploadedPhotos.length,
+                            workType: "furo",
+                          };
+
+                          const savedWaterBores = JSON.parse(
+                            localStorage.getItem("waterBores") || "[]",
+                          );
+                          savedWaterBores.push(waterBoreData);
+                          localStorage.setItem(
+                            "waterBores",
+                            JSON.stringify(savedWaterBores),
+                          );
+                        }
+
+                        alert(
+                          `Obra "${workTitle}" criada com sucesso! ` +
+                            (selectedUserId
+                              ? "Notificação enviada ao responsável."
+                              : "") +
+                            (selectedWorkType === "furo"
+                              ? " Dados do furo registados."
+                              : ""),
+                        );
+
+                        // Clear form data
+                        setSelectedWorkType("");
+                        setUploadedPhotos([]);
+                        setActiveSection("dashboard");
+                      }}
+                      className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Building2 className="h-4 w-4" />
+                      <span>Criar Obra</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        );
+      case "nova-piscina":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Waves className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Nova Piscina
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Registar uma nova piscina no sistema
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-6">
+                  {/* Basic Information */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nome da Piscina *
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: Piscina Villa Marina"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Cliente Proprietário *
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecionar cliente</option>
+                        {clients.map((client) => (
+                          <option key={client.id} value={client.id}>
+                            {client.name}
+                          </option>
+                        ))}
+                        <option value="novo">+ Adicionar Novo Cliente</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Location */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Localização Completa *
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Ex: Cascais, Villa Marina Resort, Edifício A, Apartamento 205"
+                      required
+                    />
+                  </div>
+
+                  {/* Pool Specifications */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de Piscina *
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecionar tipo</option>
+                        <option value="residencial">Residencial</option>
+                        <option value="comercial">Comercial</option>
+                        <option value="hotel">Hotel/Resort</option>
+                        <option value="condominio">Condomínio</option>
+                        <option value="spa">SPA/Wellness</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Formato
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="retangular">Retangular</option>
+                        <option value="oval">Oval</option>
+                        <option value="redonda">Redonda</option>
+                        <option value="kidney">Kidney</option>
+                        <option value="irregular">Irregular</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado Atual
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="ativa">Ativa</option>
+                        <option value="inativa">Inativa</option>
+                        <option value="manutencao">Em Manutenção</option>
+                        <option value="construcao">Em Construção</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Dimensions */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Comprimento (m)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="8.0"
+                        min="0"
+                        step="0.1"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Largura (m)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="4.0"
+                        min="0"
+                        step="0.1"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Profundidade Min (m)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="1.2"
+                        min="0"
+                        step="0.1"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Profundidade Max (m)
+                      </label>
+                      <input
+                        type="number"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="2.0"
+                        min="0"
+                        step="0.1"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Equipment and Features */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Sistema de Filtração
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecionar sistema</option>
+                        <option value="areia">Filtro de Areia</option>
+                        <option value="cartucho">Filtro de Cartucho</option>
+                        <option value="diatomaceas">Terra Diatomáceas</option>
+                        <option value="uv">Sistema UV</option>
+                        <option value="sal">Eletrólise de Sal</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Aquecimento
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="nao">Sem Aquecimento</option>
+                        <option value="solar">Aquecimento Solar</option>
+                        <option value="bomba-calor">Bomba de Calor</option>
+                        <option value="resistencia">
+                          Resistência El��trica
+                        </option>
+                        <option value="gas">Aquecimento a G��s</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Maintenance Schedule */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Frequência de Manutenção
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="semanal">Semanal</option>
+                        <option value="quinzenal">Quinzenal</option>
+                        <option value="mensal">Mensal</option>
+                        <option value="trimestral">Trimestral</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Próxima Manutenção
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Additional Information */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Observações e Características Especiais
+                    </label>
+                    <textarea
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Características especiais, equipamentos adicionais, notas importantes..."
+                    />
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection("piscinas")}
+                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const form = e.target.closest("form");
+                        const formData = new FormData(form);
+
+                        // Collect all form data
+                        const poolData = {
+                          id: Date.now(),
+                          name:
+                            form.querySelector('input[placeholder*="Nome"]')
+                              ?.value || "Nova Piscina",
+                          client:
+                            form.querySelector('input[placeholder*="Cliente"]')
+                              ?.value || "Cliente",
+                          location:
+                            form.querySelector('input[placeholder*="Morada"]')
+                              ?.value || "",
+                          contact:
+                            form.querySelector('input[placeholder*="Contacto"]')
+                              ?.value || "",
+                          type:
+                            form.querySelector("select").value || "residencial",
+                          status: "Ativa",
+                          createdAt: new Date().toISOString(),
+                          nextMaintenance:
+                            form.querySelector('input[type="date"]')?.value ||
+                            null,
+                        };
+
+                        // Use sync system to add pool (will handle Firebase and localStorage)
+                        addPool(poolData);
+
+                        alert(`Piscina "${poolData.name}" criada com sucesso!`);
+                        setActiveSection("piscinas");
+                      }}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Save className="h-4 w-4" />
+                      <span>Criar Piscina</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "nova-manutencao":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <Wrench className="h-4 w-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Nova Manutenção
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Registar intervenção de manutenção
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-8">
+                  {/* Pool Selection */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Piscina *
+                      </label>
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.poolId}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            poolId: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="">Selecionar piscina</option>
+                        {pools.map((pool) => (
+                          <option key={pool.id} value={pool.id}>
+                            {pool.name} - {pool.client}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data da Interven��ão *
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.date}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            date: e.target.value,
+                          })
+                        }
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Time and Team */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Hora In��cio
+                      </label>
+                      <input
+                        type="time"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.startTime}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            startTime: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Hora Fim
+                      </label>
+                      <input
+                        type="time"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.endTime}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            endTime: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Técnico Responsável *
+                      </label>
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.technician}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            technician: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="">Selecionar técnico</option>
+                        {users
+                          .filter((user) => user.role !== "super_admin")
+                          .map((user) => (
+                            <option key={user.id} value={user.id}>
+                              {user.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Viatura Utilizada
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Ex: Furgão 1, Carrinha 2"
+                        value={maintenanceForm.vehicle}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            vehicle: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {/* Water Values */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Valores da Água
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          pH
+                        </label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          max="14"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="7.2"
+                          value={maintenanceForm.pH}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              pH: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Cloro (mg/l)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="1.0"
+                          value={maintenanceForm.chlorine}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              chlorine: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Alcalinidade
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="120"
+                          value={maintenanceForm.alkalinity}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              alkalinity: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Temperatura (��C)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="25.0"
+                          value={maintenanceForm.temperature}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              temperature: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Sal (g/l)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="4.0"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Bromo (mg/l)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="0.0"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Dureza
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Estabilizador
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="30"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Chemical Products */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Produtos Qu��micos Utilizados
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Produto
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="Ex: Cloro líquido"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Quantidade
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="2.5"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Unidade
+                          </label>
+                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="l">Litros (l)</option>
+                            <option value="kg">Quilogramas (kg)</option>
+                            <option value="g">Gramas (g)</option>
+                            <option value="ml">Mililitros (ml)</option>
+                          </select>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className="text-green-600 hover:text-green-700 text-sm font-medium flex items-center space-x-1"
+                      >
+                        <Plus className="h-4 w-4" />
+                        <span>Adicionar Produto</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Work Performed */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Trabalho Realizado
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {[
+                        "Limpeza de filtros",
+                        "Limpeza de pré-filtro",
+                        "Limpeza filtro areia/vidro",
+                        "Verificação alimentação",
+                        "Enchimento autom��tico",
+                        "Limpeza linha de ��gua",
+                        "Limpeza do fundo",
+                        "Limpeza das paredes",
+                        "Limpeza skimmers",
+                        "Verificação equipamentos",
+                      ].map((task, index) => (
+                        <label key={index} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            className="mr-2 text-green-600 focus:ring-green-500"
+                          />
+                          <span className="text-sm text-gray-700">{task}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Outros trabalhos realizados
+                      </label>
+                      <textarea
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Descreva outros trabalhos realizados..."
+                      />
+                    </div>
+                  </div>
+
+                  {/* Problems and Observations */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Problemas Encontrados
+                      </label>
+                      <textarea
+                        rows={4}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Descreva problemas encontrados, se houver..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Observações Gerais
+                      </label>
+                      <textarea
+                        rows={4}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Observações, recomendações, próxima manutenção..."
+                      />
+                    </div>
+                  </div>
+
+                  {/* Next Maintenance */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Próxima Manutenção
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado da Manutenção
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="completed">Concluída</option>
+                        <option value="pending">Pendente</option>
+                        <option value="in_progress">Em Progresso</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Fotografias da Manutenção */}
+                  <div>
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                        <Eye className="h-4 w-4 text-green-600" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Fotografias da Manutenção
+                      </h3>
+                    </div>
+
+                    {/* Upload Area */}
+                    <div
+                      className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-400 transition-colors"
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                    >
+                      <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <Plus className="h-6 w-6 text-gray-400" />
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                        Carregar Fotografias
+                      </h4>
+                      <p className="text-gray-600 text-sm mb-4">
+                        Arraste e solte ou clique para selecionar fotos da
+                        manutenção
+                      </p>
+                      <p className="text-gray-500 text-xs mb-4">
+                        {uploadedPhotos.length}/20 fotografias
+                      </p>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                        id="maintenance-photo-upload"
+                      />
+                      <label
+                        htmlFor="maintenance-photo-upload"
+                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2 mx-auto cursor-pointer"
+                      >
+                        <Eye className="h-4 w-4" />
+                        <span>Escolher Fotografias</span>
+                      </label>
+                    </div>
+
+                    {/* Photo Preview Grid */}
+                    {uploadedPhotos.length > 0 && (
+                      <div className="mt-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h5 className="font-medium text-gray-900">
+                            Fotografias Carregadas ({uploadedPhotos.length})
+                          </h5>
+                          <button
+                            type="button"
+                            onClick={clearAllPhotos}
+                            className="text-red-600 hover:text-red-800 text-sm"
+                          >
+                            Limpar Todas
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {uploadedPhotos.map((photo) => (
+                            <div key={photo.id} className="relative group">
+                              <img
+                                src={photo.data}
+                                alt={photo.name}
+                                className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removePhoto(photo.id)}
+                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                              <p className="text-xs text-gray-500 mt-1 truncate">
+                                {photo.name}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection("manutencoes")}
+                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSaveIntervention();
+                      }}
+                      className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Save className="h-4 w-4" />
+                      <span>Guardar Intervenção</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "utilizadores":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <UserCheck className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Utilizadores
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gestão de utilizadores do sistema
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowUserForm(true)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    <span>Novo Utilizador</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Search */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <input
+                  type="text"
+                  placeholder="Pesquisar utilizadores..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Users List */}
+              <div className="space-y-4">
+                {users.map((user) => (
+                  <div
+                    key={user.id}
+                    className="bg-white rounded-lg shadow-sm p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                          <UserCheck className="h-6 w-6 text-gray-600" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {user.name}
+                          </h3>
+                          <p className="text-gray-600">{user.email}</p>
+                          <div className="flex items-center space-x-4 mt-2">
+                            <span className="text-sm text-gray-500">
+                              Perfil: {user.role}
+                            </span>
+                            <span
+                              className={`text-sm px-2 py-1 rounded-full ${
+                                user.active
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {user.active ? "Ativo" : "Inativo"}
+                            </span>
+                            <span className="text-sm text-gray-500">
+                              Criado: {user.createdAt}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => {
+                            setEditingUser(user);
+                            setShowUserForm(true);
+                          }}
+                          className="p-2 text-gray-400 hover:text-gray-600"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteUser(user.id)}
+                          className="p-2 text-gray-400 hover:text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* User Form Modal */}
+              {showUserForm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                    <h3 className="text-lg font-semibold mb-4">
+                      {editingUser ? "Editar Utilizador" : "Novo Utilizador"}
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Nome
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          defaultValue={editingUser?.name || ""}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          defaultValue={editingUser?.email || ""}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Perfil
+                        </label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          defaultValue={editingUser?.role || "technician"}
+                        >
+                          <option value="super_admin">Super Admin</option>
+                          <option value="manager">Gestor</option>
+                          <option value="technician">T���cnico</option>
+                        </select>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="active"
+                          className="mr-2"
+                          defaultChecked={editingUser?.active ?? true}
+                        />
+                        <label
+                          htmlFor="active"
+                          className="text-sm text-gray-700"
+                        >
+                          Utilizador ativo
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex justify-end space-x-3 mt-6">
+                      <button
+                        onClick={() => {
+                          setShowUserForm(false);
+                          setEditingUser(null);
+                        }}
+                        className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleSaveUser();
+                          setShowUserForm(false);
+                          setEditingUser(null);
+                        }}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      >
+                        Guardar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+
+      case "configuracoes":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Configurações
+                </h1>
+                <p className="text-gray-600 text-sm">
+                  Gerir definições do sistema
+                </p>
+              </div>
+
+              {/* System Information */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Informações do Sistema
+                </h3>
+                <div className="grid gap-3">
+                  <div className="flex justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Versão</span>
+                    <span className="font-medium">1.0.0</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Utilizador Ativo</span>
+                    <span className="font-medium">{currentUser.name}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Perfil</span>
+                    <span className="font-medium capitalize">
+                      {currentUser.role.replace("_", " ")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-2">
+                    <span className="text-gray-600">Modo de Dados</span>
+                    <span className="font-medium">Armazenamento Local</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "relatorios":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <BarChart3 className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Relatórios
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gere relatórios detalhados em PDF
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Report Types */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Pool Reports */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Waves className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório de Piscinas
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Lista completa de piscinas
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      <strong>{pools.length}</strong> piscinas registadas
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• Estado e localização</li>
+                      <li>• Informações de clientes</li>
+                      <li>• Histórico de manutenções</li>
+                      <li>• Próximas intervenções</li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => generatePoolsPDF()}
+                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Gerar PDF</span>
+                  </button>
+                </div>
+
+                {/* Maintenance Reports */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                      <Wrench className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório de Manutenções
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Histórico de intervenções
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      <strong>{maintenance.length}</strong> manutenções
+                      registadas
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• Trabalhos realizados</li>
+                      <li>• T���cnicos responsáveis</li>
+                      <li>• Datas e durações</li>
+                      <li>• Estados e observações</li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => generateMaintenancePDF()}
+                    className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Gerar PDF</span>
+                  </button>
+                </div>
+
+                {/* Works Reports */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-6 w-6 text-orange-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório de Obras
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Projetos e construções
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      <strong>{works.length}</strong> obras registadas
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• Orçamentos e custos</li>
+                      <li>• Prazos e cronogramas</li>
+                      <li>• Equipas respons��veis</li>
+                      <li>��� Estados de progresso</li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => generateWorksPDF()}
+                    className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Gerar PDF</span>
+                  </button>
+                </div>
+
+                {/* Clients Reports */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <Users className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório de Clientes
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Base de dados de clientes
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      <strong>{clients.length}</strong> clientes registados
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• Dados de contacto</li>
+                      <li>• Piscinas associadas</li>
+                      <li>• Histórico de serviços</li>
+                      <li>• Informações contratuais</li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => generateClientsPDF()}
+                    className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Gerar PDF</span>
+                  </button>
+                </div>
+
+                {/* Complete Report */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <BarChart3 className="h-6 w-6 text-gray-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório Completo
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Todas as informações
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      Relatório consolidado de todo o sistema
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• Resumo executivo</li>
+                      <li>• Estatísticas gerais</li>
+                      <li>• Dados consolidados</li>
+                      <li>• Análise de performance</li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => generateCompletePDF()}
+                    className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Gerar PDF Completo</span>
+                  </button>
+                </div>
+
+                {/* Custom Report */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                      <Settings className="h-6 w-6 text-indigo-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório Personalizado
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Configure os dados
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      Crie relatórios com filtros específicos
+                    </p>
+                    <div className="space-y-2">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          defaultChecked
+                        />
+                        <span className="text-xs">Piscinas</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          defaultChecked
+                        />
+                        <span className="text-xs">Manutenções</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" className="mr-2" />
+                        <span className="text-xs">Obras</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" className="mr-2" />
+                        <span className="text-xs">Clientes</span>
+                      </label>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => generateCustomPDF()}
+                    className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Settings className="h-4 w-4" />
+                    <span>Configurar PDF</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Estatísticas Rápidas
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">
+                      {pools.length}
+                    </div>
+                    <div className="text-sm text-gray-600">Piscinas</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600">
+                      {maintenance.length}
+                    </div>
+                    <div className="text-sm text-gray-600">Manuten��ões</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-orange-600">
+                      {works.length}
+                    </div>
+                    <div className="text-sm text-gray-600">Obras</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600">
+                      {clients.length}
+                    </div>
+                    <div className="text-sm text-gray-600">Clientes</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-cyan-600">
+                      {(() => {
+                        const waterBores = JSON.parse(
+                          localStorage.getItem("waterBores") || "[]",
+                        );
+                        return waterBores.length;
+                      })()}
+                    </div>
+                    <div className="text-sm text-gray-600">Furos de Água</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "clientes":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <Users className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Clientes
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gestão da base de dados de clientes
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection("novo-cliente")}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Novo Cliente</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Search and Filters */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex space-x-3">
+                  <input
+                    type="text"
+                    placeholder="Pesquisar clientes..."
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option>Todos os tipos</option>
+                    <option>Particular</option>
+                    <option>Empresa</option>
+                    <option>Condomínio</option>
+                  </select>
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option>Todos os estados</option>
+                    <option>Ativo</option>
+                    <option>Inativo</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Statistics */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <Users className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Total Clientes
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {clients.length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <Check className="h-4 w-4 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Clientes Ativos
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {clients.filter((c) => c.status === "Ativo").length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Waves className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Com Piscinas
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {pools.length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-4 w-4 text-orange-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Com Obras
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {works.length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Clients List */}
+              <div className="space-y-4">
+                {clients.length === 0 ? (
+                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Users className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhum cliente registado
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Comece por adicionar o primeiro cliente ao sistema
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("novo-cliente")}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2 mx-auto"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Adicionar Cliente</span>
+                    </button>
+                  </div>
+                ) : (
+                  clients.map((client) => (
+                    <div
+                      key={client.id}
+                      className="bg-white rounded-lg shadow-sm p-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {client.name}
+                            </h3>
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                client.status === "Ativo"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
+                              {client.status}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                            <div>
+                              <p className="font-medium">Contactos:</p>
+                              <p>{client.email}</p>
+                              <p>{client.phone}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium">Morada:</p>
+                              <p>{client.address}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium">Informações:</p>
+                              <p>Tipo: {client.type}</p>
+                              <p>
+                                Cliente desde:{" "}
+                                {new Date(client.createdAt).toLocaleDateString(
+                                  "pt-PT",
+                                )}
+                              </p>
+                            </div>
+                          </div>
+                          {client.notes && (
+                            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                              <p className="text-sm text-gray-600">
+                                <strong>Notas:</strong> {client.notes}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => dataSync.deleteClient(client.id)}
+                            className="p-2 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        );
+
+      case "novo-cliente":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <Users className="h-4 w-4 text-purple-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Novo Cliente
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Adicionar cliente à base de dados
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-8">
+                  {/* Basic Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Informações Básicas
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Nome / Razão Social *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Nome completo ou razão social"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tipo de Cliente *
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+                          <option value="">Selecionar tipo</option>
+                          <option value="particular">Particular</option>
+                          <option value="empresa">Empresa</option>
+                          <option value="condominio">Condomínio</option>
+                          <option value="hotel">Hotel / Turismo</option>
+                          <option value="publico">Entidade Pública</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Contact Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Contactos
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email Principal *
+                        </label>
+                        <input
+                          type="email"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="email@exemplo.com"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Telefone Principal *
+                        </label>
+                        <input
+                          type="tel"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="+351 XXX XXX XXX"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email Secundário
+                        </label>
+                        <input
+                          type="email"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="email2@exemplo.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Telefone Secundário
+                        </label>
+                        <input
+                          type="tel"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="+351 XXX XXX XXX"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Address */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Morada
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Morada Completa *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Rua, n��mero, andar, etc."
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Código Postal *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="XXXX-XXX"
+                          pattern="[0-9]{4}-[0-9]{3}"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Localidade *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Cidade/Vila"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Additional Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Informações Adicionais
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          NIF / NIPC
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="123456789"
+                          pattern="[0-9]{9}"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Pessoa de Contacto (se aplicável)
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Nome da pessoa responsável"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Notas e Observações
+                        </label>
+                        <textarea
+                          rows={4}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Informa��ões relevantes sobre o cliente, preferências, histórico, etc."
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection("clientes")}
+                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        alert(
+                          "Cliente criado com sucesso! (Função em desenvolvimento)",
+                        );
+                        setActiveSection("clientes");
+                      }}
+                      className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Save className="h-4 w-4" />
+                      <span>Criar Cliente</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "obras":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <h1 className="text-2xl font-bold text-gray-900">Obras</h1>
+                <p className="text-gray-600 text-sm">
+                  Gestão de obras e projetos
+                </p>
+              </div>
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <p className="text-gray-600">
+                  Sistema de obras em desenvolvimento
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                Página não encontrada
+              </h1>
+              <p className="text-gray-600">
+                A seção solicitada não foi encontrada.
+              </p>
+            </div>
+          </div>
+        );
+    }
+  };
+
+  // Photo Gallery Modal
+  if (showPhotoGallery) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden m-4">
+          <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Galeria de Fotografias ({selectedPhotos.length} fotos)
+            </h2>
+            <button
+              onClick={() => setShowPhotoGallery(false)}
+              className="p-2 hover:bg-gray-100 rounded-lg"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="p-4 overflow-y-auto max-h-[calc(90vh-80px)]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {selectedPhotos.map((photo) => (
+                <div key={photo.id} className="relative">
+                  <img
+                    src={photo.data}
+                    alt={photo.name}
+                    className="w-full h-48 object-cover rounded-lg border border-gray-200"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 rounded-b-lg">
+                    <p className="text-sm truncate">{photo.name}</p>
+                    <p className="text-xs text-gray-300">
+                      {new Date(photo.timestamp).toLocaleDateString("pt-PT")}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Share Modal
+  if (showShareModal) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-900">
+                Partilhar Relatório
+              </h2>
+              <button
+                onClick={() => {
+                  setShowShareModal(false);
+                  setInterventionSaved(false);
+                }}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <Check className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Manutenção guardada com sucesso!
+                </h3>
+                <p className="text-gray-600">
+                  Escolha como pretende partilhar o relatório
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <button
+                onClick={() => handleShare("whatsapp")}
+                className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                  <Users className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="text-left">
+                  <p className="font-medium text-gray-900">WhatsApp</p>
+                  <p className="text-sm text-gray-500">Enviar por WhatsApp</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleShare("email")}
+                className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Building2 className="h-5 w-5 text-blue-600" />
+                </div>
+                <div className="text-left">
+                  <p className="font-medium text-gray-900">Email</p>
+                  <p className="text-sm text-gray-500">Enviar por email</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleShare("sms")}
+                className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                  <BarChart3 className="h-5 w-5 text-yellow-600" />
+                </div>
+                <div className="text-left">
+                  <p className="font-medium text-gray-900">SMS</p>
+                  <p className="text-sm text-gray-500">Enviar por SMS</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleShare("download")}
+                className="w-full flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <Save className="h-5 w-5 text-purple-600" />
+                </div>
+                <div className="text-left">
+                  <p className="font-medium text-gray-900">Download PDF</p>
+                  <p className="text-sm text-gray-500">Baixar arquivo</p>
+                </div>
+              </button>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+              <h4 className="font-medium text-gray-900 mb-2">
+                Conteúdo do Relatório:
+              </h4>
+              <div className="space-y-1 text-sm text-gray-600">
+                <div className="flex items-center space-x-2">
+                  <span>✓</span>
+                  <span>Dados da intervenção</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span>✓</span>
+                  <span>Valores da água</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span>✓</span>
+                  <span>Produtos químicos utilizados</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span>✓</span>
+                  <span>Trabalho realizado</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span>✓</span>
+                  <span>Fotografias</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span>✓</span>
+                  <span>Observações e próxima manutenção</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex space-x-3">
+              <button
+                onClick={() => {
+                  setShowShareModal(false);
+                  setInterventionSaved(false);
+                }}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+              >
+                Agora Não
+              </button>
+              <button
+                onClick={() => handleShare("preview")}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Pré-visualizar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
+    if (showAdvancedSettings) {
+      if (isAdvancedUnlocked) {
+        return (
+          <AdvancedSettings
+            onBack={handleAdvancedSettingsBack}
+            onNavigateToSection={(section) => {
+              navigateToSection(section);
+              setShowAdvancedSettings(false);
+              setIsAdvancedUnlocked(false);
+            }}
+            dataSync={{
+              pools,
+              maintenance,
+              works,
+              clients,
+              lastSync,
+              syncWithFirebase,
+              enableSync,
+            }}
+            notifications={{
+              pushPermission,
+              notificationsEnabled,
+              requestNotificationPermission,
+              testPushNotification,
+              sendWorkAssignmentNotification,
+            }}
+          />
+        );
+      }
+
+      // Password protection screen
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-red-600" />
+              </div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                Área Protegida
+              </h1>
+              <p className="text-gray-600">
+                Insira a palavra-passe para aceder às configurações avançadas
+              </p>
+            </div>
+
+            <form onSubmit={handleAdvancedPasswordSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Palavra-passe
+                </label>
+                <input
+                  type="password"
+                  value={advancedPassword}
+                  onChange={(e) => setAdvancedPassword(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  placeholder="Insira a palavra-passe"
+                  required
+                />
+              </div>
+
+              {advancedPasswordError && (
+                <div className="text-red-600 text-sm">
+                  {advancedPasswordError}
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedSettings(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Voltar
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  Entrar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="w-32 h-20 bg-white rounded-lg shadow-md p-2 mx-auto">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                alt="Leirisonda Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                value={loginForm.email}
+                onChange={(e) =>
+                  setLoginForm({ ...loginForm, email: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Palavra-passe
+              </label>
+              <input
+                type="password"
+                value={loginForm.password}
+                onChange={(e) =>
+                  setLoginForm({ ...loginForm, password: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                required
+              />
+            </div>
+
+            {loginError && (
+              <div className="text-red-600 text-sm">{loginError}</div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Entrar
+            </button>
+          </form>
+        </div>
+
+        {/* Floating Advanced Settings Button */}
+        <button
+          onClick={() => setShowAdvancedSettings(true)}
+          className="fixed bottom-4 right-4 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 hover:shadow-xl transition-all duration-200"
+        >
+          <Settings className="h-5 w-5" />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0`}
+      >
+        <div className="flex flex-col h-full">
+          {/* Logo Header */}
+          <div className="px-6 py-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                    alt="Leirisonda Logo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-500">Gestão de Serviços</p>
+                  <SyncStatusDisplay
+                    isLoading={syncLoading}
+                    lastSync={lastSync}
+                    error={syncError}
+                    syncEnabled={!!localStorage.getItem("firebase-config")}
+                  />
+                </div>
+              </div>
+              {/* Close button for mobile */}
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="lg:hidden p-1 rounded-md hover:bg-gray-100"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 px-4 py-6 space-y-2">
+            <button
+              onClick={() => {
+                navigateToSection("dashboard");
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                activeSection === "dashboard"
+                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Home className="h-5 w-5" />
+              <span>Dashboard</span>
+            </button>
+
+            <button
+              onClick={() => {
+                navigateToSection("nova-obra");
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                activeSection === "nova-obra"
+                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Plus className="h-5 w-5" />
+              <span>Nova Obra</span>
+            </button>
+
+            <button
+              onClick={() => {
+                navigateToSection("nova-manutencao");
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                activeSection === "nova-manutencao"
+                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Wrench className="h-5 w-5" />
+              <span>Nova Manutenção</span>
+            </button>
+
+            <button
+              onClick={() => {
+                navigateToSection("futuras-manutencoes");
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                activeSection === "futuras-manutencoes"
+                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Waves className="h-5 w-5" />
+              <span>Piscinas</span>
+            </button>
+          </nav>
+
+          {/* User Section */}
+          <div className="px-4 py-6 border-t border-gray-200">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                <UserCheck className="h-5 w-5 text-red-600" />
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">{currentUser.name}</p>
+                <p className="text-sm text-gray-500">{currentUser.role}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <LogOut className="h-5 w-5" />
+              <span>Terminar Sessão</span>
+            </button>
+            <div className="mt-4 text-center">
+              <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu Button */}
+      <div className="lg:hidden fixed top-4 left-4 z-60">
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="bg-white p-2 rounded-md shadow-md"
+        >
+          <Menu className="h-6 w-6 text-gray-600" />
+        </button>
+      </div>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Main Content */}
+      <main className="lg:ml-80 min-h-screen">
+        <div className="p-4 lg:p-6">{renderContent()}</div>
+      </main>
+
+      {/* Install Prompt for Mobile */}
+      <InstallPrompt />
+    </div>
+  );
+}
+
+export default App;
