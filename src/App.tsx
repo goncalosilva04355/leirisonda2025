@@ -722,7 +722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relatório PDF. Tente novamente.");
+      alert("Erro ao gerar o relat��rio PDF. Tente novamente.");
     }
   };
 
@@ -2760,6 +2760,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           min="0"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="120"
+                          value={maintenanceForm.alkalinity}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              alkalinity: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
