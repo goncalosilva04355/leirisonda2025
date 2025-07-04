@@ -70,7 +70,9 @@ self.addEventListener("sync", (event) => {
   if (event.tag === "background-sync") {
     event.waitUntil(
       // Perform background sync operations
-      console.log("Performing background sync..."),
+      Promise.resolve().then(() => {
+        console.log("Performing background sync...");
+      }),
     );
   }
 });
