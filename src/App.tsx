@@ -87,7 +87,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true); // Temporarily hidden login page
   const [currentUser, setCurrentUser] = useState(ADMIN_USER);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("piscinas");
+  const [activeSection, setActiveSection] = useState("dashboard");
   const [users, setUsers] = useState(initialUsers);
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
@@ -1733,7 +1733,7 @@ function App() {
                               📍 Marinha Grande
                             </p>
                             <div className="flex items-center space-x-3 mt-1 text-sm text-gray-500">
-                              <span>📅 28/01/2025</span>
+                              <span>���� 28/01/2025</span>
         );
       case "nova-manutencao":
         return (
