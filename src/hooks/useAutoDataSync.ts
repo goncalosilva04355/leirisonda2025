@@ -130,33 +130,51 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
         error.message?.includes("quota") ||
         error.message?.includes("resource-exhausted")
       ) {
+        quotaExceededCount.current += 1;
         isQuotaExceeded.current = true;
+
+        // Open circuit breaker after 3 quota exceeded errors
+        if (quotaExceededCount.current >= 3) {
+          circuitBreakerOpen.current = true;
+          console.error(
+            `🚨 CIRCUIT BREAKER OPEN - Firebase sync DISABLED after ${quotaExceededCount.current} quota exceeded errors`,
+          );
+          syncStatus.current.error =
+            "Firebase sync disabled - quota limit reached";
+          return; // Stop all sync operations
+        }
+
         backoffMultiplier.current = Math.min(backoffMultiplier.current * 2, 32); // Max 32x backoff
         console.warn(
-          `🔥 Firebase quota exceeded. Using ${backoffMultiplier.current}x backoff`,
+          `🔥 Firebase quota exceeded (${quotaExceededCount.current}/3). Using ${backoffMultiplier.current}x backoff`,
         );
       } else {
-        // Reset backoff for non-quota errors
+        // Reset quota count for non-quota errors
+        quotaExceededCount.current = 0;
         backoffMultiplier.current = Math.max(backoffMultiplier.current / 2, 1);
       }
 
-      // Reagenda com backoff exponencial
-      if (finalConfig.enabled && !isQuotaExceeded.current) {
-        const nextInterval =
-          finalConfig.syncInterval * backoffMultiplier.current;
-        console.log(`⏰ Reagendando sincronização em ${nextInterval / 1000}s`);
-        syncTimeoutRef.current = setTimeout(performAutoSync, nextInterval);
-      } else if (isQuotaExceeded.current) {
-        // Para quota exceeded, espera muito mais tempo
-        const quotaBackoffTime = finalConfig.syncInterval * 60; // 60x o intervalo normal
-        console.log(
-          `🔥 Quota exceeded: aguardando ${quotaBackoffTime / 1000}s antes de tentar novamente`,
-        );
-        syncTimeoutRef.current = setTimeout(() => {
-          isQuotaExceeded.current = false;
-          backoffMultiplier.current = 1;
-          performAutoSync();
-        }, quotaBackoffTime);
+      // Reagenda com backoff exponencial (se circuit breaker não estiver aberto)
+      if (finalConfig.enabled && !circuitBreakerOpen.current) {
+        if (isQuotaExceeded.current) {
+          // Para quota exceeded, espera muito mais tempo
+          const quotaBackoffTime = finalConfig.syncInterval * 60; // 60x o intervalo normal
+          console.log(
+            `🔥 Quota exceeded: aguardando ${quotaBackoffTime / 1000}s antes de tentar novamente`,
+          );
+          syncTimeoutRef.current = setTimeout(() => {
+            isQuotaExceeded.current = false;
+            backoffMultiplier.current = 1;
+            performAutoSync();
+          }, quotaBackoffTime);
+        } else {
+          const nextInterval =
+            finalConfig.syncInterval * backoffMultiplier.current;
+          console.log(
+            `⏰ Reagendando sincronização em ${nextInterval / 1000}s`,
+          );
+          syncTimeoutRef.current = setTimeout(performAutoSync, nextInterval);
+        }
       }
     } finally {
       syncStatus.current.syncing = false;
