@@ -336,7 +336,36 @@ export function useDataSync(): SyncState & SyncActions {
   useEffect(() => {
     const today = new Date();
 
-    // Load saved data from localStorage
+    // Check if app was recently cleaned - if so, start with empty data
+    const appCleaned = localStorage.getItem("app-cleaned");
+    const lastCleanup = localStorage.getItem("last-cleanup");
+
+    let shouldUseEmptyData = false;
+    if (appCleaned && lastCleanup) {
+      const cleanupTime = new Date(lastCleanup);
+      const hoursSinceCleanup =
+        (today.getTime() - cleanupTime.getTime()) / (1000 * 60 * 60);
+      shouldUseEmptyData = hoursSinceCleanup < 24; // Use empty data if cleaned within 24 hours
+    }
+
+    if (shouldUseEmptyData) {
+      // Use only mock data (no localStorage data) if recently cleaned
+      const future = mockMaintenance.filter(
+        (m) => new Date(m.scheduledDate) >= today,
+      );
+
+      setState((prev) => ({
+        ...prev,
+        pools: [...mockPools],
+        maintenance: [...mockMaintenance],
+        futureMaintenance: future,
+        works: [...mockWorks],
+        clients: [...mockClients],
+      }));
+      return;
+    }
+
+    // Load saved data from localStorage (normal behavior)
     const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
     const savedMaintenance = JSON.parse(
       localStorage.getItem("maintenance") || "[]",
