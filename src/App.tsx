@@ -1617,16 +1617,7 @@ function App() {
                               <span>👨‍🔧 João Santos</span>
                             </div>
                             <p className="text-xs text-gray-500 mt-1">
-                              Limpeza trimestral completa
-                            </p>
-                          </div>
-                          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
-                            Programada
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>
