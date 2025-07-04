@@ -1272,7 +1272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Pendentes
                       </h3>
                       <p className="text-sm text-gray-500">
-                        Obras necessitam atenção
+                        Obras necessitam atenç��o
                       </p>
                     </div>
                     <div className="text-4xl font-bold text-gray-900">
@@ -5874,67 +5874,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 Entrar
-              </button>
-
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const gonçaloUser = {
-                    uid: "goncalo-1",
-                    email: "gongonsilva@gmail.com",
-                    name: "Gonçalo Fonseca",
-                    role: "super_admin" as const,
-                    permissions: {
-                      obras: {
-                        view: true,
-                        create: true,
-                        edit: true,
-                        delete: true,
-                      },
-                      manutencoes: {
-                        view: true,
-                        create: true,
-                        edit: true,
-                        delete: true,
-                      },
-                      piscinas: {
-                        view: true,
-                        create: true,
-                        edit: true,
-                        delete: true,
-                      },
-                      utilizadores: {
-                        view: true,
-                        create: true,
-                        edit: true,
-                        delete: true,
-                      },
-                      relatorios: {
-                        view: true,
-                        create: true,
-                        edit: true,
-                        delete: true,
-                      },
-                      clientes: {
-                        view: true,
-                        create: true,
-                        edit: true,
-                        delete: true,
-                      },
-                    },
-                    active: true,
-                    createdAt: "2024-01-01",
-                  };
-
-                  setCurrentUser(gonçaloUser);
-                  setIsAuthenticated(true);
-                  setLoginForm({ email: "", password: "" });
-                  navigateToSection("dashboard");
-                }}
-                className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
-              >
-                🚀 Login Rápido (Gonçalo)
               </button>
             </div>
           </form>
