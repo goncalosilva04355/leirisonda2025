@@ -3268,7 +3268,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de ��gua - Conditional */}
+                    {/* Detalhes do Furo de Água - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div>
                         <div className="flex items-center space-x-3 mb-6">
@@ -4054,7 +4054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G������s</option>
+                          <option value="gas">Aquecimento a Gás</option>
                         </select>
                       </div>
                     </div>
@@ -5202,7 +5202,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>��� Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>• Equipas respons��veis</li>
-                        <li>������� Estados de progresso</li>
+                        <li>�������� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
