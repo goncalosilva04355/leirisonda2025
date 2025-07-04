@@ -486,6 +486,9 @@ export const workService = {
 export const syncService = {
   // Initialize all data
   async initializeData() {
+    if (!isFirebaseAvailable()) {
+      return; // Skip initialization if Firebase not configured
+    }
     await userService.initializeDefaultUsers();
   },
 
@@ -496,6 +499,15 @@ export const syncService = {
     onMaintenanceChange: (maintenance: Maintenance[]) => void;
     onWorksChange: (works: Work[]) => void;
   }) {
+    if (!isFirebaseAvailable()) {
+      // Return empty data and empty unsubscribe function
+      callbacks.onUsersChange([]);
+      callbacks.onPoolsChange([]);
+      callbacks.onMaintenanceChange([]);
+      callbacks.onWorksChange([]);
+      return () => {};
+    }
+
     const unsubscribeUsers = userService.subscribeToUsers(
       callbacks.onUsersChange,
     );
