@@ -60,19 +60,12 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
       return;
     }
 
-    try {
-      // Save to localStorage
-      localStorage.setItem("firebase-config", JSON.stringify(config));
-
-      setSuccess(true);
-      setTimeout(() => {
-        onConfigured();
-      }, 1500);
-    } catch (error) {
-      setError("Erro ao guardar configuração");
-    } finally {
-      setLoading(false);
-    }
+    // Configuration is already fixed and active
+    setSuccess(true);
+    setLoading(false);
+    setTimeout(() => {
+      onConfigured();
+    }, 1500);
   };
 
   const handleFieldChange = (field: keyof FirebaseSettings, value: string) => {
@@ -87,7 +80,7 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Configuração Guardada!
+            Configura��ão Guardada!
           </h2>
           <p className="text-gray-600">
             Firebase configurado com sucesso. A sincronização será ativada.
