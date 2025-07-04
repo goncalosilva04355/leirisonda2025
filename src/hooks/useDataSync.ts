@@ -484,7 +484,7 @@ export function useDataSync(): SyncState & SyncActions {
         clients: [],
       }));
 
-      console.log("✅ Demo data cleaned - new data will be saved normally");
+      console.log("�� Demo data cleaned - new data will be saved normally");
       return;
     }
 
@@ -561,6 +561,23 @@ export function useDataSync(): SyncState & SyncActions {
       manutencoes: savedMaintenance.length,
       clientes: savedClients.length,
     });
+
+    // If no data found locally, try to force sync from Firebase
+    if (
+      savedPools.length === 0 &&
+      savedWorks.length === 0 &&
+      savedMaintenance.length === 0
+    ) {
+      console.log(
+        "🔄 Nenhum dado local encontrado, tentando recuperar do Firebase...",
+      );
+      // Trigger sync with Firebase immediately after state is set
+      setTimeout(() => {
+        if (syncEnabled && realFirebaseService.isReady()) {
+          syncWithFirebase();
+        }
+      }, 1000);
+    }
 
     // Always use only saved data, never add mock data automatically
     const finalPools = savedPools;
