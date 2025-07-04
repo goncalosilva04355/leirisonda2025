@@ -590,18 +590,48 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const downloadPDF = (content: string, filename: string) => {
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    try {
+      const pdf = new jsPDF();
 
-    // Show success message
-    alert(`Relatório "${filename}" gerado com sucesso!`);
+      // Set font size and line height
+      pdf.setFontSize(12);
+      const lineHeight = 6;
+
+      // Split content into lines and handle page breaks
+      const lines = content.split("\n");
+      let yPosition = 20;
+
+      lines.forEach((line) => {
+        // Check if we need a new page
+        if (yPosition > 270) {
+          pdf.addPage();
+          yPosition = 20;
+        }
+
+        // Handle long lines by splitting them
+        const maxWidth = 180;
+        const splitLines = pdf.splitTextToSize(line, maxWidth);
+
+        splitLines.forEach((splitLine: string) => {
+          if (yPosition > 270) {
+            pdf.addPage();
+            yPosition = 20;
+          }
+          pdf.text(splitLine, 10, yPosition);
+          yPosition += lineHeight;
+        });
+      });
+
+      // Save the PDF
+      const pdfFilename = filename.replace(".txt", ".pdf");
+      pdf.save(pdfFilename);
+
+      // Show success message
+      alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      alert("Erro ao gerar o relatório PDF. Tente novamente.");
+    }
   };
 
   // User management functions
@@ -1821,7 +1851,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Nível da ��gua (m) *
+                                Nível da Água (m) *
                               </label>
                               <input
                                 type="number"
