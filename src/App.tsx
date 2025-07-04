@@ -133,6 +133,17 @@ function App() {
     });
   }, [isAuthenticated, currentUser]);
 
+  // Monitoramento de integridade de dados
+  useEffect(() => {
+    // Iniciar monitoramento de integridade de dados
+    dataIntegrityService.startIntegrityMonitoring();
+
+    // Cleanup ao desmontar componente
+    return () => {
+      dataIntegrityService.stopIntegrityMonitoring();
+    };
+  }, []);
+
   // No auto-login - users must login manually
   useEffect(() => {
     // Clear any existing auth data on app start
