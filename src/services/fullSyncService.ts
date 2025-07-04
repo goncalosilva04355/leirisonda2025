@@ -33,6 +33,15 @@ class FullSyncService {
       clientsSync: { local: 0, firebase: 0, merged: 0 },
     };
 
+    // Firebase temporarily paused - running in offline mode
+    console.log("⏸️ Firebase sync paused - app running in offline mode");
+    return {
+      success: true,
+      message: "App running in offline mode",
+      details: ["Using local storage only - Firebase sync temporarily paused"],
+      stats,
+    };
+
     if (!db) {
       return {
         success: false,
@@ -203,9 +212,7 @@ class FullSyncService {
     }
   }
 
-  private async syncCollection(
-    collectionName: string,
-  ): Promise<{
+  private async syncCollection(collectionName: string): Promise<{
     details: string[];
     stats: { local: number; firebase: number; merged: number };
   }> {

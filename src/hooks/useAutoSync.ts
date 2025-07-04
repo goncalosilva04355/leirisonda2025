@@ -9,6 +9,14 @@ export const useAutoSync = () => {
 
   useEffect(() => {
     const performAutoSync = async () => {
+      // Firebase temporarily disabled due to quota - running in offline mode
+      console.log("⏸️ Firebase sync paused - running in offline mode");
+      setSyncStatus("completed");
+      const now = new Date();
+      setLastSync(now);
+      sessionStorage.setItem("auto-sync-completed", "true");
+      return;
+
       // Check if we should auto-sync (e.g., only once per session)
       const hasAutoSynced = sessionStorage.getItem("auto-sync-completed");
 
@@ -41,9 +49,18 @@ export const useAutoSync = () => {
           setSyncStatus("error");
           console.warn("⚠️ Auto-sync completed with errors:", result.message);
         }
-      } catch (error) {
+      } catch (error: any) {
         setSyncStatus("error");
         console.error("❌ Auto-sync failed:", error);
+
+        // Handle quota exceeded specifically
+        if (
+          error.message?.includes("quota") ||
+          error.message?.includes("resource-exhausted")
+        ) {
+          console.warn("🔥 Firebase quota exceeded in auto-sync");
+          setSyncStatus("completed"); // Set as completed to prevent retries
+        }
       }
     };
 

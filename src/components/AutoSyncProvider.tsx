@@ -3,6 +3,7 @@ import {
   useAutoDataSync,
   useFirebaseRealtimeSync,
 } from "../hooks/useAutoDataSync";
+import { SyncErrorBoundary } from "./SyncErrorBoundary";
 
 interface AutoSyncContextType {
   isActive: boolean;
@@ -96,24 +97,30 @@ export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
   }
 
   const contextValue: AutoSyncContextType = {
-    isActive: autoSync.isActive,
-    syncing: autoSync.syncing,
-    lastSync: autoSync.lastSync,
-    error: autoSync.error,
-    forceSyncNow: autoSync.forceSyncNow,
-    config: autoSync.config,
+    isActive: autoSync?.isActive ?? false,
+    syncing: autoSync?.syncing ?? false,
+    lastSync: autoSync?.lastSync ?? null,
+    error: autoSync?.error ?? null,
+    forceSyncNow: autoSync?.forceSyncNow ?? (async () => {}),
+    config: autoSync?.config ?? {
+      enabled: false,
+      syncInterval: 30000,
+      collections: [],
+    },
   };
 
   return (
-    <AutoSyncContext.Provider value={contextValue}>
-      {children}
-      {/* Indicador visual opcional */}
-      {showNotifications && autoSync.syncing && (
-        <div className="fixed bottom-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm shadow-lg z-50">
-          🔄 Sincronizando...
-        </div>
-      )}
-    </AutoSyncContext.Provider>
+    <SyncErrorBoundary>
+      <AutoSyncContext.Provider value={contextValue}>
+        {children}
+        {/* Indicador visual opcional */}
+        {showNotifications && autoSync.syncing && (
+          <div className="fixed bottom-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm shadow-lg z-50">
+            🔄 Sincronizando...
+          </div>
+        )}
+      </AutoSyncContext.Provider>
+    </SyncErrorBoundary>
   );
 };
 

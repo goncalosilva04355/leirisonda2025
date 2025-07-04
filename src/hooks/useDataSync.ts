@@ -454,6 +454,11 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Real Firebase sync
   const syncWithFirebase = useCallback(async () => {
+    // Firebase temporarily paused - running in offline mode
+    console.log("⏸️ Firebase sync paused - using local storage only");
+    setState((prev) => ({ ...prev, isLoading: false, error: null }));
+    return;
+
     if (!syncEnabled) {
       setState((prev) => ({ ...prev, error: "Firebase not configured" }));
       return;

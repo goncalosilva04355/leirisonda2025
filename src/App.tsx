@@ -35,6 +35,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { AutoSyncNotification } from "./components/AutoSyncNotification";
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { SyncStatusIcon } from "./components/SyncStatusIndicator";
+import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
@@ -317,9 +318,22 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
+    console.log("🔔 Initializing notifications...");
     if ("Notification" in window) {
-      setPushPermission(Notification.permission);
-      setNotificationsEnabled(Notification.permission === "granted");
+      const permission = Notification.permission;
+      console.log("🔔 Current notification permission:", permission);
+      setPushPermission(permission);
+      setNotificationsEnabled(permission === "granted");
+
+      if (permission === "granted") {
+        console.log("✅ Notifications already granted");
+      } else if (permission === "denied") {
+        console.warn("❌ Notifications denied by user");
+      } else {
+        console.log("⏳ Notifications permission not yet requested");
+      }
+    } else {
+      console.warn("❌ Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -328,12 +342,12 @@ function App() {
         .register("/sw.js")
         .then((registration) => {
           console.log(
-            "Service Worker registered successfully:",
+            "✅ Service Worker registered successfully:",
             registration.scope,
           );
         })
         .catch((error) => {
-          console.log("Service Worker registration failed:", error);
+          console.error("❌ Service Worker registration failed:", error);
         });
     }
 
@@ -593,14 +607,22 @@ function App() {
         // Clear login form
         setLoginForm({ email: "", password: "" });
 
+        console.log("✅ Login state updated", {
+          user: result.user.email,
+          role: result.user.role,
+          isAuthenticated: true,
+        });
+
         // Use setTimeout to ensure state is set before navigation
         setTimeout(() => {
           // Handle any pending hash navigation after login
           const hash = window.location.hash.substring(1);
           if (hash && hash !== "login") {
+            console.log("🔄 Navigating to hash section:", hash);
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
+            console.log("��� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -883,25 +905,36 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr��������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr����������-definidos por agora.",
     );
   };
 
   // Push Notification functions
   const requestNotificationPermission = async () => {
+    console.log("🔔 Requesting notification permission...");
     if ("Notification" in window) {
-      const permission = await Notification.requestPermission();
-      setPushPermission(permission);
-      if (permission === "granted") {
-        setNotificationsEnabled(true);
-        showNotification(
-          "Notificações Ativadas",
-          "Agora vai receber notifica��ões de obras atribuídas",
-          "success",
-        );
+      try {
+        const permission = await Notification.requestPermission();
+        console.log("🔔 Permission result:", permission);
+        setPushPermission(permission);
+        if (permission === "granted") {
+          setNotificationsEnabled(true);
+          showNotification(
+            "Notificações Ativadas",
+            "Agora vai receber notificações de obras atribuídas",
+            "success",
+          );
+          console.log("✅ Notifications enabled successfully");
+        } else {
+          console.warn("❌ Notification permission denied or dismissed");
+        }
+        return permission;
+      } catch (error) {
+        console.error("❌ Error requesting notification permission:", error);
+        return "error";
       }
-      return permission;
     }
+    console.warn("❌ Notifications not supported in this browser");
     return "denied";
   };
 
@@ -1405,6 +1438,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const renderContent = () => {
     // Add loading state check with timeout
     if (!currentUser || !isAuthenticated) {
+      console.log("🔄 renderContent: Waiting for auth state", {
+        currentUser: !!currentUser,
+        isAuthenticated,
+        activeSection,
+      });
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
@@ -1417,6 +1455,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         </div>
       );
     }
+
+    console.log("✅ renderContent: Auth state valid, rendering", {
+      activeSection,
+      userRole: currentUser?.role,
+    });
 
     // Add error boundary
     try {
@@ -2753,7 +2796,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manutenção</option>
+                            <option value="manutencao">Manuten��ão</option>
                             <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -4883,7 +4926,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Estado e localizaç��o</li>
                         <li>• Informações de clientes</li>
-                        <li>��� Histórico de manutenç��es</li>
+                        <li>����� Histórico de manutenç��es</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -5109,7 +5152,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="text-2xl font-bold text-green-600">
                         {maintenance.length}
                       </div>
-                      <div className="text-sm text-gray-600">Manuten��ões</div>
+                      <div className="text-sm text-gray-600">
+                        Manuten����ões
+                      </div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-orange-600">
@@ -5554,7 +5599,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Nome da pessoa responsável"
+                            placeholder="Nome da pessoa respons����vel"
                           />
                         </div>
                         <div>
@@ -6052,7 +6097,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="installation">Instalação</option>
                           <option value="maintenance">Manutenção</option>
                           <option value="repair">Reparação</option>
-                          <option value="renovation">Renovação</option>
+                          <option value="renovation">Renova��ão</option>
                           <option value="inspection">Inspeção</option>
                         </select>
                       </div>
@@ -7071,48 +7116,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </form>
 
           {/* SECURITY: Only super admin can create new accounts - removed public registration */}
-
-          {/* Login instructions for Gonçalo */}
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <p className="text-sm text-blue-800 font-medium">
-              Credenciais de administração:
-            </p>
-            <p className="text-xs text-blue-600 mt-1">
-              Email: gongonsilva@gmail.com
-              <br />
-              Password: 19867gsf
-            </p>
-          </div>
-
-          {/* Notification activation instructions */}
-          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-            <p className="text-sm text-green-800 font-medium mb-2">
-              Como ativar notificações:
-            </p>
-
-            <div className="text-xs text-green-700 space-y-2">
-              <div>
-                <p className="font-semibold">📱 iPhone/iPad:</p>
-                <p>1. Definições → Notificações → Leirisonda</p>
-                <p>2. Ativar "Permitir Notificações"</p>
-                <p>3. Escolher estilo de alerta</p>
-              </div>
-
-              <div>
-                <p className="font-semibold">🤖 Android:</p>
-                <p>1. Definições → Apps → Leirisonda</p>
-                <p>2. Notificações → Ativar</p>
-                <p>3. Permitir todas as categorias</p>
-              </div>
-
-              <div>
-                <p className="font-semibold">🌐 Chrome/Safari:</p>
-                <p>1. Clicar no ícone 🔒 na barra de endereço</p>
-                <p>2. Notificações → Permitir</p>
-                <p>3. Recarregar a página</p>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Floating Advanced Settings Button */}
@@ -7122,29 +7125,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         >
           <Settings className="h-5 w-5" />
         </button>
-
-        {/* Debug button for clearing auth data (remove in production) */}
-        <button
-          onClick={() => {
-            localStorage.removeItem("currentUser");
-            localStorage.removeItem("mock-current-user");
-            localStorage.removeItem("mock-users");
-            sessionStorage.clear();
-            window.location.reload();
-          }}
-          className="fixed bottom-4 left-4 w-12 h-12 bg-red-100 border border-red-200 rounded-full shadow-lg flex items-center justify-center text-red-500 hover:text-red-700 hover:shadow-xl transition-all duration-200"
-          title="Clear Auth Data (Debug)"
-        >
-          <X className="h-4 w-4" />
-        </button>
       </div>
     );
   }
 
   return (
     <AutoSyncProvider
-      enabled={true}
-      syncInterval={1000}
+      enabled={false}
+      syncInterval={15000}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={false}
     >

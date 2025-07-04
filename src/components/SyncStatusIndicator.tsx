@@ -7,6 +7,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useAutoSync } from "./AutoSyncProvider";
+import { SyncErrorBoundary } from "./SyncErrorBoundary";
 
 interface SyncStatusIndicatorProps {
   position?: "fixed" | "relative";
@@ -21,7 +22,20 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
   showText = false,
   className = "",
 }) => {
-  const { isActive, syncing, lastSync, error } = useAutoSync();
+  let syncData;
+  try {
+    syncData = useAutoSync();
+  } catch (error) {
+    console.warn("SyncStatusIndicator: useAutoSync error", error);
+    syncData = {
+      isActive: false,
+      syncing: false,
+      lastSync: null,
+      error: "Sync unavailable",
+    };
+  }
+
+  const { isActive, syncing, lastSync, error: syncError } = syncData;
 
   const getSizeClasses = () => {
     switch (size) {
@@ -67,12 +81,14 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
       };
     }
 
-    if (error) {
+    if (syncError) {
+      const isQuotaError =
+        syncError.includes("quota") || syncError.includes("resource-exhausted");
       return {
         icon: AlertCircle,
-        color: "text-red-500",
-        bgColor: "bg-red-50",
-        text: "Erro na sincronização",
+        color: isQuotaError ? "text-orange-500" : "text-red-500",
+        bgColor: isQuotaError ? "bg-orange-50" : "bg-red-50",
+        text: isQuotaError ? "Limite atingido" : "Erro na sincronização",
         pulse: false,
       };
     }
@@ -113,38 +129,55 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
   const IconComponent = statusInfo.icon;
 
   return (
-    <div className={`${getPositionClasses()} ${className}`}>
-      <div
-        className={`
-          flex items-center gap-2 px-2 py-1 rounded-lg shadow-sm border
-          ${statusInfo.bgColor} border-gray-200
-          ${showText ? "pr-3" : ""}
-        `}
-        title={error || statusInfo.text}
-      >
-        <IconComponent
+    <SyncErrorBoundary
+      fallback={
+        <div className={`${getPositionClasses()} ${className}`}>
+          <div className="flex items-center gap-2 px-2 py-1 rounded-lg shadow-sm border bg-orange-50 border-orange-200">
+            <AlertCircle className={`${getSizeClasses()} text-orange-500`} />
+            {showText && (
+              <span
+                className={`${getTextSizeClasses()} text-orange-500 font-medium`}
+              >
+                Limite atingido
+              </span>
+            )}
+          </div>
+        </div>
+      }
+    >
+      <div className={`${getPositionClasses()} ${className}`}>
+        <div
           className={`
-            ${getSizeClasses()} ${statusInfo.color}
-            ${statusInfo.pulse ? "animate-spin" : ""}
+            flex items-center gap-2 px-2 py-1 rounded-lg shadow-sm border
+            ${statusInfo.bgColor} border-gray-200
+            ${showText ? "pr-3" : ""}
           `}
-        />
+          title={syncError || statusInfo.text}
+        >
+          <IconComponent
+            className={`
+              ${getSizeClasses()} ${statusInfo.color}
+              ${statusInfo.pulse ? "animate-spin" : ""}
+            `}
+          />
 
-        {showText && (
-          <span
-            className={`${getTextSizeClasses()} ${statusInfo.color} font-medium`}
-          >
-            {statusInfo.text}
-          </span>
+          {showText && (
+            <span
+              className={`${getTextSizeClasses()} ${statusInfo.color} font-medium`}
+            >
+              {statusInfo.text}
+            </span>
+          )}
+        </div>
+
+        {/* Detalhes no hover para versão sem texto */}
+        {!showText && lastSync && (
+          <div className="absolute top-full right-0 mt-1 bg-black text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            Última sync: {lastSync.toLocaleTimeString()}
+          </div>
         )}
       </div>
-
-      {/* Detalhes no hover para versão sem texto */}
-      {!showText && lastSync && (
-        <div className="absolute top-full right-0 mt-1 bg-black text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">
-          Última sync: {lastSync.toLocaleTimeString()}
-        </div>
-      )}
-    </div>
+    </SyncErrorBoundary>
   );
 };
 
@@ -178,7 +211,21 @@ export const SyncStatusBadge: React.FC<{ className?: string }> = ({
 
 // Hook para informações detalhadas de sincronização
 export const useSyncStatusInfo = () => {
-  const { isActive, syncing, lastSync, error, config } = useAutoSync();
+  let syncData;
+  try {
+    syncData = useAutoSync();
+  } catch (error) {
+    console.warn("useSyncStatusInfo: useAutoSync error", error);
+    syncData = {
+      isActive: false,
+      syncing: false,
+      lastSync: null,
+      error: "Sync unavailable",
+      config: { enabled: false, syncInterval: 30000, collections: [] },
+    };
+  }
+
+  const { isActive, syncing, lastSync, error, config } = syncData;
 
   const getStatusText = () => {
     if (!isActive) return "Sincronização desativada";

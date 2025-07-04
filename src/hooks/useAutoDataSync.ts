@@ -18,7 +18,7 @@ interface SyncStatus {
 export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   const defaultConfig: AutoSyncConfig = {
     enabled: true,
-    syncInterval: 1000, // 1 segundo
+    syncInterval: 15000, // 15 segundos - balance entre responsividade e quota
     collections: ["users", "pools", "maintenance", "works", "clients"],
   };
 
@@ -34,6 +34,10 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   const lastDataSnapshot = useRef<Record<string, string>>({});
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isInitialized = useRef(false);
+  const backoffMultiplier = useRef(1);
+  const isQuotaExceeded = useRef(false);
+  const quotaExceededCount = useRef(0);
+  const circuitBreakerOpen = useRef(false);
 
   // Função para gerar hash dos dados para detectar mudanças
   const generateDataHash = useCallback((data: any): string => {
@@ -65,6 +69,14 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
       return;
     }
 
+    // Circuit breaker - para completamente se quota foi excedido muitas vezes
+    if (circuitBreakerOpen.current) {
+      console.warn(
+        "⚡ Circuit breaker OPEN - Firebase sync stopped due to quota exceeded",
+      );
+      return;
+    }
+
     try {
       syncStatus.current.syncing = true;
       syncStatus.current.error = null;
@@ -72,15 +84,20 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
       // 1. Verifica se há mudanças locais
       const hasLocalChanges = checkForLocalChanges();
 
-      // 2. Sincroniza dados se há mudanças ou se é a primeira vez
+      // 2. Sincroniza dados APENAS se há mudanças ou se é a primeira vez
       if (hasLocalChanges || !isInitialized.current) {
-        console.log("🔄 Iniciando sincronização automática...");
+        console.log("🔄 Mudanças detectadas - iniciando sincronização...");
 
         // Sincronização completa bidirecional
         const result = await fullSyncService.syncAllData();
 
         if (result.success) {
           syncStatus.current.lastSync = new Date();
+          syncStatus.current.error = null;
+          backoffMultiplier.current = 1; // Reset backoff on success
+          isQuotaExceeded.current = false;
+          quotaExceededCount.current = 0; // Reset quota error count
+          circuitBreakerOpen.current = false; // Close circuit breaker on success
           console.log("✅ Sincronização automática concluída");
 
           // Atualiza snapshots após sincronização
@@ -95,9 +112,11 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
         }
 
         isInitialized.current = true;
+      } else {
+        console.log("✅ Nenhuma mudança detectada - skip sync");
       }
 
-      // 3. Agenda próxima verificação
+      // 3. Agenda próxima verificação SEMPRE (mas só sync se houver mudanças)
       if (finalConfig.enabled) {
         syncTimeoutRef.current = setTimeout(
           performAutoSync,
@@ -108,12 +127,56 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
       syncStatus.current.error = error.message;
       console.error("❌ Erro na sincronização automática:", error);
 
-      // Reagenda mesmo com erro
-      if (finalConfig.enabled) {
-        syncTimeoutRef.current = setTimeout(
-          performAutoSync,
-          finalConfig.syncInterval * 2, // Dobra o intervalo em caso de erro
+      // Check if it's a Firebase quota exceeded error
+      if (
+        error.message?.includes("quota") ||
+        error.message?.includes("resource-exhausted")
+      ) {
+        quotaExceededCount.current += 1;
+        isQuotaExceeded.current = true;
+
+        // Open circuit breaker after 3 quota exceeded errors
+        if (quotaExceededCount.current >= 3) {
+          circuitBreakerOpen.current = true;
+          console.error(
+            `🚨 CIRCUIT BREAKER OPEN - Firebase sync DISABLED after ${quotaExceededCount.current} quota exceeded errors`,
+          );
+          syncStatus.current.error =
+            "Firebase sync disabled - quota limit reached";
+          return; // Stop all sync operations
+        }
+
+        backoffMultiplier.current = Math.min(backoffMultiplier.current * 2, 32); // Max 32x backoff
+        console.warn(
+          `🔥 Firebase quota exceeded (${quotaExceededCount.current}/3). Using ${backoffMultiplier.current}x backoff`,
         );
+      } else {
+        // Reset quota count for non-quota errors
+        quotaExceededCount.current = 0;
+        backoffMultiplier.current = Math.max(backoffMultiplier.current / 2, 1);
+      }
+
+      // Reagenda com backoff exponencial (se circuit breaker não estiver aberto)
+      if (finalConfig.enabled && !circuitBreakerOpen.current) {
+        if (isQuotaExceeded.current) {
+          // Para quota exceeded, espera muito mais tempo
+          const quotaBackoffTime = finalConfig.syncInterval * 60; // 60x o intervalo normal
+          console.log(
+            `🔥 Quota exceeded: aguardando ${quotaBackoffTime / 1000}s antes de tentar novamente`,
+          );
+          syncTimeoutRef.current = setTimeout(() => {
+            isQuotaExceeded.current = false;
+            backoffMultiplier.current = 1;
+            performAutoSync();
+          }, quotaBackoffTime);
+        } else {
+          const nextInterval =
+            finalConfig.syncInterval * backoffMultiplier.current;
+          console.log(
+            `⏰ Reagendando sincronização em ${nextInterval / 1000}s`,
+          );
+          syncTimeoutRef.current = setTimeout(performAutoSync, nextInterval);
+        }
       }
     } finally {
       syncStatus.current.syncing = false;
@@ -193,6 +256,10 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   useEffect(() => {
     if (!finalConfig.enabled) {
       syncStatus.current.isActive = false;
+      syncStatus.current.syncing = false;
+      syncStatus.current.lastSync = null;
+      syncStatus.current.error = null;
+      console.log("🛑 Auto-sync disabled via config");
       return;
     }
 
@@ -278,26 +345,40 @@ export const useFirebaseRealtimeSync = () => {
 
     console.log("📡 Configurando listeners em tempo real do Firebase");
 
+    // Throttle sync calls to prevent quota exceeded
+    let lastSyncTime = 0;
+    const MIN_SYNC_INTERVAL = 5000; // 5 seconds minimum between syncs
+
+    const throttledSync = () => {
+      const now = Date.now();
+      if (now - lastSyncTime > MIN_SYNC_INTERVAL) {
+        lastSyncTime = now;
+        forceSyncNow();
+      } else {
+        console.log("🚫 Sync throttled - too frequent");
+      }
+    };
+
     // Listeners para mudanças em tempo real no Firebase
     const unsubscribers = [
       realFirebaseService.onPoolsChange(() => {
         console.log("🔄 Mudança detectada em pools (Firebase)");
-        forceSyncNow();
+        throttledSync();
       }),
 
       realFirebaseService.onWorksChange(() => {
         console.log("🔄 Mudança detectada em works (Firebase)");
-        forceSyncNow();
+        throttledSync();
       }),
 
       realFirebaseService.onMaintenanceChange(() => {
         console.log("🔄 Mudança detectada em maintenance (Firebase)");
-        forceSyncNow();
+        throttledSync();
       }),
 
       realFirebaseService.onClientsChange(() => {
         console.log("🔄 Mudança detectada em clients (Firebase)");
-        forceSyncNow();
+        throttledSync();
       }),
     ];
 

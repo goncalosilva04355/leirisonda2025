@@ -30,6 +30,10 @@ class RealFirebaseService {
 
   // Initialize Firebase using existing app instance
   initialize(): boolean {
+    // Firebase temporarily paused - running in offline mode
+    console.log("⏸️ Firebase initialization paused - offline mode active");
+    return false;
+
     try {
       if (!firebaseApp) {
         console.error("Firebase app not available from config");
@@ -40,10 +44,10 @@ class RealFirebaseService {
       this.database = getDatabase(this.app);
       this.isInitialized = true;
 
-      console.log("Firebase database service initialized successfully");
+      console.log("✅ Firebase database service initialized successfully");
       return true;
     } catch (error) {
-      console.error("Firebase database initialization failed:", error);
+      console.error("❌ Firebase database initialization failed:", error);
       return false;
     }
   }

@@ -38,8 +38,13 @@ export function useRealtimeSync() {
 
     const initializeAndSubscribe = async () => {
       try {
+        // Firebase temporarily paused - running in offline mode
+        console.log("⏸️ Realtime sync paused - offline mode active");
+        setState((prev) => ({ ...prev, loading: false, error: null }));
+        return;
+
         // Firebase is always configured with fixed settings
-        console.log("Firebase sync always available with fixed configuration");
+        console.log("🔄 Firebase sync available with fixed configuration");
 
         // Initialize default data if needed
         await syncService.initializeData();
