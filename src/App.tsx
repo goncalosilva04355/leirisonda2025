@@ -527,6 +527,14 @@ function App() {
   };
 
   const handleSaveIntervention = () => {
+    // SECURITY: Check if user has permission to create maintenance
+    if (!currentUser?.permissions?.manutencoes?.create) {
+      alert(
+        "Não tem permissão para criar manutenções. Contacte o administrador.",
+      );
+      return;
+    }
+
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
       alert("Por favor, preencha os campos obrigatórios (Piscina e Técnico).");
@@ -692,7 +700,7 @@ function App() {
       console.log("🔐 Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("✅ Login successful for:", result.user.email);
+        console.log("�� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -895,7 +903,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç��o: ${work.location}
+   Localizaç����o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -1409,7 +1417,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+              `⚠️ Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -1902,12 +1910,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenções aparecerão aqui
                         </p>
-                        <button
-                          onClick={() => navigateToSection("nova-manutencao")}
-                          className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
-                        >
-                          Agendar Manutenção
-                        </button>
+                        {hasPermission("manutencoes", "create") && (
+                          <button
+                            onClick={() => navigateToSection("nova-manutencao")}
+                            className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
+                          >
+                            Agendar Manutenção
+                          </button>
+                        )}
                       </div>
                     ) : (
                       futureMaintenance
@@ -2505,13 +2515,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-600 text-sm mb-4">
                         Comece por adicionar a primeira piscina ao sistema
                       </p>
-                      <button
-                        onClick={() => setActiveSection("nova-piscina")}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
-                      >
-                        <Plus className="h-4 w-4" />
-                        <span>Adicionar Piscina</span>
-                      </button>
+                      {hasPermission("piscinas", "create") && (
+                        <button
+                          onClick={() => setActiveSection("nova-piscina")}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
+                        >
+                          <Plus className="h-4 w-4" />
+                          <span>Adicionar Piscina</span>
+                        </button>
+                      )}
                     </div>
                   ) : (
                     pools.map((pool) => (
@@ -3717,6 +3729,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="submit"
                         onClick={(e) => {
                           e.preventDefault();
+
+                          // SECURITY: Check if user has permission to create works
+                          if (!currentUser?.permissions?.obras?.create) {
+                            alert(
+                              "Não tem permissão para criar obras. Contacte o administrador.",
+                            );
+                            return;
+                          }
+
                           const form = (e.target as HTMLElement).closest(
                             "form",
                           );
@@ -4234,6 +4255,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="submit"
                         onClick={(e) => {
                           e.preventDefault();
+
+                          // SECURITY: Check if user has permission to create pools
+                          if (!currentUser?.permissions?.piscinas?.create) {
+                            alert(
+                              "Não tem permissão para criar piscinas. Contacte o administrador.",
+                            );
+                            return;
+                          }
+
                           const form = (e.target as HTMLElement).closest(
                             "form",
                           );
@@ -5080,7 +5110,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-green-900">
-                              Navegação Maps
+                              Navega��ão Maps
                             </h4>
                             <button
                               onClick={() =>
@@ -5123,7 +5153,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As definições são guardadas localmente no
+                              • As defini��ões são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
@@ -5179,7 +5209,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <li>
                                 • Todas as piscinas ({pools.length} registos)
                               </li>
-                              <li>• Dados do Firebase e armazenamento local</li>
+                              <li>
+                                ��� Dados do Firebase e armazenamento local
+                              </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
                               ⚠️ ATENÇÃO: Esta operação é irreversível!
@@ -5256,7 +5288,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Estado e localização</li>
+                        <li>�� Estado e localização</li>
                         <li>• Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
@@ -5295,7 +5327,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Trabalhos realizados</li>
                         <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observações</li>
+                        <li>• Estados e observaç��es</li>
                       </ul>
                     </div>
                     <button
@@ -6277,12 +6309,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       : activeWorkFilter
                             }" aplicado.`}
                       </p>
-                      <button
-                        onClick={() => navigateToSection("nova-obra")}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                      >
-                        Criar Nova Obra
-                      </button>
+                      {hasPermission("obras", "create") && (
+                        <button
+                          onClick={() => navigateToSection("nova-obra")}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                        >
+                          Criar Nova Obra
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
@@ -7183,7 +7217,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => navigateToSection("utilizadores")}
                     className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                   >
-                    ← Voltar aos Utilizadores
+                    �� Voltar aos Utilizadores
                   </button>
                   <RegisterForm
                     onRegisterSuccess={() => {
@@ -7596,16 +7630,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               >
                 Entrar
               </button>
-
-              {/* Administration Button */}
-              <button
-                type="button"
-                onClick={() => setShowAdminLogin(true)}
-                className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 flex items-center justify-center space-x-2"
-              >
-                <Shield className="h-4 w-4" />
-                <span>Administração</span>
-              </button>
             </div>
           </form>
 
@@ -7782,20 +7806,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 >
                   <Users className="h-5 w-5" />
                   <span>Utilizadores</span>
-                </button>
-              )}
-
-              {/* Administration Section - Only for super admin */}
-              {currentUser?.role === "super_admin" && (
-                <button
-                  onClick={() => {
-                    setShowAdminLogin(true);
-                    setSidebarOpen(false);
-                  }}
-                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 hover:bg-gray-100"
-                >
-                  <Shield className="h-5 w-5" />
-                  <span>Administração</span>
                 </button>
               )}
             </nav>
