@@ -901,6 +901,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
+    console.log("🔍 DEBUG: sendWorkAssignmentNotification called with:", {
+      workTitle,
+      assignedTo,
+      currentUser: currentUser?.name,
+      notificationsEnabled,
+      notificationPermission: Notification.permission,
+    });
+
     // Always add to assigned works list when a work is assigned
     const newAssignedWork = {
       id: Date.now(),
@@ -911,15 +919,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     };
     setAssignedWorks((prev) => [newAssignedWork, ...prev]);
 
+    // Debug: Check notification conditions
+    console.log("🔍 DEBUG: Notification conditions:", {
+      hasCurrentUser: !!currentUser,
+      currentUserName: currentUser?.name,
+      assignedTo: assignedTo,
+      userMatches: currentUser?.name === assignedTo,
+      notificationsEnabled,
+      permissionGranted: Notification.permission === "granted",
+    });
+
     // Send notification if user is assigned to current user and notifications are enabled
     if (currentUser && assignedTo === currentUser.name) {
       if (notificationsEnabled && Notification.permission === "granted") {
+        console.log("✅ All conditions met, sending notification...");
         showNotification(
           "Nova Obra Atribuída",
           `A obra "${workTitle}" foi-lhe atribuída`,
           "work-assignment",
         );
+      } else {
+        console.warn("❌ Notification blocked:", {
+          notificationsEnabled,
+          permission: Notification.permission,
+        });
       }
+    } else {
+      console.warn("❌ User not matching:", {
+        currentUser: currentUser?.name,
+        assignedTo,
+        match: currentUser?.name === assignedTo,
+      });
     }
 
     // Console log for debugging purposes (admin view)
