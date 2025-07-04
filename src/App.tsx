@@ -30,15 +30,9 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { InstallPrompt } from "./components/InstallPrompt";
+import { RegisterForm } from "./components/RegisterForm";
 import { useDataSync } from "./hooks/useDataSync";
-
-// Mock authentication and user data
-const ADMIN_USER = {
-  email: "gongonsilva@gmail.com",
-  password: "19867gsf",
-  name: "Gonçalo Fonseca",
-  role: "super_admin",
-};
+import { authService, UserProfile } from "./services/authService";
 
 // Mock users database
 const initialUsers = [
@@ -1103,7 +1097,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center p-4 border-b border-gray-100">
                     <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Minhas Obras Atribuídas
+                      Minhas Obras Atribu��das
                     </h2>
                   </div>
                   <div className="p-4 space-y-3">
@@ -1126,7 +1120,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span>Atribuída a: {work.assignedTo}</span>
                               </div>
                               <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                <span>📅</span>
+                                <span>����</span>
                                 <span>
                                   Atribuída em:{" "}
                                   {new Date(
@@ -1917,7 +1911,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Nível da Água (m) *
+                                N��vel da Água (m) *
                               </label>
                               <input
                                 type="number"
