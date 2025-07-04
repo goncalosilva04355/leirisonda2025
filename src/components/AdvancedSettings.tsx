@@ -81,7 +81,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
         projectId: "leirisonda-16f8b",
         storageBucket: "leirisonda-16f8b.firebasestorage.app",
         messagingSenderId: "540456875574",
-        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97"
+        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
       };
       const tests = [];
 
@@ -488,24 +488,23 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
               {/* Activate Real Sync */}
               <div className="mt-4">
-                  <button
-                    onClick={activateRealSync}
-                    disabled={syncTest.status === "testing"}
-                    className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 disabled:bg-gray-400 transition-colors flex items-center justify-center space-x-2"
-                  >
-                    {syncTest.status === "testing" ? (
-                      <Loader className="w-5 h-5 animate-spin" />
-                    ) : (
-                      <CheckCircle className="w-5 h-5" />
-                    )}
-                    <span>Ativar Sincronização Real</span>
-                  </button>
-                  <p className="text-xs text-gray-500 text-center mt-2">
-                    Ativa sincronização automática para piscinas, obras,
-                    manutenções e clientes
-                  </p>
-                </div>
-              )}
+                <button
+                  onClick={activateRealSync}
+                  disabled={syncTest.status === "testing"}
+                  className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 disabled:bg-gray-400 transition-colors flex items-center justify-center space-x-2"
+                >
+                  {syncTest.status === "testing" ? (
+                    <Loader className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <CheckCircle className="w-5 h-5" />
+                  )}
+                  <span>Ativar Sincronização Real</span>
+                </button>
+                <p className="text-xs text-gray-500 text-center mt-2">
+                  Ativa sincronização automática para piscinas, obras,
+                  manutenções e clientes
+                </p>
+              </div>
 
               {/* Test Results */}
               {syncTest.status !== "idle" && (
