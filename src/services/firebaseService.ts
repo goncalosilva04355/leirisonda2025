@@ -156,6 +156,7 @@ export const userService = {
     console.log(
       `User ${userData.name} (${userData.email}) added and will be synchronized automatically`,
     );
+    await syncService.triggerUserSync(docRef.id);
 
     return docRef.id;
   },
