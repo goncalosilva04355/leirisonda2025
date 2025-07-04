@@ -202,7 +202,7 @@ function App() {
         currentUser?.name.toLowerCase().includes("alexandre") &&
         works.length > 0
       ) {
-      console.log("🔍 DEBUG Alexandre - Data loaded:", {
+        console.log("🔍 DEBUG Alexandre - Data loaded:", {
         currentUser: currentUser.name,
         worksCount: works.length,
         works: works.map((w) => ({
@@ -5192,7 +5192,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               dispositivo
                             </li>
                             <li>
-                              • A marcação automática funciona melhor em
+                              • A marcaç��o automática funciona melhor em
                               dispositivos móveis
                             </li>
                             <li>• O Google Maps abre numa nova janela/tab</li>
