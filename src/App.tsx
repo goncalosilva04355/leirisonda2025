@@ -170,6 +170,13 @@ function App() {
   const [currentVehicle, setCurrentVehicle] = useState("");
   const [currentTechnician, setCurrentTechnician] = useState("");
 
+  // Edit and view states
+  const [editingWork, setEditingWork] = useState(null);
+  const [editingPool, setEditingPool] = useState(null);
+  const [editingMaintenance, setEditingMaintenance] = useState(null);
+  const [selectedWork, setSelectedWork] = useState(null);
+  const [viewingWork, setViewingWork] = useState(false);
+
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
     poolId: "",
@@ -4652,7 +4659,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Relatório de Obras
+                        Relat��rio de Obras
                       </h3>
                       <p className="text-sm text-gray-600">
                         Projetos e construç��es
