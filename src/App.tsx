@@ -637,7 +637,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or���amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or��amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -859,6 +859,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
     if (activeSection !== "nova-obra") {
       setSelectedWorkType("");
+      setWorkVehicles([]);
+      setWorkTechnicians([]);
+      setCurrentVehicle("");
+      setCurrentTechnician("");
     }
   }, [activeSection]);
 
@@ -3837,7 +3841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         "Limpeza filtro areia/vidro",
                         "Verificação alimentação",
                         "Enchimento autom��tico",
-                        "Limpeza linha de ��gua",
+                        "Limpeza linha de ���gua",
                         "Limpeza do fundo",
                         "Limpeza das paredes",
                         "Limpeza skimmers",
@@ -4533,7 +4537,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <strong>{pools.length}</strong> piscinas registadas
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Estado e localização</li>
+                      <li>�� Estado e localização</li>
                       <li>• Informações de clientes</li>
                       <li>• Histórico de manutenções</li>
                       <li>• Próximas intervenções</li>
