@@ -26,6 +26,7 @@ import {
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
+import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { useDataSync } from "./hooks/useDataSync";
 
 // Mock authentication and user data
@@ -906,7 +907,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "nova-manutencao",
       icon: Wrench,
-      label: "Nova Manuten��ão",
+      label: "Nova Manutenção",
       path: "/manutencao/nova",
     },
     {
@@ -4308,7 +4309,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Fotografias</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��</span>
+                  <span>✓</span>
                   <span>Observações e próxima manutenção</span>
                 </div>
               </div>
