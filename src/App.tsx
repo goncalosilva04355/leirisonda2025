@@ -567,10 +567,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     setUploadedPhotos([]);
   };
 
-  // Clear photos when changing sections
+  // Clear photos and work type when changing sections
   useEffect(() => {
     if (activeSection !== "nova-obra" && activeSection !== "nova-manutencao") {
       setUploadedPhotos([]);
+    }
+    if (activeSection !== "nova-obra") {
+      setSelectedWorkType("");
     }
   }, [activeSection]);
 
