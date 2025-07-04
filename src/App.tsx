@@ -340,10 +340,10 @@ function App() {
     }
   }, [isAuthenticated]);
 
-  // Login form state - Pre-fill Gonçalo's email for convenience
+  // Login form state
   const [loginForm, setLoginForm] = useState({
-    email: "gongonsilva@gmail.com",
-    password: "admin123",
+    email: "",
+    password: "",
   });
   const [loginError, setLoginError] = useState("");
 
@@ -534,7 +534,7 @@ function App() {
     setLoginError("");
 
     try {
-      // Quick bypass for Gon��alo's account
+      // Quick bypass for Gon���alo's account
       if (loginForm.email === "gongonsilva@gmail.com") {
         const gonçaloUser = {
           uid: "goncalo-1",
@@ -6054,7 +6054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       defaultValue={editingWork?.description}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       rows={4}
-                      placeholder="Descrição detalhada da obra"
+                      placeholder="Descri��ão detalhada da obra"
                     />
                   </div>
 
