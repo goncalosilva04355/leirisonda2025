@@ -9,6 +9,14 @@ export const useAutoSync = () => {
 
   useEffect(() => {
     const performAutoSync = async () => {
+      // EMERGENCY STOP - Block ALL auto-sync operations due to quota exceeded
+      console.error("🚨 EMERGENCY: Auto-sync BLOCKED due to quota exceeded");
+      setSyncStatus("completed");
+      const now = new Date();
+      setLastSync(now);
+      sessionStorage.setItem("auto-sync-completed", "true");
+      return;
+
       // Check if we should auto-sync (e.g., only once per session)
       const hasAutoSynced = sessionStorage.getItem("auto-sync-completed");
 
