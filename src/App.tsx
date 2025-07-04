@@ -3063,159 +3063,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
-              {/* Header */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                      <Building2 className="h-4 w-4 text-orange-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-2xl font-bold text-gray-900">
-                        Obras
-                      </h1>
-                      <p className="text-gray-600 text-sm">
-                        Gestão de projetos e construções
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setActiveSection("nova-obra")}
-                    className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 flex items-center space-x-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>Nova Obra</span>
-                  </button>
-                </div>
+                <h1 className="text-2xl font-bold text-gray-900">Obras</h1>
+                <p className="text-gray-600 text-sm">
+                  Gestão de obras e projetos
+                </p>
               </div>
-
-              {/* Search and Filters */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex space-x-3">
-                  <input
-                    type="text"
-                    placeholder="Pesquisar obras..."
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
-                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
-                    <option>Todos os estados</option>
-                    <option>Orçamento</option>
-                    <option>Aprovado</option>
-                    <option>Em Execução</option>
-                    <option>Concluído</option>
-                    <option>Cancelado</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Works List */}
-              <div className="space-y-4">
-                {works.length === 0 ? (
-                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <Building2 className="h-8 w-8 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      Nenhuma obra registada
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4">
-                      Comece por adicionar o primeiro projeto ao sistema
-                    </p>
-                    <button
-                      onClick={() => setActiveSection("nova-obra")}
-                      className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 flex items-center space-x-2 mx-auto"
-                    >
-                      <Plus className="h-4 w-4" />
-                      <span>Adicionar Obra</span>
-                    </button>
-                  </div>
-                ) : (
-                  works.map((work) => (
-                    <div
-                      key={work.id}
-                      className="bg-white rounded-lg shadow-sm p-6"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {work.name}
-                            </h3>
-                            <span
-                              className={`text-xs px-2 py-1 rounded-full font-medium ${
-                                work.status === "Concluído"
-                                  ? "bg-green-100 text-green-800"
-                                  : work.status === "Em Execução"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : work.status === "Aprovado"
-                                      ? "bg-purple-100 text-purple-800"
-                                      : "bg-gray-100 text-gray-800"
-                              }`}
-                            >
-                              {work.status}
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
-                            <div>
-                              <p className="font-medium">Cliente:</p>
-                              <p>{work.client}</p>
-                            </div>
-                            <div>
-                              <p className="font-medium">Local:</p>
-                              <p>{work.location}</p>
-                            </div>
-                            <div>
-                              <p className="font-medium">Valor:</p>
-                              <p className="font-semibold text-green-600">
-                                {work.budget?.toLocaleString("pt-PT")}€
-                              </p>
-                            </div>
-                          </div>
-                          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-                            <div>
-                              <p className="font-medium">Início previsto:</p>
-                              <p>
-                                {work.startDate
-                                  ? new Date(work.startDate).toLocaleDateString(
-                                      "pt-PT",
-                                    )
-                                  : "Não definido"}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="font-medium">Fim previsto:</p>
-                              <p>
-                                {work.endDate
-                                  ? new Date(work.endDate).toLocaleDateString(
-                                      "pt-PT",
-                                    )
-                                  : "Não definido"}
-                              </p>
-                            </div>
-                          </div>
-                          {work.description && (
-                            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                              <p className="text-sm text-gray-600">
-                                <strong>Descrição:</strong> {work.description}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <button className="p-2 text-gray-400 hover:text-gray-600">
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => dataSync.deleteWork(work.id)}
-                            className="p-2 text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
+                <p className="text-gray-600">
+                  Sistema de obras em desenvolvimento
+                </p>
               </div>
             </div>
           </div>
