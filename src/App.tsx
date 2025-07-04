@@ -2776,7 +2776,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </p>
                             <div className="flex items-center space-x-4 text-sm">
                               <span className="text-blue-600">
-                                ������{" "}
+                                €{" "}
                                 {new Date(
                                   maint.scheduledDate,
                                 ).toLocaleDateString("pt-PT")}
@@ -6605,9 +6605,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenç��o">
-                            Em Manuten����o
-                          </option>
+                          <option value="Em Manutenç��o">Em Manutenç��o</option>
                         </select>
                       </div>
                       <div>
@@ -6997,7 +6995,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        Guardar Alteraç���es
+                        Guardar Alteraç��es
                       </button>
                     </div>
                   </form>
