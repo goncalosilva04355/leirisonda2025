@@ -396,9 +396,9 @@ function App() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    setCurrentUser(null);
+    setCurrentUser(ADMIN_USER);
     setLoginForm({ email: "", password: "" });
-    setActiveSection("dashboard");
+    navigateToSection("dashboard");
   };
 
   // Advanced settings functions
