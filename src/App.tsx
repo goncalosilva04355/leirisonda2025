@@ -128,6 +128,9 @@ function App() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [pushPermission, setPushPermission] = useState("default");
   const [assignedWorks, setAssignedWorks] = useState([]);
+  const [uploadedPhotos, setUploadedPhotos] = useState([]);
+  const [showPhotoGallery, setShowPhotoGallery] = useState(false);
+  const [selectedPhotos, setSelectedPhotos] = useState([]);
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
@@ -933,7 +936,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <span>Vieira de Leiria</span>
                           </div>
                           <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                            <span>���</span>
+                            <span>�����</span>
                             <span>Em 28 dias</span>
                           </div>
                           <p className="text-xs text-gray-400 mt-1">
@@ -2551,7 +2554,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="super_admin">Super Admin</option>
                           <option value="manager">Gestor</option>
-                          <option value="technician">T��cnico</option>
+                          <option value="technician">T���cnico</option>
                         </select>
                       </div>
                       <div className="flex items-center">
