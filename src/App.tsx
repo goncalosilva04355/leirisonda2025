@@ -3443,7 +3443,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observaç��es Específicas do Furo */}
+                          {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -5202,7 +5202,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>��� Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>• Equipas respons��veis</li>
-                        <li>������� Estados de progresso</li>
+                        <li>��������� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -6796,7 +6796,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manutenç��o
+                        Editar Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
