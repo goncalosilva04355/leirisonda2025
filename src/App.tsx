@@ -1183,7 +1183,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nenhuma manutenção agendada
                     </h3>
                     <p className="text-gray-600 text-sm mb-4">
-                      As futuras manutenções aparecerão aqui quando forem
+                      As futuras manuten��ões aparecerão aqui quando forem
                       agendadas
                     </p>
                     <button
@@ -1752,24 +1752,361 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
+              {/* Header */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Nova Manutenção
-                </h1>
-                <p className="text-gray-600 text-sm">
-                  Registar uma nova manutenção
-                </p>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <Wrench className="h-4 w-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Nova Manutenção
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Registar intervenção de manutenção
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <p className="text-gray-600">
-                  Formulário de nova manutenção em desenvolvimento
-                </p>
-                <button
-                  onClick={handleSaveIntervention}
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                >
-                  Guardar Manutenção
-                </button>
+
+              {/* Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-8">
+                  {/* Pool Selection */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Piscina *
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">Selecionar piscina</option>
+                        {pools.map((pool) => (
+                          <option key={pool.id} value={pool.id}>
+                            {pool.name} - {pool.client}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data da Intervenção *
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        defaultValue={new Date().toISOString().split("T")[0]}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Time and Team */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Hora Início
+                      </label>
+                      <input
+                        type="time"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Hora Fim
+                      </label>
+                      <input
+                        type="time"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Técnico Responsável *
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">Selecionar técnico</option>
+                        {users
+                          .filter((user) => user.role !== "super_admin")
+                          .map((user) => (
+                            <option key={user.id} value={user.id}>
+                              {user.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Viatura Utilizada
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Ex: Furgão 1, Carrinha 2"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Water Values */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Valores da Água
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          pH
+                        </label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          max="14"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="7.2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Cloro (mg/l)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="1.0"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Alcalinidade
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="120"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Temperatura (°C)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="25.0"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Sal (g/l)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="4.0"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Bromo (mg/l)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="0.0"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Dureza
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Estabilizador
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                          placeholder="30"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Chemical Products */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Produtos Químicos Utilizados
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Produto
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="Ex: Cloro líquido"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Quantidade
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                            placeholder="2.5"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Unidade
+                          </label>
+                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="l">Litros (l)</option>
+                            <option value="kg">Quilogramas (kg)</option>
+                            <option value="g">Gramas (g)</option>
+                            <option value="ml">Mililitros (ml)</option>
+                          </select>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className="text-green-600 hover:text-green-700 text-sm font-medium flex items-center space-x-1"
+                      >
+                        <Plus className="h-4 w-4" />
+                        <span>Adicionar Produto</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Work Performed */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Trabalho Realizado
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {[
+                        "Limpeza de filtros",
+                        "Limpeza de pré-filtro",
+                        "Limpeza filtro areia/vidro",
+                        "Verificação alimentação",
+                        "Enchimento automático",
+                        "Limpeza linha de água",
+                        "Limpeza do fundo",
+                        "Limpeza das paredes",
+                        "Limpeza skimmers",
+                        "Verificação equipamentos",
+                      ].map((task, index) => (
+                        <label key={index} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            className="mr-2 text-green-600 focus:ring-green-500"
+                          />
+                          <span className="text-sm text-gray-700">{task}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Outros trabalhos realizados
+                      </label>
+                      <textarea
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Descreva outros trabalhos realizados..."
+                      />
+                    </div>
+                  </div>
+
+                  {/* Problems and Observations */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Problemas Encontrados
+                      </label>
+                      <textarea
+                        rows={4}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Descreva problemas encontrados, se houver..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Observações Gerais
+                      </label>
+                      <textarea
+                        rows={4}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Observações, recomendações, próxima manutenção..."
+                      />
+                    </div>
+                  </div>
+
+                  {/* Next Maintenance */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Próxima Manutenção
+                      </label>
+                      <input
+                        type="date"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado da Manutenção
+                      </label>
+                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="completed">Concluída</option>
+                        <option value="pending">Pendente</option>
+                        <option value="in_progress">Em Progresso</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection("manutencoes")}
+                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSaveIntervention();
+                      }}
+                      className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Save className="h-4 w-4" />
+                      <span>Guardar Intervenção</span>
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -2436,7 +2773,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               className="w-full flex items-center justify-center space-x-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
             >
               <Settings className="h-4 w-4" />
-              <span>Configurações Avançadas</span>
+              <span>Configura��ões Avançadas</span>
             </button>
             <p className="text-xs text-gray-400 text-center mt-2">
               Configure sincronização Firebase
