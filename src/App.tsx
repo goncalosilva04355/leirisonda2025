@@ -555,7 +555,7 @@ function App() {
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
-          description: "Manuten��ão programada automaticamente",
+          description: "Manutenção programada automaticamente",
           notes: "Agendada automaticamente após manutenç��o anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
@@ -3268,7 +3268,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de Água - Conditional */}
+                    {/* Detalhes do Furo de ��gua - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div>
                         <div className="flex items-center space-x-3 mb-6">
@@ -4052,7 +4052,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resistência El��trica
+                            Resistência Elétrica
                           </option>
                           <option value="gas">Aquecimento a G������s</option>
                         </select>
