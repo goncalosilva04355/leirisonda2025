@@ -205,20 +205,60 @@ export function useDataSync(): SyncState & SyncActions {
     return !!localStorage.getItem("firebase-config");
   });
 
-  // Initialize with mock data
+  // Initialize with data from localStorage + mock data
   useEffect(() => {
     const today = new Date();
-    const future = mockMaintenance.filter(
+
+    // Load saved data from localStorage
+    const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
+    const savedMaintenance = JSON.parse(
+      localStorage.getItem("maintenance") || "[]",
+    );
+    const savedInterventions = JSON.parse(
+      localStorage.getItem("interventions") || "[]",
+    );
+    const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
+    const savedClients = JSON.parse(localStorage.getItem("clients") || "[]");
+
+    // Convert interventions to maintenance format
+    const interventionsAsMaintenance = savedInterventions.map(
+      (intervention) => ({
+        id: intervention.id.toString(),
+        poolId: intervention.poolId || "unknown",
+        poolName: intervention.poolName || "Piscina",
+        type: "Manutenção",
+        status: intervention.status || "completed",
+        description: intervention.workPerformed || "Manutenção realizada",
+        scheduledDate: intervention.date,
+        completedDate: intervention.date,
+        technician: intervention.technician || "Técnico",
+        notes: intervention.observations,
+        createdAt: intervention.createdAt || new Date().toISOString(),
+      }),
+    );
+
+    // Combine all maintenance data
+    const allMaintenance = [
+      ...mockMaintenance,
+      ...savedMaintenance,
+      ...interventionsAsMaintenance,
+    ];
+    const future = allMaintenance.filter(
       (m) => new Date(m.scheduledDate) >= today,
     );
 
+    // Combine all data
+    const allPools = [...mockPools, ...savedPools];
+    const allWorks = [...mockWorks, ...savedWorks];
+    const allClients = [...mockClients, ...savedClients];
+
     setState((prev) => ({
       ...prev,
-      pools: mockPools,
-      maintenance: mockMaintenance,
+      pools: allPools,
+      maintenance: allMaintenance,
       futureMaintenance: future,
-      works: mockWorks,
-      clients: mockClients,
+      works: allWorks,
+      clients: allClients,
     }));
   }, []);
 
