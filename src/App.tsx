@@ -1664,7 +1664,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <Edit2 className="h-4 w-4" />
                           </button>
                           <button
-                            onClick={() => dataSync.deleteMaintenance(maint.id)}
+                            onClick={() =>
+                              confirmDelete(
+                                `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                () => dataSync.deleteMaintenance(maint.id),
+                              )
+                            }
                             className="p-2 text-gray-400 hover:text-red-600"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -2548,7 +2553,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Frequência de Manutenção
+                        Frequ��ncia de Manutenção
                       </label>
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="semanal">Semanal</option>
@@ -3644,7 +3649,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório de Obras
                       </h3>
                       <p className="text-sm text-gray-600">
-                        Projetos e construções
+                        Projetos e construç��es
                       </p>
                     </div>
                   </div>
@@ -4353,7 +4358,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                Partilhar Relatório
+                Partilhar Relat��rio
               </h2>
               <button
                 onClick={() => {
