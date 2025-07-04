@@ -4836,7 +4836,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="flex items-center mb-4">
                   <Settings className="h-6 w-6 text-blue-600 mr-3" />
                   <h3 className="text-lg font-semibold text-gray-900">
-                    Interação Mobile
+                    Interaç��o Mobile
                   </h3>
                 </div>
                 <p className="text-gray-600 mb-6">
@@ -6407,6 +6407,100 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="Em Manutenção">Em Manutenção</option>
                       </select>
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de Piscina
+                      </label>
+                      <select
+                        defaultValue={editingPool?.poolType || "outdoor"}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="outdoor">Exterior</option>
+                        <option value="indoor">Interior</option>
+                        <option value="semi_covered">Semi-coberta</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Dimensões (m)
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingPool?.dimensions}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: 8x4x1.5"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Volume (L)
+                      </label>
+                      <input
+                        type="number"
+                        defaultValue={editingPool?.volume}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="48000"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Sistema de Filtração
+                      </label>
+                      <select
+                        defaultValue={editingPool?.filtrationSystem || "sand"}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="sand">Areia</option>
+                        <option value="cartridge">Cartucho</option>
+                        <option value="diatomaceous">Terra Diatomácea</option>
+                        <option value="other">Outro</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Instalação
+                      </label>
+                      <input
+                        type="date"
+                        defaultValue={
+                          editingPool?.installationDate?.split("T")[0]
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Telefone do Cliente
+                      </label>
+                      <input
+                        type="tel"
+                        defaultValue={editingPool?.clientPhone}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="+351 912 345 678"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Email do Cliente
+                      </label>
+                      <input
+                        type="email"
+                        defaultValue={editingPool?.clientEmail}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="cliente@email.com"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Observações
+                    </label>
+                    <textarea
+                      defaultValue={editingPool?.observations}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={3}
+                      placeholder="Observações sobre a piscina, equipamentos instalados, etc."
+                    />
                   </div>
 
                   <div className="flex space-x-4">
