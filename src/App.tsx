@@ -550,38 +550,14 @@ function App() {
     e.preventDefault();
     setLoginError("");
 
-    try {
-      // Quick bypass for Gon���alo's account
-      if (loginForm.email === "gongonsilva@gmail.com") {
-        const gonçaloUser = {
-          uid: "goncalo-1",
-          email: "gongonsilva@gmail.com",
-          name: "Gonçalo Fonseca",
-          role: "super_admin" as const,
-          permissions: {
-            obras: { view: true, create: true, edit: true, delete: true },
-            manutencoes: { view: true, create: true, edit: true, delete: true },
-            piscinas: { view: true, create: true, edit: true, delete: true },
-            utilizadores: {
-              view: true,
-              create: true,
-              edit: true,
-              delete: true,
-            },
-            relatorios: { view: true, create: true, edit: true, delete: true },
-            clientes: { view: true, create: true, edit: true, delete: true },
-          },
-          active: true,
-          createdAt: "2024-01-01",
-        };
+    // Validate input first
+    if (!loginForm.email || !loginForm.password) {
+      setLoginError("Por favor, preencha todos os campos");
+      return;
+    }
 
-        setCurrentUser(gonçaloUser);
-        setIsAuthenticated(true);
-        localStorage.setItem("currentUser", JSON.stringify(gonçaloUser));
-        setLoginForm({ email: "", password: "" });
-        navigateToSection("dashboard");
-        return;
-      }
+    try {
+      console.log("🔐 Attempting login for:", loginForm.email);
 
       try {
         const result = await authService.login(
@@ -590,31 +566,38 @@ function App() {
         );
 
         if (result.success && result.user) {
-          // Set user state directly
+          console.log("✅ Login successful for:", result.user.email);
+
+          // Clear any previous auth state
+          setLoginError("");
+
+          // Set user state and authentication
           setCurrentUser(result.user);
           setIsAuthenticated(true);
           localStorage.setItem("currentUser", JSON.stringify(result.user));
+
+          // Clear login form
           setLoginForm({ email: "", password: "" });
 
-          // Handle any pending hash navigation after login
-          const hash = window.location.hash.substring(1);
-          if (hash) {
-            setActiveSection(hash);
-          } else {
-            // Default to dashboard when no hash is present
-            navigateToSection("dashboard");
-          }
+          // Use setTimeout to ensure state is set before navigation
+          setTimeout(() => {
+            // Handle any pending hash navigation after login
+            const hash = window.location.hash.substring(1);
+            if (hash && hash !== "login") {
+              setActiveSection(hash);
+            } else {
+              // Default to dashboard when no hash is present
+              navigateToSection("dashboard");
+            }
+          }, 100);
+
         } else {
+          console.warn("❌ Login failed:", result.error);
           setLoginError(result.error || "Credenciais inválidas");
         }
-      } catch (authError) {
-        console.error("Auth service error:", authError);
-        // Try to recover with local state
-        setLoginError("Erro temporário. Tente novamente em alguns segundos.");
-      }
     } catch (error) {
-      console.error("Login error:", error);
-      setLoginError("Erro de sistema. Contacte o administrador.");
+      console.error("❌ Login error:", error);
+      setLoginError("Erro de sistema. Por favor, tente novamente.");
     }
   };
 
@@ -5026,7 +5009,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>• Dados consolidados</li>
-                        <li>• Análise de performance</li>
+                        <li>��� Análise de performance</li>
                       </ul>
                     </div>
                     <button
@@ -6853,7 +6836,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>���</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
