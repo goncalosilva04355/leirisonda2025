@@ -4473,16 +4473,223 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
+              {/* Header */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h1 className="text-2xl font-bold text-gray-900">Obras</h1>
-                <p className="text-gray-600 text-sm">
-                  Gestão de obras e projetos
-                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Obras
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gestão de obras e projetos
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => navigateToSection("nova-obra")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Nova Obra</span>
+                  </button>
+                </div>
               </div>
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <p className="text-gray-600">
-                  Sistema de obras em desenvolvimento
-                </p>
+
+              {/* Filter Tabs */}
+              <div className="bg-white rounded-lg shadow-sm">
+                <div className="flex border-b border-gray-200">
+                  <button
+                    onClick={() => setActiveWorkFilter("all")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeWorkFilter === "all"
+                        ? "border-blue-500 text-blue-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Todas ({works.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveWorkFilter("pending")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeWorkFilter === "pending"
+                        ? "border-red-500 text-red-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Pendentes (
+                    {works.filter((w) => w.status === "pending").length})
+                  </button>
+                  <button
+                    onClick={() => setActiveWorkFilter("in_progress")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeWorkFilter === "in_progress"
+                        ? "border-orange-500 text-orange-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Em Progresso (
+                    {works.filter((w) => w.status === "in_progress").length})
+                  </button>
+                  <button
+                    onClick={() => setActiveWorkFilter("completed")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeWorkFilter === "completed"
+                        ? "border-green-500 text-green-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Concluídas (
+                    {works.filter((w) => w.status === "completed").length})
+                  </button>
+                  <button
+                    onClick={() => setActiveWorkFilter("no_sheet")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeWorkFilter === "no_sheet"
+                        ? "border-blue-500 text-blue-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Sem Folha de Obra (
+                    {works.filter((w) => !w.folhaGerada).length})
+                  </button>
+                </div>
+              </div>
+
+              {/* Works List */}
+              <div className="space-y-4">
+                {works
+                  .filter((work) => {
+                    if (activeWorkFilter === "all") return true;
+                    if (activeWorkFilter === "no_sheet")
+                      return !work.folhaGerada;
+                    return work.status === activeWorkFilter;
+                  })
+                  .map((work) => (
+                    <div
+                      key={work.id}
+                      className="bg-white rounded-lg p-4 shadow-sm"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {work.title}
+                            </h3>
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                work.status === "pending"
+                                  ? "bg-red-100 text-red-700"
+                                  : work.status === "in_progress"
+                                    ? "bg-orange-100 text-orange-700"
+                                    : work.status === "completed"
+                                      ? "bg-green-100 text-green-700"
+                                      : "bg-gray-100 text-gray-700"
+                              }`}
+                            >
+                              {work.status === "pending"
+                                ? "Pendente"
+                                : work.status === "in_progress"
+                                  ? "Em Progresso"
+                                  : work.status === "completed"
+                                    ? "Concluída"
+                                    : work.status}
+                            </span>
+                            {!work.folhaGerada && (
+                              <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                Sem Folha de Obra
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-gray-600 mb-2">
+                            {work.description}
+                          </p>
+                          <div className="grid grid-cols-2 gap-4 text-sm text-gray-500">
+                            <div>
+                              <span className="font-medium">Cliente:</span>{" "}
+                              {work.client}
+                            </div>
+                            <div>
+                              <span className="font-medium">Local:</span>{" "}
+                              {work.location}
+                            </div>
+                            <div>
+                              <span className="font-medium">Início:</span>{" "}
+                              {new Date(work.startDate).toLocaleDateString(
+                                "pt-PT",
+                              )}
+                            </div>
+                            <div>
+                              <span className="font-medium">Atribuída a:</span>{" "}
+                              {work.assignedTo}
+                            </div>
+                            {work.budget && (
+                              <div>
+                                <span className="font-medium">Orçamento:</span>{" "}
+                                €{work.budget}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2 ml-4">
+                          <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() =>
+                              confirmDelete(
+                                `Tem a certeza que deseja apagar a obra "${work.title}"?`,
+                                () => dataSync.deleteWork(work.id),
+                              )
+                            }
+                            className="p-2 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                {works.filter((work) => {
+                  if (activeWorkFilter === "all") return true;
+                  if (activeWorkFilter === "no_sheet") return !work.folhaGerada;
+                  return work.status === activeWorkFilter;
+                }).length === 0 && (
+                  <div className="bg-white rounded-lg p-8 shadow-sm text-center">
+                    <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      Nenhuma obra encontrada
+                    </h3>
+                    <p className="text-gray-500 mb-4">
+                      {activeWorkFilter === "all"
+                        ? "Não há obras registadas no sistema."
+                        : `Não há obras com o filtro "${
+                            activeWorkFilter === "pending"
+                              ? "Pendentes"
+                              : activeWorkFilter === "in_progress"
+                                ? "Em Progresso"
+                                : activeWorkFilter === "completed"
+                                  ? "Concluídas"
+                                  : activeWorkFilter === "no_sheet"
+                                    ? "Sem Folha de Obra"
+                                    : activeWorkFilter
+                          }" aplicado.`}
+                    </p>
+                    <button
+                      onClick={() => navigateToSection("nova-obra")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      Criar Nova Obra
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
