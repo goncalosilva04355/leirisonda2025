@@ -177,6 +177,14 @@ function App() {
   const [selectedWork, setSelectedWork] = useState(null);
   const [viewingWork, setViewingWork] = useState(false);
 
+  // Clickable links settings
+  const [enablePhoneDialer, setEnablePhoneDialer] = useState(() => {
+    return localStorage.getItem("enablePhoneDialer") === "true";
+  });
+  const [enableMapsRedirect, setEnableMapsRedirect] = useState(() => {
+    return localStorage.getItem("enableMapsRedirect") === "true";
+  });
+
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
     poolId: "",
