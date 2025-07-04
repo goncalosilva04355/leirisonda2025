@@ -720,14 +720,13 @@ export function useDataSync(): SyncState & SyncActions {
 
   const deletePool = useCallback(
     (id: string) => {
-      setState((prev) => ({
-        ...prev,
-        pools: prev.pools.filter((pool) => pool.id !== id),
-      }));
+      console.warn(
+        "⚠️ ATENÇÃO: Tentativa de apagar piscina bloqueada por proteção de dados!",
+      );
+      console.log("🔒 DeletePool chamado para ID:", id, "- Operação bloqueada");
 
-      if (syncEnabled) {
-        syncWithFirebase();
-      }
+      // PROTEÇÃO: Não permitir apagar piscinas conforme instruções do usuário
+      return;
     },
     [syncEnabled, syncWithFirebase],
   );
@@ -805,24 +804,17 @@ export function useDataSync(): SyncState & SyncActions {
 
   const deleteMaintenance = useCallback(
     (id: string) => {
-      setState((prev) => {
-        const updated = prev.maintenance.filter(
-          (maintenance) => maintenance.id !== id,
-        );
-        const future = updated.filter(
-          (m) => new Date(m.scheduledDate) >= new Date(),
-        );
+      console.warn(
+        "⚠️ ATENÇÃO: Tentativa de apagar manutenção bloqueada por proteção de dados!",
+      );
+      console.log(
+        "🔒 DeleteMaintenance chamado para ID:",
+        id,
+        "- Operação bloqueada",
+      );
 
-        return {
-          ...prev,
-          maintenance: updated,
-          futureMaintenance: future,
-        };
-      });
-
-      if (syncEnabled) {
-        syncWithFirebase();
-      }
+      // PROTEÇÃO: Não permitir apagar manutenções conforme instruções do usuário
+      return;
     },
     [syncEnabled, syncWithFirebase],
   );
