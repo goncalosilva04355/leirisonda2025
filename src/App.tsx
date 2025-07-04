@@ -92,7 +92,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
-  const [showRegisterForm, setShowRegisterForm] = useState(false);
+  // SECURITY: Register form removed - only super admin can create users
   const [showNewClientForm, setShowNewClientForm] = useState(false);
   const [newClientForm, setNewClientForm] = useState({
     name: "",
@@ -1266,7 +1266,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <span className="text-gray-600 text-lg">←</span>
                   </button>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Próximas Manuten��ões
+                    Próximas Manuten����es
                   </h2>
                 </div>
 
@@ -4212,7 +4212,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Trabalhos realizados</li>
-                      <li>• T���cnicos respons��veis</li>
+                      <li>• T����cnicos responsáveis</li>
                       <li>• Datas e duraç��es</li>
                       <li>• Estados e observações</li>
                     </ul>
