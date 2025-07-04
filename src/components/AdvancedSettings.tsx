@@ -15,6 +15,15 @@ import { FirebaseConfig } from "./FirebaseConfig";
 
 interface AdvancedSettingsProps {
   onBack: () => void;
+  dataSync?: {
+    pools: any[];
+    maintenance: any[];
+    works: any[];
+    clients: any[];
+    lastSync: Date | null;
+    syncWithFirebase: () => Promise<void>;
+    enableSync: (enabled: boolean) => void;
+  };
 }
 
 export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
