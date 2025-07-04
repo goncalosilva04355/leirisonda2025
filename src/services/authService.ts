@@ -60,14 +60,16 @@ class AuthService {
     name: string,
     role: "super_admin" | "manager" | "technician" = "technician",
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-
     // Validate inputs first
     if (!email || !email.trim()) {
       return { success: false, error: "Email é obrigatório" };
     }
 
     if (!password || password.length < 6) {
-      return { success: false, error: "Password deve ter pelo menos 6 caracteres" };
+      return {
+        success: false,
+        error: "Password deve ter pelo menos 6 caracteres",
+      };
     }
 
     if (!name || !name.trim()) {
@@ -80,7 +82,10 @@ class AuthService {
       try {
         return await this.registerWithFirebase(email, password, name, role);
       } catch (error: any) {
-        console.error("Firebase registration failed, falling back to mock:", error);
+        console.error(
+          "Firebase registration failed, falling back to mock:",
+          error,
+        );
         // Fall through to mock auth
       }
     } else {
@@ -96,9 +101,8 @@ class AuthService {
     email: string,
     password: string,
     name: string,
-    role: "super_admin" | "manager" | "technician"
-  ): Promise<{ success: boolean; error?: string; user?: UserProfile }>
-
+    role: "super_admin" | "manager" | "technician",
+  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
       // Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
@@ -146,13 +150,14 @@ class AuthService {
       } else if (error.code === "auth/too-many-requests") {
         errorMessage = "Muitas tentativas. Tente novamente mais tarde";
       } else if (error.code === "auth/operation-not-allowed") {
-        errorMessage = "Email/Password authentication não está ativado no Firebase Console";
+        errorMessage =
+          "Email/Password authentication não está ativado no Firebase Console";
       } else if (error.code === "auth/invalid-api-key") {
         errorMessage = "Chave API Firebase inválida";
       } else if (error.code === "auth/app-deleted") {
         errorMessage = "Projeto Firebase foi removido";
       } else if (error.message) {
-        errorMessage = `Erro Firebase: ${error.code || 'unknown'} - ${error.message}`;
+        errorMessage = `Erro Firebase: ${error.code || "unknown"} - ${error.message}`;
       }
 
       return { success: false, error: errorMessage };
