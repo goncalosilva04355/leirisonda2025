@@ -1,10 +1,6 @@
 import { initializeApp, getApps, getApp, deleteApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import {
-  getAuth,
-  setPersistence,
-  browserSessionPersistence,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 // Fixed Firebase config
 const firebaseConfig = {
