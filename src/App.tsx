@@ -133,6 +133,26 @@ function App() {
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
   const [selectedPhotos, setSelectedPhotos] = useState([]);
 
+  // Maintenance form state
+  const [maintenanceForm, setMaintenanceForm] = useState({
+    poolId: "",
+    date: new Date().toISOString().split("T")[0],
+    startTime: "",
+    endTime: "",
+    technician: "",
+    vehicle: "",
+    pH: "",
+    chlorine: "",
+    alkalinity: "",
+    temperature: "",
+    workPerformed: "",
+    otherWork: "",
+    problems: "",
+    observations: "",
+    nextMaintenance: "",
+    status: "completed",
+  });
+
   // Initialize notification permission state and register service worker
   useEffect(() => {
     if ("Notification" in window) {
@@ -934,7 +954,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        🚀 Funcionalidades Avançadas
+                        ���� Funcionalidades Avançadas
                       </h3>
                       <p className="text-sm text-gray-500">
                         📸 Fotos • 💧 Furo de Água • 🔧 Gestão Completa
@@ -3299,7 +3319,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Dados de contacto</li>
                       <li>• Piscinas associadas</li>
-                      <li>• Histórico de serviços</li>
+                      <li>• Histórico de servi��os</li>
                       <li>• Informações contratuais</li>
                     </ul>
                   </div>
