@@ -94,7 +94,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(ADMIN_USER);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("futuras-manutencoes");
+  const [activeSection, setActiveSection] = useState("dashboard");
 
   // Custom setActiveSection that updates URL hash
   const navigateToSection = (section: string) => {
@@ -388,6 +388,9 @@ function App() {
       const hash = window.location.hash.substring(1);
       if (hash) {
         setActiveSection(hash);
+      } else {
+        // Default to dashboard when no hash is present
+        navigateToSection("dashboard");
       }
     } else {
       setLoginError("Credenciais inválidas");
@@ -456,7 +459,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manutenções: ${maintenance.length}
+- Total de Manuten��ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -1084,7 +1087,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         🚀 Funcionalidades Avançadas
                       </h3>
                       <p className="text-sm text-gray-500">
-                        📸 Fotos • 💧 Furo de Água • 🔧 Gestão Completa
+                        📸 Fotos • �� Furo de Água • 🔧 Gestão Completa
                       </p>
                     </div>
                     <div className="flex space-x-2">
