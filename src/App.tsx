@@ -1430,11 +1430,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Prioridade
                       </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        defaultValue="media"
+                      >
                         <option value="baixa">Baixa</option>
-                        <option value="media" selected>
-                          Média
-                        </option>
+                        <option value="media">Média</option>
                         <option value="alta">Alta</option>
                         <option value="urgente">Urgente</option>
                       </select>
@@ -2010,7 +2011,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         "Limpeza de pré-filtro",
                         "Limpeza filtro areia/vidro",
                         "Verificação alimentação",
-                        "Enchimento automático",
+                        "Enchimento autom��tico",
                         "Limpeza linha de água",
                         "Limpeza do fundo",
                         "Limpeza das paredes",
