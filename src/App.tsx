@@ -4744,7 +4744,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Limpar Dados do Sistema
                           </h4>
                           <p className="text-red-700 text-sm mb-3">
-                            Esta ação eliminar�� permanentemente:
+                            Esta ação eliminar��� permanentemente:
                           </p>
                           <ul className="text-red-700 text-sm space-y-1 mb-4">
                             <li>• Todas as obras ({works.length} registos)</li>
@@ -7059,436 +7059,441 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       <div className="min-h-screen bg-gray-50">
         {/* Sidebar */}
         <div
-        className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Logo Header */}
-          <div className="px-6 py-6 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
-                  <img
-                    src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                    alt="Leirisonda Logo"
-                    className="w-full h-full object-contain"
-                  />
+          className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="flex flex-col h-full">
+            {/* Logo Header */}
+            <div className="px-6 py-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                      alt="Leirisonda Logo"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-500">Gestão de Serviços</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-500">Gestão de Serviços</p>
-                </div>
-              </div>
-              {/* Close button for mobile */}
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="lg:hidden p-1 rounded-md hover:bg-gray-100"
-              >
-                <X className="h-5 w-5 text-gray-500" />
-              </button>
-            </div>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
-            <button
-              onClick={() => {
-                navigateToSection("dashboard");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "dashboard"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Home className="h-5 w-5" />
-              <span>Dashboard</span>
-            </button>
-
-            {hasPermission("obras", "view") && (
-              <button
-                onClick={() => {
-                  navigateToSection("obras");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "obras"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Building2 className="h-5 w-5" />
-                <span>Obras</span>
-              </button>
-            )}
-
-            {hasPermission("obras", "create") && (
-              <button
-                onClick={() => {
-                  navigateToSection("nova-obra");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "nova-obra"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Plus className="h-5 w-5" />
-                <span>Nova Obra</span>
-              </button>
-            )}
-
-            {hasPermission("manutencoes", "view") && (
-              <button
-                onClick={() => {
-                  navigateToSection("manutencoes");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "manutencoes"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Wrench className="h-5 w-5" />
-                <span>Manutenções</span>
-              </button>
-            )}
-
-            {hasPermission("manutencoes", "create") && (
-              <button
-                onClick={() => {
-                  navigateToSection("nova-manutencao");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "nova-manutencao"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Plus className="h-5 w-5" />
-                <span>Nova Manutenção</span>
-              </button>
-            )}
-
-            {hasPermission("piscinas", "view") && (
-              <button
-                onClick={() => {
-                  navigateToSection("piscinas");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "piscinas"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Waves className="h-5 w-5" />
-                <span>Piscinas</span>
-              </button>
-            )}
-
-            {/* Only show Users button for super admins */}
-            {currentUser?.role === "super_admin" && (
-              <button
-                onClick={() => {
-                  navigateToSection("utilizadores");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "utilizadores"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Users className="h-5 w-5" />
-                <span>Utilizadores</span>
-              </button>
-            )}
-
-            {hasPermission("manutencoes", "view") && (
-              <button
-                onClick={() => {
-                  navigateToSection("futuras-manutencoes");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "futuras-manutencoes"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <BarChart3 className="h-5 w-5" />
-                <span>Futuras Manutenções</span>
-              </button>
-            )}
-
-            {/* Administration Section - Only for super admin */}
-            {currentUser?.role === "super_admin" && (
-              <button
-                onClick={() => {
-                  setShowAdminLogin(true);
-                  setSidebarOpen(false);
-                }}
-                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 hover:bg-gray-100"
-              >
-                <Shield className="h-5 w-5" />
-                <span>Administração</span>
-              </button>
-            )}
-          </nav>
-
-          {/* User Section */}
-          <div className="px-4 py-6 border-t border-gray-200">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                <UserCheck className="h-5 w-5 text-red-600" />
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">{currentUser.name}</p>
-                <p className="text-sm text-gray-500">{currentUser.role}</p>
+                {/* Close button for mobile */}
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="lg:hidden p-1 rounded-md hover:bg-gray-100"
+                >
+                  <X className="h-5 w-5 text-gray-500" />
+                </button>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <LogOut className="h-5 w-5" />
-              <span>Terminar Sessão</span>
-            </button>
-            <div className="mt-4 text-center">
-              <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
+
+            {/* Navigation */}
+            <nav className="flex-1 px-4 py-6 space-y-2">
+              <button
+                onClick={() => {
+                  navigateToSection("dashboard");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "dashboard"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Home className="h-5 w-5" />
+                <span>Dashboard</span>
+              </button>
+
+              {hasPermission("obras", "view") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("obras");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "obras"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Building2 className="h-5 w-5" />
+                  <span>Obras</span>
+                </button>
+              )}
+
+              {hasPermission("obras", "create") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("nova-obra");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "nova-obra"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>Nova Obra</span>
+                </button>
+              )}
+
+              {hasPermission("manutencoes", "view") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("manutencoes");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "manutencoes"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Wrench className="h-5 w-5" />
+                  <span>Manutenções</span>
+                </button>
+              )}
+
+              {hasPermission("manutencoes", "create") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("nova-manutencao");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "nova-manutencao"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>Nova Manutenção</span>
+                </button>
+              )}
+
+              {hasPermission("piscinas", "view") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("piscinas");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "piscinas"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Waves className="h-5 w-5" />
+                  <span>Piscinas</span>
+                </button>
+              )}
+
+              {/* Only show Users button for super admins */}
+              {currentUser?.role === "super_admin" && (
+                <button
+                  onClick={() => {
+                    navigateToSection("utilizadores");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "utilizadores"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Users className="h-5 w-5" />
+                  <span>Utilizadores</span>
+                </button>
+              )}
+
+              {hasPermission("manutencoes", "view") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("futuras-manutencoes");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "futuras-manutencoes"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <BarChart3 className="h-5 w-5" />
+                  <span>Futuras Manutenções</span>
+                </button>
+              )}
+
+              {/* Administration Section - Only for super admin */}
+              {currentUser?.role === "super_admin" && (
+                <button
+                  onClick={() => {
+                    setShowAdminLogin(true);
+                    setSidebarOpen(false);
+                  }}
+                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 hover:bg-gray-100"
+                >
+                  <Shield className="h-5 w-5" />
+                  <span>Administração</span>
+                </button>
+              )}
+            </nav>
+
+            {/* User Section */}
+            <div className="px-4 py-6 border-t border-gray-200">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <UserCheck className="h-5 w-5 text-red-600" />
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900">
+                    {currentUser.name}
+                  </p>
+                  <p className="text-sm text-gray-500">{currentUser.role}</p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <LogOut className="h-5 w-5" />
+                <span>Terminar Sessão</span>
+              </button>
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Menu Button */}
-      <div className="lg:hidden fixed top-20 left-4 z-60 flex flex-col space-y-2">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="bg-white p-2 rounded-md shadow-md"
-        >
-          <Menu className="h-6 w-6 text-gray-600" />
-        </button>
-        <button
-          onClick={handleGoBack}
-          className="bg-white p-2 rounded-md shadow-md"
-        >
-          <ArrowLeft className="h-6 w-6 text-gray-600" />
-        </button>
-      </div>
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden fixed top-20 left-4 z-60 flex flex-col space-y-2">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="bg-white p-2 rounded-md shadow-md"
+          >
+            <Menu className="h-6 w-6 text-gray-600" />
+          </button>
+          <button
+            onClick={handleGoBack}
+            className="bg-white p-2 rounded-md shadow-md"
+          >
+            <ArrowLeft className="h-6 w-6 text-gray-600" />
+          </button>
+        </div>
 
-      {/* Mobile Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+        {/* Mobile Overlay */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
 
-      {/* Work View Modal */}
-      {viewingWork && selectedWork && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Detalhes da Obra
-                </h2>
-                <button
-                  onClick={() => {
-                    setViewingWork(false);
-                    setSelectedWork(null);
-                  }}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Título
-                    </label>
-                    <p className="text-gray-900">{selectedWork.title}</p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Cliente
-                    </label>
-                    <p className="text-gray-900">{selectedWork.client}</p>
-                    {selectedWork.contact && (
-                      <button
-                        onClick={() => handlePhoneClick(selectedWork.contact)}
-                        className={`text-sm mt-1 ${
-                          enablePhoneDialer
-                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                            : "text-gray-500"
-                        }`}
-                        disabled={!enablePhoneDialer}
-                      >
-                        📞 {selectedWork.contact}
-                      </button>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Local
-                    </label>
-                    <button
-                      onClick={() => handleAddressClick(selectedWork.location)}
-                      className={`text-left ${
-                        enableMapsRedirect
-                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                          : "text-gray-900"
-                      }`}
-                      disabled={!enableMapsRedirect}
-                    >
-                      ��� {selectedWork.location}
-                    </button>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Estado
-                    </label>
-                    <span
-                      className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                        selectedWork.status === "pending"
-                          ? "bg-red-100 text-red-700"
-                          : selectedWork.status === "in_progress"
-                            ? "bg-orange-100 text-orange-700"
-                            : selectedWork.status === "completed"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-700"
-                      }`}
-                    >
-                      {selectedWork.status === "pending"
-                        ? "Pendente"
-                        : selectedWork.status === "in_progress"
-                          ? "Em Progresso"
-                          : selectedWork.status === "completed"
-                            ? "Concluída"
-                            : selectedWork.status}
-                    </span>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Data de Início
-                    </label>
-                    <p className="text-gray-900">
-                      {new Date(selectedWork.startDate).toLocaleDateString(
-                        "pt-PT",
-                      )}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Atribuída a
-                    </label>
-                    <p className="text-gray-900">
-                      {selectedWork.assignedTo || "Não atribuída"}
-                    </p>
-                  </div>
-                </div>
-
-                {selectedWork.description && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Descrição
-                    </label>
-                    <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                      {selectedWork.description}
-                    </p>
-                  </div>
-                )}
-
-                {selectedWork.budget && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Orçamento
-                    </label>
-                    <p className="text-gray-900">€{selectedWork.budget}</p>
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-6 flex justify-end space-x-3">
-                <button
-                  onClick={() => {
-                    setViewingWork(false);
-                    setSelectedWork(null);
-                  }}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
-                >
-                  Fechar
-                </button>
-                {hasPermission("obras", "edit") && (
+        {/* Work View Modal */}
+        {viewingWork && selectedWork && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Detalhes da Obra
+                  </h2>
                   <button
                     onClick={() => {
-                      setEditingWork(selectedWork);
                       setViewingWork(false);
                       setSelectedWork(null);
-                      setActiveSection("editar-obra");
                     }}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    className="text-gray-400 hover:text-gray-600"
                   >
-                    Editar
+                    <X className="h-6 w-6" />
                   </button>
-                )}
+                </div>
+
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Título
+                      </label>
+                      <p className="text-gray-900">{selectedWork.title}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Cliente
+                      </label>
+                      <p className="text-gray-900">{selectedWork.client}</p>
+                      {selectedWork.contact && (
+                        <button
+                          onClick={() => handlePhoneClick(selectedWork.contact)}
+                          className={`text-sm mt-1 ${
+                            enablePhoneDialer
+                              ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                              : "text-gray-500"
+                          }`}
+                          disabled={!enablePhoneDialer}
+                        >
+                          📞 {selectedWork.contact}
+                        </button>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Local
+                      </label>
+                      <button
+                        onClick={() =>
+                          handleAddressClick(selectedWork.location)
+                        }
+                        className={`text-left ${
+                          enableMapsRedirect
+                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                            : "text-gray-900"
+                        }`}
+                        disabled={!enableMapsRedirect}
+                      >
+                        ��� {selectedWork.location}
+                      </button>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Estado
+                      </label>
+                      <span
+                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          selectedWork.status === "pending"
+                            ? "bg-red-100 text-red-700"
+                            : selectedWork.status === "in_progress"
+                              ? "bg-orange-100 text-orange-700"
+                              : selectedWork.status === "completed"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {selectedWork.status === "pending"
+                          ? "Pendente"
+                          : selectedWork.status === "in_progress"
+                            ? "Em Progresso"
+                            : selectedWork.status === "completed"
+                              ? "Concluída"
+                              : selectedWork.status}
+                      </span>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Data de Início
+                      </label>
+                      <p className="text-gray-900">
+                        {new Date(selectedWork.startDate).toLocaleDateString(
+                          "pt-PT",
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Atribuída a
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.assignedTo || "Não atribuída"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {selectedWork.description && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Descrição
+                      </label>
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {selectedWork.description}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedWork.budget && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Orçamento
+                      </label>
+                      <p className="text-gray-900">€{selectedWork.budget}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-6 flex justify-end space-x-3">
+                  <button
+                    onClick={() => {
+                      setViewingWork(false);
+                      setSelectedWork(null);
+                    }}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                  >
+                    Fechar
+                  </button>
+                  {hasPermission("obras", "edit") && (
+                    <button
+                      onClick={() => {
+                        setEditingWork(selectedWork);
+                        setViewingWork(false);
+                        setSelectedWork(null);
+                        setActiveSection("editar-obra");
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
+                      Editar
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Main Content */}
-      <main className="lg:ml-80 min-h-screen">
-        <div className="p-4 lg:p-6">{renderContent()}</div>
-      </main>
+        {/* Main Content */}
+        <main className="lg:ml-80 min-h-screen">
+          <div className="p-4 lg:p-6">{renderContent()}</div>
+        </main>
 
-      {/* Install Prompt for Mobile */}
-      <InstallPrompt />
+        {/* Install Prompt for Mobile */}
+        <InstallPrompt />
 
-      {/* Auto-sync notification */}
-      <AutoSyncNotification
-        syncStatus={syncStatus}
-        lastSync={autoSyncLastSync}
-        onDismiss={syncStatus === "completed" ? () => {} : undefined}
-      />
+        {/* Auto-sync notification */}
+        <AutoSyncNotification
+          syncStatus={syncStatus}
+          lastSync={autoSyncLastSync}
+          onDismiss={syncStatus === "completed" ? () => {} : undefined}
+        />
 
-      {/* Admin Login Modal */}
-      {showAdminLogin && !isAdminAuthenticated && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg max-w-md w-full mx-4">
-            <AdminLogin
-              onLogin={() => {
-                setIsAdminAuthenticated(true);
+        {/* Admin Login Modal */}
+        {showAdminLogin && !isAdminAuthenticated && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg max-w-md w-full mx-4">
+              <AdminLogin
+                onLogin={() => {
+                  setIsAdminAuthenticated(true);
+                  setShowAdminLogin(false);
+                }}
+                onBack={() => setShowAdminLogin(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Admin Page */}
+        {isAdminAuthenticated && (
+          <div className="fixed inset-0 bg-white z-50">
+            <AdminPage
+              onLogout={() => {
+                setIsAdminAuthenticated(false);
                 setShowAdminLogin(false);
               }}
-              onBack={() => setShowAdminLogin(false)}
             />
           </div>
-        </div>
-      )}
-
-      {/* Admin Page */}
-      {isAdminAuthenticated && (
-        <div className="fixed inset-0 bg-white z-50">
-          <AdminPage
-            onLogout={() => {
-              setIsAdminAuthenticated(false);
-              setShowAdminLogin(false);
-            }}
-          />
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </AutoSyncProvider>
   );
 }
 
