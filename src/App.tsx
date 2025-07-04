@@ -891,7 +891,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS A���ÕES:
+PR��XIMAS A���ÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -3231,7 +3231,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={3}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Observa������ões sobre a obra..."
+                          placeholder="Observa����ões sobre a obra..."
                         />
                       </div>
 
@@ -4247,7 +4247,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         "Limpeza de pré-filtro",
                         "Limpeza filtro areia/vidro",
                         "Verificação alimentação",
-                        "Enchimento autom��tico",
+                        "Enchimento autom���tico",
                         "Limpeza linha de ���gua",
                         "Limpeza do fundo",
                         "Limpeza das paredes",
@@ -7498,6 +7498,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       {/* Install Prompt for Mobile */}
       <InstallPrompt />
+
+      {/* Auto-sync notification */}
+      <AutoSyncNotification
+        syncStatus={syncStatus}
+        lastSync={lastSync}
+        onDismiss={syncStatus === "completed" ? () => {} : undefined}
+      />
 
       {/* Debug Components - Remove in production */}
       <FullSyncManager />
