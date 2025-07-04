@@ -164,7 +164,11 @@ function App() {
   } = useDataCleanup();
 
   // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
-  const { syncStatus, lastSync, isAutoSyncing } = useAutoSync();
+  const {
+    syncStatus,
+    lastSync: autoSyncLastSync,
+    isAutoSyncing,
+  } = useAutoSync();
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -891,7 +895,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PR��XIMAS A���ÕES:
+PRÓXIMAS A���ÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -1035,7 +1039,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const testPushNotification = () => {
     if (Notification.permission === "granted") {
       showNotification(
-        "Teste de Notificação",
+        "Teste de Notifica��ão",
         "As notificações estão a funcionar corretamente!",
         "test",
       );
@@ -1433,7 +1437,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "relatorios",
       icon: BarChart3,
-      label: "Relatórios",
+      label: "Relat��rios",
       path: "/relatorios",
     },
     { id: "clientes", icon: Users, label: "Clientes", path: "/clientes" },
@@ -4247,7 +4251,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         "Limpeza de pré-filtro",
                         "Limpeza filtro areia/vidro",
                         "Verificação alimentação",
-                        "Enchimento autom���tico",
+                        "Enchimento autom��tico",
                         "Limpeza linha de ���gua",
                         "Limpeza do fundo",
                         "Limpeza das paredes",
