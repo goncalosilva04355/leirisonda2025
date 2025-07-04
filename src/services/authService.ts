@@ -358,37 +358,55 @@ class AuthService {
 
   // Listen to auth state changes
   onAuthStateChanged(callback: (user: UserProfile | null) => void): () => void {
-    if (!auth || !db) {
-      callback(null);
-      return () => {};
-    }
-
-    return onAuthStateChanged(
-      auth,
-      async (firebaseUser: FirebaseUser | null) => {
-        if (firebaseUser) {
-          try {
-            const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
-            if (userDoc.exists()) {
-              const userProfile = userDoc.data() as UserProfile;
-              callback(userProfile.active ? userProfile : null);
-            } else {
-              // Force logout if no valid user profile found
-              console.log("No valid user profile found, forcing logout");
+    // Try Firebase first if available
+    if (auth && db) {
+      console.log("Setting up Firebase auth state listener");
+      return onAuthStateChanged(
+        auth,
+        async (firebaseUser: FirebaseUser | null) => {
+          if (firebaseUser) {
+            try {
+              const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+              if (userDoc.exists()) {
+                const userProfile = userDoc.data() as UserProfile;
+                callback(userProfile.active ? userProfile : null);
+              } else {
+                // Force logout if no valid user profile found
+                console.log("No valid user profile found, forcing logout");
+                await this.logout();
+                callback(null);
+              }
+            } catch (error) {
+              console.error("Error getting user profile:", error);
+              // Force logout on error for security
               await this.logout();
               callback(null);
             }
-          } catch (error) {
-            console.error("Error getting user profile:", error);
-            // Force logout on error for security
-            await this.logout();
+          } else {
             callback(null);
           }
+        },
+      );
+    } else {
+      // Fallback to mock authentication
+      console.log("Setting up mock auth state listener");
+      return mockAuthService.onAuthStateChanged((mockUser) => {
+        if (mockUser) {
+          const userProfile: UserProfile = {
+            uid: mockUser.uid,
+            email: mockUser.email,
+            name: mockUser.name,
+            role: mockUser.role,
+            permissions: this.getDefaultPermissions(mockUser.role),
+            active: mockUser.active,
+            createdAt: mockUser.createdAt,
+          };
+          callback(userProfile);
         } else {
           callback(null);
         }
-      },
-    );
+      });
+    }
   }
 
   // Get current user profile
