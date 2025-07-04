@@ -108,7 +108,7 @@ const mockMaintenance: Maintenance[] = [
     id: "maint-2",
     poolId: "pool-2",
     poolName: "Piscina Condomínio Sol",
-    type: "Manutenção",
+    type: "Manutenç��o",
     status: "completed",
     description: "Verificação de equipamentos e limpeza",
     scheduledDate: "2025-01-10",
@@ -258,33 +258,56 @@ export function useDataSync(): SyncState & SyncActions {
   useEffect(() => {
     if (syncEnabled) {
       const performInitialSync = async () => {
-        const initialized = realFirebaseService.initialize();
-        if (initialized) {
-          setState((prev) => ({ ...prev, isLoading: true, error: null }));
+        try {
+          const initialized = realFirebaseService.initialize();
+          if (initialized) {
+            setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
-          try {
-            const connectionOk = await realFirebaseService.testConnection();
-            if (!connectionOk) {
-              throw new Error("Firebase connection test failed");
+            try {
+              const connectionOk = await realFirebaseService.testConnection();
+              if (!connectionOk) {
+                console.warn(
+                  "Firebase connection test failed, using local mode",
+                );
+                setState((prev) => ({
+                  ...prev,
+                  isLoading: false,
+                  error: null,
+                }));
+                return;
+              }
+
+              // Set successful sync immediately to remove "waiting" status
+              setState((prev) => ({
+                ...prev,
+                isLoading: false,
+                lastSync: new Date(),
+                error: null,
+              }));
+            } catch (error: any) {
+              console.warn(
+                "Initial Firebase sync failed, using local mode:",
+                error,
+              );
+              setState((prev) => ({
+                ...prev,
+                isLoading: false,
+                error: null, // Don't show error, just use local mode
+              }));
             }
-
-            // Set successful sync immediately to remove "waiting" status
+          } else {
+            // Clear error when Firebase is not configured - should show "Modo Local"
             setState((prev) => ({
               ...prev,
-              isLoading: false,
-              lastSync: new Date(),
               error: null,
-            }));
-          } catch (error: any) {
-            console.error("Initial Firebase sync failed:", error);
-            setState((prev) => ({
-              ...prev,
               isLoading: false,
-              error: `Sync failed: ${error.message}`,
             }));
           }
-        } else {
-          // Clear error when Firebase is not configured - should show "Modo Local"
+        } catch (error: any) {
+          console.warn(
+            "Firebase initialization error, using local mode:",
+            error,
+          );
           setState((prev) => ({
             ...prev,
             error: null,
