@@ -4557,7 +4557,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <nav className="flex-1 px-4 py-6 space-y-2">
             <button
               onClick={() => {
-                setActiveSection("dashboard");
+                navigateToSection("dashboard");
                 setSidebarOpen(false);
               }}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
