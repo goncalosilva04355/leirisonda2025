@@ -847,7 +847,7 @@ ${index + 1}. ${work.title}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: ���${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -1063,7 +1063,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     if (Notification.permission === "granted") {
       showNotification(
         "Teste de Notificação",
-        "As notificações estão a funcionar corretamente!",
+        "As notificações est��o a funcionar corretamente!",
         "test",
       );
     } else {
@@ -2792,7 +2792,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </p>
                             <div className="flex items-center space-x-4 text-sm">
                               <span className="text-blue-600">
-                                ���{" "}
+                                €{" "}
                                 {new Date(
                                   maint.scheduledDate,
                                 ).toLocaleDateString("pt-PT")}
@@ -5272,7 +5272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>• Dados consolidados</li>
-                        <li>��� Análise de performance</li>
+                        <li>• Análise de performance</li>
                       </ul>
                     </div>
                     <button
@@ -5292,7 +5292,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat����rio Personalizado
+                          Relatório Personalizado
                         </h3>
                         <p className="text-sm text-gray-600">
                           Configure os dados
@@ -5343,7 +5343,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estatísticas R����pidas
+                    Estatísticas Rápidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
@@ -5356,9 +5356,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="text-2xl font-bold text-green-600">
                         {maintenance.length}
                       </div>
-                      <div className="text-sm text-gray-600">
-                        Manuten����ões
-                      </div>
+                      <div className="text-sm text-gray-600">Manutenções</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-orange-600">
@@ -5561,7 +5559,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enablePhoneDialer}
                                 >
-                                  �� {client.phone}
+                                  📞 {client.phone}
                                 </button>
                               </div>
                               <div>
@@ -7663,7 +7661,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 hover:bg-gray-100"
                 >
                   <Shield className="h-5 w-5" />
-                  <span>Administra��ão</span>
+                  <span>Administração</span>
                 </button>
               )}
             </nav>
