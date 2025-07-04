@@ -6597,6 +6597,52 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         );
 
+      case "register":
+        // SECURITY: Only super admin can register new users
+        if (currentUser?.role !== "super_admin") {
+          return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+              <div className="text-center">
+                <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                  Acesso Restrito
+                </h2>
+                <p className="text-gray-500">
+                  Apenas super administradores podem criar utilizadores.
+                </p>
+                <button
+                  onClick={() => navigateToSection("dashboard")}
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Voltar ao Dashboard
+                </button>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <button
+                  onClick={() => navigateToSection("utilizadores")}
+                  className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                >
+                  ← Voltar aos Utilizadores
+                </button>
+                <RegisterForm
+                  onRegisterSuccess={() => {
+                    navigateToSection("utilizadores");
+                  }}
+                  onBackToLogin={() => {
+                    navigateToSection("utilizadores");
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div className="min-h-screen bg-gray-50 flex items-center justify-center">
