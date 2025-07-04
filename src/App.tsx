@@ -2630,6 +2630,597 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         );
 
+      case "clientes":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <Users className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Clientes
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gestão da base de dados de clientes
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection("novo-cliente")}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Novo Cliente</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Search and Filters */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex space-x-3">
+                  <input
+                    type="text"
+                    placeholder="Pesquisar clientes..."
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option>Todos os tipos</option>
+                    <option>Particular</option>
+                    <option>Empresa</option>
+                    <option>Condomínio</option>
+                  </select>
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option>Todos os estados</option>
+                    <option>Ativo</option>
+                    <option>Inativo</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Statistics */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <Users className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Total Clientes
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {clients.length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <Check className="h-4 w-4 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Clientes Ativos
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {clients.filter((c) => c.status === "Ativo").length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Waves className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Com Piscinas
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {pools.length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-4 w-4 text-orange-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">
+                        Com Obras
+                      </p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {works.length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Clients List */}
+              <div className="space-y-4">
+                {clients.length === 0 ? (
+                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Users className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhum cliente registado
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Comece por adicionar o primeiro cliente ao sistema
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("novo-cliente")}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2 mx-auto"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Adicionar Cliente</span>
+                    </button>
+                  </div>
+                ) : (
+                  clients.map((client) => (
+                    <div
+                      key={client.id}
+                      className="bg-white rounded-lg shadow-sm p-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {client.name}
+                            </h3>
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                client.status === "Ativo"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
+                              {client.status}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                            <div>
+                              <p className="font-medium">Contactos:</p>
+                              <p>{client.email}</p>
+                              <p>{client.phone}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium">Morada:</p>
+                              <p>{client.address}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium">Informações:</p>
+                              <p>Tipo: {client.type}</p>
+                              <p>
+                                Cliente desde:{" "}
+                                {new Date(client.createdAt).toLocaleDateString(
+                                  "pt-PT",
+                                )}
+                              </p>
+                            </div>
+                          </div>
+                          {client.notes && (
+                            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                              <p className="text-sm text-gray-600">
+                                <strong>Notas:</strong> {client.notes}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => dataSync.deleteClient(client.id)}
+                            className="p-2 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        );
+
+      case "novo-cliente":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <Users className="h-4 w-4 text-purple-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Novo Cliente
+                    </h1>
+                    <p className="text-gray-600 text-sm">
+                      Adicionar cliente à base de dados
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <form className="space-y-8">
+                  {/* Basic Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Informações Básicas
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Nome / Razão Social *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Nome completo ou razão social"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tipo de Cliente *
+                        </label>
+                        <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+                          <option value="">Selecionar tipo</option>
+                          <option value="particular">Particular</option>
+                          <option value="empresa">Empresa</option>
+                          <option value="condominio">Condomínio</option>
+                          <option value="hotel">Hotel / Turismo</option>
+                          <option value="publico">Entidade Pública</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Contact Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Contactos
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email Principal *
+                        </label>
+                        <input
+                          type="email"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="email@exemplo.com"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Telefone Principal *
+                        </label>
+                        <input
+                          type="tel"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="+351 XXX XXX XXX"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email Secundário
+                        </label>
+                        <input
+                          type="email"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="email2@exemplo.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Telefone Secundário
+                        </label>
+                        <input
+                          type="tel"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="+351 XXX XXX XXX"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Address */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Morada
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Morada Completa *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Rua, número, andar, etc."
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Código Postal *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="XXXX-XXX"
+                          pattern="[0-9]{4}-[0-9]{3}"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Localidade *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Cidade/Vila"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Additional Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Informações Adicionais
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          NIF / NIPC
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="123456789"
+                          pattern="[0-9]{9}"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Pessoa de Contacto (se aplicável)
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Nome da pessoa responsável"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Notas e Observações
+                        </label>
+                        <textarea
+                          rows={4}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          placeholder="Informações relevantes sobre o cliente, preferências, histórico, etc."
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection("clientes")}
+                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        alert(
+                          "Cliente criado com sucesso! (Função em desenvolvimento)",
+                        );
+                        setActiveSection("clientes");
+                      }}
+                      className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Save className="h-4 w-4" />
+                      <span>Criar Cliente</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "obras":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-4 w-4 text-orange-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Obras
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gestão de projetos e construções
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setActiveSection("nova-obra")}
+                    className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Nova Obra</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Search and Filters */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex space-x-3">
+                  <input
+                    type="text"
+                    placeholder="Pesquisar obras..."
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <option>Todos os estados</option>
+                    <option>Orçamento</option>
+                    <option>Aprovado</option>
+                    <option>Em Execução</option>
+                    <option>Concluído</option>
+                    <option>Cancelado</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Works List */}
+              <div className="space-y-4">
+                {works.length === 0 ? (
+                  <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Building2 className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhuma obra registada
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Comece por adicionar o primeiro projeto ao sistema
+                    </p>
+                    <button
+                      onClick={() => setActiveSection("nova-obra")}
+                      className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 flex items-center space-x-2 mx-auto"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Adicionar Obra</span>
+                    </button>
+                  </div>
+                ) : (
+                  works.map((work) => (
+                    <div
+                      key={work.id}
+                      className="bg-white rounded-lg shadow-sm p-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {work.name}
+                            </h3>
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                work.status === "Concluído"
+                                  ? "bg-green-100 text-green-800"
+                                  : work.status === "Em Execução"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : work.status === "Aprovado"
+                                      ? "bg-purple-100 text-purple-800"
+                                      : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
+                              {work.status}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                            <div>
+                              <p className="font-medium">Cliente:</p>
+                              <p>{work.client}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium">Local:</p>
+                              <p>{work.location}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium">Valor:</p>
+                              <p className="font-semibold text-green-600">
+                                {work.budget?.toLocaleString("pt-PT")}€
+                              </p>
+                            </div>
+                          </div>
+                          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                            <div>
+                              <p className="font-medium">Início previsto:</p>
+                              <p>
+                                {work.startDate
+                                  ? new Date(work.startDate).toLocaleDateString(
+                                      "pt-PT",
+                                    )
+                                  : "Não definido"}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="font-medium">Fim previsto:</p>
+                              <p>
+                                {work.endDate
+                                  ? new Date(work.endDate).toLocaleDateString(
+                                      "pt-PT",
+                                    )
+                                  : "Não definido"}
+                              </p>
+                            </div>
+                          </div>
+                          {work.description && (
+                            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                              <p className="text-sm text-gray-600">
+                                <strong>Descrição:</strong> {work.description}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button className="p-2 text-gray-400 hover:text-gray-600">
+                            <Edit2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => dataSync.deleteWork(work.id)}
+                            className="p-2 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div className="min-h-screen bg-gray-50 flex items-center justify-center">
