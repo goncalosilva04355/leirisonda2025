@@ -286,14 +286,23 @@ export function useDataSync(): SyncState & SyncActions {
             }));
           }
         } else {
+          // Clear error when Firebase is not configured - should show "Modo Local"
           setState((prev) => ({
             ...prev,
-            error: "Firebase configuration invalid",
+            error: null,
+            isLoading: false,
           }));
         }
       };
 
       performInitialSync();
+    } else {
+      // When sync is disabled, clear any errors
+      setState((prev) => ({
+        ...prev,
+        error: null,
+        isLoading: false,
+      }));
     }
   }, [syncEnabled]);
 
