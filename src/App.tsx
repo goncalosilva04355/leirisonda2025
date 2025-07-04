@@ -746,7 +746,7 @@ ${index + 1}. ${pool.name}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
-   ${pool.nextMaintenance ? `Próxima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
+   ${pool.nextMaintenance ? `Pr��xima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
 `,
   )
   .join("\n")}
@@ -1867,9 +1867,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 work.location
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()) ||
-                                work.assignedTo
-                                  .toLowerCase()
-                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                (work.assignedUsers &&
+                                work.assignedUsers.length > 0
+                                  ? work.assignedUsers.some((u) =>
+                                      u.name
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ),
+                                    )
+                                  : work.assignedTo
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      )) ||
                                 work.description
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()),
@@ -2140,9 +2151,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 work.location
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()) ||
-                                work.assignedTo
-                                  .toLowerCase()
-                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                (work.assignedUsers &&
+                                work.assignedUsers.length > 0
+                                  ? work.assignedUsers.some((u) =>
+                                      u.name
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ),
+                                    )
+                                  : work.assignedTo
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      )) ||
                                 work.description
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()),
@@ -2609,7 +2631,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenç����es
+                          Futuras Manutenç�����es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenções agendadas e programadas
