@@ -1043,7 +1043,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincroniza��ão:`,
             syncError,
           );
         }
@@ -2983,6 +2983,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? users.find((u) => u.id == selectedUserId)?.name
                             : "",
                           assignedUserId: selectedUserId,
+                          vehicles: workVehicles,
+                          technicians: workTechnicians,
                           photos: uploadedPhotos,
                           photoCount: uploadedPhotos.length,
                           createdAt: new Date().toISOString(),
@@ -3405,7 +3407,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Frequ��ncia de Manutenç��o
+                        Frequ��ncia de Manutenção
                       </label>
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="semanal">Semanal</option>
