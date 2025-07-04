@@ -476,6 +476,34 @@ function App() {
     setAdvancedPasswordError("");
   };
 
+  // Data cleanup functions
+  const handleDataCleanup = async () => {
+    if (
+      window.confirm(
+        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+      )
+    ) {
+      try {
+        await cleanAllData();
+        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
+        setShowDataCleanup(false);
+      } catch (error) {
+        console.error("Erro na limpeza:", error);
+        alert("Erro ao eliminar dados. Tente novamente.");
+      }
+    }
+  };
+
+  // Fixed back button function
+  const handleGoBack = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      // Fallback to dashboard if no history
+      navigateToSection("dashboard");
+    }
+  };
+
   // PDF Generation Functions
   const generatePoolsPDF = () => {
     const content = `
