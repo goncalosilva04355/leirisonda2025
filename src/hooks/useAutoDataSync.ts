@@ -110,12 +110,38 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
       syncStatus.current.error = error.message;
       console.error("❌ Erro na sincronização automática:", error);
 
-      // Reagenda mesmo com erro
-      if (finalConfig.enabled) {
-        syncTimeoutRef.current = setTimeout(
-          performAutoSync,
-          finalConfig.syncInterval * 2, // Dobra o intervalo em caso de erro
+      // Check if it's a Firebase quota exceeded error
+      if (
+        error.message?.includes("quota") ||
+        error.message?.includes("resource-exhausted")
+      ) {
+        isQuotaExceeded.current = true;
+        backoffMultiplier.current = Math.min(backoffMultiplier.current * 2, 32); // Max 32x backoff
+        console.warn(
+          `🔥 Firebase quota exceeded. Using ${backoffMultiplier.current}x backoff`,
         );
+      } else {
+        // Reset backoff for non-quota errors
+        backoffMultiplier.current = Math.max(backoffMultiplier.current / 2, 1);
+      }
+
+      // Reagenda com backoff exponencial
+      if (finalConfig.enabled && !isQuotaExceeded.current) {
+        const nextInterval =
+          finalConfig.syncInterval * backoffMultiplier.current;
+        console.log(`⏰ Reagendando sincronização em ${nextInterval / 1000}s`);
+        syncTimeoutRef.current = setTimeout(performAutoSync, nextInterval);
+      } else if (isQuotaExceeded.current) {
+        // Para quota exceeded, espera muito mais tempo
+        const quotaBackoffTime = finalConfig.syncInterval * 60; // 60x o intervalo normal
+        console.log(
+          `🔥 Quota exceeded: aguardando ${quotaBackoffTime / 1000}s antes de tentar novamente`,
+        );
+        syncTimeoutRef.current = setTimeout(() => {
+          isQuotaExceeded.current = false;
+          backoffMultiplier.current = 1;
+          performAutoSync();
+        }, quotaBackoffTime);
       }
     } finally {
       syncStatus.current.syncing = false;
@@ -149,7 +175,7 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   const handleStorageChange = useCallback(
     (event: StorageEvent) => {
       if (finalConfig.collections.includes(event.key || "")) {
-        console.log(`�� Storage event detectado: ${event.key}`);
+        console.log(`📢 Storage event detectado: ${event.key}`);
         // Força sincronização quando localStorage muda
         forceSyncNow();
       }
