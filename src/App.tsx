@@ -2061,7 +2061,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Diâmetro da Coluna *
+                                Di��metro da Coluna *
                               </label>
                               <select
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
@@ -3448,7 +3448,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Relat��rios
+                        Relatórios
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Gere relatórios detalhados em PDF
