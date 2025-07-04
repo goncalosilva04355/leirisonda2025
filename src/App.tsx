@@ -4745,7 +4745,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       </div>
 
       {/* Mobile Menu Button */}
-      <div className="lg:hidden fixed top-4 left-4 z-60 flex flex-col space-y-2">
+      <div className="lg:hidden fixed top-20 left-4 z-60 flex flex-col space-y-2">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="bg-white p-2 rounded-md shadow-md"
