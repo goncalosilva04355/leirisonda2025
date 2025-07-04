@@ -1382,8 +1382,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Próximas Manutenções */}
               <div className="bg-white rounded-lg shadow-sm">
                 <div className="flex items-center p-4 border-b border-gray-100">
-                  <button className="p-1 mr-3">
-                    <span className="text-gray-600 text-lg">←</span>
+                  <button
+                    onClick={() => navigateToSection("futuras-manutencoes")}
+                    className="p-1 mr-3 hover:bg-gray-100 rounded"
+                  >
+                    <span className="text-gray-600 text-lg">→</span>
                   </button>
                   <h2 className="text-lg font-semibold text-gray-900">
                     Próximas Manuten��ões
@@ -1391,75 +1394,106 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
 
                 <div className="p-4 space-y-3">
-                  {/* Piscina Magnolia 1 */}
-                  <div className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
-                          <Waves className="h-5 w-5 text-cyan-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900">
-                            Piscina Magnolia
-                          </h3>
-                          <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                            <span>📍</span>
-                            <span>Vieira de Leiria</span>
-                          </div>
-                          <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                            <span>�������</span>
-                            <span>Em 28 dias</span>
-                          </div>
-                          <p className="text-xs text-gray-400 mt-1">
-                            Próxima: 31/07/2025
-                          </p>
-                        </div>
+                  {futureMaintenance.length === 0 ? (
+                    <div className="text-center py-8">
+                      <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <Waves className="h-6 w-6 text-cyan-600" />
                       </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="bg-cyan-200 text-cyan-800 text-xs px-2 py-1 rounded-full font-medium">
-                          Agendada
-                        </span>
-                        <button className="p-1 text-gray-400">
-                          <Eye className="h-4 w-4" />
-                        </button>
-                      </div>
+                      <p className="text-gray-500 text-sm font-medium">
+                        Nenhuma manutenção agendada
+                      </p>
+                      <p className="text-gray-400 text-xs mt-1">
+                        As futuras manutenções aparecerão aqui
+                      </p>
+                      <button
+                        onClick={() => navigateToSection("nova-manutencao")}
+                        className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
+                      >
+                        Agendar Manutenção
+                      </button>
                     </div>
-                  </div>
+                  ) : (
+                    futureMaintenance
+                      .sort(
+                        (a, b) =>
+                          new Date(a.scheduledDate).getTime() -
+                          new Date(b.scheduledDate).getTime(),
+                      )
+                      .slice(0, 4)
+                      .map((maint) => {
+                        const scheduledDate = new Date(maint.scheduledDate);
+                        const today = new Date();
+                        const diffTime =
+                          scheduledDate.getTime() - today.getTime();
+                        const diffDays = Math.ceil(
+                          diffTime / (1000 * 60 * 60 * 24),
+                        );
 
-                  {/* Piscina Magnolia 2 */}
-                  <div className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
-                          <Waves className="h-5 w-5 text-cyan-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900">
-                            Piscina Magnolia
-                          </h3>
-                          <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                            <span>📍</span>
-                            <span>Vieira de Leiria</span>
+                        let timeText = "";
+                        if (diffDays === 0) {
+                          timeText = "Hoje";
+                        } else if (diffDays === 1) {
+                          timeText = "Amanhã";
+                        } else if (diffDays > 0) {
+                          timeText = `Em ${diffDays} dias`;
+                        } else {
+                          timeText = "Atrasada";
+                        }
+
+                        return (
+                          <div
+                            key={maint.id}
+                            className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start space-x-3">
+                                <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                                  <Waves className="h-5 w-5 text-cyan-600" />
+                                </div>
+                                <div>
+                                  <h3 className="font-semibold text-gray-900">
+                                    {maint.poolName}
+                                  </h3>
+                                  <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                                    <span>🔧</span>
+                                    <span>{maint.type}</span>
+                                  </div>
+                                  <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                                    <span>📅</span>
+                                    <span>{timeText}</span>
+                                  </div>
+                                  <p className="text-xs text-gray-400 mt-1">
+                                    Data:{" "}
+                                    {scheduledDate.toLocaleDateString("pt-PT")}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-start space-x-2">
+                                <span
+                                  className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                    diffDays < 0
+                                      ? "bg-red-200 text-red-800"
+                                      : diffDays <= 3
+                                        ? "bg-yellow-200 text-yellow-800"
+                                        : "bg-cyan-200 text-cyan-800"
+                                  }`}
+                                >
+                                  {diffDays < 0 ? "Atrasada" : "Agendada"}
+                                </span>
+                                <button
+                                  onClick={() =>
+                                    navigateToSection("futuras-manutencoes")
+                                  }
+                                  className="p-1 text-gray-400 hover:text-gray-600"
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                            <span>📅</span>
-                            <span>Em 28 dias</span>
-                          </div>
-                          <p className="text-xs text-gray-400 mt-1">
-                            Próxima: 31/07/2025
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="bg-cyan-200 text-cyan-800 text-xs px-2 py-1 rounded-full font-medium">
-                          Agendada
-                        </span>
-                        <button className="p-1 text-gray-400">
-                          <Eye className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                        );
+                      })
+                  )}
                 </div>
               </div>
 
@@ -2466,7 +2500,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Usuários Atribuídos
+                          Usu��rios Atribuídos
                         </label>
                         <p className="text-sm text-gray-600 mb-2">
                           Selecione os usuários responsáveis por esta obra
@@ -4540,7 +4574,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                   <div className="space-y-3 mb-4">
                     <p className="text-sm text-gray-600">
-                      Relatório consolidado de todo o sistema
+                      Relat��rio consolidado de todo o sistema
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Resumo executivo</li>
