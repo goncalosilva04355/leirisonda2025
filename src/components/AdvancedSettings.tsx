@@ -134,7 +134,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
     try {
       // Test data availability
-      tests.push("��� Verificando dados disponíveis...");
+      tests.push("🔄 Verificando dados disponíveis...");
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       if (dataSync) {
@@ -214,7 +214,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
           "✅ Firebase conectado",
           "✅ Dados sincronizados",
           "✅ Real-time updates ativos",
-          "🔄 Todas as alterações ser��o sincronizadas automaticamente",
+          "🔄 Todas as alterações serão sincronizadas automaticamente",
         ],
       });
     } catch (error) {
@@ -389,6 +389,28 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   <span>Testar Sincronização</span>
                 </button>
               </div>
+
+              {/* Activate Real Sync */}
+              {localStorage.getItem("firebase-config") && (
+                <div className="mt-4">
+                  <button
+                    onClick={activateRealSync}
+                    disabled={syncTest.status === "testing"}
+                    className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 disabled:bg-gray-400 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    {syncTest.status === "testing" ? (
+                      <Loader className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <CheckCircle className="w-5 h-5" />
+                    )}
+                    <span>Ativar Sincronização Real</span>
+                  </button>
+                  <p className="text-xs text-gray-500 text-center mt-2">
+                    Ativa sincronização automática para piscinas, obras,
+                    manutenções e clientes
+                  </p>
+                </div>
+              )}
 
               {/* Test Results */}
               {syncTest.status !== "idle" && (
