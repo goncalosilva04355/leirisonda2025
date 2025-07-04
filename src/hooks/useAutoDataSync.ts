@@ -83,6 +83,9 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
 
         if (result.success) {
           syncStatus.current.lastSync = new Date();
+          syncStatus.current.error = null;
+          backoffMultiplier.current = 1; // Reset backoff on success
+          isQuotaExceeded.current = false;
           console.log("✅ Sincronização automática concluída");
 
           // Atualiza snapshots após sincronização
