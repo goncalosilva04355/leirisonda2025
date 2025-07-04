@@ -3268,7 +3268,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de ��gua - Conditional */}
+                    {/* Detalhes do Furo de Água - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div>
                         <div className="flex items-center space-x-3 mb-6">
@@ -4493,8 +4493,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento autom��tico",
-                          "Limpeza linha de ���gua",
+                          "Enchimento automático",
+                          "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
                           "Limpeza skimmers",
