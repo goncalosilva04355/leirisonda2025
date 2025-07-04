@@ -488,7 +488,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manuten����ões: ${maintenance.length}
+- Total de Manuten���ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -1412,7 +1412,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {work.title}
                                     </p>
                                     <p className="text-sm text-gray-600">
-                                      {work.client} �� {work.location}
+                                      {work.client} • {work.location}
                                     </p>
                                   </div>
                                 </div>
@@ -1693,13 +1693,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setActiveSection("nova-piscina")}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>Nova Piscina</span>
-                  </button>
+                  {hasPermission("piscinas", "create") && (
+                    <button
+                      onClick={() => setActiveSection("nova-piscina")}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Nova Piscina</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -2476,7 +2478,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         {/* Observaç��es Específicas do Furo */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observaç��es Específicas do Furo
+                            Observações Específicas do Furo
                           </label>
                           <textarea
                             rows={3}
