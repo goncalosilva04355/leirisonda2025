@@ -239,6 +239,8 @@ function App() {
           );
           setCurrentUser(user);
           setIsAuthenticated(true);
+          // Persist current user for notifications
+          localStorage.setItem("currentUser", JSON.stringify(user));
         } else {
           console.log("❌ Invalid or inactive user, forcing logout");
           setCurrentUser(null);
@@ -4265,7 +4267,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Estado da Manutenção
+                        Estado da Manuten��ão
                       </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -5104,7 +5106,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Orçamentos e custos</li>
                       <li>• Prazos e cronogramas</li>
                       <li>• Equipas respons��veis</li>
-                      <li>��� Estados de progresso</li>
+                      <li>����� Estados de progresso</li>
                     </ul>
                   </div>
                   <button
