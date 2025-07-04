@@ -2279,7 +2279,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -5718,7 +5718,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç��es
+                            Notas e Observações
                           </label>
                           <textarea
                             rows={4}
@@ -6218,21 +6218,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   (u) =>
                                     String(u.id) === currentEditAssignedUser,
                                 );
-                                if (
-                                  selectedUser &&
-                                  !editAssignedUsers.some(
-                                    (assigned) =>
-                                      assigned.id === String(selectedUser.id),
-                                  )
-                                ) {
-                                  setEditAssignedUsers([
-                                    ...editAssignedUsers,
-                                    {
-                                      id: String(selectedUser.id),
-                                      name: selectedUser.name,
-                                    },
-                                  ]);
-                                  setCurrentEditAssignedUser("");
+                                if (selectedUser) {
+                                  const userIdStr = String(selectedUser.id);
+                                  const isAlreadyAssigned =
+                                    editAssignedUsers.some(
+                                      (assigned) => assigned.id === userIdStr,
+                                    );
+
+                                  console.log(
+                                    "Attempting to assign user:",
+                                    selectedUser.name,
+                                    "ID:",
+                                    userIdStr,
+                                    "Already assigned:",
+                                    isAlreadyAssigned,
+                                  );
+
+                                  if (!isAlreadyAssigned) {
+                                    setEditAssignedUsers([
+                                      ...editAssignedUsers,
+                                      {
+                                        id: userIdStr,
+                                        name: selectedUser.name,
+                                      },
+                                    ]);
+                                    setCurrentEditAssignedUser("");
+                                    console.log("User assigned successfully!");
+                                  } else {
+                                    console.log(
+                                      "User already assigned, skipping",
+                                    );
+                                  }
                                 }
                               }
                             }}
@@ -6715,7 +6731,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          T��cnico *
+                          Técnico *
                         </label>
                         <input
                           type="text"
