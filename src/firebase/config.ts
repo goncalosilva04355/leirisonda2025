@@ -1,6 +1,6 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 // Get Firebase config from localStorage or use production config
 const getFirebaseConfig = () => {
@@ -27,7 +27,7 @@ const getFirebaseConfig = () => {
 
 const firebaseConfig = getFirebaseConfig();
 
-// Only initialize Firebase if we have real config
+// Initialize Firebase app only once
 let app: any = null;
 let db: any = null;
 let auth: any = null;
@@ -47,11 +47,19 @@ try {
       );
     }
 
-    app = initializeApp(firebaseConfig);
+    // Check if Firebase app is already initialized
+    if (getApps().length === 0) {
+      app = initializeApp(firebaseConfig);
+      console.log("Firebase app initialized for the first time");
+    } else {
+      app = getApp();
+      console.log("Using existing Firebase app instance");
+    }
+
     db = getFirestore(app);
     auth = getAuth(app);
 
-    console.log("Firebase initialized successfully");
+    console.log("Firebase services initialized successfully");
   } else {
     console.warn("Firebase not initialized - demo mode");
   }
