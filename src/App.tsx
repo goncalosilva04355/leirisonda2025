@@ -379,6 +379,12 @@ function App() {
       setIsAuthenticated(true);
       setCurrentUser(ADMIN_USER);
       setLoginError("");
+
+      // Handle any pending hash navigation after login
+      const hash = window.location.hash.substring(1);
+      if (hash) {
+        setActiveSection(hash);
+      }
     } else {
       setLoginError("Credenciais inválidas");
     }
@@ -1111,7 +1117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
               </div>
 
-              {/* Lista de Obras Atribuídas */}
+              {/* Lista de Obras Atribu��das */}
               {assignedWorks.length > 0 && (
                 <div className="bg-white rounded-lg shadow-sm">
                   <div className="flex items-center p-4 border-b border-gray-100">
@@ -1314,7 +1320,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   <button className="w-full flex items-center space-x-3 p-3 border border-blue-200 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors text-left">
                     <div className="w-5 h-5 flex items-center justify-center">
-                      <span className="text-blue-600">���</span>
+                      <span className="text-blue-600">����</span>
                     </div>
                     <span className="font-medium text-blue-900">
                       Diagnóstico de Sincronização
