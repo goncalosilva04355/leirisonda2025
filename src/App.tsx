@@ -447,14 +447,7 @@ function App() {
   };
 
   // Register functions
-  const handleRegisterSuccess = () => {
-    setShowRegisterForm(false);
-    // User will be automatically logged in by the auth state listener
-  };
-
-  const handleBackToLogin = () => {
-    setShowRegisterForm(false);
-  };
+  // SECURITY: Register functions removed - only super admin can create users
 
   // Advanced settings functions
   const handleAdvancedPasswordSubmit = (e: React.FormEvent) => {
@@ -1266,7 +1259,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <span className="text-gray-600 text-lg">←</span>
                   </button>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Próximas Manuten����es
+                    Próximas Manuten��ões
                   </h2>
                 </div>
 
@@ -4212,7 +4205,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Trabalhos realizados</li>
-                      <li>• T����cnicos responsáveis</li>
+                      <li>• T���cnicos responsáveis</li>
                       <li>• Datas e duraç��es</li>
                       <li>• Estados e observações</li>
                     </ul>
