@@ -839,15 +839,15 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 </h4>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>
-                    ��� Quando uma obra é criada e atribuída a um utilizador,
-                    ele recebe uma notificação push
+                    • Quando uma obra é criada e atribuída a um utilizador, ele
+                    recebe uma notificação push
                   </li>
                   <li>
                     • A obra aparece automaticamente no dashboard do utilizador
                     na seção "Obras Atribuídas"
                   </li>
                   <li>
-                    • As notificações funcionam mesmo com a aplicaç��o fechada
+                    • As notificações funcionam mesmo com a aplicação fechada
                     (no telemóvel)
                   </li>
                   <li>
