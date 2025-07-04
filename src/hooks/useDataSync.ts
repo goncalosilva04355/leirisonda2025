@@ -705,7 +705,22 @@ export function useDataSync(): SyncState & SyncActions {
     (enabled: boolean) => {
       setSyncEnabled(enabled);
       if (enabled) {
-        syncWithFirebase();
+        // Initialize Firebase when enabling sync
+        if (!realFirebaseService.isReady()) {
+          const initialized = realFirebaseService.initialize();
+          if (initialized) {
+            console.log("Firebase initialized for sync");
+            syncWithFirebase();
+          } else {
+            console.error("Failed to initialize Firebase for sync");
+            setState((prev) => ({
+              ...prev,
+              error: "Failed to initialize Firebase",
+            }));
+          }
+        } else {
+          syncWithFirebase();
+        }
       }
     },
     [syncWithFirebase],
