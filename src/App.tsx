@@ -190,7 +190,39 @@ function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // Data sync hook - manages all data with optional Firebase sync
-  const dataSync = useDataSync();
+  let dataSync;
+  try {
+    dataSync = useDataSync();
+  } catch (error) {
+    console.error("useDataSync hook error:", error);
+    // Fallback to safe default state
+    dataSync = {
+      pools: [],
+      maintenance: [],
+      futureMaintenance: [],
+      works: [],
+      clients: [],
+      isLoading: false,
+      lastSync: null,
+      error: "Hook initialization failed",
+      syncWithFirebase: () => {},
+      enableSync: () => {},
+      addPool: () => {},
+      addWork: () => {},
+      addMaintenance: () => {},
+      addClient: () => {},
+      updatePool: () => {},
+      updateWork: () => {},
+      updateMaintenance: () => {},
+      updateClient: () => {},
+      deletePool: () => {},
+      deleteWork: () => {},
+      deleteMaintenance: () => {},
+      deleteClient: () => {},
+      cleanAllData: () => {},
+    };
+  }
+
   const {
     pools,
     maintenance,
@@ -892,7 +924,7 @@ ${index + 1}. ${maint.poolName}
   )
   .join("\n")}
 
-�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+�� ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
