@@ -218,12 +218,46 @@ function App() {
   };
 
   const handleSaveIntervention = () => {
-    // Save intervention with photos
+    // Validate required fields
+    if (!maintenanceForm.poolId || !maintenanceForm.technician) {
+      alert("Por favor, preencha os campos obrigatórios (Piscina e Técnico).");
+      return;
+    }
+
+    // Get pool and technician names for display
+    const selectedPool = pools.find((p) => p.id === maintenanceForm.poolId);
+    const selectedTechnician = users.find(
+      (u) => u.id === parseInt(maintenanceForm.technician),
+    );
+
+    // Save complete intervention data
     const interventionData = {
       id: Date.now(),
-      date: new Date().toISOString(),
+      poolId: maintenanceForm.poolId,
+      poolName: selectedPool ? selectedPool.name : "Piscina Desconhecida",
+      client: selectedPool ? selectedPool.client : "",
+      date: maintenanceForm.date,
+      startTime: maintenanceForm.startTime,
+      endTime: maintenanceForm.endTime,
+      technician: selectedTechnician
+        ? selectedTechnician.name
+        : maintenanceForm.technician,
+      vehicle: maintenanceForm.vehicle,
+      waterValues: {
+        pH: maintenanceForm.pH,
+        chlorine: maintenanceForm.chlorine,
+        alkalinity: maintenanceForm.alkalinity,
+        temperature: maintenanceForm.temperature,
+      },
+      workPerformed: maintenanceForm.workPerformed,
+      otherWork: maintenanceForm.otherWork,
+      problems: maintenanceForm.problems,
+      observations: maintenanceForm.observations,
+      nextMaintenance: maintenanceForm.nextMaintenance,
+      status: maintenanceForm.status,
       photos: uploadedPhotos,
       photoCount: uploadedPhotos.length,
+      createdAt: new Date().toISOString(),
     };
 
     // Store in localStorage for persistence (in real app, would save to backend)
@@ -233,13 +267,51 @@ function App() {
     savedInterventions.push(interventionData);
     localStorage.setItem("interventions", JSON.stringify(savedInterventions));
 
-    console.log("Intervenção salva com", uploadedPhotos.length, "fotos");
+    // Also add to maintenance array for reports and listings
+    const newMaintenance = {
+      id: Date.now(),
+      poolName: interventionData.poolName,
+      type: "Manutenção Regular",
+      scheduledDate: maintenanceForm.date,
+      technician: interventionData.technician,
+      status: maintenanceForm.status,
+      description: maintenanceForm.workPerformed || "Manutenção realizada",
+      notes: maintenanceForm.observations,
+      createdAt: new Date().toISOString(),
+    };
 
-    setInterventionSaved(true);
-    setShowShareModal(true);
+    const updatedMaintenance = [...maintenance, newMaintenance];
+    localStorage.setItem("maintenance", JSON.stringify(updatedMaintenance));
 
-    // Clear photos after saving
+    console.log("Manutenção salva com sucesso:", interventionData);
+
+    alert(
+      `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`,
+    );
+
+    // Clear form and photos after saving
+    setMaintenanceForm({
+      poolId: "",
+      date: new Date().toISOString().split("T")[0],
+      startTime: "",
+      endTime: "",
+      technician: "",
+      vehicle: "",
+      pH: "",
+      chlorine: "",
+      alkalinity: "",
+      temperature: "",
+      workPerformed: "",
+      otherWork: "",
+      problems: "",
+      observations: "",
+      nextMaintenance: "",
+      status: "completed",
+    });
     setUploadedPhotos([]);
+
+    // Navigate back to maintenance list
+    setActiveSection("manutencoes");
   };
 
   const handleShare = (platform) => {
@@ -954,7 +1026,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        ���� Funcionalidades Avançadas
+                        🚀 Funcionalidades Avançadas
                       </h3>
                       <p className="text-sm text-gray-500">
                         📸 Fotos • 💧 Furo de Água • 🔧 Gestão Completa
@@ -3319,7 +3391,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Dados de contacto</li>
                       <li>• Piscinas associadas</li>
-                      <li>• Histórico de servi��os</li>
+                      <li>• Histórico de serviços</li>
                       <li>• Informações contratuais</li>
                     </ul>
                   </div>
