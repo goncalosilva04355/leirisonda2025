@@ -312,7 +312,7 @@ class RealFirebaseService {
       callback(clients);
     });
 
-    return () => off(clientsRef, "value", unsubscribe);
+    return unsubscribe;
   }
 
   // Bulk sync operations
