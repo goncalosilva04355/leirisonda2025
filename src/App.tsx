@@ -50,7 +50,7 @@ const initialUsers = [
     id: 1,
     name: "Gonçalo Fonseca",
     email: "gongonsilva@gmail.com",
-    password: "123456",
+    password: "19867gsf",
     role: "super_admin",
     permissions: {
       obras: { view: true, create: true, edit: true, delete: true },
@@ -313,7 +313,7 @@ function App() {
     // DO NOT initialize default admin automatically - this was causing the security issue
     // Users must always login manually for security
     console.log(
-      "🔒 SECURITY: No automatic admin initialization - manual login required",
+      "��� SECURITY: No automatic admin initialization - manual login required",
     );
 
     // Return empty cleanup function since unsubscribe is handled inside the promise
@@ -4684,7 +4684,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenção
+                          Pr��xima Manutenção
                         </label>
                         <input
                           type="date"
@@ -7369,7 +7369,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>��</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
