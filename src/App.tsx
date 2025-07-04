@@ -209,8 +209,34 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // SECURITY: Clear ALL potential auto-login data on app start
-    localStorage.removeItem("mock-current-user");
+    // Try to restore user from localStorage first
+    const storedUser =
+      localStorage.getItem("currentUser") ||
+      localStorage.getItem("mock-current-user");
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        console.log(
+          "🔄 App init: Restoring user from localStorage:",
+          user.email,
+        );
+        setCurrentUser(user);
+        setIsAuthenticated(true);
+
+        // Set up auth state listener for restored user
+        const unsubscribe = authService.onAuthStateChanged((authUser) => {
+          console.log(
+            "🔒 AUTH STATE CHANGE (restored user):",
+            authUser ? `User ${authUser.email} logged in` : "Auth user changed",
+          );
+        });
+        return () => unsubscribe();
+      } catch (e) {
+        console.warn("App init: Error parsing stored user:", e);
+      }
+    }
+
+    // If no stored user, clear session data and force logout for security
     sessionStorage.clear(); // Clear any session data
 
     // Force clear authentication state
@@ -239,6 +265,8 @@ function App() {
           );
           setCurrentUser(user);
           setIsAuthenticated(true);
+          // Persist current user for notifications
+          localStorage.setItem("currentUser", JSON.stringify(user));
         } else {
           console.log("❌ Invalid or inactive user, forcing logout");
           setCurrentUser(null);
@@ -260,15 +288,31 @@ function App() {
     return () => {};
   }, []);
 
-  // SECURITY: Additional check to prevent bypass
+  // SECURITY: Additional check to prevent bypass, but first try to restore from localStorage
   useEffect(() => {
-    // Double check - if somehow authentication state is true but no user, force logout
+    // First try to restore currentUser from localStorage if authenticated but no user in memory
     if (isAuthenticated && !currentUser) {
+      const storedUser =
+        localStorage.getItem("currentUser") ||
+        localStorage.getItem("mock-current-user");
+      if (storedUser) {
+        try {
+          const user = JSON.parse(storedUser);
+          console.log("🔄 Restoring user from localStorage:", user.email);
+          setCurrentUser(user);
+          return; // Exit early, user restored successfully
+        } catch (e) {
+          console.warn("Error parsing stored user:", e);
+        }
+      }
+
+      // Only force logout if we can't restore user and the state is inconsistent
       console.warn(
         "SECURITY: Inconsistent auth state detected, forcing logout",
       );
       setIsAuthenticated(false);
       setCurrentUser(null);
+      localStorage.removeItem("currentUser");
       authService.logout();
     }
   }, [isAuthenticated, currentUser]);
@@ -277,9 +321,25 @@ function App() {
   useEffect(() => {
     const authCheckInterval = setInterval(() => {
       if (isAuthenticated && !currentUser) {
+        // Try to restore user before forcing logout
+        const storedUser =
+          localStorage.getItem("currentUser") ||
+          localStorage.getItem("mock-current-user");
+        if (storedUser) {
+          try {
+            const user = JSON.parse(storedUser);
+            console.log("🔄 Restoring user from periodic check:", user.email);
+            setCurrentUser(user);
+            return;
+          } catch (e) {
+            console.warn("Error parsing stored user in periodic check:", e);
+          }
+        }
+
         console.warn("SECURITY: Auth state compromised, forcing logout");
         setIsAuthenticated(false);
         setCurrentUser(null);
+        localStorage.removeItem("currentUser");
         authService.logout();
       }
     }, 5000); // Check every 5 seconds
@@ -560,6 +620,7 @@ function App() {
 
         setCurrentUser(gonçaloUser);
         setIsAuthenticated(true);
+        localStorage.setItem("currentUser", JSON.stringify(gonçaloUser));
         setLoginForm({ email: "", password: "" });
         navigateToSection("dashboard");
         return;
@@ -601,6 +662,7 @@ function App() {
       // Clear current user state immediately for better UX
       setCurrentUser(null);
       setIsAuthenticated(false);
+      localStorage.removeItem("currentUser");
 
       // Clear form and navigate to dashboard
       setLoginForm({ email: "", password: "" });
@@ -617,6 +679,7 @@ function App() {
       setSidebarOpen(false);
       setCurrentUser(null);
       setIsAuthenticated(false);
+      localStorage.removeItem("currentUser");
       setLoginForm({ email: "", password: "" });
       navigateToSection("dashboard");
 
@@ -858,7 +921,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat����rio personalizado em desenvolvimento. Use os relatórios pr�����-definidos por agora.",
+      "Funcionalidade de relat����rio personalizado em desenvolvimento. Use os relatórios pr������-definidos por agora.",
     );
   };
 
@@ -901,6 +964,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
+    console.log("🔍 DEBUG: sendWorkAssignmentNotification called with:", {
+      workTitle,
+      assignedTo,
+      currentUser: currentUser?.name,
+      notificationsEnabled,
+      notificationPermission: Notification.permission,
+    });
+
     // Always add to assigned works list when a work is assigned
     const newAssignedWork = {
       id: Date.now(),
@@ -911,15 +982,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     };
     setAssignedWorks((prev) => [newAssignedWork, ...prev]);
 
+    // Debug: Check notification conditions
+    console.log("🔍 DEBUG: Notification conditions:", {
+      hasCurrentUser: !!currentUser,
+      currentUserName: currentUser?.name,
+      assignedTo: assignedTo,
+      userMatches: currentUser?.name === assignedTo,
+      notificationsEnabled,
+      permissionGranted: Notification.permission === "granted",
+    });
+
     // Send notification if user is assigned to current user and notifications are enabled
     if (currentUser && assignedTo === currentUser.name) {
       if (notificationsEnabled && Notification.permission === "granted") {
+        console.log("✅ All conditions met, sending notification...");
         showNotification(
           "Nova Obra Atribuída",
           `A obra "${workTitle}" foi-lhe atribuída`,
           "work-assignment",
         );
+      } else {
+        console.warn("❌ Notification blocked:", {
+          notificationsEnabled,
+          permission: Notification.permission,
+        });
       }
+    } else {
+      console.warn("❌ User not matching:", {
+        currentUser: currentUser?.name,
+        assignedTo,
+        match: currentUser?.name === assignedTo,
+      });
     }
 
     // Console log for debugging purposes (admin view)
@@ -2506,7 +2599,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nenhuma manutenção agendada
                     </h3>
                     <p className="text-gray-600 text-sm mb-4">
-                      As futuras manuten��ões aparecerão aqui quando forem
+                      As futuras manuten����ões aparecerão aqui quando forem
                       agendadas
                     </p>
                     <button
@@ -2514,7 +2607,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manuten��ão</span>
+                      <span>Agendar Manuten���ão</span>
                     </button>
                   </div>
                 ) : (
@@ -2661,7 +2754,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="">Selecionar tipo</option>
                           <option value="piscina">Piscina</option>
                           <option value="manutencao">Manutenção</option>
-                          <option value="instalacao">Instalação</option>
+                          <option value="instalacao">Instala��ão</option>
                           <option value="reparacao">Reparação</option>
                           <option value="limpeza">Limpeza</option>
                           <option value="furo">Furo de Água</option>
@@ -3107,7 +3200,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   )}
 
-                  {/* Observa��ões e Trabalho */}
+                  {/* Observa����es e Trabalho */}
                   <div>
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -4235,7 +4328,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Estado da Manutenção
+                        Estado da Manuten��ão
                       </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -4769,7 +4862,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="flex items-center mb-4">
                   <Settings className="h-6 w-6 text-blue-600 mr-3" />
                   <h3 className="text-lg font-semibold text-gray-900">
-                    Interação Mobile
+                    Interaç��o Mobile
                   </h3>
                 </div>
                 <p className="text-gray-600 mb-6">
@@ -4912,7 +5005,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Limpar Dados do Sistema
                           </h4>
                           <p className="text-red-700 text-sm mb-3">
-                            Esta ação eliminará permanentemente:
+                            Esta ação eliminar�� permanentemente:
                           </p>
                           <ul className="text-red-700 text-sm space-y-1 mb-4">
                             <li>• Todas as obras ({works.length} registos)</li>
@@ -4968,7 +5061,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Relatórios
+                        Relat��rios
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Gere relatórios detalhados em PDF
@@ -5002,7 +5095,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>�� Estado e localização</li>
                       <li>• Informações de clientes</li>
-                      <li>• Histórico de manutenções</li>
+                      <li>• Histórico de manutenç��es</li>
                       <li>• Próximas intervenções</li>
                     </ul>
                   </div>
@@ -5074,7 +5167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Orçamentos e custos</li>
                       <li>• Prazos e cronogramas</li>
                       <li>• Equipas respons��veis</li>
-                      <li>��� Estados de progresso</li>
+                      <li>����� Estados de progresso</li>
                     </ul>
                   </div>
                   <button
@@ -5215,7 +5308,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Quick Stats */}
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Estatísticas R��pidas
+                  Estatísticas R����pidas
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
@@ -6072,6 +6165,103 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="pending">Pendente</option>
                         <option value="in_progress">Em Progresso</option>
                         <option value="completed">Concluída</option>
+                        <option value="cancelled">Cancelada</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Início
+                      </label>
+                      <input
+                        type="date"
+                        defaultValue={editingWork?.startDate?.split("T")[0]}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Conclusão Prevista
+                      </label>
+                      <input
+                        type="date"
+                        defaultValue={
+                          editingWork?.expectedEndDate?.split("T")[0]
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Responsável
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingWork?.assignedTo}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Técnico responsável"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Valor Orçamentado (€)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        defaultValue={editingWork?.budgetValue}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0.00"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Telefone do Cliente
+                      </label>
+                      <input
+                        type="tel"
+                        defaultValue={editingWork?.clientPhone}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="+351 912 345 678"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Email do Cliente
+                      </label>
+                      <input
+                        type="email"
+                        defaultValue={editingWork?.clientEmail}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="cliente@email.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Prioridade
+                      </label>
+                      <select
+                        defaultValue={editingWork?.priority || "medium"}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="low">Baixa</option>
+                        <option value="medium">Média</option>
+                        <option value="high">Alta</option>
+                        <option value="urgent">Urgente</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de Obra
+                      </label>
+                      <select
+                        defaultValue={editingWork?.workType || "installation"}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="installation">Instalação</option>
+                        <option value="maintenance">Manutenção</option>
+                        <option value="repair">Reparação</option>
+                        <option value="renovation">Renovação</option>
+                        <option value="inspection">Inspeção</option>
                       </select>
                     </div>
                   </div>
@@ -6084,7 +6274,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       defaultValue={editingWork?.description}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       rows={4}
-                      placeholder="Descri��ão detalhada da obra"
+                      placeholder="Descrição detalhada da obra"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Observações Técnicas
+                    </label>
+                    <textarea
+                      defaultValue={editingWork?.technicalNotes}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={3}
+                      placeholder="Observações técnicas, materiais necessários, etc."
                     />
                   </div>
 
@@ -6103,25 +6304,46 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       type="button"
                       onClick={(e) => {
                         const form = e.target.closest("form");
-                        const title = form.querySelector(
-                          'input[placeholder*="Título"]',
-                        ).value;
-                        const client = form.querySelector(
-                          'input[placeholder*="cliente"]',
-                        ).value;
-                        const location = form.querySelector(
-                          'input[placeholder*="Morada"]',
-                        ).value;
-                        const status = form.querySelector("select").value;
-                        const description =
-                          form.querySelector("textarea").value;
+                        const inputs = form.querySelectorAll(
+                          "input, select, textarea",
+                        );
+
+                        const title = inputs[0].value; // Título da Obra
+                        const client = inputs[1].value; // Cliente
+                        const location = inputs[2].value; // Local
+                        const status = inputs[3].value; // Estado
+                        const startDate = inputs[4].value; // Data de Início
+                        const expectedEndDate = inputs[5].value; // Data de Conclusão Prevista
+                        const assignedTo = inputs[6].value; // Responsável
+                        const budgetValue = inputs[7].value; // Valor Orçamentado
+                        const clientPhone = inputs[8].value; // Telefone do Cliente
+                        const clientEmail = inputs[9].value; // Email do Cliente
+                        const priority = inputs[10].value; // Prioridade
+                        const workType = inputs[11].value; // Tipo de Obra
+                        const description = inputs[12].value; // Descrição
+                        const technicalNotes = inputs[13].value; // Observações Técnicas
 
                         dataSync.updateWork(editingWork.id, {
                           title,
                           client,
                           location,
                           status,
+                          startDate: startDate
+                            ? new Date(startDate).toISOString()
+                            : undefined,
+                          expectedEndDate: expectedEndDate
+                            ? new Date(expectedEndDate).toISOString()
+                            : undefined,
+                          assignedTo,
+                          budgetValue: budgetValue
+                            ? parseFloat(budgetValue)
+                            : undefined,
+                          clientPhone,
+                          clientEmail,
+                          priority,
+                          workType,
                           description,
+                          technicalNotes,
                         });
 
                         alert("Obra atualizada com sucesso!");
@@ -6211,6 +6433,100 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="Em Manutenção">Em Manutenção</option>
                       </select>
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de Piscina
+                      </label>
+                      <select
+                        defaultValue={editingPool?.poolType || "outdoor"}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="outdoor">Exterior</option>
+                        <option value="indoor">Interior</option>
+                        <option value="semi_covered">Semi-coberta</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Dimensões (m)
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingPool?.dimensions}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ex: 8x4x1.5"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Volume (L)
+                      </label>
+                      <input
+                        type="number"
+                        defaultValue={editingPool?.volume}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="48000"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Sistema de Filtração
+                      </label>
+                      <select
+                        defaultValue={editingPool?.filtrationSystem || "sand"}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="sand">Areia</option>
+                        <option value="cartridge">Cartucho</option>
+                        <option value="diatomaceous">Terra Diatomácea</option>
+                        <option value="other">Outro</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Instalação
+                      </label>
+                      <input
+                        type="date"
+                        defaultValue={
+                          editingPool?.installationDate?.split("T")[0]
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Telefone do Cliente
+                      </label>
+                      <input
+                        type="tel"
+                        defaultValue={editingPool?.clientPhone}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="+351 912 345 678"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Email do Cliente
+                      </label>
+                      <input
+                        type="email"
+                        defaultValue={editingPool?.clientEmail}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="cliente@email.com"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Observações
+                    </label>
+                    <textarea
+                      defaultValue={editingPool?.observations}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={3}
+                      placeholder="Observações sobre a piscina, equipamentos instalados, etc."
+                    />
                   </div>
 
                   <div className="flex space-x-4">
@@ -6228,22 +6544,38 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       type="button"
                       onClick={(e) => {
                         const form = e.target.closest("form");
-                        const name = form.querySelector(
-                          'input[placeholder*="Piscina"]',
-                        ).value;
-                        const client = form.querySelector(
-                          'input[placeholder*="cliente"]',
-                        ).value;
-                        const location = form.querySelector(
-                          'input[placeholder*="Localização"]',
-                        ).value;
-                        const status = form.querySelector("select").value;
+                        const inputs = form.querySelectorAll(
+                          "input, select, textarea",
+                        );
+
+                        const name = inputs[0].value; // Nome da Piscina
+                        const client = inputs[1].value; // Cliente
+                        const location = inputs[2].value; // Local
+                        const status = inputs[3].value; // Estado
+                        const poolType = inputs[4].value; // Tipo de Piscina
+                        const dimensions = inputs[5].value; // Dimensões
+                        const volume = inputs[6].value; // Volume
+                        const filtrationSystem = inputs[7].value; // Sistema de Filtração
+                        const installationDate = inputs[8].value; // Data de Instalação
+                        const clientPhone = inputs[9].value; // Telefone do Cliente
+                        const clientEmail = inputs[10].value; // Email do Cliente
+                        const observations = inputs[11].value; // Observações
 
                         dataSync.updatePool(editingPool.id, {
                           name,
                           client,
                           location,
                           status,
+                          poolType,
+                          dimensions,
+                          volume: volume ? parseInt(volume) : undefined,
+                          filtrationSystem,
+                          installationDate: installationDate
+                            ? new Date(installationDate).toISOString()
+                            : undefined,
+                          clientPhone,
+                          clientEmail,
+                          observations,
                         });
 
                         alert("Piscina atualizada com sucesso!");
@@ -6337,8 +6669,82 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="scheduled">Agendado</option>
                         <option value="in_progress">Em Progresso</option>
                         <option value="completed">Concluído</option>
+                        <option value="cancelled">Cancelado</option>
                       </select>
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Duração Estimada (horas)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.5"
+                        defaultValue={editingMaintenance?.estimatedDuration}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="2.5"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Duração Real (horas)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.5"
+                        defaultValue={editingMaintenance?.actualDuration}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="3.0"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Custo (€)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        defaultValue={editingMaintenance?.cost}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0.00"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Prioridade
+                      </label>
+                      <select
+                        defaultValue={editingMaintenance?.priority || "medium"}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="low">Baixa</option>
+                        <option value="medium">Média</option>
+                        <option value="high">Alta</option>
+                        <option value="urgent">Urgente</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Conclusão
+                      </label>
+                      <input
+                        type="date"
+                        defaultValue={
+                          editingMaintenance?.completedDate?.split("T")[0]
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Materiais Utilizados
+                    </label>
+                    <textarea
+                      defaultValue={editingMaintenance?.materialsUsed}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={3}
+                      placeholder="Lista de materiais e produtos utilizados"
+                    />
                   </div>
 
                   <div>
@@ -6368,21 +6774,41 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       type="button"
                       onClick={(e) => {
                         const form = e.target.closest("form");
-                        const scheduledDate =
-                          form.querySelector('input[type="date"]').value;
-                        const technician = form.querySelector(
-                          'input[placeholder*="técnico"]',
-                        ).value;
-                        const type = form.querySelectorAll("select")[0].value;
-                        const status = form.querySelectorAll("select")[1].value;
-                        const observations =
-                          form.querySelector("textarea").value;
+                        const inputs = form.querySelectorAll(
+                          "input, select, textarea",
+                        );
+
+                        const scheduledDate = inputs[0].value; // Data
+                        const technician = inputs[1].value; // Técnico
+                        const type = inputs[2].value; // Tipo de Manutenção
+                        const status = inputs[3].value; // Estado
+                        const estimatedDuration = inputs[4].value; // Duração Estimada
+                        const actualDuration = inputs[5].value; // Duração Real
+                        const cost = inputs[6].value; // Custo
+                        const priority = inputs[7].value; // Prioridade
+                        const completedDate = inputs[8].value; // Data de Conclusão
+                        const materialsUsed = inputs[9].value; // Materiais Utilizados
+                        const observations = inputs[10].value; // Observações
 
                         dataSync.updateMaintenance(editingMaintenance.id, {
-                          scheduledDate: new Date(scheduledDate).toISOString(),
+                          scheduledDate: scheduledDate
+                            ? new Date(scheduledDate).toISOString()
+                            : undefined,
                           technician,
                           type,
                           status,
+                          estimatedDuration: estimatedDuration
+                            ? parseFloat(estimatedDuration)
+                            : undefined,
+                          actualDuration: actualDuration
+                            ? parseFloat(actualDuration)
+                            : undefined,
+                          cost: cost ? parseFloat(cost) : undefined,
+                          priority,
+                          completedDate: completedDate
+                            ? new Date(completedDate).toISOString()
+                            : undefined,
+                          materialsUsed,
                           observations,
                         });
 
@@ -6588,7 +7014,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 }}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
               >
-                Agora Não
+                Agora N��o
               </button>
               <button
                 onClick={() => handleShare("preview")}

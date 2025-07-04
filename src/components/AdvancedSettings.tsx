@@ -696,6 +696,15 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                         </p>
                       </div>
                     </div>
+                    {notifications.pushPermission !== "granted" && (
+                      <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p className="text-sm text-yellow-800">
+                          ⚠️ <strong>Notificações não ativadas!</strong> Para
+                          receber notificações de obras, clique em "Ativar"
+                          acima primeiro.
+                        </p>
+                      </div>
+                    )}
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={() => {
@@ -714,20 +723,61 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                       </button>
                       <button
                         onClick={() => {
+                          // Check notification permissions first
+                          if (Notification.permission !== "granted") {
+                            alert(
+                              "❌ Notificações não estão ativadas!\n\n" +
+                                "Para receber notificações de obras atribuídas:\n" +
+                                "1. Clique no botão 'Ativar' acima\n" +
+                                "2. Permita notificações quando o browser pedir\n" +
+                                "3. Tente a simulação novamente",
+                            );
+                            return;
+                          }
+
                           const testWorkTitle = `Obra Urgente ${new Date().toLocaleTimeString()}`;
-                          // Get current user from localStorage or default
-                          const currentUserName = localStorage.getItem(
-                            "currentUser",
-                          )
-                            ? JSON.parse(localStorage.getItem("currentUser"))
-                                .name
-                            : "Utilizador Atual";
+                          // Get current user from localStorage (check both possible keys)
+                          let currentUserName = "Utilizador Atual";
+
+                          // First try the mock-current-user key
+                          const mockCurrentUser =
+                            localStorage.getItem("mock-current-user");
+                          if (mockCurrentUser) {
+                            try {
+                              currentUserName =
+                                JSON.parse(mockCurrentUser).name;
+                            } catch (e) {
+                              console.warn(
+                                "Error parsing mock-current-user:",
+                                e,
+                              );
+                            }
+                          } else {
+                            // Fallback to currentUser key
+                            const currentUser =
+                              localStorage.getItem("currentUser");
+                            if (currentUser) {
+                              try {
+                                currentUserName = JSON.parse(currentUser).name;
+                              } catch (e) {
+                                console.warn("Error parsing currentUser:", e);
+                              }
+                            }
+                          }
+
+                          console.log(
+                            "🔍 DEBUG: Current user for notification:",
+                            currentUserName,
+                          );
                           notifications.sendWorkAssignmentNotification(
                             testWorkTitle,
                             currentUserName,
                           );
+
+                          // Show success message with debugging info
+                          const debugInfo = `\n\n📋 Debug Info:\n- Usuário: ${currentUserName}\n- Permissão: ${Notification.permission}\n- Hora: ${new Date().toLocaleTimeString()}`;
                           alert(
-                            `🔔 Obra "${testWorkTitle}" atribuída a si!\n📱 Deve receber notificação push`,
+                            `🔔 Obra "${testWorkTitle}" atribuída a si!\n📱 Deve receber notificação push${debugInfo}`,
                           );
                         }}
                         className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-medium transition-colors"
@@ -786,8 +836,8 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 </h4>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>
-                    • Quando uma obra é criada e atribuída a um utilizador, ele
-                    recebe uma notificação push
+                    ��� Quando uma obra é criada e atribuída a um utilizador,
+                    ele recebe uma notificação push
                   </li>
                   <li>
                     • A obra aparece automaticamente no dashboard do utilizador
