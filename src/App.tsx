@@ -128,6 +128,7 @@ function App() {
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
   const [showDataCleanup, setShowDataCleanup] = useState(false);
+  const [showAuthDiagnostic, setShowAuthDiagnostic] = useState(false);
 
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
@@ -1136,7 +1137,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relat��rio PDF. Tente novamente.");
+      alert("Erro ao gerar o relat����rio PDF. Tente novamente.");
     }
   };
 
