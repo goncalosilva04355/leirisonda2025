@@ -580,7 +580,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇ��O: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -3098,7 +3098,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         alert(
                           `Obra "${workTitle}" criada com sucesso! ` +
                             (selectedUserId
-                              ? "Notifica��ão enviada ao responsável."
+                              ? "Notificação enviada ao responsável."
                               : "") +
                             (selectedWorkType === "furo"
                               ? " Dados do furo registados."
@@ -6419,6 +6419,140 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
+      )}
+
+      {/* Work View Modal */}
+      {viewingWork && selectedWork && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Detalhes da Obra
+                </h2>
+                <button
+                  onClick={() => {
+                    setViewingWork(false);
+                    setSelectedWork(null);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Título
+                    </label>
+                    <p className="text-gray-900">{selectedWork.title}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Cliente
+                    </label>
+                    <p className="text-gray-900">{selectedWork.client}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Local
+                    </label>
+                    <p className="text-gray-900">{selectedWork.location}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Estado
+                    </label>
+                    <span
+                      className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                        selectedWork.status === "pending"
+                          ? "bg-red-100 text-red-700"
+                          : selectedWork.status === "in_progress"
+                            ? "bg-orange-100 text-orange-700"
+                            : selectedWork.status === "completed"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {selectedWork.status === "pending"
+                        ? "Pendente"
+                        : selectedWork.status === "in_progress"
+                          ? "Em Progresso"
+                          : selectedWork.status === "completed"
+                            ? "Concluída"
+                            : selectedWork.status}
+                    </span>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Data de Início
+                    </label>
+                    <p className="text-gray-900">
+                      {new Date(selectedWork.startDate).toLocaleDateString(
+                        "pt-PT",
+                      )}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Atribuída a
+                    </label>
+                    <p className="text-gray-900">
+                      {selectedWork.assignedTo || "Não atribuída"}
+                    </p>
+                  </div>
+                </div>
+
+                {selectedWork.description && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Descrição
+                    </label>
+                    <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                      {selectedWork.description}
+                    </p>
+                  </div>
+                )}
+
+                {selectedWork.budget && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Orçamento
+                    </label>
+                    <p className="text-gray-900">€{selectedWork.budget}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-end space-x-3">
+                <button
+                  onClick={() => {
+                    setViewingWork(false);
+                    setSelectedWork(null);
+                  }}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                >
+                  Fechar
+                </button>
+                {hasPermission("obras", "edit") && (
+                  <button
+                    onClick={() => {
+                      setEditingWork(selectedWork);
+                      setViewingWork(false);
+                      setSelectedWork(null);
+                      setActiveSection("editar-obra");
+                    }}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Editar
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Main Content */}
