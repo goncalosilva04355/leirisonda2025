@@ -3268,6 +3268,27 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Password
+                        </label>
+                        <input
+                          type="password"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          value={userForm.password}
+                          onChange={(e) =>
+                            setUserForm({
+                              ...userForm,
+                              password: e.target.value,
+                            })
+                          }
+                          placeholder={
+                            editingUser
+                              ? "Deixe vazio para manter a senha atual"
+                              : "Digite a senha"
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
                           Perfil
                         </label>
                         <select
