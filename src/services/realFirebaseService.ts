@@ -28,30 +28,22 @@ class RealFirebaseService {
   private database: Database | null = null;
   private isInitialized = false;
 
-  // Initialize Firebase with fixed config
+  // Initialize Firebase using existing app instance
   initialize(): boolean {
     try {
-      // Fixed Firebase configuration - always available
-      const config: FirebaseConfig = {
-        apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-        authDomain: "leirisonda-16f8b.firebaseapp.com",
-        databaseURL: "https://leirisonda-16f8b-default-rtdb.firebaseio.com/",
-        projectId: "leirisonda-16f8b",
-        storageBucket: "leirisonda-16f8b.firebasestorage.app",
-        messagingSenderId: "540456875574",
-        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
-      };
+      if (!firebaseApp) {
+        console.error("Firebase app not available from config");
+        return false;
+      }
 
-      console.log("Using fixed Firebase configuration - always available");
-
-      this.app = initializeApp(config);
+      this.app = firebaseApp;
       this.database = getDatabase(this.app);
       this.isInitialized = true;
 
-      console.log("Firebase initialized successfully");
+      console.log("Firebase database service initialized successfully");
       return true;
     } catch (error) {
-      console.error("Firebase initialization failed:", error);
+      console.error("Firebase database initialization failed:", error);
       return false;
     }
   }
