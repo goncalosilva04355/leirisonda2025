@@ -3687,7 +3687,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Frequ��ncia de Manutenção
+                        Frequ���ncia de Manutenção
                       </label>
                       <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="semanal">Semanal</option>
@@ -4136,6 +4136,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Descreva outros trabalhos realizados..."
+                        value={maintenanceForm.otherWork}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            otherWork: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -4150,6 +4157,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         rows={4}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Descreva problemas encontrados, se houver..."
+                        value={maintenanceForm.problems}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            problems: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
@@ -4160,6 +4174,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         rows={4}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         placeholder="Observações, recomendações, próxima manutenção..."
+                        value={maintenanceForm.observations}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            observations: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
