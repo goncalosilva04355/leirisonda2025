@@ -562,6 +562,7 @@ function App() {
 
         setCurrentUser(gonçaloUser);
         setIsAuthenticated(true);
+        localStorage.setItem("currentUser", JSON.stringify(gonçaloUser));
         setLoginForm({ email: "", password: "" });
         navigateToSection("dashboard");
         return;
@@ -3141,7 +3142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   )}
 
-                  {/* Observa��ões e Trabalho */}
+                  {/* Observa����es e Trabalho */}
                   <div>
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -5002,7 +5003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Relatórios
+                        Relat��rios
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Gere relatórios detalhados em PDF
