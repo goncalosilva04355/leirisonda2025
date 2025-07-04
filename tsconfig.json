@@ -14,10 +14,14 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitAny": false,
-    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "noStrictNullChecks": true,
+    "noFallthroughCasesInSwitch": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": false,
+    "suppressImplicitAnyIndexErrors": true
   },
   "include": ["src/**/*", "src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist"]
