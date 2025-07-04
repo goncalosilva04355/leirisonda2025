@@ -107,24 +107,8 @@ function App() {
   const [syncEnabled, setSyncEnabled] = useState(false);
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 
-  // Check if Firebase is configured
-  useEffect(() => {
-    const savedConfig = localStorage.getItem("firebase-config");
-    if (savedConfig) {
-      setFirebaseConfigured(true);
-      setSyncEnabled(true);
-    }
-  }, []);
-
-  // Firebase sync hooks - only use when configured
-  const syncData = syncEnabled ? useRealtimeSync() : null;
-  const userSync = syncEnabled ? useUsers() : null;
-
-  // Use Firebase data when available, fallback to local state
-  const users = syncData?.users || initialUsers;
-  const pools = syncData?.pools || [];
-  const maintenance = syncData?.maintenance || [];
-  const futureMaintenance = syncData?.futureMaintenance || [];
+  // Use local state for users (Firebase moved to login page)
+  const [users, setUsers] = useState(initialUsers);
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
