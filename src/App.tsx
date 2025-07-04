@@ -883,7 +883,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
 - Manutenções Realizadas: ${maintenance.length}
-- Futuras Manuten��ões: ${futureMaintenance.length}
+- Futuras Manutenções: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
@@ -1517,6 +1517,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <h1 className="text-lg font-semibold text-gray-900">
                         Olá, {currentUser?.name || "Utilizador"}
                       </h1>
+                      {currentUser?.name
+                        .toLowerCase()
+                        .includes("alexandre") && (
+                        <button
+                          onClick={() => {
+                            const debugInfo = {
+                              currentUser: currentUser.name,
+                              worksCount: works.length,
+                              worksData: works,
+                              localStorage: {
+                                pools: JSON.parse(
+                                  localStorage.getItem("pools") || "[]",
+                                ),
+                                works: JSON.parse(
+                                  localStorage.getItem("works") || "[]",
+                                ),
+                                maintenance: JSON.parse(
+                                  localStorage.getItem("maintenance") || "[]",
+                                ),
+                              },
+                            };
+                            console.log("🔍 Alexandre Debug Info:", debugInfo);
+                            alert(
+                              `Debug Alexandre:\nObras no sistema: ${works.length}\nVer console para mais detalhes`,
+                            );
+                          }}
+                          className="mt-2 px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600"
+                        >
+                          Debug Dados Alexandre
+                        </button>
+                      )}
                       <p className="text-gray-600 text-sm">
                         Bem-vindo ao sistema Leirisonda
                       </p>
@@ -1717,7 +1748,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manuten������es
+                      Próximas Manuten��������es
                     </h2>
                   </div>
 
