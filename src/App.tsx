@@ -1234,7 +1234,20 @@ function App() {
   if (!isAuthenticated) {
     if (showAdvancedSettings) {
       if (isAdvancedUnlocked) {
-        return <AdvancedSettings onBack={handleAdvancedSettingsBack} />;
+        return (
+          <AdvancedSettings
+            onBack={handleAdvancedSettingsBack}
+            dataSync={{
+              pools,
+              maintenance,
+              works,
+              clients,
+              lastSync,
+              syncWithFirebase,
+              enableSync,
+            }}
+          />
+        );
       }
 
       // Password protection screen
