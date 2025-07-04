@@ -73,7 +73,7 @@ export interface PoolMaintenance {
   clientPhone: string;
   clientEmail: string;
   poolType: "outdoor" | "indoor" | "spa" | "olympic";
-  waterCubicage: string; // Ex: "50m��" ou "50000L"
+  waterCubicage: string; // Ex: "50m³" ou "50000L"
   lastMaintenanceDate?: string;
   interventions: MaintenanceIntervention[];
   status: "active" | "inactive" | "seasonal";
