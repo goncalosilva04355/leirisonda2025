@@ -220,7 +220,7 @@ function App() {
   const handleSaveIntervention = () => {
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigatórios (Piscina e Técnico).");
+      alert("Por favor, preencha os campos obrigat��rios (Piscina e Técnico).");
       return;
     }
 
@@ -722,7 +722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relat��rio PDF. Tente novamente.");
+      alert("Erro ao gerar o relatório PDF. Tente novamente.");
     }
   };
 
@@ -2633,7 +2633,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Hora Início
+                        Hora In��cio
                       </label>
                       <input
                         type="time"
@@ -2778,6 +2778,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           step="0.1"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="25.0"
+                          value={maintenanceForm.temperature}
+                          onChange={(e) =>
+                            setMaintenanceForm({
+                              ...maintenanceForm,
+                              temperature: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
@@ -2832,7 +2839,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {/* Chemical Products */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Produtos Químicos Utilizados
+                      Produtos Qu��micos Utilizados
                     </h3>
                     <div className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
