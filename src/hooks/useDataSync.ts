@@ -544,8 +544,8 @@ export function useDataSync(): SyncState & SyncActions {
       works: finalWorks.length,
       maintenance: finalMaintenance.length,
       clients: finalClients.length,
-      alexandreWorks: finalWorks.filter((w) =>
-        w.assignedTo.includes("Alexandre"),
+      alexandreWorks: finalWorks.filter(
+        (w) => w.assignedTo && w.assignedTo.includes("Alexandre"),
       ).length,
     });
   }, []);
