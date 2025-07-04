@@ -1176,7 +1176,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relat��rio PDF. Tente novamente.");
+      alert("Erro ao gerar o relatório PDF. Tente novamente.");
     }
   };
 
@@ -2861,7 +2861,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa��ões Básicas */}
+                    {/* Informações Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -2903,8 +2903,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manuten���ão</option>
-                            <option value="instalacao">Instala��ão</option>
+                            <option value="manutencao">Manutenção</option>
+                            <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -3302,7 +3302,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N��vel da Água (m) *
+                                  Nível da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -3365,7 +3365,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Di��metro da Coluna *
+                                  Diâmetro da Coluna *
                                 </label>
                                 <select
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
@@ -4556,7 +4556,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendaç����es, próxima manutenção..."
+                          placeholder="Observações, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5054,7 +5054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <li>• Dados do Firebase e armazenamento local</li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠��� ATEN��ÃO: Esta operação é irreversível!
+                              ⚠��� ATENÇÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
