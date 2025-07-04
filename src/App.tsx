@@ -1040,6 +1040,139 @@ function App() {
           </div>
         );
 
+      case "configuracoes":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Configurações
+                </h1>
+                <p className="text-gray-600 text-sm">
+                  Gerir definições do sistema e sincronização
+                </p>
+              </div>
+
+              {/* Firebase Sync Section */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    {syncEnabled ? (
+                      <Wifi className="h-5 w-5 text-blue-600" />
+                    ) : (
+                      <WifiOff className="h-5 w-5 text-gray-400" />
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Sincronização em Tempo Real
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {syncEnabled
+                        ? "Sincronização ativa - dados partilhados entre dispositivos"
+                        : "Configure Firebase para ativar sincronização"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid gap-4">
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">
+                        Estado da Sincronização
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {syncEnabled
+                          ? "Conectado e sincronizando"
+                          : "Desconectado"}
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {syncEnabled ? (
+                        <div className="flex items-center space-x-2 text-green-600">
+                          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                          <span className="text-sm font-medium">Ativo</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center space-x-2 text-gray-400">
+                          <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                          <span className="text-sm font-medium">Inativo</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {!syncEnabled && (
+                    <button
+                      onClick={() => {
+                        setFirebaseConfigured(false);
+                        setShowSettingsPage(false);
+                      }}
+                      className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                    >
+                      <Settings className="w-5 h-5" />
+                      <span>Configurar Firebase</span>
+                    </button>
+                  )}
+
+                  {syncEnabled && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => {
+                          localStorage.removeItem("firebase-config");
+                          setFirebaseConfigured(false);
+                          setSyncEnabled(false);
+                        }}
+                        className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors text-sm"
+                      >
+                        Desconectar
+                      </button>
+                      <button
+                        onClick={() => window.location.reload()}
+                        className="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                      >
+                        Reconectar
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* System Information */}
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Informações do Sistema
+                </h3>
+                <div className="grid gap-3">
+                  <div className="flex justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Versão</span>
+                    <span className="font-medium">1.0.0</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Utilizador Ativo</span>
+                    <span className="font-medium">{currentUser.name}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-gray-100">
+                    <span className="text-gray-600">Perfil</span>
+                    <span className="font-medium capitalize">
+                      {currentUser.role.replace("_", " ")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-2">
+                    <span className="text-gray-600">Dados</span>
+                    <span className="font-medium">
+                      {syncEnabled
+                        ? "Sincronização Firebase"
+                        : "Armazenamento Local"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div className="min-h-screen bg-gray-50 flex items-center justify-center">
