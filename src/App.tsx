@@ -1068,7 +1068,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç��es não est��o ativadas. Active-as primeiro nas configurações.",
+        "As notificaç��es não est���o ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -6137,7 +6137,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
                           ? "Não há obras registadas no sistema."
-                          : `N��o há obras com o filtro "${
+                          : `Não há obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
                                 : activeWorkFilter === "in_progress"
@@ -7735,7 +7735,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-600 text-sm">
                         {selectedWork.id?.toUpperCase() ||
                           "ID-" + Date.now().toString().slice(-6)}{" "}
-                        • {selectedWork.title}
+                        �� {selectedWork.title}
                       </p>
                     </div>
                   </div>
@@ -7792,7 +7792,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                         disabled={!enableMapsRedirect}
                       >
-                        ��� {selectedWork.location}
+                        📍 {selectedWork.location}
                       </button>
                     </div>
                     <div>
