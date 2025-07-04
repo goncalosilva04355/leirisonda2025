@@ -637,7 +637,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or��amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or���amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -1043,7 +1043,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincroniza��ão:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
             syncError,
           );
         }
@@ -3041,6 +3041,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         // Clear form data
                         setSelectedWorkType("");
                         setUploadedPhotos([]);
+                        setWorkVehicles([]);
+                        setWorkTechnicians([]);
+                        setCurrentVehicle("");
+                        setCurrentTechnician("");
                         setActiveSection("dashboard");
                       }}
                       className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
