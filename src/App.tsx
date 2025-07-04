@@ -5069,7 +5069,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>�� Estado e localização</li>
                       <li>• Informações de clientes</li>
-                      <li>• Histórico de manutenções</li>
+                      <li>• Histórico de manutenç��es</li>
                       <li>• Próximas intervenções</li>
                     </ul>
                   </div>
@@ -6748,21 +6748,41 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       type="button"
                       onClick={(e) => {
                         const form = e.target.closest("form");
-                        const scheduledDate =
-                          form.querySelector('input[type="date"]').value;
-                        const technician = form.querySelector(
-                          'input[placeholder*="técnico"]',
-                        ).value;
-                        const type = form.querySelectorAll("select")[0].value;
-                        const status = form.querySelectorAll("select")[1].value;
-                        const observations =
-                          form.querySelector("textarea").value;
+                        const inputs = form.querySelectorAll(
+                          "input, select, textarea",
+                        );
+
+                        const scheduledDate = inputs[0].value; // Data
+                        const technician = inputs[1].value; // Técnico
+                        const type = inputs[2].value; // Tipo de Manutenção
+                        const status = inputs[3].value; // Estado
+                        const estimatedDuration = inputs[4].value; // Duração Estimada
+                        const actualDuration = inputs[5].value; // Duração Real
+                        const cost = inputs[6].value; // Custo
+                        const priority = inputs[7].value; // Prioridade
+                        const completedDate = inputs[8].value; // Data de Conclusão
+                        const materialsUsed = inputs[9].value; // Materiais Utilizados
+                        const observations = inputs[10].value; // Observações
 
                         dataSync.updateMaintenance(editingMaintenance.id, {
-                          scheduledDate: new Date(scheduledDate).toISOString(),
+                          scheduledDate: scheduledDate
+                            ? new Date(scheduledDate).toISOString()
+                            : undefined,
                           technician,
                           type,
                           status,
+                          estimatedDuration: estimatedDuration
+                            ? parseFloat(estimatedDuration)
+                            : undefined,
+                          actualDuration: actualDuration
+                            ? parseFloat(actualDuration)
+                            : undefined,
+                          cost: cost ? parseFloat(cost) : undefined,
+                          priority,
+                          completedDate: completedDate
+                            ? new Date(completedDate).toISOString()
+                            : undefined,
+                          materialsUsed,
                           observations,
                         });
 
