@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { realFirebaseService } from "../services/realFirebaseService";
+import { useDataMutationSync } from "./useAutoDataSync";
 
 // Simulate data types
 export interface Pool {
@@ -253,6 +254,9 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Firebase sync is always enabled with fixed configuration
   const [syncEnabled, setSyncEnabled] = useState(true);
+
+  // Hook para sincronização automática em mutações
+  const { withAutoSync } = useDataMutationSync();
 
   // Initial sync when enabled
   useEffect(() => {
@@ -564,7 +568,7 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Pool actions
   const addPool = useCallback(
-    async (poolData: Omit<Pool, "id" | "createdAt">) => {
+    withAutoSync(async (poolData: Omit<Pool, "id" | "createdAt">) => {
       const newPool: Pool = {
         ...poolData,
         id: Date.now().toString(),
@@ -591,8 +595,8 @@ export function useDataSync(): SyncState & SyncActions {
           console.error("Failed to add pool to Firebase:", error);
         }
       }
-    },
-    [syncEnabled],
+    }),
+    [syncEnabled, withAutoSync],
   );
 
   const updatePool = useCallback(
@@ -627,45 +631,47 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Maintenance actions
   const addMaintenance = useCallback(
-    async (maintenanceData: Omit<Maintenance, "id" | "createdAt">) => {
-      const newMaintenance: Maintenance = {
-        ...maintenanceData,
-        id: Date.now().toString(),
-        createdAt: new Date().toISOString(),
-      };
-
-      // Add to local state immediately
-      setState((prev) => {
-        const updated = [...prev.maintenance, newMaintenance];
-        const future = updated.filter(
-          (m) => new Date(m.scheduledDate) >= new Date(),
-        );
-
-        return {
-          ...prev,
-          maintenance: updated,
-          futureMaintenance: future,
+    withAutoSync(
+      async (maintenanceData: Omit<Maintenance, "id" | "createdAt">) => {
+        const newMaintenance: Maintenance = {
+          ...maintenanceData,
+          id: Date.now().toString(),
+          createdAt: new Date().toISOString(),
         };
-      });
 
-      // Add to localStorage for backup
-      const savedMaintenance = JSON.parse(
-        localStorage.getItem("maintenance") || "[]",
-      );
-      savedMaintenance.push(newMaintenance);
-      localStorage.setItem("maintenance", JSON.stringify(savedMaintenance));
+        // Add to local state immediately
+        setState((prev) => {
+          const updated = [...prev.maintenance, newMaintenance];
+          const future = updated.filter(
+            (m) => new Date(m.scheduledDate) >= new Date(),
+          );
 
-      // Add to Firebase if sync is enabled
-      if (syncEnabled && realFirebaseService.isReady()) {
-        try {
-          await realFirebaseService.addMaintenance(newMaintenance);
-          console.log("Maintenance added to Firebase successfully");
-        } catch (error) {
-          console.error("Failed to add maintenance to Firebase:", error);
+          return {
+            ...prev,
+            maintenance: updated,
+            futureMaintenance: future,
+          };
+        });
+
+        // Add to localStorage for backup
+        const savedMaintenance = JSON.parse(
+          localStorage.getItem("maintenance") || "[]",
+        );
+        savedMaintenance.push(newMaintenance);
+        localStorage.setItem("maintenance", JSON.stringify(savedMaintenance));
+
+        // Add to Firebase if sync is enabled
+        if (syncEnabled && realFirebaseService.isReady()) {
+          try {
+            await realFirebaseService.addMaintenance(newMaintenance);
+            console.log("Maintenance added to Firebase successfully");
+          } catch (error) {
+            console.error("Failed to add maintenance to Firebase:", error);
+          }
         }
-      }
-    },
-    [syncEnabled],
+      },
+    ),
+    [syncEnabled, withAutoSync],
   );
 
   const updateMaintenance = useCallback(
@@ -720,7 +726,7 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Work actions
   const addWork = useCallback(
-    async (workData: Omit<Work, "id" | "createdAt">) => {
+    withAutoSync(async (workData: Omit<Work, "id" | "createdAt">) => {
       const newWork: Work = {
         ...workData,
         id: Date.now().toString(),
@@ -747,8 +753,8 @@ export function useDataSync(): SyncState & SyncActions {
           console.error("Failed to add work to Firebase:", error);
         }
       }
-    },
-    [syncEnabled],
+    }),
+    [syncEnabled, withAutoSync],
   );
 
   const updateWork = useCallback(

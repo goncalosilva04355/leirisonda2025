@@ -21,6 +21,7 @@ import { DataCleanupManager } from "../components/DataCleanupManager";
 import { DataManagementPanel } from "../components/DataManagementPanel";
 import { FirebaseConfig } from "../components/FirebaseConfig";
 import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
+import { AutoSyncDemo } from "../components/AutoSyncDemo";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -35,7 +36,8 @@ type AdminSection =
   | "data-cleanup"
   | "data-management"
   | "firebase-config"
-  | "cross-device-users";
+  | "cross-device-users"
+  | "auto-sync-demo";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
@@ -98,6 +100,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       icon: Wifi,
       color: "bg-cyan-500",
     },
+    {
+      id: "auto-sync-demo" as AdminSection,
+      title: "Sincronização Automática",
+      description: "Sistema de sincronização em tempo real",
+      icon: RefreshCw,
+      color: "bg-emerald-500",
+    },
   ];
 
   const renderCurrentSection = () => {
@@ -118,6 +127,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <FirebaseConfig />;
       case "cross-device-users":
         return <CrossDeviceUserManager />;
+      case "auto-sync-demo":
+        return <AutoSyncDemo />;
       case "overview":
       default:
         return (
