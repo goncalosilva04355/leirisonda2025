@@ -211,7 +211,21 @@ export const SyncStatusBadge: React.FC<{ className?: string }> = ({
 
 // Hook para informações detalhadas de sincronização
 export const useSyncStatusInfo = () => {
-  const { isActive, syncing, lastSync, error, config } = useAutoSync();
+  let syncData;
+  try {
+    syncData = useAutoSync();
+  } catch (error) {
+    console.warn("useSyncStatusInfo: useAutoSync error", error);
+    syncData = {
+      isActive: false,
+      syncing: false,
+      lastSync: null,
+      error: "Sync unavailable",
+      config: { enabled: false, syncInterval: 30000, collections: [] },
+    };
+  }
+
+  const { isActive, syncing, lastSync, error, config } = syncData;
 
   const getStatusText = () => {
     if (!isActive) return "Sincronização desativada";
