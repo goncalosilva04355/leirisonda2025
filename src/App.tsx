@@ -4851,7 +4851,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-green-900">
-                              Navegação Maps
+                              Navega��ão Maps
                             </h4>
                             <button
                               onClick={() =>
@@ -4953,7 +4953,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <li>• Dados do Firebase e armazenamento local</li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠️ ATENÇÃO: Esta operação é irreversível!
+                              ⚠��� ATENÇÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -5971,6 +5971,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               )}
                             </div>
                           </div>
+                          {/* Enhanced Action Buttons */}
                           <div className="flex items-center space-x-2 ml-4">
                             {hasPermission("obras", "view") && (
                               <button
@@ -5978,24 +5979,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   setSelectedWork(work);
                                   setViewingWork(true);
                                 }}
-                                className="p-2 text-gray-400 hover:text-gray-600"
+                                className="p-3 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors"
+                                title="Ver todos os detalhes"
                               >
-                                <Eye className="h-4 w-4" />
+                                <Eye className="h-5 w-5" />
                               </button>
                             )}
                             {hasPermission("obras", "edit") && (
                               <button
                                 onClick={() => {
                                   setEditingWork(work);
-                                  // Initialize edit assigned users
-                                  setEditAssignedUsers(
-                                    work.assignedUsers || [],
-                                  );
+                                  setEditAssignedUsers(work.assignedUsers || []);
                                   setActiveSection("editar-obra");
                                 }}
-                                className="p-2 text-gray-400 hover:text-gray-600"
+                                className="p-3 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg border border-gray-200 transition-colors"
+                                title="Editar obra"
                               >
-                                <Edit2 className="h-4 w-4" />
+                                <Edit2 className="h-5 w-5" />
                               </button>
                             )}
                             {hasPermission("obras", "delete") && (
@@ -6006,9 +6006,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     () => dataSync.deleteWork(work.id),
                                   )
                                 }
-                                className="p-2 text-gray-400 hover:text-red-600"
+                                className="p-3 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg border border-red-200 transition-colors"
+                                title="Eliminar obra"
                               >
-                                <Trash2 className="h-4 w-4" />
+                                <Trash2 className="h-5 w-5" />
                               </button>
                             )}
                           </div>
