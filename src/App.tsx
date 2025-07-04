@@ -1646,7 +1646,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <div className="flex items-center space-x-1 text-gray-500 text-sm">
                                   <span>����</span>
                                   <span>
-                                    Atribuída em:{" "}
+                                    Atribu��da em:{" "}
                                     {new Date(
                                       work.dateAssigned,
                                     ).toLocaleDateString("pt-PT")}
@@ -3096,7 +3096,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   (user) =>
                                     user.role !== "viewer" &&
                                     !assignedUsers.some(
-                                      (assigned) => assigned.id === user.id,
+                                      (assigned) =>
+                                        assigned.id === String(user.id),
                                     ),
                                 )
                                 .map((user) => (
@@ -5189,7 +5190,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio Personalizado
+                          Relat����rio Personalizado
                         </h3>
                         <p className="text-sm text-gray-600">
                           Configure os dados
@@ -6155,7 +6156,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 (user) =>
                                   user.role !== "viewer" &&
                                   !editAssignedUsers.some(
-                                    (assigned) => assigned.id === user.id,
+                                    (assigned) =>
+                                      assigned.id === String(user.id),
                                   ),
                               )
                               .map((user) => (
