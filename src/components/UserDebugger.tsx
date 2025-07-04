@@ -135,9 +135,12 @@ export const UserDebugger: React.FC = () => {
                 </div>
                 <div className="text-gray-600">{user.email}</div>
                 <div className="text-gray-500">{user.role}</div>
+                <div className="text-red-500">
+                  Pass: {user.password || "❌ SEM PASSWORD"}
+                </div>
               </div>
               <button
-                onClick={() => testLogin(user.email)}
+                onClick={() => testLogin(user.email, user.password || "123456")}
                 className="px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
               >
                 Test
