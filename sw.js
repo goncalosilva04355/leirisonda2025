@@ -1,10 +1,5 @@
-const CACHE_NAME = "leirisonda-v2";
-const urlsToCache = [
-  "/",
-  "/assets/index-DHnQ0z6C.css",
-  "/assets/index-Cf1crVxO.js",
-  "/manifest.json",
-];
+const CACHE_NAME = "leirisonda-v3";
+const urlsToCache = ["/", "/manifest.json"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
