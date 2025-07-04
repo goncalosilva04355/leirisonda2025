@@ -27,6 +27,7 @@ import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
+import { InstallPrompt } from "./components/InstallPrompt";
 import { useDataSync } from "./hooks/useDataSync";
 
 // Mock authentication and user data
@@ -1272,7 +1273,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   <button className="w-full flex items-center space-x-3 p-3 border border-blue-200 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors text-left">
                     <div className="w-5 h-5 flex items-center justify-center">
-                      <span className="text-blue-600">🔄</span>
+                      <span className="text-blue-600">���</span>
                     </div>
                     <span className="font-medium text-blue-900">
                       Diagnóstico de Sincronização
