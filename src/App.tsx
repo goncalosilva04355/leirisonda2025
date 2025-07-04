@@ -1778,45 +1778,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <Building2 className="h-4 w-4" />
                       <span>Criar Obra</span>
                     </button>
-                        <option value="instalacao">
-                          Instalação Equipamentos
-                        </option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Localização *
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        placeholder="Ex: Cascais, Vila Marina"
-                        required
-                      />
-                    </div>
                   </div>
-
-                  {/* Dates and Budget */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Data de Início *
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Data de Fim Prevista
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      />
-                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        );
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Orçamento (€)
