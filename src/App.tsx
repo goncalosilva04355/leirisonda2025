@@ -1185,6 +1185,299 @@ function App() {
           </div>
         );
 
+      case "relatorios":
+        return (
+          <div className="min-h-screen bg-gray-50">
+            <div className="px-4 py-4 space-y-6">
+              {/* Header */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <BarChart3 className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Relatórios
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Gere relatórios detalhados em PDF
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Report Types */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Pool Reports */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Waves className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório de Piscinas
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Lista completa de piscinas
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      <strong>{pools.length}</strong> piscinas registadas
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• Estado e localização</li>
+                      <li>• Informações de clientes</li>
+                      <li>• Histórico de manutenções</li>
+                      <li>• Próximas intervenções</li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => generatePoolsPDF()}
+                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Gerar PDF</span>
+                  </button>
+                </div>
+
+                {/* Maintenance Reports */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                      <Wrench className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório de Manutenções
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Histórico de intervenções
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      <strong>{maintenance.length}</strong> manutenções
+                      registadas
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• Trabalhos realizados</li>
+                      <li>• Técnicos responsáveis</li>
+                      <li>• Datas e durações</li>
+                      <li>• Estados e observações</li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => generateMaintenancePDF()}
+                    className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Gerar PDF</span>
+                  </button>
+                </div>
+
+                {/* Works Reports */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-6 w-6 text-orange-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório de Obras
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Projetos e construções
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      <strong>{works.length}</strong> obras registadas
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• Orçamentos e custos</li>
+                      <li>• Prazos e cronogramas</li>
+                      <li>• Equipas responsáveis</li>
+                      <li>• Estados de progresso</li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => generateWorksPDF()}
+                    className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Gerar PDF</span>
+                  </button>
+                </div>
+
+                {/* Clients Reports */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <Users className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório de Clientes
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Base de dados de clientes
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      <strong>{clients.length}</strong> clientes registados
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• Dados de contacto</li>
+                      <li>• Piscinas associadas</li>
+                      <li>• Histórico de serviços</li>
+                      <li>• Informações contratuais</li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => generateClientsPDF()}
+                    className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Gerar PDF</span>
+                  </button>
+                </div>
+
+                {/* Complete Report */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <BarChart3 className="h-6 w-6 text-gray-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório Completo
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Todas as informações
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      Relatório consolidado de todo o sistema
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• Resumo executivo</li>
+                      <li>• Estatísticas gerais</li>
+                      <li>• Dados consolidados</li>
+                      <li>• Análise de performance</li>
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => generateCompletePDF()}
+                    className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Gerar PDF Completo</span>
+                  </button>
+                </div>
+
+                {/* Custom Report */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                      <Settings className="h-6 w-6 text-indigo-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Relatório Personalizado
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Configure os dados
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-sm text-gray-600">
+                      Crie relatórios com filtros específicos
+                    </p>
+                    <div className="space-y-2">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          defaultChecked
+                        />
+                        <span className="text-xs">Piscinas</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          defaultChecked
+                        />
+                        <span className="text-xs">Manutenções</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" className="mr-2" />
+                        <span className="text-xs">Obras</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" className="mr-2" />
+                        <span className="text-xs">Clientes</span>
+                      </label>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => generateCustomPDF()}
+                    className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Settings className="h-4 w-4" />
+                    <span>Configurar PDF</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Estatísticas Rápidas
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">
+                      {pools.length}
+                    </div>
+                    <div className="text-sm text-gray-600">Piscinas</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600">
+                      {maintenance.length}
+                    </div>
+                    <div className="text-sm text-gray-600">Manutenções</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-orange-600">
+                      {works.length}
+                    </div>
+                    <div className="text-sm text-gray-600">Obras</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600">
+                      {clients.length}
+                    </div>
+                    <div className="text-sm text-gray-600">Clientes</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div className="min-h-screen bg-gray-50 flex items-center justify-center">
