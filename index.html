@@ -9,13 +9,11 @@
 
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Leirisonda" />
     <meta name="application-name" content="Leirisonda" />
-    <meta name="theme-color" content="#dc2626" />
+    <meta name="theme-color" content="#0891b2" />
+    <meta name="msapplication-TileColor" content="#0891b2" />
     <meta
       name="description"
       content="Sistema de gestão de obras e manutenção de piscinas da Leirisonda com notificações push"
@@ -24,12 +22,99 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- Icons -->
-    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-    <link rel="apple-touch-icon" href="/icon.svg" />
+    <!-- Icons for different devices -->
+    <link
+      rel="icon"
+      type="image/webp"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=32"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      type="image/webp"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=192"
+      sizes="192x192"
+    />
 
-    <!-- Notification Permission Meta Tag -->
+    <!-- Apple Touch Icons -->
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=180"
+      sizes="180x180"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=152"
+      sizes="152x152"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=144"
+      sizes="144x144"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=120"
+      sizes="120x120"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=114"
+      sizes="114x114"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=76"
+      sizes="76x76"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=72"
+      sizes="72x72"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=60"
+      sizes="60x60"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=57"
+      sizes="57x57"
+    />
+
+    <!-- Microsoft Tiles -->
+    <meta
+      name="msapplication-TileImage"
+      content="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=144"
+    />
+    <meta
+      name="msapplication-square70x70logo"
+      content="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=70"
+    />
+    <meta
+      name="msapplication-square150x150logo"
+      content="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=150"
+    />
+    <meta
+      name="msapplication-wide310x150logo"
+      content="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=310"
+    />
+    <meta
+      name="msapplication-square310x310logo"
+      content="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=310"
+    />
+
+    <!-- Mobile Web App Capable -->
     <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Splash Screens for iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link
+      rel="apple-touch-startup-image"
+      href="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=512"
+    />
 
     <title>Leirisonda - Gestão de Obras</title>
   </head>
