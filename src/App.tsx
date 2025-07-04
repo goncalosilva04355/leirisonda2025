@@ -2682,7 +2682,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenç�����es
+                          Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenções agendadas e programadas
@@ -3430,7 +3430,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observaç��es Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observações Específicas do Furo
+                              Observa��ões Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
