@@ -182,7 +182,7 @@ const mockWorks: Work[] = [
     client: "Pedro Almeida",
     contact: "934567890",
     location: "Cascais",
-    type: "Repara����ão",
+    type: "Repara��ão",
     status: "pending",
     startDate: "2025-01-25",
     budget: 1500,
@@ -490,6 +490,8 @@ export function useDataSync(): SyncState & SyncActions {
 
     // Normal startup - load existing data from localStorage
     console.log("📂 Loading saved data from localStorage");
+
+    // Clear any existing mock data and only use real user data
     const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
     const savedMaintenance = JSON.parse(
       localStorage.getItem("maintenance") || "[]",
