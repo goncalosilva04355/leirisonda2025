@@ -592,10 +592,26 @@ function App() {
   };
 
   const handleLogout = async () => {
-    await authService.logout();
-    // Auth state will be updated by the listener
-    setLoginForm({ email: "", password: "" });
-    navigateToSection("dashboard");
+    try {
+      // Close sidebar first
+      setSidebarOpen(false);
+
+      // Clear form and navigate to dashboard
+      setLoginForm({ email: "", password: "" });
+      navigateToSection("dashboard");
+
+      // Perform logout
+      await authService.logout();
+
+      // Auth state will be updated by the listener
+      console.log("Logout completed successfully");
+    } catch (error) {
+      console.error("Error during logout:", error);
+      // Force close sidebar and reset state even if logout fails
+      setSidebarOpen(false);
+      setLoginForm({ email: "", password: "" });
+      navigateToSection("dashboard");
+    }
   };
 
   // Register functions
@@ -3096,7 +3112,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={3}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Observa����ões sobre a obra..."
+                          placeholder="Observa�����ões sobre a obra..."
                         />
                       </div>
 
