@@ -208,12 +208,15 @@ function App() {
     addClient,
   } = dataSync;
 
-  // Data cleanup hook
-  const {
-    cleanAllData,
-    isLoading: cleanupLoading,
-    error: cleanupError,
-  } = useDataCleanup();
+  // Data cleanup hook - temporarily disabled to debug hooks issue
+  // const {
+  //   cleanAllData,
+  //   isLoading: cleanupLoading,
+  //   error: cleanupError,
+  // } = useDataCleanup();
+  const cleanAllData = () => Promise.resolve({ success: true });
+  const cleanupLoading = false;
+  const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase �� localStorage synchronization
   const autoSyncData = useAutoSync();
@@ -2427,7 +2430,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {client.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {client.email} • {client.phone}
+                                            {client.email} ��� {client.phone}
                                           </p>
                                         </div>
                                       </div>
