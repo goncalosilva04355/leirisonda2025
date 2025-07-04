@@ -3255,7 +3255,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Hora In��cio
+                        Hora In���cio
                       </label>
                       <input
                         type="time"
@@ -5500,20 +5500,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <span>Dashboard</span>
             </button>
 
-            <button
-              onClick={() => {
-                navigateToSection("nova-obra");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "nova-obra"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Plus className="h-5 w-5" />
-              <span>Nova Obra</span>
-            </button>
+            {hasPermission("obras", "create") && (
+              <button
+                onClick={() => {
+                  navigateToSection("nova-obra");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "nova-obra"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Plus className="h-5 w-5" />
+                <span>Nova Obra</span>
+              </button>
+            )}
 
             <button
               onClick={() => {
