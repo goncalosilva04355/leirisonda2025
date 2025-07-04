@@ -1351,7 +1351,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               ? {
                   ...u,
                   ...userForm,
-                  password: userForm.password || u.password,
                 }
               : u,
           ),
@@ -1373,7 +1372,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             userForm.email,
             userForm.password,
             userForm.name,
-            userForm.role,
+            userForm.role as "super_admin" | "manager" | "technician",
           );
 
           if (result.success) {
@@ -1421,7 +1420,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const setRolePermissions = (role) => {
-    let permissions = {};
+    let permissions = userForm.permissions;
 
     switch (role) {
       case "super_admin":
@@ -5034,7 +5033,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-blue-600 text-xs">
                             Estado:{" "}
-                            {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
+                            {enablePhoneDialer ? "��� Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
