@@ -5045,7 +5045,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 • Todas as obras ({works.length} registos)
                               </li>
                               <li>
-                                • Todas as manuten��ões ({maintenance.length}{" "}
+                                • Todas as manutenções ({maintenance.length}{" "}
                                 registos)
                               </li>
                               <li>
@@ -5054,7 +5054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <li>• Dados do Firebase e armazenamento local</li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠��� ATENÇÃO: Esta operação é irreversível!
+                              ⚠️ ATENÇÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -5096,7 +5096,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat����rios
+                          Relatórios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -5128,9 +5128,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Estado e localizaç��o</li>
+                        <li>• Estado e localização</li>
                         <li>• Informações de clientes</li>
-                        <li>����� Histórico de manutenç����es</li>
+                        <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -5164,9 +5164,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Trabalhos realizados</li>
-                        <li>• T������cnicos responsáveis</li>
-                        <li>• Datas e duraç��es</li>
+                        <li>• Trabalhos realizados</li>
+                        <li>• Técnicos responsáveis</li>
+                        <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
