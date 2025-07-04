@@ -96,6 +96,8 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
           syncStatus.current.error = null;
           backoffMultiplier.current = 1; // Reset backoff on success
           isQuotaExceeded.current = false;
+          quotaExceededCount.current = 0; // Reset quota error count
+          circuitBreakerOpen.current = false; // Close circuit breaker on success
           console.log("✅ Sincronização automática concluída");
 
           // Atualiza snapshots após sincronização
