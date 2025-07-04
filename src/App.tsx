@@ -891,7 +891,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS A����ÕES:
+PRÓXIMAS AÇÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -2600,7 +2600,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {maint.clientContact}
+                                        �� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
