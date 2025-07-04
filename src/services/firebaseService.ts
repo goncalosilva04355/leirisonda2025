@@ -151,6 +151,10 @@ export const userService = {
 
   // Update user
   async updateUser(userId: string, userData: Partial<User>) {
+    if (!db) {
+      throw new Error("Firebase not configured");
+    }
+
     const userRef = doc(db, COLLECTIONS.USERS, userId);
     await updateDoc(userRef, {
       ...userData,
@@ -160,12 +164,20 @@ export const userService = {
 
   // Delete user
   async deleteUser(userId: string) {
+    if (!db) {
+      throw new Error("Firebase not configured");
+    }
+
     const userRef = doc(db, COLLECTIONS.USERS, userId);
     await deleteDoc(userRef);
   },
 
   // Initialize default users
   async initializeDefaultUsers() {
+    if (!db) {
+      return; // Skip initialization if Firebase not configured
+    }
+
     const usersSnapshot = await getDocs(collection(db, COLLECTIONS.USERS));
     if (usersSnapshot.empty) {
       const defaultUsers = [
