@@ -47,6 +47,8 @@ export interface Work {
   budget?: number;
   actualCost?: number;
   assignedTo: string;
+  assignedUsers?: Array<{ id: string; name: string }>;
+  assignedUserIds?: string[];
   folhaGerada?: boolean;
   createdAt: string;
 }
@@ -165,6 +167,11 @@ const mockWorks: Work[] = [
     startDate: "2025-01-20",
     budget: 25000,
     assignedTo: "Equipa A",
+    assignedUsers: [
+      { id: "1", name: "Gonçalo Fonseca" },
+      { id: "2", name: "Maria Silva" },
+    ],
+    assignedUserIds: ["1", "2"],
     folhaGerada: false,
     createdAt: "2025-01-18",
   },
@@ -180,6 +187,8 @@ const mockWorks: Work[] = [
     startDate: "2025-01-25",
     budget: 1500,
     assignedTo: "João Santos",
+    assignedUsers: [{ id: "3", name: "João Santos" }],
+    assignedUserIds: ["3"],
     folhaGerada: false,
     createdAt: "2025-01-22",
   },

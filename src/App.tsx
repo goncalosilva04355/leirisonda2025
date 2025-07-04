@@ -206,6 +206,14 @@ function App() {
   const [workTechnicians, setWorkTechnicians] = useState<string[]>([]);
   const [currentVehicle, setCurrentVehicle] = useState("");
   const [currentTechnician, setCurrentTechnician] = useState("");
+  const [currentAssignedUser, setCurrentAssignedUser] = useState("");
+  const [assignedUsers, setAssignedUsers] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
+  const [editAssignedUsers, setEditAssignedUsers] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
+  const [currentEditAssignedUser, setCurrentEditAssignedUser] = useState("");
 
   // Edit and view states
   const [editingWork, setEditingWork] = useState(null);
@@ -333,7 +341,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("❌ Notifications not supported in this browser");
+      console.warn("�� Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -655,7 +663,7 @@ function App() {
       // Perform actual logout
       await authService.logout();
 
-      console.log("✅ Logout completed successfully");
+      console.log("��� Logout completed successfully");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -738,7 +746,7 @@ ${index + 1}. ${pool.name}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
-   ${pool.nextMaintenance ? `Próxima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
+   ${pool.nextMaintenance ? `Pr��xima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
 `,
   )
   .join("\n")}
@@ -802,7 +810,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or���amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -837,7 +845,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest�����o
     `;
     downloadPDF(
       content,
@@ -1024,7 +1032,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
+        "As notificaç��es não estão ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -1075,6 +1083,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       setWorkTechnicians([]);
       setCurrentVehicle("");
       setCurrentTechnician("");
+      setAssignedUsers([]);
+      setCurrentAssignedUser("");
     }
   }, [activeSection]);
 
@@ -1623,12 +1633,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </h3>
                                 <div className="flex items-center space-x-1 text-gray-600 text-sm">
                                   <span>👤</span>
-                                  <span>Atribuída a: {work.assignedTo}</span>
+                                  <span>
+                                    Atribuída a:{" "}
+                                    {work.assignedUsers &&
+                                    work.assignedUsers.length > 0
+                                      ? work.assignedUsers
+                                          .map((u) => u.name)
+                                          .join(", ")
+                                      : work.assignedTo || "Não atribuída"}
+                                  </span>
                                 </div>
                                 <div className="flex items-center space-x-1 text-gray-500 text-sm">
                                   <span>����</span>
                                   <span>
-                                    Atribuída em:{" "}
+                                    Atribu��da em:{" "}
                                     {new Date(
                                       work.dateAssigned,
                                     ).toLocaleDateString("pt-PT")}
@@ -1747,7 +1765,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>📅</span>
+                                      <span>����</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -1826,7 +1844,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">���</div>
+                            <div className="text-gray-400 mb-2">����</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
@@ -1849,9 +1867,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 work.location
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()) ||
-                                work.assignedTo
-                                  .toLowerCase()
-                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                (work.assignedUsers &&
+                                work.assignedUsers.length > 0
+                                  ? work.assignedUsers.some((u) =>
+                                      u.name
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ),
+                                    )
+                                  : work.assignedTo
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      )) ||
                                 work.description
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()),
@@ -2034,7 +2063,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {maint.type}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {maint.poolName} •{" "}
+                                            {maint.poolName} ���{" "}
                                             {new Date(
                                               maint.scheduledDate,
                                             ).toLocaleDateString("pt-PT")}
@@ -2122,9 +2151,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 work.location
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()) ||
-                                work.assignedTo
-                                  .toLowerCase()
-                                  .includes(globalSearchTerm.toLowerCase()) ||
+                                (work.assignedUsers &&
+                                work.assignedUsers.length > 0
+                                  ? work.assignedUsers.some((u) =>
+                                      u.name
+                                        .toLowerCase()
+                                        .includes(
+                                          globalSearchTerm.toLowerCase(),
+                                        ),
+                                    )
+                                  : work.assignedTo
+                                      .toLowerCase()
+                                      .includes(
+                                        globalSearchTerm.toLowerCase(),
+                                      )) ||
                                 work.description
                                   .toLowerCase()
                                   .includes(globalSearchTerm.toLowerCase()),
@@ -2591,7 +2631,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenç��es
+                          Futuras Manutenç�����es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenções agendadas e programadas
@@ -3037,24 +3077,92 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usu��rios Atribuídos
+                            Usuários Atribuídos
                           </label>
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra
                           </p>
-                          <select
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            aria-label="Usu��rios Atribu��dos"
-                          >
-                            <option value="">Selecionar usuário...</option>
-                            {users
-                              .filter((user) => user.role !== "viewer")
-                              .map((user) => (
-                                <option key={user.id} value={user.id}>
-                                  {user.name}
-                                </option>
+                          <div className="flex space-x-2">
+                            <select
+                              value={currentAssignedUser}
+                              onChange={(e) =>
+                                setCurrentAssignedUser(e.target.value)
+                              }
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Selecionar usuário...</option>
+                              {users
+                                .filter(
+                                  (user) =>
+                                    user.role !== "viewer" &&
+                                    !assignedUsers.some(
+                                      (assigned) =>
+                                        assigned.id === String(user.id),
+                                    ),
+                                )
+                                .map((user) => (
+                                  <option key={user.id} value={user.id}>
+                                    {user.name}
+                                  </option>
+                                ))}
+                            </select>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (currentAssignedUser) {
+                                  const selectedUser = users.find(
+                                    (u) => String(u.id) === currentAssignedUser,
+                                  );
+                                  if (
+                                    selectedUser &&
+                                    !assignedUsers.some(
+                                      (assigned) =>
+                                        assigned.id === String(selectedUser.id),
+                                    )
+                                  ) {
+                                    setAssignedUsers([
+                                      ...assignedUsers,
+                                      {
+                                        id: String(selectedUser.id),
+                                        name: selectedUser.name,
+                                      },
+                                    ]);
+                                    setCurrentAssignedUser("");
+                                  }
+                                }
+                              }}
+                              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            >
+                              Atribuir
+                            </button>
+                          </div>
+                          {assignedUsers.length > 0 && (
+                            <div className="mt-2 space-y-1">
+                              {assignedUsers.map((assignedUser, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
+                                >
+                                  <span className="text-sm text-blue-700 font-medium">
+                                    👤 {assignedUser.name}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setAssignedUsers(
+                                        assignedUsers.filter(
+                                          (_, i) => i !== index,
+                                        ),
+                                      )
+                                    }
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
                               ))}
-                          </select>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -3411,11 +3519,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const status =
                             form.querySelector('select[name="status"]')
                               ?.value || "pending";
-                          const responsibleUser = form.querySelector(
-                            'select[aria-label="Usuários Atribuídos"]',
-                          );
-                          const selectedUserId = responsibleUser?.value || null;
-
                           // Create complete work data object
                           const workData = {
                             id: Date.now(),
@@ -3427,10 +3530,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             startTime: startTime,
                             endTime: endTime,
                             status: status,
-                            assignedTo: selectedUserId
-                              ? users.find((u) => u.id == selectedUserId)?.name
-                              : "",
-                            assignedUserId: selectedUserId,
+                            assignedTo:
+                              assignedUsers.length > 0
+                                ? assignedUsers.map((u) => u.name).join(", ")
+                                : "",
+                            description: "", // Add default description
+                            assignedUsers: assignedUsers, // Store complete user objects
+                            assignedUserIds: assignedUsers.map((u) => u.id), // Store user IDs
                             vehicles: workVehicles,
                             technicians: workTechnicians,
                             photos: uploadedPhotos,
@@ -3442,18 +3548,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Use sync system to add work (will handle Firebase and localStorage)
                           addWork(workData);
 
-                          // Send notification if user assigned
-                          if (selectedUserId) {
-                            const selectedUser = users.find(
-                              (u) => u.id == selectedUserId,
+                          // Send notifications to all assigned users
+                          assignedUsers.forEach((assignedUser) => {
+                            sendWorkAssignmentNotification(
+                              workTitle,
+                              assignedUser.name,
                             );
-                            if (selectedUser) {
-                              sendWorkAssignmentNotification(
-                                workTitle,
-                                selectedUser.name,
-                              );
-                            }
-                          }
+                          });
 
                           // Save water bore data if work type is "furo"
                           if (selectedWorkType === "furo") {
@@ -3478,8 +3579,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           alert(
                             `Obra "${workTitle}" criada com sucesso! ` +
-                              (selectedUserId
-                                ? "Notificação enviada ao responsável."
+                              (assignedUsers.length > 0
+                                ? `Notificações enviadas a ${assignedUsers.length} responsável(eis).`
                                 : "") +
                               (selectedWorkType === "furo"
                                 ? " Dados do furo registados."
@@ -3493,6 +3594,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           setWorkTechnicians([]);
                           setCurrentVehicle("");
                           setCurrentTechnician("");
+                          setAssignedUsers([]);
+                          setCurrentAssignedUser("");
                           setActiveSection("dashboard");
                         }}
                         className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
@@ -3767,7 +3870,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
                           <option value="manutencao">Em Manutenção</option>
-                          <option value="construcao">Em Construção</option>
+                          <option value="construcao">Em Constru���ão</option>
                         </select>
                       </div>
                     </div>
@@ -3850,7 +3953,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência El��trica
                           </option>
-                          <option value="gas">Aquecimento a G����s</option>
+                          <option value="gas">Aquecimento a G������s</option>
                         </select>
                       </div>
                     </div>
@@ -4004,7 +4107,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data da Interven��ão *
+                          Data da Interven����ão *
                         </label>
                         <input
                           type="date"
@@ -4352,7 +4455,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendações, próxima manutenção..."
+                          placeholder="Observações, recomendaç��es, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -4743,7 +4846,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                          ����
+                          �����
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
@@ -4841,7 +4944,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 • Todas as obras ({works.length} registos)
                               </li>
                               <li>
-                                • Todas as manutenções ({maintenance.length}{" "}
+                                • Todas as manuten��ões ({maintenance.length}{" "}
                                 registos)
                               </li>
                               <li>
@@ -4892,7 +4995,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat��rios
+                          Relat����rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -4926,7 +5029,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Estado e localizaç��o</li>
                         <li>• Informações de clientes</li>
-                        <li>����� Histórico de manutenç��es</li>
+                        <li>����� Histórico de manutenç����es</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -5088,7 +5191,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio Personalizado
+                          Relat����rio Personalizado
                         </h3>
                         <p className="text-sm text-gray-600">
                           Configure os dados
@@ -5838,7 +5941,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span className="font-medium">
                                   Atribuída a:
                                 </span>{" "}
-                                {work.assignedTo}
+                                {work.assignedUsers &&
+                                work.assignedUsers.length > 0
+                                  ? work.assignedUsers
+                                      .map((u) => u.name)
+                                      .join(", ")
+                                  : work.assignedTo || "Não atribuída"}
                               </div>
                               {work.budget && (
                                 <div>
@@ -5866,6 +5974,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() => {
                                   setEditingWork(work);
+                                  // Initialize edit assigned users
+                                  setEditAssignedUsers(
+                                    work.assignedUsers || [],
+                                  );
                                   setActiveSection("editar-obra");
                                 }}
                                 className="p-2 text-gray-400 hover:text-gray-600"
@@ -6029,14 +6141,90 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Responsável
+                          Usuários Atribuídos
                         </label>
-                        <input
-                          type="text"
-                          defaultValue={editingWork?.assignedTo}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Técnico responsável"
-                        />
+                        <div className="flex space-x-2">
+                          <select
+                            value={currentEditAssignedUser}
+                            onChange={(e) =>
+                              setCurrentEditAssignedUser(e.target.value)
+                            }
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">Selecionar usuário...</option>
+                            {users
+                              .filter(
+                                (user) =>
+                                  user.role !== "viewer" &&
+                                  !editAssignedUsers.some(
+                                    (assigned) =>
+                                      assigned.id === String(user.id),
+                                  ),
+                              )
+                              .map((user) => (
+                                <option key={user.id} value={user.id}>
+                                  {user.name}
+                                </option>
+                              ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (currentEditAssignedUser) {
+                                const selectedUser = users.find(
+                                  (u) =>
+                                    String(u.id) === currentEditAssignedUser,
+                                );
+                                if (
+                                  selectedUser &&
+                                  !editAssignedUsers.some(
+                                    (assigned) =>
+                                      assigned.id === String(selectedUser.id),
+                                  )
+                                ) {
+                                  setEditAssignedUsers([
+                                    ...editAssignedUsers,
+                                    {
+                                      id: String(selectedUser.id),
+                                      name: selectedUser.name,
+                                    },
+                                  ]);
+                                  setCurrentEditAssignedUser("");
+                                }
+                              }
+                            }}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                          >
+                            Atribuir
+                          </button>
+                        </div>
+                        {editAssignedUsers.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            {editAssignedUsers.map((assignedUser, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
+                              >
+                                <span className="text-sm text-blue-700 font-medium">
+                                  👤 {assignedUser.name}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setEditAssignedUsers(
+                                      editAssignedUsers.filter(
+                                        (_, i) => i !== index,
+                                      ),
+                                    )
+                                  }
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -6131,6 +6319,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         type="button"
                         onClick={() => {
                           setEditingWork(null);
+                          setEditAssignedUsers([]);
+                          setCurrentEditAssignedUser("");
                           setActiveSection("obras");
                         }}
                         className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
@@ -6151,14 +6341,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const status = inputs[3].value; // Estado
                           const startDate = inputs[4].value; // Data de Início
                           const expectedEndDate = inputs[5].value; // Data de Conclusão Prevista
-                          const assignedTo = inputs[6].value; // Responsável
-                          const budgetValue = inputs[7].value; // Valor Orçamentado
-                          const clientPhone = inputs[8].value; // Telefone do Cliente
-                          const clientEmail = inputs[9].value; // Email do Cliente
-                          const priority = inputs[10].value; // Prioridade
-                          const workType = inputs[11].value; // Tipo de Obra
+                          // assignedTo now comes from editAssignedUsers state
+                          const budgetValue = inputs[6].value; // Valor Orçamentado
+                          const clientPhone = inputs[7].value; // Telefone do Cliente
+                          const clientEmail = inputs[8].value; // Email do Cliente
+                          const priority = inputs[9].value; // Prioridade
+                          const workType = inputs[10].value; // Tipo de Obra
                           const description = inputs[12].value; // Descri��ão
-                          const technicalNotes = inputs[13].value; // Observações Técnicas
+                          const technicalNotes = inputs[12].value; // Observações Técnicas
 
                           dataSync.updateWork(editingWork.id, {
                             title,
@@ -6171,7 +6361,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             expectedEndDate: expectedEndDate
                               ? new Date(expectedEndDate).toISOString()
                               : undefined,
-                            assignedTo,
+                            assignedTo:
+                              editAssignedUsers.length > 0
+                                ? editAssignedUsers
+                                    .map((u) => u.name)
+                                    .join(", ")
+                                : "",
+                            assignedUsers: editAssignedUsers,
+                            assignedUserIds: editAssignedUsers.map((u) => u.id),
                             budgetValue: budgetValue
                               ? parseFloat(budgetValue)
                               : undefined,
@@ -6185,6 +6382,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           alert("Obra atualizada com sucesso!");
                           setEditingWork(null);
+                          setEditAssignedUsers([]);
+                          setCurrentEditAssignedUser("");
                           setActiveSection("obras");
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
@@ -7008,7 +7207,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Shield className="h-8 w-8 text-red-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                ����rea Protegida
+                ������rea Protegida
               </h1>
               <p className="text-gray-600">
                 Insira a palavra-passe para aceder às configurações avançadas
@@ -7478,7 +7677,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Atribuída a
                       </label>
                       <p className="text-gray-900">
-                        {selectedWork.assignedTo || "Não atribuída"}
+                        {selectedWork.assignedUsers &&
+                        selectedWork.assignedUsers.length > 0
+                          ? selectedWork.assignedUsers
+                              .map((u) => u.name)
+                              .join(", ")
+                          : selectedWork.assignedTo || "Não atribuída"}
                       </p>
                     </div>
                   </div>
@@ -7518,6 +7722,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <button
                       onClick={() => {
                         setEditingWork(selectedWork);
+                        // Initialize edit assigned users
+                        setEditAssignedUsers(selectedWork.assignedUsers || []);
                         setViewingWork(false);
                         setSelectedWork(null);
                         setActiveSection("editar-obra");
