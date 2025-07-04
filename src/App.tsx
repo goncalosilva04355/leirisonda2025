@@ -1050,93 +1050,8 @@ function App() {
                   Configurações
                 </h1>
                 <p className="text-gray-600 text-sm">
-                  Gerir definições do sistema e sincronização
+                  Gerir definições do sistema
                 </p>
-              </div>
-
-              {/* Firebase Sync Section */}
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    {syncEnabled ? (
-                      <Wifi className="h-5 w-5 text-blue-600" />
-                    ) : (
-                      <WifiOff className="h-5 w-5 text-gray-400" />
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Sincronização em Tempo Real
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      {syncEnabled
-                        ? "Sincronização ativa - dados partilhados entre dispositivos"
-                        : "Configure Firebase para ativar sincronização"}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid gap-4">
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <p className="font-medium text-gray-900">
-                        Estado da Sincronização
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {syncEnabled
-                          ? "Conectado e sincronizando"
-                          : "Desconectado"}
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {syncEnabled ? (
-                        <div className="flex items-center space-x-2 text-green-600">
-                          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-sm font-medium">Ativo</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center space-x-2 text-gray-400">
-                          <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
-                          <span className="text-sm font-medium">Inativo</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {!syncEnabled && (
-                    <button
-                      onClick={() => {
-                        setFirebaseConfigured(false);
-                        setShowSettingsPage(false);
-                      }}
-                      className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
-                    >
-                      <Settings className="w-5 h-5" />
-                      <span>Configurar Firebase</span>
-                    </button>
-                  )}
-
-                  {syncEnabled && (
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        onClick={() => {
-                          localStorage.removeItem("firebase-config");
-                          setFirebaseConfigured(false);
-                          setSyncEnabled(false);
-                        }}
-                        className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors text-sm"
-                      >
-                        Desconectar
-                      </button>
-                      <button
-                        onClick={() => window.location.reload()}
-                        className="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors text-sm"
-                      >
-                        Reconectar
-                      </button>
-                    </div>
-                  )}
-                </div>
               </div>
 
               {/* System Information */}
@@ -1160,12 +1075,8 @@ function App() {
                     </span>
                   </div>
                   <div className="flex justify-between py-2">
-                    <span className="text-gray-600">Dados</span>
-                    <span className="font-medium">
-                      {syncEnabled
-                        ? "Sincronização Firebase"
-                        : "Armazenamento Local"}
-                    </span>
+                    <span className="text-gray-600">Modo de Dados</span>
+                    <span className="font-medium">Armazenamento Local</span>
                   </div>
                 </div>
               </div>
