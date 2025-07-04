@@ -69,7 +69,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     }
 
     try {
-      // Try Firebase first
+      console.log("Attempting Firebase registration...");
+
       const result = await authService.register(
         formData.email.trim(),
         formData.password,
@@ -77,44 +78,62 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         formData.role,
       );
 
+      console.log("Firebase registration result:", result);
+
       if (result.success) {
         onRegisterSuccess();
+        return;
       } else {
-        setError(result.error || "Erro ao criar conta");
+        // If Firebase returns an error result, try mock auth
+        console.log("Firebase returned error, trying mock auth...");
+
+        const mockResult = await mockAuthService.register(
+          formData.email.trim(),
+          formData.password,
+          formData.name.trim(),
+          formData.role,
+        );
+
+        if (mockResult.success) {
+          setError("✅ Conta criada com sucesso (modo local)");
+          setTimeout(() => {
+            setError("");
+            onRegisterSuccess();
+          }, 1500);
+        } else {
+          setError(mockResult.error || "Erro ao criar conta");
+        }
       }
     } catch (error: any) {
-      console.error("Firebase registration failed:", error);
+      console.error("Firebase registration exception:", error);
+      console.log("Error code:", error.code);
+      console.log("Error message:", error.message);
 
-      // Fallback to mock authentication for Firebase issues
-      if (
-        error.code === "auth/network-request-failed" ||
-        error.message?.includes("Body is disturbed")
-      ) {
-        console.log("Using mock authentication as fallback...");
+      // Always fallback to mock authentication for any Firebase error
+      console.log("Using mock authentication fallback...");
 
-        try {
-          const mockResult = await mockAuthService.register(
-            formData.email.trim(),
-            formData.password,
-            formData.name.trim(),
-            formData.role,
+      try {
+        const mockResult = await mockAuthService.register(
+          formData.email.trim(),
+          formData.password,
+          formData.name.trim(),
+          formData.role,
+        );
+
+        if (mockResult.success) {
+          setError(
+            "✅ Conta criada com sucesso (Firebase indisponível - modo local ativo)",
           );
-
-          if (mockResult.success) {
-            setError(
-              "Conta criada com autenticação local (Firebase indisponível)",
-            );
-            setTimeout(() => {
-              onRegisterSuccess();
-            }, 2000);
-          } else {
-            setError(mockResult.error || "Erro ao criar conta");
-          }
-        } catch (mockError) {
-          setError("Erro em ambos os sistemas de autenticação");
+          setTimeout(() => {
+            setError("");
+            onRegisterSuccess();
+          }, 2000);
+        } else {
+          setError(mockResult.error || "Erro ao criar conta local");
         }
-      } else {
-        setError("Erro inesperado. Verifique a conexão e tente novamente.");
+      } catch (mockError) {
+        console.error("Mock auth also failed:", mockError);
+        setError("Erro em todos os sistemas de autenticação");
       }
     } finally {
       setLoading(false);
