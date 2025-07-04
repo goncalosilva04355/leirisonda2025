@@ -21,6 +21,7 @@ import { DataCleanupManager } from "../components/DataCleanupManager";
 import { DataManagementPanel } from "../components/DataManagementPanel";
 import { FirebaseConfig } from "../components/FirebaseConfig";
 import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
+import { AutoSyncDemo } from "../components/AutoSyncDemo";
 
 interface AdminPageProps {
   onLogout: () => void;
