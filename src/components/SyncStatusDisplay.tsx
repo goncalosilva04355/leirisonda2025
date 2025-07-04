@@ -14,7 +14,9 @@ export const SyncStatusDisplay: React.FC<SyncStatusDisplayProps> = ({
   error,
   syncEnabled,
 }) => {
+  // Firebase is always enabled now
   if (!syncEnabled) {
+    // This should never happen now, but keeping as fallback
     return (
       <div className="flex items-center space-x-2 text-gray-500 text-xs">
         <WifiOff className="w-3 h-3" />
