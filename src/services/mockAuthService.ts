@@ -133,6 +133,16 @@ class MockAuthService {
     return this.currentUser; // Only return if currently logged in this session
   }
 
+  // Force reload users from localStorage (for debugging)
+  reloadUsers(): void {
+    this.loadUsers();
+  }
+
+  // Get all users (for debugging)
+  getAllUsers(): MockUser[] {
+    return this.users;
+  }
+
   onAuthStateChanged(callback: (user: MockUser | null) => void): () => void {
     // Do NOT immediately call with current user - this was causing automatic login
     // Only call callback when user actually logs in
