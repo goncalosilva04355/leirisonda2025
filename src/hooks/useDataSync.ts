@@ -41,6 +41,7 @@ export interface Work {
   budget?: number;
   actualCost?: number;
   assignedTo: string;
+  folhaGerada?: boolean;
   createdAt: string;
 }
 
