@@ -330,7 +330,7 @@ ${index + 1}. ${maint.poolName}
     `;
     downloadPDF(
       content,
-      `Manutencoes_${new Date().toISOString().split("T")[0]}.txt`,
+      `Manutencoes_${new Date().toISOString().split("T")[0]}.pdf`,
     );
   };
 
@@ -522,7 +522,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const testPushNotification = () => {
     if (Notification.permission === "granted") {
       showNotification(
-        "Teste de Notificação",
+        "Teste de Notificaç��o",
         "As notificações estão a funcionar corretamente!",
         "test",
       );
