@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { authService } from "../services/authService";
+import { mockAuthService } from "../services/mockAuthService";
 
 interface RegisterFormProps {
   onRegisterSuccess: () => void;
@@ -22,30 +23,50 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Prevent multiple submissions
+    if (loading) {
+      return;
+    }
+
     setError("");
+    setLoading(true);
+
+    // Add small delay to ensure UI updates
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     // Validation
     if (!formData.name.trim()) {
       setError("Nome é obrigatório");
+      setLoading(false);
       return;
     }
 
     if (!formData.email.trim()) {
       setError("Email é obrigatório");
+      setLoading(false);
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      setError("Por favor, insira um email válido");
+      setLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
       setError("Password deve ter pelo menos 6 caracteres");
+      setLoading(false);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords não coincidem");
+      setLoading(false);
       return;
     }
-
-    setLoading(true);
 
     try {
       const result = await authService.register(
@@ -60,7 +81,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       } else {
         setError(result.error || "Erro ao criar conta");
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Registration error:", error);
       setError("Erro inesperado. Tente novamente.");
     } finally {
       setLoading(false);
@@ -172,6 +194,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             <button
               type="submit"
               disabled={loading}
+              onDoubleClick={(e) => e.preventDefault()}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
             >
               {loading ? "A criar conta..." : "Criar Conta"}

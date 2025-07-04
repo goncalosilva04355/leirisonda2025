@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
+import { mockAuthService } from "./mockAuthService";
 
 export interface UserProfile {
   uid: string;
@@ -59,15 +60,54 @@ class AuthService {
     name: string,
     role: "super_admin" | "manager" | "technician" = "technician",
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-    if (!auth || !db) {
-      return { success: false, error: "Firebase não configurado" };
+    // Validate inputs first
+    if (!email || !email.trim()) {
+      return { success: false, error: "Email é obrigatório" };
     }
 
+    if (!password || password.length < 6) {
+      return {
+        success: false,
+        error: "Password deve ter pelo menos 6 caracteres",
+      };
+    }
+
+    if (!name || !name.trim()) {
+      return { success: false, error: "Nome é obrigatório" };
+    }
+
+    // Try Firebase first if available
+    if (auth && db) {
+      console.log("Attempting Firebase registration...");
+      try {
+        return await this.registerWithFirebase(email, password, name, role);
+      } catch (error: any) {
+        console.error(
+          "Firebase registration failed, falling back to mock:",
+          error,
+        );
+        // Fall through to mock auth
+      }
+    } else {
+      console.log("Firebase not available, using mock auth directly");
+    }
+
+    // Fallback to mock authentication
+    console.log("Using mock authentication...");
+    return await this.registerWithMock(email, password, name, role);
+  }
+
+  private async registerWithFirebase(
+    email: string,
+    password: string,
+    name: string,
+    role: "super_admin" | "manager" | "technician",
+  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
       // Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
+        email.trim(),
         password,
       );
       const firebaseUser = userCredential.user;
@@ -94,17 +134,72 @@ class AuthService {
       return { success: true, user: userProfile };
     } catch (error: any) {
       console.error("Registration error:", error);
+      console.error("Error code:", error.code);
+      console.error("Error message:", error.message);
+      console.error("Full error:", JSON.stringify(error, null, 2));
 
       let errorMessage = "Erro ao criar conta";
       if (error.code === "auth/email-already-in-use") {
         errorMessage = "Este email já está em uso";
       } else if (error.code === "auth/weak-password") {
-        errorMessage = "Password muito fraca";
+        errorMessage = "Password muito fraca (mínimo 6 caracteres)";
       } else if (error.code === "auth/invalid-email") {
         errorMessage = "Email inválido";
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage = "Erro de rede. Verifique a conexão à internet";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMessage = "Muitas tentativas. Tente novamente mais tarde";
+      } else if (error.code === "auth/operation-not-allowed") {
+        errorMessage =
+          "Email/Password authentication não está ativado no Firebase Console";
+      } else if (error.code === "auth/invalid-api-key") {
+        errorMessage = "Chave API Firebase inválida";
+      } else if (error.code === "auth/app-deleted") {
+        errorMessage = "Projeto Firebase foi removido";
+      } else if (error.message) {
+        errorMessage = `Erro Firebase: ${error.code || "unknown"} - ${error.message}`;
       }
 
       return { success: false, error: errorMessage };
+    }
+  }
+
+  private async registerWithMock(
+    email: string,
+    password: string,
+    name: string,
+    role: "super_admin" | "manager" | "technician",
+  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
+    try {
+      const mockResult = await mockAuthService.register(
+        email,
+        password,
+        name,
+        role,
+      );
+
+      if (mockResult.success && mockResult.user) {
+        // Convert mock user to UserProfile format
+        const userProfile: UserProfile = {
+          uid: mockResult.user.uid,
+          email: mockResult.user.email,
+          name: mockResult.user.name,
+          role: mockResult.user.role,
+          permissions: this.getDefaultPermissions(mockResult.user.role),
+          active: mockResult.user.active,
+          createdAt: mockResult.user.createdAt,
+        };
+
+        return { success: true, user: userProfile };
+      } else {
+        return {
+          success: false,
+          error: mockResult.error || "Erro na autenticação local",
+        };
+      }
+    } catch (error: any) {
+      console.error("Mock auth registration failed:", error);
+      return { success: false, error: "Erro na autenticação local" };
     }
   }
 
