@@ -100,6 +100,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       icon: Wifi,
       color: "bg-cyan-500",
     },
+    {
+      id: "auto-sync-demo" as AdminSection,
+      title: "Sincronização Automática",
+      description: "Sistema de sincronização em tempo real",
+      icon: RefreshCw,
+      color: "bg-emerald-500",
+    },
   ];
 
   const renderCurrentSection = () => {
