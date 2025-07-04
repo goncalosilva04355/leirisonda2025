@@ -208,32 +208,37 @@ class AuthService {
     email: string,
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-    // Always try mock auth first for reliability
-    console.log("Using mock authentication for better reliability...");
-    try {
-      return await this.loginWithMock(email, password);
-    } catch (mockError: any) {
-      console.error("Mock auth failed:", mockError);
-    }
-
-    // Try Firebase as fallback if available
+    // Try Firebase first for cross-device access
     if (auth && db) {
-      console.log("Attempting Firebase login as fallback...");
+      console.log("Attempting Firebase login for cross-device access...");
       try {
-        return await this.loginWithFirebase(email, password);
+        const result = await this.loginWithFirebase(email, password);
+        if (result.success) {
+          console.log(
+            "✅ Firebase login successful - cross-device access enabled",
+          );
+          return result;
+        }
       } catch (error: any) {
-        console.error("Firebase login error:", error);
-        return {
-          success: false,
-          error: "Erro de autenticação. Tente novamente.",
-        };
+        console.warn("Firebase login failed, trying local auth:", error);
       }
     }
 
-    return {
-      success: false,
-      error: "Sistema de autenticação indisponível",
-    };
+    // Fallback to mock auth for local-only users
+    console.log("Using local authentication as fallback...");
+    try {
+      const result = await this.loginWithMock(email, password);
+      if (result.success) {
+        console.log("⚠️ Local login successful - device-specific access only");
+      }
+      return result;
+    } catch (mockError: any) {
+      console.error("Local auth failed:", mockError);
+      return {
+        success: false,
+        error: "Credenciais inválidas ou sistema indisponível",
+      };
+    }
   }
 
   private async loginWithFirebase(
