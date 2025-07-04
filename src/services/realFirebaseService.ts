@@ -255,6 +255,35 @@ class RealFirebaseService {
     }
   }
 
+  async updateClient(clientId: string, clientData: any): Promise<boolean> {
+    if (!this.isReady()) return false;
+
+    try {
+      const clientRef = ref(this.database!, `clients/${clientId}`);
+      await update(clientRef, {
+        ...clientData,
+        updatedAt: new Date().toISOString(),
+      });
+      return true;
+    } catch (error) {
+      console.error("Failed to update client:", error);
+      return false;
+    }
+  }
+
+  async deleteClient(clientId: string): Promise<boolean> {
+    if (!this.isReady()) return false;
+
+    try {
+      const clientRef = ref(this.database!, `clients/${clientId}`);
+      await remove(clientRef);
+      return true;
+    } catch (error) {
+      console.error("Failed to delete client:", error);
+      return false;
+    }
+  }
+
   // Real-time listeners
   onPoolsChange(callback: (pools: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
