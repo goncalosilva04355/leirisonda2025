@@ -510,7 +510,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenção Regular",
+      type: "Manuten��ão Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -1695,9 +1695,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </span>
                                 </div>
                                 <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                  <span>����</span>
+                                  <span>📍</span>
                                   <span>
-                                    Atribu��da em:{" "}
+                                    Atribuída em:{" "}
                                     {new Date(
                                       work.dateAssigned,
                                     ).toLocaleDateString("pt-PT")}
@@ -3456,7 +3456,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observa��ões
+                            Observações
                           </label>
                           <textarea
                             rows={3}
