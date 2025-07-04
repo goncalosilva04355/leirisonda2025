@@ -148,7 +148,7 @@ function App() {
   const [assignedWorks, setAssignedWorks] = useState<any[]>([]);
   const [uploadedPhotos, setUploadedPhotos] = useState<any[]>([]);
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
-  const [selectedPhotos, setSelectedPhotos] = useState([]);
+  const [selectedPhotos, setSelectedPhotos] = useState<any[]>([]);
 
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
@@ -2156,7 +2156,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Building2 className="h-4 w-4 text-blue-600" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Observaç��es e Trabalho
+                        Observações e Trabalho
                       </h3>
                     </div>
 
@@ -3621,7 +3621,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <li>• Resumo executivo</li>
                       <li>• Estatísticas gerais</li>
                       <li>• Dados consolidados</li>
-                      <li>• Análise de performance</li>
+                      <li>�� Análise de performance</li>
                     </ul>
                   </div>
                   <button
@@ -4341,7 +4341,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>���</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
