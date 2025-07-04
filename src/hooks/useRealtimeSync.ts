@@ -38,6 +38,11 @@ export function useRealtimeSync() {
 
     const initializeAndSubscribe = async () => {
       try {
+        // TEMPORARILY DISABLED TO PREVENT FIREBASE QUOTA EXCEEDED ERRORS
+        console.warn("🛑 useRealtimeSync DISABLED to prevent quota exceeded");
+        setState((prev) => ({ ...prev, loading: false }));
+        return;
+
         // Firebase is always configured with fixed settings
         console.log("Firebase sync always available with fixed configuration");
 
