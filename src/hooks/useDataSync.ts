@@ -862,12 +862,19 @@ export function useDataSync(): SyncState & SyncActions {
 
   const updateWork = useCallback(
     (id: string, workData: Partial<Work>) => {
-      setState((prev) => ({
-        ...prev,
-        works: prev.works.map((work) =>
+      setState((prev) => {
+        const updatedWorks = prev.works.map((work) =>
           work.id === id ? { ...work, ...workData } : work,
-        ),
-      }));
+        );
+
+        // Persist to localStorage
+        localStorage.setItem("works", JSON.stringify(updatedWorks));
+
+        return {
+          ...prev,
+          works: updatedWorks,
+        };
+      });
 
       if (syncEnabled) {
         syncWithFirebase();
@@ -878,14 +885,33 @@ export function useDataSync(): SyncState & SyncActions {
 
   const deleteWork = useCallback(
     (id: string) => {
-      setState((prev) => ({
-        ...prev,
-        works: prev.works.filter((work) => work.id !== id),
-      }));
+      console.warn(
+        "⚠️ ATENÇÃO: Tentativa de apagar obra bloqueada por proteção de dados!",
+      );
+      console.log("🔒 DeleteWork chamado para ID:", id, "- Operação bloqueada");
+
+      // PROTEÇÃO: Não permitir apagar obras conforme instruções do usuário
+      // Apenas logar a tentativa mas não executar
+      return;
+
+      // Código original comentado para proteção:
+      /*
+      setState((prev) => {
+        const updatedWorks = prev.works.filter((work) => work.id !== id);
+
+        // Persist to localStorage
+        localStorage.setItem("works", JSON.stringify(updatedWorks));
+
+        return {
+          ...prev,
+          works: updatedWorks,
+        };
+      });
 
       if (syncEnabled) {
         syncWithFirebase();
       }
+      */
     },
     [syncEnabled, syncWithFirebase],
   );
