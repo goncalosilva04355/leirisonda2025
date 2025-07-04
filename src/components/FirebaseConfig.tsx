@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Cloud, Save, AlertCircle, CheckCircle } from "lucide-react";
+import { Cloud, Save, AlertCircle, CheckCircle, RefreshCw } from "lucide-react";
+import { saveFirebaseConfig } from "../firebase/config";
 
 interface FirebaseConfigProps {
   onConfigured: () => void;
@@ -12,6 +13,7 @@ interface FirebaseSettings {
   storageBucket: string;
   messagingSenderId: string;
   appId: string;
+  measurementId?: string;
 }
 
 export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
@@ -24,48 +26,115 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     storageBucket: "",
     messagingSenderId: "",
     appId: "",
+    measurementId: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [isConfigLoaded, setIsConfigLoaded] = useState(false);
 
   useEffect(() => {
-    // Firebase is always configured with fixed settings
-    const fixedConfig = {
-      apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-      authDomain: "leirisonda-16f8b.firebaseapp.com",
-      projectId: "leirisonda-16f8b",
-      storageBucket: "leirisonda-16f8b.firebasestorage.app",
-      messagingSenderId: "540456875574",
-      appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+    // Load existing Firebase config from localStorage
+    const loadConfigFromStorage = () => {
+      try {
+        const storedConfig = localStorage.getItem("firebase-config");
+        if (storedConfig) {
+          const parsedConfig = JSON.parse(storedConfig);
+          setConfig(parsedConfig);
+          setIsConfigLoaded(true);
+          setSuccess(true);
+          console.log(
+            "🔧 FirebaseConfig: Loaded configuration from localStorage",
+          );
+          onConfigured();
+          return;
+        }
+      } catch (error) {
+        console.warn(
+          "🔧 FirebaseConfig: Error loading from localStorage:",
+          error,
+        );
+      }
+
+      // If no stored config, use the provided default config
+      const defaultConfig = {
+        apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+        authDomain: "leirisonda-16f8b.firebaseapp.com",
+        projectId: "leirisonda-16f8b",
+        storageBucket: "leirisonda-16f8b.firebasestorage.app",
+        messagingSenderId: "540456875574",
+        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+        measurementId: "G-R9W43EHH2C",
+      };
+
+      setConfig(defaultConfig);
+      setIsConfigLoaded(true);
+      setSuccess(true);
+
+      // Save default config to localStorage
+      saveFirebaseConfig(defaultConfig);
+      console.log(
+        "🔧 FirebaseConfig: Saved default configuration to localStorage",
+      );
+      onConfigured();
     };
-    setConfig(fixedConfig);
-    setSuccess(true);
-    onConfigured();
+
+    loadConfigFromStorage();
   }, [onConfigured]);
 
   const handleSave = async () => {
     setLoading(true);
     setError("");
 
-    // Basic validation
-    const requiredFields = ["apiKey", "authDomain", "projectId"];
-    const missingFields = requiredFields.filter(
-      (field) => !config[field as keyof FirebaseSettings],
-    );
+    try {
+      // Basic validation
+      const requiredFields = ["apiKey", "authDomain", "projectId"];
+      const missingFields = requiredFields.filter(
+        (field) => !config[field as keyof FirebaseSettings],
+      );
 
-    if (missingFields.length > 0) {
-      setError(`Campos obrigatórios em falta: ${missingFields.join(", ")}`);
-      setLoading(false);
-      return;
+      if (missingFields.length > 0) {
+        setError(`Campos obrigatórios em falta: ${missingFields.join(", ")}`);
+        setLoading(false);
+        return;
+      }
+
+      // Save configuration to localStorage
+      const saveSuccess = saveFirebaseConfig(config);
+
+      if (saveSuccess) {
+        setSuccess(true);
+        console.log("🔧 FirebaseConfig: Configuration saved successfully");
+
+        setTimeout(() => {
+          onConfigured();
+        }, 1500);
+      } else {
+        setError("Erro ao guardar configuração. Tente novamente.");
+      }
+    } catch (error) {
+      console.error("🔧 FirebaseConfig: Error saving configuration:", error);
+      setError("Erro inesperado ao guardar configuração.");
     }
 
-    // Configuration is already fixed and active
-    setSuccess(true);
     setLoading(false);
-    setTimeout(() => {
-      onConfigured();
-    }, 1500);
+  };
+
+  const handleReset = () => {
+    const defaultConfig = {
+      apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+      authDomain: "leirisonda-16f8b.firebaseapp.com",
+      projectId: "leirisonda-16f8b",
+      storageBucket: "leirisonda-16f8b.firebasestorage.app",
+      messagingSenderId: "540456875574",
+      appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+      measurementId: "G-R9W43EHH2C",
+    };
+
+    setConfig(defaultConfig);
+    saveFirebaseConfig(defaultConfig);
+    setSuccess(true);
+    setError("");
   };
 
   const handleFieldChange = (field: keyof FirebaseSettings, value: string) => {
@@ -74,18 +143,37 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     setSuccess(false);
   };
 
-  if (success) {
+  if (success && isConfigLoaded) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Firebase Sempre Ativo!
+            Firebase Ativo!
           </h2>
-          <p className="text-gray-600">
-            Configuração permanente ativa em todos os dispositivos. A
-            sincronização está sempre disponível.
+          <p className="text-gray-600 mb-6">
+            Configuração persistente guardada localmente.
+            <br />
+            Sincronização ativa em todos os dispositivos.
           </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => {
+                setSuccess(false);
+                setError("");
+              }}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Editar Configuração
+            </button>
+            <button
+              onClick={handleReset}
+              className="w-full bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Restaurar Padrão
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -188,6 +276,21 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Measurement ID (Google Analytics)
+            </label>
+            <input
+              type="text"
+              value={config.measurementId || ""}
+              onChange={(e) =>
+                handleFieldChange("measurementId", e.target.value)
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="G-XXXXXXXXXX"
+            />
+          </div>
+
           {error && (
             <div className="flex items-center space-x-2 text-red-600 bg-red-50 p-3 rounded-md">
               <AlertCircle className="w-5 h-5" />
@@ -195,14 +298,24 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
             </div>
           )}
 
-          <button
-            onClick={handleSave}
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-          >
-            <Save className="w-5 h-5" />
-            <span>{loading ? "A guardar..." : "Guardar Configuração"}</span>
-          </button>
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              onClick={handleReset}
+              disabled={loading}
+              className="bg-gray-600 text-white py-3 px-4 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            >
+              <RefreshCw className="w-5 h-5" />
+              <span>Restaurar</span>
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={loading}
+              className="bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            >
+              <Save className="w-5 h-5" />
+              <span>{loading ? "A guardar..." : "Guardar"}</span>
+            </button>
+          </div>
         </div>
 
         <div className="mt-8 p-4 bg-blue-50 rounded-md">

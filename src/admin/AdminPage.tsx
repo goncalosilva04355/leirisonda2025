@@ -20,6 +20,7 @@ import { UserDebugger } from "../components/UserDebugger";
 import { DataCleanupManager } from "../components/DataCleanupManager";
 import { DataManagementPanel } from "../components/DataManagementPanel";
 import { FirebaseConfig } from "../components/FirebaseConfig";
+import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -33,7 +34,8 @@ type AdminSection =
   | "user-debugger"
   | "data-cleanup"
   | "data-management"
-  | "firebase-config";
+  | "firebase-config"
+  | "cross-device-users";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
@@ -89,6 +91,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       icon: Settings,
       color: "bg-gray-500",
     },
+    {
+      id: "cross-device-users" as AdminSection,
+      title: "Acesso Multi-Dispositivo",
+      description: "Gestão de utilizadores para acesso universal",
+      icon: Wifi,
+      color: "bg-cyan-500",
+    },
   ];
 
   const renderCurrentSection = () => {
@@ -107,6 +116,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <DataManagementPanel />;
       case "firebase-config":
         return <FirebaseConfig />;
+      case "cross-device-users":
+        return <CrossDeviceUserManager />;
       case "overview":
       default:
         return (
