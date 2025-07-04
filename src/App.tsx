@@ -221,6 +221,20 @@ function App() {
     }
   }, [isAuthenticated, currentUser]);
 
+  // SECURITY: Periodic auth check to prevent tampering
+  useEffect(() => {
+    const authCheckInterval = setInterval(() => {
+      if (isAuthenticated && !currentUser) {
+        console.warn("SECURITY: Auth state compromised, forcing logout");
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        authService.logout();
+      }
+    }, 5000); // Check every 5 seconds
+
+    return () => clearInterval(authCheckInterval);
+  }, [isAuthenticated, currentUser]);
+
   // Initialize notification permission state and register service worker
   useEffect(() => {
     if ("Notification" in window) {
