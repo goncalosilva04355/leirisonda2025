@@ -63,29 +63,6 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
       // Save to localStorage
       localStorage.setItem("firebase-config", JSON.stringify(config));
 
-      // Update the config file
-      const configFileContent = `import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-
-const firebaseConfig = {
-  apiKey: "${config.apiKey}",
-  authDomain: "${config.authDomain}",
-  projectId: "${config.projectId}",
-  storageBucket: "${config.storageBucket}",
-  messagingSenderId: "${config.messagingSenderId}",
-  appId: "${config.appId}"
-};
-
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-export default app;
-`;
-
-      // In a real app, you'd need to update the actual file
-      // For demo purposes, we'll just show success
       setSuccess(true);
       setTimeout(() => {
         onConfigured();
