@@ -38,6 +38,8 @@ import { UserDebugger } from "./components/UserDebugger";
 import { FullSyncManager } from "./components/FullSyncManager";
 import { AutoSyncNotification } from "./components/AutoSyncNotification";
 // SECURITY: RegisterForm removed - only super admin can create users
+import { AdminLogin } from "./admin/AdminLogin";
+import { AdminPage } from "./admin/AdminPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -136,6 +138,10 @@ function App() {
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
   const [showDataCleanup, setShowDataCleanup] = useState(false);
   const [showAuthDiagnostic, setShowAuthDiagnostic] = useState(false);
+
+  // Admin area states
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
@@ -1445,6 +1451,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       label: "Configurações",
       path: "/configuracoes",
     },
+    {
+      id: "admin",
+      icon: Shield,
+      label: "Administração",
+      path: "/admin",
+      requiresAuth: true,
+    },
   ];
 
   const renderContent = () => {
@@ -2597,7 +2610,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     Manutenções
                   </button>
                   <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                    Futuras Manutenções
+                    Futuras Manuten��ões
                   </button>
                 </div>
               </div>
@@ -7508,10 +7521,32 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         onDismiss={syncStatus === "completed" ? () => {} : undefined}
       />
 
-      {/* Debug Components - Remove in production */}
-      <FullSyncManager />
-      <FirebaseStatus />
-      <UserDebugger />
+      {/* Admin Login Modal */}
+      {showAdminLogin && !isAdminAuthenticated && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-md w-full mx-4">
+            <AdminLogin
+              onLogin={() => {
+                setIsAdminAuthenticated(true);
+                setShowAdminLogin(false);
+              }}
+              onBack={() => setShowAdminLogin(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Admin Page */}
+      {isAdminAuthenticated && (
+        <div className="fixed inset-0 bg-white z-50">
+          <AdminPage
+            onLogout={() => {
+              setIsAdminAuthenticated(false);
+              setShowAdminLogin(false);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
