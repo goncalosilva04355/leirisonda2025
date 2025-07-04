@@ -924,7 +924,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr��������-definidos por agora.",
     );
   };
 
@@ -4484,19 +4484,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
-              {/* Header */}
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <UserCheck className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-2xl font-bold text-gray-900">
-                        Utilizadores
-                      </h1>
-                      <p className="text-gray-600 text-sm">
-                        Gestão de utilizadores do sistema
+              <UserPermissionsManager />
                       </p>
                     </div>
                   </div>
