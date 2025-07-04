@@ -527,6 +527,14 @@ function App() {
   };
 
   const handleSaveIntervention = () => {
+    // SECURITY: Check if user has permission to create maintenance
+    if (!currentUser?.permissions?.manutencoes?.create) {
+      alert(
+        "Não tem permissão para criar manutenções. Contacte o administrador.",
+      );
+      return;
+    }
+
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
       alert("Por favor, preencha os campos obrigatórios (Piscina e Técnico).");
@@ -895,7 +903,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç��o: ${work.location}
+   Localizaç����o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -7183,7 +7191,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => navigateToSection("utilizadores")}
                     className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                   >
-                    ← Voltar aos Utilizadores
+                    �� Voltar aos Utilizadores
                   </button>
                   <RegisterForm
                     onRegisterSuccess={() => {
