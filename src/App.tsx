@@ -2132,12 +2132,46 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }
                         }
 
+                        // Save water bore data if work type is "furo"
+                        if (selectedWorkType === "furo") {
+                          const waterBoreData = {
+                            id: Date.now(),
+                            workTitle: workTitle,
+                            date: new Date().toISOString(),
+                            photos: uploadedPhotos,
+                            photoCount: uploadedPhotos.length,
+                            workType: "furo",
+                          };
+
+                          const savedWaterBores = JSON.parse(
+                            localStorage.getItem("waterBores") || "[]",
+                          );
+                          savedWaterBores.push(waterBoreData);
+                          localStorage.setItem(
+                            "waterBores",
+                            JSON.stringify(savedWaterBores),
+                          );
+
+                          console.log(
+                            "Obra de furo salva com",
+                            uploadedPhotos.length,
+                            "fotos",
+                          );
+                        }
+
                         alert(
                           "Obra criada com sucesso! " +
                             (selectedUserId
                               ? "Notificação enviada ao responsável."
+                              : "") +
+                            (selectedWorkType === "furo"
+                              ? " Dados do furo registados."
                               : ""),
                         );
+
+                        // Clear form data
+                        setSelectedWorkType("");
+                        setUploadedPhotos([]);
                         setActiveSection("dashboard");
                       }}
                       className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
@@ -3983,7 +4017,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>���</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
