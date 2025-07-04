@@ -4476,6 +4476,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   }
 
+  // Show register form
+  if (showRegisterForm) {
+    return (
+      <RegisterForm
+        onRegisterSuccess={handleRegisterSuccess}
+        onBackToLogin={handleBackToLogin}
+      />
+    );
+  }
+
   // Show login page if not authenticated
   if (!isAuthenticated) {
     if (showAdvancedSettings) {
