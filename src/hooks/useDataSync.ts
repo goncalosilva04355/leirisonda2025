@@ -62,85 +62,11 @@ const mockPools: Pool[] = [];
 // Mock maintenance data - DISABLED FOR PRODUCTION
 const mockMaintenance: Maintenance[] = [];
 
-const mockWorks: Work[] = [
-  {
-    id: "1",
-    title: "Renovação Sistema Filtração",
-    description: "Substituição completa do sistema de filtração da piscina",
-    client: "Hotel Marina",
-    location: "Cascais, Villa Marina Resort",
-    type: "Renovação",
-    status: "in_progress",
-    startDate: "2024-01-10",
-    budget: 5000,
-    assignedTo: "Equipa Técnica A",
-    folhaGerada: true,
-    createdAt: "2024-01-08",
-  },
-  {
-    id: "2",
-    title: "Instalação Nova Piscina",
-    description: "Construção de nova piscina 8x4m com deck",
-    client: "Família Costa",
-    location: "Sintra, Quinta da Beloura",
-    type: "Construção",
-    status: "pending",
-    startDate: "2024-02-01",
-    budget: 25000,
-    assignedTo: "Equipa Construção",
-    folhaGerada: false,
-    createdAt: "2024-01-20",
-  },
-  {
-    id: "3",
-    title: "Manutenção Piscina Municipal",
-    description: "Limpeza e tratamento químico da piscina municipal",
-    client: "Câmara Municipal",
-    location: "Lisboa, Centro Desportivo",
-    type: "Manutenção",
-    status: "completed",
-    startDate: "2024-01-05",
-    budget: 1500,
-    assignedTo: "João Santos",
-    folhaGerada: true,
-    createdAt: "2024-01-03",
-  },
-  {
-    id: "4",
-    title: "Reparação Bomba de Calor",
-    description: "Substituição de componentes da bomba de calor",
-    client: "Condomínio Bela Vista",
-    location: "Porto, Foz do Douro",
-    type: "Reparação",
-    status: "pending",
-    startDate: "2024-01-25",
-    budget: 800,
-    assignedTo: "Maria Silva",
-    folhaGerada: false,
-    createdAt: "2024-01-22",
-  },
-];
+// Mock works data - DISABLED FOR PRODUCTION
+const mockWorks: Work[] = [];
 
-const mockClients: Client[] = [
-  {
-    id: "1",
-    name: "Hotel Marina",
-    email: "gestao@hotelmarina.pt",
-    phone: "+351 214 123 456",
-    address: "Av. Marginal, 2750 Cascais",
-    pools: ["1"],
-    createdAt: "2024-01-01",
-  },
-  {
-    id: "2",
-    name: "Família Costa",
-    email: "joao.costa@email.pt",
-    phone: "+351 919 876 543",
-    address: "Quinta da Beloura, 2710 Sintra",
-    pools: ["2"],
-    createdAt: "2024-01-05",
-  },
-];
+// Mock clients data - DISABLED FOR PRODUCTION
+const mockClients: Client[] = [];
 
 export interface SyncState {
   pools: Pool[];
