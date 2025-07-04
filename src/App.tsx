@@ -6139,6 +6139,103 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="pending">Pendente</option>
                         <option value="in_progress">Em Progresso</option>
                         <option value="completed">Concluída</option>
+                        <option value="cancelled">Cancelada</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Início
+                      </label>
+                      <input
+                        type="date"
+                        defaultValue={editingWork?.startDate?.split("T")[0]}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Data de Conclusão Prevista
+                      </label>
+                      <input
+                        type="date"
+                        defaultValue={
+                          editingWork?.expectedEndDate?.split("T")[0]
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Responsável
+                      </label>
+                      <input
+                        type="text"
+                        defaultValue={editingWork?.assignedTo}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Técnico responsável"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Valor Orçamentado (€)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        defaultValue={editingWork?.budgetValue}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0.00"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Telefone do Cliente
+                      </label>
+                      <input
+                        type="tel"
+                        defaultValue={editingWork?.clientPhone}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="+351 912 345 678"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Email do Cliente
+                      </label>
+                      <input
+                        type="email"
+                        defaultValue={editingWork?.clientEmail}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="cliente@email.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Prioridade
+                      </label>
+                      <select
+                        defaultValue={editingWork?.priority || "medium"}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="low">Baixa</option>
+                        <option value="medium">Média</option>
+                        <option value="high">Alta</option>
+                        <option value="urgent">Urgente</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de Obra
+                      </label>
+                      <select
+                        defaultValue={editingWork?.workType || "installation"}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="installation">Instalação</option>
+                        <option value="maintenance">Manutenção</option>
+                        <option value="repair">Reparação</option>
+                        <option value="renovation">Renovação</option>
+                        <option value="inspection">Inspeção</option>
                       </select>
                     </div>
                   </div>
