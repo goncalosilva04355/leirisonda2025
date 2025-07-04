@@ -354,20 +354,28 @@ class AuthService {
 
       return { success: true, user: userProfile };
     } catch (error: any) {
-      console.error("Firebase login error:", error);
+      // Only log actual authentication errors, not network/initialization errors
+      if (error.code && error.code.startsWith("auth/")) {
+        console.log("🔐 Firebase auth error:", error.code);
+      }
 
       let errorMessage = "Credenciais inválidas";
       if (error.code === "auth/user-not-found") {
         errorMessage = "Utilizador não encontrado";
-      } else if (error.code === "auth/wrong-password") {
+      } else if (
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/invalid-credential"
+      ) {
         errorMessage = "Password incorreta";
       } else if (error.code === "auth/too-many-requests") {
         errorMessage = "Muitas tentativas. Tente novamente mais tarde";
       } else if (
         error.code === "auth/network-request-failed" ||
-        error.message === "Firebase timeout"
+        error.message === "Firebase timeout" ||
+        error.message === "Firebase Auth not initialized" ||
+        error.message === "Firestore not initialized"
       ) {
-        // Network error - throw to trigger fallback to mock auth
+        // Network or initialization error - throw to trigger fallback to mock auth
         throw error;
       } else if (error.message && error.message.includes("fetch")) {
         // General network fetch error - throw to trigger fallback
