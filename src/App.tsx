@@ -270,7 +270,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -3473,6 +3473,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               lastSync,
               syncWithFirebase,
               enableSync,
+            }}
+            notifications={{
+              pushPermission,
+              notificationsEnabled,
+              requestNotificationPermission,
+              testPushNotification,
+              sendWorkAssignmentNotification,
             }}
           />
         );
