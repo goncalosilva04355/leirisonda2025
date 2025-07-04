@@ -637,7 +637,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or��amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or���amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -783,23 +783,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
-    // Always add to assigned works regardless of notification settings
-    const newAssignedWork = {
-      id: Date.now(),
-      title: workTitle,
-      assignedTo: assignedTo,
-      dateAssigned: new Date().toISOString(),
-      status: "Nova",
-    };
-    setAssignedWorks((prev) => [newAssignedWork, ...prev]);
+    // Only add to assigned works if the work is assigned to the current user
+    if (currentUser && assignedTo === currentUser.name) {
+      const newAssignedWork = {
+        id: Date.now(),
+        title: workTitle,
+        assignedTo: assignedTo,
+        dateAssigned: new Date().toISOString(),
+        status: "Nova",
+      };
+      setAssignedWorks((prev) => [newAssignedWork, ...prev]);
 
-    // Send notification if enabled and permission granted
-    if (notificationsEnabled && Notification.permission === "granted") {
-      showNotification(
-        "Nova Obra Atribuída",
-        `A obra "${workTitle}" foi-lhe atribuída`,
-        "work-assignment",
-      );
+      // Send notification if enabled and permission granted
+      if (notificationsEnabled && Notification.permission === "granted") {
+        showNotification(
+          "Nova Obra Atribuída",
+          `A obra "${workTitle}" foi-lhe atribuída`,
+          "work-assignment",
+        );
+      }
     }
   };
 
