@@ -636,7 +636,7 @@ function App() {
                       <span className="text-blue-600">🔄</span>
                     </div>
                     <span className="font-medium text-blue-900">
-                      Diagn��stico de Sincronização
+                      Diagnóstico de Sincronização
                     </span>
                   </button>
                 </div>
