@@ -914,7 +914,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç����o: ${work.location}
+   Localizaç������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -1837,8 +1837,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 currentUser.name,
                                 ":",
                                 {
+                                  currentUserName: currentUser.name,
                                   totalWorks: works.length,
                                   assignedWorks: assignedWorks.length,
+                                  allWorks: works.map((w) => ({
+                                    id: w.id,
+                                    title: w.title,
+                                    assignedTo: w.assignedTo,
+                                    assignedUsers: w.assignedUsers,
+                                    matches:
+                                      w.assignedTo
+                                        ?.toLowerCase()
+                                        .includes(
+                                          currentUser.name.toLowerCase(),
+                                        ) ||
+                                      w.assignedUsers?.some((user) =>
+                                        user.name
+                                          ?.toLowerCase()
+                                          .includes(
+                                            currentUser.name.toLowerCase(),
+                                          ),
+                                      ),
+                                  })),
                                   userWorks: assignedWorks.map((w) => ({
                                     id: w.id,
                                     title: w.title,
