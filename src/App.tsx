@@ -593,24 +593,34 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      // Close sidebar first
+      console.log("🔄 Initiating logout process...");
+
+      // Close sidebar immediately
       setSidebarOpen(false);
+
+      // Clear current user state immediately for better UX
+      setCurrentUser(null);
+      setIsAuthenticated(false);
 
       // Clear form and navigate to dashboard
       setLoginForm({ email: "", password: "" });
       navigateToSection("dashboard");
 
-      // Perform logout
+      // Perform actual logout
       await authService.logout();
 
-      // Auth state will be updated by the listener
-      console.log("Logout completed successfully");
+      console.log("✅ Logout completed successfully");
     } catch (error) {
-      console.error("Error during logout:", error);
-      // Force close sidebar and reset state even if logout fails
+      console.error("❌ Error during logout:", error);
+
+      // Force clear state even if logout service fails
       setSidebarOpen(false);
+      setCurrentUser(null);
+      setIsAuthenticated(false);
       setLoginForm({ email: "", password: "" });
       navigateToSection("dashboard");
+
+      console.log("🔧 Forced logout state clear completed");
     }
   };
 
@@ -3112,7 +3122,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={3}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Observa�����ões sobre a obra..."
+                          placeholder="Observa����ões sobre a obra..."
                         />
                       </div>
 
@@ -6451,7 +6461,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                Partilhar Relat��rio
+                Partilhar Relat����rio
               </h2>
               <button
                 onClick={() => {
