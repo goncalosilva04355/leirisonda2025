@@ -152,7 +152,7 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
             ${statusInfo.bgColor} border-gray-200
             ${showText ? "pr-3" : ""}
           `}
-          title={error || statusInfo.text}
+          title={syncError || statusInfo.text}
         >
           <IconComponent
             className={`
