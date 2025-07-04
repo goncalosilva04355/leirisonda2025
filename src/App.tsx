@@ -21,6 +21,7 @@ import {
   Shield,
   Check,
   AlertCircle,
+  Download,
 } from "lucide-react";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
