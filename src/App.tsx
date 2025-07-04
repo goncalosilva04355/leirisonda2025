@@ -4834,7 +4834,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>�� Estado e localizaç��o</li>
                       <li>• Informações de clientes</li>
-                      <li>• Histórico de manutenç��es</li>
+                      <li>��� Histórico de manutenç��es</li>
                       <li>• Próximas intervenções</li>
                     </ul>
                   </div>
@@ -7050,9 +7050,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div
+    <AutoSyncProvider
+      enabled={true}
+      syncInterval={1000}
+      collections={["users", "pools", "maintenance", "works", "clients"]}
+      showNotifications={false}
+    >
+      <div className="min-h-screen bg-gray-50">
+        {/* Sidebar */}
+        <div
         className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
