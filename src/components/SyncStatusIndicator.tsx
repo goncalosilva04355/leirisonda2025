@@ -22,7 +22,20 @@ export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
   showText = false,
   className = "",
 }) => {
-  const { isActive, syncing, lastSync, error } = useAutoSync();
+  let syncData;
+  try {
+    syncData = useAutoSync();
+  } catch (error) {
+    console.warn("SyncStatusIndicator: useAutoSync error", error);
+    syncData = {
+      isActive: false,
+      syncing: false,
+      lastSync: null,
+      error: "Sync unavailable",
+    };
+  }
+
+  const { isActive, syncing, lastSync, error: syncError } = syncData;
 
   const getSizeClasses = () => {
     switch (size) {
