@@ -241,9 +241,18 @@ class AuthService {
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
+      // Additional validation before Firebase call
+      if (!auth) {
+        throw new Error("Firebase Auth not initialized");
+      }
+
+      if (!email || !password) {
+        throw new Error("Email and password are required");
+      }
+
       const userCredential = await signInWithEmailAndPassword(
         auth,
-        email,
+        email.trim(),
         password,
       );
       const firebaseUser = userCredential.user;
