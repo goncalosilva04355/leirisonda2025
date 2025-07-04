@@ -379,23 +379,35 @@ export function useDataSync(): SyncState & SyncActions {
 
   // Pool actions
   const addPool = useCallback(
-    (poolData: Omit<Pool, "id" | "createdAt">) => {
+    async (poolData: Omit<Pool, "id" | "createdAt">) => {
       const newPool: Pool = {
         ...poolData,
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
       };
 
+      // Add to local state immediately
       setState((prev) => ({
         ...prev,
         pools: [...prev.pools, newPool],
       }));
 
-      if (syncEnabled) {
-        syncWithFirebase();
+      // Add to localStorage for backup
+      const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
+      savedPools.push(newPool);
+      localStorage.setItem("pools", JSON.stringify(savedPools));
+
+      // Add to Firebase if sync is enabled
+      if (syncEnabled && realFirebaseService.isReady()) {
+        try {
+          await realFirebaseService.addPool(newPool);
+          console.log("Pool added to Firebase successfully");
+        } catch (error) {
+          console.error("Failed to add pool to Firebase:", error);
+        }
       }
     },
-    [syncEnabled, syncWithFirebase],
+    [syncEnabled],
   );
 
   const updatePool = useCallback(
