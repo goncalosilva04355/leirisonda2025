@@ -704,7 +704,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇ��O: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇ��O: Esta ação vai eliminar permanentemente todas as obras, manuten��ões e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -898,7 +898,7 @@ ${maintenance
   .map(
     (maint, index) => `
 ${index + 1}. ${maint.poolName} - ${maint.type}
-   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | Técnico: ${maint.technician}
+   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | T��cnico: ${maint.technician}
 `,
   )
   .join("")}
@@ -1019,7 +1019,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🏗️ OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`🏗��� OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -3077,7 +3077,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usuários Atribuídos
+                            Usuários Atribuídos ({users.length} utilizadores
+                            disponíveis)
                           </label>
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra
