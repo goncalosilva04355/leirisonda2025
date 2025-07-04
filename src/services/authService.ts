@@ -208,22 +208,32 @@ class AuthService {
     email: string,
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-    // Try Firebase first if available
+    // Always try mock auth first for reliability
+    console.log("Using mock authentication for better reliability...");
+    try {
+      return await this.loginWithMock(email, password);
+    } catch (mockError: any) {
+      console.error("Mock auth failed:", mockError);
+    }
+
+    // Try Firebase as fallback if available
     if (auth && db) {
-      console.log("Attempting Firebase login...");
+      console.log("Attempting Firebase login as fallback...");
       try {
         return await this.loginWithFirebase(email, password);
       } catch (error: any) {
-        console.error("Firebase login failed, falling back to mock:", error);
-        // Fall through to mock auth
+        console.error("Firebase login error:", error);
+        return {
+          success: false,
+          error: "Erro de autenticação. Tente novamente.",
+        };
       }
-    } else {
-      console.log("Firebase not available, using mock auth directly");
     }
 
-    // Fallback to mock authentication
-    console.log("Using mock authentication...");
-    return await this.loginWithMock(email, password);
+    return {
+      success: false,
+      error: "Sistema de autenticação indisponível",
+    };
   }
 
   private async loginWithFirebase(
