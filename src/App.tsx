@@ -1745,18 +1745,39 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   {/* Actions */}
                   <div className="flex space-x-4 pt-6 border-t border-gray-200">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Tipo de Obra *
-                      </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-                        <option value="">Selecionar tipo</option>
-                        <option value="construcao">Construção Nova</option>
-                        <option value="renovacao">Renovação</option>
-                        <option value="manutencao-pesada">
-                          Manutenção Pesada
-                        </option>
-                        <option value="reparacao">Reparação</option>
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection("dashboard")}
+                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const form = e.target.closest('form');
+                        const workTitle = form.querySelector('input[placeholder*="LS-"]').value || "Nova Obra";
+                        const responsibleUser = form.querySelector('select[aria-label="Usuários Atribuídos"]');
+                        const selectedUserId = responsibleUser ? responsibleUser.value : null;
+
+                        if (selectedUserId) {
+                          const selectedUser = users.find(u => u.id == selectedUserId);
+                          if (selectedUser) {
+                            sendWorkAssignmentNotification(workTitle, selectedUser.name);
+                          }
+                        }
+
+                        alert(
+                          "Obra criada com sucesso! " + (selectedUserId ? "Notificação enviada ao responsável." : ""),
+                        );
+                        setActiveSection("dashboard");
+                      }}
+                      className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+                    >
+                      <Building2 className="h-4 w-4" />
+                      <span>Criar Obra</span>
+                    </button>
                         <option value="instalacao">
                           Instalação Equipamentos
                         </option>
