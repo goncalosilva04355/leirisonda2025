@@ -567,6 +567,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     setUploadedPhotos([]);
   };
 
+  // Clear photos when changing sections
+  useEffect(() => {
+    if (activeSection !== "nova-obra" && activeSection !== "nova-manutencao") {
+      setUploadedPhotos([]);
+    }
+  }, [activeSection]);
+
   const handleDragOver = (e) => {
     e.preventDefault();
   };
