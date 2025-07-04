@@ -67,6 +67,7 @@ class MockAuthService {
     const newUser: MockUser = {
       uid: `mock-${Date.now()}`,
       email,
+      password, // Store password
       name,
       role,
       active: true,
