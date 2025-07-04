@@ -23,6 +23,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { FirebaseConfig } from "./components/FirebaseConfig";
+import { AdvancedSettings } from "./components/AdvancedSettings";
 
 // Mock authentication and user data
 const ADMIN_USER = {
