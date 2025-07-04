@@ -1289,7 +1289,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠�� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -7130,7 +7130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   return (
     <AutoSyncProvider
-      enabled={true}
+      enabled={false}
       syncInterval={15000}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={false}
