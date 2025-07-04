@@ -267,9 +267,9 @@ function App() {
     savedInterventions.push(interventionData);
     localStorage.setItem("interventions", JSON.stringify(savedInterventions));
 
-    // Also add to maintenance array for reports and listings
+    // Add to maintenance sync system
     const newMaintenance = {
-      id: Date.now(),
+      poolId: interventionData.poolId,
       poolName: interventionData.poolName,
       type: "Manutenção Regular",
       scheduledDate: maintenanceForm.date,
@@ -277,11 +277,10 @@ function App() {
       status: maintenanceForm.status,
       description: maintenanceForm.workPerformed || "Manutenção realizada",
       notes: maintenanceForm.observations,
-      createdAt: new Date().toISOString(),
     };
 
-    const updatedMaintenance = [...maintenance, newMaintenance];
-    localStorage.setItem("maintenance", JSON.stringify(updatedMaintenance));
+    // Use sync system to add maintenance (will handle Firebase and localStorage)
+    addMaintenance(newMaintenance);
 
     console.log("Manutenção salva com sucesso:", interventionData);
 
@@ -722,7 +721,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relat��rio PDF. Tente novamente.");
+      alert("Erro ao gerar o relatório PDF. Tente novamente.");
     }
   };
 
