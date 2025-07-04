@@ -569,11 +569,15 @@ function App() {
 
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
+      console.log("🔐 Email:", loginForm.email);
+      console.log("🔐 Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
         loginForm.email,
         loginForm.password,
       );
+
+      console.log("🔐 Auth result:", result);
 
       if (result.success && result.user) {
         console.log("✅ Login successful for:", result.user.email);
@@ -3716,7 +3720,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
-                          <option value="manutencao">Em Manutenç��o</option>
+                          <option value="manutencao">Em Manutenção</option>
                           <option value="construcao">Em Construção</option>
                         </select>
                       </div>
@@ -4458,7 +4462,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
                       >
                         <Save className="h-4 w-4" />
-                        <span>Guardar Intervenção</span>
+                        <span>Guardar Interven��ão</span>
                       </button>
                     </div>
                   </form>
