@@ -14,6 +14,34 @@
 
 ---
 
+## 📱 INSTALAÇÃO MOBILE
+
+### **iPhone (iOS)**
+
+1. **Safari** → Aceda ao site Leirisonda
+2. **Partilhar** (ícone quadrado com seta) → **"Adicionar ao Ecrã Principal"**
+3. **Confirme** "Leirisonda" → **Adicionar**
+4. **App instalada** com ícone personalizado!
+
+### **Android**
+
+1. **Chrome** → Aceda ao site Leirisonda
+2. **Banner "Instalar App"** aparece automaticamente
+3. **Toque "Instalar"** → Confirme
+4. **App instalada** como aplicação nativa!
+
+### **Funcionalidades Mobile:**
+
+- 🔔 **Notificações Push** - Obras atribuídas instantaneamente
+- 📱 **Interface Nativa** - Ecrã completo, sem barras do browser
+- ⚡ **Acesso Rápido** - Ícone Leirisonda no ecrã principal
+- 🌐 **Sincronização** - Dados em tempo real entre dispositivos
+- 📊 **Relatórios PDF** - Geração e download direto no telemóvel
+
+**📖 Guia Completo:** Consulte `GUIA-INSTALACAO-MOBILE.md` para instruções detalhadas
+
+---
+
 ## 🎨 NOVO SISTEMA DE PDF
 
 **📄 Características dos PDFs:**
