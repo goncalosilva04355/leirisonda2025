@@ -38,6 +38,17 @@ export function useRealtimeSync() {
 
     const initializeAndSubscribe = async () => {
       try {
+        // Check if Firebase is configured
+        const savedConfig = localStorage.getItem("firebase-config");
+        if (!savedConfig) {
+          setState((prev) => ({
+            ...prev,
+            loading: false,
+            error: "Firebase não configurado",
+          }));
+          return;
+        }
+
         // Initialize default data if needed
         await syncService.initializeData();
 
