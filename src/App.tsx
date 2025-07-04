@@ -1278,6 +1278,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
               </div>
 
+              {/* Pesquisar Obras */}
+              <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="flex items-center space-x-2 mb-4">
                   <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
                     <span className="text-blue-600">🔍</span>
                   </div>
