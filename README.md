@@ -1,14 +1,16 @@
-# 🚀 LEIRISONDA - Deploy com PDF Melhorado
+# 📱 LEIRISONDA - App Mobile Completa
 
-## ✅ NOVA VERSÃO PREMIUM!
+## 🆕 NOVA VERSÃO MOBILE PWA!
 
-**Última atualização:** 28 Jun 2024, 18:45  
+**Última atualização:** Janeiro 2025
 **Melhorias principais:**
 
-- ✅ **PDFs Profissionais** - Design moderno, alta qualidade, totalmente reformulado
-- ✅ Botão "Atualizar App" removido do login
-- ✅ Campo "Filtros" alterado para "Pré-filtro" na manutenção
-- ✅ Relatórios sempre em PDF com qualidade premium
+- 📱 **App Mobile Instalável** - iPhone e Android
+- 🔔 **Notificações Push** - Atribuição de obras em tempo real
+- 🌐 **Sincronização Firebase** - Dados partilhados entre dispositivos
+- 📄 **PDFs Profissionais** - Design moderno, alta qualidade
+- ⚡ **Performance Otimizada** - Carregamento rápido e interface fluida
+- 🎨 **Novo Ícone Leirisonda** - Branding profissional
 
 ---
 
