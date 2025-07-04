@@ -392,7 +392,7 @@ ${index + 1}. ${client.name}
     `;
     downloadPDF(
       content,
-      `Clientes_${new Date().toISOString().split("T")[0]}.txt`,
+      `Clientes_${new Date().toISOString().split("T")[0]}.pdf`,
     );
   };
 
