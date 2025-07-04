@@ -2737,7 +2737,7 @@ function App() {
                 </div>
               </div>
 
-              {/* Ações Rápidas */}
+              {/* Ações R��pidas */}
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center space-x-2 mb-4">
                   <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
@@ -2817,6 +2817,8 @@ function App() {
             </div>
           </div>
         );
+      default:
+        return <div>Page not found</div>;
     }
   };
 
