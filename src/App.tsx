@@ -390,7 +390,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS AÇÕES:
+PRÓXIMAS A��ÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -1486,7 +1486,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="LS-2025-163"
-                          defaultValue={`LS-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`}
+                          defaultValue={`LS-${new Date().getFullYear()}-${Math.floor(
+                            Math.random() * 1000,
+                          )
+                            .toString()
+                            .padStart(3, "0")}`}
                           required
                         />
                       </div>
@@ -1561,7 +1565,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Deixe vazio se ainda não terminou"
                           />
-                          <p className="text-xs text-gray-500 mt-1">Deixe vazio se ainda não terminou</p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Deixe vazio se ainda não terminou
+                          </p>
                         </div>
                       </div>
 
@@ -1583,7 +1589,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           id="folha-preenchida"
                           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                         />
-                        <label htmlFor="folha-preenchida" className="ml-2 text-sm text-gray-700">
+                        <label
+                          htmlFor="folha-preenchida"
+                          className="ml-2 text-sm text-gray-700"
+                        >
                           Folha de obra preenchida/feita
                         </label>
                       </div>
@@ -1733,22 +1742,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                     </div>
                   </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cliente *
-                      </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-                        <option value="">Selecionar cliente</option>
-                        {clients.map((client) => (
-                          <option key={client.id} value={client.id}>
-                            {client.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Actions */}
+                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Tipo de Obra *
@@ -1923,8 +1919,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         e.preventDefault();
                         const form = e.target.closest("form");
                         const formData = new FormData(form);
-                        const workTitle = form.querySelector('input[placeholder*="LS-"]').value || "Nova Obra";
-                        const responsibleUser = form.querySelector('select[aria-label="Usuários Atribuídos"]');
+                        const workTitle =
+                          form.querySelector('input[placeholder*="LS-"]')
+                            .value || "Nova Obra";
+                        const responsibleUser = form.querySelector(
+                          'select[aria-label="Usuários Atribuídos"]',
+                        );
                         const selectedUserId = responsibleUser
                           ? responsibleUser.value
                           : null;
@@ -2478,7 +2478,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         "Limpeza filtro areia/vidro",
                         "Verificação alimentação",
                         "Enchimento autom��tico",
-                        "Limpeza linha de água",
+                        "Limpeza linha de ��gua",
                         "Limpeza do fundo",
                         "Limpeza das paredes",
                         "Limpeza skimmers",
