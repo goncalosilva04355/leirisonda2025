@@ -217,34 +217,31 @@ export function useDataSync(): SyncState & SyncActions {
   useEffect(() => {
     const today = new Date();
 
-    // Check if app was recently cleaned - if so, start with empty data
-    const appCleaned = localStorage.getItem("app-cleaned");
-    const lastCleanup = localStorage.getItem("last-cleanup");
+    // FORCE CLEANUP: User requested removal of all old demo data
+    // Clear all localStorage data on every startup
+    console.log("🧹 FORCE CLEANUP: Removing all old demo data");
+    localStorage.removeItem("pools");
+    localStorage.removeItem("works");
+    localStorage.removeItem("maintenance");
+    localStorage.removeItem("interventions");
+    localStorage.removeItem("clients");
 
-    let shouldUseEmptyData = false;
-    if (appCleaned && lastCleanup) {
-      const cleanupTime = new Date(lastCleanup);
-      const hoursSinceCleanup =
-        (today.getTime() - cleanupTime.getTime()) / (1000 * 60 * 60);
-      shouldUseEmptyData = hoursSinceCleanup < 24; // Use empty data if cleaned within 24 hours
-    }
+    // Set cleanup flags to indicate fresh start
+    localStorage.setItem("app-cleaned", new Date().toISOString());
+    localStorage.setItem("last-cleanup", new Date().toISOString());
 
-    if (shouldUseEmptyData) {
-      // Use only mock data (no localStorage data) if recently cleaned
-      const future = mockMaintenance.filter(
-        (m) => new Date(m.scheduledDate) >= today,
-      );
+    // Start with completely empty data (no mock data)
+    setState((prev) => ({
+      ...prev,
+      pools: [],
+      maintenance: [],
+      futureMaintenance: [],
+      works: [],
+      clients: [],
+    }));
 
-      setState((prev) => ({
-        ...prev,
-        pools: [...mockPools],
-        maintenance: [...mockMaintenance],
-        futureMaintenance: future,
-        works: [...mockWorks],
-        clients: [...mockClients],
-      }));
-      return;
-    }
+    console.log("✅ Fresh start: All demo data removed, ready for new data");
+    return;
 
     // Load saved data from localStorage (normal behavior)
     const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
