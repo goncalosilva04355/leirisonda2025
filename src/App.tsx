@@ -97,7 +97,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState(ADMIN_USER);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("futuras-manutencoes");
-  const [users, setUsers] = useState(initialUsers);
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -106,6 +105,27 @@ function App() {
   const [showSettingsPage, setShowSettingsPage] = useState(false);
   const [settingsPassword, setSettingsPassword] = useState("");
   const [settingsPasswordError, setSettingsPasswordError] = useState("");
+  const [firebaseConfigured, setFirebaseConfigured] = useState(false);
+  const [syncEnabled, setSyncEnabled] = useState(false);
+
+  // Check if Firebase is configured
+  useEffect(() => {
+    const savedConfig = localStorage.getItem("firebase-config");
+    if (savedConfig) {
+      setFirebaseConfigured(true);
+      setSyncEnabled(true);
+    }
+  }, []);
+
+  // Firebase sync hooks - only use when configured
+  const syncData = syncEnabled ? useRealtimeSync() : null;
+  const userSync = syncEnabled ? useUsers() : null;
+
+  // Use Firebase data when available, fallback to local state
+  const users = syncData?.users || initialUsers;
+  const pools = syncData?.pools || [];
+  const maintenance = syncData?.maintenance || [];
+  const futureMaintenance = syncData?.futureMaintenance || [];
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
