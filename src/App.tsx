@@ -95,6 +95,17 @@ function App() {
   const [currentUser, setCurrentUser] = useState(ADMIN_USER);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("futuras-manutencoes");
+
+  // Custom setActiveSection that updates URL hash
+  const navigateToSection = (section: string) => {
+    setActiveSection(section);
+    // Update URL hash for PWA support
+    if (section !== "futuras-manutencoes") {
+      window.history.replaceState(null, "", `#${section}`);
+    } else {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  };
   const [showUserForm, setShowUserForm] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
