@@ -98,6 +98,9 @@ const mockMaintenance: Maintenance[] = [
     completedDate: "2025-01-15",
     technician: "Maria Santos",
     notes: "Piscina em excelentes condições",
+    clientName: "João Silva",
+    clientContact: "912345678",
+    location: "Quinta da Marinha, Cascais",
     createdAt: "2025-01-10",
   },
   {
@@ -111,6 +114,9 @@ const mockMaintenance: Maintenance[] = [
     completedDate: "2025-01-10",
     technician: "João Santos",
     notes: "Bomba a precisar de revisão",
+    clientName: "Condomínio Sol Nascente",
+    clientContact: "213456789",
+    location: "Estoril",
     createdAt: "2025-01-05",
   },
   {
@@ -122,6 +128,9 @@ const mockMaintenance: Maintenance[] = [
     description: "Limpeza mensal programada",
     scheduledDate: "2025-02-15",
     technician: "Maria Santos",
+    clientName: "João Silva",
+    clientContact: "912345678",
+    location: "Quinta da Marinha, Cascais",
     createdAt: "2025-01-15",
   },
   {
@@ -133,6 +142,9 @@ const mockMaintenance: Maintenance[] = [
     description: "Tratamento químico e análise da água",
     scheduledDate: "2025-02-10",
     technician: "João Santos",
+    clientName: "Condomínio Sol Nascente",
+    clientContact: "213456789",
+    location: "Estoril",
     createdAt: "2025-01-10",
   },
 ];
