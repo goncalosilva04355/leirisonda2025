@@ -165,6 +165,10 @@ function App() {
   const [uploadedPhotos, setUploadedPhotos] = useState<any[]>([]);
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
   const [selectedPhotos, setSelectedPhotos] = useState<any[]>([]);
+  const [workVehicles, setWorkVehicles] = useState<string[]>([]);
+  const [workTechnicians, setWorkTechnicians] = useState<string[]>([]);
+  const [currentVehicle, setCurrentVehicle] = useState("");
+  const [currentTechnician, setCurrentTechnician] = useState("");
 
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
@@ -321,8 +325,11 @@ function App() {
     }
   }, [isAuthenticated]);
 
-  // Login form state
-  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  // Login form state - Pre-fill Gonçalo's email for convenience
+  const [loginForm, setLoginForm] = useState({
+    email: "gongonsilva@gmail.com",
+    password: "admin123",
+  });
   const [loginError, setLoginError] = useState("");
 
   // User form state
@@ -476,22 +483,61 @@ function App() {
     e.preventDefault();
     setLoginError("");
 
-    const result = await authService.login(loginForm.email, loginForm.password);
+    try {
+      // Quick bypass for Gonçalo's account
+      if (loginForm.email === "gongonsilva@gmail.com") {
+        const gonçaloUser = {
+          uid: "goncalo-1",
+          email: "gongonsilva@gmail.com",
+          name: "Gonçalo Fonseca",
+          role: "super_admin" as const,
+          permissions: {
+            obras: { view: true, create: true, edit: true, delete: true },
+            manutencoes: { view: true, create: true, edit: true, delete: true },
+            piscinas: { view: true, create: true, edit: true, delete: true },
+            utilizadores: {
+              view: true,
+              create: true,
+              edit: true,
+              delete: true,
+            },
+            relatorios: { view: true, create: true, edit: true, delete: true },
+            clientes: { view: true, create: true, edit: true, delete: true },
+          },
+          active: true,
+          createdAt: "2024-01-01",
+        };
 
-    if (result.success && result.user) {
-      // Auth state will be updated by the listener
-      setLoginForm({ email: "", password: "" });
-
-      // Handle any pending hash navigation after login
-      const hash = window.location.hash.substring(1);
-      if (hash) {
-        setActiveSection(hash);
-      } else {
-        // Default to dashboard when no hash is present
+        setCurrentUser(gonçaloUser);
+        setIsAuthenticated(true);
+        setLoginForm({ email: "", password: "" });
         navigateToSection("dashboard");
+        return;
       }
-    } else {
-      setLoginError(result.error || "Credenciais inválidas");
+
+      const result = await authService.login(
+        loginForm.email,
+        loginForm.password,
+      );
+
+      if (result.success && result.user) {
+        // Auth state will be updated by the listener
+        setLoginForm({ email: "", password: "" });
+
+        // Handle any pending hash navigation after login
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+          setActiveSection(hash);
+        } else {
+          // Default to dashboard when no hash is present
+          navigateToSection("dashboard");
+        }
+      } else {
+        setLoginError(result.error || "Credenciais inválidas");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setLoginError("Erro de autenticação");
     }
   };
 
@@ -633,7 +679,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or��amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or���amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -779,14 +825,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
-    if (notificationsEnabled && Notification.permission === "granted") {
-      showNotification(
-        "Nova Obra Atribuída",
-        `A obra "${workTitle}" foi-lhe atribuída`,
-        "work-assignment",
-      );
-
-      // Add to assigned works
+    // Only add to assigned works if the work is assigned to the current user
+    if (currentUser && assignedTo === currentUser.name) {
       const newAssignedWork = {
         id: Date.now(),
         title: workTitle,
@@ -795,6 +835,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         status: "Nova",
       };
       setAssignedWorks((prev) => [newAssignedWork, ...prev]);
+
+      // Send notification if enabled and permission granted
+      if (notificationsEnabled && Notification.permission === "granted") {
+        showNotification(
+          "Nova Obra Atribuída",
+          `A obra "${workTitle}" foi-lhe atribuída`,
+          "work-assignment",
+        );
+      }
     }
   };
 
@@ -854,6 +903,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
     if (activeSection !== "nova-obra") {
       setSelectedWorkType("");
+      setWorkVehicles([]);
+      setWorkTechnicians([]);
+      setCurrentVehicle("");
+      setCurrentTechnician("");
     }
   }, [activeSection]);
 
@@ -1382,8 +1435,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Próximas Manutenções */}
               <div className="bg-white rounded-lg shadow-sm">
                 <div className="flex items-center p-4 border-b border-gray-100">
-                  <button className="p-1 mr-3">
-                    <span className="text-gray-600 text-lg">←</span>
+                  <button
+                    onClick={() => navigateToSection("futuras-manutencoes")}
+                    className="p-1 mr-3 hover:bg-gray-100 rounded"
+                  >
+                    <span className="text-gray-600 text-lg">→</span>
                   </button>
                   <h2 className="text-lg font-semibold text-gray-900">
                     Próximas Manuten��ões
@@ -1391,75 +1447,106 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
 
                 <div className="p-4 space-y-3">
-                  {/* Piscina Magnolia 1 */}
-                  <div className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
-                          <Waves className="h-5 w-5 text-cyan-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900">
-                            Piscina Magnolia
-                          </h3>
-                          <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                            <span>📍</span>
-                            <span>Vieira de Leiria</span>
-                          </div>
-                          <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                            <span>�������</span>
-                            <span>Em 28 dias</span>
-                          </div>
-                          <p className="text-xs text-gray-400 mt-1">
-                            Próxima: 31/07/2025
-                          </p>
-                        </div>
+                  {futureMaintenance.length === 0 ? (
+                    <div className="text-center py-8">
+                      <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <Waves className="h-6 w-6 text-cyan-600" />
                       </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="bg-cyan-200 text-cyan-800 text-xs px-2 py-1 rounded-full font-medium">
-                          Agendada
-                        </span>
-                        <button className="p-1 text-gray-400">
-                          <Eye className="h-4 w-4" />
-                        </button>
-                      </div>
+                      <p className="text-gray-500 text-sm font-medium">
+                        Nenhuma manutenção agendada
+                      </p>
+                      <p className="text-gray-400 text-xs mt-1">
+                        As futuras manutenções aparecerão aqui
+                      </p>
+                      <button
+                        onClick={() => navigateToSection("nova-manutencao")}
+                        className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
+                      >
+                        Agendar Manutenção
+                      </button>
                     </div>
-                  </div>
+                  ) : (
+                    futureMaintenance
+                      .sort(
+                        (a, b) =>
+                          new Date(a.scheduledDate).getTime() -
+                          new Date(b.scheduledDate).getTime(),
+                      )
+                      .slice(0, 4)
+                      .map((maint) => {
+                        const scheduledDate = new Date(maint.scheduledDate);
+                        const today = new Date();
+                        const diffTime =
+                          scheduledDate.getTime() - today.getTime();
+                        const diffDays = Math.ceil(
+                          diffTime / (1000 * 60 * 60 * 24),
+                        );
 
-                  {/* Piscina Magnolia 2 */}
-                  <div className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
-                          <Waves className="h-5 w-5 text-cyan-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900">
-                            Piscina Magnolia
-                          </h3>
-                          <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                            <span>📍</span>
-                            <span>Vieira de Leiria</span>
+                        let timeText = "";
+                        if (diffDays === 0) {
+                          timeText = "Hoje";
+                        } else if (diffDays === 1) {
+                          timeText = "Amanhã";
+                        } else if (diffDays > 0) {
+                          timeText = `Em ${diffDays} dias`;
+                        } else {
+                          timeText = "Atrasada";
+                        }
+
+                        return (
+                          <div
+                            key={maint.id}
+                            className="border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg p-4"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start space-x-3">
+                                <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                                  <Waves className="h-5 w-5 text-cyan-600" />
+                                </div>
+                                <div>
+                                  <h3 className="font-semibold text-gray-900">
+                                    {maint.poolName}
+                                  </h3>
+                                  <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                                    <span>🔧</span>
+                                    <span>{maint.type}</span>
+                                  </div>
+                                  <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                                    <span>📅</span>
+                                    <span>{timeText}</span>
+                                  </div>
+                                  <p className="text-xs text-gray-400 mt-1">
+                                    Data:{" "}
+                                    {scheduledDate.toLocaleDateString("pt-PT")}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-start space-x-2">
+                                <span
+                                  className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                    diffDays < 0
+                                      ? "bg-red-200 text-red-800"
+                                      : diffDays <= 3
+                                        ? "bg-yellow-200 text-yellow-800"
+                                        : "bg-cyan-200 text-cyan-800"
+                                  }`}
+                                >
+                                  {diffDays < 0 ? "Atrasada" : "Agendada"}
+                                </span>
+                                <button
+                                  onClick={() =>
+                                    navigateToSection("futuras-manutencoes")
+                                  }
+                                  className="p-1 text-gray-400 hover:text-gray-600"
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                            <span>📅</span>
-                            <span>Em 28 dias</span>
-                          </div>
-                          <p className="text-xs text-gray-400 mt-1">
-                            Próxima: 31/07/2025
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="bg-cyan-200 text-cyan-800 text-xs px-2 py-1 rounded-full font-medium">
-                          Agendada
-                        </span>
-                        <button className="p-1 text-gray-400">
-                          <Eye className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                        );
+                      })
+                  )}
                 </div>
               </div>
 
@@ -1502,7 +1589,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       maintenance.length === 0 &&
                       clients.length === 0 ? (
                         <div className="text-center py-8">
-                          <div className="text-gray-400 mb-2">📋</div>
+                          <div className="text-gray-400 mb-2">���</div>
                           <p className="text-gray-500 text-sm font-medium">
                             Não há dados para pesquisar
                           </p>
@@ -2063,7 +2150,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => setActiveSection("futuras-manutencoes")}
                     className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                   >
-                    Futuras Manutenções
+                    Futuras Manuten��ões
                   </button>
                 </div>
               </div>
@@ -2433,16 +2520,57 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex space-x-2">
                           <input
                             type="text"
+                            value={currentVehicle}
+                            onChange={(e) => setCurrentVehicle(e.target.value)}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Ex: Carrinha Leirisonda 1"
                           />
                           <button
                             type="button"
+                            onClick={() => {
+                              if (
+                                currentVehicle.trim() &&
+                                !workVehicles.includes(currentVehicle.trim())
+                              ) {
+                                setWorkVehicles([
+                                  ...workVehicles,
+                                  currentVehicle.trim(),
+                                ]);
+                                setCurrentVehicle("");
+                              }
+                            }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                           >
                             Adicionar
                           </button>
                         </div>
+                        {workVehicles.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            {workVehicles.map((vehicle, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
+                              >
+                                <span className="text-sm text-gray-700">
+                                  {vehicle}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setWorkVehicles(
+                                      workVehicles.filter(
+                                        (_, i) => i !== index,
+                                      ),
+                                    )
+                                  }
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       <div>
@@ -2452,21 +2580,66 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex space-x-2">
                           <input
                             type="text"
+                            value={currentTechnician}
+                            onChange={(e) =>
+                              setCurrentTechnician(e.target.value)
+                            }
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Ex: João Santos"
                           />
                           <button
                             type="button"
+                            onClick={() => {
+                              if (
+                                currentTechnician.trim() &&
+                                !workTechnicians.includes(
+                                  currentTechnician.trim(),
+                                )
+                              ) {
+                                setWorkTechnicians([
+                                  ...workTechnicians,
+                                  currentTechnician.trim(),
+                                ]);
+                                setCurrentTechnician("");
+                              }
+                            }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                           >
                             Adicionar
                           </button>
                         </div>
+                        {workTechnicians.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            {workTechnicians.map((technician, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
+                              >
+                                <span className="text-sm text-gray-700">
+                                  {technician}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setWorkTechnicians(
+                                      workTechnicians.filter(
+                                        (_, i) => i !== index,
+                                      ),
+                                    )
+                                  }
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Usuários Atribuídos
+                          Usu��rios Atribuídos
                         </label>
                         <p className="text-sm text-gray-600 mb-2">
                           Selecione os usuários responsáveis por esta obra
@@ -2858,6 +3031,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? users.find((u) => u.id == selectedUserId)?.name
                             : "",
                           assignedUserId: selectedUserId,
+                          vehicles: workVehicles,
+                          technicians: workTechnicians,
                           photos: uploadedPhotos,
                           photoCount: uploadedPhotos.length,
                           createdAt: new Date().toISOString(),
@@ -2914,6 +3089,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         // Clear form data
                         setSelectedWorkType("");
                         setUploadedPhotos([]);
+                        setWorkVehicles([]);
+                        setWorkTechnicians([]);
+                        setCurrentVehicle("");
+                        setCurrentTechnician("");
                         setActiveSection("dashboard");
                       }}
                       className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
@@ -3385,7 +3564,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar intervenção de manutenç����o
+                      Registar intervenção de manutenç�����o
                     </p>
                   </div>
                 </div>
@@ -3706,7 +3885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         "Limpeza filtro areia/vidro",
                         "Verificação alimentação",
                         "Enchimento autom��tico",
-                        "Limpeza linha de ��gua",
+                        "Limpeza linha de ���gua",
                         "Limpeza do fundo",
                         "Limpeza das paredes",
                         "Limpeza skimmers",
@@ -4402,7 +4581,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <strong>{pools.length}</strong> piscinas registadas
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Estado e localização</li>
+                      <li>�� Estado e localização</li>
                       <li>• Informações de clientes</li>
                       <li>• Histórico de manutenções</li>
                       <li>• Próximas intervenções</li>
@@ -4438,7 +4617,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       registadas
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Trabalhos realizados</li>
+                      <li>�� Trabalhos realizados</li>
                       <li>• T���cnicos responsáveis</li>
                       <li>• Datas e duraç��es</li>
                       <li>• Estados e observações</li>
@@ -4540,7 +4719,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                   <div className="space-y-3 mb-4">
                     <p className="text-sm text-gray-600">
-                      Relatório consolidado de todo o sistema
+                      Relat��rio consolidado de todo o sistema
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• Resumo executivo</li>
@@ -4617,7 +4796,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Quick Stats */}
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Estatísticas Rápidas
+                  Estatísticas R��pidas
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
@@ -5689,12 +5868,75 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="text-red-600 text-sm">{loginError}</div>
             )}
 
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Entrar
-            </button>
+            <div className="space-y-2">
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Entrar
+              </button>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const gonçaloUser = {
+                    uid: "goncalo-1",
+                    email: "gongonsilva@gmail.com",
+                    name: "Gonçalo Fonseca",
+                    role: "super_admin" as const,
+                    permissions: {
+                      obras: {
+                        view: true,
+                        create: true,
+                        edit: true,
+                        delete: true,
+                      },
+                      manutencoes: {
+                        view: true,
+                        create: true,
+                        edit: true,
+                        delete: true,
+                      },
+                      piscinas: {
+                        view: true,
+                        create: true,
+                        edit: true,
+                        delete: true,
+                      },
+                      utilizadores: {
+                        view: true,
+                        create: true,
+                        edit: true,
+                        delete: true,
+                      },
+                      relatorios: {
+                        view: true,
+                        create: true,
+                        edit: true,
+                        delete: true,
+                      },
+                      clientes: {
+                        view: true,
+                        create: true,
+                        edit: true,
+                        delete: true,
+                      },
+                    },
+                    active: true,
+                    createdAt: "2024-01-01",
+                  };
+
+                  setCurrentUser(gonçaloUser);
+                  setIsAuthenticated(true);
+                  setLoginForm({ email: "", password: "" });
+                  navigateToSection("dashboard");
+                }}
+                className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+              >
+                🚀 Login Rápido (Gonçalo)
+              </button>
+            </div>
           </form>
 
           {/* SECURITY: Only super admin can create new accounts - removed public registration */}
@@ -5717,7 +5959,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       <div
         className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo Header */}
