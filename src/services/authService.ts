@@ -312,8 +312,17 @@ class AuthService {
       );
       const firebaseUser = userCredential.user;
 
-      // Get user profile from Firestore
-      const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+      // Get user profile from Firestore with error handling
+      let userDoc;
+      try {
+        if (!db) {
+          throw new Error("Firestore not available");
+        }
+        userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+      } catch (firestoreError: any) {
+        console.warn("Firestore access failed:", firestoreError.message);
+        throw new Error("Firestore not available");
+      }
 
       if (!userDoc.exists()) {
         // Auto-create profile for existing Firebase Auth users
