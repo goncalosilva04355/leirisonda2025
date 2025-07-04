@@ -97,6 +97,30 @@ function App() {
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+
+  // Auto-login para Gonçalo
+  useEffect(() => {
+    const gonçaloUser = {
+      uid: "goncalo-1",
+      email: "gongonsilva@gmail.com",
+      name: "Gonçalo Fonseca",
+      role: "super_admin" as const,
+      permissions: {
+        obras: { view: true, create: true, edit: true, delete: true },
+        manutencoes: { view: true, create: true, edit: true, delete: true },
+        piscinas: { view: true, create: true, edit: true, delete: true },
+        utilizadores: { view: true, create: true, edit: true, delete: true },
+        relatorios: { view: true, create: true, edit: true, delete: true },
+        clientes: { view: true, create: true, edit: true, delete: true },
+      },
+      active: true,
+      createdAt: "2024-01-01",
+    };
+
+    setCurrentUser(gonçaloUser);
+    setIsAuthenticated(true);
+    localStorage.setItem("currentUser", JSON.stringify(gonçaloUser));
+  }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
   // SECURITY: Register form removed - only super admin can create users
@@ -266,7 +290,7 @@ function App() {
       // Set up auth state listener only AFTER forced logout
       const unsubscribe = authService.onAuthStateChanged((user) => {
         console.log(
-          "🔒 AUTH STATE CHANGE:",
+          "���� AUTH STATE CHANGE:",
           user ? `User ${user.email} logged in` : "No user - login required",
         );
 
