@@ -620,7 +620,7 @@ function App() {
                     </button>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-700">
-                        Backup automático diário
+                        Backup autom��tico diário
                       </span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
