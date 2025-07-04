@@ -32,6 +32,7 @@ import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 import { InstallPrompt } from "./components/InstallPrompt";
 import { AuthSyncDiagnostic } from "./components/AuthSyncDiagnostic";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
+import { RegisterForm } from "./components/RegisterForm";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
@@ -967,7 +968,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
-    console.log("🔍 DEBUG: sendWorkAssignmentNotification called with:", {
+    console.log("�� DEBUG: sendWorkAssignmentNotification called with:", {
       workTitle,
       assignedTo,
       currentUser: currentUser?.name,
@@ -2822,7 +2823,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             placeholder="Deixe vazio se ainda não terminou"
                           />
                           <p className="text-xs text-gray-500 mt-1">
-                            Deixe vazio se ainda não terminou
+                            Deixe vazio se ainda n��o terminou
                           </p>
                         </div>
                       </div>
