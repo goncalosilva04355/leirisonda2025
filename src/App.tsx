@@ -3918,7 +3918,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar intervenção de manutenç�����o
+                      Registar interven��ão de manutenç�����o
                     </p>
                   </div>
                 </div>
@@ -4485,8 +4485,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="min-h-screen bg-gray-50">
             <div className="px-4 py-4 space-y-6">
               <UserPermissionsManager />
-                              Criado: {user.createdAt}
-                            </span>
                           </div>
                         </div>
                       </div>
