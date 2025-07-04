@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
+import { mockAuthService } from "./mockAuthService";
 
 export interface UserProfile {
   uid: string;
