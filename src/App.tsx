@@ -1140,9 +1140,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </button>
 
                 {/* Obras Atribuídas */}
-                <div className="bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm">
+                <button
+                  onClick={() => navigateToSection("obras")}
+                  className="w-full bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="text-left">
                       <h3 className="text-lg font-semibold text-gray-900">
                         Obras Atribuídas
                       </h3>
@@ -1152,7 +1155,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {assignedWorks.length}
                     </div>
                   </div>
-                </div>
+                </button>
               </div>
 
               {/* Lista de Obras Atribuídas */}
