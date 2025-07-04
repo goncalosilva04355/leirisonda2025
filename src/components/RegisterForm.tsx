@@ -22,16 +22,28 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Prevent multiple submissions
+    if (loading) {
+      return;
+    }
+
     setError("");
+    setLoading(true);
+
+    // Add small delay to ensure UI updates
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     // Validation
     if (!formData.name.trim()) {
       setError("Nome é obrigatório");
+      setLoading(false);
       return;
     }
 
     if (!formData.email.trim()) {
       setError("Email é obrigatório");
+      setLoading(false);
       return;
     }
 
@@ -39,20 +51,21 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email.trim())) {
       setError("Por favor, insira um email válido");
+      setLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
       setError("Password deve ter pelo menos 6 caracteres");
+      setLoading(false);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords não coincidem");
+      setLoading(false);
       return;
     }
-
-    setLoading(true);
 
     try {
       const result = await authService.register(
