@@ -212,7 +212,29 @@ export function useDataSync(): SyncState & SyncActions {
       const performInitialSync = async () => {
         const initialized = realFirebaseService.initialize();
         if (initialized) {
-          await syncWithFirebase();
+          setState((prev) => ({ ...prev, isLoading: true, error: null }));
+
+          try {
+            const connectionOk = await realFirebaseService.testConnection();
+            if (!connectionOk) {
+              throw new Error("Firebase connection test failed");
+            }
+
+            // Set successful sync immediately to remove "waiting" status
+            setState((prev) => ({
+              ...prev,
+              isLoading: false,
+              lastSync: new Date(),
+              error: null,
+            }));
+          } catch (error: any) {
+            console.error("Initial Firebase sync failed:", error);
+            setState((prev) => ({
+              ...prev,
+              isLoading: false,
+              error: `Sync failed: ${error.message}`,
+            }));
+          }
         } else {
           setState((prev) => ({
             ...prev,
@@ -223,7 +245,7 @@ export function useDataSync(): SyncState & SyncActions {
 
       performInitialSync();
     }
-  }, [syncEnabled, syncWithFirebase]);
+  }, [syncEnabled]);
 
   // Real-time listeners
   useEffect(() => {
