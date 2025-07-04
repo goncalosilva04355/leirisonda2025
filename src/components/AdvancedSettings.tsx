@@ -286,44 +286,96 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
         {/* Tab Navigation */}
         <div className="border-b border-gray-200">
-          <div className="flex">
+          <div className="grid grid-cols-7 text-sm">
             <button
               onClick={() => setActiveTab("firebase")}
-              className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${
+              className={`py-4 px-3 text-center font-medium transition-colors ${
                 activeTab === "firebase"
                   ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
                   : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
               }`}
             >
-              <div className="flex items-center justify-center space-x-2">
-                <Database className="w-5 h-5" />
-                <span>Configuração Firebase</span>
+              <div className="flex flex-col items-center space-y-1">
+                <Database className="w-4 h-4" />
+                <span>Firebase</span>
               </div>
             </button>
             <button
               onClick={() => setActiveTab("sync-test")}
-              className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${
+              className={`py-4 px-3 text-center font-medium transition-colors ${
                 activeTab === "sync-test"
                   ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
                   : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
               }`}
             >
-              <div className="flex items-center justify-center space-x-2">
-                <TestTube className="w-5 h-5" />
-                <span>Teste de Sincronização</span>
+              <div className="flex flex-col items-center space-y-1">
+                <TestTube className="w-4 h-4" />
+                <span>Sync Test</span>
               </div>
             </button>
             <button
               onClick={() => setActiveTab("notifications")}
-              className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${
+              className={`py-4 px-3 text-center font-medium transition-colors ${
                 activeTab === "notifications"
                   ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
                   : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
               }`}
             >
-              <div className="flex items-center justify-center space-x-2">
-                <Wifi className="w-5 h-5" />
-                <span>Notificações Push</span>
+              <div className="flex flex-col items-center space-y-1">
+                <Wifi className="w-4 h-4" />
+                <span>Push</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab("utilizadores")}
+              className={`py-4 px-3 text-center font-medium transition-colors ${
+                activeTab === "utilizadores"
+                  ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex flex-col items-center space-y-1">
+                <UserCheck className="w-4 h-4" />
+                <span>Utilizadores</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab("relatorios")}
+              className={`py-4 px-3 text-center font-medium transition-colors ${
+                activeTab === "relatorios"
+                  ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex flex-col items-center space-y-1">
+                <BarChart3 className="w-4 h-4" />
+                <span>Relatórios</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab("clientes")}
+              className={`py-4 px-3 text-center font-medium transition-colors ${
+                activeTab === "clientes"
+                  ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex flex-col items-center space-y-1">
+                <Users className="w-4 h-4" />
+                <span>Clientes</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab("configuracoes")}
+              className={`py-4 px-3 text-center font-medium transition-colors ${
+                activeTab === "configuracoes"
+                  ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex flex-col items-center space-y-1">
+                <Settings className="w-4 h-4" />
+                <span>Config</span>
               </div>
             </button>
           </div>
