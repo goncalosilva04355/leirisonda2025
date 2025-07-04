@@ -33,6 +33,7 @@ import { InstallPrompt } from "./components/InstallPrompt";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
+import { useDataCleanup } from "./hooks/useDataCleanup";
 
 // Mock users database
 const initialUsers = [
@@ -87,7 +88,7 @@ const initialUsers = [
 ];
 
 function App() {
-  // SECURITY: Always start as not authenticated
+  // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -125,6 +126,7 @@ function App() {
   const [advancedPassword, setAdvancedPassword] = useState("");
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
+  const [showDataCleanup, setShowDataCleanup] = useState(false);
 
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
@@ -144,6 +146,13 @@ function App() {
     addMaintenance,
     addClient,
   } = dataSync;
+
+  // Data cleanup hook
+  const {
+    cleanAllData,
+    isLoading: cleanupLoading,
+    error: cleanupError,
+  } = useDataCleanup();
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -210,6 +219,20 @@ function App() {
       setCurrentUser(null);
       authService.logout();
     }
+  }, [isAuthenticated, currentUser]);
+
+  // SECURITY: Periodic auth check to prevent tampering
+  useEffect(() => {
+    const authCheckInterval = setInterval(() => {
+      if (isAuthenticated && !currentUser) {
+        console.warn("SECURITY: Auth state compromised, forcing logout");
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        authService.logout();
+      }
+    }, 5000); // Check every 5 seconds
+
+    return () => clearInterval(authCheckInterval);
   }, [isAuthenticated, currentUser]);
 
   // Initialize notification permission state and register service worker
@@ -465,6 +488,34 @@ function App() {
     setIsAdvancedUnlocked(false);
     setAdvancedPassword("");
     setAdvancedPasswordError("");
+  };
+
+  // Data cleanup functions
+  const handleDataCleanup = async () => {
+    if (
+      window.confirm(
+        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+      )
+    ) {
+      try {
+        await cleanAllData();
+        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
+        setShowDataCleanup(false);
+      } catch (error) {
+        console.error("Erro na limpeza:", error);
+        alert("Erro ao eliminar dados. Tente novamente.");
+      }
+    }
+  };
+
+  // Fixed back button function
+  const handleGoBack = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      // Fallback to dashboard if no history
+      navigateToSection("dashboard");
+    }
   };
 
   // PDF Generation Functions
@@ -899,33 +950,72 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   };
 
-  const handleSaveUser = (e) => {
+  const handleSaveUser = async (e) => {
     if (e) e.preventDefault();
 
-    if (editingUser) {
-      // Update existing user
-      setUsers(
-        users.map((u) =>
-          u.id === editingUser.id
-            ? {
-                ...u,
-                ...userForm,
-                password: userForm.password || u.password,
-              }
-            : u,
-        ),
-      );
-    } else {
-      // Add new user
-      const newUser = {
-        id: Math.max(...users.map((u) => u.id)) + 1,
-        ...userForm,
-        createdAt: new Date().toISOString().split("T")[0],
-      };
-      setUsers([...users, newUser]);
-    }
+    try {
+      if (editingUser) {
+        // Update existing user
+        setUsers(
+          users.map((u) =>
+            u.id === editingUser.id
+              ? {
+                  ...u,
+                  ...userForm,
+                  password: userForm.password || u.password,
+                }
+              : u,
+          ),
+        );
 
-    setShowUserForm(false);
+        console.log(`Utilizador ${userForm.name} atualizado com sucesso`);
+      } else {
+        // Add new user
+        const newUser = {
+          id: Math.max(...users.map((u) => u.id)) + 1,
+          ...userForm,
+          createdAt: new Date().toISOString().split("T")[0],
+        };
+        setUsers([...users, newUser]);
+
+        // Try to register with Firebase for automatic synchronization
+        try {
+          const result = await authService.register(
+            userForm.email,
+            userForm.password,
+            userForm.name,
+            userForm.role,
+          );
+
+          if (result.success) {
+            console.log(
+              `✅ Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
+            );
+
+            // Show success message
+            setTimeout(() => {
+              alert(
+                `Utilizador ${userForm.name} criado e sincronizado com sucesso!`,
+              );
+            }, 100);
+          } else {
+            console.log(
+              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+            );
+          }
+        } catch (syncError) {
+          console.log(
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            syncError,
+          );
+        }
+      }
+
+      setShowUserForm(false);
+    } catch (error) {
+      console.error("Erro ao salvar utilizador:", error);
+      alert("Erro ao salvar utilizador. Tente novamente.");
+    }
   };
 
   const handlePermissionChange = (module, permission, value) => {
@@ -2042,7 +2132,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <div className="flex items-center space-x-4 text-sm">
                             <span className="text-blue-600">
-                              ����{" "}
+                              ������{" "}
                               {new Date(maint.scheduledDate).toLocaleDateString(
                                 "pt-PT",
                               )}
@@ -4119,6 +4209,70 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
               </div>
+
+              {/* Data Management Section - Only for Super Admin */}
+              {currentUser.role === "super_admin" && (
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <Trash2 className="h-6 w-6 text-red-600 mr-3" />
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Gestão de Dados
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 mb-6">
+                    Elimine todos os dados de obras, manutenções e piscinas para
+                    começar com uma aplicação limpa. Os utilizadores s��o
+                    mantidos.
+                  </p>
+
+                  <div className="space-y-4">
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-red-900 mb-2">
+                            Limpar Dados do Sistema
+                          </h4>
+                          <p className="text-red-700 text-sm mb-3">
+                            Esta ação eliminará permanentemente:
+                          </p>
+                          <ul className="text-red-700 text-sm space-y-1 mb-4">
+                            <li>• Todas as obras ({works.length} registos)</li>
+                            <li>
+                              • Todas as manutenções ({maintenance.length}{" "}
+                              registos)
+                            </li>
+                            <li>
+                              • Todas as piscinas ({pools.length} registos)
+                            </li>
+                            <li>• Dados do Firebase e armazenamento local</li>
+                          </ul>
+                          <p className="text-red-700 text-sm font-medium mb-3">
+                            ⚠️ ATENÇÃO: Esta operação é irreversível!
+                          </p>
+                          <button
+                            onClick={handleDataCleanup}
+                            disabled={cleanupLoading}
+                            className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span>
+                              {cleanupLoading
+                                ? "A Eliminar..."
+                                : "Eliminar Todos os Dados"}
+                            </span>
+                          </button>
+                          {cleanupError && (
+                            <p className="text-red-600 text-sm mt-2">
+                              {cleanupError}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         );
@@ -5027,7 +5181,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             {work.budget && (
                               <div>
                                 <span className="font-medium">Orçamento:</span>{" "}
-                                €{work.budget}
+                                ��{work.budget}
                               </div>
                             )}
                           </div>
@@ -5306,10 +5460,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // SECURITY: Triple check - never allow access without proper authentication
   if (!isAuthenticated || !currentUser) {
     console.log(
-      "Security check: Blocking access - isAuthenticated:",
+      "🔒 SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
       "currentUser:",
       !!currentUser,
+      "timestamp:",
+      new Date().toISOString(),
     );
     if (showAdvancedSettings) {
       if (isAdvancedUnlocked) {
@@ -5608,7 +5764,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <Menu className="h-6 w-6 text-gray-600" />
         </button>
         <button
-          onClick={() => window.history.back()}
+          onClick={handleGoBack}
           className="bg-white p-2 rounded-md shadow-md"
         >
           <ArrowLeft className="h-6 w-6 text-gray-600" />

@@ -33,10 +33,25 @@ export const SyncStatusDisplay: React.FC<SyncStatusDisplayProps> = ({
   }
 
   if (error) {
+    const isConfigError =
+      error.includes("not configured") || error.includes("não configurado");
+    const isConnectionError =
+      error.includes("connection") || error.includes("conexão");
+
+    let errorText = "Erro de sync";
+    if (isConfigError) {
+      errorText = "Config Firebase";
+    } else if (isConnectionError) {
+      errorText = "Sem conexão";
+    }
+
     return (
-      <div className="flex items-center space-x-2 text-red-600 text-xs">
+      <div
+        className="flex items-center space-x-2 text-red-600 text-xs"
+        title={error}
+      >
         <AlertCircle className="w-3 h-3" />
-        <span>Erro de sync</span>
+        <span>{errorText}</span>
       </div>
     );
   }
