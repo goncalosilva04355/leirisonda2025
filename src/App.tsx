@@ -4666,8 +4666,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         </div>
       </div>
 
+      {/* Mobile Menu Button */}
+      <div className="lg:hidden fixed top-4 left-4 z-60">
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="bg-white p-2 rounded-md shadow-md"
+        >
+          <Menu className="h-6 w-6 text-gray-600" />
+        </button>
+      </div>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Main Content */}
-      <main className="ml-80">{renderContent()}</main>
+      <main className="lg:ml-80 min-h-screen">
+        <div className="p-4 lg:p-6">{renderContent()}</div>
+      </main>
 
       {/* Install Prompt for Mobile */}
       <InstallPrompt />
