@@ -1682,33 +1682,72 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {currentUser?.name
                         .toLowerCase()
                         .includes("alexandre") && (
-                        <button
-                          onClick={() => {
-                            const debugInfo = {
-                              currentUser: currentUser.name,
-                              worksCount: works.length,
-                              worksData: works,
-                              localStorage: {
-                                pools: JSON.parse(
-                                  localStorage.getItem("pools") || "[]",
-                                ),
-                                works: JSON.parse(
-                                  localStorage.getItem("works") || "[]",
-                                ),
-                                maintenance: JSON.parse(
-                                  localStorage.getItem("maintenance") || "[]",
-                                ),
-                              },
-                            };
-                            console.log("🔍 Alexandre Debug Info:", debugInfo);
-                            alert(
-                              `Debug Alexandre:\nObras no sistema: ${works.length}\nVer console para mais detalhes`,
-                            );
-                          }}
-                          className="mt-2 px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600"
-                        >
-                          Debug Dados Alexandre
-                        </button>
+                        <div className="mt-2 space-y-1">
+                          <button
+                            onClick={() => {
+                              const alexandreWorks = works.filter(
+                                (w) =>
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes("alexandre") ||
+                                  w.assignedUsers?.some((user) =>
+                                    user.name
+                                      .toLowerCase()
+                                      .includes("alexandre"),
+                                  ),
+                              );
+
+                              const debugInfo = {
+                                currentUser: currentUser.name,
+                                totalWorks: works.length,
+                                alexandreWorks: alexandreWorks,
+                                localStorage: {
+                                  pools: JSON.parse(
+                                    localStorage.getItem("pools") || "[]",
+                                  ).length,
+                                  works: JSON.parse(
+                                    localStorage.getItem("works") || "[]",
+                                  ).length,
+                                  maintenance: JSON.parse(
+                                    localStorage.getItem("maintenance") || "[]",
+                                  ).length,
+                                },
+                                notificationsEnabled,
+                                notificationPermission: Notification.permission,
+                              };
+                              console.log(
+                                "🔍 Alexandre Debug Info:",
+                                debugInfo,
+                              );
+                              alert(
+                                `Debug Alexandre:\n` +
+                                  `Obras no sistema: ${works.length}\n` +
+                                  `Obras atribuídas ao Alexandre: ${alexandreWorks.length}\n` +
+                                  `Notificações ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
+                                  `Permissão notificações: ${Notification.permission}\n\n` +
+                                  `Ver console para mais detalhes`,
+                              );
+                            }}
+                            className="px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600"
+                          >
+                            Debug Dados Alexandre
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              console.log(
+                                "🧪 Testando notificação para Alexandre...",
+                              );
+                              sendWorkAssignmentNotification(
+                                "Obra de Teste para Alexandre",
+                                "Alexandre",
+                              );
+                            }}
+                            className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
+                          >
+                            Testar Notificação
+                          </button>
+                        </div>
                       )}
                       <p className="text-gray-600 text-sm">
                         Bem-vindo ao sistema Leirisonda
