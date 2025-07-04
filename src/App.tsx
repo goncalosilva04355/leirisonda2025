@@ -34,6 +34,7 @@ import { AuthSyncDiagnostic } from "./components/AuthSyncDiagnostic";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { FirebaseStatus } from "./components/FirebaseStatus";
+import { UserDebugger } from "./components/UserDebugger";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
@@ -926,7 +927,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr���������-definidos por agora.",
+      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr��������-definidos por agora.",
     );
   };
 
