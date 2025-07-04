@@ -841,7 +841,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest���o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest�����o
     `;
     downloadPDF(
       content,
@@ -1629,7 +1629,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </h3>
                                 <div className="flex items-center space-x-1 text-gray-600 text-sm">
                                   <span>👤</span>
-                                  <span>Atribuída a: {work.assignedTo}</span>
+                                  <span>
+                                    Atribuída a:{" "}
+                                    {work.assignedUsers &&
+                                    work.assignedUsers.length > 0
+                                      ? work.assignedUsers
+                                          .map((u) => u.name)
+                                          .join(", ")
+                                      : work.assignedTo || "Não atribuída"}
+                                  </span>
                                 </div>
                                 <div className="flex items-center space-x-1 text-gray-500 text-sm">
                                   <span>����</span>
@@ -1832,7 +1840,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">���</div>
+                            <div className="text-gray-400 mb-2">����</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
@@ -2597,7 +2605,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenç��es
+                          Futuras Manutenç����es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenções agendadas e programadas
@@ -3834,7 +3842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
                           <option value="manutencao">Em Manutenção</option>
-                          <option value="construcao">Em Construção</option>
+                          <option value="construcao">Em Constru��ão</option>
                         </select>
                       </div>
                     </div>
@@ -4908,7 +4916,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 • Todas as obras ({works.length} registos)
                               </li>
                               <li>
-                                • Todas as manutenções ({maintenance.length}{" "}
+                                • Todas as manuten��ões ({maintenance.length}{" "}
                                 registos)
                               </li>
                               <li>
@@ -5905,7 +5913,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span className="font-medium">
                                   Atribuída a:
                                 </span>{" "}
-                                {work.assignedTo}
+                                {work.assignedUsers &&
+                                work.assignedUsers.length > 0
+                                  ? work.assignedUsers
+                                      .map((u) => u.name)
+                                      .join(", ")
+                                  : work.assignedTo || "Não atribuída"}
                               </div>
                               {work.budget && (
                                 <div>
@@ -7545,7 +7558,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Atribuída a
                       </label>
                       <p className="text-gray-900">
-                        {selectedWork.assignedTo || "Não atribuída"}
+                        {selectedWork.assignedUsers &&
+                        selectedWork.assignedUsers.length > 0
+                          ? selectedWork.assignedUsers
+                              .map((u) => u.name)
+                              .join(", ")
+                          : selectedWork.assignedTo || "Não atribuída"}
                       </p>
                     </div>
                   </div>
