@@ -331,6 +331,19 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               </div>
             </button>
             <button
+              onClick={() => setActiveTab("auth-diagnostic")}
+              className={`py-4 px-3 text-center font-medium transition-colors ${
+                activeTab === "auth-diagnostic"
+                  ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex flex-col items-center space-y-1">
+                <Key className="w-4 h-4" />
+                <span>Auth</span>
+              </div>
+            </button>
+            <button
               onClick={() => setActiveTab("utilizadores")}
               className={`py-4 px-3 text-center font-medium transition-colors ${
                 activeTab === "utilizadores"
