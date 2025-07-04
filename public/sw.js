@@ -79,12 +79,20 @@ self.addEventListener("sync", (event) => {
 
 // Fetch event for caching (optional)
 self.addEventListener("fetch", (event) => {
-  // Basic caching strategy for offline support
-  if (event.request.method === "GET") {
-    event.respondWith(
-      caches.match(event.request).then((response) => {
-        return response || fetch(event.request);
-      }),
-    );
+  // Skip Firebase Auth and API requests to prevent interference
+  if (
+    event.request.url.includes("firebase") ||
+    event.request.url.includes("googleapis") ||
+    event.request.url.includes("identitytoolkit") ||
+    event.request.method !== "GET"
+  ) {
+    return;
   }
+
+  // Basic caching strategy for offline support
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
+    }),
+  );
 });
