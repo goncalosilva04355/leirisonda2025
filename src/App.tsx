@@ -414,6 +414,16 @@ function App() {
     navigateToSection("dashboard");
   };
 
+  // Register functions
+  const handleRegisterSuccess = () => {
+    setShowRegisterForm(false);
+    // User will be automatically logged in by the auth state listener
+  };
+
+  const handleBackToLogin = () => {
+    setShowRegisterForm(false);
+  };
+
   // Advanced settings functions
   const handleAdvancedPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
