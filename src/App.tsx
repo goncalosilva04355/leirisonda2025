@@ -35,6 +35,7 @@ import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { FirebaseStatus } from "./components/FirebaseStatus";
 import { UserDebugger } from "./components/UserDebugger";
+import { FullSyncManager } from "./components/FullSyncManager";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
@@ -3921,7 +3922,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Nova Manutenção
                     </h1>
                     <p className="text-gray-600 text-sm">
-                      Registar interven��ão de manutenç������o
+                      Registar interven��ão de manutenç�����o
                     </p>
                   </div>
                 </div>
@@ -4778,7 +4779,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Limpar Dados do Sistema
                           </h4>
                           <p className="text-red-700 text-sm mb-3">
-                            Esta ação eliminar��� permanentemente:
+                            Esta ação eliminar�� permanentemente:
                           </p>
                           <ul className="text-red-700 text-sm space-y-1 mb-4">
                             <li>• Todas as obras ({works.length} registos)</li>
