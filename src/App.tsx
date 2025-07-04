@@ -94,6 +94,22 @@ const initialUsers = [
     active: true,
     createdAt: "2024-02-01",
   },
+  {
+    id: 4,
+    name: "Alexandre",
+    email: "alexandre@leirisonda.pt",
+    role: "technician",
+    permissions: {
+      obras: { view: true, create: false, edit: true, delete: false },
+      manutencoes: { view: true, create: true, edit: true, delete: false },
+      piscinas: { view: true, create: false, edit: true, delete: false },
+      utilizadores: { view: false, create: false, edit: false, delete: false },
+      relatorios: { view: true, create: false, edit: false, delete: false },
+      clientes: { view: true, create: false, edit: false, delete: false },
+    },
+    active: true,
+    createdAt: "2024-02-15",
+  },
 ];
 
 function App() {
@@ -363,7 +379,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("�� Notifications not supported in this browser");
+      console.warn("��� Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -459,9 +475,7 @@ function App() {
   const handleSaveIntervention = () => {
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert(
-        "Por favor, preencha os campos obrigat����rios (Piscina e Técnico).",
-      );
+      alert("Por favor, preencha os campos obrigatórios (Piscina e Técnico).");
       return;
     }
 
@@ -612,7 +626,7 @@ function App() {
     }
 
     try {
-      console.log("���� Attempting login for:", loginForm.email);
+      console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -787,7 +801,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manuten����ões: ${maintenance.length}
+- Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -867,7 +881,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest�����o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -893,7 +907,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS A����ÕES:
+PRÓXIMAS AÇÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -935,7 +949,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat������rio personalizado em desenvolvimento. Use os relatórios pr����������-definidos por agora.",
+      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
     );
   };
 
@@ -1162,7 +1176,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar o relat����rio PDF. Tente novamente.");
+      alert("Erro ao gerar o relatório PDF. Tente novamente.");
     }
   };
 
@@ -1697,9 +1711,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </span>
                                 </div>
                                 <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                  <span>����</span>
+                                  <span>📍</span>
                                   <span>
-                                    Atribu��da em:{" "}
+                                    Atribuída em:{" "}
                                     {new Date(
                                       work.dateAssigned,
                                     ).toLocaleDateString("pt-PT")}
@@ -1748,7 +1762,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manuten��������es
+                      Próximas Manutenções
                     </h2>
                   </div>
 
@@ -1818,7 +1832,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>����</span>
+                                      <span>⏰</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -1897,7 +1911,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">����</div>
+                            <div className="text-gray-400 mb-2">📅</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
@@ -2684,7 +2698,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenç�����es
+                          Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenções agendadas e programadas
@@ -2733,7 +2747,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manuten����ões aparecerão aqui quando forem
+                        As futuras manutenções aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -2778,7 +2792,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </p>
                             <div className="flex items-center space-x-4 text-sm">
                               <span className="text-blue-600">
-                                ������{" "}
+                                €{" "}
                                 {new Date(
                                   maint.scheduledDate,
                                 ).toLocaleDateString("pt-PT")}
@@ -3429,7 +3443,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observaç��es Específicas do Furo */}
+                          {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -3444,7 +3458,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Observa����es e Trabalho */}
+                    {/* Observações e Trabalho */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -3463,7 +3477,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa����ões sobre a obra..."
+                            placeholder="Observações sobre a obra..."
                           />
                         </div>
 
@@ -3957,7 +3971,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
                           <option value="manutencao">Em Manutenção</option>
-                          <option value="construcao">Em Constru���ão</option>
+                          <option value="construcao">Em Construção</option>
                         </select>
                       </div>
                     </div>
@@ -4038,9 +4052,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resistência El��trica
+                            Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G������s</option>
+                          <option value="gas">Aquecimento a Gás</option>
                         </select>
                       </div>
                     </div>
@@ -4049,7 +4063,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequ���ncia de Manutenção
+                          Frequência de Manutenção
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -4060,7 +4074,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manuten��ão
+                          Próxima Manutenção
                         </label>
                         <input
                           type="date"
@@ -4159,7 +4173,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar interven��ão de manutenç�����o
+                        Registar intervenção de manutenção
                       </p>
                     </div>
                   </div>
@@ -4194,7 +4208,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data da Interven����ão *
+                          Data da Intervenção *
                         </label>
                         <input
                           type="date"
@@ -4215,7 +4229,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Hora In���cio
+                          Hora Início
                         </label>
                         <input
                           type="time"
@@ -4353,7 +4367,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Temperatura (��C)
+                            Temperatura (°C)
                           </label>
                           <input
                             type="number"
@@ -4421,7 +4435,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Chemical Products */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Produtos Qu�����micos Utilizados
+                        Produtos Químicos Utilizados
                       </h3>
                       <div className="space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -4479,8 +4493,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento autom��tico",
-                          "Limpeza linha de ���gua",
+                          "Enchimento automático",
+                          "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
                           "Limpeza skimmers",
@@ -7450,6 +7464,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               >
                 Entrar
               </button>
+
+              {/* Administration Button */}
+              <button
+                type="button"
+                onClick={() => setShowAdminLogin(true)}
+                className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 flex items-center justify-center space-x-2"
+              >
+                <Shield className="h-4 w-4" />
+                <span>Administração</span>
+              </button>
             </div>
           </form>
 
@@ -7626,23 +7650,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 >
                   <Users className="h-5 w-5" />
                   <span>Utilizadores</span>
-                </button>
-              )}
-
-              {hasPermission("manutencoes", "view") && (
-                <button
-                  onClick={() => {
-                    navigateToSection("futuras-manutencoes");
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeSection === "futuras-manutencoes"
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <BarChart3 className="h-5 w-5" />
-                  <span>Futuras Manutenções</span>
                 </button>
               )}
 
