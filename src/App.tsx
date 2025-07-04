@@ -2408,7 +2408,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Cliente Proprietário *
                       </label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onChange={(e) => {
+                          if (e.target.value === "novo") {
+                            setShowNewClientForm(true);
+                          }
+                        }}
+                      >
                         <option value="">Selecionar cliente</option>
                         {clients.map((client) => (
                           <option key={client.id} value={client.id}>
