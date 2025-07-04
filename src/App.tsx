@@ -88,9 +88,10 @@ const initialUsers = [
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(ADMIN_USER);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
 
   // Custom setActiveSection that updates URL hash
   const navigateToSection = (section: string) => {
@@ -1516,7 +1517,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Futuras Manutenções
+                        Futuras Manutenç��es
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Manutenções agendadas e programadas
