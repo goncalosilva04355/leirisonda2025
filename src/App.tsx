@@ -206,6 +206,10 @@ function App() {
   const [workTechnicians, setWorkTechnicians] = useState<string[]>([]);
   const [currentVehicle, setCurrentVehicle] = useState("");
   const [currentTechnician, setCurrentTechnician] = useState("");
+  const [currentAssignedUser, setCurrentAssignedUser] = useState("");
+  const [assignedUsers, setAssignedUsers] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
 
   // Edit and view states
   const [editingWork, setEditingWork] = useState(null);
@@ -582,7 +586,7 @@ function App() {
     }
 
     try {
-      console.log("🔐 Attempting login for:", loginForm.email);
+      console.log("���� Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
