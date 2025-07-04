@@ -306,13 +306,16 @@ function App() {
               },
             ];
 
-            // Add the works
-            for (const work of newWorks) {
-              addWork(work);
-              console.log("✅ Created work for Alexandre:", work.title);
+            // Add the works asynchronously
+            try {
+              for (const work of newWorks) {
+                await addWork(work);
+                console.log("✅ Created work for Alexandre:", work.title);
+              }
+              console.log("🎉 Alexandre's works have been restored!");
+            } catch (error) {
+              console.error("❌ Error creating works for Alexandre:", error);
             }
-
-            console.log("🎉 Alexandre's works have been restored!");
           }
         }
       }
@@ -699,7 +702,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manuten��ão agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manuten����ão agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -2251,7 +2254,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} • {pool.location}
+                                            {pool.client} �� {pool.location}
                                           </p>
                                         </div>
                                       </div>
