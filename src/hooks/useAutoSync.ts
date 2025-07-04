@@ -9,8 +9,8 @@ export const useAutoSync = () => {
 
   useEffect(() => {
     const performAutoSync = async () => {
-      // EMERGENCY STOP - Block ALL auto-sync operations due to quota exceeded
-      console.error("🚨 EMERGENCY: Auto-sync BLOCKED due to quota exceeded");
+      // Firebase temporarily disabled due to quota - running in offline mode
+      console.log("⏸️ Firebase sync paused - running in offline mode");
       setSyncStatus("completed");
       const now = new Date();
       setLastSync(now);
