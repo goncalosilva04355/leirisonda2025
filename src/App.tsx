@@ -1756,20 +1756,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       type="submit"
                       onClick={(e) => {
                         e.preventDefault();
-                        const form = e.target.closest('form');
-                        const workTitle = form.querySelector('input[placeholder*="LS-"]').value || "Nova Obra";
-                        const responsibleUser = form.querySelector('select[aria-label="Usuários Atribuídos"]');
-                        const selectedUserId = responsibleUser ? responsibleUser.value : null;
+                        const form = e.target.closest("form");
+                        const workTitle =
+                          form.querySelector('input[placeholder*="LS-"]')
+                            .value || "Nova Obra";
+                        const responsibleUser = form.querySelector(
+                          'select[aria-label="Usuários Atribuídos"]',
+                        );
+                        const selectedUserId = responsibleUser
+                          ? responsibleUser.value
+                          : null;
 
                         if (selectedUserId) {
-                          const selectedUser = users.find(u => u.id == selectedUserId);
+                          const selectedUser = users.find(
+                            (u) => u.id == selectedUserId,
+                          );
                           if (selectedUser) {
-                            sendWorkAssignmentNotification(workTitle, selectedUser.name);
+                            sendWorkAssignmentNotification(
+                              workTitle,
+                              selectedUser.name,
+                            );
                           }
                         }
 
                         alert(
-                          "Obra criada com sucesso! " + (selectedUserId ? "Notificação enviada ao responsável." : ""),
+                          "Obra criada com sucesso! " +
+                            (selectedUserId
+                              ? "Notificação enviada ao responsável."
+                              : ""),
                         );
                         setActiveSection("dashboard");
                       }}
