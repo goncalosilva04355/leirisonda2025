@@ -81,7 +81,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
         projectId: "leirisonda-16f8b",
         storageBucket: "leirisonda-16f8b.firebasestorage.app",
         messagingSenderId: "540456875574",
-        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97"
       };
       const tests = [];
 
@@ -487,8 +487,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               </div>
 
               {/* Activate Real Sync */}
-              {localStorage.getItem("firebase-config") && (
-                <div className="mt-4">
+              <div className="mt-4">
                   <button
                     onClick={activateRealSync}
                     disabled={syncTest.status === "testing"}
@@ -850,7 +849,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   </li>
                   <li>
                     • A obra aparece automaticamente no dashboard do utilizador
-                    na se��ão "Obras Atribuídas"
+                    na seção "Obras Atribuídas"
                   </li>
                   <li>
                     • As notificações funcionam mesmo com a aplicaç��o fechada
