@@ -529,8 +529,8 @@ export const UserPermissionsManager: React.FC = () => {
           </button>
           <button
             onClick={() => {
-              // Navigate to register form or show modal
-              window.location.hash = "#register";
+              // Navigate to register form
+              window.location.hash = "register";
             }}
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center space-x-2"
           >
