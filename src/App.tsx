@@ -1071,6 +1071,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Check if current user is the one assigned (exact match or partial match for combined assignments)
     const isAssignedToCurrentUser =
       currentUser &&
+      assignedTo &&
       (assignedTo === currentUser.name ||
         assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
         currentUser.name.toLowerCase().includes(assignedTo.toLowerCase()));
@@ -1129,7 +1130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç���es não est���o ativadas. Active-as primeiro nas configurações.",
+        "As notificaç����es não est���o ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
