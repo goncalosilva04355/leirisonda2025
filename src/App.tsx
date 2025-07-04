@@ -2638,6 +2638,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <input
                         type="time"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.startTime}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            startTime: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
@@ -2647,6 +2654,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <input
                         type="time"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={maintenanceForm.endTime}
+                        onChange={(e) =>
+                          setMaintenanceForm({
+                            ...maintenanceForm,
+                            endTime: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
