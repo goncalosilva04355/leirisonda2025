@@ -2546,9 +2546,45 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       type="submit"
                       onClick={(e) => {
                         e.preventDefault();
-                        alert(
-                          "Piscina criada com sucesso! (Função em desenvolvimento)",
+                        const form = e.target.closest("form");
+                        const formData = new FormData(form);
+
+                        // Collect all form data
+                        const poolData = {
+                          id: Date.now(),
+                          name:
+                            form.querySelector('input[placeholder*="Nome"]')
+                              ?.value || "Nova Piscina",
+                          client:
+                            form.querySelector('input[placeholder*="Cliente"]')
+                              ?.value || "Cliente",
+                          location:
+                            form.querySelector('input[placeholder*="Morada"]')
+                              ?.value || "",
+                          contact:
+                            form.querySelector('input[placeholder*="Contacto"]')
+                              ?.value || "",
+                          type:
+                            form.querySelector("select").value || "residencial",
+                          status: "Ativa",
+                          createdAt: new Date().toISOString(),
+                          nextMaintenance:
+                            form.querySelector('input[type="date"]')?.value ||
+                            null,
+                        };
+
+                        // Save to localStorage
+                        const savedPools = JSON.parse(
+                          localStorage.getItem("pools") || "[]",
                         );
+                        savedPools.push(poolData);
+                        localStorage.setItem(
+                          "pools",
+                          JSON.stringify(savedPools),
+                        );
+
+                        alert(`Piscina "${poolData.name}" criada com sucesso!`);
+                        setActiveSection("piscinas");
                       }}
                       className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
                     >
