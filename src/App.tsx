@@ -1515,7 +1515,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Form */}
               <div className="bg-white rounded-lg p-6 shadow-sm">
                 <form className="space-y-8">
-                  {/* Informações Básicas */}
+                  {/* Informaç��es Básicas */}
                   <div>
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -1976,7 +1976,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="residencial">Residencial</option>
                         <option value="comercial">Comercial</option>
                         <option value="hotel">Hotel/Resort</option>
-                        <option value="condominio">Condomínio</option>
+                        <option value="condominio">Condom��nio</option>
                         <option value="spa">SPA/Wellness</option>
                       </select>
                     </div>
@@ -2488,6 +2488,93 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <option value="in_progress">Em Progresso</option>
                       </select>
                     </div>
+                  </div>
+
+                  {/* Fotografias da Manutenção */}
+                  <div>
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                        <Eye className="h-4 w-4 text-green-600" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Fotografias da Manutenção
+                      </h3>
+                    </div>
+
+                    {/* Upload Area */}
+                    <div
+                      className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-400 transition-colors"
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                    >
+                      <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                        <Plus className="h-6 w-6 text-gray-400" />
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                        Carregar Fotografias
+                      </h4>
+                      <p className="text-gray-600 text-sm mb-4">
+                        Arraste e solte ou clique para selecionar fotos da
+                        manutenção
+                      </p>
+                      <p className="text-gray-500 text-xs mb-4">
+                        {uploadedPhotos.length}/20 fotografias
+                      </p>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                        id="maintenance-photo-upload"
+                      />
+                      <label
+                        htmlFor="maintenance-photo-upload"
+                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2 mx-auto cursor-pointer"
+                      >
+                        <Eye className="h-4 w-4" />
+                        <span>Escolher Fotografias</span>
+                      </label>
+                    </div>
+
+                    {/* Photo Preview Grid */}
+                    {uploadedPhotos.length > 0 && (
+                      <div className="mt-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h5 className="font-medium text-gray-900">
+                            Fotografias Carregadas ({uploadedPhotos.length})
+                          </h5>
+                          <button
+                            type="button"
+                            onClick={clearAllPhotos}
+                            className="text-red-600 hover:text-red-800 text-sm"
+                          >
+                            Limpar Todas
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {uploadedPhotos.map((photo) => (
+                            <div key={photo.id} className="relative group">
+                              <img
+                                src={photo.data}
+                                alt={photo.name}
+                                className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removePhoto(photo.id)}
+                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                              <p className="text-xs text-gray-500 mt-1 truncate">
+                                {photo.name}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Actions */}
