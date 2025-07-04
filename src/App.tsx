@@ -841,7 +841,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest���o
     `;
     downloadPDF(
       content,
@@ -3043,24 +3043,91 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usu��rios Atribuídos
+                            Usuários Atribuídos
                           </label>
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra
                           </p>
-                          <select
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            aria-label="Usu��rios Atribu��dos"
-                          >
-                            <option value="">Selecionar usuário...</option>
-                            {users
-                              .filter((user) => user.role !== "viewer")
-                              .map((user) => (
-                                <option key={user.id} value={user.id}>
-                                  {user.name}
-                                </option>
+                          <div className="flex space-x-2">
+                            <select
+                              value={currentAssignedUser}
+                              onChange={(e) =>
+                                setCurrentAssignedUser(e.target.value)
+                              }
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Selecionar usuário...</option>
+                              {users
+                                .filter(
+                                  (user) =>
+                                    user.role !== "viewer" &&
+                                    !assignedUsers.some(
+                                      (assigned) => assigned.id === user.id,
+                                    ),
+                                )
+                                .map((user) => (
+                                  <option key={user.id} value={user.id}>
+                                    {user.name}
+                                  </option>
+                                ))}
+                            </select>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (currentAssignedUser) {
+                                  const selectedUser = users.find(
+                                    (u) => u.id == currentAssignedUser,
+                                  );
+                                  if (
+                                    selectedUser &&
+                                    !assignedUsers.some(
+                                      (assigned) =>
+                                        assigned.id === selectedUser.id,
+                                    )
+                                  ) {
+                                    setAssignedUsers([
+                                      ...assignedUsers,
+                                      {
+                                        id: selectedUser.id,
+                                        name: selectedUser.name,
+                                      },
+                                    ]);
+                                    setCurrentAssignedUser("");
+                                  }
+                                }
+                              }}
+                              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            >
+                              Atribuir
+                            </button>
+                          </div>
+                          {assignedUsers.length > 0 && (
+                            <div className="mt-2 space-y-1">
+                              {assignedUsers.map((assignedUser, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
+                                >
+                                  <span className="text-sm text-blue-700 font-medium">
+                                    👤 {assignedUser.name}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setAssignedUsers(
+                                        assignedUsers.filter(
+                                          (_, i) => i !== index,
+                                        ),
+                                      )
+                                    }
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
                               ))}
-                          </select>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
