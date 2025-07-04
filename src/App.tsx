@@ -2488,7 +2488,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Histórico de manutenç��es realizadas
+                          Histórico de manutenções realizadas
                         </p>
                       </div>
                     </div>
@@ -2666,7 +2666,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manuten��ão "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -2731,7 +2731,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manuten��ões
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
@@ -2755,7 +2755,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                       >
                         <Plus className="h-4 w-4" />
-                        <span>Agendar Manuten���ão</span>
+                        <span>Agendar Manutenção</span>
                       </button>
                     </div>
                   ) : (
@@ -4173,7 +4173,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manuten��ão
+                        Registar intervenção de manutenção
                       </p>
                     </div>
                   </div>
@@ -7363,7 +7363,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 ������rea Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configurações avançadas
+                Insira a palavra-passe para aceder às configurações avan��adas
               </p>
             </div>
 
