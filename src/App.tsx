@@ -1647,7 +1647,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 `Debug Alexandre:\n` +
                                   `Obras no sistema: ${works.length}\n` +
                                   `Obras atribuídas ao Alexandre: ${alexandreWorks.length}\n` +
-                                  `Notificações ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
+                                  `Notifica��ões ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
                                   `Permissão notificações: ${Notification.permission}\n\n` +
                                   `Ver console para mais detalhes`,
                               );
@@ -4687,7 +4687,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Pr��xima Manutenção
+                          Próxima Manutenção
                         </label>
                         <input
                           type="date"
@@ -6549,7 +6549,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                           <option value="installation">Instalação</option>
-                          <option value="maintenance">Manutenção</option>
+                          <option value="maintenance">Manutenç��o</option>
                           <option value="repair">Reparação</option>
                           <option value="renovation">Renovação</option>
                           <option value="inspection">Inspeção</option>
@@ -6736,7 +6736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenção">Em Manuten��ão</option>
+                          <option value="Em Manutenção">Em Manutenção</option>
                         </select>
                       </div>
                       <div>
@@ -7960,7 +7960,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ? selectedWork.assignedUsers
                               .map((u) => u.name)
                               .join(", ")
-                          : selectedWork.assignedTo || "Não atribu��da"}
+                          : selectedWork.assignedTo || "Não atribuída"}
                       </p>
                     </div>
                   </div>
