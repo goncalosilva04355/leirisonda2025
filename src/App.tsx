@@ -1339,7 +1339,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   };
 
-  const handleSaveUser = async (e) => {
+  const handleSaveUser = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
 
     try {
@@ -2828,7 +2828,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manuten��ões
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
