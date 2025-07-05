@@ -39,10 +39,36 @@ export interface SyncActions {
 }
 
 export function useDataSync(): SyncState & SyncActions {
-  const [works, setWorks] = useState<Work[]>([]);
+  // CRITICAL FIX: Load data from localStorage on initialization
+  const [works, setWorks] = useState<Work[]>(() => {
+    try {
+      const stored = localStorage.getItem("works");
+      const parsedWorks = stored ? JSON.parse(stored) : [];
+      console.log(
+        "🔄 Loading works from localStorage:",
+        parsedWorks.length,
+        "works",
+      );
+      return parsedWorks;
+    } catch (error) {
+      console.error("❌ Error loading works from localStorage:", error);
+      return [];
+    }
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [lastSync, setLastSync] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // CRITICAL FIX: Save to localStorage whenever works change
+  useEffect(() => {
+    try {
+      localStorage.setItem("works", JSON.stringify(works));
+      console.log("💾 Saved", works.length, "works to localStorage");
+    } catch (error) {
+      console.error("❌ Error saving works to localStorage:", error);
+    }
+  }, [works]);
 
   const addWork = useCallback((workData: Omit<Work, "id" | "createdAt">) => {
     const newWork: Work = {
@@ -51,8 +77,16 @@ export function useDataSync(): SyncState & SyncActions {
       createdAt: new Date().toISOString(),
     };
 
-    setWorks((prev) => [...prev, newWork]);
-    console.log("Work added:", newWork);
+    setWorks((prev) => {
+      const updated = [...prev, newWork];
+      console.log(
+        "✅ Work added:",
+        newWork.title,
+        "Total works:",
+        updated.length,
+      );
+      return updated;
+    });
   }, []);
 
   const updateWork = useCallback((id: string, workData: Partial<Work>) => {
