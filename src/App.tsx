@@ -34,7 +34,7 @@ import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
 
 // import { AutoSyncProvider } from "./components/AutoSyncProvider"; // Temporarily disabled due to React hook error
-import { SyncStatusIcon } from "./components/SyncStatusIndicator";
+// import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Temporarily disabled due to AutoSyncProvider dependency
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 
 // SECURITY: RegisterForm removed - only super admin can create users
@@ -930,7 +930,7 @@ ${index + 1}. ${work.title}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: ���${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -5224,7 +5224,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                   );
                                 }
                               } else {
@@ -6450,7 +6450,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </button>
                               </div>
                               <div>
-                                <span className="font-medium">Início:</span>{" "}
+                                <span className="font-medium">In��cio:</span>{" "}
                                 {new Date(work.startDate).toLocaleDateString(
                                   "pt-PT",
                                 )}
@@ -6678,7 +6678,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">
                               {users.length > 0
                                 ? "Selecionar usu��rio..."
-                                : "Nenhum utilizador disponível"}
+                                : "Nenhum utilizador dispon��vel"}
                             </option>
                             {users
                               .filter((user) => {
