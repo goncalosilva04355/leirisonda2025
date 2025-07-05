@@ -4015,16 +4015,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="submit"
-                        onClick={(e) => {
-                          e.preventDefault();
+                        onClick={async (e) => {
+                          try {
+                            e.preventDefault();
 
-                          // SECURITY: Check if user has permission to create works
-                          if (!currentUser?.permissions?.obras?.create) {
-                            alert(
-                              "Não tem permissão para criar obras. Contacte o administrador.",
-                            );
-                            return;
-                          }
+                            // SECURITY: Check if user has permission to create works
+                            if (!currentUser?.permissions?.obras?.create) {
+                              alert(
+                                "Não tem permissão para criar obras. Contacte o administrador.",
+                              );
+                              return;
+                            }
 
                           const form = (e.target as HTMLElement).closest(
                             "form",
@@ -5427,7 +5428,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
                         <div className="flex-1">
                           <h4 className="font-medium text-blue-900 mb-2">
-                            Notifica��ões de Obras
+                            Notifica���ões de Obras
                           </h4>
                           <p className="text-blue-700 text-sm mb-3">
                             Receba notificações quando uma nova obra for
