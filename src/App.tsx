@@ -332,7 +332,7 @@ function App() {
     // DO NOT initialize default admin automatically - this was causing the security issue
     // Users must always login manually for security
     console.log(
-      "��� SECURITY: No automatic admin initialization - manual login required",
+      "����� SECURITY: No automatic admin initialization - manual login required",
     );
 
     // Return empty cleanup function since unsubscribe is handled inside the promise
@@ -890,7 +890,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest����o
     `;
     downloadPDF(
       content,
@@ -1961,7 +1961,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           ? work.assignedUsers
                                               .map((u) => u.name)
                                               .join(", ")
-                                          : work.assignedTo || "N��o atribuída"}
+                                          : work.assignedTo || "Não atribuída"}
                                       </span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -2552,9 +2552,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">
-                                    �����
-                                  </div>
+                                  <div className="text-gray-400 mb-2">���</div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -3591,7 +3589,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Nível da Água (m) *
+                                  Nível da ��gua (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -5484,7 +5482,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ��️ ATENÇÃO: Esta operação é irrevers��vel!
+                              ��️ ATENÇÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -6625,6 +6623,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </label>
                         <input
                           type="text"
+                          name="workTitle"
                           defaultValue={editingWork?.title}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="Ex: Instalação de Piscina"
@@ -6637,6 +6636,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </label>
                         <input
                           type="text"
+                          name="client"
                           defaultValue={editingWork?.client}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="Nome do cliente"
@@ -7711,7 +7711,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>����</span>
+                  <span>��</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
