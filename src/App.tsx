@@ -3969,8 +3969,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Use sync system to add work (will handle Firebase and localStorage)
                           try {
                             console.log("🔄 Chamando addWork...");
-                            await addWork(workData);
-                            console.log("✅ addWork concluído com sucesso");
+                            addWork(workData);
+                            console.log("✅ addWork chamado com sucesso");
                           } catch (error) {
                             console.error("❌ Erro ao adicionar obra:", error);
                             alert(`Erro ao guardar obra: ${error.message}`);
