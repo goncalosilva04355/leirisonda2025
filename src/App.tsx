@@ -1161,7 +1161,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`�����️ OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`����️ OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -2803,7 +2803,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Lista de Manuten��ões */}
+                {/* Lista de Manutenções */}
                 <div className="space-y-4">
                   {maintenance.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
@@ -3166,7 +3166,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
                             <option value="instalacao">Instalação</option>
-                            <option value="reparacao">Repara��ão</option>
+                            <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
                           </select>
@@ -3563,7 +3563,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Nível da Água (m) *
+                                  Nível da ��gua (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -7685,8 +7685,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // TEMPORARY: Bypass authentication for testing - DISABLED
-  /*
+  // TEMPORARY: Bypass authentication for testing - REACTIVATED
   useEffect(() => {
     if (!currentUser) {
       const testUser = {
@@ -7710,10 +7709,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       localStorage.setItem("isAuthenticated", "true");
     }
   }, []);
-  */
 
   // Always allow access for testing - bypass authentication
-  if (!isAuthenticated || !currentUser) {
+  if (false) {
     console.log(
       "🛡️ SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
@@ -8150,7 +8148,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        Título
+                        T��tulo
                       </label>
                       <p className="text-gray-900">{selectedWork.title}</p>
                     </div>
