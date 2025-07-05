@@ -4197,6 +4197,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   phone: e.target.value,
                                 })
                               }
+                              name="contact"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="+351 XXX XXX XXX"
                             />
@@ -5656,7 +5657,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{clients.length}</strong> clientes registados
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>��� Dados de contacto</li>
+                        <li>����� Dados de contacto</li>
                         <li>• Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
