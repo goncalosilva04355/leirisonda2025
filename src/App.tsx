@@ -3587,25 +3587,35 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </option>
                               {users
                                 .filter((user) => {
-                                  console.log(
-                                    "Nova obra - User:",
-                                    user.name,
-                                    "Role:",
-                                    user.role,
-                                    "Active:",
-                                    user.active,
+                                  // Filter active users that are not viewers and not already assigned
+                                  const isNotViewer = user.role !== "viewer";
+                                  const isActive = user.active !== false;
+                                  const isNotAssigned = !assignedUsers.some(
+                                    (assigned) =>
+                                      assigned.id === String(user.id),
                                   );
+
+                                  console.log(
+                                    "🔍 Filtering user:",
+                                    user.name,
+                                    "| Role:",
+                                    user.role,
+                                    "| Active:",
+                                    user.active,
+                                    "| Not viewer:",
+                                    isNotViewer,
+                                    "| Is active:",
+                                    isActive,
+                                    "| Not assigned:",
+                                    isNotAssigned,
+                                  );
+
                                   return (
-                                    user.role !== "viewer" &&
-                                    user.active !== false &&
-                                    !assignedUsers.some(
-                                      (assigned) =>
-                                        assigned.id === String(user.id),
-                                    )
+                                    isNotViewer && isActive && isNotAssigned
                                   );
                                 })
                                 .map((user) => (
-                                  <option key={user.id} value={user.id}>
+                                  <option key={user.id} value={String(user.id)}>
                                     {user.name}
                                   </option>
                                 ))}
@@ -7932,7 +7942,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const technician = inputs[1].value; // Técnico
                           const type = inputs[2].value; // Tipo de Manutenção
                           const status = inputs[3].value; // Estado
-                          const estimatedDuration = inputs[4].value; // Duraç��o Estimada
+                          const estimatedDuration = inputs[4].value; // Duraç���o Estimada
                           const actualDuration = inputs[5].value; // Duração Real
                           const cost = inputs[6].value; // Custo
                           const priority = inputs[7].value; // Prioridade
