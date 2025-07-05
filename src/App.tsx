@@ -36,7 +36,7 @@ import {
   Bell,
 } from "lucide-react";
 import jsPDF from "jspdf";
-// import { FirebaseConfig } from "./components/FirebaseConfig"; // Temporarily disabled to debug
+import { FirebaseConfig } from "./components/FirebaseConfig";
 // import { AdvancedSettings } from "./components/AdvancedSettings"; // Temporarily disabled to debug
 // import { SyncStatusDisplay } from "./components/SyncStatusDisplay"; // Temporarily disabled to debug
 // import { InstallPrompt } from "./components/InstallPrompt"; // Temporarily disabled due to React hook error
