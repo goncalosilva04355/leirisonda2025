@@ -43,7 +43,7 @@ import { AdminPage } from "./admin/AdminPage";
 import { useDataSync } from "./hooks/useDataSync_simple";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSync } from "./hooks/useAutoSync";
+// import { useAutoSync } from "./hooks/useAutoSync"; // Temporarily disabled due to React hook error
 
 // Mock users database
 const initialUsers = [
@@ -7641,7 +7641,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
             <div className="bg-gray-50 rounded-lg p-4 mb-6">
               <h4 className="font-medium text-gray-900 mb-2">
-                Conteúdo do Relatório:
+                Conteúdo do Relat��rio:
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
