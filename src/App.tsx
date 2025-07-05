@@ -124,7 +124,7 @@ function App() {
 
   // Debug logging for authentication state changes
   useEffect(() => {
-    console.log("���� Auth State Debug:", {
+    console.log("����� Auth State Debug:", {
       isAuthenticated,
       currentUser: currentUser
         ? `${currentUser.name} (${currentUser.email})`
@@ -189,24 +189,31 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // Data sync hook - simplified version
+  // Data sync hook with Firebase synchronization
   const dataSync = useDataSync();
   const {
     works,
+    pools,
+    maintenance,
+    futureMaintenance,
+    clients,
     isLoading: syncLoading,
     lastSync,
     error: syncError,
     addWork,
+    updateWork,
+    deleteWork,
+    addPool,
+    updatePool,
+    deletePool,
+    addMaintenance,
+    updateMaintenance,
+    deleteMaintenance,
+    addClient,
+    updateClient,
+    deleteClient,
+    syncWithFirebase,
   } = dataSync;
-
-  // Mock empty arrays for other data types
-  const pools = [];
-  const maintenance = [];
-  const futureMaintenance = [];
-  const clients = [];
-
-  // Mock functions for unused operations
-  const syncWithFirebase = () => Promise.resolve();
   const enableSync = () => {};
   const addPool = () => {};
   const addMaintenance = () => {};
@@ -5115,7 +5122,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {[
                           "Limpeza de filtros",
-                          "Limpeza de pré-filtro",
+                          "Limpeza de pr��-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
                           "Enchimento automático",
