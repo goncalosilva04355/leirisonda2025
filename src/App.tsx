@@ -41,7 +41,7 @@ import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 // import { InstallPrompt } from "./components/InstallPrompt"; // Temporarily disabled due to React hook error
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
-import { RegisterForm } from "./components/RegisterForm";
+// import { RegisterForm } from "./components/RegisterForm"; // Temporarily disabled
 
 // import { AutoSyncProvider } from "./components/AutoSyncProvider"; // Temporarily disabled due to React hook error
 // import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Temporarily disabled due to AutoSyncProvider dependency
