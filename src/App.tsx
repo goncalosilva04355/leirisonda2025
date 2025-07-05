@@ -848,7 +848,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplica��ão agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplica���ão agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -949,7 +949,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or�����amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -8255,12 +8255,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-gray-900 capitalize">
                       {selectedWork.type || "Não especificado"}
                     </p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Título
-                    </label>
-                    <p className="text-gray-900">{selectedWork.title}</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
