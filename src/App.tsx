@@ -7118,6 +7118,138 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       />
                     </div>
 
+                    {/* Seção Específica para Furos de Água */}
+                    {editingWork?.type === "furo" && (
+                      <div className="border-t border-gray-200 pt-6">
+                        <div className="flex items-center space-x-3 mb-6">
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <Waves className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            Informações do Furo de Água
+                          </h3>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Profundidade (metros)
+                            </label>
+                            <input
+                              type="number"
+                              name="wellDepth"
+                              defaultValue={editingWork?.wellDepth}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 150"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Nível Água (metros)
+                            </label>
+                            <input
+                              type="number"
+                              name="waterLevel"
+                              defaultValue={editingWork?.waterLevel}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 25"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Profundidade da Bomba (metros)
+                            </label>
+                            <input
+                              type="number"
+                              name="pumpDepth"
+                              defaultValue={editingWork?.pumpDepth}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 120"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Caudal do Furo (m³)
+                            </label>
+                            <input
+                              type="number"
+                              name="waterFlow"
+                              step="0.1"
+                              defaultValue={editingWork?.waterFlow}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 3.5"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Tipo de Coluna
+                            </label>
+                            <select
+                              name="columnType"
+                              defaultValue={editingWork?.columnType}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Selecionar tipo</option>
+                              <option value="PEAD">PEAD</option>
+                              <option value="HIDROROSCADO">HIDROROSCADO</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Diâmetro Coluna (polegadas)
+                            </label>
+                            <input
+                              type="number"
+                              name="columnDiameter"
+                              step="0.1"
+                              defaultValue={editingWork?.columnDiameter}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 6"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Bomba Instalada (modelo)
+                            </label>
+                            <input
+                              type="text"
+                              name="pumpModel"
+                              defaultValue={editingWork?.pumpModel}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: Grundfos SQ3-65"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Potência Motor (HP)
+                            </label>
+                            <input
+                              type="number"
+                              name="motorPower"
+                              step="0.1"
+                              defaultValue={editingWork?.motorPower}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 3.5"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Tensão da Bomba
+                            </label>
+                            <select
+                              name="pumpVoltage"
+                              defaultValue={editingWork?.pumpVoltage}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Selecionar tensão</option>
+                              <option value="230V">230V</option>
+                              <option value="400V">400V</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex space-x-4">
                       <button
                         type="button"
