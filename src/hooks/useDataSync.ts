@@ -155,7 +155,8 @@ const mockMaintenance: Maintenance[] = [
 
 // Mock works data - DISABLED to prevent auto-populated test data
 const mockWorks: Work[] = [];
-    id: "work-1",
+
+// Mock clients data
     title: "Instalação Nova Piscina",
     description: "Construção de piscina 8x4m com sistema de filtração",
     client: "Ana Costa",
