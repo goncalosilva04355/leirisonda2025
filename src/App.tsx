@@ -3593,7 +3593,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Caudal do Furo (m³/h) *
+                                  Caudal do Furo (m��/h) *
                                 </label>
                                 <input
                                   type="number"
@@ -8168,20 +8168,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         {selectedWork.client || "Não especificado"}
                       </p>
                       <div className="mt-1">
-                        <span className="text-sm font-medium text-gray-700">Contacto: </span>
+                        <span className="text-sm font-medium text-gray-700">
+                          Contacto:{" "}
+                        </span>
                         {selectedWork.contact ? (
-                        <button
-                          onClick={() => handlePhoneClick(selectedWork.contact)}
-                          className={`text-sm mt-1 ${
-                            enablePhoneDialer
-                              ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                              : "text-gray-500"
-                          }`}
-                          disabled={!enablePhoneDialer}
-                        >
-                          �� {selectedWork.contact}
-                        </button>
-                      )}
+                          <button
+                            onClick={() =>
+                              handlePhoneClick(selectedWork.contact)
+                            }
+                            className={`text-sm mt-1 ${
+                              enablePhoneDialer
+                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                : "text-gray-500"
+                            }`}
+                            disabled={!enablePhoneDialer}
+                          >
+                            �� {selectedWork.contact}
+                          </button>
+                        ) : (
+                          <span className="text-sm text-gray-500">
+                            Não especificado
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
