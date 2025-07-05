@@ -4161,6 +4161,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   name: e.target.value,
                                 })
                               }
+                              name="client"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Nome do cliente"
                               required
