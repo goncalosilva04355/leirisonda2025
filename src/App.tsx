@@ -40,7 +40,7 @@ import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
-import { useDataSync } from "./hooks/useDataSync_simple";
+// import { useDataSync } from "./hooks/useDataSync_simple"; // Removed to fix hook errors
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 // import { useAutoSync } from "./hooks/useAutoSync"; // Temporarily disabled due to React hook error
@@ -7295,7 +7295,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Manutenç��o
+                          Tipo de Manutenção
                         </label>
                         <select
                           defaultValue={editingMaintenance?.type}
@@ -8364,7 +8364,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <label className="block text-sm font-medium text-gray-700">
                       Orçamento
                     </label>
-                    <p className="text-gray-900">€{selectedWork.budget}</p>
+                    <p className="text-gray-900">���{selectedWork.budget}</p>
                   </div>
                 )}
 
