@@ -928,7 +928,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTEN��ÕES REALIZADAS:
+MANUTEN����ÕES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
@@ -7284,6 +7284,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             };
 
                             console.log("💾 Update data:", updateData);
+                            console.log("🔍 Form elements found:", {
+                              workTitle: form.querySelector(
+                                'input[name="workTitle"]',
+                              )?.value,
+                              client: form.querySelector('input[name="client"]')
+                                ?.value,
+                              contact: form.querySelector(
+                                'input[name="contact"]',
+                              )?.value,
+                              location: form.querySelector(
+                                'textarea[name="location"]',
+                              )?.value,
+                              observations: form.querySelector(
+                                'textarea[name="observations"]',
+                              )?.value,
+                              workPerformed: form.querySelector(
+                                'textarea[name="workPerformed"]',
+                              )?.value,
+                              status: form.querySelector(
+                                'select[name="status"]',
+                              )?.value,
+                            });
 
                             await updateWork(editingWork.id, updateData);
 
