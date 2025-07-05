@@ -3613,9 +3613,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <button
                               type="button"
                               onClick={() => {
+                                console.log("🔄 Assignment button clicked");
+                                console.log(
+                                  "currentAssignedUser:",
+                                  currentAssignedUser,
+                                );
+                                console.log("users:", users);
+                                console.log("assignedUsers:", assignedUsers);
+
+                                if (!currentAssignedUser) {
+                                  console.log("❌ No user selected");
+                                  alert(
+                                    "Por favor selecione um utilizador para atribuir",
+                                  );
+                                  return;
+                                }
+
                                 if (currentAssignedUser) {
                                   const selectedUser = users.find(
                                     (u) => String(u.id) === currentAssignedUser,
+                                  );
+
+                                  console.log(
+                                    "selectedUser found:",
+                                    selectedUser,
                                   );
 
                                   if (selectedUser) {
@@ -3626,7 +3647,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       );
 
                                     console.log(
-                                      "Nova obra - Attempting to assign user:",
+                                      "🔧 Attempting to assign user:",
                                       selectedUser.name,
                                       "ID:",
                                       userIdStr,
@@ -3635,23 +3656,38 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     );
 
                                     if (!isAlreadyAssigned) {
-                                      setAssignedUsers([
+                                      const newAssignedUsers = [
                                         ...assignedUsers,
                                         {
                                           id: userIdStr,
                                           name: selectedUser.name,
                                         },
-                                      ]);
+                                      ];
+                                      setAssignedUsers(newAssignedUsers);
                                       setCurrentAssignedUser("");
                                       console.log(
-                                        "Nova obra - User assigned successfully!",
+                                        "✅ User assigned successfully!",
+                                        newAssignedUsers,
                                       );
                                     } else {
                                       console.log(
-                                        "Nova obra - User already assigned, skipping",
+                                        "⚠️ User already assigned, skipping",
+                                      );
+                                      alert(
+                                        "Este utilizador já está atribuído a esta obra",
                                       );
                                     }
+                                  } else {
+                                    console.log(
+                                      "❌ User not found in users array",
+                                    );
+                                    alert("Utilizador não encontrado");
                                   }
+                                } else {
+                                  console.log(
+                                    "❌ currentAssignedUser is empty",
+                                  );
+                                  alert("Por favor selecione um utilizador");
                                 }
                               }}
                               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
@@ -5754,7 +5790,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat���rio de Piscinas
+                          Relat����rio de Piscinas
                         </h3>
                         <p className="text-sm text-gray-600">
                           Lista completa de piscinas
@@ -5908,7 +5944,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
-                        <li>• Estatísticas gerais</li>
+                        <li>��� Estatísticas gerais</li>
                         <li>• Dados consolidados</li>
                         <li>• Análise de performance</li>
                       </ul>
@@ -8681,7 +8717,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">
-                      {selectedWork.client || "Cliente não especificado"}
+                      {selectedWork.client || "Cliente n��o especificado"}
                     </h2>
                     <p className="text-gray-600 text-sm">
                       {selectedWork.title}
