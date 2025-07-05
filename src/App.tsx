@@ -2052,7 +2052,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenção agendada
+                          Nenhuma manuten��ão agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenções aparecerão aqui
@@ -4291,7 +4291,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Location */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Localização Completa *
+                        Localiza��ão Completa *
                       </label>
                       <textarea
                         name="location"
@@ -8228,12 +8228,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">
-                      Detalhes Completos da Obra
+                      {selectedWork.client || "Cliente não especificado"}
                     </h2>
                     <p className="text-gray-600 text-sm">
-                      {selectedWork.id?.toUpperCase() ||
-                        "ID-" + Date.now().toString().slice(-6)}{" "}
-                      → {selectedWork.title}
+                      {selectedWork.title}
                     </p>
                   </div>
                 </div>
