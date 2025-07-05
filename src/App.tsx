@@ -5152,7 +5152,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex justify-between py-2 border-b border-gray-100">
                       <span className="text-gray-600">Perfil</span>
                       <span className="font-medium capitalize">
-                        {currentUser.role.replace("_", " ")}
+                        {currentUser?.role.replace("_", " ")}
                       </span>
                     </div>
                     <div className="flex justify-between py-2">
@@ -5400,7 +5400,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
 
                 {/* Data Management Section - Only for Super Admin */}
-                {currentUser.role === "super_admin" && (
+                {currentUser?.role === "super_admin" && (
                   <div className="bg-white rounded-lg p-6 shadow-sm">
                     <div className="flex items-center mb-4">
                       <Trash2 className="h-6 w-6 text-red-600 mr-3" />
@@ -8054,7 +8054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <p className="font-medium text-gray-900">
                     {currentUser?.name}
                   </p>
-                  <p className="text-sm text-gray-500">{currentUser.role}</p>
+                  <p className="text-sm text-gray-500">{currentUser?.role}</p>
                 </div>
               </div>
               <button
