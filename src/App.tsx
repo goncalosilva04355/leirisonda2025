@@ -1183,7 +1183,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`����️ OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`�����️ OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -7943,6 +7943,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             {loginError && (
               <div className="text-red-600 text-sm">{loginError}</div>
             )}
+
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                checked={loginForm.rememberMe}
+                onChange={(e) =>
+                  setLoginForm({ ...loginForm, rememberMe: e.target.checked })
+                }
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <label
+                htmlFor="rememberMe"
+                className="ml-2 text-sm text-gray-700"
+              >
+                Lembrar-me (auto-login automático)
+              </label>
+            </div>
 
             <div className="space-y-2">
               <button
