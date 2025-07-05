@@ -3297,6 +3297,117 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
+                    {/* Seção Específica para Furos de Água */}
+                    {selectedWorkType === "furo" && (
+                      <div>
+                        <div className="flex items-center space-x-3 mb-6">
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <Waves className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            Informações do Furo de Água
+                          </h3>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Profundidade do Furo (metros)
+                            </label>
+                            <input
+                              type="number"
+                              name="wellDepth"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 150"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Caudal de Água (L/min)
+                            </label>
+                            <input
+                              type="number"
+                              name="waterFlow"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 3000"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Diâmetro do Furo (polegadas)
+                            </label>
+                            <input
+                              type="number"
+                              name="wellDiameter"
+                              step="0.1"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 6"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Tipo de Bomba
+                            </label>
+                            <input
+                              type="text"
+                              name="pumpType"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: Bomba submersível"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Estado da Perfuração
+                            </label>
+                            <select
+                              name="drillingStatus"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Selecionar estado</option>
+                              <option value="not_started">Não Iniciado</option>
+                              <option value="in_progress">Em Perfuração</option>
+                              <option value="completed">
+                                Perfuração Concluída
+                              </option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Qualidade da Água
+                            </label>
+                            <input
+                              type="text"
+                              name="waterQuality"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: Boa qualidade, potável"
+                            />
+                          </div>
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Informações Geológicas
+                            </label>
+                            <textarea
+                              name="geologicalInfo"
+                              rows={3}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Descrição das camadas geológicas encontradas..."
+                            />
+                          </div>
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Equipamento Utilizado
+                            </label>
+                            <textarea
+                              name="equipmentUsed"
+                              rows={3}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Lista do equipamento utilizado na perfuração..."
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Viaturas e Técnicos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
