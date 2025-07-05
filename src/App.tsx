@@ -2302,10 +2302,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         <Building2 className="h-4 w-4 text-blue-600" />
                                         <div>
                                           <p className="font-medium text-gray-900">
-                                            {work.title}
+                                            {work.client || work.title}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {work.client} • {work.location}
+                                            {work.title} • {work.location}
                                           </p>
                                         </div>
                                       </div>
@@ -5480,7 +5480,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador n��o suporta notificações.",
+                                  "Este navegador n��o suporta notificaç��es.",
                                 );
                               }
                             }}
