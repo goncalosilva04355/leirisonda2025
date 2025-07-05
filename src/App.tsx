@@ -1241,7 +1241,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     // Check if current user is the one assigned (exact match or partial match for combined assignments)
     const isAssignedToCurrentUser =
-      currentUser &&
+      currentUser?.name &&
       assignedTo &&
       (assignedTo === currentUser.name ||
         assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
