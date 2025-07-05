@@ -957,7 +957,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -1910,7 +1910,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           .map((work) => (
                             <div
                               key={work.id}
-                              className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4"
+                              className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 cursor-pointer hover:bg-purple-100 transition-colors"
+                              onClick={() => {
+                                setSelectedWork(work);
+                                setViewingWork(true);
+                              }}
                             >
                               <div className="flex items-start justify-between">
                                 <div className="flex items-start space-x-3">
@@ -6795,7 +6799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Descrição
+                        Descri��ão
                       </label>
                       <textarea
                         defaultValue={editingWork?.description}
@@ -7999,7 +8003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <LogOut className="h-5 w-5" />
-                <span>Terminar Sessão</span>
+                <span>Terminar Sess��o</span>
               </button>
               <div className="mt-4 text-center">
                 <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
