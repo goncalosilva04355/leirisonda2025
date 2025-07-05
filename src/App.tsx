@@ -7093,8 +7093,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <button
                         type="button"
                         onClick={(e) => {
-                          // Wrap in Promise to handle any async errors properly
-                          Promise.resolve().then(async () => {
+                          // Safe async wrapper to prevent unhandled promise rejections
+                          (async () => {
                             try {
                               const form = (e.target as HTMLElement).closest(
                                 "form",
