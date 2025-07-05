@@ -732,8 +732,24 @@ function App() {
         setIsAuthenticated(true);
         localStorage.setItem("currentUser", JSON.stringify(result.user));
 
+        // Handle remember me functionality
+        if (loginForm.rememberMe) {
+          localStorage.setItem("autoLogin", "true");
+          localStorage.setItem(
+            "rememberedUser",
+            JSON.stringify({
+              email: loginForm.email,
+              password: loginForm.password,
+            }),
+          );
+          console.log("💾 Auto-login habilitado para:", loginForm.email);
+        } else {
+          localStorage.removeItem("autoLogin");
+          localStorage.removeItem("rememberedUser");
+        }
+
         // Clear login form
-        setLoginForm({ email: "", password: "" });
+        setLoginForm({ email: "", password: "", rememberMe: false });
 
         console.log("✅ Login state updated", {
           user: result.user.email,
@@ -3169,7 +3185,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
                             <option value="instalacao">Instalação</option>
-                            <option value="reparacao">Reparação</option>
+                            <option value="reparacao">Reparaç��o</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
                           </select>
@@ -5352,7 +5368,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-green-900">
-                              Navega���ão Maps
+                              Navega����ão Maps
                             </h4>
                             <button
                               onClick={() =>
