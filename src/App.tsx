@@ -2756,7 +2756,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenç��o</span>
+                      <span>Nova Manutenção</span>
                     </button>
                   </div>
                 </div>
@@ -4556,7 +4556,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manuten��ão
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar interven��ão de manutenção
+                        Registar intervenção de manutenção
                       </p>
                     </div>
                   </div>
@@ -8387,8 +8387,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         <div className="p-4 lg:p-6">{renderContent()}</div>
       </main>
 
-      {/* Install Prompt for Mobile */}
-      <InstallPrompt />
+      {/* Install Prompt for Mobile - Disabled */}
 
       {/* Admin Login Modal */}
       {showAdminLogin && !isAdminAuthenticated && (
