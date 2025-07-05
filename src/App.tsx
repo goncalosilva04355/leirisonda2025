@@ -2525,9 +2525,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">
-                                    �����
-                                  </div>
+                                  <div className="text-gray-400 mb-2">���</div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -3968,6 +3966,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             createdAt: new Date().toISOString(),
                             startDate: new Date().toISOString(),
                           };
+
+                          // Debug: Log extracted form data
+                          console.log("📋 Dados extraídos do formulário:", {
+                            workTitle,
+                            client,
+                            contact,
+                            location,
+                            startTime,
+                            endTime,
+                            status,
+                            description,
+                          });
 
                           // Use sync system to add work (will handle Firebase and localStorage)
                           addWork(workData);
@@ -7103,7 +7113,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
+                        Observa��ões
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
@@ -7643,7 +7653,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Valores da água</span>
+                  <span>Valores da ��gua</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
