@@ -3524,7 +3524,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de Água - Conditional */}
+                    {/* Detalhes do Furo de ��gua - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div>
                         <div className="flex items-center space-x-3 mb-6">
@@ -3744,6 +3744,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </label>
                           <textarea
                             rows={4}
+                            name="workPerformed"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Descrição do trabalho realizado..."
                           />
@@ -5499,7 +5500,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Piscinas
+                          Relat��rio de Piscinas
                         </h3>
                         <p className="text-sm text-gray-600">
                           Lista completa de piscinas
@@ -5618,7 +5619,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>��� Piscinas associadas</li>
+                        <li>• Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
