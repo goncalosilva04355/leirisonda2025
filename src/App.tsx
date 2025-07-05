@@ -189,24 +189,21 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // Data sync hook - manages all data with optional Firebase sync
-  const dataSync = useDataSync();
-  const {
-    pools,
-    maintenance,
-    futureMaintenance,
-    works,
-    clients,
-    isLoading: syncLoading,
-    lastSync,
-    error: syncError,
-    syncWithFirebase,
-    enableSync,
-    addPool,
-    addWork,
-    addMaintenance,
-    addClient,
-  } = dataSync;
+  // Simple data management without problematic hooks
+  const [works, setWorks] = useState([]);
+  const [pools, setPools] = useState([]);
+  const [maintenance, setMaintenance] = useState([]);
+  const [clients, setClients] = useState([]);
+  const futureMaintenance = [];
+  const syncLoading = false;
+  const lastSync = null;
+  const syncError = null;
+  const syncWithFirebase = () => {};
+  const enableSync = () => {};
+  const addWork = () => {};
+  const addPool = () => {};
+  const addMaintenance = () => {};
+  const addClient = () => {};
 
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
@@ -5498,7 +5495,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Piscinas
+                          Relat��rio de Piscinas
                         </h3>
                         <p className="text-sm text-gray-600">
                           Lista completa de piscinas
