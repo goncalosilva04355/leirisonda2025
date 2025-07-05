@@ -2831,7 +2831,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Lista de Manutenções */}
+                {/* Lista de Manutenç��es */}
                 <div className="space-y-4">
                   {maintenance.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
@@ -8369,12 +8369,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Atribuída a
                     </label>
                     <p className="text-gray-900">
-                      {selectedWork.assignedUsers &&
-                      selectedWork.assignedUsers.length > 0
-                        ? selectedWork.assignedUsers
+                      {(() => {
+                        // Priority: assignedUsers array (preferred format)
+                        if (
+                          selectedWork.assignedUsers &&
+                          selectedWork.assignedUsers.length > 0
+                        ) {
+                          return selectedWork.assignedUsers
                             .map((u) => u.name)
-                            .join(", ")
-                        : selectedWork.assignedTo || "Não atribuída"}
+                            .join(", ");
+                        }
+                        // Fallback: assignedTo string
+                        if (
+                          selectedWork.assignedTo &&
+                          selectedWork.assignedTo.trim()
+                        ) {
+                          return selectedWork.assignedTo;
+                        }
+                        // Default: not assigned
+                        return "Não atribuída";
+                      })()}
+                      {selectedWork.status === "completed" && (
+                        <span className="ml-2 text-sm text-green-600 font-medium">
+                          (Concluída)
+                        </span>
+                      )}
                     </p>
                   </div>
                   {selectedWork.technicians &&
@@ -8579,7 +8598,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Data de Criação
+                      Data de Cria��ão
                     </label>
                     <p className="text-gray-900 text-sm">
                       {new Date(
