@@ -1143,7 +1143,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribu��da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -6574,7 +6574,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Título da Obra *
+                          T��tulo da Obra *
                         </label>
                         <input
                           type="text"
@@ -8127,7 +8127,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <label className="block text-sm font-medium text-gray-700">
                         Cliente
                       </label>
-                      <p className="text-gray-900">{selectedWork.client}</p>
+                      <p className="text-gray-900">
+                        {selectedWork.client || "Não especificado"}
+                      </p>
                       {selectedWork.contact && (
                         <button
                           onClick={() => handlePhoneClick(selectedWork.contact)}
