@@ -2063,7 +2063,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manutenções
+                      Pr��ximas Manutenções
                     </h2>
                   </div>
 
@@ -6703,6 +6703,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Estado
                         </label>
                         <select
+                          name="status"
                           defaultValue={editingWork?.status}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
