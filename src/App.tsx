@@ -493,7 +493,7 @@ function App() {
         setTimeout(() => {
           showNotification(
             "Obras Atribuídas",
-            `Ol�� Alexandre! Tens ${alexandreWorks.length} obra${alexandreWorks.length > 1 ? "s" : ""} atribuída${alexandreWorks.length > 1 ? "s" : ""}.`,
+            `Olá Alexandre! Tens ${alexandreWorks.length} obra${alexandreWorks.length > 1 ? "s" : ""} atribuída${alexandreWorks.length > 1 ? "s" : ""}.`,
             "work",
           );
         }, 2000); // Delay to ensure notification system is ready
@@ -2109,7 +2109,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {maint.poolName}
                                     </h3>
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                      <span>🔧</span>
+                                      <span>��</span>
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -4131,70 +4131,64 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             createdAt: new Date().toISOString(),
                             startDate: new Date().toISOString(),
                             // Water well specific fields
-                            wellDepth:
-                              workType === "furo"
-                                ? (
-                                    form.querySelector(
-                                      'input[name="wellDepth"]',
-                                    ) as HTMLInputElement
-                                  )?.value || ""
-                                : "",
-                            waterFlow:
-                              workType === "furo"
-                                ? (
-                                    form.querySelector(
-                                      'input[name="waterFlow"]',
-                                    ) as HTMLInputElement
-                                  )?.value || ""
-                                : "",
-                            wellDiameter:
-                              workType === "furo"
-                                ? (
-                                    form.querySelector(
-                                      'input[name="wellDiameter"]',
-                                    ) as HTMLInputElement
-                                  )?.value || ""
-                                : "",
-                            pumpType:
-                              workType === "furo"
-                                ? (
-                                    form.querySelector(
-                                      'input[name="pumpType"]',
-                                    ) as HTMLInputElement
-                                  )?.value || ""
-                                : "",
-                            drillingStatus:
-                              workType === "furo"
-                                ? (
-                                    form.querySelector(
-                                      'select[name="drillingStatus"]',
-                                    ) as HTMLSelectElement
-                                  )?.value || ""
-                                : "",
-                            waterQuality:
-                              workType === "furo"
-                                ? (
-                                    form.querySelector(
-                                      'input[name="waterQuality"]',
-                                    ) as HTMLInputElement
-                                  )?.value || ""
-                                : "",
-                            geologicalInfo:
-                              workType === "furo"
-                                ? (
-                                    form.querySelector(
-                                      'textarea[name="geologicalInfo"]',
-                                    ) as HTMLTextAreaElement
-                                  )?.value || ""
-                                : "",
-                            equipmentUsed:
-                              workType === "furo"
-                                ? (
-                                    form.querySelector(
-                                      'textarea[name="equipmentUsed"]',
-                                    ) as HTMLTextAreaElement
-                                  )?.value || ""
-                                : "",
+                            ...(workType === "furo"
+                              ? {
+                                  wellDepth:
+                                    (
+                                      form.querySelector(
+                                        'input[name="wellDepth"]',
+                                      ) as HTMLInputElement
+                                    )?.value || "",
+                                  waterLevel:
+                                    (
+                                      form.querySelector(
+                                        'input[name="waterLevel"]',
+                                      ) as HTMLInputElement
+                                    )?.value || "",
+                                  pumpDepth:
+                                    (
+                                      form.querySelector(
+                                        'input[name="pumpDepth"]',
+                                      ) as HTMLInputElement
+                                    )?.value || "",
+                                  waterFlow:
+                                    (
+                                      form.querySelector(
+                                        'input[name="waterFlow"]',
+                                      ) as HTMLInputElement
+                                    )?.value || "",
+                                  columnType:
+                                    (
+                                      form.querySelector(
+                                        'select[name="columnType"]',
+                                      ) as HTMLSelectElement
+                                    )?.value || "",
+                                  columnDiameter:
+                                    (
+                                      form.querySelector(
+                                        'input[name="columnDiameter"]',
+                                      ) as HTMLInputElement
+                                    )?.value || "",
+                                  pumpModel:
+                                    (
+                                      form.querySelector(
+                                        'input[name="pumpModel"]',
+                                      ) as HTMLInputElement
+                                    )?.value || "",
+                                  motorPower:
+                                    (
+                                      form.querySelector(
+                                        'input[name="motorPower"]',
+                                      ) as HTMLInputElement
+                                    )?.value || "",
+                                  pumpVoltage:
+                                    (
+                                      form.querySelector(
+                                        'select[name="pumpVoltage"]',
+                                      ) as HTMLSelectElement
+                                    )?.value || "",
+                                }
+                              : {}),
                           };
 
                           // Debug logging for water well works
@@ -5800,7 +5794,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Trabalhos realizados</li>
                         <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observaç��es</li>
+                        <li>• Estados e observaç����es</li>
                       </ul>
                     </div>
                     <button
@@ -7320,7 +7314,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Sistema de Filtra��ão
+                          Sistema de Filtração
                         </label>
                         <select
                           defaultValue={editingPool?.filtrationSystem || "sand"}
@@ -7369,7 +7363,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observaç��es
+                        Observações
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
