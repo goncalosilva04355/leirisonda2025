@@ -949,7 +949,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or�����amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or�����amento: ����${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -5445,7 +5445,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Notification.permission === "granted"
                                 ) {
                                   new Notification("Leirisonda", {
-                                    body: "Notificações já estão ativadas!",
+                                    body: "Notificações já est��o ativadas!",
                                     icon: "/icon.svg",
                                   });
                                 } else {
@@ -7330,34 +7330,124 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const description = inputs[12].value; // Descri������o
                           const technicalNotes = inputs[12].value; // Observações Técnicas
 
-                          dataSync.updateWork(editingWork.id, {
+                          // Water well specific data (only if it's a water well work)
+                          const waterWellData =
+                            editingWork?.type === "furo"
+                              ? {
+                                  wellDepth:
+                                    (
+                                      form.querySelector(
+                                        'input[name="wellDepth"]',
+                                      ) as HTMLInputElement
+                                    )?.value ||
+                                    editingWork?.wellDepth ||
+                                    "",
+                                  waterLevel:
+                                    (
+                                      form.querySelector(
+                                        'input[name="waterLevel"]',
+                                      ) as HTMLInputElement
+                                    )?.value ||
+                                    editingWork?.waterLevel ||
+                                    "",
+                                  pumpDepth:
+                                    (
+                                      form.querySelector(
+                                        'input[name="pumpDepth"]',
+                                      ) as HTMLInputElement
+                                    )?.value ||
+                                    editingWork?.pumpDepth ||
+                                    "",
+                                  waterFlow:
+                                    (
+                                      form.querySelector(
+                                        'input[name="waterFlow"]',
+                                      ) as HTMLInputElement
+                                    )?.value ||
+                                    editingWork?.waterFlow ||
+                                    "",
+                                  columnType:
+                                    (
+                                      form.querySelector(
+                                        'select[name="columnType"]',
+                                      ) as HTMLSelectElement
+                                    )?.value ||
+                                    editingWork?.columnType ||
+                                    "",
+                                  columnDiameter:
+                                    (
+                                      form.querySelector(
+                                        'input[name="columnDiameter"]',
+                                      ) as HTMLInputElement
+                                    )?.value ||
+                                    editingWork?.columnDiameter ||
+                                    "",
+                                  pumpModel:
+                                    (
+                                      form.querySelector(
+                                        'input[name="pumpModel"]',
+                                      ) as HTMLInputElement
+                                    )?.value ||
+                                    editingWork?.pumpModel ||
+                                    "",
+                                  motorPower:
+                                    (
+                                      form.querySelector(
+                                        'input[name="motorPower"]',
+                                      ) as HTMLInputElement
+                                    )?.value ||
+                                    editingWork?.motorPower ||
+                                    "",
+                                  pumpVoltage:
+                                    (
+                                      form.querySelector(
+                                        'select[name="pumpVoltage"]',
+                                      ) as HTMLSelectElement
+                                    )?.value ||
+                                    editingWork?.pumpVoltage ||
+                                    "",
+                                }
+                              : {};
+
+                          console.log(
+                            "💾 Updating work:",
+                            editingWork.id,
+                            "with data:",
+                            {
+                              title,
+                              client,
+                              contact,
+                              location,
+                              observations,
+                              workPerformed,
+                              ...(editingWork?.type === "furo"
+                                ? waterWellData
+                                : {}),
+                            },
+                          );
+
+                          updateWork(editingWork.id, {
                             title,
                             client,
+                            contact,
                             location,
-                            status,
-                            startDate: startDate
-                              ? new Date(startDate).toISOString()
-                              : undefined,
-                            expectedEndDate: expectedEndDate
-                              ? new Date(expectedEndDate).toISOString()
-                              : undefined,
+                            observations,
+                            workPerformed,
                             assignedTo:
                               editAssignedUsers.length > 0
                                 ? editAssignedUsers
                                     .map((u) => u.name)
                                     .join(", ")
-                                : "",
-                            assignedUsers: editAssignedUsers,
-                            assignedUserIds: editAssignedUsers.map((u) => u.id),
-                            budgetValue: budgetValue
-                              ? parseFloat(budgetValue)
-                              : undefined,
-                            clientPhone,
-                            clientEmail,
-                            priority,
-                            workType,
-                            description,
-                            technicalNotes,
+                                : editingWork?.assignedTo || "",
+                            assignedUsers:
+                              editAssignedUsers.length > 0
+                                ? editAssignedUsers
+                                : editingWork?.assignedUsers || [],
+                            assignedUserIds:
+                              editAssignedUsers.length > 0
+                                ? editAssignedUsers.map((u) => u.id)
+                                : editingWork?.assignedUserIds || [],
+                            ...waterWellData,
                           });
 
                           alert("Obra atualizada com sucesso!");
