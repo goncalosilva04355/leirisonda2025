@@ -1010,7 +1010,7 @@ ESTATÍSTICAS:
 - Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PRÓXIMAS AÇÕES:
+PRÓXIMAS AÇ��ES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -3225,10 +3225,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Morada *
                           </label>
-                          <input
-                            type="text"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: Rua das Flores, 123, Leiria"
+                          <textarea
+                            name="location"
+                            rows={3}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
+                            placeholder="Ex: Rua das Flores, 123&#10;2400-000 Leiria&#10;Portugal"
                             required
                           />
                         </div>
@@ -7682,7 +7683,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>��</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
