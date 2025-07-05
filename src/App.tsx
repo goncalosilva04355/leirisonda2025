@@ -885,7 +885,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTENÇ��ES REALIZADAS:
+MANUTENÇÕES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
@@ -1161,7 +1161,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`����️ OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`�����️ OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -2803,7 +2803,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Lista de Manutenções */}
+                {/* Lista de Manuten��ões */}
                 <div className="space-y-4">
                   {maintenance.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
@@ -3166,7 +3166,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
                             <option value="instalacao">Instalação</option>
-                            <option value="reparacao">Reparação</option>
+                            <option value="reparacao">Repara��ão</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
                           </select>
@@ -3704,7 +3704,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observaç��es Específicas do Furo */}
+                          {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observaç��es Específicas do Furo
@@ -7685,7 +7685,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // TEMPORARY: Bypass authentication for testing
+  // TEMPORARY: Bypass authentication for testing - DISABLED
+  /*
   useEffect(() => {
     if (!currentUser) {
       const testUser = {
@@ -7709,6 +7710,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       localStorage.setItem("isAuthenticated", "true");
     }
   }, []);
+  */
 
   // Always allow access for testing - bypass authentication
   if (!isAuthenticated || !currentUser) {
