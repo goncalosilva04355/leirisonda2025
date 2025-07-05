@@ -3637,7 +3637,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <option value="">Selecionar diâmetro</option>
                                   <option value="1">1 polegada</option>
                                   <option value="1.25">1¼ polegadas</option>
-                                  <option value="1.5">1½ polegadas</option>
+                                  <option value="1.5">1�� polegadas</option>
                                   <option value="2">2 polegadas</option>
                                   <option value="2.5">2½ polegadas</option>
                                   <option value="3">3 polegadas</option>
@@ -5224,7 +5224,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                   );
                                 }
                               } else {
@@ -6450,7 +6450,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </button>
                               </div>
                               <div>
-                                <span className="font-medium">In��cio:</span>{" "}
+                                <span className="font-medium">Início:</span>{" "}
                                 {new Date(work.startDate).toLocaleDateString(
                                   "pt-PT",
                                 )}
@@ -6678,7 +6678,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">
                               {users.length > 0
                                 ? "Selecionar usu��rio..."
-                                : "Nenhum utilizador dispon��vel"}
+                                : "Nenhum utilizador disponível"}
                             </option>
                             {users
                               .filter((user) => {
@@ -7939,7 +7939,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
               </div>
               {/* Sync Status Indicator */}
-              <SyncStatusIcon className="ml-2" />
+              {/* <SyncStatusIcon className="ml-2" /> */}
               {/* Close button for mobile */}
               <button
                 onClick={() => setSidebarOpen(false)}
