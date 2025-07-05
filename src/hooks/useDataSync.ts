@@ -384,9 +384,10 @@ export function useDataSync(): SyncState & SyncActions {
     });
 
     const unsubscribeWorks = realFirebaseService.onWorksChange((works) => {
+      // Only update if Firebase has data or if local data is empty
       setState((prev) => ({
         ...prev,
-        works: works,
+        works: works.length > 0 || prev.works.length === 0 ? works : prev.works,
       }));
     });
 
