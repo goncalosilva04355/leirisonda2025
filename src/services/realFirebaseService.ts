@@ -313,10 +313,14 @@ class RealFirebaseService {
 
     try {
       const clientRef = ref(this.database!, `clients/${clientId}`);
-      await update(clientRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...clientData,
         updatedAt: new Date().toISOString(),
       });
+
+      await update(clientRef, sanitizedData);
       return true;
     } catch (error) {
       console.error("Failed to update client:", error);
