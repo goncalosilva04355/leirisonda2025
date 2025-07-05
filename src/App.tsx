@@ -3267,7 +3267,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Users className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Viaturas e Técnicos
+                          Viaturas e T��cnicos
                         </h3>
                       </div>
 
@@ -3929,26 +3929,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
                               : `LS-${Date.now()}`,
-                            title: workTitle,
-                            type: workType,
-                            client: client,
-                            contact: contact,
-                            location: location,
-                            startTime: startTime,
-                            endTime: endTime,
-                            status: status,
-                            description: description,
+                            title: workTitle || "",
+                            type: workType || "",
+                            client: client || "",
+                            contact: contact || "",
+                            location: location || "",
+                            startTime: startTime || "",
+                            endTime: endTime || "",
+                            status: status || "pending",
+                            description: description || "",
                             budget: budget ? parseFloat(budget) : null,
                             assignedTo:
                               assignedUsers.length > 0
                                 ? assignedUsers.map((u) => u.name).join(", ")
                                 : "",
-                            assignedUsers: assignedUsers, // Store complete user objects
-                            assignedUserIds: assignedUsers.map((u) => u.id), // Store user IDs
-                            vehicles: workVehicles,
-                            technicians: workTechnicians,
-                            photos: uploadedPhotos,
-                            photoCount: uploadedPhotos.length,
+                            assignedUsers: assignedUsers || [], // Store complete user objects
+                            assignedUserIds: assignedUsers
+                              ? assignedUsers.map((u) => u.id)
+                              : [], // Store user IDs
+                            vehicles: workVehicles || [],
+                            technicians: workTechnicians || [],
+                            photos: uploadedPhotos || [],
+                            photoCount: uploadedPhotos
+                              ? uploadedPhotos.length
+                              : 0,
                             observations: "",
                             workPerformed: "",
                             workSheetCompleted: false,
@@ -6885,7 +6889,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const clientEmail = inputs[8].value; // Email do Cliente
                           const priority = inputs[9].value; // Prioridade
                           const workType = inputs[10].value; // Tipo de Obra
-                          const description = inputs[12].value; // Descrição
+                          const description = inputs[12].value; // Descri��ão
                           const technicalNotes = inputs[12].value; // Observações Técnicas
 
                           dataSync.updateWork(editingWork.id, {
