@@ -189,24 +189,28 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // Data sync hook - manages all data with optional Firebase sync
+  // Data sync hook - simplified version
   const dataSync = useDataSync();
   const {
-    pools,
-    maintenance,
-    futureMaintenance,
     works,
-    clients,
     isLoading: syncLoading,
     lastSync,
     error: syncError,
-    syncWithFirebase,
-    enableSync,
-    addPool,
     addWork,
-    addMaintenance,
-    addClient,
   } = dataSync;
+
+  // Mock empty arrays for other data types
+  const pools = [];
+  const maintenance = [];
+  const futureMaintenance = [];
+  const clients = [];
+
+  // Mock functions for unused operations
+  const syncWithFirebase = () => Promise.resolve();
+  const enableSync = () => {};
+  const addPool = () => {};
+  const addMaintenance = () => {};
+  const addClient = () => {};
 
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
