@@ -6643,13 +6643,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Local *
+                          Contacto
                         </label>
                         <input
-                          type="text"
-                          defaultValue={editingWork?.location}
+                          type="tel"
+                          name="contact"
+                          defaultValue={editingWork?.contact}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Morada da obra"
+                          placeholder="+351 XXX XXX XXX"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Local *
+                        </label>
+                        <textarea
+                          name="location"
+                          rows={3}
+                          defaultValue={editingWork?.location}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
+                          placeholder="Morada completa da obra"
                           required
                         />
                       </div>
