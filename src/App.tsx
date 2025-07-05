@@ -124,7 +124,7 @@ function App() {
 
   // Debug logging for authentication state changes
   useEffect(() => {
-    console.log("����� Auth State Debug:", {
+    console.log("���� Auth State Debug:", {
       isAuthenticated,
       currentUser: currentUser
         ? `${currentUser.name} (${currentUser.email})`
@@ -190,6 +190,9 @@ function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // Data sync hook with Firebase synchronization
+  console.log(
+    "🔥 Firebase synchronization REACTIVATED - data will sync across devices!",
+  );
   const dataSync = useDataSync();
   const {
     works,
@@ -5122,7 +5125,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {[
                           "Limpeza de filtros",
-                          "Limpeza de pr��-filtro",
+                          "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
                           "Enchimento automático",
