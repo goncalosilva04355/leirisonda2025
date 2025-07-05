@@ -37,7 +37,7 @@ function App() {
   }, []);
 
   const dataSync = useDataSync();
-  const { works, addWork } = dataSync;
+  const { works, addWork, updateWork } = dataSync;
 
   const createTestWork = () => {
     const testWork = {
