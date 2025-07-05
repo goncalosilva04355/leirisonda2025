@@ -153,105 +153,8 @@ const mockMaintenance: Maintenance[] = [
   },
 ];
 
-// Mock works data
-const mockWorks: Work[] = [
-  {
-    id: "work-1",
-    title: "Instalação Nova Piscina",
-    description: "Construção de piscina 8x4m com sistema de filtração",
-    client: "Ana Costa",
-    contact: "923456789",
-    location: "Sintra",
-    type: "Instalação",
-    status: "in_progress",
-    startDate: "2025-01-20",
-    budget: 25000,
-    assignedTo: "Equipa A",
-    assignedUsers: [
-      { id: "1", name: "Gonçalo Fonseca" },
-      { id: "2", name: "Maria Silva" },
-    ],
-    assignedUserIds: ["1", "2"],
-    folhaGerada: false,
-    createdAt: "2025-01-18",
-  },
-  {
-    id: "work-2",
-    title: "Reparação Sistema Filtração",
-    description: "Substituiç��o de bomba e filtros",
-    client: "Pedro Almeida",
-    contact: "934567890",
-    location: "Cascais",
-    type: "Repara��ão",
-    status: "pending",
-    startDate: "2025-01-25",
-    budget: 1500,
-    assignedTo: "João Santos",
-    assignedUsers: [{ id: "3", name: "João Santos" }],
-    assignedUserIds: ["3"],
-    folhaGerada: false,
-    createdAt: "2025-01-22",
-  },
-  {
-    id: "work-3",
-    title: "Manutenção Anual Piscina Premium",
-    description: "Serviço completo de manutenção anual com limpeza profunda",
-    client: "Hotel Quinta da Marinha",
-    contact: "214567890",
-    location: "Quinta da Marinha, Cascais",
-    type: "Manutenção",
-    status: "in_progress",
-    startDate: "2025-01-15",
-    budget: 3500,
-    assignedTo: "Alexandre",
-    assignedUsers: [{ id: "4", name: "Alexandre" }],
-    assignedUserIds: ["4"],
-    folhaGerada: false,
-    createdAt: "2025-01-14",
-  },
-  {
-    id: "work-4",
-    title: "Instalação Sistema Aquecimento Solar",
-    description:
-      "Instalação de sistema de aquecimento solar para piscina residencial",
-    client: "Carlos Mendes",
-    contact: "965432187",
-    location: "Sintra",
-    type: "Instalação",
-    status: "pending",
-    startDate: "2025-02-01",
-    budget: 4200,
-    assignedTo: "Maria Silva, Alexandre",
-    assignedUsers: [
-      { id: "2", name: "Maria Silva" },
-      { id: "4", name: "Alexandre" },
-    ],
-    assignedUserIds: ["2", "4"],
-    folhaGerada: false,
-    createdAt: "2025-01-23",
-  },
-  {
-    id: "work-5",
-    title: "Renovação Deck Piscina",
-    description:
-      "Renovação completa do deck envolvente da piscina com materiais anti-derrapantes",
-    client: "Família Rodrigues",
-    contact: "923456781",
-    location: "Estoril",
-    type: "Renovação",
-    status: "completed",
-    startDate: "2024-12-20",
-    budget: 6800,
-    assignedTo: "João Santos, Alexandre",
-    assignedUsers: [
-      { id: "3", name: "João Santos" },
-      { id: "4", name: "Alexandre" },
-    ],
-    assignedUserIds: ["3", "4"],
-    folhaGerada: true,
-    createdAt: "2024-12-15",
-  },
-];
+// Mock works data - DISABLED to prevent auto-populated test data
+const mockWorks: Work[] = [];
 
 // Mock clients data
 const mockClients: Client[] = [
@@ -309,25 +212,263 @@ export interface SyncActions {
 }
 
 export function useDataSync(): SyncState & SyncActions {
-  const [state, setState] = useState<SyncState>({
-    pools: [],
-    maintenance: [],
-    futureMaintenance: [],
-    works: [],
-    clients: [],
-    isLoading: false,
-    lastSync: null,
-    error: null,
+  const [state, setState] = useState<SyncState>(() => {
+    // 🛡️ ADVANCED RECOVERY SYSTEM - Multiple backup sources
+    const recoverData = (dataType: string) => {
+      console.log(`🔍 RECOVERY: Attempting to recover ${dataType}...`);
+
+      // SOURCE 1: Primary storage
+      try {
+        const primary = localStorage.getItem(dataType);
+        if (primary) {
+          const data = JSON.parse(primary);
+          if (data.length > 0) {
+            console.log(
+              `✅ PRIMARY: ${dataType} recovered (${data.length} items)`,
+            );
+            return data;
+          }
+        }
+      } catch (error) {
+        console.warn(`⚠️ PRIMARY: ${dataType} corrupted, trying backups...`);
+      }
+
+      // SOURCE 2: Rolling backups (last 3 saves)
+      try {
+        const rolling = localStorage.getItem(`${dataType}_backup_rolling`);
+        if (rolling) {
+          const backups = JSON.parse(rolling);
+          if (backups.length > 0) {
+            const latest = backups[backups.length - 1];
+            if (latest.data && latest.data.length > 0) {
+              console.log(
+                `🔄 ROLLING: ${dataType} recovered (${latest.data.length} items)`,
+              );
+              return latest.data;
+            }
+          }
+        }
+      } catch (error) {
+        console.warn(
+          `⚠️ ROLLING: ${dataType} backup corrupted, trying daily...`,
+        );
+      }
+
+      // SOURCE 3: Daily backups (try last 7 days)
+      for (let i = 0; i < 7; i++) {
+        try {
+          const date = new Date();
+          date.setDate(date.getDate() - i);
+          const dateStr = date.toISOString().split("T")[0];
+          const daily = localStorage.getItem(`${dataType}_daily_${dateStr}`);
+          if (daily) {
+            const data = JSON.parse(daily);
+            if (data.length > 0) {
+              console.log(
+                `📅 DAILY: ${dataType} recovered from ${dateStr} (${data.length} items)`,
+              );
+              return data;
+            }
+          }
+        } catch (error) {
+          console.warn(`⚠️ DAILY: ${dataType} backup corrupted for day ${i}`);
+        }
+      }
+
+      // SOURCE 4: Emergency backups
+      try {
+        const keys = Object.keys(localStorage).filter((key) =>
+          key.startsWith("emergency_backup_"),
+        );
+        for (const key of keys.reverse()) {
+          try {
+            const emergency = JSON.parse(localStorage.getItem(key)!);
+            if (emergency[dataType] && emergency[dataType].length > 0) {
+              console.log(
+                `🚨 EMERGENCY: ${dataType} recovered (${emergency[dataType].length} items)`,
+              );
+              return emergency[dataType];
+            }
+          } catch (error) {
+            continue;
+          }
+        }
+      } catch (error) {
+        console.warn(`⚠️ EMERGENCY: Search failed for ${dataType}`);
+      }
+
+      console.warn(
+        `❌ FAILED: No valid ${dataType} found in ANY backup source!`,
+      );
+      return [];
+    };
+
+    try {
+      const works = recoverData("works");
+      const pools = recoverData("pools");
+      const maintenance = recoverData("maintenance");
+      const clients = recoverData("clients");
+
+      console.log("🛡️ RECOVERY COMPLETE:", {
+        works: works.length,
+        pools: pools.length,
+        maintenance: maintenance.length,
+        clients: clients.length,
+      });
+
+      const today = new Date();
+      const futureMaintenance = maintenance.filter(
+        (m: Maintenance) => new Date(m.scheduledDate) >= today,
+      );
+
+      return {
+        pools,
+        maintenance,
+        futureMaintenance,
+        works,
+        clients,
+        isLoading: false,
+        lastSync: null,
+        error: null,
+      };
+    } catch (error) {
+      console.error("🚨 CATASTROPHIC: Complete recovery failure:", error);
+      return {
+        pools: [],
+        maintenance: [],
+        futureMaintenance: [],
+        works: [],
+        clients: [],
+        isLoading: false,
+        lastSync: null,
+        error: null,
+      };
+    }
   });
 
   // Firebase sync is always enabled with fixed configuration
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  // Hook para sincronização automática em mutações - temporarily disabled
-  // const { withAutoSync } = useDataMutationSync();
+  // BULLETPROOF DATA PROTECTION - Multiple backup layers
+  useEffect(() => {
+    try {
+      const timestamp = new Date().toISOString();
+
+      // LAYER 1: Create backup before any save operation
+      const createBackup = (dataType: string, data: any[]) => {
+        if (data.length > 0) {
+          // Main storage
+          localStorage.setItem(dataType, JSON.stringify(data));
+
+          // Backup 1 - Timestamped backup
+          localStorage.setItem(
+            `${dataType}_backup_${Date.now()}`,
+            JSON.stringify(data),
+          );
+
+          // Backup 2 - Rolling backup (keep last 3)
+          const backupKey = `${dataType}_backup_rolling`;
+          const existingBackups = JSON.parse(
+            localStorage.getItem(backupKey) || "[]",
+          );
+          existingBackups.push({ timestamp, data });
+          if (existingBackups.length > 3) existingBackups.shift(); // Keep only last 3
+          localStorage.setItem(backupKey, JSON.stringify(existingBackups));
+
+          // Backup 3 - Daily backup
+          const today = new Date().toISOString().split("T")[0];
+          localStorage.setItem(
+            `${dataType}_daily_${today}`,
+            JSON.stringify(data),
+          );
+
+          console.log(
+            `🔒 PROTECTED: ${dataType} saved with 3 backup layers (${data.length} items)`,
+          );
+        }
+      };
+
+      // LAYER 2: Integrity check before saving
+      const hasValidData =
+        state.works.length > 0 ||
+        state.pools.length > 0 ||
+        state.maintenance.length > 0 ||
+        state.clients.length > 0;
+
+      if (!hasValidData) {
+        console.warn(
+          "⚠️ PROTECTION: Skipping save - no valid data to prevent overwrite",
+        );
+        return;
+      }
+
+      // LAYER 3: Save with multiple backups
+      createBackup("works", state.works);
+      createBackup("pools", state.pools);
+      createBackup("maintenance", state.maintenance);
+      createBackup("clients", state.clients);
+
+      // LAYER 4: Audit log
+      const auditLog = JSON.parse(
+        localStorage.getItem("data_audit_log") || "[]",
+      );
+      auditLog.push({
+        timestamp,
+        action: "auto_save",
+        counts: {
+          works: state.works.length,
+          pools: state.pools.length,
+          maintenance: state.maintenance.length,
+          clients: state.clients.length,
+        },
+      });
+      if (auditLog.length > 100) auditLog.shift(); // Keep last 100 entries
+      localStorage.setItem("data_audit_log", JSON.stringify(auditLog));
+
+      console.log("✅ BULLETPROOF SAVE COMPLETED:", {
+        works: state.works.length,
+        pools: state.pools.length,
+        maintenance: state.maintenance.length,
+        clients: state.clients.length,
+        timestamp,
+      });
+    } catch (error) {
+      console.error("🚨 CRITICAL ERROR in bulletproof save:", error);
+      // Emergency backup to a different key
+      try {
+        localStorage.setItem(
+          "emergency_backup_" + Date.now(),
+          JSON.stringify({
+            works: state.works,
+            pools: state.pools,
+            maintenance: state.maintenance,
+            clients: state.clients,
+            timestamp: new Date().toISOString(),
+            error: error.message,
+          }),
+        );
+      } catch (emergencyError) {
+        console.error("💥 EMERGENCY BACKUP ALSO FAILED:", emergencyError);
+      }
+    }
+  }, [state.works, state.pools, state.maintenance, state.clients]);
+
+  // Hook para sincronização automática em mutações - with debugging
   const withAutoSync = <T extends any[], R>(
     fn: (...args: T) => R | Promise<R>,
-  ) => fn;
+  ) => {
+    return async (...args: T): Promise<R> => {
+      try {
+        console.log("🔄 Executing data operation with args:", args);
+        const result = await fn(...args);
+        console.log("✅ Data operation completed successfully");
+        return result;
+      } catch (error) {
+        console.error("❌ Error in data operation:", error);
+        throw error;
+      }
+    };
+  };
 
   // Initial sync when enabled
   useEffect(() => {
@@ -410,44 +551,115 @@ export function useDataSync(): SyncState & SyncActions {
 
     // Set up real-time listeners
     const unsubscribePools = realFirebaseService.onPoolsChange((pools) => {
-      setState((prev) => ({
-        ...prev,
-        pools: pools,
-      }));
+      setState((prev) => {
+        // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
+        if (pools.length === 0 && prev.pools.length > 0) {
+          console.warn(
+            "🛡️ BLOCKED: Firebase tried to overwrite pools with empty array",
+          );
+          return prev; // Keep existing data
+        }
+
+        // Only update if Firebase has more/newer data
+        if (pools.length >= prev.pools.length) {
+          console.log(
+            `🔄 SYNC: Pools updated from Firebase (${pools.length} items)`,
+          );
+          return { ...prev, pools };
+        }
+
+        console.log(
+          `🛡️ PROTECTED: Keeping local pools (${prev.pools.length} > ${pools.length})`,
+        );
+        return prev;
+      });
     });
 
     const unsubscribeWorks = realFirebaseService.onWorksChange((works) => {
-      setState((prev) => ({
-        ...prev,
-        works: works,
-      }));
+      setState((prev) => {
+        // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
+        if (works.length === 0 && prev.works.length > 0) {
+          console.warn(
+            "🛡️ BLOCKED: Firebase tried to overwrite works with empty array",
+          );
+          return prev; // Keep existing data
+        }
+
+        // Only update if Firebase has more/newer data
+        if (works.length >= prev.works.length) {
+          console.log(
+            `🔄 SYNC: Works updated from Firebase (${works.length} items)`,
+          );
+          return { ...prev, works };
+        }
+
+        console.log(
+          `🛡️ PROTECTED: Keeping local works (${prev.works.length} > ${works.length})`,
+        );
+        return prev;
+      });
     });
 
     const unsubscribeMaintenance = realFirebaseService.onMaintenanceChange(
       (maintenance) => {
-        const today = new Date();
-        const futureMaintenance = maintenance.filter(
-          (m) => new Date(m.scheduledDate) >= today,
-        );
+        setState((prev) => {
+          // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
+          if (maintenance.length === 0 && prev.maintenance.length > 0) {
+            console.warn(
+              "🛡️ BLOCKED: Firebase tried to overwrite maintenance with empty array",
+            );
+            return prev; // Keep existing data
+          }
 
-        setState((prev) => ({
-          ...prev,
-          maintenance: maintenance,
-          futureMaintenance,
-        }));
+          const today = new Date();
+          const futureMaintenance = maintenance.filter(
+            (m) => new Date(m.scheduledDate) >= today,
+          );
+
+          // Only update if Firebase has more/newer data
+          if (maintenance.length >= prev.maintenance.length) {
+            console.log(
+              `🔄 SYNC: Maintenance updated from Firebase (${maintenance.length} items)`,
+            );
+            return { ...prev, maintenance, futureMaintenance };
+          }
+
+          console.log(
+            `🛡️ PROTECTED: Keeping local maintenance (${prev.maintenance.length} > ${maintenance.length})`,
+          );
+          return prev;
+        });
       },
     );
 
     const unsubscribeClients = realFirebaseService.onClientsChange(
       (clients) => {
-        setState((prev) => ({
-          ...prev,
-          clients: clients,
-        }));
+        setState((prev) => {
+          // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
+          if (clients.length === 0 && prev.clients.length > 0) {
+            console.warn(
+              "🛡️ BLOCKED: Firebase tried to overwrite clients with empty array",
+            );
+            return prev; // Keep existing data
+          }
+
+          // Only update if Firebase has more/newer data
+          if (clients.length >= prev.clients.length) {
+            console.log(
+              `🔄 SYNC: Clients updated from Firebase (${clients.length} items)`,
+            );
+            return { ...prev, clients };
+          }
+
+          console.log(
+            `🛡️ PROTECTED: Keeping local clients (${prev.clients.length} > ${clients.length})`,
+          );
+          return prev;
+        });
       },
     );
 
-    // Cleanup listeners on unmount
+    // Cleanup function
     return () => {
       unsubscribePools();
       unsubscribeWorks();
@@ -456,284 +668,9 @@ export function useDataSync(): SyncState & SyncActions {
     };
   }, [syncEnabled]);
 
-  // Initialize with data from localStorage + mock data
-  useEffect(() => {
-    const today = new Date();
+  // CRUD operations
 
-    // Check if we need to do a one-time cleanup
-    const hasBeenCleaned = localStorage.getItem("demo-data-cleaned");
-
-    if (!hasBeenCleaned) {
-      // ONE-TIME CLEANUP: Remove old demo data only once
-      console.log("🧹 ONE-TIME CLEANUP: Removing old demo data");
-      localStorage.removeItem("pools");
-      localStorage.removeItem("works");
-      localStorage.removeItem("maintenance");
-      localStorage.removeItem("interventions");
-      localStorage.removeItem("clients");
-
-      // Mark as cleaned so this doesn't happen again
-      localStorage.setItem("demo-data-cleaned", "true");
-      localStorage.setItem("app-cleaned", new Date().toISOString());
-      localStorage.setItem("last-cleanup", new Date().toISOString());
-
-      // Start with empty data after cleanup
-      setState((prev) => ({
-        ...prev,
-        pools: [],
-        maintenance: [],
-        futureMaintenance: [],
-        works: [],
-        clients: [],
-      }));
-
-      console.log("�� Demo data cleaned - new data will be saved normally");
-      return;
-    }
-
-    // Normal startup - load existing data from localStorage
-    console.log("📂 Loading saved data from localStorage");
-
-    // Clean only specific known mock/fictitious data while preserving real user data
-    const cleanMockData = (data: any[], type: string) => {
-      if (!Array.isArray(data)) return data;
-      // Only remove data with very specific mock identifiers
-      return data.filter((item) => {
-        if (!item || !item.id) return true; // Keep items without IDs
-
-        // Only remove items that match exact mock data patterns
-        const isExactMockPool =
-          (item.id === "pool-1" && item.name === "Piscina Villa Marina") ||
-          (item.id === "pool-2" && item.name === "Piscina Condomínio Sol");
-
-        const isExactMockWork =
-          (item.id === "work-1" && item.title === "Instalação Nova Piscina") ||
-          (item.id === "work-2" &&
-            item.title === "Reparação Sistema Filtração") ||
-          (item.id === "work-3" &&
-            item.title === "Manutenção Mensal Pool Club") ||
-          (item.id === "work-4" &&
-            item.title === "Instalação Cobertura Automática") ||
-          (item.id === "work-5" &&
-            item.title === "Renovação Sistema Filtração");
-
-        const isExactMockMaintenance =
-          item.id === "maint-1" ||
-          item.id === "maint-2" ||
-          item.id === "maint-3" ||
-          item.id === "maint-4" ||
-          item.id === "maint-5";
-
-        const isExactMockClient =
-          (item.id === "client-1" && item.name === "João Silva") ||
-          (item.id === "client-2" && item.name === "Maria Santos");
-
-        // Keep everything except exact mock matches
-        return !(
-          isExactMockPool ||
-          isExactMockWork ||
-          isExactMockMaintenance ||
-          isExactMockClient
-        );
-      });
-    };
-
-    const rawPools = JSON.parse(localStorage.getItem("pools") || "[]");
-    const rawMaintenance = JSON.parse(
-      localStorage.getItem("maintenance") || "[]",
-    );
-    const rawWorks = JSON.parse(localStorage.getItem("works") || "[]");
-    const rawClients = JSON.parse(localStorage.getItem("clients") || "[]");
-
-    // Clean mock data from localStorage
-    const savedPools = cleanMockData(rawPools, "pools");
-    const savedMaintenance = cleanMockData(rawMaintenance, "maintenance");
-    const savedWorks = cleanMockData(rawWorks, "works");
-    const savedClients = cleanMockData(rawClients, "clients");
-
-    // Save cleaned data back to localStorage
-    localStorage.setItem("pools", JSON.stringify(savedPools));
-    localStorage.setItem("maintenance", JSON.stringify(savedMaintenance));
-    localStorage.setItem("works", JSON.stringify(savedWorks));
-    localStorage.setItem("clients", JSON.stringify(savedClients));
-
-    // Log what real data was found and preserved
-    console.log("📊 Dados reais carregados:", {
-      piscinas: savedPools.length,
-      obras: savedWorks.length,
-      manutencoes: savedMaintenance.length,
-      clientes: savedClients.length,
-    });
-
-    // If no data found locally, try to force sync from Firebase
-    if (
-      savedPools.length === 0 &&
-      savedWorks.length === 0 &&
-      savedMaintenance.length === 0
-    ) {
-      console.log(
-        "🔄 Nenhum dado local encontrado, tentando recuperar do Firebase...",
-      );
-      // Trigger sync with Firebase immediately after state is set
-      setTimeout(() => {
-        if (syncEnabled && realFirebaseService.isReady()) {
-          syncWithFirebase();
-        }
-      }, 1000);
-    }
-
-    // Always use only saved data, never add mock data automatically
-    const finalPools = savedPools;
-    const finalMaintenance = savedMaintenance;
-    const finalWorks = savedWorks;
-    const finalClients = savedClients;
-
-    // Calculate future maintenance
-    const future = finalMaintenance.filter(
-      (m) => new Date(m.scheduledDate) >= today,
-    );
-
-    // Set the loaded data
-    setState((prev) => ({
-      ...prev,
-      pools: finalPools,
-      maintenance: finalMaintenance,
-      futureMaintenance: future,
-      works: finalWorks,
-      clients: finalClients,
-    }));
-
-    console.log("✅ Data loaded:", {
-      pools: finalPools.length,
-      works: finalWorks.length,
-      maintenance: finalMaintenance.length,
-      clients: finalClients.length,
-      alexandreWorks: finalWorks.filter(
-        (w) => w.assignedTo && w.assignedTo.includes("Alexandre"),
-      ).length,
-    });
-  }, []);
-
-  // Real Firebase sync
-  const syncWithFirebase = useCallback(async () => {
-    // Firebase temporarily paused - running in offline mode
-    console.log("⏸️ Firebase sync paused - using local storage only");
-    setState((prev) => ({ ...prev, isLoading: false, error: null }));
-    return;
-
-    if (!syncEnabled) {
-      setState((prev) => ({ ...prev, error: "Firebase not configured" }));
-      return;
-    }
-
-    setState((prev) => ({ ...prev, isLoading: true, error: null }));
-
-    try {
-      // Initialize Firebase if not already done
-      if (!realFirebaseService.isReady()) {
-        const initialized = realFirebaseService.initialize();
-        if (!initialized) {
-          throw new Error("Failed to initialize Firebase");
-        }
-      }
-
-      // Test connection
-      const connectionOk = await realFirebaseService.testConnection();
-      if (!connectionOk) {
-        throw new Error("Firebase connection test failed");
-      }
-
-      // Sync all data from Firebase
-      const firebaseData = await realFirebaseService.syncAllData();
-      if (firebaseData) {
-        // Merge with local data
-        const localPools = JSON.parse(localStorage.getItem("pools") || "[]");
-        const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
-        const localMaintenance = JSON.parse(
-          localStorage.getItem("maintenance") || "[]",
-        );
-        const localInterventions = JSON.parse(
-          localStorage.getItem("interventions") || "[]",
-        );
-        const localClients = JSON.parse(
-          localStorage.getItem("clients") || "[]",
-        );
-
-        // Upload local data to Firebase if it doesn't exist there
-        for (const pool of localPools) {
-          if (!firebaseData.pools.find((p) => p.id === pool.id)) {
-            await realFirebaseService.addPool(pool);
-          }
-        }
-
-        for (const work of localWorks) {
-          if (!firebaseData.works.find((w) => w.id === work.id)) {
-            await realFirebaseService.addWork(work);
-          }
-        }
-
-        for (const maintenance of localMaintenance) {
-          if (!firebaseData.maintenance.find((m) => m.id === maintenance.id)) {
-            await realFirebaseService.addMaintenance(maintenance);
-          }
-        }
-
-        for (const intervention of localInterventions) {
-          const maintenanceData = {
-            id: intervention.id.toString(),
-            poolId: intervention.poolId || "unknown",
-            poolName: intervention.poolName || "Piscina",
-            type: "Manutenção",
-            status: intervention.status || "completed",
-            description: intervention.workPerformed || "Manutenção realizada",
-            scheduledDate: intervention.date,
-            completedDate: intervention.date,
-            technician: intervention.technician || "Técnico",
-            notes: intervention.observations,
-            createdAt: intervention.createdAt || new Date().toISOString(),
-          };
-
-          if (
-            !firebaseData.maintenance.find((m) => m.id === maintenanceData.id)
-          ) {
-            await realFirebaseService.addMaintenance(maintenanceData);
-          }
-        }
-
-        // Get updated data after upload
-        const updatedData = await realFirebaseService.syncAllData();
-        if (updatedData) {
-          const today = new Date();
-          const futureMaintenance = updatedData.maintenance.filter(
-            (m) => new Date(m.scheduledDate) >= today,
-          );
-
-          setState((prev) => ({
-            ...prev,
-            pools: updatedData.pools,
-            works: updatedData.works,
-            maintenance: updatedData.maintenance,
-            futureMaintenance,
-            clients: updatedData.clients,
-            isLoading: false,
-            lastSync: new Date(),
-            error: null,
-          }));
-        }
-      }
-
-      console.log("Firebase sync completed successfully");
-    } catch (error) {
-      console.error("Firebase sync failed:", error);
-      setState((prev) => ({
-        ...prev,
-        isLoading: false,
-        error: `Sync failed: ${error.message}`,
-      }));
-    }
-  }, [syncEnabled]);
-
-  // Pool actions
+  // Pools
   const addPool = useCallback(
     withAutoSync(async (poolData: Omit<Pool, "id" | "createdAt">) => {
       const newPool: Pool = {
@@ -742,32 +679,20 @@ export function useDataSync(): SyncState & SyncActions {
         createdAt: new Date().toISOString(),
       };
 
-      // Add to local state immediately
       setState((prev) => ({
         ...prev,
         pools: [...prev.pools, newPool],
       }));
 
-      // Add to localStorage for backup
-      const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
-      savedPools.push(newPool);
-      localStorage.setItem("pools", JSON.stringify(savedPools));
-
-      // Add to Firebase if sync is enabled
-      if (syncEnabled && realFirebaseService.isReady()) {
-        try {
-          await realFirebaseService.addPool(newPool);
-          console.log("Pool added to Firebase successfully");
-        } catch (error) {
-          console.error("Failed to add pool to Firebase:", error);
-        }
+      if (realFirebaseService.isReady()) {
+        await realFirebaseService.addPool(newPool);
       }
     }),
-    [syncEnabled, withAutoSync],
+    [withAutoSync],
   );
 
   const updatePool = useCallback(
-    (id: string, poolData: Partial<Pool>) => {
+    withAutoSync(async (id: string, poolData: Partial<Pool>) => {
       setState((prev) => ({
         ...prev,
         pools: prev.pools.map((pool) =>
@@ -775,33 +700,28 @@ export function useDataSync(): SyncState & SyncActions {
         ),
       }));
 
-      if (syncEnabled) {
-        syncWithFirebase();
+      if (realFirebaseService.isReady()) {
+        await realFirebaseService.updatePool(id, poolData);
       }
-    },
-    [syncEnabled, syncWithFirebase],
+    }),
+    [withAutoSync],
   );
 
   const deletePool = useCallback(
-    (id: string) => {
+    withAutoSync(async (id: string) => {
       setState((prev) => ({
         ...prev,
         pools: prev.pools.filter((pool) => pool.id !== id),
       }));
 
-      // Remove from localStorage
-      const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
-      const updatedPools = savedPools.filter((pool: Pool) => pool.id !== id);
-      localStorage.setItem("pools", JSON.stringify(updatedPools));
-
-      if (syncEnabled) {
-        syncWithFirebase();
+      if (realFirebaseService.isReady()) {
+        await realFirebaseService.deletePool(id);
       }
-    },
-    [syncEnabled, syncWithFirebase],
+    }),
+    [withAutoSync],
   );
 
-  // Maintenance actions
+  // Maintenance
   const addMaintenance = useCallback(
     withAutoSync(
       async (maintenanceData: Omit<Maintenance, "id" | "createdAt">) => {
@@ -811,142 +731,125 @@ export function useDataSync(): SyncState & SyncActions {
           createdAt: new Date().toISOString(),
         };
 
-        // Add to local state immediately
-        setState((prev) => {
-          const updated = [...prev.maintenance, newMaintenance];
-          const future = updated.filter(
-            (m) => new Date(m.scheduledDate) >= new Date(),
-          );
+        // Update both maintenance and futureMaintenance arrays
+        const today = new Date();
+        const isFuture =
+          new Date(newMaintenance.scheduledDate) >= today &&
+          (newMaintenance.status === "scheduled" ||
+            newMaintenance.status === "pending");
 
-          return {
-            ...prev,
-            maintenance: updated,
-            futureMaintenance: future,
-          };
-        });
+        setState((prev) => ({
+          ...prev,
+          maintenance: [...prev.maintenance, newMaintenance],
+          futureMaintenance: isFuture
+            ? [...prev.futureMaintenance, newMaintenance]
+            : prev.futureMaintenance,
+        }));
 
-        // Add to localStorage for backup
-        const savedMaintenance = JSON.parse(
-          localStorage.getItem("maintenance") || "[]",
-        );
-        savedMaintenance.push(newMaintenance);
-        localStorage.setItem("maintenance", JSON.stringify(savedMaintenance));
-
-        // Add to Firebase if sync is enabled
-        if (syncEnabled && realFirebaseService.isReady()) {
-          try {
-            await realFirebaseService.addMaintenance(newMaintenance);
-            console.log("Maintenance added to Firebase successfully");
-          } catch (error) {
-            console.error("Failed to add maintenance to Firebase:", error);
-          }
+        if (realFirebaseService.isReady()) {
+          await realFirebaseService.addMaintenance(newMaintenance);
         }
       },
     ),
-    [syncEnabled, withAutoSync],
+    [withAutoSync],
   );
 
   const updateMaintenance = useCallback(
-    (id: string, maintenanceData: Partial<Maintenance>) => {
+    withAutoSync(async (id: string, maintenanceData: Partial<Maintenance>) => {
       setState((prev) => {
-        const updated = prev.maintenance.map((maintenance) =>
-          maintenance.id === id
-            ? { ...maintenance, ...maintenanceData }
-            : maintenance,
+        const updatedMaintenance = prev.maintenance.map((maint) =>
+          maint.id === id ? { ...maint, ...maintenanceData } : maint,
         );
-        const future = updated.filter(
-          (m) => new Date(m.scheduledDate) >= new Date(),
+
+        // Recalculate future maintenance
+        const today = new Date();
+        const futureMaintenance = updatedMaintenance.filter(
+          (m) =>
+            new Date(m.scheduledDate) >= today &&
+            (m.status === "scheduled" || m.status === "pending"),
         );
 
         return {
           ...prev,
-          maintenance: updated,
-          futureMaintenance: future,
+          maintenance: updatedMaintenance,
+          futureMaintenance,
         };
       });
 
-      if (syncEnabled) {
-        syncWithFirebase();
+      if (realFirebaseService.isReady()) {
+        await realFirebaseService.updateMaintenance(id, maintenanceData);
       }
-    },
-    [syncEnabled, syncWithFirebase],
+    }),
+    [withAutoSync],
   );
 
   const deleteMaintenance = useCallback(
-    (id: string) => {
-      setState((prev) => {
-        const updated = prev.maintenance.filter(
-          (maintenance) => maintenance.id !== id,
-        );
-        const future = updated.filter(
-          (m) => new Date(m.scheduledDate) >= new Date(),
-        );
+    withAutoSync(async (id: string) => {
+      setState((prev) => ({
+        ...prev,
+        maintenance: prev.maintenance.filter((maint) => maint.id !== id),
+        futureMaintenance: prev.futureMaintenance.filter(
+          (maint) => maint.id !== id,
+        ),
+      }));
 
-        return {
-          ...prev,
-          maintenance: updated,
-          futureMaintenance: future,
-        };
-      });
-
-      // Remove from localStorage
-      const savedMaintenance = JSON.parse(
-        localStorage.getItem("maintenance") || "[]",
-      );
-      const updatedMaintenance = savedMaintenance.filter(
-        (maintenance: Maintenance) => maintenance.id !== id,
-      );
-      localStorage.setItem("maintenance", JSON.stringify(updatedMaintenance));
-
-      if (syncEnabled) {
-        syncWithFirebase();
+      if (realFirebaseService.isReady()) {
+        await realFirebaseService.deleteMaintenance(id);
       }
-    },
-    [syncEnabled, syncWithFirebase],
+    }),
+    [withAutoSync],
   );
 
-  // Work actions
+  // Works
   const addWork = useCallback(
     withAutoSync(async (workData: Omit<Work, "id" | "createdAt">) => {
+      console.log("🔧 addWork called with data:", workData);
+
       const newWork: Work = {
         ...workData,
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
       };
 
-      // Add to local state immediately
-      setState((prev) => ({
-        ...prev,
-        works: [...prev.works, newWork],
-      }));
+      console.log("🆕 Creating new work:", newWork);
 
-      // Add to localStorage for backup
-      const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
-      savedWorks.push(newWork);
-      localStorage.setItem("works", JSON.stringify(savedWorks));
+      setState((prev) => {
+        const updatedWorks = [...prev.works, newWork];
+        console.log("📊 Updated works count:", updatedWorks.length);
+        return {
+          ...prev,
+          works: updatedWorks,
+        };
+      });
 
-      // Add to Firebase if sync is enabled
-      if (syncEnabled && realFirebaseService.isReady()) {
-        try {
-          await realFirebaseService.addWork(newWork);
-          console.log("Work added to Firebase successfully");
-        } catch (error) {
-          console.error("Failed to add work to Firebase:", error);
-        }
+      if (realFirebaseService.isReady()) {
+        console.log("🔥 Syncing to Firebase...");
+        await realFirebaseService.addWork(newWork);
+      } else {
+        console.log("📱 Firebase not ready, using local storage only");
       }
+
+      console.log("✅ Work added successfully");
     }),
-    [syncEnabled, withAutoSync],
+    [withAutoSync],
   );
 
   const updateWork = useCallback(
-    (id: string, workData: Partial<Work>) => {
+    withAutoSync(async (id: string, workData: Partial<Work>) => {
+      console.log("🔧 updateWork called with:", { id, workData });
+
       setState((prev) => {
+        const workIndex = prev.works.findIndex((work) => work.id === id);
+        if (workIndex === -1) {
+          console.error("❌ Work not found for ID:", id);
+          return prev;
+        }
+
         const updatedWorks = prev.works.map((work) =>
           work.id === id ? { ...work, ...workData } : work,
         );
 
-        // Persist to localStorage
-        localStorage.setItem("works", JSON.stringify(updatedWorks));
+        console.log("✅ Work updated in state:", updatedWorks[workIndex]);
 
         return {
           ...prev,
@@ -954,37 +857,34 @@ export function useDataSync(): SyncState & SyncActions {
         };
       });
 
-      if (syncEnabled) {
-        syncWithFirebase();
+      if (realFirebaseService.isReady()) {
+        console.log("🔥 Syncing work update to Firebase...");
+        await realFirebaseService.updateWork(id, workData);
+        console.log("✅ Firebase sync completed");
+      } else {
+        console.log("📱 Firebase not ready, using local storage only");
       }
-    },
-    [syncEnabled, syncWithFirebase],
+    }),
+    [withAutoSync],
   );
 
   const deleteWork = useCallback(
-    (id: string) => {
-      setState((prev) => {
-        const updatedWorks = prev.works.filter((work) => work.id !== id);
+    withAutoSync(async (id: string) => {
+      setState((prev) => ({
+        ...prev,
+        works: prev.works.filter((work) => work.id !== id),
+      }));
 
-        // Persist to localStorage
-        localStorage.setItem("works", JSON.stringify(updatedWorks));
-
-        return {
-          ...prev,
-          works: updatedWorks,
-        };
-      });
-
-      if (syncEnabled) {
-        syncWithFirebase();
+      if (realFirebaseService.isReady()) {
+        await realFirebaseService.deleteWork(id);
       }
-    },
-    [syncEnabled, syncWithFirebase],
+    }),
+    [withAutoSync],
   );
 
-  // Client actions
+  // Clients
   const addClient = useCallback(
-    (clientData: Omit<Client, "id" | "createdAt">) => {
+    withAutoSync(async (clientData: Omit<Client, "id" | "createdAt">) => {
       const newClient: Client = {
         ...clientData,
         id: Date.now().toString(),
@@ -996,15 +896,15 @@ export function useDataSync(): SyncState & SyncActions {
         clients: [...prev.clients, newClient],
       }));
 
-      if (syncEnabled) {
-        syncWithFirebase();
+      if (realFirebaseService.isReady()) {
+        await realFirebaseService.addClient(newClient);
       }
-    },
-    [syncEnabled, syncWithFirebase],
+    }),
+    [withAutoSync],
   );
 
   const updateClient = useCallback(
-    (id: string, clientData: Partial<Client>) => {
+    withAutoSync(async (id: string, clientData: Partial<Client>) => {
       setState((prev) => ({
         ...prev,
         clients: prev.clients.map((client) =>
@@ -1012,93 +912,97 @@ export function useDataSync(): SyncState & SyncActions {
         ),
       }));
 
-      if (syncEnabled) {
-        syncWithFirebase();
+      if (realFirebaseService.isReady()) {
+        await realFirebaseService.updateClient(id, clientData);
       }
-    },
-    [syncEnabled, syncWithFirebase],
+    }),
+    [withAutoSync],
   );
 
   const deleteClient = useCallback(
-    (id: string) => {
+    withAutoSync(async (id: string) => {
       setState((prev) => ({
         ...prev,
         clients: prev.clients.filter((client) => client.id !== id),
       }));
 
-      if (syncEnabled) {
-        syncWithFirebase();
+      if (realFirebaseService.isReady()) {
+        await realFirebaseService.deleteClient(id);
       }
-    },
-    [syncEnabled, syncWithFirebase],
+    }),
+    [withAutoSync],
   );
 
-  const enableSync = useCallback(
-    (enabled: boolean) => {
-      setSyncEnabled(enabled);
-      if (enabled) {
-        // Initialize Firebase when enabling sync
-        if (!realFirebaseService.isReady()) {
-          const initialized = realFirebaseService.initialize();
-          if (initialized) {
-            console.log("Firebase initialized for sync");
-            syncWithFirebase();
-          } else {
-            console.error("Failed to initialize Firebase for sync");
-            setState((prev) => ({
-              ...prev,
-              error: "Failed to initialize Firebase",
-            }));
-          }
-        } else {
-          syncWithFirebase();
-        }
-      }
-    },
-    [syncWithFirebase],
-  );
+  // Sync operations
+  const syncWithFirebase = useCallback(async () => {
+    if (!realFirebaseService.isReady()) {
+      console.warn("Firebase service not ready");
+      return;
+    }
 
-  const cleanAllData = useCallback(async () => {
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      // Clear local storage
-      localStorage.removeItem("pools");
-      localStorage.removeItem("works");
-      localStorage.removeItem("maintenance");
-      localStorage.removeItem("interventions");
-      localStorage.removeItem("clients");
+      const [pools, maintenance, works, clients] = await Promise.all([
+        realFirebaseService.getPools(),
+        realFirebaseService.getMaintenance(),
+        realFirebaseService.getWorks(),
+        realFirebaseService.getClients(),
+      ]);
 
-      // Reset state to only mock data
+      // Calculate future maintenance
       const today = new Date();
-      const future = mockMaintenance.filter(
-        (m) => new Date(m.scheduledDate) >= today,
+      const futureMaintenance = maintenance.filter(
+        (m) =>
+          new Date(m.scheduledDate) >= today &&
+          (m.status === "scheduled" || m.status === "pending"),
       );
 
       setState((prev) => ({
         ...prev,
-        pools: [],
-        maintenance: [],
-        futureMaintenance: [],
-        works: [],
-        clients: [],
+        pools,
+        maintenance,
+        futureMaintenance,
+        works,
+        clients,
         isLoading: false,
         lastSync: new Date(),
         error: null,
       }));
-
-      // Set cleanup flags
-      localStorage.setItem("app-cleaned", new Date().toISOString());
-      localStorage.setItem("last-cleanup", new Date().toISOString());
-
-      console.log("Data cleanup completed successfully");
     } catch (error: any) {
-      console.error("Data cleanup failed:", error);
+      console.error("Firebase sync error:", error);
       setState((prev) => ({
         ...prev,
         isLoading: false,
-        error: `Cleanup failed: ${error.message}`,
+        error: error.message || "Sync failed",
       }));
+    }
+  }, []);
+
+  const enableSync = useCallback((enabled: boolean) => {
+    setSyncEnabled(enabled);
+  }, []);
+
+  const cleanAllData = useCallback(async () => {
+    // Clear all data locally
+    setState({
+      pools: [],
+      maintenance: [],
+      futureMaintenance: [],
+      works: [],
+      clients: [],
+      isLoading: false,
+      lastSync: null,
+      error: null,
+    });
+
+    // Clear all data in Firebase if connected
+    if (realFirebaseService.isReady()) {
+      try {
+        await realFirebaseService.cleanAllData();
+      } catch (error) {
+        console.warn("Failed to clean Firebase data:", error);
+      }
     }
   }, []);
 

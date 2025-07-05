@@ -28,6 +28,55 @@ class RealFirebaseService {
   private database: Database | null = null;
   private isInitialized = false;
 
+  // Sanitize data for Firebase - remove undefined values and functions
+  private sanitizeForFirebase(data: any): any {
+    // Handle null and undefined
+    if (data === null) {
+      return null;
+    }
+
+    if (data === undefined) {
+      return null;
+    }
+
+    // Remove functions
+    if (typeof data === "function") {
+      return null;
+    }
+
+    // Preserve primitive values (strings, numbers, booleans)
+    if (
+      typeof data === "string" ||
+      typeof data === "number" ||
+      typeof data === "boolean"
+    ) {
+      return data;
+    }
+
+    // Handle arrays
+    if (Array.isArray(data)) {
+      const sanitizedArray = data
+        .map((item) => this.sanitizeForFirebase(item))
+        .filter((item) => item !== null && item !== undefined);
+      return sanitizedArray;
+    }
+
+    // Handle objects
+    if (typeof data === "object") {
+      const sanitized: any = {};
+      for (const [key, value] of Object.entries(data)) {
+        const sanitizedValue = this.sanitizeForFirebase(value);
+        // Preserve all values except null/undefined
+        if (sanitizedValue !== null && sanitizedValue !== undefined) {
+          sanitized[key] = sanitizedValue;
+        }
+      }
+      return sanitized;
+    }
+
+    return data;
+  }
+
   // Initialize Firebase using existing app instance
   initialize(): boolean {
     try {
@@ -82,12 +131,16 @@ class RealFirebaseService {
     try {
       const poolsRef = ref(this.database!, "pools");
       const newPoolRef = push(poolsRef);
-      await set(newPoolRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...poolData,
         id: newPoolRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+
+      await set(newPoolRef, sanitizedData);
       return newPoolRef.key;
     } catch (error) {
       console.error("Failed to add pool:", error);
@@ -100,10 +153,14 @@ class RealFirebaseService {
 
     try {
       const poolRef = ref(this.database!, `pools/${poolId}`);
-      await update(poolRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...poolData,
         updatedAt: new Date().toISOString(),
       });
+
+      await update(poolRef, sanitizedData);
       return true;
     } catch (error) {
       console.error("Failed to update pool:", error);
@@ -131,12 +188,16 @@ class RealFirebaseService {
     try {
       const worksRef = ref(this.database!, "works");
       const newWorkRef = push(worksRef);
-      await set(newWorkRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...workData,
         id: newWorkRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+
+      await set(newWorkRef, sanitizedData);
       return newWorkRef.key;
     } catch (error) {
       console.error("Failed to add work:", error);
@@ -149,10 +210,14 @@ class RealFirebaseService {
 
     try {
       const workRef = ref(this.database!, `works/${workId}`);
-      await update(workRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...workData,
         updatedAt: new Date().toISOString(),
       });
+
+      await update(workRef, sanitizedData);
       return true;
     } catch (error) {
       console.error("Failed to update work:", error);
@@ -180,12 +245,16 @@ class RealFirebaseService {
     try {
       const maintenanceRef = ref(this.database!, "maintenance");
       const newMaintenanceRef = push(maintenanceRef);
-      await set(newMaintenanceRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...maintenanceData,
         id: newMaintenanceRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+
+      await set(newMaintenanceRef, sanitizedData);
       return newMaintenanceRef.key;
     } catch (error) {
       console.error("Failed to add maintenance:", error);
@@ -204,10 +273,13 @@ class RealFirebaseService {
         this.database!,
         `maintenance/${maintenanceId}`,
       );
-      await update(maintenanceRef, {
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...maintenanceData,
         updatedAt: new Date().toISOString(),
       });
+
+      await update(maintenanceRef, sanitizedData);
       return true;
     } catch (error) {
       console.error("Failed to update maintenance:", error);
@@ -238,12 +310,16 @@ class RealFirebaseService {
     try {
       const clientsRef = ref(this.database!, "clients");
       const newClientRef = push(clientsRef);
-      await set(newClientRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...clientData,
         id: newClientRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+
+      await set(newClientRef, sanitizedData);
       return newClientRef.key;
     } catch (error) {
       console.error("Failed to add client:", error);
@@ -256,10 +332,14 @@ class RealFirebaseService {
 
     try {
       const clientRef = ref(this.database!, `clients/${clientId}`);
-      await update(clientRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...clientData,
         updatedAt: new Date().toISOString(),
       });
+
+      await update(clientRef, sanitizedData);
       return true;
     } catch (error) {
       console.error("Failed to update client:", error);
