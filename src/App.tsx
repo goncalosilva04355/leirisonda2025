@@ -843,7 +843,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenç��es e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -4602,7 +4602,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manuten��ão
+                        Nova Manuten����ão
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar intervenção de manutenção
@@ -5427,7 +5427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              ��� As defini��ões são guardadas localmente no
+                              ����� As defini��ões são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
@@ -7180,7 +7180,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         defaultValue={editingPool?.observations}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={3}
-                        placeholder="Observações sobre a piscina, equipamentos instalados, etc."
+                        placeholder="Observaç��es sobre a piscina, equipamentos instalados, etc."
                       />
                     </div>
 
@@ -8250,16 +8250,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Referência da Obra
-                    </label>
-                    <p className="text-gray-900 font-mono">
-                      {selectedWork.workSheetNumber ||
-                        selectedWork.id ||
-                        "Sem referência"}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
                       Tipo de Obra
                     </label>
                     <p className="text-gray-900 capitalize">
@@ -8277,7 +8267,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Cliente
                     </label>
                     <p className="text-gray-900">
-                      {selectedWork.client || "N��o especificado"}
+                      {selectedWork.client || "Não especificado"}
                     </p>
                     <div className="mt-1">
                       <span className="text-sm font-medium text-gray-700">
