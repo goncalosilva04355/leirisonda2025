@@ -3955,8 +3955,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             photoCount: uploadedPhotos
                               ? uploadedPhotos.length
                               : 0,
-                            observations: "",
-                            workPerformed: "",
+                            observations:
+                              (
+                                form.querySelector(
+                                  'textarea[name="observations"]',
+                                ) as HTMLTextAreaElement
+                              )?.value || "",
+                            workPerformed:
+                              (
+                                form.querySelector(
+                                  'textarea[name="workPerformed"]',
+                                ) as HTMLTextAreaElement
+                              )?.value || "",
                             workSheetCompleted: false,
                             createdAt: new Date().toISOString(),
                             startDate: new Date().toISOString(),
@@ -5618,7 +5628,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{clients.length}</strong> clientes registados
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Dados de contacto</li>
+                        <li>��� Dados de contacto</li>
                         <li>• Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
