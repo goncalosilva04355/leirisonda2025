@@ -40,7 +40,7 @@ import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
-import { useDataSync } from "./hooks/useDataSync";
+// import { useDataSync } from "./hooks/useDataSync"; // Disabled to prevent Firebase errors
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
@@ -3117,7 +3117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informações Básicas */}
+                    {/* Informa��ões Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
