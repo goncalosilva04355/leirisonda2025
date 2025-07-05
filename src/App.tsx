@@ -3185,7 +3185,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
                             <option value="instalacao">Instalação</option>
-                            <option value="reparacao">Reparaç��o</option>
+                            <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
                           </select>
@@ -5368,7 +5368,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-green-900">
-                              Navega����ão Maps
+                              Navega���ão Maps
                             </h4>
                             <button
                               onClick={() =>
@@ -7716,31 +7716,65 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // Auto-login disabled per user request
-  // useEffect(() => {
-  //   const storedUser = localStorage.getItem("currentUser");
-  //   if (!storedUser && !currentUser) {
-  //     const testUser = {
-  //       id: 1,
-  //       name: "Gonçalo Fonseca",
-  //       email: "gongonsilva@gmail.com",
-  //       role: "super_admin",
-  //       permissions: {
-  //         obras: { view: true, create: true, edit: true, delete: true },
-  //         manutencoes: { view: true, create: true, edit: true, delete: true },
-  //         piscinas: { view: true, create: true, edit: true, delete: true },
-  //         relatorios: { view: true, create: true, edit: true, delete: true },
-  //         utilizadores: { view: true, create: true, edit: true, delete: true },
-  //         admin: { view: true, create: true, edit: true, delete: true },
-  //         dashboard: { view: true },
-  //       },
-  //     };
-  //     setCurrentUser(testUser);
-  //     setIsAuthenticated(true);
-  //     localStorage.setItem("currentUser", JSON.stringify(testUser));
-  //     localStorage.setItem("isAuthenticated", "true");
-  //   }
-  // }, [currentUser]);
+  // Check for auto-login on app initialization
+  useEffect(() => {
+    const autoLogin = localStorage.getItem("autoLogin");
+    const rememberedUser = localStorage.getItem("rememberedUser");
+    const storedUser = localStorage.getItem("currentUser");
+
+    if (
+      autoLogin === "true" &&
+      rememberedUser &&
+      !currentUser &&
+      !isAuthenticated
+    ) {
+      try {
+        const credentials = JSON.parse(rememberedUser);
+        console.log("🔄 Auto-login tentando para:", credentials.email);
+
+        // Automatically attempt login with remembered credentials
+        authService
+          .login(credentials.email, credentials.password)
+          .then((result) => {
+            if (result.success && result.user) {
+              setCurrentUser(result.user);
+              setIsAuthenticated(true);
+              localStorage.setItem("currentUser", JSON.stringify(result.user));
+              console.log(
+                "✅ Auto-login bem-sucedido para:",
+                result.user.email,
+              );
+            } else {
+              console.warn(
+                "⚠️ Auto-login falhou, removendo credenciais salvas",
+              );
+              localStorage.removeItem("autoLogin");
+              localStorage.removeItem("rememberedUser");
+            }
+          })
+          .catch((error) => {
+            console.error("❌ Erro no auto-login:", error);
+            localStorage.removeItem("autoLogin");
+            localStorage.removeItem("rememberedUser");
+          });
+      } catch (error) {
+        console.error("❌ Erro ao ler credenciais salvas:", error);
+        localStorage.removeItem("autoLogin");
+        localStorage.removeItem("rememberedUser");
+      }
+    } else if (storedUser && !currentUser) {
+      // Check for existing session without auto-login
+      try {
+        const user = JSON.parse(storedUser);
+        setCurrentUser(user);
+        setIsAuthenticated(true);
+        console.log("🔄 Sessão restaurada para:", user.email);
+      } catch (error) {
+        console.error("❌ Erro ao restaurar sessão:", error);
+        localStorage.removeItem("currentUser");
+      }
+    }
+  }, [currentUser, isAuthenticated]);
 
   // Allow access with auto-login for testing
   if (!isAuthenticated || !currentUser) {
