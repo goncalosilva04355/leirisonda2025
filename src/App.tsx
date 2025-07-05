@@ -29,7 +29,7 @@ import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
-import { InstallPrompt } from "./components/InstallPrompt";
+// import { InstallPrompt } from "./components/InstallPrompt"; // Temporarily disabled due to React hook error
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
 
@@ -930,7 +930,7 @@ ${index + 1}. ${work.title}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: ���${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -4572,7 +4572,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manuten��ão
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenç��o de manutenção
+                        Registar intervenção de manutenção
                       </p>
                     </div>
                   </div>
@@ -5424,7 +5424,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <p className="text-gray-600 mb-6">
                       Elimine todos os dados de obras, manutenções e piscinas
-                      para começar com uma aplica��ão limpa. Os utilizadores são
+                      para começar com uma aplicação limpa. Os utilizadores são
                       mantidos.
                     </p>
 
@@ -8415,7 +8415,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       </main>
 
       {/* Install Prompt for Mobile */}
-      <InstallPrompt />
+      {/* <InstallPrompt /> */}
 
       {/* Admin Login Modal */}
       {showAdminLogin && !isAdminAuthenticated && (
