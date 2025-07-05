@@ -131,6 +131,94 @@ function App() {
               </div>
             )}
           </div>
+
+          {/* Simple Edit Modal */}
+          {editingWork && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                <h3 className="text-lg font-semibold mb-4">Editar Obra</h3>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      Título
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-title"
+                      defaultValue={editingWork.title}
+                      className="w-full border rounded px-3 py-2"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      Cliente
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-client"
+                      defaultValue={editingWork.client}
+                      className="w-full border rounded px-3 py-2"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      Status
+                    </label>
+                    <select
+                      id="edit-status"
+                      defaultValue={editingWork.status}
+                      className="w-full border rounded px-3 py-2"
+                    >
+                      <option value="pending">Pendente</option>
+                      <option value="in_progress">Em Progresso</option>
+                      <option value="completed">Concluída</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex space-x-2 mt-6">
+                  <button
+                    onClick={() => setEditingWork(null)}
+                    className="flex-1 bg-gray-500 text-white py-2 rounded hover:bg-gray-600"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={async () => {
+                      try {
+                        const titleInput = document.getElementById(
+                          "edit-title",
+                        ) as HTMLInputElement;
+                        const clientInput = document.getElementById(
+                          "edit-client",
+                        ) as HTMLInputElement;
+                        const statusInput = document.getElementById(
+                          "edit-status",
+                        ) as HTMLSelectElement;
+
+                        await updateWork(editingWork.id, {
+                          title: titleInput.value,
+                          client: clientInput.value,
+                          status: statusInput.value,
+                        });
+
+                        alert("✅ Obra atualizada com sucesso!");
+                        setEditingWork(null);
+                      } catch (error) {
+                        alert("❌ Erro ao atualizar obra: " + error.message);
+                      }
+                    }}
+                    className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                  >
+                    Guardar Alterações
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </AutoSyncProvider>
