@@ -189,24 +189,93 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // Data sync hook - manages all data with optional Firebase sync
-  const dataSync = useDataSync();
-  const {
-    pools,
-    maintenance,
-    futureMaintenance,
-    works,
-    clients,
-    isLoading: syncLoading,
-    lastSync,
-    error: syncError,
-    syncWithFirebase,
-    enableSync,
-    addPool,
-    addWork,
-    addMaintenance,
-    addClient,
-  } = dataSync;
+  // Simple data management without problematic hooks
+  const [works, setWorks] = useState(() => {
+    try {
+      const stored = localStorage.getItem("works");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [pools, setPools] = useState(() => {
+    try {
+      const stored = localStorage.getItem("pools");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [maintenance, setMaintenance] = useState(() => {
+    try {
+      const stored = localStorage.getItem("maintenance");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [clients, setClients] = useState(() => {
+    try {
+      const stored = localStorage.getItem("clients");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const futureMaintenance = [];
+  const syncLoading = false;
+  const lastSync = null;
+  const syncError = null;
+  const syncWithFirebase = () => {};
+  const enableSync = () => {};
+
+  const addWork = (work) => {
+    const newWork = {
+      ...work,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    const updatedWorks = [...works, newWork];
+    setWorks(updatedWorks);
+    localStorage.setItem("works", JSON.stringify(updatedWorks));
+  };
+
+  const addPool = (pool) => {
+    const newPool = {
+      ...pool,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    const updatedPools = [...pools, newPool];
+    setPools(updatedPools);
+    localStorage.setItem("pools", JSON.stringify(updatedPools));
+  };
+
+  const addMaintenance = (maint) => {
+    const newMaintenance = {
+      ...maint,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    const updatedMaintenance = [...maintenance, newMaintenance];
+    setMaintenance(updatedMaintenance);
+    localStorage.setItem("maintenance", JSON.stringify(updatedMaintenance));
+  };
+
+  const addClient = (client) => {
+    const newClient = {
+      ...client,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    const updatedClients = [...clients, newClient];
+    setClients(updatedClients);
+    localStorage.setItem("clients", JSON.stringify(updatedClients));
+  };
 
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
@@ -7226,7 +7295,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Manutenção
+                          Tipo de Manutenç��o
                         </label>
                         <select
                           defaultValue={editingMaintenance?.type}
