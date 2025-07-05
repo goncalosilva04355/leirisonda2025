@@ -127,7 +127,7 @@ function App() {
     console.log("�� Auth State Debug:", {
       isAuthenticated,
       currentUser: currentUser
-        ? `${currentUser.name} (${currentUser.email})`
+        ? `${currentUser?.name} (${currentUser.email})`
         : null,
       timestamp: new Date().toISOString(),
     });
@@ -444,7 +444,7 @@ function App() {
       works.length > 0
     ) {
       console.log("🔍 DEBUG Alexandre - Data loaded:", {
-        currentUser: currentUser.name,
+        currentUser: currentUser?.name,
         worksCount: works.length,
         works: works.map((w) => ({
           id: w.id,
@@ -1111,9 +1111,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     const isAssignedToCurrentUser =
       currentUser &&
       assignedTo &&
-      (assignedTo === currentUser.name ||
-        assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
-        currentUser.name.toLowerCase().includes(assignedTo.toLowerCase()));
+      (assignedTo === currentUser?.name ||
+        assignedTo.toLowerCase().includes(currentUser?.name.toLowerCase()) ||
+        currentUser?.name.toLowerCase().includes(assignedTo.toLowerCase()));
 
     console.log("🔍 DEBUG: Assignment check:", {
       currentUser: currentUser?.name,
@@ -1657,7 +1657,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
 
                               const debugInfo = {
-                                currentUser: currentUser.name,
+                                currentUser: currentUser?.name,
                                 totalWorks: works.length,
                                 alexandreWorks: alexandreWorks,
                                 localStorage: {
@@ -1825,7 +1825,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   work.assignedTo
                                     .split(",")
                                     .map((name) => name.trim().toLowerCase())
-                                    .includes(currentUser.name.toLowerCase());
+                                    .includes(currentUser?.name.toLowerCase());
 
                                 // Check if user is in assignedUsers array (exact match)
                                 const assignedUsersMatch =
@@ -1833,7 +1833,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     (user) =>
                                       user.name &&
                                       user.name.toLowerCase() ===
-                                        currentUser.name.toLowerCase(),
+                                        currentUser?.name.toLowerCase(),
                                   );
 
                                 return assignedToMatch || assignedUsersMatch;
@@ -1842,7 +1842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `✅ ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser.name}`,
+                                  `✅ ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
                                 );
                               }
 
@@ -1865,14 +1865,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       work.assignedTo
                         .split(",")
                         .map((name) => name.trim().toLowerCase())
-                        .includes(currentUser.name.toLowerCase());
+                        .includes(currentUser?.name.toLowerCase());
 
                     // Check if user is in assignedUsers array (exact match)
                     const assignedUsersMatch = work.assignedUsers?.some(
                       (user) =>
                         user.name &&
                         user.name.toLowerCase() ===
-                          currentUser.name.toLowerCase(),
+                          currentUser?.name.toLowerCase(),
                     );
 
                     return assignedToMatch || assignedUsersMatch;
@@ -1895,14 +1895,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               work.assignedTo
                                 .split(",")
                                 .map((name) => name.trim().toLowerCase())
-                                .includes(currentUser.name.toLowerCase());
+                                .includes(currentUser?.name.toLowerCase());
 
                             // Check if user is in assignedUsers array (exact match)
                             const assignedUsersMatch = work.assignedUsers?.some(
                               (user) =>
                                 user.name &&
                                 user.name.toLowerCase() ===
-                                  currentUser.name.toLowerCase(),
+                                  currentUser?.name.toLowerCase(),
                             );
 
                             return assignedToMatch || assignedUsersMatch;
@@ -5142,7 +5142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-100">
                       <span className="text-gray-600">Utilizador Ativo</span>
-                      <span className="font-medium">{currentUser.name}</span>
+                      <span className="font-medium">{currentUser?.name}</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-100">
                       <span className="text-gray-600">Perfil</span>
@@ -8047,7 +8047,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">
-                    {currentUser.name}
+                    {currentUser?.name}
                   </p>
                   <p className="text-sm text-gray-500">{currentUser.role}</p>
                 </div>
