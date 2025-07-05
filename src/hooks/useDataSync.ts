@@ -270,10 +270,26 @@ export function useDataSync(): SyncState & SyncActions {
   // Auto-save to localStorage whenever state changes
   useEffect(() => {
     try {
-      localStorage.setItem("works", JSON.stringify(state.works));
-      localStorage.setItem("pools", JSON.stringify(state.pools));
-      localStorage.setItem("maintenance", JSON.stringify(state.maintenance));
-      localStorage.setItem("clients", JSON.stringify(state.clients));
+      // Only save if we have data to prevent overwriting with empty arrays
+      if (state.works.length > 0) {
+        localStorage.setItem("works", JSON.stringify(state.works));
+      }
+      if (state.pools.length > 0) {
+        localStorage.setItem("pools", JSON.stringify(state.pools));
+      }
+      if (state.maintenance.length > 0) {
+        localStorage.setItem("maintenance", JSON.stringify(state.maintenance));
+      }
+      if (state.clients.length > 0) {
+        localStorage.setItem("clients", JSON.stringify(state.clients));
+      }
+
+      console.log("💾 Saved data to localStorage:", {
+        works: state.works.length,
+        pools: state.pools.length,
+        maintenance: state.maintenance.length,
+        clients: state.clients.length,
+      });
     } catch (error) {
       console.error("❌ Error saving data to localStorage:", error);
     }
