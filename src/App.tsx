@@ -8167,7 +8167,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-900">
                         {selectedWork.client || "Não especificado"}
                       </p>
-                      {selectedWork.contact && (
+                      <div className="mt-1">
+                        <span className="text-sm font-medium text-gray-700">Contacto: </span>
+                        {selectedWork.contact ? (
                         <button
                           onClick={() => handlePhoneClick(selectedWork.contact)}
                           className={`text-sm mt-1 ${
