@@ -321,7 +321,7 @@ function App() {
 
     // Only clear auth state if no valid stored user found
     console.log("🔒 No valid stored user found, ensuring clean state");
-    sessionStorage.clear(); // Clear any session data
+    // sessionStorage.clear(); // REMOVIDO - nunca apagar dados do utilizador
     setIsAuthenticated(false);
     setCurrentUser(null);
 
@@ -5544,7 +5544,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio de Piscinas
+                          Relat���rio de Piscinas
                         </h3>
                         <p className="text-sm text-gray-600">
                           Lista completa de piscinas
