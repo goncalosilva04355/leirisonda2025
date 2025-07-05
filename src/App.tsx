@@ -124,7 +124,7 @@ function App() {
 
   // Debug logging for authentication state changes
   useEffect(() => {
-    console.log("�� Auth State Debug:", {
+    console.log("���� Auth State Debug:", {
       isAuthenticated,
       currentUser: currentUser
         ? `${currentUser.name} (${currentUser.email})`
@@ -1918,6 +1918,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         {works
                           .filter((work) => {
                             if (!work) return false;
+
+                            // Exclude completed works from assigned works display
+                            if (work.status === "completed") return false;
 
                             // Check if user is in assignedTo string (exact match or comma-separated list)
                             const assignedToMatch =
@@ -5001,7 +5004,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenção
+                          Próxima Manuten��ão
                         </label>
                         <input
                           type="date"
@@ -6961,7 +6964,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const clientEmail = inputs[8].value; // Email do Cliente
                           const priority = inputs[9].value; // Prioridade
                           const workType = inputs[10].value; // Tipo de Obra
-                          const description = inputs[12].value; // Descri��ão
+                          const description = inputs[12].value; // Descri����o
                           const technicalNotes = inputs[12].value; // Observações Técnicas
 
                           dataSync.updateWork(editingWork.id, {
