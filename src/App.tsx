@@ -190,6 +190,20 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
+  // 🛡️ BULLETPROOF DATA PROTECTION SYSTEM ACTIVATED
+  useEffect(() => {
+    console.log("🛡️ INITIALIZING BULLETPROOF DATA PROTECTION...");
+    const status = dataProtection.getProtectionStatus();
+    console.log("🛡️ PROTECTION STATUS:", status);
+
+    // Clean old backups periodically
+    const cleanupInterval = setInterval(() => {
+      dataProtection.cleanOldBackups();
+    }, 60000 * 30); // Every 30 minutes
+
+    return () => clearInterval(cleanupInterval);
+  }, []);
+
   // Data sync hook with Firebase synchronization
   console.log(
     "🔥 Firebase synchronization REACTIVATED - data will sync across devices!",
@@ -8580,7 +8594,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 }`}
               >
                 <Wrench className="h-5 w-5" />
-                <span>Manutenções</span>
+                <span>Manuten��ões</span>
               </button>
             )}
 
