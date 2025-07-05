@@ -2872,7 +2872,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {maint.clientContact}
+                                        ��� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3911,9 +3911,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 'select[name="status"]',
                               ) as HTMLSelectElement
                             )?.value || "pending";
+                          const description =
+                            (
+                              form.querySelector(
+                                'textarea[placeholder*="Descrição"]',
+                              ) as HTMLTextAreaElement
+                            )?.value || "";
+                          const budget =
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Orçamento"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           // Create complete work data object
                           const workData = {
                             id: Date.now(),
+                            workSheetNumber: workTitle.startsWith("LS-")
+                              ? workTitle
+                              : `LS-${Date.now()}`,
                             title: workTitle,
                             type: workType,
                             client: client,
@@ -3922,17 +3937,21 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             startTime: startTime,
                             endTime: endTime,
                             status: status,
+                            description: description,
+                            budget: budget ? parseFloat(budget) : undefined,
                             assignedTo:
                               assignedUsers.length > 0
                                 ? assignedUsers.map((u) => u.name).join(", ")
                                 : "",
-                            description: "", // Add default description
                             assignedUsers: assignedUsers, // Store complete user objects
                             assignedUserIds: assignedUsers.map((u) => u.id), // Store user IDs
                             vehicles: workVehicles,
                             technicians: workTechnicians,
                             photos: uploadedPhotos,
                             photoCount: uploadedPhotos.length,
+                            observations: "",
+                            workPerformed: "",
+                            workSheetCompleted: false,
                             createdAt: new Date().toISOString(),
                             startDate: new Date().toISOString(),
                           };
