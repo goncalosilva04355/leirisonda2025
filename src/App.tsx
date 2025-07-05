@@ -6507,7 +6507,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </button>
                               </div>
                               <div>
-                                <span className="font-medium">Início:</span>{" "}
+                                <span className="font-medium">In��cio:</span>{" "}
                                 {new Date(work.startDate).toLocaleDateString(
                                   "pt-PT",
                                 )}
@@ -7092,12 +7092,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="button"
-                        onClick={async (e) => {
-                          const form = (e.target as HTMLElement).closest(
-                            "form",
-                          );
+                        onClick={(e) => {
+                          // Wrap in Promise to handle any async errors properly
+                          Promise.resolve().then(async () => {
+                            try {
+                              const form = (e.target as HTMLElement).closest(
+                                "form",
+                              );
 
-                          // Extract data using name attributes instead of indices
+                              // Extract data using name attributes instead of indices
                           const title =
                             (
                               form.querySelector(
@@ -7509,7 +7512,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         defaultValue={editingPool?.observations}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={3}
-                        placeholder="Observaç��es sobre a piscina, equipamentos instalados, etc."
+                        placeholder="Observaç���es sobre a piscina, equipamentos instalados, etc."
                       />
                     </div>
 
