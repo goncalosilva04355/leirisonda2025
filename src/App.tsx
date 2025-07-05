@@ -217,10 +217,6 @@ function App() {
     deleteClient,
     syncWithFirebase,
   } = dataSync;
-  const enableSync = () => {};
-  const addPool = () => {};
-  const addMaintenance = () => {};
-  const addClient = () => {};
 
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
@@ -776,7 +772,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("��� Navigating to dashboard");
+            console.log("����� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -1052,7 +1048,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-���� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+���� ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -6899,7 +6895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Conclus��o Prevista
+                          Data de Conclus���o Prevista
                         </label>
                         <input
                           type="date"
