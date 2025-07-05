@@ -30,24 +30,43 @@ class RealFirebaseService {
 
   // Sanitize data for Firebase - remove undefined values and functions
   private sanitizeForFirebase(data: any): any {
-    if (data === null || data === undefined) {
+    // Handle null and undefined
+    if (data === null) {
       return null;
     }
 
+    if (data === undefined) {
+      return null;
+    }
+
+    // Remove functions
     if (typeof data === "function") {
       return null;
     }
 
-    if (Array.isArray(data)) {
-      return data
-        .map((item) => this.sanitizeForFirebase(item))
-        .filter((item) => item !== null);
+    // Preserve primitive values (strings, numbers, booleans)
+    if (
+      typeof data === "string" ||
+      typeof data === "number" ||
+      typeof data === "boolean"
+    ) {
+      return data;
     }
 
+    // Handle arrays
+    if (Array.isArray(data)) {
+      const sanitizedArray = data
+        .map((item) => this.sanitizeForFirebase(item))
+        .filter((item) => item !== null && item !== undefined);
+      return sanitizedArray;
+    }
+
+    // Handle objects
     if (typeof data === "object") {
       const sanitized: any = {};
       for (const [key, value] of Object.entries(data)) {
         const sanitizedValue = this.sanitizeForFirebase(value);
+        // Preserve all values except null/undefined
         if (sanitizedValue !== null && sanitizedValue !== undefined) {
           sanitized[key] = sanitizedValue;
         }
