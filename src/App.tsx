@@ -6887,37 +6887,57 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const description = inputs[12].value; // Descri��ão
                           const technicalNotes = inputs[12].value; // Observações Técnicas
 
-                          dataSync.updateWork(editingWork.id, {
-                            title,
-                            client,
-                            location,
-                            status,
-                            startDate: startDate
-                              ? new Date(startDate).toISOString()
-                              : undefined,
-                            expectedEndDate: expectedEndDate
-                              ? new Date(expectedEndDate).toISOString()
-                              : undefined,
-                            assignedTo:
-                              editAssignedUsers.length > 0
-                                ? editAssignedUsers
-                                    .map((u) => u.name)
-                                    .join(", ")
-                                : "",
-                            assignedUsers: editAssignedUsers,
-                            assignedUserIds: editAssignedUsers.map((u) => u.id),
-                            budgetValue: budgetValue
-                              ? parseFloat(budgetValue)
-                              : undefined,
-                            clientPhone,
-                            clientEmail,
-                            priority,
-                            workType,
-                            description,
-                            technicalNotes,
-                          });
+                          try {
+                            if (
+                              !dataSync ||
+                              typeof dataSync.updateWork !== "function"
+                            ) {
+                              throw new Error(
+                                "Função de atualização não disponível",
+                              );
+                            }
 
-                          alert("Obra atualizada com sucesso!");
+                            await dataSync.updateWork(editingWork.id, {
+                              title,
+                              client,
+                              location,
+                              status,
+                              startDate: startDate
+                                ? new Date(startDate).toISOString()
+                                : undefined,
+                              expectedEndDate: expectedEndDate
+                                ? new Date(expectedEndDate).toISOString()
+                                : undefined,
+                              assignedTo:
+                                editAssignedUsers.length > 0
+                                  ? editAssignedUsers
+                                      .map((u) => u.name)
+                                      .join(", ")
+                                  : "",
+                              assignedUsers: editAssignedUsers,
+                              assignedUserIds: editAssignedUsers.map(
+                                (u) => u.id,
+                              ),
+                              budgetValue: budgetValue
+                                ? parseFloat(budgetValue)
+                                : undefined,
+                              clientPhone,
+                              clientEmail,
+                              priority,
+                              workType,
+                              description,
+                              technicalNotes,
+                            });
+
+                            alert("✅ Obra atualizada com sucesso!");
+                          } catch (error) {
+                            console.error("❌ Erro ao atualizar obra:", error);
+                            alert(
+                              "❌ Erro ao atualizar obra: " +
+                                (error.message || "Erro desconhecido"),
+                            );
+                            return; // Don't close the modal on error
+                          }
                           setEditingWork(null);
                           setEditAssignedUsers([]);
                           setCurrentEditAssignedUser("");
