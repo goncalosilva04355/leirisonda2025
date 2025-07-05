@@ -3863,18 +3863,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           );
 
                           // Extract all form data
+                          // Get all input elements from the form
+                          const inputs = form.querySelectorAll(
+                            "input, select, textarea",
+                          );
+                          const formData = new FormData(
+                            form as HTMLFormElement,
+                          );
+
+                          // Extract data using more reliable selectors
                           const workTitle =
-                            (
-                              form.querySelector(
-                                'input[placeholder*="LS-"]',
-                              ) as HTMLInputElement
-                            )?.value || "Nova Obra";
-                          const workType =
-                            (
-                              form.querySelector(
-                                'select[name="workType"]',
-                              ) as HTMLSelectElement
-                            )?.value || selectedWorkType;
+                            (inputs[0] as HTMLInputElement)?.value ||
+                            "Nova Obra";
+                          const workType = selectedWorkType || "piscina";
                           const client =
                             (
                               form.querySelector(
@@ -3890,39 +3891,35 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const location =
                             (
                               form.querySelector(
-                                'input[placeholder*="Morada completa"]',
+                                'input[placeholder*="Ex: Rua das Flores"]',
                               ) as HTMLInputElement
                             )?.value || "";
+
+                          // Get datetime-local inputs (entrada/saída)
+                          const datetimeInputs = form.querySelectorAll(
+                            'input[type="datetime-local"]',
+                          );
                           const startTime =
-                            (
-                              form.querySelector(
-                                'input[placeholder*="Entrada"]',
-                              ) as HTMLInputElement
-                            )?.value || "";
+                            (datetimeInputs[0] as HTMLInputElement)?.value ||
+                            "";
                           const endTime =
-                            (
-                              form.querySelector(
-                                'input[placeholder*="Saída"]',
-                              ) as HTMLInputElement
-                            )?.value || "";
-                          const status =
-                            (
-                              form.querySelector(
-                                'select[name="status"]',
-                              ) as HTMLSelectElement
-                            )?.value || "pending";
-                          const description =
-                            (
-                              form.querySelector(
-                                'textarea[placeholder*="Descrição"]',
-                              ) as HTMLTextAreaElement
-                            )?.value || "";
-                          const budget =
-                            (
-                              form.querySelector(
-                                'input[placeholder*="Orçamento"]',
-                              ) as HTMLInputElement
-                            )?.value || "";
+                            (datetimeInputs[1] as HTMLInputElement)?.value ||
+                            "";
+
+                          // Get select for status
+                          const statusSelect = form.querySelector(
+                            "select",
+                          ) as HTMLSelectElement;
+                          const status = statusSelect?.value || "pending";
+
+                          // Get textarea for description
+                          const descriptionTextarea = form.querySelector(
+                            "textarea",
+                          ) as HTMLTextAreaElement;
+                          const description = descriptionTextarea?.value || "";
+
+                          // Get budget input - let's add a more specific way to find it
+                          const budget = "";
                           // Create complete work data object
                           const workData = {
                             id: Date.now(),
