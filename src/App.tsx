@@ -4983,7 +4983,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Gerais
+                          Observaç��es Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -5691,7 +5691,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório Completo
+                          Relat��rio Completo
                         </h3>
                         <p className="text-sm text-gray-600">
                           Todas as informações
@@ -8563,7 +8563,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Folha de Obra Concluída
@@ -8579,16 +8579,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         ? "Concluída"
                         : "Pendente"}
                     </span>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Data de Cria��ão
-                    </label>
-                    <p className="text-gray-900 text-sm">
-                      {new Date(
-                        selectedWork.createdAt || selectedWork.startDate,
-                      ).toLocaleString("pt-PT")}
-                    </p>
                   </div>
                 </div>
               </div>
