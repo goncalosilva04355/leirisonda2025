@@ -277,6 +277,66 @@ function App() {
     localStorage.setItem("clients", JSON.stringify(updatedClients));
   };
 
+  const updateWork = (id, updates) => {
+    const updatedWorks = works.map((work) =>
+      work.id === id ? { ...work, ...updates } : work,
+    );
+    setWorks(updatedWorks);
+    localStorage.setItem("works", JSON.stringify(updatedWorks));
+  };
+
+  const deleteWork = (id) => {
+    const updatedWorks = works.filter((work) => work.id !== id);
+    setWorks(updatedWorks);
+    localStorage.setItem("works", JSON.stringify(updatedWorks));
+  };
+
+  const updatePool = (id, updates) => {
+    const updatedPools = pools.map((pool) =>
+      pool.id === id ? { ...pool, ...updates } : pool,
+    );
+    setPools(updatedPools);
+    localStorage.setItem("pools", JSON.stringify(updatedPools));
+  };
+
+  const deletePool = (id) => {
+    const updatedPools = pools.filter((pool) => pool.id !== id);
+    setPools(updatedPools);
+    localStorage.setItem("pools", JSON.stringify(updatedPools));
+  };
+
+  const updateMaintenance = (id, updates) => {
+    const updatedMaintenance = maintenance.map((maint) =>
+      maint.id === id ? { ...maint, ...updates } : maint,
+    );
+    setMaintenance(updatedMaintenance);
+    localStorage.setItem("maintenance", JSON.stringify(updatedMaintenance));
+  };
+
+  const deleteMaintenance = (id) => {
+    const updatedMaintenance = maintenance.filter((maint) => maint.id !== id);
+    setMaintenance(updatedMaintenance);
+    localStorage.setItem("maintenance", JSON.stringify(updatedMaintenance));
+  };
+
+  const deleteClient = (id) => {
+    const updatedClients = clients.filter((client) => client.id !== id);
+    setClients(updatedClients);
+    localStorage.setItem("clients", JSON.stringify(updatedClients));
+  };
+
+  // Create dataSync object for backward compatibility
+  const dataSync = {
+    updateWork,
+    deleteWork,
+    updatePool,
+    deletePool,
+    updateMaintenance,
+    deleteMaintenance,
+    deleteClient,
+    addClient,
+  };
+
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
   //   cleanAllData,
@@ -5209,7 +5269,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </h3>
                   <div className="grid gap-3">
                     <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600">Versão</span>
+                      <span className="text-gray-600">Vers��o</span>
                       <span className="font-medium">1.0.0</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-100">
@@ -8364,7 +8424,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <label className="block text-sm font-medium text-gray-700">
                       Orçamento
                     </label>
-                    <p className="text-gray-900">���{selectedWork.budget}</p>
+                    <p className="text-gray-900">€{selectedWork.budget}</p>
                   </div>
                 )}
 
