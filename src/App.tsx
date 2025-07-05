@@ -8669,7 +8669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-blue-50 p-4 rounded-lg">
                       <div>
                         <label className="block text-sm font-medium text-blue-700">
-                          Profundidade do Furo
+                          Profundidade
                         </label>
                         <p className="text-gray-900">
                           {selectedWork.wellDepth || "A determinar"} metros
@@ -8677,34 +8677,67 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-blue-700">
-                          Caudal de Água
+                          Nível Água
                         </label>
                         <p className="text-gray-900">
-                          {selectedWork.waterFlow || "A medir"} L/min
+                          {selectedWork.waterLevel || "A medir"} metros
                         </p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-blue-700">
-                          Qualidade da Água
+                          Profundidade da Bomba
                         </label>
                         <p className="text-gray-900">
-                          {selectedWork.waterQuality || "Análise pendente"}
+                          {selectedWork.pumpDepth || "A definir"} metros
                         </p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-blue-700">
-                          Tipo de Bomba
+                          Caudal do Furo
                         </label>
                         <p className="text-gray-900">
-                          {selectedWork.pumpType || "Por especificar"}
+                          {selectedWork.waterFlow || "A medir"} m³
                         </p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-blue-700">
-                          Diâmetro do Furo
+                          Tipo de Coluna
                         </label>
                         <p className="text-gray-900">
-                          {selectedWork.wellDiameter || "Standard"} polegadas
+                          {selectedWork.columnType || "A especificar"}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700">
+                          Diâmetro Coluna
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.columnDiameter || "A especificar"}{" "}
+                          polegadas
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700">
+                          Bomba Instalada
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.pumpModel || "A especificar"}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700">
+                          Potência Motor
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.motorPower || "A especificar"} HP
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700">
+                          Tensão da Bomba
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.pumpVoltage || "A especificar"}
                         </p>
                       </div>
                       <div>
