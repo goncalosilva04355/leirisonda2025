@@ -7,7 +7,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/config";
+import { auth, db, isFirebaseReady } from "../firebase/config";
 import { mockAuthService } from "./mockAuthService";
 
 export interface UserProfile {
@@ -233,15 +233,15 @@ class AuthService {
       return { success: false, error: "Email e password são obrigatórios" };
     }
 
-    // Try Firebase first for cross-device access, but with timeout
-    if (auth && db) {
-      console.log("Attempting Firebase login for cross-device access...");
+    // Try Firebase first for cross-device access, but only if properly initialized
+    if (isFirebaseReady()) {
+      console.log("🔥 Attempting Firebase login for cross-device access...");
       try {
         // Set a timeout to prevent hanging
         const result = await Promise.race([
           this.loginWithFirebase(email, password),
           new Promise<{ success: boolean; error: string }>((_, reject) =>
-            setTimeout(() => reject(new Error("Firebase timeout")), 5000),
+            setTimeout(() => reject(new Error("Firebase timeout")), 8000),
           ),
         ]);
 
@@ -252,13 +252,17 @@ class AuthService {
           return result;
         }
       } catch (error: any) {
-        console.warn(
-          "Firebase login failed, trying local auth:",
-          error.message || error,
-        );
+        // Only log specific errors, not all Firebase errors
+        if (error.message === "Firebase timeout") {
+          console.log("⏱️ Firebase login timeout, using local auth");
+        } else if (error.code === "auth/network-request-failed") {
+          console.log("🌐 Network error, using local auth");
+        } else {
+          console.log("🔄 Firebase unavailable, using local auth");
+        }
       }
     } else {
-      console.log("Firebase not available, using local authentication");
+      console.log("📱 Firebase not configured, using local authentication");
     }
 
     // Fallback to mock auth for local-only users
@@ -285,9 +289,16 @@ class AuthService {
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
-      // Additional validation before Firebase call
+      // Check if Firebase Auth is available
       if (!auth) {
+        console.warn("Firebase Auth not available, falling back to mock auth");
         throw new Error("Firebase Auth not initialized");
+      }
+
+      // Check if Firestore is available
+      if (!db) {
+        console.warn("Firestore not available, falling back to mock auth");
+        throw new Error("Firestore not initialized");
       }
 
       if (!email || !password) {
@@ -301,8 +312,17 @@ class AuthService {
       );
       const firebaseUser = userCredential.user;
 
-      // Get user profile from Firestore
-      const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+      // Get user profile from Firestore with error handling
+      let userDoc;
+      try {
+        if (!db) {
+          throw new Error("Firestore not available");
+        }
+        userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+      } catch (firestoreError: any) {
+        console.warn("Firestore access failed:", firestoreError.message);
+        throw new Error("Firestore not available");
+      }
 
       if (!userDoc.exists()) {
         // Auto-create profile for existing Firebase Auth users
@@ -329,8 +349,16 @@ class AuthService {
           createdAt: new Date().toISOString(),
         };
 
-        await setDoc(doc(db, "users", firebaseUser.uid), userProfile);
-        console.log("User profile created successfully");
+        try {
+          await setDoc(doc(db, "users", firebaseUser.uid), userProfile);
+          console.log("User profile created successfully");
+        } catch (createError: any) {
+          console.warn(
+            "Failed to create user profile in Firestore:",
+            createError.message,
+          );
+          throw new Error("Failed to create user profile");
+        }
 
         return { success: true, user: userProfile };
       }
@@ -343,20 +371,28 @@ class AuthService {
 
       return { success: true, user: userProfile };
     } catch (error: any) {
-      console.error("Firebase login error:", error);
+      // Only log actual authentication errors, not network/initialization errors
+      if (error.code && error.code.startsWith("auth/")) {
+        console.log("🔐 Firebase auth error:", error.code);
+      }
 
       let errorMessage = "Credenciais inválidas";
       if (error.code === "auth/user-not-found") {
         errorMessage = "Utilizador não encontrado";
-      } else if (error.code === "auth/wrong-password") {
+      } else if (
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/invalid-credential"
+      ) {
         errorMessage = "Password incorreta";
       } else if (error.code === "auth/too-many-requests") {
         errorMessage = "Muitas tentativas. Tente novamente mais tarde";
       } else if (
         error.code === "auth/network-request-failed" ||
-        error.message === "Firebase timeout"
+        error.message === "Firebase timeout" ||
+        error.message === "Firebase Auth not initialized" ||
+        error.message === "Firestore not initialized"
       ) {
-        // Network error - throw to trigger fallback to mock auth
+        // Network or initialization error - throw to trigger fallback to mock auth
         throw error;
       } else if (error.message && error.message.includes("fetch")) {
         // General network fetch error - throw to trigger fallback

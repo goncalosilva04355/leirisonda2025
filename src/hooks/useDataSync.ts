@@ -178,7 +178,7 @@ const mockWorks: Work[] = [
   {
     id: "work-2",
     title: "Reparação Sistema Filtração",
-    description: "Substituição de bomba e filtros",
+    description: "Substituiç��o de bomba e filtros",
     client: "Pedro Almeida",
     contact: "934567890",
     location: "Cascais",
@@ -323,8 +323,11 @@ export function useDataSync(): SyncState & SyncActions {
   // Firebase sync is always enabled with fixed configuration
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  // Hook para sincronização automática em mutações
-  const { withAutoSync } = useDataMutationSync();
+  // Hook para sincronização automática em mutações - temporarily disabled
+  // const { withAutoSync } = useDataMutationSync();
+  const withAutoSync = <T extends any[], R>(
+    fn: (...args: T) => R | Promise<R>,
+  ) => fn;
 
   // Initial sync when enabled
   useEffect(() => {
@@ -409,14 +412,14 @@ export function useDataSync(): SyncState & SyncActions {
     const unsubscribePools = realFirebaseService.onPoolsChange((pools) => {
       setState((prev) => ({
         ...prev,
-        pools: [...mockPools, ...pools],
+        pools: pools,
       }));
     });
 
     const unsubscribeWorks = realFirebaseService.onWorksChange((works) => {
       setState((prev) => ({
         ...prev,
-        works: [...mockWorks, ...works],
+        works: works,
       }));
     });
 
@@ -429,7 +432,7 @@ export function useDataSync(): SyncState & SyncActions {
 
         setState((prev) => ({
           ...prev,
-          maintenance: [...mockMaintenance, ...maintenance],
+          maintenance: maintenance,
           futureMaintenance,
         }));
       },
@@ -439,7 +442,7 @@ export function useDataSync(): SyncState & SyncActions {
       (clients) => {
         setState((prev) => ({
           ...prev,
-          clients: [...mockClients, ...clients],
+          clients: clients,
         }));
       },
     );
@@ -484,45 +487,106 @@ export function useDataSync(): SyncState & SyncActions {
         clients: [],
       }));
 
-      console.log("✅ Demo data cleaned - new data will be saved normally");
+      console.log("�� Demo data cleaned - new data will be saved normally");
       return;
     }
 
     // Normal startup - load existing data from localStorage
     console.log("📂 Loading saved data from localStorage");
-    const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
-    const savedMaintenance = JSON.parse(
+
+    // Clean only specific known mock/fictitious data while preserving real user data
+    const cleanMockData = (data: any[], type: string) => {
+      if (!Array.isArray(data)) return data;
+      // Only remove data with very specific mock identifiers
+      return data.filter((item) => {
+        if (!item || !item.id) return true; // Keep items without IDs
+
+        // Only remove items that match exact mock data patterns
+        const isExactMockPool =
+          (item.id === "pool-1" && item.name === "Piscina Villa Marina") ||
+          (item.id === "pool-2" && item.name === "Piscina Condomínio Sol");
+
+        const isExactMockWork =
+          (item.id === "work-1" && item.title === "Instalação Nova Piscina") ||
+          (item.id === "work-2" &&
+            item.title === "Reparação Sistema Filtração") ||
+          (item.id === "work-3" &&
+            item.title === "Manutenção Mensal Pool Club") ||
+          (item.id === "work-4" &&
+            item.title === "Instalação Cobertura Automática") ||
+          (item.id === "work-5" &&
+            item.title === "Renovação Sistema Filtração");
+
+        const isExactMockMaintenance =
+          item.id === "maint-1" ||
+          item.id === "maint-2" ||
+          item.id === "maint-3" ||
+          item.id === "maint-4" ||
+          item.id === "maint-5";
+
+        const isExactMockClient =
+          (item.id === "client-1" && item.name === "João Silva") ||
+          (item.id === "client-2" && item.name === "Maria Santos");
+
+        // Keep everything except exact mock matches
+        return !(
+          isExactMockPool ||
+          isExactMockWork ||
+          isExactMockMaintenance ||
+          isExactMockClient
+        );
+      });
+    };
+
+    const rawPools = JSON.parse(localStorage.getItem("pools") || "[]");
+    const rawMaintenance = JSON.parse(
       localStorage.getItem("maintenance") || "[]",
     );
-    const savedWorks = JSON.parse(localStorage.getItem("works") || "[]");
-    const savedClients = JSON.parse(localStorage.getItem("clients") || "[]");
+    const rawWorks = JSON.parse(localStorage.getItem("works") || "[]");
+    const rawClients = JSON.parse(localStorage.getItem("clients") || "[]");
 
-    // If no data exists, initialize with mock data and save it
-    const finalPools = savedPools.length > 0 ? savedPools : mockPools;
-    const finalMaintenance =
-      savedMaintenance.length > 0 ? savedMaintenance : mockMaintenance;
-    const finalWorks = savedWorks.length > 0 ? savedWorks : mockWorks;
-    const finalClients = savedClients.length > 0 ? savedClients : mockClients;
+    // Clean mock data from localStorage
+    const savedPools = cleanMockData(rawPools, "pools");
+    const savedMaintenance = cleanMockData(rawMaintenance, "maintenance");
+    const savedWorks = cleanMockData(rawWorks, "works");
+    const savedClients = cleanMockData(rawClients, "clients");
 
-    // Save mock data to localStorage if it was used
-    if (savedPools.length === 0) {
-      localStorage.setItem("pools", JSON.stringify(mockPools));
-      console.log("💾 Mock pools data saved to localStorage");
-    }
-    if (savedMaintenance.length === 0) {
-      localStorage.setItem("maintenance", JSON.stringify(mockMaintenance));
-      console.log("💾 Mock maintenance data saved to localStorage");
-    }
-    if (savedWorks.length === 0) {
-      localStorage.setItem("works", JSON.stringify(mockWorks));
+    // Save cleaned data back to localStorage
+    localStorage.setItem("pools", JSON.stringify(savedPools));
+    localStorage.setItem("maintenance", JSON.stringify(savedMaintenance));
+    localStorage.setItem("works", JSON.stringify(savedWorks));
+    localStorage.setItem("clients", JSON.stringify(savedClients));
+
+    // Log what real data was found and preserved
+    console.log("📊 Dados reais carregados:", {
+      piscinas: savedPools.length,
+      obras: savedWorks.length,
+      manutencoes: savedMaintenance.length,
+      clientes: savedClients.length,
+    });
+
+    // If no data found locally, try to force sync from Firebase
+    if (
+      savedPools.length === 0 &&
+      savedWorks.length === 0 &&
+      savedMaintenance.length === 0
+    ) {
       console.log(
-        "💾 Mock works data saved to localStorage (including Alexandre's works)",
+        "🔄 Nenhum dado local encontrado, tentando recuperar do Firebase...",
       );
+      // Trigger sync with Firebase immediately after state is set
+      setTimeout(() => {
+        if (syncEnabled && realFirebaseService.isReady()) {
+          syncWithFirebase();
+        }
+      }, 1000);
     }
-    if (savedClients.length === 0) {
-      localStorage.setItem("clients", JSON.stringify(mockClients));
-      console.log("💾 Mock clients data saved to localStorage");
-    }
+
+    // Always use only saved data, never add mock data automatically
+    const finalPools = savedPools;
+    const finalMaintenance = savedMaintenance;
+    const finalWorks = savedWorks;
+    const finalClients = savedClients;
 
     // Calculate future maintenance
     const future = finalMaintenance.filter(
@@ -646,11 +710,11 @@ export function useDataSync(): SyncState & SyncActions {
 
           setState((prev) => ({
             ...prev,
-            pools: [...mockPools, ...updatedData.pools],
-            works: [...mockWorks, ...updatedData.works],
-            maintenance: [...mockMaintenance, ...updatedData.maintenance],
+            pools: updatedData.pools,
+            works: updatedData.works,
+            maintenance: updatedData.maintenance,
             futureMaintenance,
-            clients: [...mockClients, ...updatedData.clients],
+            clients: updatedData.clients,
             isLoading: false,
             lastSync: new Date(),
             error: null,
@@ -720,13 +784,19 @@ export function useDataSync(): SyncState & SyncActions {
 
   const deletePool = useCallback(
     (id: string) => {
-      console.warn(
-        "⚠️ ATENÇÃO: Tentativa de apagar piscina bloqueada por proteção de dados!",
-      );
-      console.log("🔒 DeletePool chamado para ID:", id, "- Operação bloqueada");
+      setState((prev) => ({
+        ...prev,
+        pools: prev.pools.filter((pool) => pool.id !== id),
+      }));
 
-      // PROTEÇÃO: Não permitir apagar piscinas conforme instruções do usuário
-      return;
+      // Remove from localStorage
+      const savedPools = JSON.parse(localStorage.getItem("pools") || "[]");
+      const updatedPools = savedPools.filter((pool: Pool) => pool.id !== id);
+      localStorage.setItem("pools", JSON.stringify(updatedPools));
+
+      if (syncEnabled) {
+        syncWithFirebase();
+      }
     },
     [syncEnabled, syncWithFirebase],
   );
@@ -804,17 +874,33 @@ export function useDataSync(): SyncState & SyncActions {
 
   const deleteMaintenance = useCallback(
     (id: string) => {
-      console.warn(
-        "⚠️ ATENÇÃO: Tentativa de apagar manutenção bloqueada por proteção de dados!",
-      );
-      console.log(
-        "🔒 DeleteMaintenance chamado para ID:",
-        id,
-        "- Operação bloqueada",
-      );
+      setState((prev) => {
+        const updated = prev.maintenance.filter(
+          (maintenance) => maintenance.id !== id,
+        );
+        const future = updated.filter(
+          (m) => new Date(m.scheduledDate) >= new Date(),
+        );
 
-      // PROTEÇÃO: Não permitir apagar manutenções conforme instruções do usuário
-      return;
+        return {
+          ...prev,
+          maintenance: updated,
+          futureMaintenance: future,
+        };
+      });
+
+      // Remove from localStorage
+      const savedMaintenance = JSON.parse(
+        localStorage.getItem("maintenance") || "[]",
+      );
+      const updatedMaintenance = savedMaintenance.filter(
+        (maintenance: Maintenance) => maintenance.id !== id,
+      );
+      localStorage.setItem("maintenance", JSON.stringify(updatedMaintenance));
+
+      if (syncEnabled) {
+        syncWithFirebase();
+      }
     },
     [syncEnabled, syncWithFirebase],
   );
@@ -877,17 +963,6 @@ export function useDataSync(): SyncState & SyncActions {
 
   const deleteWork = useCallback(
     (id: string) => {
-      console.warn(
-        "⚠️ ATENÇÃO: Tentativa de apagar obra bloqueada por proteção de dados!",
-      );
-      console.log("🔒 DeleteWork chamado para ID:", id, "- Operação bloqueada");
-
-      // PROTEÇÃO: Não permitir apagar obras conforme instruções do usuário
-      // Apenas logar a tentativa mas não executar
-      return;
-
-      // Código original comentado para proteção:
-      /*
       setState((prev) => {
         const updatedWorks = prev.works.filter((work) => work.id !== id);
 
@@ -903,7 +978,6 @@ export function useDataSync(): SyncState & SyncActions {
       if (syncEnabled) {
         syncWithFirebase();
       }
-      */
     },
     [syncEnabled, syncWithFirebase],
   );
@@ -1003,11 +1077,11 @@ export function useDataSync(): SyncState & SyncActions {
 
       setState((prev) => ({
         ...prev,
-        pools: [...mockPools],
-        maintenance: [...mockMaintenance],
-        futureMaintenance: future,
-        works: [...mockWorks],
-        clients: [...mockClients],
+        pools: [],
+        maintenance: [],
+        futureMaintenance: [],
+        works: [],
+        clients: [],
         isLoading: false,
         lastSync: new Date(),
         error: null,

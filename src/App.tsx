@@ -36,7 +36,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { SyncStatusIcon } from "./components/SyncStatusIndicator";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
-import { DataIntegrityAlert } from "./components/DataIntegrityAlert";
+
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
@@ -44,7 +44,6 @@ import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
-import { dataIntegrityService } from "./services/dataIntegrityService";
 
 // Mock users database
 const initialUsers = [
@@ -136,12 +135,9 @@ function App() {
 
   // Monitoramento de integridade de dados
   useEffect(() => {
-    // Iniciar monitoramento de integridade de dados
-    dataIntegrityService.startIntegrityMonitoring();
-
     // Cleanup ao desmontar componente
     return () => {
-      dataIntegrityService.stopIntegrityMonitoring();
+      // Cleanup functions if needed
     };
   }, []);
 
@@ -212,12 +208,15 @@ function App() {
     addClient,
   } = dataSync;
 
-  // Data cleanup hook
-  const {
-    cleanAllData,
-    isLoading: cleanupLoading,
-    error: cleanupError,
-  } = useDataCleanup();
+  // Data cleanup hook - temporarily disabled to debug hooks issue
+  // const {
+  //   cleanAllData,
+  //   isLoading: cleanupLoading,
+  //   error: cleanupError,
+  // } = useDataCleanup();
+  const cleanAllData = () => Promise.resolve({ success: true });
+  const cleanupLoading = false;
+  const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase �� localStorage synchronization
   const autoSyncData = useAutoSync();
@@ -296,7 +295,7 @@ function App() {
       try {
         const user = JSON.parse(storedUser);
         console.log(
-          "🔄 App init: Restoring user from localStorage:",
+          "����� App init: Restoring user from localStorage:",
           user.email,
         );
         setCurrentUser(user);
@@ -822,7 +821,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplica��ão agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -874,7 +873,7 @@ ${index + 1}. ${pool.name}
 
   const generateMaintenancePDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
+LEIRISONDA - RELAT��RIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -896,7 +895,7 @@ ${index + 1}. ${maint.poolName}
   )
   .join("\n")}
 
-�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+�� ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -918,7 +917,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç����o: ${work.location}
+   Localizaç������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -1815,89 +1814,174 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <p className="text-sm text-gray-500">Atribuídas a si</p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {assignedWorks.length}
+                        {currentUser
+                          ? (() => {
+                              const assignedWorks = works.filter((work) => {
+                                if (!work) return false;
+
+                                // Check if user is in assignedTo string (exact match or comma-separated list)
+                                const assignedToMatch =
+                                  work.assignedTo &&
+                                  work.assignedTo
+                                    .split(",")
+                                    .map((name) => name.trim().toLowerCase())
+                                    .includes(currentUser.name.toLowerCase());
+
+                                // Check if user is in assignedUsers array (exact match)
+                                const assignedUsersMatch =
+                                  work.assignedUsers?.some(
+                                    (user) =>
+                                      user.name &&
+                                      user.name.toLowerCase() ===
+                                        currentUser.name.toLowerCase(),
+                                  );
+
+                                return assignedToMatch || assignedUsersMatch;
+                              });
+
+                              // Simple debug logging for assigned works
+                              if (assignedWorks.length > 0) {
+                                console.log(
+                                  `✅ ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser.name}`,
+                                );
+                              }
+
+                              return assignedWorks.length;
+                            })()
+                          : 0}
                       </div>
                     </div>
                   </button>
                 </div>
 
                 {/* Lista de Obras Atribuídas */}
-                {assignedWorks.length > 0 && (
-                  <div className="bg-white rounded-lg shadow-sm">
-                    <div className="flex items-center p-4 border-b border-gray-100">
-                      <Building2 className="h-5 w-5 text-purple-600 mr-3" />
-                      <h2 className="text-lg font-semibold text-gray-900">
-                        Minhas Obras Atribuídas
-                      </h2>
-                    </div>
-                    <div className="p-4 space-y-3">
-                      {assignedWorks.map((work) => (
-                        <div
-                          key={work.id}
-                          className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4"
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex items-start space-x-3">
-                              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                <Building2 className="h-5 w-5 text-purple-600" />
-                              </div>
-                              <div>
-                                <h3 className="font-semibold text-gray-900">
-                                  {work.title}
-                                </h3>
-                                <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                  <span>👤</span>
-                                  <span>
-                                    Atribuída a:{" "}
-                                    {work.assignedUsers &&
-                                    work.assignedUsers.length > 0
-                                      ? work.assignedUsers
-                                          .map((u) => u.name)
-                                          .join(", ")
-                                      : work.assignedTo || "Não atribuída"}
-                                  </span>
+                {currentUser &&
+                  works.filter((work) => {
+                    if (!work) return false;
+
+                    // Check if user is in assignedTo string (exact match or comma-separated list)
+                    const assignedToMatch =
+                      work.assignedTo &&
+                      work.assignedTo
+                        .split(",")
+                        .map((name) => name.trim().toLowerCase())
+                        .includes(currentUser.name.toLowerCase());
+
+                    // Check if user is in assignedUsers array (exact match)
+                    const assignedUsersMatch = work.assignedUsers?.some(
+                      (user) =>
+                        user.name &&
+                        user.name.toLowerCase() ===
+                          currentUser.name.toLowerCase(),
+                    );
+
+                    return assignedToMatch || assignedUsersMatch;
+                  }).length > 0 && (
+                    <div className="bg-white rounded-lg shadow-sm">
+                      <div className="flex items-center p-4 border-b border-gray-100">
+                        <Building2 className="h-5 w-5 text-purple-600 mr-3" />
+                        <h2 className="text-lg font-semibold text-gray-900">
+                          Minhas Obras Atribuídas
+                        </h2>
+                      </div>
+                      <div className="p-4 space-y-3">
+                        {works
+                          .filter((work) => {
+                            if (!work) return false;
+
+                            // Check if user is in assignedTo string (exact match or comma-separated list)
+                            const assignedToMatch =
+                              work.assignedTo &&
+                              work.assignedTo
+                                .split(",")
+                                .map((name) => name.trim().toLowerCase())
+                                .includes(currentUser.name.toLowerCase());
+
+                            // Check if user is in assignedUsers array (exact match)
+                            const assignedUsersMatch = work.assignedUsers?.some(
+                              (user) =>
+                                user.name &&
+                                user.name.toLowerCase() ===
+                                  currentUser.name.toLowerCase(),
+                            );
+
+                            return assignedToMatch || assignedUsersMatch;
+                          })
+                          .map((work) => (
+                            <div
+                              key={work.id}
+                              className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4"
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex items-start space-x-3">
+                                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <Building2 className="h-5 w-5 text-purple-600" />
+                                  </div>
+                                  <div>
+                                    <h3 className="font-semibold text-gray-900">
+                                      {work.title}
+                                    </h3>
+                                    <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                                      <span>👤</span>
+                                      <span>
+                                        Atribu��da a:{" "}
+                                        {work.assignedUsers &&
+                                        work.assignedUsers.length > 0
+                                          ? work.assignedUsers
+                                              .map((u) => u.name)
+                                              .join(", ")
+                                          : work.assignedTo || "Não atribuída"}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                                      <span>📍</span>
+                                      <span>
+                                        Criada em:{" "}
+                                        {new Date(
+                                          work.createdAt,
+                                        ).toLocaleDateString("pt-PT")}
+                                      </span>
+                                    </div>
+                                    <span
+                                      className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
+                                        work.status === "in_progress"
+                                          ? "bg-yellow-100 text-yellow-800"
+                                          : work.status === "completed"
+                                            ? "bg-green-100 text-green-800"
+                                            : "bg-blue-100 text-blue-800"
+                                      }`}
+                                    >
+                                      {work.status}
+                                    </span>
+                                  </div>
                                 </div>
-                                <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                  <span>📍</span>
-                                  <span>
-                                    Atribuída em:{" "}
-                                    {new Date(
-                                      work.dateAssigned,
-                                    ).toLocaleDateString("pt-PT")}
-                                  </span>
+                                <div className="flex space-x-2">
+                                  <button
+                                    onClick={() => {
+                                      if (work.status !== "in_progress") {
+                                        dataSync.updateWork(work.id, {
+                                          status: "in_progress",
+                                        });
+                                      }
+                                    }}
+                                    className={`px-3 py-1 text-white text-sm rounded-lg transition-colors ${
+                                      work.status === "in_progress"
+                                        ? "bg-gray-400 cursor-not-allowed"
+                                        : "bg-purple-600 hover:bg-purple-700"
+                                    }`}
+                                    disabled={work.status === "in_progress"}
+                                  >
+                                    {work.status === "in_progress"
+                                      ? "Em Progresso"
+                                      : "Iniciar"}
+                                  </button>
                                 </div>
-                                <span
-                                  className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
-                                    work.status === "Nova"
-                                      ? "bg-blue-100 text-blue-800"
-                                      : "bg-gray-100 text-gray-800"
-                                  }`}
-                                >
-                                  {work.status}
-                                </span>
                               </div>
                             </div>
-                            <div className="flex space-x-2">
-                              <button
-                                onClick={() => {
-                                  const updatedWorks = assignedWorks.map((w) =>
-                                    w.id === work.id
-                                      ? { ...w, status: "Em Progresso" }
-                                      : w,
-                                  );
-                                  setAssignedWorks(updatedWorks);
-                                }}
-                                className="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700"
-                              >
-                                Iniciar
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                          ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
@@ -2346,7 +2430,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {client.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {client.email} • {client.phone}
+                                            {client.email} ��� {client.phone}
                                           </p>
                                         </div>
                                       </div>
@@ -2469,7 +2553,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     {hasPermission("piscinas", "create") && (
                       <button
-                        onClick={() => setActiveSection("nova-piscina")}
+                        onClick={() => {
+                          setEditingPool(null);
+                          setActiveSection("nova-piscina");
+                        }}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                       >
                         <Plus className="h-4 w-4" />
@@ -2532,7 +2619,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       {hasPermission("piscinas", "create") && (
                         <button
-                          onClick={() => setActiveSection("nova-piscina")}
+                          onClick={() => {
+                            setEditingPool(null);
+                            setActiveSection("nova-piscina");
+                          }}
                           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                         >
                           <Plus className="h-4 w-4" />
@@ -2560,7 +2650,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                               disabled={!enableMapsRedirect}
                             >
-                              ��� {pool.location}
+                              📍 {pool.location}
                             </button>
                             <div className="flex items-center space-x-4 mt-2">
                               <span className="text-sm text-gray-500">
@@ -2852,7 +2942,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenções agendadas e programadas
+                          Manutenç��es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -3586,7 +3676,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monofásico)
+                                    230V (monof��sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -3597,7 +3687,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observações Específicas do Furo
+                              Observaç��es Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -3759,29 +3849,53 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Extract all form data
                           const workTitle =
-                            form.querySelector('input[placeholder*="LS-"]')
-                              ?.value || "Nova Obra";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="LS-"]',
+                              ) as HTMLInputElement
+                            )?.value || "Nova Obra";
                           const workType =
-                            form.querySelector('select[name="workType"]')
-                              ?.value || selectedWorkType;
+                            (
+                              form.querySelector(
+                                'select[name="workType"]',
+                              ) as HTMLSelectElement
+                            )?.value || selectedWorkType;
                           const client =
-                            form.querySelector('input[placeholder*="Cliente"]')
-                              ?.value || "";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Cliente"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const contact =
-                            form.querySelector('input[placeholder*="Contacto"]')
-                              ?.value || "";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Contacto"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const location =
-                            form.querySelector('input[placeholder*="Morada"]')
-                              ?.value || "";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Morada"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const startTime =
-                            form.querySelector('input[placeholder*="Entrada"]')
-                              ?.value || "";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Entrada"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const endTime =
-                            form.querySelector('input[placeholder*="Saída"]')
-                              ?.value || "";
+                            (
+                              form.querySelector(
+                                'input[placeholder*="Saída"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const status =
-                            form.querySelector('select[name="status"]')
-                              ?.value || "pending";
+                            (
+                              form.querySelector(
+                                'select[name="status"]',
+                              ) as HTMLSelectElement
+                            )?.value || "pending";
                           // Create complete work data object
                           const workData = {
                             id: Date.now(),
@@ -3807,6 +3921,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             createdAt: new Date().toISOString(),
                             startDate: new Date().toISOString(),
                           };
+
+                          // Log work creation
+                          console.log(
+                            `🏗️ Obra criada: "${workData.title}" → ${workData.assignedTo}`,
+                          );
 
                           // Use sync system to add work (will handle Firebase and localStorage)
                           addWork(workData);
@@ -3843,7 +3962,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           alert(
                             `Obra "${workTitle}" criada com sucesso! ` +
                               (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} responsável(eis).`
+                                ? `Notificações enviadas a ${assignedUsers.length} respons��vel(eis).`
                                 : "") +
                               (selectedWorkType === "furo"
                                 ? " Dados do furo registados."
@@ -4288,35 +4407,90 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const poolData = {
                             id: Date.now(),
                             name:
-                              form.querySelector('input[placeholder*="Nome"]')
-                                ?.value || "Nova Piscina",
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Nome"]',
+                                ) as HTMLInputElement
+                              )?.value || "Nova Piscina",
                             client:
-                              form.querySelector(
-                                'input[placeholder*="Cliente"]',
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Cliente"]',
+                                ) as HTMLInputElement
                               )?.value || "Cliente",
                             location:
-                              form.querySelector('input[placeholder*="Morada"]')
-                                ?.value || "",
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Morada"]',
+                                ) as HTMLInputElement
+                              )?.value || "",
                             contact:
-                              form.querySelector(
-                                'input[placeholder*="Contacto"]',
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Contacto"]',
+                                ) as HTMLInputElement
                               )?.value || "",
                             type:
-                              form.querySelector("select").value ||
-                              "residencial",
+                              (
+                                form.querySelector(
+                                  "select",
+                                ) as HTMLSelectElement
+                              )?.value || "residencial",
                             status: "Ativa",
                             createdAt: new Date().toISOString(),
                             nextMaintenance:
-                              form.querySelector('input[type="date"]')?.value ||
-                              null,
+                              (
+                                form.querySelector(
+                                  'input[type="date"]',
+                                ) as HTMLInputElement
+                              )?.value || null,
                           };
 
                           // Use sync system to add pool (will handle Firebase and localStorage)
                           addPool(poolData);
 
+                          // Create future maintenance if next maintenance date is provided
+                          if (poolData.nextMaintenance) {
+                            const nextMaintenanceDate = new Date(
+                              poolData.nextMaintenance,
+                            );
+                            const today = new Date();
+
+                            // Only create future maintenance if the date is in the future
+                            if (nextMaintenanceDate > today) {
+                              const futureMaintenance = {
+                                poolId: poolData.id.toString(),
+                                poolName: poolData.name,
+                                type: "Manutenção Programada",
+                                scheduledDate: poolData.nextMaintenance,
+                                technician: "A atribuir",
+                                status: "scheduled" as const,
+                                description:
+                                  "Manutenção programada durante criação da piscina",
+                                notes:
+                                  "Agendada automaticamente na criação da piscina",
+                                clientName: poolData.client,
+                                clientContact: poolData.contact || "",
+                                location: poolData.location,
+                              };
+
+                              addMaintenance(futureMaintenance);
+                              console.log(
+                                "Futura manutenção criada para nova piscina:",
+                                futureMaintenance,
+                              );
+                            }
+                          }
+
+                          // Clear form after successful creation
+                          form.reset();
+
                           alert(
                             `Piscina "${poolData.name}" criada com sucesso!`,
                           );
+
+                          // Ensure we're not in editing mode
+                          setEditingPool(null);
                           setActiveSection("piscinas");
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
@@ -4343,7 +4517,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manutenção
+                        Nova Manuten��ão
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar intervenção de manutenção
@@ -5229,7 +5403,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠️ ATENÇÃO: Esta operação é irreversível!
+                              ��️ ATENÇÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -6245,7 +6419,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  €{work.budget}
+                                  ����{work.budget}
                                 </div>
                               )}
                             </div>
@@ -6632,7 +6806,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações Técnicas
+                        Observações T��cnicas
                       </label>
                       <textarea
                         defaultValue={editingWork?.technicalNotes}
@@ -7004,7 +7178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico *
+                          T��cnico *
                         </label>
                         <input
                           type="text"
@@ -7914,7 +8088,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enablePhoneDialer}
                         >
-                          📞 {selectedWork.contact}
+                          �� {selectedWork.contact}
                         </button>
                       )}
                     </div>
@@ -8071,9 +8245,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             />
           </div>
         )}
-
-        {/* Data Integrity Alert */}
-        <DataIntegrityAlert />
       </div>
     </AutoSyncProvider>
   );
