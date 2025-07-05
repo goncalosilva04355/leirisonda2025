@@ -551,19 +551,53 @@ export function useDataSync(): SyncState & SyncActions {
 
     // Set up real-time listeners
     const unsubscribePools = realFirebaseService.onPoolsChange((pools) => {
-      // Only update if Firebase has data or if local data is empty
-      setState((prev) => ({
-        ...prev,
-        pools: pools.length > 0 || prev.pools.length === 0 ? pools : prev.pools,
-      }));
+      setState((prev) => {
+        // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
+        if (pools.length === 0 && prev.pools.length > 0) {
+          console.warn(
+            "🛡️ BLOCKED: Firebase tried to overwrite pools with empty array",
+          );
+          return prev; // Keep existing data
+        }
+
+        // Only update if Firebase has more/newer data
+        if (pools.length >= prev.pools.length) {
+          console.log(
+            `🔄 SYNC: Pools updated from Firebase (${pools.length} items)`,
+          );
+          return { ...prev, pools };
+        }
+
+        console.log(
+          `🛡️ PROTECTED: Keeping local pools (${prev.pools.length} > ${pools.length})`,
+        );
+        return prev;
+      });
     });
 
     const unsubscribeWorks = realFirebaseService.onWorksChange((works) => {
-      // Only update if Firebase has data or if local data is empty
-      setState((prev) => ({
-        ...prev,
-        works: works.length > 0 || prev.works.length === 0 ? works : prev.works,
-      }));
+      setState((prev) => {
+        // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
+        if (works.length === 0 && prev.works.length > 0) {
+          console.warn(
+            "🛡️ BLOCKED: Firebase tried to overwrite works with empty array",
+          );
+          return prev; // Keep existing data
+        }
+
+        // Only update if Firebase has more/newer data
+        if (works.length >= prev.works.length) {
+          console.log(
+            `🔄 SYNC: Works updated from Firebase (${works.length} items)`,
+          );
+          return { ...prev, works };
+        }
+
+        console.log(
+          `🛡️ PROTECTED: Keeping local works (${prev.works.length} > ${works.length})`,
+        );
+        return prev;
+      });
     });
 
     const unsubscribeMaintenance = realFirebaseService.onMaintenanceChange(
