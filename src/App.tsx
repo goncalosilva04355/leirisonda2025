@@ -885,7 +885,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTENÇÕES REALIZADAS:
+MANUTENÇ��ES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
@@ -3704,7 +3704,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observações Específicas do Furo */}
+                          {/* Observaç��es Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observaç��es Específicas do Furo
@@ -7711,7 +7711,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   }, []);
 
   // Always allow access for testing - bypass authentication
-  if (false) {
+  if (!isAuthenticated || !currentUser) {
     console.log(
       "🛡️ SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
