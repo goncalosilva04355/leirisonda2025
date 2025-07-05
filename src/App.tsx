@@ -3996,7 +3996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           alert(
                             `Obra "${workTitle}" criada com sucesso! ` +
                               (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} respons��vel(eis).`
+                                ? `Notificações enviadas a ${assignedUsers.length} respons����vel(eis).`
                                 : "") +
                               (selectedWorkType === "furo"
                                 ? " Dados do furo registados."
@@ -5333,7 +5333,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-green-900">
-                              Navega��ão Maps
+                              Navega���ão Maps
                             </h4>
                             <button
                               onClick={() =>
@@ -8282,6 +8282,57 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-900">€{selectedWork.budget}</p>
                     </div>
                   )}
+
+                  {selectedWork.workPerformed && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Trabalho Realizado
+                      </label>
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {selectedWork.workPerformed}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedWork.observations && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Observações
+                      </label>
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {selectedWork.observations}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Folha de Obra Concluída
+                      </label>
+                      <span
+                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          selectedWork.workSheetCompleted
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {selectedWork.workSheetCompleted
+                          ? "Concluída"
+                          : "Pendente"}
+                      </span>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Data de Criação
+                      </label>
+                      <p className="text-gray-900 text-sm">
+                        {new Date(
+                          selectedWork.createdAt || selectedWork.startDate,
+                        ).toLocaleString("pt-PT")}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="mt-6 flex justify-end space-x-3">
