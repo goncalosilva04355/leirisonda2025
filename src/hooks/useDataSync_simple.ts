@@ -43,7 +43,46 @@ export function useDataSync(): SyncState & SyncActions {
   const [works, setWorks] = useState<Work[]>(() => {
     try {
       const stored = localStorage.getItem("works");
-      const parsedWorks = stored ? JSON.parse(stored) : [];
+      let parsedWorks = stored ? JSON.parse(stored) : [];
+
+      // Add example water well work if no works exist
+      if (parsedWorks.length === 0) {
+        const exampleWaterWell = {
+          id: "example-water-well-" + Date.now(),
+          title: "LS-2025-001",
+          description: "Perfuração de furo de água",
+          client: "Exemplo Cliente Furo",
+          contact: "912345678",
+          location: "Leiria, Portugal\nRua Exemplo, 123\n2400-000 Leiria",
+          type: "furo",
+          status: "pending" as const,
+          startDate: new Date().toISOString(),
+          assignedTo: "Gonçalo Fonseca",
+          assignedUsers: [{ id: "1", name: "Gonçalo Fonseca" }],
+          assignedUserIds: ["1"],
+          workSheetNumber: "LS-2025-001",
+          startTime: "08:00",
+          endTime: "17:00",
+          observations: "Furo de água para abastecimento doméstico",
+          workPerformed: "Perfuração iniciada",
+          workSheetCompleted: false,
+          createdAt: new Date().toISOString(),
+          // Water well specific fields
+          wellDepth: "150",
+          waterFlow: "3000",
+          wellDiameter: "6",
+          pumpType: "Bomba submersível",
+          drillingStatus: "in_progress",
+          waterQuality: "Boa qualidade, análise pendente",
+          geologicalInfo:
+            "Camada superficial: argila (0-5m)\nCamada média: calcário (5-50m)\nCamada profunda: arenito aquífero (50-150m)",
+          equipmentUsed:
+            "Máquina de perfuração rotativa\nTubos de revestimento 6 polegadas\nBomba de lama\nCompressor de ar",
+        };
+        parsedWorks = [exampleWaterWell];
+        console.log("🚰 Added example water well work");
+      }
+
       console.log(
         "🔄 Loading works from localStorage:",
         parsedWorks.length,
