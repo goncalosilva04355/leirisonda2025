@@ -985,7 +985,7 @@ ${index + 1}. ${work.title}
 
   const generateClientsPDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE CLIENTES
+LEIRISONDA - RELAT��RIO DE CLIENTES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -7279,7 +7279,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="button"
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           const form = (e.target as HTMLElement).closest(
                             "form",
                           );
