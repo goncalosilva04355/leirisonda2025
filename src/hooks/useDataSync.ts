@@ -213,21 +213,103 @@ export interface SyncActions {
 
 export function useDataSync(): SyncState & SyncActions {
   const [state, setState] = useState<SyncState>(() => {
-    // CRITICAL: Load existing data from localStorage to prevent data loss
+    // 🛡️ ADVANCED RECOVERY SYSTEM - Multiple backup sources
+    const recoverData = (dataType: string) => {
+      console.log(`🔍 RECOVERY: Attempting to recover ${dataType}...`);
+
+      // SOURCE 1: Primary storage
+      try {
+        const primary = localStorage.getItem(dataType);
+        if (primary) {
+          const data = JSON.parse(primary);
+          if (data.length > 0) {
+            console.log(
+              `✅ PRIMARY: ${dataType} recovered (${data.length} items)`,
+            );
+            return data;
+          }
+        }
+      } catch (error) {
+        console.warn(`⚠️ PRIMARY: ${dataType} corrupted, trying backups...`);
+      }
+
+      // SOURCE 2: Rolling backups (last 3 saves)
+      try {
+        const rolling = localStorage.getItem(`${dataType}_backup_rolling`);
+        if (rolling) {
+          const backups = JSON.parse(rolling);
+          if (backups.length > 0) {
+            const latest = backups[backups.length - 1];
+            if (latest.data && latest.data.length > 0) {
+              console.log(
+                `🔄 ROLLING: ${dataType} recovered (${latest.data.length} items)`,
+              );
+              return latest.data;
+            }
+          }
+        }
+      } catch (error) {
+        console.warn(
+          `⚠️ ROLLING: ${dataType} backup corrupted, trying daily...`,
+        );
+      }
+
+      // SOURCE 3: Daily backups (try last 7 days)
+      for (let i = 0; i < 7; i++) {
+        try {
+          const date = new Date();
+          date.setDate(date.getDate() - i);
+          const dateStr = date.toISOString().split("T")[0];
+          const daily = localStorage.getItem(`${dataType}_daily_${dateStr}`);
+          if (daily) {
+            const data = JSON.parse(daily);
+            if (data.length > 0) {
+              console.log(
+                `📅 DAILY: ${dataType} recovered from ${dateStr} (${data.length} items)`,
+              );
+              return data;
+            }
+          }
+        } catch (error) {
+          console.warn(`⚠️ DAILY: ${dataType} backup corrupted for day ${i}`);
+        }
+      }
+
+      // SOURCE 4: Emergency backups
+      try {
+        const keys = Object.keys(localStorage).filter((key) =>
+          key.startsWith("emergency_backup_"),
+        );
+        for (const key of keys.reverse()) {
+          try {
+            const emergency = JSON.parse(localStorage.getItem(key)!);
+            if (emergency[dataType] && emergency[dataType].length > 0) {
+              console.log(
+                `🚨 EMERGENCY: ${dataType} recovered (${emergency[dataType].length} items)`,
+              );
+              return emergency[dataType];
+            }
+          } catch (error) {
+            continue;
+          }
+        }
+      } catch (error) {
+        console.warn(`⚠️ EMERGENCY: Search failed for ${dataType}`);
+      }
+
+      console.warn(
+        `❌ FAILED: No valid ${dataType} found in ANY backup source!`,
+      );
+      return [];
+    };
+
     try {
-      const storedWorks = localStorage.getItem("works");
-      const storedPools = localStorage.getItem("pools");
-      const storedMaintenance = localStorage.getItem("maintenance");
-      const storedClients = localStorage.getItem("clients");
+      const works = recoverData("works");
+      const pools = recoverData("pools");
+      const maintenance = recoverData("maintenance");
+      const clients = recoverData("clients");
 
-      const works = storedWorks ? JSON.parse(storedWorks) : [];
-      const pools = storedPools ? JSON.parse(storedPools) : [];
-      const maintenance = storedMaintenance
-        ? JSON.parse(storedMaintenance)
-        : [];
-      const clients = storedClients ? JSON.parse(storedClients) : [];
-
-      console.log("🔄 Restored data from localStorage:", {
+      console.log("🛡️ RECOVERY COMPLETE:", {
         works: works.length,
         pools: pools.length,
         maintenance: maintenance.length,
@@ -250,7 +332,7 @@ export function useDataSync(): SyncState & SyncActions {
         error: null,
       };
     } catch (error) {
-      console.error("❌ Error loading data from localStorage:", error);
+      console.error("🚨 CATASTROPHIC: Complete recovery failure:", error);
       return {
         pools: [],
         maintenance: [],
