@@ -4185,6 +4185,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : "",
                           };
 
+                          // Debug logging for water well works
+                          if (workType === "furo") {
+                            console.log("🔧 Furo de água criado:", {
+                              type: workData.type,
+                              wellDepth: workData.wellDepth,
+                              waterFlow: workData.waterFlow,
+                              pumpType: workData.pumpType,
+                              waterQuality: workData.waterQuality,
+                            });
+                          }
+
                           // Use sync system to add work (will handle Firebase and localStorage)
                           addWork(workData);
 
