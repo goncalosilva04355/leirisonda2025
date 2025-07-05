@@ -6397,12 +6397,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             {/* Enhanced Header with Work ID */}
                             <div className="flex items-center space-x-3 mb-3">
                               <div className="flex items-center space-x-2">
-                                <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                                  {work.id?.toUpperCase() ||
-                                    "ID-" + Date.now().toString().slice(-6)}
-                                </span>
                                 <h3 className="text-lg font-bold text-gray-900">
-                                  {work.title}
+                                  {work.client || "Cliente não especificado"}
                                 </h3>
                               </div>
                               <span
@@ -7443,7 +7439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const technician = inputs[1].value; // Técnico
                           const type = inputs[2].value; // Tipo de Manutenção
                           const status = inputs[3].value; // Estado
-                          const estimatedDuration = inputs[4].value; // Duração Estimada
+                          const estimatedDuration = inputs[4].value; // Duraç��o Estimada
                           const actualDuration = inputs[5].value; // Duração Real
                           const cost = inputs[6].value; // Custo
                           const priority = inputs[7].value; // Prioridade
