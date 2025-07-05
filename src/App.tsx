@@ -3964,9 +3964,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           console.log(
                             `🏗️ Obra criada: "${workData.title}" → ${workData.assignedTo}`,
                           );
+                          console.log("📋 Dados completos da obra:", workData);
 
                           // Use sync system to add work (will handle Firebase and localStorage)
-                          addWork(workData);
+                          try {
+                            console.log("🔄 Chamando addWork...");
+                            await addWork(workData);
+                            console.log("✅ addWork concluído com sucesso");
+                          } catch (error) {
+                            console.error("❌ Erro ao adicionar obra:", error);
+                            alert(`Erro ao guardar obra: ${error.message}`);
+                          }
 
                           // Send notifications to all assigned users
                           assignedUsers.forEach((assignedUser) => {
