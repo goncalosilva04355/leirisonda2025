@@ -191,7 +191,7 @@ function App() {
 
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
-  const {
+  /* const {
     pools,
     maintenance,
     futureMaintenance,
@@ -209,7 +209,7 @@ function App() {
   } = dataSync;
 
   // Data cleanup hook - temporarily disabled to debug hooks issue
-  // const {
+  // /* const {
   //   cleanAllData,
   //   isLoading: cleanupLoading,
   //   error: cleanupError,
