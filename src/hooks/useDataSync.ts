@@ -602,36 +602,60 @@ export function useDataSync(): SyncState & SyncActions {
 
     const unsubscribeMaintenance = realFirebaseService.onMaintenanceChange(
       (maintenance) => {
-        const today = new Date();
-        const futureMaintenance = maintenance.filter(
-          (m) => new Date(m.scheduledDate) >= today,
-        );
+        setState((prev) => {
+          // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
+          if (maintenance.length === 0 && prev.maintenance.length > 0) {
+            console.warn(
+              "🛡️ BLOCKED: Firebase tried to overwrite maintenance with empty array",
+            );
+            return prev; // Keep existing data
+          }
 
-        // Only update if Firebase has data or if local data is empty
-        setState((prev) => ({
-          ...prev,
-          maintenance:
-            maintenance.length > 0 || prev.maintenance.length === 0
-              ? maintenance
-              : prev.maintenance,
-          futureMaintenance:
-            maintenance.length > 0 || prev.maintenance.length === 0
-              ? futureMaintenance
-              : prev.futureMaintenance,
-        }));
+          const today = new Date();
+          const futureMaintenance = maintenance.filter(
+            (m) => new Date(m.scheduledDate) >= today,
+          );
+
+          // Only update if Firebase has more/newer data
+          if (maintenance.length >= prev.maintenance.length) {
+            console.log(
+              `🔄 SYNC: Maintenance updated from Firebase (${maintenance.length} items)`,
+            );
+            return { ...prev, maintenance, futureMaintenance };
+          }
+
+          console.log(
+            `🛡️ PROTECTED: Keeping local maintenance (${prev.maintenance.length} > ${maintenance.length})`,
+          );
+          return prev;
+        });
       },
     );
 
     const unsubscribeClients = realFirebaseService.onClientsChange(
       (clients) => {
-        // Only update if Firebase has data or if local data is empty
-        setState((prev) => ({
-          ...prev,
-          clients:
-            clients.length > 0 || prev.clients.length === 0
-              ? clients
-              : prev.clients,
-        }));
+        setState((prev) => {
+          // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
+          if (clients.length === 0 && prev.clients.length > 0) {
+            console.warn(
+              "🛡️ BLOCKED: Firebase tried to overwrite clients with empty array",
+            );
+            return prev; // Keep existing data
+          }
+
+          // Only update if Firebase has more/newer data
+          if (clients.length >= prev.clients.length) {
+            console.log(
+              `🔄 SYNC: Clients updated from Firebase (${clients.length} items)`,
+            );
+            return { ...prev, clients };
+          }
+
+          console.log(
+            `🛡️ PROTECTED: Keeping local clients (${prev.clients.length} > ${clients.length})`,
+          );
+          return prev;
+        });
       },
     );
 
