@@ -650,7 +650,7 @@ function App() {
 
     console.log("Manutenção salva com sucesso:", interventionData);
 
-    let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
+    let alertMessage = `Manuten��ão salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
 
     if (maintenanceForm.nextMaintenance) {
       const nextDate = new Date(
@@ -2596,7 +2596,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manuten��ões
+                      Manutenções
                     </button>
                     <button
                       onClick={() => setActiveSection("futuras-manutencoes")}
@@ -5517,7 +5517,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Estado e localização</li>
                         <li>• Informações de clientes</li>
-                        <li>• Histórico de manuten��ões</li>
+                        <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -6929,7 +6929,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           } catch (error) {
                             console.error("❌ Erro ao atualizar:", error);
                             alert("❌ Erro ao atualizar obra");
-                            return;
                           }
                           setEditingWork(null);
                           setEditAssignedUsers([]);
