@@ -493,7 +493,7 @@ function App() {
         setTimeout(() => {
           showNotification(
             "Obras Atribuídas",
-            `Olá Alexandre! Tens ${alexandreWorks.length} obra${alexandreWorks.length > 1 ? "s" : ""} atribuída${alexandreWorks.length > 1 ? "s" : ""}.`,
+            `Ol�� Alexandre! Tens ${alexandreWorks.length} obra${alexandreWorks.length > 1 ? "s" : ""} atribuída${alexandreWorks.length > 1 ? "s" : ""}.`,
             "work",
           );
         }, 2000); // Delay to ensure notification system is ready
@@ -3312,7 +3312,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Profundidade do Furo (metros)
+                              Profundidade (metros)
                             </label>
                             <input
                               type="number"
@@ -3323,22 +3323,58 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Caudal de Água (L/min)
+                              Nível Água (metros)
                             </label>
                             <input
                               type="number"
-                              name="waterFlow"
+                              name="waterLevel"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: 3000"
+                              placeholder="Ex: 25"
                             />
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Diâmetro do Furo (polegadas)
+                              Profundidade da Bomba (metros)
                             </label>
                             <input
                               type="number"
-                              name="wellDiameter"
+                              name="pumpDepth"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 120"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Caudal do Furo (m³)
+                            </label>
+                            <input
+                              type="number"
+                              name="waterFlow"
+                              step="0.1"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 3.5"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Tipo de Coluna
+                            </label>
+                            <select
+                              name="columnType"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">Selecionar tipo</option>
+                              <option value="PEAD">PEAD</option>
+                              <option value="HIDROROSCADO">HIDROROSCADO</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Diâmetro Coluna (polegadas)
+                            </label>
+                            <input
+                              type="number"
+                              name="columnDiameter"
                               step="0.1"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Ex: 6"
@@ -3346,63 +3382,39 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Tipo de Bomba
+                              Bomba Instalada (modelo)
                             </label>
                             <input
                               type="text"
-                              name="pumpType"
+                              name="pumpModel"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: Bomba submersível"
+                              placeholder="Ex: Grundfos SQ3-65"
                             />
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Estado da Perfuração
+                              Potência Motor (HP)
+                            </label>
+                            <input
+                              type="number"
+                              name="motorPower"
+                              step="0.1"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Ex: 3.5"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Tensão da Bomba
                             </label>
                             <select
-                              name="drillingStatus"
+                              name="pumpVoltage"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                              <option value="">Selecionar estado</option>
-                              <option value="not_started">Não Iniciado</option>
-                              <option value="in_progress">Em Perfuração</option>
-                              <option value="completed">
-                                Perfuração Concluída
-                              </option>
+                              <option value="">Selecionar tensão</option>
+                              <option value="230V">230V</option>
+                              <option value="400V">400V</option>
                             </select>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Qualidade da Água
-                            </label>
-                            <input
-                              type="text"
-                              name="waterQuality"
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: Boa qualidade, potável"
-                            />
-                          </div>
-                          <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Informações Geológicas
-                            </label>
-                            <textarea
-                              name="geologicalInfo"
-                              rows={3}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Descrição das camadas geológicas encontradas..."
-                            />
-                          </div>
-                          <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Equipamento Utilizado
-                            </label>
-                            <textarea
-                              name="equipmentUsed"
-                              rows={3}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Lista do equipamento utilizado na perfuração..."
-                            />
                           </div>
                         </div>
                       </div>
@@ -7308,7 +7320,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Sistema de Filtração
+                          Sistema de Filtra��ão
                         </label>
                         <select
                           defaultValue={editingPool?.filtrationSystem || "sand"}
@@ -7357,7 +7369,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
+                        Observaç��es
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
