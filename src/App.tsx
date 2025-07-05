@@ -4118,6 +4118,71 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             workSheetCompleted: false,
                             createdAt: new Date().toISOString(),
                             startDate: new Date().toISOString(),
+                            // Water well specific fields
+                            wellDepth:
+                              workType === "furo"
+                                ? (
+                                    form.querySelector(
+                                      'input[name="wellDepth"]',
+                                    ) as HTMLInputElement
+                                  )?.value || ""
+                                : "",
+                            waterFlow:
+                              workType === "furo"
+                                ? (
+                                    form.querySelector(
+                                      'input[name="waterFlow"]',
+                                    ) as HTMLInputElement
+                                  )?.value || ""
+                                : "",
+                            wellDiameter:
+                              workType === "furo"
+                                ? (
+                                    form.querySelector(
+                                      'input[name="wellDiameter"]',
+                                    ) as HTMLInputElement
+                                  )?.value || ""
+                                : "",
+                            pumpType:
+                              workType === "furo"
+                                ? (
+                                    form.querySelector(
+                                      'input[name="pumpType"]',
+                                    ) as HTMLInputElement
+                                  )?.value || ""
+                                : "",
+                            drillingStatus:
+                              workType === "furo"
+                                ? (
+                                    form.querySelector(
+                                      'select[name="drillingStatus"]',
+                                    ) as HTMLSelectElement
+                                  )?.value || ""
+                                : "",
+                            waterQuality:
+                              workType === "furo"
+                                ? (
+                                    form.querySelector(
+                                      'input[name="waterQuality"]',
+                                    ) as HTMLInputElement
+                                  )?.value || ""
+                                : "",
+                            geologicalInfo:
+                              workType === "furo"
+                                ? (
+                                    form.querySelector(
+                                      'textarea[name="geologicalInfo"]',
+                                    ) as HTMLTextAreaElement
+                                  )?.value || ""
+                                : "",
+                            equipmentUsed:
+                              workType === "furo"
+                                ? (
+                                    form.querySelector(
+                                      'textarea[name="equipmentUsed"]',
+                                    ) as HTMLTextAreaElement
+                                  )?.value || ""
+                                : "",
                           };
 
                           // Use sync system to add work (will handle Firebase and localStorage)
