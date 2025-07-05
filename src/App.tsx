@@ -3641,7 +3641,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                                 if (currentAssignedUser) {
                                   const selectedUser = users.find(
-                                    (u) => String(u.id) === currentAssignedUser,
+                                    (u) =>
+                                      String(u.id) ===
+                                      String(currentAssignedUser),
                                   );
 
                                   console.log(
@@ -5532,7 +5534,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Notificações de Sistema
                           </h4>
                           <p className="text-green-700 text-sm mb-3">
-                            Receba alertas sobre atualizações do sistema e
+                            Receba alertas sobre atualiza��ões do sistema e
                             manutenções programadas.
                           </p>
                           <div className="flex items-center justify-between">
@@ -5661,7 +5663,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
-                            {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
+                            {enableMapsRedirect ? "��� Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
@@ -5953,7 +5955,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Resumo executivo</li>
+                        <li>�� Resumo executivo</li>
                         <li>��� Estatísticas gerais</li>
                         <li>• Dados consolidados</li>
                         <li>• Análise de performance</li>
@@ -7942,7 +7944,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const technician = inputs[1].value; // Técnico
                           const type = inputs[2].value; // Tipo de Manutenção
                           const status = inputs[3].value; // Estado
-                          const estimatedDuration = inputs[4].value; // Duraç���o Estimada
+                          const estimatedDuration = inputs[4].value; // Duraç��o Estimada
                           const actualDuration = inputs[5].value; // Duração Real
                           const cost = inputs[6].value; // Custo
                           const priority = inputs[7].value; // Prioridade
