@@ -747,7 +747,7 @@ function App() {
           }
         }, 100);
       } else {
-        console.warn("❌ Login failed:", result.error);
+        console.warn("�� Login failed:", result.error);
         setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
@@ -7304,7 +7304,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Conclusão
+                          Data de Conclus��o
                         </label>
                         <input
                           type="date"
@@ -8101,6 +8101,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Número da Folha de Obra
+                      </label>
+                      <p className="text-gray-900 font-mono">
+                        {selectedWork.workSheetNumber || selectedWork.title}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Tipo de Obra
+                      </label>
+                      <p className="text-gray-900 capitalize">
+                        {selectedWork.type || "Não especificado"}
+                      </p>
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Título
