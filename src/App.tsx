@@ -107,14 +107,25 @@ function App() {
             ) : (
               <div className="space-y-3">
                 {works.map((work) => (
-                  <div key={work.id} className="border rounded p-4">
-                    <h4 className="font-medium">{work.title}</h4>
-                    <p className="text-sm text-gray-600">
-                      Cliente: {work.client}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Status: {work.status}
-                    </p>
+                  <div
+                    key={work.id}
+                    className="border rounded p-4 flex justify-between items-start"
+                  >
+                    <div>
+                      <h4 className="font-medium">{work.title}</h4>
+                      <p className="text-sm text-gray-600">
+                        Cliente: {work.client}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Status: {work.status}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setEditingWork(work)}
+                      className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600"
+                    >
+                      Editar
+                    </button>
                   </div>
                 ))}
               </div>
