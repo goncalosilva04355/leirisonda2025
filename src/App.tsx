@@ -985,7 +985,7 @@ ${index + 1}. ${work.title}
 
   const generateClientsPDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO DE CLIENTES
+LEIRISONDA - RELAT����RIO DE CLIENTES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1978,7 +1978,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <div>
                                     <h3 className="font-semibold text-gray-900">
-                                      {work.title}
+                                      {work.client || work.title}
                                     </h3>
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
                                       <span>👤</span>
@@ -5699,7 +5699,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registos)
                               </li>
                               <li>
-                                • Todas as piscinas ({pools.length} registos)
+                                ��� Todas as piscinas ({pools.length} registos)
                               </li>
                               <li>
                                 ��� Dados do Firebase e armazenamento local
