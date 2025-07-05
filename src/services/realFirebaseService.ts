@@ -183,10 +183,14 @@ class RealFirebaseService {
 
     try {
       const workRef = ref(this.database!, `works/${workId}`);
-      await update(workRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...workData,
         updatedAt: new Date().toISOString(),
       });
+
+      await update(workRef, sanitizedData);
       return true;
     } catch (error) {
       console.error("Failed to update work:", error);
