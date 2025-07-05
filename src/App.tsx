@@ -29,21 +29,21 @@ import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
-// import { InstallPrompt } from "./components/InstallPrompt"; // Temporarily disabled due to React hook error
+import { InstallPrompt } from "./components/InstallPrompt";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
 
-// import { AutoSyncProvider } from "./components/AutoSyncProvider"; // Temporarily disabled due to React hook error
-// import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Temporarily disabled due to AutoSyncProvider dependency
+import { AutoSyncProvider } from "./components/AutoSyncProvider";
+import { SyncStatusIcon } from "./components/SyncStatusIndicator";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
-// import { useDataSync } from "./hooks/useDataSync_simple"; // Removed to fix hook errors
+import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
-// import { useAutoSync } from "./hooks/useAutoSync"; // Temporarily disabled due to React hook error
+import { useAutoSync } from "./hooks/useAutoSync";
 
 // Mock users database
 const initialUsers = [
@@ -127,7 +127,7 @@ function App() {
     console.log("�� Auth State Debug:", {
       isAuthenticated,
       currentUser: currentUser
-        ? `${currentUser?.name} (${currentUser.email})`
+        ? `${currentUser.name} (${currentUser.email})`
         : null,
       timestamp: new Date().toISOString(),
     });
@@ -189,153 +189,24 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // Simple data management without problematic hooks
-  const [works, setWorks] = useState(() => {
-    try {
-      const stored = localStorage.getItem("works");
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [pools, setPools] = useState(() => {
-    try {
-      const stored = localStorage.getItem("pools");
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [maintenance, setMaintenance] = useState(() => {
-    try {
-      const stored = localStorage.getItem("maintenance");
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [clients, setClients] = useState(() => {
-    try {
-      const stored = localStorage.getItem("clients");
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const futureMaintenance = [];
-  const syncLoading = false;
-  const lastSync = null;
-  const syncError = null;
-  const syncWithFirebase = () => {};
-  const enableSync = () => {};
-
-  const addWork = (work) => {
-    const newWork = {
-      ...work,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    const updatedWorks = [...works, newWork];
-    setWorks(updatedWorks);
-    localStorage.setItem("works", JSON.stringify(updatedWorks));
-  };
-
-  const addPool = (pool) => {
-    const newPool = {
-      ...pool,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    const updatedPools = [...pools, newPool];
-    setPools(updatedPools);
-    localStorage.setItem("pools", JSON.stringify(updatedPools));
-  };
-
-  const addMaintenance = (maint) => {
-    const newMaintenance = {
-      ...maint,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    const updatedMaintenance = [...maintenance, newMaintenance];
-    setMaintenance(updatedMaintenance);
-    localStorage.setItem("maintenance", JSON.stringify(updatedMaintenance));
-  };
-
-  const addClient = (client) => {
-    const newClient = {
-      ...client,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    const updatedClients = [...clients, newClient];
-    setClients(updatedClients);
-    localStorage.setItem("clients", JSON.stringify(updatedClients));
-  };
-
-  const updateWork = (id, updates) => {
-    const updatedWorks = works.map((work) =>
-      work.id === id ? { ...work, ...updates } : work,
-    );
-    setWorks(updatedWorks);
-    localStorage.setItem("works", JSON.stringify(updatedWorks));
-  };
-
-  const deleteWork = (id) => {
-    const updatedWorks = works.filter((work) => work.id !== id);
-    setWorks(updatedWorks);
-    localStorage.setItem("works", JSON.stringify(updatedWorks));
-  };
-
-  const updatePool = (id, updates) => {
-    const updatedPools = pools.map((pool) =>
-      pool.id === id ? { ...pool, ...updates } : pool,
-    );
-    setPools(updatedPools);
-    localStorage.setItem("pools", JSON.stringify(updatedPools));
-  };
-
-  const deletePool = (id) => {
-    const updatedPools = pools.filter((pool) => pool.id !== id);
-    setPools(updatedPools);
-    localStorage.setItem("pools", JSON.stringify(updatedPools));
-  };
-
-  const updateMaintenance = (id, updates) => {
-    const updatedMaintenance = maintenance.map((maint) =>
-      maint.id === id ? { ...maint, ...updates } : maint,
-    );
-    setMaintenance(updatedMaintenance);
-    localStorage.setItem("maintenance", JSON.stringify(updatedMaintenance));
-  };
-
-  const deleteMaintenance = (id) => {
-    const updatedMaintenance = maintenance.filter((maint) => maint.id !== id);
-    setMaintenance(updatedMaintenance);
-    localStorage.setItem("maintenance", JSON.stringify(updatedMaintenance));
-  };
-
-  const deleteClient = (id) => {
-    const updatedClients = clients.filter((client) => client.id !== id);
-    setClients(updatedClients);
-    localStorage.setItem("clients", JSON.stringify(updatedClients));
-  };
-
-  // Create dataSync object for backward compatibility
-  const dataSync = {
-    updateWork,
-    deleteWork,
-    updatePool,
-    deletePool,
-    updateMaintenance,
-    deleteMaintenance,
-    deleteClient,
+  // Data sync hook - manages all data with optional Firebase sync
+  const dataSync = useDataSync();
+  const {
+    pools,
+    maintenance,
+    futureMaintenance,
+    works,
+    clients,
+    isLoading: syncLoading,
+    lastSync,
+    error: syncError,
+    syncWithFirebase,
+    enableSync,
+    addPool,
+    addWork,
+    addMaintenance,
     addClient,
-  };
+  } = dataSync;
 
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
@@ -348,12 +219,9 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase �� localStorage synchronization
-  // const autoSyncData = useAutoSync();
-  // const { syncStatus, isAutoSyncing } = autoSyncData;
-  // const autoSyncLastSync = autoSyncData.lastSync;
-  const syncStatus = "idle";
-  const isAutoSyncing = false;
-  const autoSyncLastSync = null;
+  const autoSyncData = useAutoSync();
+  const { syncStatus, isAutoSyncing } = autoSyncData;
+  const autoSyncLastSync = autoSyncData.lastSync;
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -445,7 +313,7 @@ function App() {
     }
 
     // Only clear auth state if no valid stored user found
-    console.log("��� No valid stored user found, ensuring clean state");
+    console.log("🔒 No valid stored user found, ensuring clean state");
     sessionStorage.clear(); // Clear any session data
     setIsAuthenticated(false);
     setCurrentUser(null);
@@ -490,7 +358,7 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
-    console.log("��� Initializing notifications...");
+    console.log("🔔 Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
       console.log("🔔 Current notification permission:", permission);
@@ -572,11 +440,11 @@ function App() {
   // Notify Alexandre about assigned works when he logs in
   useEffect(() => {
     if (
-      currentUser?.name?.toLowerCase().includes("alexandre") &&
+      currentUser?.name.toLowerCase().includes("alexandre") &&
       works.length > 0
     ) {
       console.log("🔍 DEBUG Alexandre - Data loaded:", {
-        currentUser: currentUser?.name || "Unknown",
+        currentUser: currentUser.name,
         worksCount: works.length,
         works: works.map((w) => ({
           id: w.id,
@@ -874,7 +742,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("���� Navigating to dashboard");
+            console.log("��� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -1018,7 +886,7 @@ ${maintenance
     (maint, index) => `
 ${index + 1}. ${maint.poolName}
    Tipo: ${maint.type}
-   Estado: ${maint.status === "completed" ? "Conclu��da" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
@@ -1049,13 +917,13 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç��������o: ${work.location}
+   Localizaç������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: ���${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -1241,11 +1109,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     // Check if current user is the one assigned (exact match or partial match for combined assignments)
     const isAssignedToCurrentUser =
-      currentUser?.name &&
+      currentUser &&
       assignedTo &&
-      (assignedTo === currentUser?.name ||
-        assignedTo.toLowerCase().includes(currentUser?.name.toLowerCase()) ||
-        currentUser?.name.toLowerCase().includes(assignedTo.toLowerCase()));
+      (assignedTo === currentUser.name ||
+        assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
+        currentUser.name.toLowerCase().includes(assignedTo.toLowerCase()));
 
     console.log("🔍 DEBUG: Assignment check:", {
       currentUser: currentUser?.name,
@@ -1275,7 +1143,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n��� ${workTitle}\n\n👤 Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1789,7 +1657,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
 
                               const debugInfo = {
-                                currentUser: currentUser?.name || "Unknown",
+                                currentUser: currentUser.name,
                                 totalWorks: works.length,
                                 alexandreWorks: alexandreWorks,
                                 localStorage: {
@@ -1957,18 +1825,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   work.assignedTo
                                     .split(",")
                                     .map((name) => name.trim().toLowerCase())
-                                    .includes(
-                                      currentUser?.name?.toLowerCase() || "",
-                                    );
+                                    .includes(currentUser.name.toLowerCase());
 
                                 // Check if user is in assignedUsers array (exact match)
                                 const assignedUsersMatch =
                                   work.assignedUsers?.some(
                                     (user) =>
                                       user.name &&
-                                      currentUser?.name &&
                                       user.name.toLowerCase() ===
-                                        currentUser?.name.toLowerCase(),
+                                        currentUser.name.toLowerCase(),
                                   );
 
                                 return assignedToMatch || assignedUsersMatch;
@@ -1977,7 +1842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `✅ ${assignedWorks.length} obra(s) atribu��da(s) a ${currentUser?.name}`,
+                                  `✅ ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser.name}`,
                                 );
                               }
 
@@ -2000,14 +1865,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       work.assignedTo
                         .split(",")
                         .map((name) => name.trim().toLowerCase())
-                        .includes(currentUser?.name.toLowerCase());
+                        .includes(currentUser.name.toLowerCase());
 
                     // Check if user is in assignedUsers array (exact match)
                     const assignedUsersMatch = work.assignedUsers?.some(
                       (user) =>
                         user.name &&
                         user.name.toLowerCase() ===
-                          currentUser?.name.toLowerCase(),
+                          currentUser.name.toLowerCase(),
                     );
 
                     return assignedToMatch || assignedUsersMatch;
@@ -2030,14 +1895,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               work.assignedTo
                                 .split(",")
                                 .map((name) => name.trim().toLowerCase())
-                                .includes(currentUser?.name.toLowerCase());
+                                .includes(currentUser.name.toLowerCase());
 
                             // Check if user is in assignedUsers array (exact match)
                             const assignedUsersMatch = work.assignedUsers?.some(
                               (user) =>
                                 user.name &&
                                 user.name.toLowerCase() ===
-                                  currentUser?.name.toLowerCase(),
+                                  currentUser.name.toLowerCase(),
                             );
 
                             return assignedToMatch || assignedUsersMatch;
@@ -3189,7 +3054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ����‍🔧 {maint.technician}
+                                👨‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -3837,7 +3702,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observaç���es Específicas do Furo
+                              Observaç��es Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -5277,7 +5142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-100">
                       <span className="text-gray-600">Utilizador Ativo</span>
-                      <span className="font-medium">{currentUser?.name}</span>
+                      <span className="font-medium">{currentUser.name}</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-100">
                       <span className="text-gray-600">Perfil</span>
@@ -6380,7 +6245,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Obras
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o de obras e projetos
+                          Gestão de obras e projetos
                         </p>
                       </div>
                     </div>
@@ -6580,7 +6445,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? work.assignedUsers
                                       .map((u) => u.name)
                                       .join(", ")
-                                  : work.assignedTo || "Não atribu��da"}
+                                  : work.assignedTo || "Não atribuída"}
                               </div>
                               {work.budget && (
                                 <div>
@@ -7784,7 +7649,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Fotografias</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>✓</span>
                   <span>Observações e próxima manutenção</span>
                 </div>
               </div>
@@ -8030,524 +7895,537 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Logo Header */}
-          <div className="px-6 py-6 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
-                  <img
-                    src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                    alt="Leirisonda Logo"
-                    className="w-full h-full object-contain"
-                  />
+    <AutoSyncProvider
+      enabled={false}
+      syncInterval={15000}
+      collections={["users", "pools", "maintenance", "works", "clients"]}
+      showNotifications={false}
+    >
+      <div className="min-h-screen bg-gray-50">
+        {/* Sidebar */}
+        <div
+          className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="flex flex-col h-full">
+            {/* Logo Header */}
+            <div className="px-6 py-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                      alt="Leirisonda Logo"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-500">Gestão de Serviços</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-500">Gestão de Serviços</p>
-                </div>
-              </div>
-              {/* Sync Status Indicator - Disabled */}
-              {/* Close button for mobile */}
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="lg:hidden p-1 rounded-md hover:bg-gray-100"
-              >
-                <X className="h-5 w-5 text-gray-500" />
-              </button>
-            </div>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
-            <button
-              onClick={() => {
-                navigateToSection("dashboard");
-                setSidebarOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                activeSection === "dashboard"
-                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Home className="h-5 w-5" />
-              <span>Dashboard</span>
-            </button>
-
-            {hasPermission("obras", "view") && (
-              <button
-                onClick={() => {
-                  navigateToSection("obras");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "obras"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Building2 className="h-5 w-5" />
-                <span>Obras</span>
-              </button>
-            )}
-
-            {hasPermission("obras", "create") && (
-              <button
-                onClick={() => {
-                  navigateToSection("nova-obra");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "nova-obra"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Plus className="h-5 w-5" />
-                <span>Nova Obra</span>
-              </button>
-            )}
-
-            {hasPermission("manutencoes", "view") && (
-              <button
-                onClick={() => {
-                  navigateToSection("manutencoes");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "manutencoes"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Wrench className="h-5 w-5" />
-                <span>Manutenções</span>
-              </button>
-            )}
-
-            {hasPermission("manutencoes", "create") && (
-              <button
-                onClick={() => {
-                  navigateToSection("nova-manutencao");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "nova-manutencao"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Plus className="h-5 w-5" />
-                <span>Nova Manutenção</span>
-              </button>
-            )}
-
-            {hasPermission("piscinas", "view") && (
-              <button
-                onClick={() => {
-                  navigateToSection("piscinas");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "piscinas"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Waves className="h-5 w-5" />
-                <span>Piscinas</span>
-              </button>
-            )}
-          </nav>
-
-          {/* User Section */}
-          <div className="px-4 py-6 border-t border-gray-200">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                <UserCheck className="h-5 w-5 text-red-600" />
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">{currentUser?.name}</p>
-                <p className="text-sm text-gray-500">{currentUser.role}</p>
+                {/* Sync Status Indicator */}
+                <SyncStatusIcon className="ml-2" />
+                {/* Close button for mobile */}
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="lg:hidden p-1 rounded-md hover:bg-gray-100"
+                >
+                  <X className="h-5 w-5 text-gray-500" />
+                </button>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <LogOut className="h-5 w-5" />
-              <span>Terminar Sessão</span>
-            </button>
-            <div className="mt-4 text-center">
-              <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
+
+            {/* Navigation */}
+            <nav className="flex-1 px-4 py-6 space-y-2">
+              <button
+                onClick={() => {
+                  navigateToSection("dashboard");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "dashboard"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Home className="h-5 w-5" />
+                <span>Dashboard</span>
+              </button>
+
+              {hasPermission("obras", "view") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("obras");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "obras"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Building2 className="h-5 w-5" />
+                  <span>Obras</span>
+                </button>
+              )}
+
+              {hasPermission("obras", "create") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("nova-obra");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "nova-obra"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>Nova Obra</span>
+                </button>
+              )}
+
+              {hasPermission("manutencoes", "view") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("manutencoes");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "manutencoes"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Wrench className="h-5 w-5" />
+                  <span>Manutenções</span>
+                </button>
+              )}
+
+              {hasPermission("manutencoes", "create") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("nova-manutencao");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "nova-manutencao"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>Nova Manutenção</span>
+                </button>
+              )}
+
+              {hasPermission("piscinas", "view") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("piscinas");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "piscinas"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Waves className="h-5 w-5" />
+                  <span>Piscinas</span>
+                </button>
+              )}
+            </nav>
+
+            {/* User Section */}
+            <div className="px-4 py-6 border-t border-gray-200">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <UserCheck className="h-5 w-5 text-red-600" />
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900">
+                    {currentUser.name}
+                  </p>
+                  <p className="text-sm text-gray-500">{currentUser.role}</p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <LogOut className="h-5 w-5" />
+                <span>Terminar Sessão</span>
+              </button>
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Menu Button */}
-      <div className="lg:hidden fixed top-20 left-4 z-60 flex flex-col space-y-2">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="bg-white p-2 rounded-md shadow-md"
-        >
-          <Menu className="h-6 w-6 text-gray-600" />
-        </button>
-        <button
-          onClick={handleGoBack}
-          className="bg-white p-2 rounded-md shadow-md"
-        >
-          <ArrowLeft className="h-6 w-6 text-gray-600" />
-        </button>
-      </div>
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden fixed top-20 left-4 z-60 flex flex-col space-y-2">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="bg-white p-2 rounded-md shadow-md"
+          >
+            <Menu className="h-6 w-6 text-gray-600" />
+          </button>
+          <button
+            onClick={handleGoBack}
+            className="bg-white p-2 rounded-md shadow-md"
+          >
+            <ArrowLeft className="h-6 w-6 text-gray-600" />
+          </button>
+        </div>
 
-      {/* Mobile Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+        {/* Mobile Overlay */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
 
-      {/* Enhanced Work View Modal */}
-      {viewingWork && selectedWork && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="p-6">
-              {/* Enhanced Header */}
-              <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Building2 className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900">
-                      Detalhes Completos da Obra
-                    </h2>
-                    <p className="text-gray-600 text-sm">
-                      {selectedWork.id?.toUpperCase() ||
-                        "ID-" + Date.now().toString().slice(-6)}{" "}
-                      → {selectedWork.title}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => {
-                    setViewingWork(false);
-                    setSelectedWork(null);
-                  }}
-                  className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Número da Folha de Obra
-                    </label>
-                    <p className="text-gray-900 font-mono">
-                      {selectedWork.workSheetNumber || selectedWork.title}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Tipo de Obra
-                    </label>
-                    <p className="text-gray-900 capitalize">
-                      {selectedWork.type || "Não especificado"}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Título
-                    </label>
-                    <p className="text-gray-900">{selectedWork.title}</p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Cliente
-                    </label>
-                    <p className="text-gray-900">
-                      {selectedWork.client || "Não especificado"}
-                    </p>
-                    {selectedWork.contact && (
-                      <button
-                        onClick={() => handlePhoneClick(selectedWork.contact)}
-                        className={`text-sm mt-1 ${
-                          enablePhoneDialer
-                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                            : "text-gray-500"
-                        }`}
-                        disabled={!enablePhoneDialer}
-                      >
-                        �� {selectedWork.contact}
-                      </button>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Local
-                    </label>
-                    <button
-                      onClick={() => handleAddressClick(selectedWork.location)}
-                      className={`text-left ${
-                        enableMapsRedirect
-                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                          : "text-gray-900"
-                      }`}
-                      disabled={!enableMapsRedirect}
-                    >
-                      📍 {selectedWork.location}
-                    </button>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Estado
-                    </label>
-                    <span
-                      className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                        selectedWork.status === "pending"
-                          ? "bg-red-100 text-red-700"
-                          : selectedWork.status === "in_progress"
-                            ? "bg-orange-100 text-orange-700"
-                            : selectedWork.status === "completed"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-700"
-                      }`}
-                    >
-                      {selectedWork.status === "pending"
-                        ? "Pendente"
-                        : selectedWork.status === "in_progress"
-                          ? "Em Progresso"
-                          : selectedWork.status === "completed"
-                            ? "Concluída"
-                            : selectedWork.status}
-                    </span>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Data de Início
-                    </label>
-                    <p className="text-gray-900">
-                      {new Date(selectedWork.startDate).toLocaleDateString(
-                        "pt-PT",
-                      )}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Horário
-                    </label>
-                    <p className="text-gray-900">
-                      {selectedWork.startTime && selectedWork.endTime
-                        ? `${selectedWork.startTime} - ${selectedWork.endTime}`
-                        : selectedWork.startTime
-                          ? `Das ${selectedWork.startTime}`
-                          : "Não definido"}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Atribuída a
-                    </label>
-                    <p className="text-gray-900">
-                      {selectedWork.assignedUsers &&
-                      selectedWork.assignedUsers.length > 0
-                        ? selectedWork.assignedUsers
-                            .map((u) => u.name)
-                            .join(", ")
-                        : selectedWork.assignedTo || "Não atribuída"}
-                    </p>
-                  </div>
-                  {selectedWork.technicians &&
-                    selectedWork.technicians.length > 0 && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Técnicos
-                        </label>
-                        <p className="text-gray-900">
-                          {selectedWork.technicians.join(", ")}
-                        </p>
-                      </div>
-                    )}
-                  {selectedWork.vehicles &&
-                    selectedWork.vehicles.length > 0 && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Veículos
-                        </label>
-                        <p className="text-gray-900">
-                          {selectedWork.vehicles.join(", ")}
-                        </p>
-                      </div>
-                    )}
-                  {selectedWork.photos && selectedWork.photos.length > 0 && (
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Fotografias ({selectedWork.photos.length})
-                      </label>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
-                        {selectedWork.photos.map((photo, index) => (
-                          <div key={photo.id || index} className="relative">
-                            <img
-                              src={photo.data || photo.url}
-                              alt={photo.name || `Foto ${index + 1}`}
-                              className="w-full h-20 object-cover rounded-lg border border-gray-200"
-                            />
-                          </div>
-                        ))}
-                      </div>
+        {/* Enhanced Work View Modal */}
+        {viewingWork && selectedWork && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+              <div className="p-6">
+                {/* Enhanced Header */}
+                <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-6 w-6 text-blue-600" />
                     </div>
-                  )}
-                </div>
-
-                {selectedWork.description && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Descrição
-                    </label>
-                    <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                      {selectedWork.description}
-                    </p>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Detalhes Completos da Obra
+                      </h2>
+                      <p className="text-gray-600 text-sm">
+                        {selectedWork.id?.toUpperCase() ||
+                          "ID-" + Date.now().toString().slice(-6)}{" "}
+                        → {selectedWork.title}
+                      </p>
+                    </div>
                   </div>
-                )}
-
-                {selectedWork.budget && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Orçamento
-                    </label>
-                    <p className="text-gray-900">€{selectedWork.budget}</p>
-                  </div>
-                )}
-
-                {selectedWork.workPerformed && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Trabalho Realizado
-                    </label>
-                    <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                      {selectedWork.workPerformed}
-                    </p>
-                  </div>
-                )}
-
-                {selectedWork.observations && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Observações
-                    </label>
-                    <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                      {selectedWork.observations}
-                    </p>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Folha de Obra Concluída
-                    </label>
-                    <span
-                      className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                        selectedWork.workSheetCompleted
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
-                    >
-                      {selectedWork.workSheetCompleted
-                        ? "Concluída"
-                        : "Pendente"}
-                    </span>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Data de Criação
-                    </label>
-                    <p className="text-gray-900 text-sm">
-                      {new Date(
-                        selectedWork.createdAt || selectedWork.startDate,
-                      ).toLocaleString("pt-PT")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end space-x-3">
-                <button
-                  onClick={() => {
-                    setViewingWork(false);
-                    setSelectedWork(null);
-                  }}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
-                >
-                  Fechar
-                </button>
-                {hasPermission("obras", "edit") && (
                   <button
                     onClick={() => {
-                      setEditingWork(selectedWork);
-                      // Initialize edit assigned users
-                      setEditAssignedUsers(selectedWork.assignedUsers || []);
                       setViewingWork(false);
                       setSelectedWork(null);
-                      setActiveSection("editar-obra");
                     }}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
                   >
-                    Editar
+                    <X className="h-6 w-6" />
                   </button>
-                )}
+                </div>
+
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Número da Folha de Obra
+                      </label>
+                      <p className="text-gray-900 font-mono">
+                        {selectedWork.workSheetNumber || selectedWork.title}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Tipo de Obra
+                      </label>
+                      <p className="text-gray-900 capitalize">
+                        {selectedWork.type || "Não especificado"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Título
+                      </label>
+                      <p className="text-gray-900">{selectedWork.title}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Cliente
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.client || "Não especificado"}
+                      </p>
+                      {selectedWork.contact && (
+                        <button
+                          onClick={() => handlePhoneClick(selectedWork.contact)}
+                          className={`text-sm mt-1 ${
+                            enablePhoneDialer
+                              ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                              : "text-gray-500"
+                          }`}
+                          disabled={!enablePhoneDialer}
+                        >
+                          �� {selectedWork.contact}
+                        </button>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Local
+                      </label>
+                      <button
+                        onClick={() =>
+                          handleAddressClick(selectedWork.location)
+                        }
+                        className={`text-left ${
+                          enableMapsRedirect
+                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                            : "text-gray-900"
+                        }`}
+                        disabled={!enableMapsRedirect}
+                      >
+                        📍 {selectedWork.location}
+                      </button>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Estado
+                      </label>
+                      <span
+                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          selectedWork.status === "pending"
+                            ? "bg-red-100 text-red-700"
+                            : selectedWork.status === "in_progress"
+                              ? "bg-orange-100 text-orange-700"
+                              : selectedWork.status === "completed"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {selectedWork.status === "pending"
+                          ? "Pendente"
+                          : selectedWork.status === "in_progress"
+                            ? "Em Progresso"
+                            : selectedWork.status === "completed"
+                              ? "Concluída"
+                              : selectedWork.status}
+                      </span>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Data de Início
+                      </label>
+                      <p className="text-gray-900">
+                        {new Date(selectedWork.startDate).toLocaleDateString(
+                          "pt-PT",
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Horário
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.startTime && selectedWork.endTime
+                          ? `${selectedWork.startTime} - ${selectedWork.endTime}`
+                          : selectedWork.startTime
+                            ? `Das ${selectedWork.startTime}`
+                            : "Não definido"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Atribuída a
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.assignedUsers &&
+                        selectedWork.assignedUsers.length > 0
+                          ? selectedWork.assignedUsers
+                              .map((u) => u.name)
+                              .join(", ")
+                          : selectedWork.assignedTo || "Não atribuída"}
+                      </p>
+                    </div>
+                    {selectedWork.technicians &&
+                      selectedWork.technicians.length > 0 && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Técnicos
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedWork.technicians.join(", ")}
+                          </p>
+                        </div>
+                      )}
+                    {selectedWork.vehicles &&
+                      selectedWork.vehicles.length > 0 && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Veículos
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedWork.vehicles.join(", ")}
+                          </p>
+                        </div>
+                      )}
+                    {selectedWork.photos && selectedWork.photos.length > 0 && (
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Fotografias ({selectedWork.photos.length})
+                        </label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+                          {selectedWork.photos.map((photo, index) => (
+                            <div key={photo.id || index} className="relative">
+                              <img
+                                src={photo.data || photo.url}
+                                alt={photo.name || `Foto ${index + 1}`}
+                                className="w-full h-20 object-cover rounded-lg border border-gray-200"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {selectedWork.description && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Descrição
+                      </label>
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {selectedWork.description}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedWork.budget && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Orçamento
+                      </label>
+                      <p className="text-gray-900">€{selectedWork.budget}</p>
+                    </div>
+                  )}
+
+                  {selectedWork.workPerformed && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Trabalho Realizado
+                      </label>
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {selectedWork.workPerformed}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedWork.observations && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Observações
+                      </label>
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {selectedWork.observations}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Folha de Obra Concluída
+                      </label>
+                      <span
+                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          selectedWork.workSheetCompleted
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {selectedWork.workSheetCompleted
+                          ? "Concluída"
+                          : "Pendente"}
+                      </span>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Data de Criação
+                      </label>
+                      <p className="text-gray-900 text-sm">
+                        {new Date(
+                          selectedWork.createdAt || selectedWork.startDate,
+                        ).toLocaleString("pt-PT")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end space-x-3">
+                  <button
+                    onClick={() => {
+                      setViewingWork(false);
+                      setSelectedWork(null);
+                    }}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                  >
+                    Fechar
+                  </button>
+                  {hasPermission("obras", "edit") && (
+                    <button
+                      onClick={() => {
+                        setEditingWork(selectedWork);
+                        // Initialize edit assigned users
+                        setEditAssignedUsers(selectedWork.assignedUsers || []);
+                        setViewingWork(false);
+                        setSelectedWork(null);
+                        setActiveSection("editar-obra");
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
+                      Editar
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Main Content */}
-      <main className="lg:ml-80 min-h-screen">
-        <div className="p-4 lg:p-6">{renderContent()}</div>
-      </main>
+        {/* Main Content */}
+        <main className="lg:ml-80 min-h-screen">
+          <div className="p-4 lg:p-6">{renderContent()}</div>
+        </main>
 
-      {/* Install Prompt for Mobile - Disabled */}
+        {/* Install Prompt for Mobile */}
+        <InstallPrompt />
 
-      {/* Admin Login Modal */}
-      {showAdminLogin && !isAdminAuthenticated && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg max-w-md w-full mx-4">
-            <AdminLogin
-              onLogin={() => {
-                setIsAdminAuthenticated(true);
+        {/* Admin Login Modal */}
+        {showAdminLogin && !isAdminAuthenticated && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg max-w-md w-full mx-4">
+              <AdminLogin
+                onLogin={() => {
+                  setIsAdminAuthenticated(true);
+                  setShowAdminLogin(false);
+                }}
+                onBack={() => setShowAdminLogin(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Admin Page */}
+        {isAdminAuthenticated && (
+          <div className="fixed inset-0 bg-white z-50">
+            <AdminPage
+              onLogout={() => {
+                setIsAdminAuthenticated(false);
                 setShowAdminLogin(false);
               }}
-              onBack={() => setShowAdminLogin(false)}
             />
           </div>
-        </div>
-      )}
-
-      {/* Admin Page */}
-      {isAdminAuthenticated && (
-        <div className="fixed inset-0 bg-white z-50">
-          <AdminPage
-            onLogout={() => {
-              setIsAdminAuthenticated(false);
-              setShowAdminLogin(false);
-            }}
-          />
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </AutoSyncProvider>
   );
 }
 
