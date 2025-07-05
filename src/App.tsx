@@ -3878,7 +3878,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="Cliente"]',
+                                'input[placeholder*="Nome do cliente"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
@@ -3890,7 +3890,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const location =
                             (
                               form.querySelector(
-                                'input[placeholder*="Morada"]',
+                                'input[placeholder*="Morada completa"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const startTime =
