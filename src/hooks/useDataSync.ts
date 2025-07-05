@@ -836,15 +836,33 @@ export function useDataSync(): SyncState & SyncActions {
 
   const updateWork = useCallback(
     withAutoSync(async (id: string, workData: Partial<Work>) => {
-      setState((prev) => ({
-        ...prev,
-        works: prev.works.map((work) =>
+      console.log("🔧 updateWork called with:", { id, workData });
+
+      setState((prev) => {
+        const workIndex = prev.works.findIndex((work) => work.id === id);
+        if (workIndex === -1) {
+          console.error("❌ Work not found for ID:", id);
+          return prev;
+        }
+
+        const updatedWorks = prev.works.map((work) =>
           work.id === id ? { ...work, ...workData } : work,
-        ),
-      }));
+        );
+
+        console.log("✅ Work updated in state:", updatedWorks[workIndex]);
+
+        return {
+          ...prev,
+          works: updatedWorks,
+        };
+      });
 
       if (realFirebaseService.isReady()) {
+        console.log("🔥 Syncing work update to Firebase...");
         await realFirebaseService.updateWork(id, workData);
+        console.log("✅ Firebase sync completed");
+      } else {
+        console.log("📱 Firebase not ready, using local storage only");
       }
     }),
     [withAutoSync],
