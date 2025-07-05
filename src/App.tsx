@@ -8159,7 +8159,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��</span>
+                  <span>����</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -8872,15 +8872,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
                       {selectedWork.description}
                     </p>
-                  </div>
-                )}
-
-                {selectedWork.budget && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Orçamento
-                    </label>
-                    <p className="text-gray-900">€{selectedWork.budget}</p>
                   </div>
                 )}
 
