@@ -42,6 +42,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
+import { dataProtection } from "./services/dataProtectionService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 // import { useAutoSync } from "./hooks/useAutoSync"; // Temporarily disabled due to React hook error
 
