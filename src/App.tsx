@@ -54,6 +54,7 @@ import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { dataProtection } from "./services/dataProtectionService";
+import { sendWorkAssignmentNotification } from "./utils/notifications";
 // import { useAutoSync } from "./hooks/useAutoSync"; // Temporarily disabled due to React hook error
 
 // BACKUP - ESTE ARQUIVO CONTÉM UMA VERSÃO FUNCIONAL
