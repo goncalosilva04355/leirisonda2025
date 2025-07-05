@@ -8198,6 +8198,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
+                        Horário
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.startTime && selectedWork.endTime
+                          ? `${selectedWork.startTime} - ${selectedWork.endTime}`
+                          : selectedWork.startTime
+                            ? `Das ${selectedWork.startTime}`
+                            : "Não definido"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
                         Atribuída a
                       </label>
                       <p className="text-gray-900">
@@ -8209,6 +8221,46 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           : selectedWork.assignedTo || "Não atribuída"}
                       </p>
                     </div>
+                    {selectedWork.technicians &&
+                      selectedWork.technicians.length > 0 && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Técnicos
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedWork.technicians.join(", ")}
+                          </p>
+                        </div>
+                      )}
+                    {selectedWork.vehicles &&
+                      selectedWork.vehicles.length > 0 && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Veículos
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedWork.vehicles.join(", ")}
+                          </p>
+                        </div>
+                      )}
+                    {selectedWork.photos && selectedWork.photos.length > 0 && (
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Fotografias ({selectedWork.photos.length})
+                        </label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+                          {selectedWork.photos.map((photo, index) => (
+                            <div key={photo.id || index} className="relative">
+                              <img
+                                src={photo.data || photo.url}
+                                alt={photo.name || `Foto ${index + 1}`}
+                                className="w-full h-20 object-cover rounded-lg border border-gray-200"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {selectedWork.description && (
