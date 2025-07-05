@@ -9,8 +9,6 @@
 // - Sem erros React hooks
 
 import React, { useState, useEffect } from "react";
-// Temporarily disabled to debug import issues
-/*
 import {
   Building2,
   Menu,
@@ -37,43 +35,25 @@ import {
   ArrowLeft,
   Bell,
 } from "lucide-react";
-*/
-// import jsPDF from "jspdf"; // Temporarily disabled to debug
-// import { FirebaseConfig } from "./components/FirebaseConfig"; // Temporarily disabled to debug
-// import { AdvancedSettings } from "./components/AdvancedSettings"; // Temporarily disabled to debug
-// import { SyncStatusDisplay } from "./components/SyncStatusDisplay"; // Temporarily disabled to debug
+import jsPDF from "jspdf";
+import { FirebaseConfig } from "./components/FirebaseConfig";
+import { AdvancedSettings } from "./components/AdvancedSettings";
+import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
 // import { InstallPrompt } from "./components/InstallPrompt"; // Temporarily disabled due to React hook error
-// import { UserPermissionsManager } from "./components/UserPermissionsManager"; // Temporarily disabled to debug
-// import { RegisterForm } from "./components/RegisterForm"; // Temporarily disabled
+import { UserPermissionsManager } from "./components/UserPermissionsManager";
+import { RegisterForm } from "./components/RegisterForm";
 
 // import { AutoSyncProvider } from "./components/AutoSyncProvider"; // Temporarily disabled due to React hook error
 // import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Temporarily disabled due to AutoSyncProvider dependency
-// import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning"; // Temporarily disabled to debug
+import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 
 // SECURITY: RegisterForm removed - only super admin can create users
-// import { AdminLogin } from "./admin/AdminLogin"; // Temporarily disabled to debug
-// import { AdminPage } from "./admin/AdminPage"; // Temporarily disabled to debug
-// import { useDataSync } from "./hooks/useDataSync_simple"; // Disabled to prevent import errors
-// import { authService, UserProfile } from "./services/authService"; // Temporarily disabled to debug
-// import { useDataCleanup } from "./hooks/useDataCleanup"; // Temporarily disabled to debug
+import { AdminLogin } from "./admin/AdminLogin";
+import { AdminPage } from "./admin/AdminPage";
+import { useDataSync } from "./hooks/useDataSync_simple";
+import { authService, UserProfile } from "./services/authService";
+import { useDataCleanup } from "./hooks/useDataCleanup";
 // import { useAutoSync } from "./hooks/useAutoSync"; // Temporarily disabled due to React hook error
 
 // BACKUP - ESTE ARQUIVO CONTÉM UMA VERSÃO FUNCIONAL
 // Para restaurar, copie o conteúdo deste arquivo para src/App.tsx
-
-function App() {
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            Leirisonda - Sistema de Gestão
-          </h1>
-          <p className="text-gray-600">Aplicação a carregar...</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default App;
