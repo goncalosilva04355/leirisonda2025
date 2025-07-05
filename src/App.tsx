@@ -217,8 +217,11 @@ function App() {
 
   // Auto-sync hook for automatic Firebase �� localStorage synchronization
   // const autoSyncData = useAutoSync(); // Disabled to prevent errors
-  const { syncStatus, isAutoSyncing } = autoSyncData;
-  const autoSyncLastSync = autoSyncData.lastSync;
+  // const { syncStatus, isAutoSyncing } = autoSyncData;
+  // const autoSyncLastSync = autoSyncData.lastSync;
+  const syncStatus = "idle";
+  const isAutoSyncing = false;
+  const autoSyncLastSync = null;
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -3008,7 +3011,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                       >
                         <Plus className="h-4 w-4" />
-                        <span>Agendar Manutenção</span>
+                        <span>Agendar Manuten��ão</span>
                       </button>
                     </div>
                   ) : (
@@ -3696,7 +3699,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observações Específicas do Furo */}
+                          {/* Observações Espec��ficas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observaç��es Específicas do Furo
