@@ -1961,7 +1961,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           ? work.assignedUsers
                                               .map((u) => u.name)
                                               .join(", ")
-                                          : work.assignedTo || "Não atribuída"}
+                                          : work.assignedTo || "N��o atribuída"}
                                       </span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -2552,7 +2552,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">���</div>
+                                  <div className="text-gray-400 mb-2">
+                                    �����
+                                  </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -5482,7 +5484,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ��️ ATENÇÃO: Esta operação é irreversível!
+                              ��️ ATENÇÃO: Esta operação é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -6898,13 +6900,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações T��cnicas
+                        Observações
                       </label>
                       <textarea
-                        defaultValue={editingWork?.technicalNotes}
+                        name="observations"
+                        defaultValue={editingWork?.observations}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={3}
-                        placeholder="Observações técnicas, materiais necessários, etc."
+                        placeholder="Observações gerais sobre a obra"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Trabalho Realizado
+                      </label>
+                      <textarea
+                        name="workPerformed"
+                        defaultValue={editingWork?.workPerformed}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={3}
+                        placeholder="Descrição do trabalho já realizado"
                       />
                     </div>
 
@@ -7696,7 +7711,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��</span>
+                  <span>����</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
