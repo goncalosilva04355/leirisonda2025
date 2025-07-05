@@ -1275,7 +1275,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n��� ${workTitle}\n\n👤 Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1957,13 +1957,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   work.assignedTo
                                     .split(",")
                                     .map((name) => name.trim().toLowerCase())
-                                    .includes(currentUser.name.toLowerCase());
+                                    .includes(
+                                      currentUser?.name?.toLowerCase() || "",
+                                    );
 
                                 // Check if user is in assignedUsers array (exact match)
                                 const assignedUsersMatch =
                                   work.assignedUsers?.some(
                                     (user) =>
                                       user.name &&
+                                      currentUser?.name &&
                                       user.name.toLowerCase() ===
                                         currentUser.name.toLowerCase(),
                                   );
