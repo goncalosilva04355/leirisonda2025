@@ -40,7 +40,7 @@ import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
-import { useDataSync } from "./hooks/useDataSync";
+import { useDataSync } from "./hooks/useDataSync_simple";
 import { authService, UserProfile } from "./services/authService";
 // import { useDataCleanup } from "./hooks/useDataCleanup"; // Temporarily disabled
 // import { useAutoSync } from "./hooks/useAutoSync"; // Temporarily disabled
@@ -3672,7 +3672,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                   required
                                 >
-                                  <option value="">Selecionar potência</option>
+                                  <option value="">Selecionar pot��ncia</option>
                                   <option value="0.5">0.5 HP</option>
                                   <option value="0.75">0.75 HP</option>
                                   <option value="1">1 HP</option>
@@ -4405,7 +4405,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Additional Information */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações e Características Especiais
+                        Observa��ões e Características Especiais
                       </label>
                       <textarea
                         rows={3}
