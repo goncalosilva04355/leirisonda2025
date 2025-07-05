@@ -127,7 +127,7 @@ function App() {
     console.log("�� Auth State Debug:", {
       isAuthenticated,
       currentUser: currentUser
-        ? `${currentUser?.name} (${currentUser.email})`
+        ? `${currentUser?.name} (${currentUser?.email})`
         : null,
       timestamp: new Date().toISOString(),
     });
@@ -4494,7 +4494,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               const futureMaintenance = {
                                 poolId: poolData.id.toString(),
                                 poolName: poolData.name,
-                                type: "Manutenção Programada",
+                                type: "Manuten��ão Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
@@ -6820,7 +6820,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="installation">Instalação</option>
                           <option value="maintenance">Manutenção</option>
                           <option value="repair">Reparação</option>
-                          <option value="renovation">Renovação</option>
+                          <option value="renovation">Renovaç��o</option>
                           <option value="inspection">Inspeção</option>
                         </select>
                       </div>
@@ -7722,7 +7722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              console.log(`🔄 Navegando para seção: ${section}`);
+              console.log(`🔄 Navegando para seç��o: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               if (
