@@ -640,7 +640,7 @@ function App() {
           technician: interventionData.technician,
           status: "scheduled" as const,
           description: "Manutenção programada automaticamente",
-          notes: "Agendada automaticamente após manutenção anterior",
+          notes: "Agendada automaticamente ap��s manutenção anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
           location: selectedPool ? selectedPool.location : "",
@@ -3907,20 +3907,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="Cliente"]',
+                                'input[name="client"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
                             (
                               form.querySelector(
-                                'input[placeholder*="Contacto"]',
+                                'input[name="contact"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const location =
                             (
                               form.querySelector(
-                                'input[placeholder*="Morada"]',
-                              ) as HTMLInputElement
+                                'textarea[name="location"]',
+                              ) as HTMLTextAreaElement
                             )?.value || "";
                           const startTime =
                             (
