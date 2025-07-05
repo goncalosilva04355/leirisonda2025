@@ -42,7 +42,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
-import { useDataCleanup } from "./hooks/useDataCleanup";
+// import { useDataCleanup } from "./hooks/useDataCleanup"; // Temporarily disabled
 // import { useAutoSync } from "./hooks/useAutoSync"; // Temporarily disabled
 
 // Mock users database
@@ -1441,7 +1441,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `������ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `����� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -3232,7 +3232,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda n��o terminou
+                              Deixe vazio se ainda não terminou
                             </p>
                           </div>
                         </div>
@@ -5215,7 +5215,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador n���o suporta notificações.",
+                                  "Este navegador n��o suporta notificações.",
                                 );
                               }
                             }}
@@ -7482,7 +7482,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte��do. Por favor, tente
+              Ocorreu um erro ao carregar o conteúdo. Por favor, tente
               novamente.
             </p>
             <button
