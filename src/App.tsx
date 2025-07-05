@@ -9,6 +9,8 @@
 // - Sem erros React hooks
 
 import React, { useState, useEffect } from "react";
+// Temporarily disabled to debug import issues
+/*
 import {
   Building2,
   Menu,
@@ -35,6 +37,7 @@ import {
   ArrowLeft,
   Bell,
 } from "lucide-react";
+*/
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 // import { AdvancedSettings } from "./components/AdvancedSettings"; // Temporarily disabled to debug
