@@ -13,6 +13,7 @@ interface UserProfile {
 function App() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [editingWork, setEditingWork] = useState<any>(null);
 
   // Auto-login para teste
   useEffect(() => {
