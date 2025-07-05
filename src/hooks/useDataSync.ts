@@ -377,9 +377,10 @@ export function useDataSync(): SyncState & SyncActions {
 
     // Set up real-time listeners
     const unsubscribePools = realFirebaseService.onPoolsChange((pools) => {
+      // Only update if Firebase has data or if local data is empty
       setState((prev) => ({
         ...prev,
-        pools: pools,
+        pools: pools.length > 0 || prev.pools.length === 0 ? pools : prev.pools,
       }));
     });
 
