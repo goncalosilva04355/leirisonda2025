@@ -170,12 +170,13 @@ class DataCleanupService {
         }
       });
 
-      // Remove main data collections
-      localStorage.removeItem("pools");
-      localStorage.removeItem("works");
-      localStorage.removeItem("maintenance");
-      localStorage.removeItem("interventions");
-      localStorage.removeItem("clients");
+      // DISABLED - NEVER delete user data
+      // localStorage.removeItem("pools");
+      // localStorage.removeItem("works");
+      // localStorage.removeItem("maintenance");
+      // localStorage.removeItem("interventions");
+      // localStorage.removeItem("clients");
+      console.log("🚫 Data cleanup disabled - preserving user data");
 
       // Remove cleanup and sync flags
       localStorage.removeItem("demo-data-cleaned");
