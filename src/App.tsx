@@ -8427,6 +8427,105 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 )}
 
+                {/* Seção Específica para Furos de Água */}
+                {selectedWork.type === "furo" && (
+                  <div className="border-t border-gray-200 pt-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Waves className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Detalhes do Furo de Água
+                      </h3>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-blue-50 p-4 rounded-lg">
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700">
+                          Profundidade do Furo
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.wellDepth || "A determinar"} metros
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700">
+                          Caudal de Água
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.waterFlow || "A medir"} L/min
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700">
+                          Qualidade da Água
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.waterQuality || "Análise pendente"}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700">
+                          Tipo de Bomba
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.pumpType || "Por especificar"}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700">
+                          Diâmetro do Furo
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.wellDiameter || "Standard"} polegadas
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700">
+                          Estado da Perfuração
+                        </label>
+                        <span
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                            selectedWork.drillingStatus === "completed"
+                              ? "bg-green-100 text-green-700"
+                              : selectedWork.drillingStatus === "in_progress"
+                                ? "bg-orange-100 text-orange-700"
+                                : "bg-gray-100 text-gray-700"
+                          }`}
+                        >
+                          {selectedWork.drillingStatus === "completed"
+                            ? "Perfuração Concluída"
+                            : selectedWork.drillingStatus === "in_progress"
+                              ? "Em Perfuração"
+                              : "Não Iniciado"}
+                        </span>
+                      </div>
+
+                      {selectedWork.geologicalInfo && (
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-blue-700 mb-2">
+                            Informações Geológicas
+                          </label>
+                          <p className="text-gray-900 bg-white p-3 rounded-md border border-blue-200">
+                            {selectedWork.geologicalInfo}
+                          </p>
+                        </div>
+                      )}
+
+                      {selectedWork.equipmentUsed && (
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-blue-700 mb-2">
+                            Equipamento Utilizado
+                          </label>
+                          <p className="text-gray-900 bg-white p-3 rounded-md border border-blue-200">
+                            {selectedWork.equipmentUsed}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
