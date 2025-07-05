@@ -43,7 +43,7 @@ import { AdminPage } from "./admin/AdminPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
-// import { useAutoSync } from "./hooks/useAutoSync";
+import { useAutoSync } from "./hooks/useAutoSync";
 
 // Mock users database
 const initialUsers = [
