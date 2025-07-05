@@ -748,7 +748,7 @@ function App() {
               password: loginForm.password,
             }),
           );
-          console.log("💾 Auto-login habilitado para:", loginForm.email);
+          console.log("��� Auto-login habilitado para:", loginForm.email);
         } else {
           localStorage.removeItem("autoLogin");
           localStorage.removeItem("rememberedUser");
@@ -3587,31 +3587,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </option>
                               {users
                                 .filter((user) => {
-                                  // Filter active users that are not viewers and not already assigned
-                                  const isNotViewer = user.role !== "viewer";
-                                  const isActive = user.active !== false;
-                                  const isNotAssigned = !assignedUsers.some(
-                                    (assigned) =>
-                                      assigned.id === String(user.id),
-                                  );
-
-                                  console.log(
-                                    "🔍 Filtering user:",
-                                    user.name,
-                                    "| Role:",
-                                    user.role,
-                                    "| Active:",
-                                    user.active,
-                                    "| Not viewer:",
-                                    isNotViewer,
-                                    "| Is active:",
-                                    isActive,
-                                    "| Not assigned:",
-                                    isNotAssigned,
-                                  );
-
                                   return (
-                                    isNotViewer && isActive && isNotAssigned
+                                    user.role !== "viewer" &&
+                                    user.active !== false &&
+                                    !assignedUsers.some(
+                                      (assigned) =>
+                                        assigned.id === String(user.id),
+                                    )
                                   );
                                 })
                                 .map((user) => (
@@ -4857,7 +4839,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manuten����ão
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenção
+                        Registar intervenção de manuten��ão
                       </p>
                     </div>
                   </div>
@@ -5534,7 +5516,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Notificações de Sistema
                           </h4>
                           <p className="text-green-700 text-sm mb-3">
-                            Receba alertas sobre atualiza��ões do sistema e
+                            Receba alertas sobre atualizações do sistema e
                             manutenções programadas.
                           </p>
                           <div className="flex items-center justify-between">
@@ -5663,7 +5645,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
-                            {enableMapsRedirect ? "��� Ativo" : "⭕ Inativo"}
+                            {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
@@ -5955,7 +5937,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Resumo executivo</li>
+                        <li>• Resumo executivo</li>
                         <li>��� Estatísticas gerais</li>
                         <li>• Dados consolidados</li>
                         <li>• Análise de performance</li>
