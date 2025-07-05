@@ -2617,7 +2617,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o de piscinas no sistema
+                          Gest���o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -7334,6 +7334,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             console.error("❌ Unexpected error:", error);
                             alert("Erro inesperado ao atualizar obra");
                           }
+                          }).catch(error => {
+                            // Ultimate safety net for any Promise rejections
+                            console.error("❌ Promise rejection caught:", error);
+                            alert("Erro crítico ao atualizar obra");
+                          });
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
