@@ -38,7 +38,7 @@ import {
   Bell,
 } from "lucide-react";
 */
-import jsPDF from "jspdf";
+// import jsPDF from "jspdf"; // Temporarily disabled to debug
 import { FirebaseConfig } from "./components/FirebaseConfig";
 // import { AdvancedSettings } from "./components/AdvancedSettings"; // Temporarily disabled to debug
 // import { SyncStatusDisplay } from "./components/SyncStatusDisplay"; // Temporarily disabled to debug
