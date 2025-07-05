@@ -1079,7 +1079,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
-    console.log("�� DEBUG: sendWorkAssignmentNotification called with:", {
+    console.log("🔍 DEBUG: sendWorkAssignmentNotification called with:", {
       workTitle,
       assignedTo,
       currentUser: currentUser?.name,
@@ -7694,31 +7694,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // SECURITY: Register form removed - only super admin can create users
 
   // AUTO-LOGIN FOR TESTING (TEMPORARY)
-  useEffect(() => {
-    if (!currentUser && !isAuthenticated) {
-      console.log("🧪 Auto-login para testes...");
-      const testUser = {
-        id: 1,
-        name: "Gonçalo Fonseca",
-        email: "gongonsilva@gmail.com",
-        role: "super_admin",
-        permissions: {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          admin: { view: true, create: true, edit: true, delete: true },
-          dashboard: { view: true },
-        },
-      };
-      setCurrentUser(testUser);
-      setIsAuthenticated(true);
-      localStorage.setItem("currentUser", JSON.stringify(testUser));
-      localStorage.setItem("isAuthenticated", "true");
-      console.log("✅ Auto-login concluído");
-    }
-  }, [currentUser, isAuthenticated]);
+  if (!currentUser && !isAuthenticated) {
+    console.log("🧪 Auto-login para testes...");
+    const testUser = {
+      id: 1,
+      name: "Gonçalo Fonseca",
+      email: "gongonsilva@gmail.com",
+      role: "super_admin",
+      permissions: {
+        obras: { view: true, create: true, edit: true, delete: true },
+        manutencoes: { view: true, create: true, edit: true, delete: true },
+        piscinas: { view: true, create: true, edit: true, delete: true },
+        relatorios: { view: true, create: true, edit: true, delete: true },
+        utilizadores: { view: true, create: true, edit: true, delete: true },
+        admin: { view: true, create: true, edit: true, delete: true },
+        dashboard: { view: true },
+      },
+    };
+    setCurrentUser(testUser);
+    setIsAuthenticated(true);
+    localStorage.setItem("currentUser", JSON.stringify(testUser));
+    localStorage.setItem("isAuthenticated", "true");
+    console.log("✅ Auto-login concluído");
+  }
 
   // SECURITY: Triple check - never allow access without proper authentication
   if (!isAuthenticated || !currentUser) {
