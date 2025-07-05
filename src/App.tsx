@@ -36,16 +36,16 @@ import {
   Bell,
 } from "lucide-react";
 import jsPDF from "jspdf";
-import { FirebaseConfig } from "./components/FirebaseConfig";
-import { AdvancedSettings } from "./components/AdvancedSettings";
-import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
+// import { FirebaseConfig } from "./components/FirebaseConfig"; // Temporarily disabled to debug
+// import { AdvancedSettings } from "./components/AdvancedSettings"; // Temporarily disabled to debug
+// import { SyncStatusDisplay } from "./components/SyncStatusDisplay"; // Temporarily disabled to debug
 // import { InstallPrompt } from "./components/InstallPrompt"; // Temporarily disabled due to React hook error
-import { UserPermissionsManager } from "./components/UserPermissionsManager";
+// import { UserPermissionsManager } from "./components/UserPermissionsManager"; // Temporarily disabled to debug
 // import { RegisterForm } from "./components/RegisterForm"; // Temporarily disabled
 
 // import { AutoSyncProvider } from "./components/AutoSyncProvider"; // Temporarily disabled due to React hook error
 // import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Temporarily disabled due to AutoSyncProvider dependency
-import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
+// import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning"; // Temporarily disabled to debug
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
