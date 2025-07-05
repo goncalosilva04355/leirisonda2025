@@ -222,10 +222,13 @@ function App() {
   const cleanupLoading = false;
   const cleanupError = null;
 
-  // Auto-sync hook for automatic Firebase �� localStorage synchronization
-  const autoSyncData = useAutoSync();
-  const { syncStatus, isAutoSyncing } = autoSyncData;
-  const autoSyncLastSync = autoSyncData.lastSync;
+  // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
+  // const autoSyncData = useAutoSync(); // Temporarily disabled due to React hook error
+  // const { syncStatus, isAutoSyncing } = autoSyncData;
+  // const autoSyncLastSync = autoSyncData.lastSync;
+  const syncStatus = "idle";
+  const isAutoSyncing = false;
+  const autoSyncLastSync = null;
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -7641,7 +7644,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
             <div className="bg-gray-50 rounded-lg p-4 mb-6">
               <h4 className="font-medium text-gray-900 mb-2">
-                Conteúdo do Relat��rio:
+                Conte��do do Relat��rio:
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
