@@ -161,12 +161,16 @@ class RealFirebaseService {
     try {
       const worksRef = ref(this.database!, "works");
       const newWorkRef = push(worksRef);
-      await set(newWorkRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...workData,
         id: newWorkRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+
+      await set(newWorkRef, sanitizedData);
       return newWorkRef.key;
     } catch (error) {
       console.error("Failed to add work:", error);
