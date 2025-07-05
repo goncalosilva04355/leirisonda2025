@@ -4027,240 +4027,244 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               return;
                             }
 
-                          const form = (e.target as HTMLElement).closest(
-                            "form",
-                          );
-
-                          // Extract all form data
-                          const workTitle =
-                            (
-                              form.querySelector(
-                                'input[name="workTitle"]',
-                              ) as HTMLInputElement
-                            )?.value || "Nova Obra";
-                          const workType =
-                            (
-                              form.querySelector(
-                                'select[name="workType"]',
-                              ) as HTMLSelectElement
-                            )?.value || selectedWorkType;
-                          const client =
-                            (
-                              form.querySelector(
-                                'input[name="client"]',
-                              ) as HTMLInputElement
-                            )?.value || "";
-                          const contact =
-                            (
-                              form.querySelector(
-                                'input[name="contact"]',
-                              ) as HTMLInputElement
-                            )?.value || "";
-                          const location =
-                            (
-                              form.querySelector(
-                                'textarea[name="location"]',
-                              ) as HTMLTextAreaElement
-                            )?.value || "";
-                          const startTime =
-                            (
-                              form.querySelector(
-                                'input[placeholder*="Entrada"]',
-                              ) as HTMLInputElement
-                            )?.value || "";
-                          const endTime =
-                            (
-                              form.querySelector(
-                                'input[placeholder*="Saída"]',
-                              ) as HTMLInputElement
-                            )?.value || "";
-                          const status =
-                            (
-                              form.querySelector(
-                                'select[name="status"]',
-                              ) as HTMLSelectElement
-                            )?.value || "pending";
-                          const description =
-                            (
-                              form.querySelector(
-                                'textarea[placeholder*="Descrição"]',
-                              ) as HTMLTextAreaElement
-                            )?.value || "";
-                          const budget =
-                            (
-                              form.querySelector(
-                                'input[placeholder*="Orçamento"]',
-                              ) as HTMLInputElement
-                            )?.value || "";
-                          // Create complete work data object
-                          const workData = {
-                            id: Date.now(),
-                            workSheetNumber: workTitle.startsWith("LS-")
-                              ? workTitle
-                              : `LS-${Date.now()}`,
-                            title: workTitle || "",
-                            type: workType || "",
-                            client: client || "",
-                            contact: contact || "",
-                            location: location || "",
-                            startTime: startTime || "",
-                            endTime: endTime || "",
-                            status: status || "pending",
-                            description: description || "",
-                            budget: budget ? parseFloat(budget) : null,
-                            assignedTo:
-                              assignedUsers.length > 0
-                                ? assignedUsers.map((u) => u.name).join(", ")
-                                : "",
-                            assignedUsers: assignedUsers || [], // Store complete user objects
-                            assignedUserIds: assignedUsers
-                              ? assignedUsers.map((u) => u.id)
-                              : [], // Store user IDs
-                            vehicles: workVehicles || [],
-                            technicians: workTechnicians || [],
-                            photos: uploadedPhotos || [],
-                            photoCount: uploadedPhotos
-                              ? uploadedPhotos.length
-                              : 0,
-                            observations:
-                              (
-                                form.querySelector(
-                                  'textarea[name="observations"]',
-                                ) as HTMLTextAreaElement
-                              )?.value || "",
-                            workPerformed:
-                              (
-                                form.querySelector(
-                                  'textarea[name="workPerformed"]',
-                                ) as HTMLTextAreaElement
-                              )?.value || "",
-                            workSheetCompleted: false,
-                            createdAt: new Date().toISOString(),
-                            startDate: new Date().toISOString(),
-                            // Water well specific fields
-                            ...(workType === "furo"
-                              ? {
-                                  wellDepth:
-                                    (
-                                      form.querySelector(
-                                        'input[name="wellDepth"]',
-                                      ) as HTMLInputElement
-                                    )?.value || "",
-                                  waterLevel:
-                                    (
-                                      form.querySelector(
-                                        'input[name="waterLevel"]',
-                                      ) as HTMLInputElement
-                                    )?.value || "",
-                                  pumpDepth:
-                                    (
-                                      form.querySelector(
-                                        'input[name="pumpDepth"]',
-                                      ) as HTMLInputElement
-                                    )?.value || "",
-                                  waterFlow:
-                                    (
-                                      form.querySelector(
-                                        'input[name="waterFlow"]',
-                                      ) as HTMLInputElement
-                                    )?.value || "",
-                                  columnType:
-                                    (
-                                      form.querySelector(
-                                        'select[name="columnType"]',
-                                      ) as HTMLSelectElement
-                                    )?.value || "",
-                                  columnDiameter:
-                                    (
-                                      form.querySelector(
-                                        'input[name="columnDiameter"]',
-                                      ) as HTMLInputElement
-                                    )?.value || "",
-                                  pumpModel:
-                                    (
-                                      form.querySelector(
-                                        'input[name="pumpModel"]',
-                                      ) as HTMLInputElement
-                                    )?.value || "",
-                                  motorPower:
-                                    (
-                                      form.querySelector(
-                                        'input[name="motorPower"]',
-                                      ) as HTMLInputElement
-                                    )?.value || "",
-                                  pumpVoltage:
-                                    (
-                                      form.querySelector(
-                                        'select[name="pumpVoltage"]',
-                                      ) as HTMLSelectElement
-                                    )?.value || "",
-                                }
-                              : {}),
-                          };
-
-                          // Debug logging for water well works
-                          if (workType === "furo") {
-                            console.log("🔧 Furo de água criado:", {
-                              type: workData.type,
-                              wellDepth: workData.wellDepth,
-                              waterFlow: workData.waterFlow,
-                              pumpType: workData.pumpType,
-                              waterQuality: workData.waterQuality,
-                            });
-                          }
-
-                          // Use sync system to add work (will handle Firebase and localStorage)
-                          addWork(workData);
-
-                          // Send notifications to all assigned users
-                          assignedUsers.forEach((assignedUser) => {
-                            sendWorkAssignmentNotification(
-                              workTitle,
-                              assignedUser.name,
+                            const form = (e.target as HTMLElement).closest(
+                              "form",
                             );
-                          });
 
-                          // Save water bore data if work type is "furo"
-                          if (selectedWorkType === "furo") {
-                            const waterBoreData = {
+                            // Extract all form data
+                            const workTitle =
+                              (
+                                form.querySelector(
+                                  'input[name="workTitle"]',
+                                ) as HTMLInputElement
+                              )?.value || "Nova Obra";
+                            const workType =
+                              (
+                                form.querySelector(
+                                  'select[name="workType"]',
+                                ) as HTMLSelectElement
+                              )?.value || selectedWorkType;
+                            const client =
+                              (
+                                form.querySelector(
+                                  'input[name="client"]',
+                                ) as HTMLInputElement
+                              )?.value || "";
+                            const contact =
+                              (
+                                form.querySelector(
+                                  'input[name="contact"]',
+                                ) as HTMLInputElement
+                              )?.value || "";
+                            const location =
+                              (
+                                form.querySelector(
+                                  'textarea[name="location"]',
+                                ) as HTMLTextAreaElement
+                              )?.value || "";
+                            const startTime =
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Entrada"]',
+                                ) as HTMLInputElement
+                              )?.value || "";
+                            const endTime =
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Saída"]',
+                                ) as HTMLInputElement
+                              )?.value || "";
+                            const status =
+                              (
+                                form.querySelector(
+                                  'select[name="status"]',
+                                ) as HTMLSelectElement
+                              )?.value || "pending";
+                            const description =
+                              (
+                                form.querySelector(
+                                  'textarea[placeholder*="Descrição"]',
+                                ) as HTMLTextAreaElement
+                              )?.value || "";
+                            const budget =
+                              (
+                                form.querySelector(
+                                  'input[placeholder*="Orçamento"]',
+                                ) as HTMLInputElement
+                              )?.value || "";
+                            // Create complete work data object
+                            const workData = {
                               id: Date.now(),
-                              workTitle: workTitle,
-                              date: new Date().toISOString(),
-                              photos: uploadedPhotos,
-                              photoCount: uploadedPhotos.length,
-                              workType: "furo",
+                              workSheetNumber: workTitle.startsWith("LS-")
+                                ? workTitle
+                                : `LS-${Date.now()}`,
+                              title: workTitle || "",
+                              type: workType || "",
+                              client: client || "",
+                              contact: contact || "",
+                              location: location || "",
+                              startTime: startTime || "",
+                              endTime: endTime || "",
+                              status: status || "pending",
+                              description: description || "",
+                              budget: budget ? parseFloat(budget) : null,
+                              assignedTo:
+                                assignedUsers.length > 0
+                                  ? assignedUsers.map((u) => u.name).join(", ")
+                                  : "",
+                              assignedUsers: assignedUsers || [], // Store complete user objects
+                              assignedUserIds: assignedUsers
+                                ? assignedUsers.map((u) => u.id)
+                                : [], // Store user IDs
+                              vehicles: workVehicles || [],
+                              technicians: workTechnicians || [],
+                              photos: uploadedPhotos || [],
+                              photoCount: uploadedPhotos
+                                ? uploadedPhotos.length
+                                : 0,
+                              observations:
+                                (
+                                  form.querySelector(
+                                    'textarea[name="observations"]',
+                                  ) as HTMLTextAreaElement
+                                )?.value || "",
+                              workPerformed:
+                                (
+                                  form.querySelector(
+                                    'textarea[name="workPerformed"]',
+                                  ) as HTMLTextAreaElement
+                                )?.value || "",
+                              workSheetCompleted: false,
+                              createdAt: new Date().toISOString(),
+                              startDate: new Date().toISOString(),
+                              // Water well specific fields
+                              ...(workType === "furo"
+                                ? {
+                                    wellDepth:
+                                      (
+                                        form.querySelector(
+                                          'input[name="wellDepth"]',
+                                        ) as HTMLInputElement
+                                      )?.value || "",
+                                    waterLevel:
+                                      (
+                                        form.querySelector(
+                                          'input[name="waterLevel"]',
+                                        ) as HTMLInputElement
+                                      )?.value || "",
+                                    pumpDepth:
+                                      (
+                                        form.querySelector(
+                                          'input[name="pumpDepth"]',
+                                        ) as HTMLInputElement
+                                      )?.value || "",
+                                    waterFlow:
+                                      (
+                                        form.querySelector(
+                                          'input[name="waterFlow"]',
+                                        ) as HTMLInputElement
+                                      )?.value || "",
+                                    columnType:
+                                      (
+                                        form.querySelector(
+                                          'select[name="columnType"]',
+                                        ) as HTMLSelectElement
+                                      )?.value || "",
+                                    columnDiameter:
+                                      (
+                                        form.querySelector(
+                                          'input[name="columnDiameter"]',
+                                        ) as HTMLInputElement
+                                      )?.value || "",
+                                    pumpModel:
+                                      (
+                                        form.querySelector(
+                                          'input[name="pumpModel"]',
+                                        ) as HTMLInputElement
+                                      )?.value || "",
+                                    motorPower:
+                                      (
+                                        form.querySelector(
+                                          'input[name="motorPower"]',
+                                        ) as HTMLInputElement
+                                      )?.value || "",
+                                    pumpVoltage:
+                                      (
+                                        form.querySelector(
+                                          'select[name="pumpVoltage"]',
+                                        ) as HTMLSelectElement
+                                      )?.value || "",
+                                  }
+                                : {}),
                             };
 
-                            const savedWaterBores = JSON.parse(
-                              localStorage.getItem("waterBores") || "[]",
+                            // Debug logging for water well works
+                            if (workType === "furo") {
+                              console.log("🔧 Furo de água criado:", {
+                                type: workData.type,
+                                wellDepth: workData.wellDepth,
+                                waterFlow: workData.waterFlow,
+                                pumpType: workData.pumpType,
+                                waterQuality: workData.waterQuality,
+                              });
+                            }
+
+                            // Use sync system to add work (will handle Firebase and localStorage)
+                            addWork(workData);
+
+                            // Send notifications to all assigned users
+                            assignedUsers.forEach((assignedUser) => {
+                              sendWorkAssignmentNotification(
+                                workTitle,
+                                assignedUser.name,
+                              );
+                            });
+
+                            // Save water bore data if work type is "furo"
+                            if (selectedWorkType === "furo") {
+                              const waterBoreData = {
+                                id: Date.now(),
+                                workTitle: workTitle,
+                                date: new Date().toISOString(),
+                                photos: uploadedPhotos,
+                                photoCount: uploadedPhotos.length,
+                                workType: "furo",
+                              };
+
+                              const savedWaterBores = JSON.parse(
+                                localStorage.getItem("waterBores") || "[]",
+                              );
+                              savedWaterBores.push(waterBoreData);
+                              localStorage.setItem(
+                                "waterBores",
+                                JSON.stringify(savedWaterBores),
+                              );
+                            }
+
+                            alert(
+                              `Obra "${workTitle}" criada com sucesso! ` +
+                                (assignedUsers.length > 0
+                                  ? `Notificações enviadas a ${assignedUsers.length} respons����vel(eis).`
+                                  : "") +
+                                (selectedWorkType === "furo"
+                                  ? " Dados do furo registados."
+                                  : ""),
                             );
-                            savedWaterBores.push(waterBoreData);
-                            localStorage.setItem(
-                              "waterBores",
-                              JSON.stringify(savedWaterBores),
-                            );
+
+                            // Clear form data
+                            setSelectedWorkType("");
+                            setUploadedPhotos([]);
+                            setWorkVehicles([]);
+                            setWorkTechnicians([]);
+                            setCurrentVehicle("");
+                            setCurrentTechnician("");
+                            setAssignedUsers([]);
+                            setCurrentAssignedUser("");
+                            setActiveSection("dashboard");
+                          } catch (error) {
+                            console.error("❌ Error creating work:", error);
+                            alert("Erro ao criar obra. Tente novamente.");
                           }
-
-                          alert(
-                            `Obra "${workTitle}" criada com sucesso! ` +
-                              (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} respons����vel(eis).`
-                                : "") +
-                              (selectedWorkType === "furo"
-                                ? " Dados do furo registados."
-                                : ""),
-                          );
-
-                          // Clear form data
-                          setSelectedWorkType("");
-                          setUploadedPhotos([]);
-                          setWorkVehicles([]);
-                          setWorkTechnicians([]);
-                          setCurrentVehicle("");
-                          setCurrentTechnician("");
-                          setAssignedUsers([]);
-                          setCurrentAssignedUser("");
-                          setActiveSection("dashboard");
                         }}
                         className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
                       >
@@ -5868,7 +5872,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{clients.length}</strong> clientes registados
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>����� Dados de contacto</li>
+                        <li>������ Dados de contacto</li>
                         <li>• Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
