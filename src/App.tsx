@@ -1886,6 +1886,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   works.filter((work) => {
                     if (!work) return false;
 
+                    // Exclude completed works from assigned works display
+                    if (work.status === "completed") return false;
+
                     // Check if user is in assignedTo string (exact match or comma-separated list)
                     const assignedToMatch =
                       work.assignedTo &&
@@ -2472,7 +2475,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {client.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {client.email} ��� {client.phone}
+                                            {client.email} ���� {client.phone}
                                           </p>
                                         </div>
                                       </div>
@@ -3187,7 +3190,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manutenção</option>
+                            <option value="manutencao">Manutenç��o</option>
                             <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -5421,7 +5424,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As defini��ões são guardadas localmente no
+                              ��� As defini��ões são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
