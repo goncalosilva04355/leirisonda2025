@@ -7323,10 +7323,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 document.body.removeChild(loadingDiv);
                               }, 3000);
 
-                              throw error;
+                              // Don't throw error - handle it gracefully
+                              console.error("❌ Error updating work:", error);
                             }
                           } catch (error) {
-                            console.error("❌ Error updating work:", error);
+                            // Final safety net for any other errors
+                            console.error("❌ Unexpected error:", error);
+                            alert("Erro inesperado ao atualizar obra");
                           }
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
