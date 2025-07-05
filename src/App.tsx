@@ -3201,6 +3201,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </label>
                           <input
                             type="text"
+                            name="client"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Ex: João Silva"
                             required
@@ -3213,6 +3214,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </label>
                           <input
                             type="tel"
+                            name="contact"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Ex: 244 123 456"
                             required
@@ -3552,7 +3554,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de ��gua - Conditional */}
+                    {/* Detalhes do Furo de ����gua - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div>
                         <div className="flex items-center space-x-3 mb-6">
