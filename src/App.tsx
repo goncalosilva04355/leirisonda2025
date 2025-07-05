@@ -208,6 +208,42 @@ function App() {
     addClient,
   } = dataSync;
 
+  // TEST: Auto-create work for debugging (TEMPORARY)
+  useEffect(() => {
+    if (currentUser && works.length === 0) {
+      console.log("🧪 Testando criação automática de obra...");
+      setTimeout(() => {
+        const testWork = {
+          title: "Obra de Teste",
+          type: "piscina",
+          client: "Cliente Teste",
+          contact: "912345678",
+          location: "Local Teste",
+          startTime: "09:00",
+          endTime: "17:00",
+          status: "pending",
+          description: "Descrição de teste",
+          budget: 1000,
+          assignedTo: currentUser.name,
+          assignedUsers: [
+            { id: currentUser.id.toString(), name: currentUser.name },
+          ],
+          assignedUserIds: [currentUser.id.toString()],
+          vehicles: [],
+          technicians: [],
+          photos: [],
+          photoCount: 0,
+          observations: "",
+          workPerformed: "",
+          workSheetCompleted: false,
+        };
+
+        console.log("📝 Dados da obra de teste:", testWork);
+        addWork(testWork);
+      }, 2000);
+    }
+  }, [currentUser, works.length, addWork]);
+
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
   //   cleanAllData,
@@ -319,7 +355,7 @@ function App() {
     setCurrentUser(null);
 
     // Firebase auth disabled to prevent crashes
-    console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
+    console.log("��� SECURITY: Firebase auth listeners disabled for stability");
     // Firebase auth code removed to fix syntax errors
 
     // DO NOT initialize default admin automatically - this was causing the security issue
@@ -1169,7 +1205,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç����es não est���o ativadas. Active-as primeiro nas configurações.",
+        "As notificaç����es não est�����o ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -1682,7 +1718,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 `Debug Alexandre:\n` +
                                   `Obras no sistema: ${works.length}\n` +
                                   `Obras atribuídas ao Alexandre: ${alexandreWorks.length}\n` +
-                                  `Notificações ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
+                                  `Notificaç��es ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
                                   `Permissão notificações: ${Notification.permission}\n\n` +
                                   `Ver console para mais detalhes`,
                               );
