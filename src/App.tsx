@@ -907,7 +907,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTENÇÕES REALIZADAS:
+MANUTEN��ÕES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
@@ -2925,7 +2925,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    �� {maint.location}
+                                    ��� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -7136,7 +7136,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const clientEmail = inputs[8].value; // Email do Cliente
                           const priority = inputs[9].value; // Prioridade
                           const workType = inputs[10].value; // Tipo de Obra
-                          const description = inputs[12].value; // Descri����o
+                          const description = inputs[12].value; // Descri������o
                           const technicalNotes = inputs[12].value; // Observações Técnicas
 
                           dataSync.updateWork(editingWork.id, {
@@ -8637,7 +8637,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 )}
 
                 {/* Seção Específica para Furos de Água */}
-                {selectedWork.type === "furo" && (
+                {(selectedWork.type === "furo" ||
+                  selectedWork.type === "Furo de Água") && (
                   <div className="border-t border-gray-200 pt-6">
                     <div className="flex items-center space-x-3 mb-4">
                       <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
