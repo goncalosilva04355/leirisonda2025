@@ -216,7 +216,7 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase �� localStorage synchronization
-  const autoSyncData = useAutoSync();
+  // const autoSyncData = useAutoSync(); // Disabled to prevent errors
   const { syncStatus, isAutoSyncing } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
