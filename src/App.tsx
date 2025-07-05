@@ -843,7 +843,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenç��es e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -8250,10 +8250,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Número da Folha de Obra
+                      Referência da Obra
                     </label>
                     <p className="text-gray-900 font-mono">
-                      {selectedWork.workSheetNumber || selectedWork.title}
+                      {selectedWork.workSheetNumber ||
+                        selectedWork.id ||
+                        "Sem referência"}
                     </p>
                   </div>
                   <div>
@@ -8275,7 +8277,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Cliente
                     </label>
                     <p className="text-gray-900">
-                      {selectedWork.client || "Não especificado"}
+                      {selectedWork.client || "N��o especificado"}
                     </p>
                     <div className="mt-1">
                       <span className="text-sm font-medium text-gray-700">
