@@ -60,3 +60,20 @@ import {
 
 // BACKUP - ESTE ARQUIVO CONTÉM UMA VERSÃO FUNCIONAL
 // Para restaurar, copie o conteúdo deste arquivo para src/App.tsx
+
+function App() {
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">
+            Leirisonda - Sistema de Gestão
+          </h1>
+          <p className="text-gray-600">Aplicação a carregar...</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
