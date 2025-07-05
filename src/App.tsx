@@ -379,7 +379,7 @@ function App() {
       setNotificationsEnabled(permission === "granted");
 
       if (permission === "granted") {
-        console.log("✅ Notifications already granted");
+        console.log("��� Notifications already granted");
       } else if (permission === "denied") {
         console.warn("❌ Notifications denied by user");
       } else {
@@ -3605,84 +3605,52 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <button
                               type="button"
                               onClick={() => {
-                                console.log("🔄 Assignment button clicked");
-                                console.log(
-                                  "currentAssignedUser:",
-                                  currentAssignedUser,
-                                );
-                                console.log("users:", users);
-                                console.log("assignedUsers:", assignedUsers);
-
                                 if (!currentAssignedUser) {
-                                  console.log("❌ No user selected");
                                   alert(
                                     "Por favor selecione um utilizador para atribuir",
                                   );
                                   return;
                                 }
 
-                                if (currentAssignedUser) {
-                                  const selectedUser = users.find(
-                                    (u) =>
-                                      String(u.id) ===
-                                      String(currentAssignedUser),
-                                  );
+                                const selectedUser = users.find(
+                                  (u) =>
+                                    String(u.id) ===
+                                    String(currentAssignedUser),
+                                );
 
-                                  console.log(
-                                    "selectedUser found:",
-                                    selectedUser,
-                                  );
-
-                                  if (selectedUser) {
-                                    const userIdStr = String(selectedUser.id);
-                                    const isAlreadyAssigned =
-                                      assignedUsers.some(
-                                        (assigned) => assigned.id === userIdStr,
-                                      );
-
-                                    console.log(
-                                      "🔧 Attempting to assign user:",
-                                      selectedUser.name,
-                                      "ID:",
-                                      userIdStr,
-                                      "Already assigned:",
-                                      isAlreadyAssigned,
-                                    );
-
-                                    if (!isAlreadyAssigned) {
-                                      const newAssignedUsers = [
-                                        ...assignedUsers,
-                                        {
-                                          id: userIdStr,
-                                          name: selectedUser.name,
-                                        },
-                                      ];
-                                      setAssignedUsers(newAssignedUsers);
-                                      setCurrentAssignedUser("");
-                                      console.log(
-                                        "✅ User assigned successfully!",
-                                        newAssignedUsers,
-                                      );
-                                    } else {
-                                      console.log(
-                                        "⚠️ User already assigned, skipping",
-                                      );
-                                      alert(
-                                        "Este utilizador já está atribuído a esta obra",
-                                      );
-                                    }
-                                  } else {
-                                    console.log(
-                                      "❌ User not found in users array",
-                                    );
-                                    alert("Utilizador não encontrado");
-                                  }
-                                } else {
-                                  console.log(
-                                    "❌ currentAssignedUser is empty",
-                                  );
-                                  alert("Por favor selecione um utilizador");
+                                if (!selectedUser) {
+                                  alert("Utilizador não encontrado");
+                                  return;
                                 }
+
+                                const userIdStr = String(selectedUser.id);
+                                const isAlreadyAssigned = assignedUsers.some(
+                                  (assigned) => assigned.id === userIdStr,
+                                );
+
+                                if (isAlreadyAssigned) {
+                                  alert(
+                                    "Este utilizador já está atribuído a esta obra",
+                                  );
+                                  return;
+                                }
+
+                                // Add user to assigned list
+                                setAssignedUsers([
+                                  ...assignedUsers,
+                                  {
+                                    id: userIdStr,
+                                    name: selectedUser.name,
+                                  },
+                                ]);
+
+                                // Clear selection
+                                setCurrentAssignedUser("");
+
+                                // Success feedback
+                                alert(
+                                  `${selectedUser.name} foi atribuído à obra com sucesso!`,
+                                );
                               }}
                               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                             >
@@ -8213,7 +8181,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observações e próxima manutenção</span>
+                  <span>Observaç��es e próxima manutenção</span>
                 </div>
               </div>
             </div>
