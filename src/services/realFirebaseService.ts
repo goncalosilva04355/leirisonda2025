@@ -291,12 +291,16 @@ class RealFirebaseService {
     try {
       const clientsRef = ref(this.database!, "clients");
       const newClientRef = push(clientsRef);
-      await set(newClientRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...clientData,
         id: newClientRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+
+      await set(newClientRef, sanitizedData);
       return newClientRef.key;
     } catch (error) {
       console.error("Failed to add client:", error);
