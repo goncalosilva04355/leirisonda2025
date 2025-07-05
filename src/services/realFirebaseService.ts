@@ -226,12 +226,16 @@ class RealFirebaseService {
     try {
       const maintenanceRef = ref(this.database!, "maintenance");
       const newMaintenanceRef = push(maintenanceRef);
-      await set(newMaintenanceRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...maintenanceData,
         id: newMaintenanceRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+
+      await set(newMaintenanceRef, sanitizedData);
       return newMaintenanceRef.key;
     } catch (error) {
       console.error("Failed to add maintenance:", error);
