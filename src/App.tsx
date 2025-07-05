@@ -7699,31 +7699,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // Initialize with test user to avoid authentication issues
-  useEffect(() => {
-    const storedUser = localStorage.getItem("currentUser");
-    if (!storedUser && !currentUser) {
-      const testUser = {
-        id: 1,
-        name: "Gonçalo Fonseca",
-        email: "gongonsilva@gmail.com",
-        role: "super_admin",
-        permissions: {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          admin: { view: true, create: true, edit: true, delete: true },
-          dashboard: { view: true },
-        },
-      };
-      setCurrentUser(testUser);
-      setIsAuthenticated(true);
-      localStorage.setItem("currentUser", JSON.stringify(testUser));
-      localStorage.setItem("isAuthenticated", "true");
-    }
-  }, [currentUser]);
+  // Auto-login disabled per user request
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem("currentUser");
+  //   if (!storedUser && !currentUser) {
+  //     const testUser = {
+  //       id: 1,
+  //       name: "Gonçalo Fonseca",
+  //       email: "gongonsilva@gmail.com",
+  //       role: "super_admin",
+  //       permissions: {
+  //         obras: { view: true, create: true, edit: true, delete: true },
+  //         manutencoes: { view: true, create: true, edit: true, delete: true },
+  //         piscinas: { view: true, create: true, edit: true, delete: true },
+  //         relatorios: { view: true, create: true, edit: true, delete: true },
+  //         utilizadores: { view: true, create: true, edit: true, delete: true },
+  //         admin: { view: true, create: true, edit: true, delete: true },
+  //         dashboard: { view: true },
+  //       },
+  //     };
+  //     setCurrentUser(testUser);
+  //     setIsAuthenticated(true);
+  //     localStorage.setItem("currentUser", JSON.stringify(testUser));
+  //     localStorage.setItem("isAuthenticated", "true");
+  //   }
+  // }, [currentUser]);
 
   // Allow access with auto-login for testing
   if (!isAuthenticated || !currentUser) {
