@@ -267,6 +267,18 @@ export function useDataSync(): SyncState & SyncActions {
   // Firebase sync is always enabled with fixed configuration
   const [syncEnabled, setSyncEnabled] = useState(true);
 
+  // Auto-save to localStorage whenever state changes
+  useEffect(() => {
+    try {
+      localStorage.setItem("works", JSON.stringify(state.works));
+      localStorage.setItem("pools", JSON.stringify(state.pools));
+      localStorage.setItem("maintenance", JSON.stringify(state.maintenance));
+      localStorage.setItem("clients", JSON.stringify(state.clients));
+    } catch (error) {
+      console.error("❌ Error saving data to localStorage:", error);
+    }
+  }, [state.works, state.pools, state.maintenance, state.clients]);
+
   // Hook para sincronização automática em mutações - temporarily disabled
   // const { withAutoSync } = useDataMutationSync();
   const withAutoSync = <T extends any[], R>(
