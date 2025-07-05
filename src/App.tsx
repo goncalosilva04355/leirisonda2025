@@ -51,8 +51,8 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 // import { AdminLogin } from "./admin/AdminLogin"; // Temporarily disabled to debug
 // import { AdminPage } from "./admin/AdminPage"; // Temporarily disabled to debug
 // import { useDataSync } from "./hooks/useDataSync_simple"; // Disabled to prevent import errors
-import { authService, UserProfile } from "./services/authService";
-import { useDataCleanup } from "./hooks/useDataCleanup";
+// import { authService, UserProfile } from "./services/authService"; // Temporarily disabled to debug
+// import { useDataCleanup } from "./hooks/useDataCleanup"; // Temporarily disabled to debug
 // import { useAutoSync } from "./hooks/useAutoSync"; // Temporarily disabled due to React hook error
 
 // BACKUP - ESTE ARQUIVO CONTÉM UMA VERSÃO FUNCIONAL
