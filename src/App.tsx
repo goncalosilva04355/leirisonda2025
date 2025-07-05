@@ -920,7 +920,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç������o: ${work.location}
+   Localizaç��������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -7898,8 +7898,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   }
 
   return (
-      showNotifications={false}
-    >
       <div className="min-h-screen bg-gray-50">
         {/* Sidebar */}
         <div
