@@ -43,7 +43,7 @@ import { AdminPage } from "./admin/AdminPage";
 // import { useDataSync } from "./hooks/useDataSync"; // Disabled to prevent Firebase errors
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSync } from "./hooks/useAutoSync";
+// import { useAutoSync } from "./hooks/useAutoSync"; // Disabled to prevent errors
 
 // Mock users database
 const initialUsers = [
@@ -886,7 +886,7 @@ ${maintenance
     (maint, index) => `
 ${index + 1}. ${maint.poolName}
    Tipo: ${maint.type}
-   Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${maint.status === "completed" ? "Conclu��da" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
@@ -1031,7 +1031,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Push Notification functions
   const requestNotificationPermission = async () => {
-    console.log("🔔 Requesting notification permission...");
+    console.log("���� Requesting notification permission...");
     if ("Notification" in window) {
       try {
         const permission = await Notification.requestPermission();
@@ -3117,7 +3117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa��ões Básicas */}
+                    {/* Informações Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
