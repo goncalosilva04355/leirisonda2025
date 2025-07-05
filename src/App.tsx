@@ -1196,7 +1196,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç����es não est�����o ativadas. Active-as primeiro nas configurações.",
+        "As notificaç����es n��o est�����o ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -3162,6 +3162,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </label>
                           <input
                             type="text"
+                            name="workTitle"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="LS-2025-163"
                             defaultValue={`LS-${new Date().getFullYear()}-${Math.floor(
@@ -3726,7 +3727,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observações Específicas do Furo */}
+                          {/* Observaç��es Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observaç��es Espec��ficas do Furo
@@ -5332,7 +5333,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-blue-900">
-                              Marcação Automática
+                              Marca��ão Automática
                             </h4>
                             <button
                               onClick={() =>
