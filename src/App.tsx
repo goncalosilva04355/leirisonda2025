@@ -43,7 +43,7 @@ import { AdminPage } from "./admin/AdminPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSync } from "./hooks/useAutoSync";
+// import { useAutoSync } from "./hooks/useAutoSync";
 
 // Mock users database
 const initialUsers = [
@@ -5147,7 +5147,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex justify-between py-2 border-b border-gray-100">
                       <span className="text-gray-600">Perfil</span>
                       <span className="font-medium capitalize">
-                        {currentUser?.role.replace("_", " ")}
+                        {currentUser?.role?.replace("_", " ")}
                       </span>
                     </div>
                     <div className="flex justify-between py-2">
