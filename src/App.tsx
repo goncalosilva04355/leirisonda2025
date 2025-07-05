@@ -793,7 +793,7 @@ function App() {
       localStorage.removeItem("currentUser");
 
       // Clear form and navigate to dashboard
-      setLoginForm({ email: "", password: "" });
+      setLoginForm({ email: "", password: "", rememberMe: false });
       navigateToSection("dashboard");
 
       // Perform actual logout
@@ -808,7 +808,10 @@ function App() {
       setCurrentUser(null);
       setIsAuthenticated(false);
       localStorage.removeItem("currentUser");
-      setLoginForm({ email: "", password: "" });
+      // Clear auto-login on manual logout
+      localStorage.removeItem("autoLogin");
+      localStorage.removeItem("rememberedUser");
+      setLoginForm({ email: "", password: "", rememberMe: false });
       navigateToSection("dashboard");
 
       console.log("🔧 Forced logout state clear completed");
