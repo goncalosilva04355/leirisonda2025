@@ -5421,7 +5421,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
                         <div className="flex-1">
                           <h4 className="font-medium text-blue-900 mb-2">
-                            Notificações de Obras
+                            Notifica��ões de Obras
                           </h4>
                           <p className="text-blue-700 text-sm mb-3">
                             Receba notificações quando uma nova obra for
@@ -5681,7 +5681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ��️ ATENÇÃO: Esta operação é irreversível!
+                              ��️ ATENÇ��O: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -7269,14 +7269,56 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const form = (e.target as HTMLElement).closest(
                             "form",
                           );
-                          const inputs = form.querySelectorAll(
-                            "input, select, textarea",
-                          );
 
-                          const title = inputs[0].value; // Título da Obra
-                          const client = inputs[1].value; // Cliente
-                          const location = inputs[2].value; // Local
-                          const status = inputs[3].value; // Estado
+                          // Extract data using name attributes instead of indices
+                          const title =
+                            (
+                              form.querySelector(
+                                'input[name="workTitle"]',
+                              ) as HTMLInputElement
+                            )?.value ||
+                            editingWork?.title ||
+                            "";
+                          const client =
+                            (
+                              form.querySelector(
+                                'input[name="client"]',
+                              ) as HTMLInputElement
+                            )?.value ||
+                            editingWork?.client ||
+                            "";
+                          const contact =
+                            (
+                              form.querySelector(
+                                'input[name="contact"]',
+                              ) as HTMLInputElement
+                            )?.value ||
+                            editingWork?.contact ||
+                            "";
+                          const location =
+                            (
+                              form.querySelector(
+                                'textarea[name="location"]',
+                              ) as HTMLTextAreaElement
+                            )?.value ||
+                            editingWork?.location ||
+                            "";
+                          const observations =
+                            (
+                              form.querySelector(
+                                'textarea[name="observations"]',
+                              ) as HTMLTextAreaElement
+                            )?.value ||
+                            editingWork?.observations ||
+                            "";
+                          const workPerformed =
+                            (
+                              form.querySelector(
+                                'textarea[name="workPerformed"]',
+                              ) as HTMLTextAreaElement
+                            )?.value ||
+                            editingWork?.workPerformed ||
+                            "";
                           const startDate = inputs[4].value; // Data de Início
                           const expectedEndDate = inputs[5].value; // Data de Conclusão Prevista
                           // assignedTo now comes from editAssignedUsers state
@@ -8921,7 +8963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Folha de Obra Concluída
+                      Folha de Obra Conclu��da
                     </label>
                     <span
                       className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
