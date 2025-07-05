@@ -8127,7 +8127,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-600 text-sm">
                         {selectedWork.id?.toUpperCase() ||
                           "ID-" + Date.now().toString().slice(-6)}{" "}
-                        → {selectedWork.title}
+                        → {selectedWork.client || "Cliente não especificado"}
                       </p>
                     </div>
                   </div>
