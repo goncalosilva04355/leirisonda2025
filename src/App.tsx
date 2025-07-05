@@ -1650,7 +1650,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
             <p className="mt-4 text-gray-600">A carregar aplicação...</p>
             <p className="mt-2 text-sm text-gray-500">
-              Se esta mensagem persistir, recarregue a p��gina
+              Se esta mensagem persistir, recarregue a página
             </p>
           </div>
         </div>
@@ -7288,36 +7288,43 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ...waterWellData,
                             };
 
-                            console.log("💾 Update data:", updateData);
-                            console.log("🔍 Form elements found:", {
-                              workTitle: form.querySelector(
-                                'input[name="workTitle"]',
-                              )?.value,
-                              client: form.querySelector('input[name="client"]')
-                                ?.value,
-                              contact: form.querySelector(
-                                'input[name="contact"]',
-                              )?.value,
-                              location: form.querySelector(
-                                'textarea[name="location"]',
-                              )?.value,
-                              observations: form.querySelector(
-                                'textarea[name="observations"]',
-                              )?.value,
-                              workPerformed: form.querySelector(
-                                'textarea[name="workPerformed"]',
-                              )?.value,
-                              status: form.querySelector(
-                                'select[name="status"]',
-                              )?.value,
-                            });
+                            // Visual feedback for iPhone users
+                            const loadingDiv = document.createElement("div");
+                            loadingDiv.innerHTML = "⏳ A guardar alterações...";
+                            loadingDiv.style.cssText =
+                              "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);color:white;padding:20px;border-radius:10px;z-index:10000;font-size:16px;";
+                            document.body.appendChild(loadingDiv);
 
-                            await updateWork(editingWork.id, updateData);
+                            try {
+                              await updateWork(editingWork.id, updateData);
 
-                            console.log(
-                              "✅ Work update completed successfully",
-                            );
-                            alert("Obra atualizada com sucesso!");
+                              // Success feedback
+                              loadingDiv.innerHTML =
+                                "✅ Obra atualizada com sucesso!";
+                              loadingDiv.style.background =
+                                "rgba(34, 197, 94, 0.9)";
+
+                              setTimeout(() => {
+                                document.body.removeChild(loadingDiv);
+                                setEditingWork(null);
+                                setEditAssignedUsers([]);
+                                setCurrentEditAssignedUser("");
+                                setActiveSection("obras");
+                              }, 1500);
+                            } catch (error) {
+                              // Error feedback
+                              loadingDiv.innerHTML =
+                                "❌ Erro: " +
+                                (error?.message || "Erro desconhecido");
+                              loadingDiv.style.background =
+                                "rgba(239, 68, 68, 0.9)";
+
+                              setTimeout(() => {
+                                document.body.removeChild(loadingDiv);
+                              }, 3000);
+
+                              throw error;
+                            }
 
                             setEditingWork(null);
                             setEditAssignedUsers([]);
