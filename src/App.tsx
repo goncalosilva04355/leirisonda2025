@@ -3938,7 +3938,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             endTime: endTime,
                             status: status,
                             description: description,
-                            budget: budget ? parseFloat(budget) : undefined,
+                            budget: budget ? parseFloat(budget) : null,
                             assignedTo:
                               assignedUsers.length > 0
                                 ? assignedUsers.map((u) => u.name).join(", ")
