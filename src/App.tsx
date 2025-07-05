@@ -957,7 +957,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -1961,7 +1961,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div className="flex space-x-2">
                                   <button
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent triggering the parent click
                                       if (work.status !== "in_progress") {
                                         dataSync.updateWork(work.id, {
                                           status: "in_progress",
@@ -1978,6 +1979,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     {work.status === "in_progress"
                                       ? "Em Progresso"
                                       : "Iniciar"}
+                                  </button>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent triggering the parent click
+                                      setSelectedWork(work);
+                                      setViewingWork(true);
+                                    }}
+                                    className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded-lg transition-colors"
+                                  >
+                                    Ver Detalhes
                                   </button>
                                 </div>
                               </div>
@@ -6629,7 +6640,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">
                               {users.length > 0
-                                ? "Selecionar usuário..."
+                                ? "Selecionar usu��rio..."
                                 : "Nenhum utilizador disponível"}
                             </option>
                             {users
@@ -6799,7 +6810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Descri��ão
+                        Descrição
                       </label>
                       <textarea
                         defaultValue={editingWork?.description}
@@ -8003,7 +8014,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <LogOut className="h-5 w-5" />
-                <span>Terminar Sess��o</span>
+                <span>Terminar Sessão</span>
               </button>
               <div className="mt-4 text-center">
                 <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
