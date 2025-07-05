@@ -494,19 +494,36 @@ export function useDataSync(): SyncState & SyncActions {
   // Works
   const addWork = useCallback(
     withAutoSync(async (workData: Omit<Work, "id" | "createdAt">) => {
+      console.log("📝 useDataSync.addWork chamado com:", workData);
+
       const newWork: Work = {
         ...workData,
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
       };
 
-      setState((prev) => ({
-        ...prev,
-        works: [...prev.works, newWork],
-      }));
+      console.log("🆕 Nova obra criada:", newWork);
+
+      setState((prev) => {
+        console.log("📊 Estado anterior - obras:", prev.works.length);
+        const newState = {
+          ...prev,
+          works: [...prev.works, newWork],
+        };
+        console.log("📊 Estado novo - obras:", newState.works.length);
+        return newState;
+      });
 
       if (realFirebaseService.isReady()) {
-        await realFirebaseService.addWork(newWork);
+        console.log("🔥 Firebase disponível, enviando dados...");
+        try {
+          await realFirebaseService.addWork(newWork);
+          console.log("✅ Dados enviados para Firebase com sucesso");
+        } catch (error) {
+          console.error("❌ Erro ao enviar para Firebase:", error);
+        }
+      } else {
+        console.log("📱 Firebase não disponível, dados guardados localmente");
       }
     }),
     [withAutoSync],
