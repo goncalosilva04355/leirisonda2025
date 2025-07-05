@@ -2806,7 +2806,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Wrench className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção registada
+                        Nenhuma manuten��ão registada
                       </h3>
                       <p className="text-gray-600 text-sm">
                         As manutenções aparecerão aqui quando forem criadas
@@ -3960,21 +3960,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             startDate: new Date().toISOString(),
                           };
 
-                          // Log work creation
-                          console.log(
-                            `🏗️ Obra criada: "${workData.title}" → ${workData.assignedTo}`,
-                          );
-                          console.log("📋 Dados completos da obra:", workData);
-
                           // Use sync system to add work (will handle Firebase and localStorage)
-                          try {
-                            console.log("🔄 Chamando addWork...");
-                            addWork(workData);
-                            console.log("✅ addWork chamado com sucesso");
-                          } catch (error) {
-                            console.error("❌ Erro ao adicionar obra:", error);
-                            alert(`Erro ao guardar obra: ${error.message}`);
-                          }
+                          addWork(workData);
 
                           // Send notifications to all assigned users
                           assignedUsers.forEach((assignedUser) => {
