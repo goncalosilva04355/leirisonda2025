@@ -190,7 +190,7 @@ function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // Data sync hook - manages all data with optional Firebase sync
-  const dataSync = useDataSync();
+  const dataSync = // useDataSync() - DISABLED;
   /* const {
     pools,
     maintenance,
