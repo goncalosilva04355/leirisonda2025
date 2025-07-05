@@ -4283,10 +4283,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Localização Completa *
                       </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: Cascais, Villa Marina Resort, Edifício A, Apartamento 205"
+                      <textarea
+                        name="location"
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
+                        placeholder="Ex: Cascais, Villa Marina Resort, Edifício A, Apartamento 205&#10;Rua da Marginal, 123&#10;2750-000 Cascais"
                         required
                       />
                     </div>
