@@ -1695,7 +1695,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <button
                             onClick={() => {
                               console.log(
-                                "���� Testando notificação para Alexandre...",
+                                "🧪 Testando notificação para Alexandre...",
                               );
                               sendWorkAssignmentNotification(
                                 "Obra de Teste para Alexandre",
@@ -4994,7 +4994,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Eye className="h-4 w-4 text-green-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Fotografias da Manutenção
+                          Fotografias da Manutenç��o
                         </h3>
                       </div>
 
@@ -6885,7 +6885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const priority = inputs[9].value; // Prioridade
                           const workType = inputs[10].value; // Tipo de Obra
                           const description = inputs[12].value; // Descri��ão
-                          const technicalNotes = inputs[12].value; // Observações T��cnicas
+                          const technicalNotes = inputs[12].value; // Observações Técnicas
 
                           dataSync.updateWork(editingWork.id, {
                             title,
@@ -7703,7 +7703,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       localStorage.setItem("currentUser", JSON.stringify(testUser));
       localStorage.setItem("isAuthenticated", "true");
     }
-  }, [currentUser]);
+  }, []);
 
   // Always allow access for testing - bypass authentication
   if (false) {
