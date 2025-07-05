@@ -7334,11 +7334,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             console.error("❌ Unexpected error:", error);
                             alert("Erro inesperado ao atualizar obra");
                           }
-                          })().catch(error => {
-                            // Ultimate safety net for any Promise rejections
-                            console.error("❌ Promise rejection caught:", error);
-                            alert("Erro crítico ao atualizar obra");
-                          });
+                          } catch (globalError) {
+                            console.error("❌ Global error:", globalError);
+                            alert("Erro ao atualizar obra");
+                          }
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
