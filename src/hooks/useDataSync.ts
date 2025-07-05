@@ -279,11 +279,22 @@ export function useDataSync(): SyncState & SyncActions {
     }
   }, [state.works, state.pools, state.maintenance, state.clients]);
 
-  // Hook para sincronização automática em mutações - temporarily disabled
-  // const { withAutoSync } = useDataMutationSync();
+  // Hook para sincronização automática em mutações - with debugging
   const withAutoSync = <T extends any[], R>(
     fn: (...args: T) => R | Promise<R>,
-  ) => fn;
+  ) => {
+    return async (...args: T): Promise<R> => {
+      try {
+        console.log("🔄 Executing data operation with args:", args);
+        const result = await fn(...args);
+        console.log("✅ Data operation completed successfully");
+        return result;
+      } catch (error) {
+        console.error("❌ Error in data operation:", error);
+        throw error;
+      }
+    };
+  };
 
   // Initial sync when enabled
   useEffect(() => {
