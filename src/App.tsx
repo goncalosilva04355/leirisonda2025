@@ -219,9 +219,12 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase �� localStorage synchronization
-  const autoSyncData = useAutoSync();
-  const { syncStatus, isAutoSyncing } = autoSyncData;
-  const autoSyncLastSync = autoSyncData.lastSync;
+  // const autoSyncData = useAutoSync();
+  // const { syncStatus, isAutoSyncing } = autoSyncData;
+  // const autoSyncLastSync = autoSyncData.lastSync;
+  const syncStatus = "idle";
+  const isAutoSyncing = false;
+  const autoSyncLastSync = null;
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -313,7 +316,7 @@ function App() {
     }
 
     // Only clear auth state if no valid stored user found
-    console.log("🔒 No valid stored user found, ensuring clean state");
+    console.log("��� No valid stored user found, ensuring clean state");
     sessionStorage.clear(); // Clear any session data
     setIsAuthenticated(false);
     setCurrentUser(null);
@@ -1842,7 +1845,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `✅ ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser.name}`,
+                                  `✅ ${assignedWorks.length} obra(s) atribu��da(s) a ${currentUser.name}`,
                                 );
                               }
 
@@ -7649,7 +7652,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Fotografias</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>��</span>
                   <span>Observações e próxima manutenção</span>
                 </div>
               </div>
