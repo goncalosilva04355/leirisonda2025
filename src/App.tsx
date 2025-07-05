@@ -3174,6 +3174,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </label>
                           <input
                             type="text"
+                            name="client"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Ex: João Silva"
                             required
@@ -7332,7 +7333,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         defaultValue={editingMaintenance?.observations}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={4}
-                        placeholder="Observações sobre a manutenção"
+                        placeholder="Observações sobre a manuten��ão"
                       />
                     </div>
 
