@@ -3195,7 +3195,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenç��o</option>
                             <option value="instalacao">Instalação</option>
-                            <option value="reparacao">Reparação</option>
+                            <option value="reparacao">Reparaç��o</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
                           </select>
@@ -9003,26 +9003,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <p className="text-gray-900">
                           {selectedWork.pumpVoltage || "A especificar"}
                         </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-blue-700">
-                          Estado da Perfuração
-                        </label>
-                        <span
-                          className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                            selectedWork.drillingStatus === "completed"
-                              ? "bg-green-100 text-green-700"
-                              : selectedWork.drillingStatus === "in_progress"
-                                ? "bg-orange-100 text-orange-700"
-                                : "bg-gray-100 text-gray-700"
-                          }`}
-                        >
-                          {selectedWork.drillingStatus === "completed"
-                            ? "Perfuração Concluída"
-                            : selectedWork.drillingStatus === "in_progress"
-                              ? "Em Perfuração"
-                              : "Não Iniciado"}
-                        </span>
                       </div>
 
                       {selectedWork.geologicalInfo && (
