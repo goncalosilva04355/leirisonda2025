@@ -218,10 +218,15 @@ function App() {
   const cleanupLoading = false;
   const cleanupError = null;
 
-  // Auto-sync hook for automatic Firebase �� localStorage synchronization
-  const autoSyncData = useAutoSync();
-  const { syncStatus, isAutoSyncing } = autoSyncData;
-  const autoSyncLastSync = autoSyncData.lastSync;
+  // Auto-sync hook for automatic Firebase <-> localStorage synchronization - TEMPORARILY DISABLED
+  // const autoSyncData = useAutoSync();
+  // const { syncStatus, isAutoSyncing } = autoSyncData;
+  // const autoSyncLastSync = autoSyncData.lastSync;
+
+  // Mock values to prevent errors
+  const syncStatus = "idle";
+  const isAutoSyncing = false;
+  const autoSyncLastSync = null;
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -1436,7 +1441,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `����� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `������ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -3227,7 +3232,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda não terminou
+                              Deixe vazio se ainda n��o terminou
                             </p>
                           </div>
                         </div>
@@ -5210,7 +5215,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador n��o suporta notificações.",
+                                  "Este navegador n���o suporta notificações.",
                                 );
                               }
                             }}
@@ -7477,7 +7482,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conteúdo. Por favor, tente
+              Ocorreu um erro ao carregar o conte��do. Por favor, tente
               novamente.
             </p>
             <button
