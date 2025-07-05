@@ -796,7 +796,7 @@ function App() {
         setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
-      console.error("❌ Login error:", error);
+      console.error("�� Login error:", error);
       setLoginError("Erro de sistema. Por favor, tente novamente.");
     }
   };
@@ -7440,35 +7440,56 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             },
                           );
 
-                          updateWork(editingWork.id, {
-                            title,
-                            client,
-                            contact,
-                            location,
-                            observations,
-                            workPerformed,
-                            assignedTo:
-                              editAssignedUsers.length > 0
-                                ? editAssignedUsers
-                                    .map((u) => u.name)
-                                    .join(", ")
-                                : editingWork?.assignedTo || "",
-                            assignedUsers:
-                              editAssignedUsers.length > 0
-                                ? editAssignedUsers
-                                : editingWork?.assignedUsers || [],
-                            assignedUserIds:
-                              editAssignedUsers.length > 0
-                                ? editAssignedUsers.map((u) => u.id)
-                                : editingWork?.assignedUserIds || [],
-                            ...waterWellData,
-                          });
+                          try {
+                            console.log(
+                              "💾 Starting work update for ID:",
+                              editingWork.id,
+                            );
 
-                          alert("Obra atualizada com sucesso!");
-                          setEditingWork(null);
-                          setEditAssignedUsers([]);
-                          setCurrentEditAssignedUser("");
-                          setActiveSection("obras");
+                            const updateData = {
+                              title,
+                              client,
+                              contact,
+                              location,
+                              observations,
+                              workPerformed,
+                              assignedTo:
+                                editAssignedUsers.length > 0
+                                  ? editAssignedUsers
+                                      .map((u) => u.name)
+                                      .join(", ")
+                                  : editingWork?.assignedTo || "",
+                              assignedUsers:
+                                editAssignedUsers.length > 0
+                                  ? editAssignedUsers
+                                  : editingWork?.assignedUsers || [],
+                              assignedUserIds:
+                                editAssignedUsers.length > 0
+                                  ? editAssignedUsers.map((u) => u.id)
+                                  : editingWork?.assignedUserIds || [],
+                              ...waterWellData,
+                            };
+
+                            console.log("💾 Update data:", updateData);
+
+                            await updateWork(editingWork.id, updateData);
+
+                            console.log(
+                              "✅ Work update completed successfully",
+                            );
+                            alert("Obra atualizada com sucesso!");
+
+                            setEditingWork(null);
+                            setEditAssignedUsers([]);
+                            setCurrentEditAssignedUser("");
+                            setActiveSection("obras");
+                          } catch (error) {
+                            console.error("❌ Error updating work:", error);
+                            alert(
+                              "Erro ao atualizar obra: " +
+                                (error?.message || "Erro desconhecido"),
+                            );
+                          }
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
