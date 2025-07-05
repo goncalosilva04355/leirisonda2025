@@ -134,10 +134,14 @@ class RealFirebaseService {
 
     try {
       const poolRef = ref(this.database!, `pools/${poolId}`);
-      await update(poolRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...poolData,
         updatedAt: new Date().toISOString(),
       });
+
+      await update(poolRef, sanitizedData);
       return true;
     } catch (error) {
       console.error("Failed to update pool:", error);
