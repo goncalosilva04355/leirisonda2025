@@ -2525,7 +2525,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">���</div>
+                                  <div className="text-gray-400 mb-2">
+                                    �����
+                                  </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -3877,40 +3879,44 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             form as HTMLFormElement,
                           );
 
-                          // Extract data using more reliable selectors
+                          // Extract data using form field names - much more reliable
                           const workTitle =
-                            (inputs[0] as HTMLInputElement)?.value ||
-                            "Nova Obra";
+                            (
+                              form.querySelector(
+                                'input[name="workTitle"]',
+                              ) as HTMLInputElement
+                            )?.value || "Nova Obra";
                           const workType = selectedWorkType || "piscina";
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="Nome do cliente"]',
+                                'input[name="client"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
                             (
                               form.querySelector(
-                                'input[placeholder*="Contacto"]',
+                                'input[name="contact"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const location =
                             (
                               form.querySelector(
-                                'input[placeholder*="Ex: Rua das Flores"]',
+                                'input[name="location"]',
                               ) as HTMLInputElement
                             )?.value || "";
-
-                          // Get datetime-local inputs (entrada/saída)
-                          const datetimeInputs = form.querySelectorAll(
-                            'input[type="datetime-local"]',
-                          );
                           const startTime =
-                            (datetimeInputs[0] as HTMLInputElement)?.value ||
-                            "";
+                            (
+                              form.querySelector(
+                                'input[name="startTime"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
                           const endTime =
-                            (datetimeInputs[1] as HTMLInputElement)?.value ||
-                            "";
+                            (
+                              form.querySelector(
+                                'input[name="endTime"]',
+                              ) as HTMLInputElement
+                            )?.value || "";
 
                           // Get select for status
                           const statusSelect = form.querySelector(
