@@ -1048,7 +1048,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-���� ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+����� ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -1657,93 +1657,94 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="px-4 py-4 space-y-4">
                 {/* Header Card */}
                 <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                      <div className="w-8 h-8 bg-white rounded-lg shadow-md p-1">
-                        <img
-                          src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                          alt="Leirisonda Logo"
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
+                  {/* Top Row - Menu, Logo, and Time */}
+                  <div className="flex items-center justify-between mb-4">
+                    {/* Left: Menu Icon and Logo */}
+                    <div className="flex items-center space-x-3">
+                      <button className="p-2">
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
+                          <line x1="3" y1="6" x2="21" y2="6"></line>
+                          <line x1="3" y1="12" x2="21" y2="12"></line>
+                          <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                      </button>
+                      <img
+                        src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                        alt="Leirisonda Logo"
+                        className="h-8 w-auto object-contain"
+                      />
                     </div>
-                    <div>
-                      <h1 className="text-lg font-semibold text-gray-900">
-                        Olá, {currentUser?.name || "Utilizador"}
-                      </h1>
-                      {currentUser?.name
-                        .toLowerCase()
-                        .includes("alexandre") && (
-                        <div className="mt-2 space-y-1">
-                          <button
-                            onClick={() => {
-                              const alexandreWorks = works.filter(
-                                (w) =>
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes("alexandre") ||
-                                  w.assignedUsers?.some((user) =>
-                                    user.name
-                                      .toLowerCase()
-                                      .includes("alexandre"),
-                                  ),
-                              );
 
-                              const debugInfo = {
-                                currentUser: currentUser.name,
-                                totalWorks: works.length,
-                                alexandreWorks: alexandreWorks,
-                                localStorage: {
-                                  pools: JSON.parse(
-                                    localStorage.getItem("pools") || "[]",
-                                  ).length,
-                                  works: JSON.parse(
-                                    localStorage.getItem("works") || "[]",
-                                  ).length,
-                                  maintenance: JSON.parse(
-                                    localStorage.getItem("maintenance") || "[]",
-                                  ).length,
-                                },
-                                notificationsEnabled,
-                                notificationPermission: Notification.permission,
-                              };
-                              console.log(
-                                "🔍 Alexandre Debug Info:",
-                                debugInfo,
-                              );
-                              alert(
-                                `Debug Alexandre:\n` +
-                                  `Obras no sistema: ${works.length}\n` +
-                                  `Obras atribuídas ao Alexandre: ${alexandreWorks.length}\n` +
-                                  `Notificaç��es ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
-                                  `Permissão notificações: ${Notification.permission}\n\n` +
-                                  `Ver console para mais detalhes`,
-                              );
-                            }}
-                            className="px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600"
-                          >
-                            Debug Dados Alexandre
-                          </button>
+                    {/* Right: Time */}
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12,6 12,12 16,14"></polyline>
+                      </svg>
+                      <span className="text-lg font-medium">
+                        {new Date().toLocaleTimeString("pt-BR", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                    </div>
+                  </div>
 
-                          <button
-                            onClick={() => {
-                              console.log(
-                                "🧪 Testando notificação para Alexandre...",
-                              );
-                              sendWorkAssignmentNotification(
-                                "Obra de Teste para Alexandre",
-                                "Alexandre",
-                              );
-                            }}
-                            className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
-                          >
-                            Testar Notifica����o
-                          </button>
-                        </div>
-                      )}
-                      <p className="text-gray-600 text-sm">
-                        Bem-vindo ao sistema Leirisonda
-                      </p>
+                  {/* Main Content */}
+                  <div className="space-y-3">
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Olá, {currentUser?.name || "Utilizador"}
+                    </h1>
+
+                    {/* Date */}
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <rect
+                          x="3"
+                          y="4"
+                          width="18"
+                          height="18"
+                          rx="2"
+                          ry="2"
+                        ></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <span>
+                        {new Date().toLocaleDateString("pt-BR", {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "long",
+                        })}
+                      </span>
+                    </div>
+
+                    {/* Status */}
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-sm text-gray-600">Online</span>
                     </div>
                   </div>
                 </div>
@@ -5505,7 +5506,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As notificações funcionam apenas com HTTPS
+                              • As notifica��ões funcionam apenas com HTTPS
                             </li>
                             <li>
                               • Certifique-se de que permite notificações no seu
