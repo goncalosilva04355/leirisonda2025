@@ -1436,7 +1436,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `����� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `������ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -3200,6 +3200,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </label>
                           <input
                             type="text"
+                            name="location"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Ex: Rua das Flores, 123, Leiria"
                             required
