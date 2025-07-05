@@ -1983,7 +1983,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
                                       <span>👤</span>
                                       <span>
-                                        Atribu��da a:{" "}
+                                        Atribu����da a:{" "}
                                         {work.assignedUsers &&
                                         work.assignedUsers.length > 0
                                           ? work.assignedUsers
@@ -6719,16 +6719,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </label>
                         <input
                           type="date"
+                          name="startDate"
                           defaultValue={editingWork?.startDate?.split("T")[0]}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Conclus���o Prevista
+                          Data de Conclusão Prevista
                         </label>
                         <input
                           type="date"
+                          name="expectedEndDate"
                           defaultValue={
                             editingWork?.expectedEndDate?.split("T")[0]
                           }
