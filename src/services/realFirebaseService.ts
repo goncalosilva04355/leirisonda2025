@@ -112,12 +112,16 @@ class RealFirebaseService {
     try {
       const poolsRef = ref(this.database!, "pools");
       const newPoolRef = push(poolsRef);
-      await set(newPoolRef, {
+
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...poolData,
         id: newPoolRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+
+      await set(newPoolRef, sanitizedData);
       return newPoolRef.key;
     } catch (error) {
       console.error("Failed to add pool:", error);
