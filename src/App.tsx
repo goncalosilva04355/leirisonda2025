@@ -48,8 +48,8 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 // import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning"; // Temporarily disabled to debug
 
 // SECURITY: RegisterForm removed - only super admin can create users
-import { AdminLogin } from "./admin/AdminLogin";
-import { AdminPage } from "./admin/AdminPage";
+// import { AdminLogin } from "./admin/AdminLogin"; // Temporarily disabled to debug
+// import { AdminPage } from "./admin/AdminPage"; // Temporarily disabled to debug
 // import { useDataSync } from "./hooks/useDataSync_simple"; // Disabled to prevent import errors
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
