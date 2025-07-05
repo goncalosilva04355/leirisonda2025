@@ -212,15 +212,56 @@ export interface SyncActions {
 }
 
 export function useDataSync(): SyncState & SyncActions {
-  const [state, setState] = useState<SyncState>({
-    pools: [],
-    maintenance: [],
-    futureMaintenance: [],
-    works: [],
-    clients: [],
-    isLoading: false,
-    lastSync: null,
-    error: null,
+  const [state, setState] = useState<SyncState>(() => {
+    // CRITICAL: Load existing data from localStorage to prevent data loss
+    try {
+      const storedWorks = localStorage.getItem("works");
+      const storedPools = localStorage.getItem("pools");
+      const storedMaintenance = localStorage.getItem("maintenance");
+      const storedClients = localStorage.getItem("clients");
+
+      const works = storedWorks ? JSON.parse(storedWorks) : [];
+      const pools = storedPools ? JSON.parse(storedPools) : [];
+      const maintenance = storedMaintenance
+        ? JSON.parse(storedMaintenance)
+        : [];
+      const clients = storedClients ? JSON.parse(storedClients) : [];
+
+      console.log("🔄 Restored data from localStorage:", {
+        works: works.length,
+        pools: pools.length,
+        maintenance: maintenance.length,
+        clients: clients.length,
+      });
+
+      const today = new Date();
+      const futureMaintenance = maintenance.filter(
+        (m: Maintenance) => new Date(m.scheduledDate) >= today,
+      );
+
+      return {
+        pools,
+        maintenance,
+        futureMaintenance,
+        works,
+        clients,
+        isLoading: false,
+        lastSync: null,
+        error: null,
+      };
+    } catch (error) {
+      console.error("❌ Error loading data from localStorage:", error);
+      return {
+        pools: [],
+        maintenance: [],
+        futureMaintenance: [],
+        works: [],
+        clients: [],
+        isLoading: false,
+        lastSync: null,
+        error: null,
+      };
+    }
   });
 
   // Firebase sync is always enabled with fixed configuration
