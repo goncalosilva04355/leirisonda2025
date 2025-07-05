@@ -2756,7 +2756,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenção</span>
+                      <span>Nova Manutenç��o</span>
                     </button>
                   </div>
                 </div>
@@ -4556,7 +4556,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manuten��ão
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenção
+                        Registar interven��ão de manutenção
                       </p>
                     </div>
                   </div>
@@ -7921,8 +7921,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <p className="text-sm text-gray-500">Gestão de Serviços</p>
                 </div>
               </div>
-              {/* Sync Status Indicator */}
-              <SyncStatusIcon className="ml-2" />
+              {/* Sync Status Indicator - Disabled */}
               {/* Close button for mobile */}
               <button
                 onClick={() => setSidebarOpen(false)}
