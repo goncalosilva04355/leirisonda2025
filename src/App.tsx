@@ -2179,7 +2179,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">🔍</span>
+                      <span className="text-blue-600">����</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -3055,7 +3055,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <BarChart3 className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção agendada
+                        Nenhuma manutenç��o agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
                         As futuras manutenções aparecerão aqui quando forem
@@ -5480,7 +5480,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center mb-4">
                       <Trash2 className="h-6 w-6 text-red-600 mr-3" />
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Gestão de Dados
+                        Gest��o de Dados
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
@@ -7334,7 +7334,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             console.error("❌ Unexpected error:", error);
                             alert("Erro inesperado ao atualizar obra");
                           }
-                          }).catch(error => {
+                          })().catch(error => {
                             // Ultimate safety net for any Promise rejections
                             console.error("❌ Promise rejection caught:", error);
                             alert("Erro crítico ao atualizar obra");
