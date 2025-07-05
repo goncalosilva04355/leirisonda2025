@@ -267,31 +267,107 @@ export function useDataSync(): SyncState & SyncActions {
   // Firebase sync is always enabled with fixed configuration
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  // Auto-save to localStorage whenever state changes
+  // BULLETPROOF DATA PROTECTION - Multiple backup layers
   useEffect(() => {
     try {
-      // Only save if we have data to prevent overwriting with empty arrays
-      if (state.works.length > 0) {
-        localStorage.setItem("works", JSON.stringify(state.works));
-      }
-      if (state.pools.length > 0) {
-        localStorage.setItem("pools", JSON.stringify(state.pools));
-      }
-      if (state.maintenance.length > 0) {
-        localStorage.setItem("maintenance", JSON.stringify(state.maintenance));
-      }
-      if (state.clients.length > 0) {
-        localStorage.setItem("clients", JSON.stringify(state.clients));
+      const timestamp = new Date().toISOString();
+
+      // LAYER 1: Create backup before any save operation
+      const createBackup = (dataType: string, data: any[]) => {
+        if (data.length > 0) {
+          // Main storage
+          localStorage.setItem(dataType, JSON.stringify(data));
+
+          // Backup 1 - Timestamped backup
+          localStorage.setItem(
+            `${dataType}_backup_${Date.now()}`,
+            JSON.stringify(data),
+          );
+
+          // Backup 2 - Rolling backup (keep last 3)
+          const backupKey = `${dataType}_backup_rolling`;
+          const existingBackups = JSON.parse(
+            localStorage.getItem(backupKey) || "[]",
+          );
+          existingBackups.push({ timestamp, data });
+          if (existingBackups.length > 3) existingBackups.shift(); // Keep only last 3
+          localStorage.setItem(backupKey, JSON.stringify(existingBackups));
+
+          // Backup 3 - Daily backup
+          const today = new Date().toISOString().split("T")[0];
+          localStorage.setItem(
+            `${dataType}_daily_${today}`,
+            JSON.stringify(data),
+          );
+
+          console.log(
+            `🔒 PROTECTED: ${dataType} saved with 3 backup layers (${data.length} items)`,
+          );
+        }
+      };
+
+      // LAYER 2: Integrity check before saving
+      const hasValidData =
+        state.works.length > 0 ||
+        state.pools.length > 0 ||
+        state.maintenance.length > 0 ||
+        state.clients.length > 0;
+
+      if (!hasValidData) {
+        console.warn(
+          "⚠️ PROTECTION: Skipping save - no valid data to prevent overwrite",
+        );
+        return;
       }
 
-      console.log("💾 Saved data to localStorage:", {
+      // LAYER 3: Save with multiple backups
+      createBackup("works", state.works);
+      createBackup("pools", state.pools);
+      createBackup("maintenance", state.maintenance);
+      createBackup("clients", state.clients);
+
+      // LAYER 4: Audit log
+      const auditLog = JSON.parse(
+        localStorage.getItem("data_audit_log") || "[]",
+      );
+      auditLog.push({
+        timestamp,
+        action: "auto_save",
+        counts: {
+          works: state.works.length,
+          pools: state.pools.length,
+          maintenance: state.maintenance.length,
+          clients: state.clients.length,
+        },
+      });
+      if (auditLog.length > 100) auditLog.shift(); // Keep last 100 entries
+      localStorage.setItem("data_audit_log", JSON.stringify(auditLog));
+
+      console.log("✅ BULLETPROOF SAVE COMPLETED:", {
         works: state.works.length,
         pools: state.pools.length,
         maintenance: state.maintenance.length,
         clients: state.clients.length,
+        timestamp,
       });
     } catch (error) {
-      console.error("❌ Error saving data to localStorage:", error);
+      console.error("🚨 CRITICAL ERROR in bulletproof save:", error);
+      // Emergency backup to a different key
+      try {
+        localStorage.setItem(
+          "emergency_backup_" + Date.now(),
+          JSON.stringify({
+            works: state.works,
+            pools: state.pools,
+            maintenance: state.maintenance,
+            clients: state.clients,
+            timestamp: new Date().toISOString(),
+            error: error.message,
+          }),
+        );
+      } catch (emergencyError) {
+        console.error("💥 EMERGENCY BACKUP ALSO FAILED:", emergencyError);
+      }
     }
   }, [state.works, state.pools, state.maintenance, state.clients]);
 
