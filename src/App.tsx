@@ -928,7 +928,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTEN����ÕES REALIZADAS:
+MANUTEN��ÕES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
@@ -1650,7 +1650,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
             <p className="mt-4 text-gray-600">A carregar aplicação...</p>
             <p className="mt-2 text-sm text-gray-500">
-              Se esta mensagem persistir, recarregue a página
+              Se esta mensagem persistir, recarregue a p��gina
             </p>
           </div>
         </div>
@@ -7259,6 +7259,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               editingWork.id,
                             );
 
+                            const status =
+                              form.querySelector('select[name="status"]')
+                                ?.value || editingWork?.status;
+
                             const updateData = {
                               title,
                               client,
@@ -7266,6 +7270,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               location,
                               observations,
                               workPerformed,
+                              status,
                               assignedTo:
                                 editAssignedUsers.length > 0
                                   ? editAssignedUsers
