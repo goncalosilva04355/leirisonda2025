@@ -7700,7 +7700,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // SECURITY: Register form removed - only super admin can create users
 
   // TEMPORARY: Auto-login for testing
-  React.useEffect(() => {
+  useEffect(() => {
     if (!currentUser) {
       const testUser = {
         id: 1,
