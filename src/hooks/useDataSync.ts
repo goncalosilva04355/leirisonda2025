@@ -558,20 +558,33 @@ export function useDataSync(): SyncState & SyncActions {
   // Works
   const addWork = useCallback(
     withAutoSync(async (workData: Omit<Work, "id" | "createdAt">) => {
+      console.log("🔧 addWork called with data:", workData);
+
       const newWork: Work = {
         ...workData,
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
       };
 
-      setState((prev) => ({
-        ...prev,
-        works: [...prev.works, newWork],
-      }));
+      console.log("🆕 Creating new work:", newWork);
+
+      setState((prev) => {
+        const updatedWorks = [...prev.works, newWork];
+        console.log("📊 Updated works count:", updatedWorks.length);
+        return {
+          ...prev,
+          works: updatedWorks,
+        };
+      });
 
       if (realFirebaseService.isReady()) {
+        console.log("🔥 Syncing to Firebase...");
         await realFirebaseService.addWork(newWork);
+      } else {
+        console.log("📱 Firebase not ready, using local storage only");
       }
+
+      console.log("✅ Work added successfully");
     }),
     [withAutoSync],
   );
