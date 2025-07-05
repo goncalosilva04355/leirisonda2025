@@ -1695,7 +1695,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <button
                             onClick={() => {
                               console.log(
-                                "🧪 Testando notificação para Alexandre...",
+                                "���� Testando notificação para Alexandre...",
                               );
                               sendWorkAssignmentNotification(
                                 "Obra de Teste para Alexandre",
@@ -6885,7 +6885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const priority = inputs[9].value; // Prioridade
                           const workType = inputs[10].value; // Tipo de Obra
                           const description = inputs[12].value; // Descri��ão
-                          const technicalNotes = inputs[12].value; // Observações Técnicas
+                          const technicalNotes = inputs[12].value; // Observações T��cnicas
 
                           dataSync.updateWork(editingWork.id, {
                             title,
@@ -7681,7 +7681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // SECURITY: Register form removed - only super admin can create users
 
   // TEMPORARY: Bypass authentication for testing
-  React.useEffect(() => {
+  useEffect(() => {
     if (!currentUser) {
       const testUser = {
         id: 1,
@@ -7703,10 +7703,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       localStorage.setItem("currentUser", JSON.stringify(testUser));
       localStorage.setItem("isAuthenticated", "true");
     }
-  }, []);
+  }, [currentUser]);
 
-  // TEMPORARY: Skip authentication check for testing
-  if (false && (!isAuthenticated || !currentUser)) {
+  // Always allow access for testing - bypass authentication
+  if (false) {
     console.log(
       "🛡️ SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
