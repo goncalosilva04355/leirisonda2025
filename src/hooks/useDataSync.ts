@@ -399,19 +399,30 @@ export function useDataSync(): SyncState & SyncActions {
           (m) => new Date(m.scheduledDate) >= today,
         );
 
+        // Only update if Firebase has data or if local data is empty
         setState((prev) => ({
           ...prev,
-          maintenance: maintenance,
-          futureMaintenance,
+          maintenance:
+            maintenance.length > 0 || prev.maintenance.length === 0
+              ? maintenance
+              : prev.maintenance,
+          futureMaintenance:
+            maintenance.length > 0 || prev.maintenance.length === 0
+              ? futureMaintenance
+              : prev.futureMaintenance,
         }));
       },
     );
 
     const unsubscribeClients = realFirebaseService.onClientsChange(
       (clients) => {
+        // Only update if Firebase has data or if local data is empty
         setState((prev) => ({
           ...prev,
-          clients: clients,
+          clients:
+            clients.length > 0 || prev.clients.length === 0
+              ? clients
+              : prev.clients,
         }));
       },
     );
