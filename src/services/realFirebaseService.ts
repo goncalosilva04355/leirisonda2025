@@ -197,6 +197,8 @@ class RealFirebaseService {
         updatedAt: new Date().toISOString(),
       });
 
+      console.log("🔍 Data being sent to Firebase:", sanitizedData);
+
       await set(newWorkRef, sanitizedData);
       return newWorkRef.key;
     } catch (error) {
