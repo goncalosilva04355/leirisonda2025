@@ -507,6 +507,7 @@ function App() {
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
+    rememberMe: false,
   });
   const [loginError, setLoginError] = useState("");
 
@@ -924,7 +925,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç������o: ${work.location}
+   Localizaç��������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
