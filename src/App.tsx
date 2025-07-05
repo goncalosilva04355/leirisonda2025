@@ -490,7 +490,7 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
-    console.log("🔔 Initializing notifications...");
+    console.log("��� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
       console.log("🔔 Current notification permission:", permission);
@@ -1789,7 +1789,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
 
                               const debugInfo = {
-                                currentUser: currentUser.name,
+                                currentUser: currentUser?.name || "Unknown",
                                 totalWorks: works.length,
                                 alexandreWorks: alexandreWorks,
                                 localStorage: {
