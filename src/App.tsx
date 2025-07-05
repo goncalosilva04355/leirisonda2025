@@ -572,11 +572,11 @@ function App() {
   // Notify Alexandre about assigned works when he logs in
   useEffect(() => {
     if (
-      currentUser?.name.toLowerCase().includes("alexandre") &&
+      currentUser?.name?.toLowerCase().includes("alexandre") &&
       works.length > 0
     ) {
       console.log("🔍 DEBUG Alexandre - Data loaded:", {
-        currentUser: currentUser.name,
+        currentUser: currentUser?.name || "Unknown",
         worksCount: works.length,
         works: works.map((w) => ({
           id: w.id,
@@ -5269,7 +5269,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </h3>
                   <div className="grid gap-3">
                     <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600">Vers��o</span>
+                      <span className="text-gray-600">Versão</span>
                       <span className="font-medium">1.0.0</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-100">
@@ -6377,7 +6377,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Obras
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão de obras e projetos
+                          Gest��o de obras e projetos
                         </p>
                       </div>
                     </div>
@@ -7781,7 +7781,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Fotografias</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��</span>
+                  <span>���</span>
                   <span>Observações e próxima manutenção</span>
                 </div>
               </div>
