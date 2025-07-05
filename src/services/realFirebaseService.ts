@@ -254,10 +254,13 @@ class RealFirebaseService {
         this.database!,
         `maintenance/${maintenanceId}`,
       );
-      await update(maintenanceRef, {
+      // Sanitize data before sending to Firebase
+      const sanitizedData = this.sanitizeForFirebase({
         ...maintenanceData,
         updatedAt: new Date().toISOString(),
       });
+
+      await update(maintenanceRef, sanitizedData);
       return true;
     } catch (error) {
       console.error("Failed to update maintenance:", error);
