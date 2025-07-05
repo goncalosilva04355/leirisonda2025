@@ -3646,7 +3646,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                                 if (isAlreadyAssigned) {
                                   alert(
-                                    "Este utilizador já está atribuído a esta obra",
+                                    "Este utilizador já est�� atribuído a esta obra",
                                   );
                                   return;
                                 }
@@ -6887,7 +6887,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                           <option value="low">Baixa</option>
-                          <option value="medium">Média</option>
+                          <option value="medium">M��dia</option>
                           <option value="high">Alta</option>
                           <option value="urgent">Urgente</option>
                         </select>
@@ -7325,17 +7325,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               throw error;
                             }
-
-                            setEditingWork(null);
-                            setEditAssignedUsers([]);
-                            setCurrentEditAssignedUser("");
-                            setActiveSection("obras");
                           } catch (error) {
                             console.error("❌ Error updating work:", error);
-                            alert(
-                              "Erro ao atualizar obra: " +
-                                (error?.message || "Erro desconhecido"),
-                            );
                           }
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
