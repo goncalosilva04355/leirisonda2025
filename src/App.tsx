@@ -2596,7 +2596,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manutenções
+                      Manuten��ões
                     </button>
                     <button
                       onClick={() => setActiveSection("futuras-manutencoes")}
@@ -5517,7 +5517,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Estado e localização</li>
                         <li>• Informações de clientes</li>
-                        <li>• Histórico de manutenções</li>
+                        <li>• Histórico de manuten��ões</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -6892,37 +6892,45 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const description = inputs[12].value; // Descri��ão
                           const technicalNotes = inputs[12].value; // Observações Técnicas
 
-                          dataSync.updateWork(editingWork.id, {
-                            title,
-                            client,
-                            location,
-                            status,
-                            startDate: startDate
-                              ? new Date(startDate).toISOString()
-                              : undefined,
-                            expectedEndDate: expectedEndDate
-                              ? new Date(expectedEndDate).toISOString()
-                              : undefined,
-                            assignedTo:
-                              editAssignedUsers.length > 0
-                                ? editAssignedUsers
-                                    .map((u) => u.name)
-                                    .join(", ")
-                                : "",
-                            assignedUsers: editAssignedUsers,
-                            assignedUserIds: editAssignedUsers.map((u) => u.id),
-                            budgetValue: budgetValue
-                              ? parseFloat(budgetValue)
-                              : undefined,
-                            clientPhone,
-                            clientEmail,
-                            priority,
-                            workType,
-                            description,
-                            technicalNotes,
-                          });
+                          try {
+                            dataSync.updateWork(editingWork.id, {
+                              title,
+                              client,
+                              location,
+                              status,
+                              startDate: startDate
+                                ? new Date(startDate).toISOString()
+                                : undefined,
+                              expectedEndDate: expectedEndDate
+                                ? new Date(expectedEndDate).toISOString()
+                                : undefined,
+                              assignedTo:
+                                editAssignedUsers.length > 0
+                                  ? editAssignedUsers
+                                      .map((u) => u.name)
+                                      .join(", ")
+                                  : "",
+                              assignedUsers: editAssignedUsers,
+                              assignedUserIds: editAssignedUsers.map(
+                                (u) => u.id,
+                              ),
+                              budgetValue: budgetValue
+                                ? parseFloat(budgetValue)
+                                : undefined,
+                              clientPhone,
+                              clientEmail,
+                              priority,
+                              workType,
+                              description,
+                              technicalNotes,
+                            });
 
-                          alert("Obra atualizada com sucesso!");
+                            alert("✅ Obra atualizada com sucesso!");
+                          } catch (error) {
+                            console.error("❌ Erro ao atualizar:", error);
+                            alert("❌ Erro ao atualizar obra");
+                            return;
+                          }
                           setEditingWork(null);
                           setEditAssignedUsers([]);
                           setCurrentEditAssignedUser("");
