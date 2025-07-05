@@ -1196,7 +1196,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç����es n��o est�����o ativadas. Active-as primeiro nas configurações.",
+        "As notificaç����es não est�����o ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -3727,7 +3727,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observaç��es Específicas do Furo */}
+                          {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observaç��es Espec��ficas do Furo
@@ -3896,7 +3896,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const workTitle =
                             (
                               form.querySelector(
-                                'input[placeholder*="LS-"]',
+                                'input[name="workTitle"]',
                               ) as HTMLInputElement
                             )?.value || "Nova Obra";
                           const workType =
@@ -5333,7 +5333,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-blue-900">
-                              Marca��ão Automática
+                              Marcação Automática
                             </h4>
                             <button
                               onClick={() =>
