@@ -7092,9 +7092,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="button"
-                        onClick={(e) => {
-                          // Safe async wrapper to prevent unhandled promise rejections
-                          (async () => {
+                        onClick={() => {
+                          try {
                             try {
                               const form = (e.target as HTMLElement).closest(
                                 "form",
