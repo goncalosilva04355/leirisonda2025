@@ -46,6 +46,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
+import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
@@ -164,8 +165,35 @@ function App() {
     const integrity = DataProtectionService.checkDataIntegrity();
     if (!integrity.valid) {
       console.error("🚨 DATA INTEGRITY ISSUES DETECTED:", integrity.issues);
-      // Tentar restaurar automaticamente
-      DataProtectionService.restoreFromLatestBackup();
+
+      // Primeira tentativa: Sistema normal de backup
+      console.log("🔄 Attempting normal backup restoration...");
+      const normalRecovery = DataProtectionService.restoreFromLatestBackup();
+
+      if (!normalRecovery) {
+        console.error(
+          "❌ Normal backup restoration failed. Initiating EMERGENCY RECOVERY...",
+        );
+
+        // EMERGÊNCIA: Recuperação crítica
+        const emergencyResult = EmergencyDataRecovery.performCompleteRecovery();
+
+        if (emergencyResult.success) {
+          console.log("✅ EMERGENCY RECOVERY SUCCESSFUL!");
+          alert(
+            "🚨 Dados recuperados com sucesso!\n\n" + emergencyResult.message,
+          );
+          // Recarregar página para aplicar dados
+          setTimeout(() => window.location.reload(), 2000);
+        } else {
+          console.error("❌ EMERGENCY RECOVERY FAILED!");
+          alert(
+            "🚨 FALHA CRÍTICA DE RECUPERAÇÃO!\n\n" +
+              emergencyResult.message +
+              "\n\nContacte o suporte técnico.",
+          );
+        }
+      }
     }
   }, []);
 
@@ -3138,7 +3166,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manutenções
+                      Manuten��ões
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
                       Futuras Manutenções
@@ -4807,7 +4835,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenção
+                        Registar intervenção de manutenç��o
                       </p>
                     </div>
                   </div>
@@ -5803,7 +5831,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>��� Trabalhos realizados</li>
                         <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
-                        <li>��� Estados e observaç���es</li>
+                        <li>• Estados e observaç���es</li>
                       </ul>
                     </div>
                     <button
