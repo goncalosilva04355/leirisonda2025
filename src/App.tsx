@@ -885,7 +885,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç����������o: ${work.location}
+   Localizaç�����������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -4091,11 +4091,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                           });
 
-                          // Save water bore data if work type is "furo"
-                          if (selectedWorkType === "furo") {
+                          // Always capture bore data from the cyan section
+                          const furosSection =
+                            document.querySelector("#furo-details");
+                          if (furosSection) {
                             // Get bore data from form
-                            const boreInputs = document.querySelectorAll(
-                              "#furo-details input, #furo-details select, #furo-details textarea",
+                            const boreInputs = furosSection.querySelectorAll(
+                              "input, select, textarea",
                             );
 
                             // Update the existing work with bore data
@@ -5692,7 +5694,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>��� Trabalhos realizados</li>
                         <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observaç��es</li>
+                        <li>• Estados e observaç���es</li>
                       </ul>
                     </div>
                     <button
