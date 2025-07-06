@@ -982,7 +982,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-���� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+����� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -8484,16 +8484,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               : "Não especificado"}
                           </p>
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Folha de Obra Preenchida
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedWork.workSheetCompleted
-                              ? "✅ Sim"
-                              : "❌ Não"}
-                          </p>
-                        </div>
                       </div>
                     </div>
 
@@ -8648,22 +8638,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   )}
 
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Folha de Obra Concluída
-                      </label>
-                      <span
-                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                          selectedWork.workSheetCompleted
-                            ? "bg-green-100 text-green-700"
-                            : "bg-yellow-100 text-yellow-700"
-                        }`}
-                      >
-                        {selectedWork.workSheetCompleted
-                          ? "Concluída"
-                          : "Pendente"}
-                      </span>
-                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Data de Criação
