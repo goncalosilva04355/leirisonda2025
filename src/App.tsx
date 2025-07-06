@@ -885,13 +885,13 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç�����������o: ${work.location}
+   Localização: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or���amento: ���${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: ����${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -1137,7 +1137,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç����es não est�����o ativadas. Active-as primeiro nas configuraç��es.",
+        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -3744,7 +3744,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observações Específicas do Furo */}
+                          {/* Observaç��es Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observaç��es Específicas do Furo
@@ -4695,7 +4695,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manuten��ão
+                        Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar intervenção de manutenção
@@ -6245,7 +6245,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Secundário
+                            Email Secund��rio
                           </label>
                           <input
                             type="email"
@@ -6836,7 +6836,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="pendente">Pendente</option>
                             <option value="em-progresso">Em Progresso</option>
-                            <option value="concluida">Concluída</option>
+                            <option value="concluida">Conclu��da</option>
                             <option value="cancelada">Cancelada</option>
                           </select>
                         </div>
@@ -7644,7 +7644,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Conclus��o
+                          Data de Conclusão
                         </label>
                         <input
                           type="date"
