@@ -47,7 +47,7 @@ import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
 
-// Mock users database
+// Production users - only real admin account
 const initialUsers = [
   {
     id: 1,
@@ -66,47 +66,7 @@ const initialUsers = [
     active: true,
     createdAt: "2024-01-01",
   },
-  {
-    id: 2,
-    name: "Maria Silva",
-    email: "maria.silva@leirisonda.pt",
-    password: "123456",
-    role: "manager",
-    permissions: {
-      obras: { view: true, create: true, edit: true, delete: false },
-      manutencoes: { view: true, create: true, edit: true, delete: false },
-      piscinas: { view: true, create: true, edit: true, delete: false },
-      utilizadores: { view: true, create: false, edit: false, delete: false },
-      relatorios: { view: true, create: true, edit: false, delete: false },
-      clientes: { view: true, create: true, edit: true, delete: false },
-    },
-    active: true,
-    createdAt: "2024-01-15",
-  },
-  {
-    id: 3,
-    name: "João Santos",
-    email: "joao.santos@leirisonda.pt",
-    password: "123456",
-    role: "technician",
-    permissions: {
-      obras: { view: true, create: false, edit: true, delete: false },
-      manutencoes: { view: true, create: true, edit: true, delete: false },
-      piscinas: { view: true, create: false, edit: true, delete: false },
-      utilizadores: { view: false, create: false, edit: false, delete: false },
-      relatorios: { view: true, create: false, edit: false, delete: false },
-      clientes: { view: true, create: false, edit: false, delete: false },
-    },
-    active: true,
-    createdAt: "2024-02-01",
-  },
-  {
-    id: 4,
-    name: "Alexandre",
-    email: "alexandre@leirisonda.pt",
-    password: "123456",
-    role: "technician",
-    permissions: {
+];
       obras: { view: true, create: false, edit: true, delete: false },
       manutencoes: { view: true, create: true, edit: true, delete: false },
       piscinas: { view: true, create: false, edit: true, delete: false },
@@ -1627,7 +1587,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     }
 
-    console.log("✅ renderContent: Auth state valid, rendering", {
+    console.log("�� renderContent: Auth state valid, rendering", {
       activeSection,
       userRole: currentUser?.role,
     });
@@ -7310,7 +7270,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          T��cnico *
+                          T����cnico *
                         </label>
                         <input
                           type="text"
