@@ -1404,7 +1404,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `������ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `������� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -5342,7 +5342,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notificações foram bloqueadas. Por favor, ative-as nas configura��ões do navegador.",
                                   );
                                 }
                               } else {
@@ -7488,9 +7488,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       />
                     </div>
 
-                    {/* Detalhes do Furo de Água - Se aplicável */}
-                    {(editingWork?.type === "furo" ||
-                      editingWork?.workType === "furo") && (
+                    {/* DEBUG: Mostrar sempre os campos de furo para teste */}
+                    {editingWork && (
+                      <div className="bg-yellow-100 p-2 rounded mb-4 text-xs">
+                        <strong>DEBUG:</strong> editingWork.type = "
+                        {editingWork.type}" | editingWork.workType = "
+                        {editingWork.workType}" | editingWork.id = "
+                        {editingWork.id}"
+                      </div>
+                    )}
+
+                    {/* Detalhes do Furo de Água - TESTE: Sempre visível */}
+                    {editingWork && (
                       <div
                         id="edit-furo-details"
                         className="border border-cyan-200 rounded-lg p-6 bg-cyan-50"
