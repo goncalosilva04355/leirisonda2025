@@ -317,6 +317,8 @@ export function useDataSync(): SyncState & SyncActions {
 
     try {
       const works = recoverData("works");
+      // Execute recovery
+      const works = recoverData("works");
       const pools = recoverData("pools");
       const maintenance = recoverData("maintenance");
       const clients = recoverData("clients");
@@ -333,30 +335,19 @@ export function useDataSync(): SyncState & SyncActions {
         (m: Maintenance) => new Date(m.scheduledDate) >= today,
       );
 
-      return {
+      setState({
         pools,
         maintenance,
         futureMaintenance,
         works,
         clients,
-        isLoading: false,
         lastSync: null,
-        error: null,
-      };
+      });
     } catch (error) {
-      console.error("🚨 CATASTROPHIC: Complete recovery failure:", error);
-      return {
-        pools: [],
-        maintenance: [],
-        futureMaintenance: [],
-        works: [],
-        clients: [],
-        isLoading: false,
-        lastSync: null,
-        error: null,
-      };
+      console.error("🚨 RECOVERY: Complete recovery failure:", error);
+      // Keep initial state if recovery fails
     }
-  });
+  }, []); // Run once on mount
 
   // Firebase sync is always enabled with fixed configuration
   const [syncEnabled, setSyncEnabled] = useState(true);
