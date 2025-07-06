@@ -642,7 +642,7 @@ function App() {
         };
 
         addMaintenance(futureMaintenance);
-        console.log("Futura manutenção criada:", futureMaintenance);
+        console.log("Futura manuten��ão criada:", futureMaintenance);
       }
     }
 
@@ -3974,6 +3974,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             (
                               form.querySelector(
                                 'textarea[placeholder*="Descrição"]',
+                              ) as HTMLTextAreaElement
+                            )?.value || "";
+                          const observations =
+                            (
+                              form.querySelector(
+                                'textarea[placeholder*="Observações sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
