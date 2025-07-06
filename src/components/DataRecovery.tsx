@@ -284,6 +284,68 @@ export const DataRecovery: React.FC = () => {
               <span>Exportar</span>
             </button>
           </div>
+
+          {/* Debug backup issues */}
+          <div className="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div>
+              <h5 className="font-semibold text-yellow-900">
+                Debug de Backups
+              </h5>
+              <p className="text-sm text-yellow-700">
+                Listar todos os backups e diagnosticar problemas
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                console.log("🔍 DEBUGGING BACKUP SYSTEM...");
+
+                // Listar todos os backups
+                const allKeys = Object.keys(localStorage);
+                const backupKeys = allKeys.filter((key) =>
+                  key.includes("backup"),
+                );
+
+                console.log("📋 All localStorage keys:", allKeys.length);
+                console.log("📋 Backup keys found:", backupKeys);
+
+                // Verificar cada backup
+                backupKeys.forEach((key) => {
+                  try {
+                    const data = localStorage.getItem(key);
+                    if (data) {
+                      const parsed = JSON.parse(data);
+                      console.log(`📦 ${key}:`, Object.keys(parsed));
+                    }
+                  } catch (error) {
+                    console.error(`❌ Failed to parse ${key}:`, error);
+                  }
+                });
+
+                // Verificar dados atuais
+                ["works", "pools", "maintenance", "clients"].forEach((key) => {
+                  try {
+                    const data = localStorage.getItem(key);
+                    const parsed = data ? JSON.parse(data) : null;
+                    console.log(
+                      `📊 Current ${key}:`,
+                      parsed?.length || 0,
+                      "items",
+                    );
+                  } catch (error) {
+                    console.error(`❌ Failed to check ${key}:`, error);
+                  }
+                });
+
+                setRestoreResult(
+                  "🔍 Debug info logged to console. Check browser developer tools.",
+                );
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 flex items-center space-x-2"
+            >
+              <AlertTriangle className="h-4 w-4" />
+              <span>Debug</span>
+            </button>
+          </div>
         </div>
       </div>
 
