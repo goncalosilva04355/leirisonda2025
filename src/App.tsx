@@ -1111,7 +1111,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n���� Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -7053,19 +7053,27 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const boreInputs = form.querySelectorAll(
                               "#edit-furo-details input, #edit-furo-details select, #edit-furo-details textarea",
                             );
+                            console.log(
+                              "🔍 DEBUG boreInputs found:",
+                              boreInputs.length,
+                            );
                             updateData = {
                               ...updateData,
                               boreDepth: boreInputs[0]?.value || "",
                               waterLevel: boreInputs[1]?.value || "",
-                              staticLevel: boreInputs[2]?.value || "",
-                              dynamicLevel: boreInputs[3]?.value || "",
-                              flowRate: boreInputs[4]?.value || "",
+                              flowRate: boreInputs[2]?.value || "",
+                              pumpDepth: boreInputs[3]?.value || "",
+                              columnType: boreInputs[4]?.value || "",
                               columnDiameter: boreInputs[5]?.value || "",
                               pumpModel: boreInputs[6]?.value || "",
                               motorPower: boreInputs[7]?.value || "",
                               pumpVoltage: boreInputs[8]?.value || "",
                               boreObservations: boreInputs[9]?.value || "",
                             };
+                            console.log(
+                              "🔍 DEBUG updateData with bore:",
+                              updateData,
+                            );
                           }
 
                           dataSync.updateWork(editingWork.id, updateData);
