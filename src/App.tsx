@@ -1639,25 +1639,121 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Header Card */}
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                      <div className="w-8 h-8 bg-white rounded-lg shadow-md p-1">
-                        <img
-                          src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                          alt="Leirisonda Logo"
-                          className="w-full h-full object-contain"
-                        />
+                {/* Modern Welcome Header - Recreation of Design */}
+                <div className="bg-gray-100 rounded-lg p-6 shadow-sm min-h-[400px] relative">
+                  {/* Top Navigation Bar */}
+                  <div className="flex items-center justify-between mb-8">
+                    {/* Left Side - Menu and Logo */}
+                    <div className="flex items-center space-x-4">
+                      {/* Hamburger Menu */}
+                      <button
+                        onClick={() => setSidebarOpen(true)}
+                        className="p-3 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="w-5 h-5 flex flex-col justify-between">
+                          <div className="w-full h-0.5 bg-gray-700"></div>
+                          <div className="w-full h-0.5 bg-gray-700"></div>
+                          <div className="w-full h-0.5 bg-gray-700"></div>
+                        </div>
+                      </button>
+
+                      {/* Logo with Progress Bar */}
+                      <div className="flex items-center space-x-3">
+                        <div className="w-16 h-12 bg-white rounded-lg shadow-sm p-2">
+                          <img
+                            src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                            alt="Leirisonda Logo"
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        {/* Progress/Status Bar */}
+                        <div className="flex items-center space-x-1">
+                          <div className="w-8 h-1 bg-gray-300 rounded-full"></div>
+                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
                       </div>
+
+                      {/* Back Button */}
+                      <button
+                        onClick={() => window.history.back()}
+                        className="p-3 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+                      >
+                        <svg
+                          className="w-5 h-5 text-gray-700"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                          />
+                        </svg>
+                      </button>
                     </div>
-                    <div>
-                      <h1 className="text-lg font-semibold text-gray-900">
-                        Olá, {currentUser?.name || "Utilizador"}
-                      </h1>
-                      <p className="text-gray-600 text-sm">
-                        Bem-vindo ao sistema Leirisonda
-                      </p>
+
+                    {/* Right Side - Time */}
+                    <div className="flex items-center space-x-2 text-gray-700">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <span className="text-xl font-medium">
+                        {new Date().toLocaleTimeString("pt-PT", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Center Content - Main Greeting */}
+                  <div className="text-center mt-12 mb-16">
+                    <h1 className="text-4xl font-bold text-gray-900 mb-6">
+                      Olá, {currentUser?.name || "Utilizador"}
+                    </h1>
+
+                    {/* Date with Calendar Icon */}
+                    <div className="flex items-center justify-center space-x-3 text-gray-600 mb-8">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      <span className="text-lg">
+                        {new Date().toLocaleDateString("pt-PT", {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "long",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Bottom Status */}
+                  <div className="absolute bottom-6 left-6">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                      <span className="text-gray-600 font-medium">Online</span>
                     </div>
                   </div>
                 </div>
@@ -5432,7 +5528,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manuten��ões e piscinas
+                      Elimine todos os dados de obras, manutenções e piscinas
                       para começar com uma aplicaç��o limpa. Os utilizadores são
                       mantidos.
                     </p>
@@ -6873,7 +6969,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         defaultValue={editingWork?.technicalNotes}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={3}
-                        placeholder="Observações técnicas, materiais necessários, etc."
+                        placeholder="Observa��ões técnicas, materiais necessários, etc."
                       />
                     </div>
 
