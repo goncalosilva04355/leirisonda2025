@@ -1852,7 +1852,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `�� ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
+                                  `��� ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
                                 );
                               }
 
@@ -2203,8 +2203,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Não há dados para pesquisar
                             </p>
                             <p className="text-gray-400 text-xs mt-1">
-                              Adicione obras, piscinas, manuten��ões ou clientes
-                              primeiro
+                              Adicione obras, piscinas, manuten����ões ou
+                              clientes primeiro
                             </p>
                           </div>
                         ) : (
@@ -5422,7 +5422,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                          ����
+                          ������
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
@@ -5790,7 +5790,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>• Dados consolidados</li>
+                        <li>��� Dados consolidados</li>
                         <li>• Análise de performance</li>
                       </ul>
                     </div>
@@ -5820,7 +5820,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Crie relatórios com filtros específicos
+                        Crie relat��rios com filtros específicos
                       </p>
                       <div className="space-y-2">
                         <label className="flex items-center">
@@ -6967,6 +6967,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Trabalho Realizado
+                          </label>
+                          <textarea
+                            defaultValue={editingWork?.workPerformed}
+                            rows={4}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Descrição do trabalho realizado..."
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
                             Observações sobre a obra
                           </label>
                           <textarea
@@ -7201,7 +7212,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               "#edit-furo-details input, #edit-furo-details select, #edit-furo-details textarea",
                             );
                             console.log(
-                              "🔍 DEBUG boreInputs found:",
+                              "��� DEBUG boreInputs found:",
                               boreInputs.length,
                             );
                             updateData = {
