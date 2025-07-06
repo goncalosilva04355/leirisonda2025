@@ -39,7 +39,8 @@ type AdminSection =
   | "firebase-config"
   | "cross-device-users"
   | "auto-sync-demo"
-  | "phone-settings";
+  | "phone-settings"
+  | "data-recovery";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
@@ -115,6 +116,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       description: "Marcação automática e configurações de chamadas",
       icon: Settings,
       color: "bg-blue-500",
+    },
+    {
+      id: "data-recovery" as AdminSection,
+      title: "🚨 Recuperação de Dados",
+      description: "EMERGÊNCIA: Restaurar obras e dados perdidos",
+      icon: AlertTriangle,
+      color: "bg-red-500",
     },
   ];
 
