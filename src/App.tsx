@@ -1451,7 +1451,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `����� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `������ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -1857,7 +1857,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `✅ ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
+                                  `�� ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
                                 );
                               }
 
@@ -7840,36 +7840,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     return (
       <LoginPage
         onLogin={async (email: string, password: string) => {
-          // Set the form data first
+          console.log("🔐 Login attempt:", email);
           setLoginForm({ email, password });
 
-          // Call login directly with the credentials
-          setLoginError("");
-
           try {
-            console.log("🔐 Attempting login for:", email);
-
             const result = await authService.login(email, password);
-            console.log("🔐 Auth result:", result);
 
             if (result.success && result.user) {
-              console.log("✅ Login successful for:", result.user.email);
-
-              // Set user state and authentication
               setCurrentUser(result.user);
               setIsAuthenticated(true);
               localStorage.setItem("currentUser", JSON.stringify(result.user));
-
-              // Clear login form
               setLoginForm({ email: "", password: "" });
-
-              console.log("✅ Login state updated", {
-                user: result.user.email,
-                role: result.user.role,
-                isAuthenticated: true,
-              });
+              console.log("✅ Login successful");
             } else {
-              console.warn("⚠️ Login failed:", result.error);
               setLoginError(result.error || "Credenciais inválidas");
             }
           } catch (error) {
