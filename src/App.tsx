@@ -46,7 +46,6 @@ import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
-import { MapsDebugButton } from "./components/MapsDebugButton";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
@@ -5753,7 +5752,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Estado e localização</li>
                         <li>• Informações de clientes</li>
-                        <li>�� Histórico de manutenções</li>
+                        <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -8578,7 +8577,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enablePhoneDialer}
                         >
-                          ���� {selectedWork.contact}
+                          📞 {selectedWork.contact}
                         </button>
                       )}
                     </div>
@@ -8959,9 +8958,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Install Prompt for Mobile */}
         <InstallPrompt />
-
-        {/* Debug Button for Maps */}
-        <MapsDebugButton />
 
         {/* Admin Login Modal */}
         {showAdminLogin && !isAdminAuthenticated && (
