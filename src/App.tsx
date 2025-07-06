@@ -1640,7 +1640,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
                 {/* Simple Welcome Header */}
-                <div className="bg-gray-50 rounded-lg p-4 shadow-sm">
+                <div
+                  className="rounded-lg p-4 shadow-sm relative overflow-hidden"
+                  style={{
+                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fe6dd131c94c1407994895f6f7cf7f1c7?format=webp&width=800')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                  }}
+                >
+                  {/* Overlay para melhor legibilidade do texto */}
+                  <div className="absolute inset-0 bg-white bg-opacity-70 rounded-lg"></div>
+
+                  {/* Conteúdo por cima do overlay */}
+                  <div className="relative z-10">
                   {/* Logo and Time Row */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="w-12 h-8 bg-white rounded shadow-sm p-1">
@@ -5591,10 +5604,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Trabalhos realizados</li>
+                        <li>��� Trabalhos realizados</li>
                         <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observaç���es</li>
+                        <li>• Estados e observaç��es</li>
                       </ul>
                     </div>
                     <button
