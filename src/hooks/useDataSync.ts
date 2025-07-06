@@ -212,8 +212,20 @@ export interface SyncActions {
 }
 
 export function useDataSync(): SyncState & SyncActions {
-  const [state, setState] = useState<SyncState>(() => {
-    // 🛡️ ADVANCED RECOVERY SYSTEM - Multiple backup sources
+  // Simple initial state - move complex recovery to useEffect
+  const [state, setState] = useState<SyncState>({
+    pools: initialPools,
+    maintenance: initialMaintenance,
+    futureMaintenance: initialMaintenance.filter(
+      (m) => new Date(m.scheduledDate) >= new Date(),
+    ),
+    works: initialWorks,
+    clients: initialClients,
+    lastSync: null,
+  });
+
+  // Recovery logic moved to useEffect
+  useEffect(() => {
     const recoverData = (dataType: string) => {
       console.log(`🔍 RECOVERY: Attempting to recover ${dataType}...`);
 
