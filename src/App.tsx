@@ -845,7 +845,7 @@ LEIRISONDA - RELAT��RIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manutenções: ${maintenance.length}
+- Total de Manutenç��es: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -6596,7 +6596,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ����{work.budget}
+                                  €{work.budget}
                                 </div>
                               )}
                             </div>
@@ -6751,7 +6751,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manutenç��o</option>
+                            <option value="manutencao">Manutenção</option>
                             <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -7803,7 +7803,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Página não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A se��ão solicitada não foi encontrada.
+                  A seção solicitada não foi encontrada.
                 </p>
               </div>
             </div>
@@ -8114,7 +8114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Shield className="h-8 w-8 text-red-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                ��rea Protegida
+                Área Protegida
               </h1>
               <p className="text-gray-600">
                 Insira a palavra-passe para aceder às configurações avançadas
@@ -8423,7 +8423,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Tipo de Obra
                       </label>
                       <p className="text-gray-900 capitalize">
-                        {selectedWork.type || "N��o especificado"}
+                        {selectedWork.type || "Não especificado"}
                       </p>
                     </div>
                     <div>
