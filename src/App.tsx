@@ -67,17 +67,6 @@ const initialUsers = [
     createdAt: "2024-01-01",
   },
 ];
-      obras: { view: true, create: false, edit: true, delete: false },
-      manutencoes: { view: true, create: true, edit: true, delete: false },
-      piscinas: { view: true, create: false, edit: true, delete: false },
-      utilizadores: { view: false, create: false, edit: false, delete: false },
-      relatorios: { view: true, create: false, edit: false, delete: false },
-      clientes: { view: true, create: false, edit: false, delete: false },
-    },
-    active: true,
-    createdAt: "2024-02-15",
-  },
-];
 
 function App() {
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
@@ -1947,7 +1936,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    👤 Nome:
+                                    ��� Nome:
                                   </span>
                                   <span className="text-sm text-gray-900">
                                     {work.client || "Não especificado"}
