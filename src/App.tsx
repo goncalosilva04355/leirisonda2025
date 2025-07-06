@@ -8309,9 +8309,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Detalhes Completos da Obra
                       </h2>
                       <p className="text-gray-600 text-sm">
-                        {selectedWork.id?.toUpperCase() ||
-                          "ID-" + Date.now().toString().slice(-6)}{" "}
-                        → {selectedWork.title}
+                        {selectedWork.title}
                       </p>
                     </div>
                   </div>
