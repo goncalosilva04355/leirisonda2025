@@ -7233,7 +7233,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               "input, select, textarea",
                             );
                             console.log(
-                              "��� DEBUG boreInputs found:",
+                              "🔍 DEBUG boreInputs found:",
                               boreInputs.length,
                             );
                             updateData = {
@@ -7644,7 +7644,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Conclus��o
+                          Data de Conclusão
                         </label>
                         <input
                           type="date"
@@ -7780,7 +7780,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => navigateToSection("utilizadores")}
                     className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                   >
-                    �� Voltar aos Utilizadores
+                    ← Voltar aos Utilizadores
                   </button>
                   <RegisterForm
                     onRegisterSuccess={() => {
