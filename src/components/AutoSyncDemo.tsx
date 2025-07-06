@@ -92,6 +92,38 @@ export const AutoSyncDemo: React.FC = () => {
     setLocalTestData("");
   };
 
+  // Se não estiver no contexto, mostrar aviso
+  if (!isInProvider) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+          <div className="flex items-start">
+            <AlertCircle className="h-6 w-6 text-yellow-600 mt-1 mr-3" />
+            <div>
+              <h3 className="text-lg font-semibold text-yellow-900 mb-2">
+                AutoSync não disponível
+              </h3>
+              <p className="text-yellow-800 mb-4">
+                O sistema de sincronização automática não está ativo nesta área.
+                Este demo funciona apenas na aplicação principal.
+              </p>
+              <div className="bg-yellow-100 p-3 rounded border border-yellow-300">
+                <h4 className="font-medium text-yellow-900 mb-2">
+                  Como ativar:
+                </h4>
+                <ol className="text-yellow-800 text-sm space-y-1">
+                  <li>1. Faça login na aplicação principal</li>
+                  <li>2. Vá às configurações da aplicação</li>
+                  <li>3. A sincronização automática estará disponível</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
