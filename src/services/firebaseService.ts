@@ -186,7 +186,7 @@ export const userService = {
     await deleteDoc(userRef);
   },
 
-  // Initialize default users
+  // Initialize only real admin user - NO MOCK DATA
   async initializeDefaultUsers() {
     if (!db) {
       return; // Skip initialization if Firebase not configured
@@ -194,29 +194,28 @@ export const userService = {
 
     const usersSnapshot = await getDocs(collection(db, COLLECTIONS.USERS));
     if (usersSnapshot.empty) {
-      const defaultUsers = [
-        {
-          name: "Gonçalo Fonseca",
-          email: "gongonsilva@gmail.com",
-          role: "super_admin" as const,
-          permissions: {
-            obras: { view: true, create: true, edit: true, delete: true },
-            manutencoes: { view: true, create: true, edit: true, delete: true },
-            piscinas: { view: true, create: true, edit: true, delete: true },
-            utilizadores: {
-              view: true,
-              create: true,
-              edit: true,
-              delete: true,
-            },
-            relatorios: { view: true, create: true, edit: true, delete: true },
-            clientes: { view: true, create: true, edit: true, delete: true },
+      const realAdmin = {
+        name: "Gonçalo Fonseca",
+        email: "gongonsilva@gmail.com",
+        role: "super_admin" as const,
+        permissions: {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: {
+            view: true,
+            create: true,
+            edit: true,
+            delete: true,
           },
-          active: true,
-          createdAt: "2024-01-01",
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
         },
-        {
-          name: "Maria Silva",
+        active: true,
+        createdAt: "2024-01-01",
+      };
+
+      console.log("Creating admin user...");
           email: "maria.silva@leirisonda.pt",
           role: "manager" as const,
           permissions: {
