@@ -889,7 +889,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or���amento: ���${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: ��${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -1942,16 +1942,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     {work.client || "Não especificado"}
                                   </span>
                                 </div>
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-sm font-medium text-gray-600">
-                                    📋 Número:
-                                  </span>
-                                  <span className="text-sm text-gray-900 font-mono">
-                                    {work.workSheetNumber ||
-                                      work.title ||
-                                      "Sem número"}
-                                  </span>
-                                </div>
+
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
                                     🔧 Trabalho realizado:
@@ -2715,7 +2706,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Histórico de manutenções realizadas
+                          Hist��rico de manutenções realizadas
                         </p>
                       </div>
                     </div>
@@ -6414,10 +6405,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             {/* Enhanced Header with Work ID */}
                             <div className="flex items-center space-x-3 mb-3">
                               <div className="flex items-center space-x-2">
-                                <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                                  {work.id?.toUpperCase() ||
-                                    "ID-" + Date.now().toString().slice(-6)}
-                                </span>
                                 <h3 className="text-lg font-bold text-gray-900">
                                   {work.title}
                                 </h3>
