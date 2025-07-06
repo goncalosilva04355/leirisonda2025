@@ -3937,19 +3937,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="Cliente"]',
+                                'input[placeholder*="João Silva"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
                             (
                               form.querySelector(
-                                'input[placeholder*="Contacto"]',
+                                'input[placeholder*="244 123 456"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const location =
                             (
                               form.querySelector(
-                                'input[placeholder*="Morada"]',
+                                'input[placeholder*="Rua das Flores"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const startTime =
