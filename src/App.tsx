@@ -2796,12 +2796,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   handleAddressClick(pool.location);
                                 }
                               }}
-                              className={`text-left ${
+                              className={`text-left cursor-pointer hover:opacity-80 ${
                                 enableMapsRedirect
-                                  ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                  : "text-gray-600"
+                                  ? "text-blue-600 hover:text-blue-800 underline"
+                                  : "text-gray-600 hover:text-blue-600"
                               }`}
-                              disabled={!enableMapsRedirect}
                             >
                               📍 {pool.location}
                             </button>
