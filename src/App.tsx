@@ -642,7 +642,7 @@ function App() {
         };
 
         addMaintenance(futureMaintenance);
-        console.log("Futura manuten��ão criada:", futureMaintenance);
+        console.log("Futura manutenção criada:", futureMaintenance);
       }
     }
 
@@ -4087,7 +4087,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             photoCount: uploadedPhotos
                               ? uploadedPhotos.length
                               : 0,
-                            observations: "",
+                            observations: observations || "",
                             workPerformed: "",
                             workSheetCompleted: false,
                             createdAt: new Date().toISOString(),
@@ -8401,7 +8401,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        Número da Folha de Obra
+                        N��mero da Folha de Obra
                       </label>
                       <p className="text-gray-900 font-mono">
                         {selectedWork.workSheetNumber || selectedWork.title}
