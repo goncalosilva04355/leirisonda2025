@@ -885,7 +885,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç��������o: ${work.location}
+   Localizaç����������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -7179,8 +7179,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const workSheetCompleted = (
                             inputs[8] as HTMLInputElement
                           ).checked; // Folha preenchida
-                          const observations = (
+                          const workPerformed = (
                             inputs[9] as HTMLTextAreaElement
+                          ).value; // Trabalho Realizado
+                          const observations = (
+                            inputs[10] as HTMLTextAreaElement
                           ).value; // Observações
 
                           // Prepare update data
@@ -7195,6 +7198,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             endTime,
                             status,
                             workSheetCompleted,
+                            workPerformed,
                             observations,
                             assignedTo:
                               editAssignedUsers.length > 0
