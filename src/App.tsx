@@ -941,7 +941,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
 - Manutenções Realizadas: ${maintenance.length}
-- Futuras Manutenç��es: ${futureMaintenance.length}
+- Futuras Manutenç���es: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
@@ -6084,17 +6084,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div>
                                 <p className="font-medium">Morada:</p>
                                 <button
-                                  onClick={() =>
-                                    handleAddressClick(client.address)
-                                  }
+                                  onClick={() => {
+                                    if (client?.address) {
+                                      handleAddressClick(client.address);
+                                    }
+                                  }}
                                   className={`text-left ${
                                     enableMapsRedirect
                                       ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
                                       : "text-gray-600"
                                   }`}
-                                  disabled={!enableMapsRedirect}
+                                  disabled={
+                                    !enableMapsRedirect || !client?.address
+                                  }
                                 >
-                                  📍 {client.address}
+                                  📍{" "}
+                                  {client?.address || "Endereço não disponível"}
                                 </button>
                               </div>
                               <div>
