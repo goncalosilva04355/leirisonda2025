@@ -15,6 +15,7 @@ import {
   Eye,
   EyeOff,
   Edit2,
+  Play,
   Trash2,
   Save,
   UserPlus,
@@ -1797,7 +1798,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas
+                          Folhas n��o geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -4131,7 +4132,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           alert(
                             `Obra "${workTitle}" criada com sucesso! ` +
                               (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} respons����vel(eis).`
+                                ? `Notificações enviadas a ${assignedUsers.length} respons������vel(eis).`
                                 : "") +
                               (selectedWorkType === "furo"
                                 ? " Dados do furo registados."
@@ -7503,7 +7504,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Nível da Água (m)
+                              N��vel da Água (m)
                             </label>
                             <input
                               type="number"
