@@ -37,7 +37,8 @@ type AdminSection =
   | "data-management"
   | "firebase-config"
   | "cross-device-users"
-  | "auto-sync-demo";
+  | "auto-sync-demo"
+  | "phone-settings";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
@@ -106,6 +107,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       description: "Sistema de sincronização em tempo real",
       icon: RefreshCw,
       color: "bg-emerald-500",
+    },
+    {
+      id: "phone-settings" as AdminSection,
+      title: "Configurações de Telefone",
+      description: "Marcação automática e configurações de chamadas",
+      icon: Settings,
+      color: "bg-blue-500",
     },
   ];
 
