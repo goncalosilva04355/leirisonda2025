@@ -212,8 +212,18 @@ export interface SyncActions {
 }
 
 export function useDataSync(): SyncState & SyncActions {
-  const [state, setState] = useState<SyncState>(() => {
-    // 🛡️ ADVANCED RECOVERY SYSTEM - Multiple backup sources
+  // Simple initial state - move complex recovery to useEffect
+  const [state, setState] = useState<SyncState>({
+    pools: [],
+    maintenance: [],
+    futureMaintenance: [],
+    works: [],
+    clients: [],
+    lastSync: null,
+  });
+
+  // Recovery logic moved to useEffect
+  useEffect(() => {
     const recoverData = (dataType: string) => {
       console.log(`🔍 RECOVERY: Attempting to recover ${dataType}...`);
 
@@ -304,6 +314,7 @@ export function useDataSync(): SyncState & SyncActions {
     };
 
     try {
+      // Execute recovery
       const works = recoverData("works");
       const pools = recoverData("pools");
       const maintenance = recoverData("maintenance");
@@ -321,30 +332,19 @@ export function useDataSync(): SyncState & SyncActions {
         (m: Maintenance) => new Date(m.scheduledDate) >= today,
       );
 
-      return {
+      setState({
         pools,
         maintenance,
         futureMaintenance,
         works,
         clients,
-        isLoading: false,
         lastSync: null,
-        error: null,
-      };
+      });
     } catch (error) {
-      console.error("🚨 CATASTROPHIC: Complete recovery failure:", error);
-      return {
-        pools: [],
-        maintenance: [],
-        futureMaintenance: [],
-        works: [],
-        clients: [],
-        isLoading: false,
-        lastSync: null,
-        error: null,
-      };
+      console.error("🚨 RECOVERY: Complete recovery failure:", error);
+      // Keep initial state if recovery fails
     }
-  });
+  }, []); // Run once on mount
 
   // Firebase sync is always enabled with fixed configuration
   const [syncEnabled, setSyncEnabled] = useState(true);

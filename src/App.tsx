@@ -40,6 +40,7 @@ import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
+import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -319,7 +320,9 @@ function App() {
     setCurrentUser(null);
 
     // Firebase auth disabled to prevent crashes
-    console.log("��� SECURITY: Firebase auth listeners disabled for stability");
+    console.log(
+      "���� SECURITY: Firebase auth listeners disabled for stability",
+    );
     // Firebase auth code removed to fix syntax errors
 
     // DO NOT initialize default admin automatically - this was causing the security issue
@@ -714,7 +717,7 @@ function App() {
       console.log("🔐 Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("�� Login successful for:", result.user.email);
+        console.log("���� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -766,16 +769,23 @@ function App() {
       // Clear current user state immediately for better UX
       setCurrentUser(null);
       setIsAuthenticated(false);
-      localStorage.removeItem("currentUser");
 
-      // Clear form and navigate to dashboard
+      // Clear all authentication data
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("isAuthenticated");
+      // Clear saved login credentials (auto-login) when user manually logs out
+      localStorage.removeItem("savedLoginCredentials");
+
+      // Clear form
       setLoginForm({ email: "", password: "" });
-      navigateToSection("dashboard");
+
+      // Clear URL hash to go back to login
+      window.location.hash = "";
 
       // Perform actual logout
       await authService.logout();
 
-      console.log("��� Logout completed successfully");
+      console.log("��� Logout completed successfully - redirected to login");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -784,10 +794,17 @@ function App() {
       setCurrentUser(null);
       setIsAuthenticated(false);
       localStorage.removeItem("currentUser");
+      localStorage.removeItem("isAuthenticated");
+      // Clear saved login credentials (auto-login) when user manually logs out
+      localStorage.removeItem("savedLoginCredentials");
       setLoginForm({ email: "", password: "" });
-      navigateToSection("dashboard");
 
-      console.log("🔧 Forced logout state clear completed");
+      // Clear URL hash
+      window.location.hash = "";
+
+      console.log(
+        "🔧 Forced logout state clear completed - redirected to login",
+      );
     }
   };
 
@@ -917,7 +934,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç������o: ${work.location}
+   Localizaç��������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -1050,7 +1067,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error("❌ Error requesting notification permission:", error);
+        console.error("��� Error requesting notification permission:", error);
         return "error";
       }
     }
@@ -1436,7 +1453,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `����� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `������ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -1622,22 +1639,67 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Header Card */}
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                      <div className="w-8 h-8 bg-white rounded-lg shadow-md p-1">
+                {/* Simple Welcome Header */}
+                <div
+                  className="rounded-lg p-4 shadow-sm relative overflow-hidden"
+                  style={{
+                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fe6dd131c94c1407994895f6f7cf7f1c7?format=webp&width=800')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                >
+                  {/* Overlay para melhor legibilidade do texto */}
+                  <div className="absolute inset-0 bg-white bg-opacity-60 rounded-lg"></div>
+
+                  {/* Conteúdo por cima do overlay */}
+                  <div className="relative z-10">
+                    {/* Logo and Time Row */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="w-20 h-12 bg-white rounded shadow-sm p-2">
                         <img
                           src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                           alt="Leirisonda Logo"
                           className="w-full h-full object-contain"
                         />
                       </div>
+                      <span className="text-sm text-gray-800 font-medium">
+                        {new Date().toLocaleTimeString("pt-PT", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
                     </div>
-                    <div>
-                      <h1 className="text-lg font-semibold text-gray-900">
-                        Olá, {currentUser?.name || "Utilizador"}
+
+                    {/* Main Content */}
+                    <div className="text-center mb-3">
+                      <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                        Olá, {currentUser?.name || "Gonçalo Fonseca"}
                       </h1>
+                      <p className="text-gray-800 text-sm font-medium">
+                        {new Date().toLocaleDateString("pt-PT", {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "long",
+                        })}
+                      </p>
+                    </div>
+
+                    {/* Online Status */}
+                    <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                      <span>Online</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Debug functions for Alexandre - keep existing functionality */}
+                {currentUser?.name?.toLowerCase().includes("alexandre") && (
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="space-y-2">
+                      <h3 className="text-sm font-medium text-gray-700">
+                        Ferramentas de Debug
+                      </h3>
                       {currentUser?.name
                         .toLowerCase()
                         .includes("alexandre") && (
@@ -1708,12 +1770,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </button>
                         </div>
                       )}
-                      <p className="text-gray-600 text-sm">
-                        Bem-vindo ao sistema Leirisonda
-                      </p>
                     </div>
                   </div>
-                </div>
+                )}
 
                 {/* Status Cards */}
                 <div className="space-y-3">
@@ -1842,7 +1901,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `✅ ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
+                                  `�� ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
                                 );
                               }
 
@@ -2124,7 +2183,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">🔍</span>
+                      <span className="text-blue-600">���</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -3923,6 +3982,74 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 'input[placeholder*="Orçamento"]',
                               ) as HTMLInputElement
                             )?.value || "";
+
+                          // Extract bore/water hole specific data if work type is "furo"
+                          let boreData = {};
+                          if (selectedWorkType === "furo") {
+                            boreData = {
+                              boreDepth:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder*="Profundidade do Furo"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              waterLevel:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder*="Nível da Água"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              pumpDepth:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder*="Profundidade da Bomba"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              flowRate:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder*="Caudal do Furo"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              columnType:
+                                (
+                                  form.querySelector(
+                                    "select",
+                                  ) as HTMLSelectElement
+                                )?.value || "",
+                              columnDiameter:
+                                (
+                                  form.querySelectorAll(
+                                    "select",
+                                  )[1] as HTMLSelectElement
+                                )?.value || "",
+                              pumpModel:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder*="Modelo da Bomba"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              motorPower:
+                                (
+                                  form.querySelectorAll(
+                                    "select",
+                                  )[2] as HTMLSelectElement
+                                )?.value || "",
+                              pumpVoltage:
+                                (
+                                  form.querySelectorAll(
+                                    "select",
+                                  )[3] as HTMLSelectElement
+                                )?.value || "",
+                              boreObservations:
+                                (
+                                  form.querySelector(
+                                    'textarea[placeholder*="Condições do terreno"]',
+                                  ) as HTMLTextAreaElement
+                                )?.value || "",
+                            };
+                          }
+
                           // Create complete work data object
                           const workData = {
                             id: Date.now(),
@@ -3938,6 +4065,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             endTime: endTime || "",
                             status: status || "pending",
                             description: description || "",
+                            ...boreData, // Spread bore-specific data if applicable
                             budget: budget ? parseFloat(budget) : null,
                             assignedTo:
                               assignedUsers.length > 0
@@ -5285,7 +5413,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                          📞
+                          ����
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
@@ -5327,7 +5455,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                          🗺️
+                          ����️
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
@@ -5405,7 +5533,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <p className="text-gray-600 mb-6">
                       Elimine todos os dados de obras, manutenções e piscinas
-                      para começar com uma aplicação limpa. Os utilizadores são
+                      para começar com uma aplicaç��o limpa. Os utilizadores são
                       mantidos.
                     </p>
 
@@ -5546,7 +5674,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Trabalhos realizados</li>
+                        <li>��� Trabalhos realizados</li>
                         <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observaç��es</li>
@@ -6633,6 +6761,40 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Contacto
+                        </label>
+                        <input
+                          type="tel"
+                          defaultValue={editingWork?.contact}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Telefone/contacto"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Folha de Obra
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingWork?.workSheetNumber}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="LS-XXXX-XXX"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Orçamento (€)
+                        </label>
+                        <input
+                          type="number"
+                          defaultValue={editingWork?.budget}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="0.00"
+                          step="0.01"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           Data de Conclusão Prevista
                         </label>
                         <input
@@ -7217,7 +7379,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingMaintenance?.technician}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Nome do técnico"
+                          placeholder="Nome do t��cnico"
                           required
                         />
                       </div>
@@ -7325,6 +7487,155 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         placeholder="Lista de materiais e produtos utilizados"
                       />
                     </div>
+
+                    {/* Detalhes do Furo de Água - Se aplicável */}
+                    {editingWork?.type === "furo" && (
+                      <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
+                        <h3 className="text-lg font-semibold text-cyan-700 mb-4">
+                          🚰 Detalhes do Furo de Água
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Profundidade do Furo (m)
+                            </label>
+                            <input
+                              type="number"
+                              step="0.1"
+                              defaultValue={editingWork?.boreDepth}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                              placeholder="Ex: 120.5"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Nível da Água (m)
+                            </label>
+                            <input
+                              type="number"
+                              step="0.1"
+                              defaultValue={editingWork?.waterLevel}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                              placeholder="Ex: 15.2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Caudal do Furo (m³/h)
+                            </label>
+                            <input
+                              type="number"
+                              step="0.1"
+                              defaultValue={editingWork?.flowRate}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                              placeholder="Ex: 5.5"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Profundidade da Bomba (m)
+                            </label>
+                            <input
+                              type="number"
+                              step="0.1"
+                              defaultValue={editingWork?.pumpDepth}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                              placeholder="Ex: 80.0"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Tipo de Coluna
+                            </label>
+                            <select
+                              defaultValue={editingWork?.columnType}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            >
+                              <option value="">Selecionar tipo</option>
+                              <option value="PEAD">PEAD</option>
+                              <option value="HIDROROSCADO">HIDROROSCADO</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Diâmetro da Coluna
+                            </label>
+                            <select
+                              defaultValue={editingWork?.columnDiameter}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            >
+                              <option value="">Selecionar diâmetro</option>
+                              <option value="1">1 polegada</option>
+                              <option value="1.25">1¼ polegadas</option>
+                              <option value="1.5">1½ polegadas</option>
+                              <option value="2">2 polegadas</option>
+                              <option value="2.5">2½ polegadas</option>
+                              <option value="3">3 polegadas</option>
+                              <option value="4">4 polegadas</option>
+                              <option value="5">5 polegadas</option>
+                              <option value="6">6 polegadas</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Modelo da Bomba
+                            </label>
+                            <input
+                              type="text"
+                              defaultValue={editingWork?.pumpModel}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                              placeholder="Ex: Grundfos SQ3-105"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Potência do Motor (HP)
+                            </label>
+                            <select
+                              defaultValue={editingWork?.motorPower}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            >
+                              <option value="">Selecionar potência</option>
+                              <option value="0.5">0.5 HP</option>
+                              <option value="0.75">0.75 HP</option>
+                              <option value="1">1 HP</option>
+                              <option value="1.5">1.5 HP</option>
+                              <option value="2">2 HP</option>
+                              <option value="3">3 HP</option>
+                              <option value="5">5 HP</option>
+                              <option value="7.5">7.5 HP</option>
+                              <option value="10">10 HP</option>
+                              <option value="15">15 HP</option>
+                              <option value="20">20 HP</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Voltagem da Bomba
+                            </label>
+                            <select
+                              defaultValue={editingWork?.pumpVoltage}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            >
+                              <option value="">Selecionar voltagem</option>
+                              <option value="230V">230V (monofásico)</option>
+                              <option value="400V">400V (trifásico)</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="mt-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Observações Específicas do Furo
+                          </label>
+                          <textarea
+                            rows={3}
+                            defaultValue={editingWork?.boreObservations}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          />
+                        </div>
+                      </div>
+                    )}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -7680,33 +7991,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // TEMPORARY: Bypass authentication for testing
-  useEffect(() => {
-    if (!currentUser) {
-      const testUser = {
-        id: 1,
-        name: "Gonçalo Fonseca",
-        email: "gongonsilva@gmail.com",
-        role: "super_admin",
-        permissions: {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          admin: { view: true, create: true, edit: true, delete: true },
-          dashboard: { view: true },
-        },
-      };
-      setCurrentUser(testUser);
-      setIsAuthenticated(true);
-      localStorage.setItem("currentUser", JSON.stringify(testUser));
-      localStorage.setItem("isAuthenticated", "true");
-    }
-  }, []);
+  // TEMPORARY: Bypass authentication for testing - COMMENTED OUT TO ALLOW LOGOUT
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     const testUser = {
+  //       id: 1,
+  //       name: "Gonçalo Fonseca",
+  //       email: "gongonsilva@gmail.com",
+  //       role: "super_admin",
+  //       permissions: {
+  //         obras: { view: true, create: true, edit: true, delete: true },
+  //         manutencoes: { view: true, create: true, edit: true, delete: true },
+  //         piscinas: { view: true, create: true, edit: true, delete: true },
+  //         relatorios: { view: true, create: true, edit: true, delete: true },
+  //         utilizadores: { view: true, create: true, edit: true, delete: true },
+  //         admin: { view: true, create: true, edit: true, delete: true },
+  //         dashboard: { view: true },
+  //       },
+  //     };
+  //     setCurrentUser(testUser);
+  //     setIsAuthenticated(true);
+  //     localStorage.setItem("currentUser", JSON.stringify(testUser));
+  //     localStorage.setItem("isAuthenticated", "true");
+  //   }
+  // }, []);
 
-  // Always allow access for testing - bypass authentication
-  if (false) {
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
     console.log(
       "🛡️ SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
@@ -7823,74 +8134,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-          <div className="text-center mb-8">
-            <div className="w-32 h-20 bg-white rounded-lg shadow-md p-2 mx-auto">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                alt="Leirisonda Logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-          </div>
+      <LoginPage
+        onLogin={async (email: string, password: string) => {
+          console.log("🔐 Login attempt:", email);
+          setLoginForm({ email, password });
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                value={loginForm.email}
-                onChange={(e) =>
-                  setLoginForm({ ...loginForm, email: e.target.value })
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                required
-              />
-            </div>
+          try {
+            const result = await authService.login(email, password);
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Palavra-passe
-              </label>
-              <input
-                type="password"
-                value={loginForm.password}
-                onChange={(e) =>
-                  setLoginForm({ ...loginForm, password: e.target.value })
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                required
-              />
-            </div>
-
-            {loginError && (
-              <div className="text-red-600 text-sm">{loginError}</div>
-            )}
-
-            <div className="space-y-2">
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Entrar
-              </button>
-            </div>
-          </form>
-
-          {/* SECURITY: Only super admin can create new accounts - removed public registration */}
-        </div>
-
-        {/* Floating Advanced Settings Button */}
-        <button
-          onClick={() => setShowAdvancedSettings(true)}
-          className="fixed bottom-4 right-4 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 hover:shadow-xl transition-all duration-200"
-        >
-          <Settings className="h-5 w-5" />
-        </button>
-      </div>
+            if (result.success && result.user) {
+              setCurrentUser(result.user);
+              setIsAuthenticated(true);
+              localStorage.setItem("currentUser", JSON.stringify(result.user));
+              setLoginForm({ email: "", password: "" });
+              console.log("✅ Login successful");
+            } else {
+              setLoginError(result.error || "Credenciais inválidas");
+            }
+          } catch (error) {
+            console.error("❌ Login error:", error);
+            setLoginError("Erro de sistema. Por favor, tente novamente.");
+          }
+        }}
+        loginError={loginError}
+        isLoading={false}
+      />
     );
   }
 
@@ -8067,7 +8335,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="lg:hidden fixed top-20 left-4 z-60 flex flex-col space-y-2">
+        <div className="lg:hidden fixed top-20 left-4 z-[70] flex flex-col space-y-2">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="bg-white p-2 rounded-md shadow-md"
@@ -8188,6 +8456,46 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
+                        Contacto
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.contact || "Não especificado"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Folha de Obra
+                      </label>
+                      <p className="text-gray-900 font-mono">
+                        {selectedWork.workSheetNumber || "Não especificado"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Hora de Entrada
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.startTime
+                          ? new Date(selectedWork.startTime).toLocaleString(
+                              "pt-PT",
+                            )
+                          : "Não especificado"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Hora de Saída
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.endTime
+                          ? new Date(selectedWork.endTime).toLocaleString(
+                              "pt-PT",
+                            )
+                          : "Não especificado"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
                         Estado
                       </label>
                       <span
@@ -8287,10 +8595,149 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     )}
                   </div>
 
+                  {/* Detalhes Completos - Seções Expandidas */}
+                  <div className="mt-6 space-y-6">
+                    {/* Informações Adicionais */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                        Informações Detalhadas
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Orçamento
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedWork.budget
+                              ? `€${selectedWork.budget}`
+                              : "Não especificado"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Folha de Obra Preenchida
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedWork.workSheetCompleted
+                              ? "✅ Sim"
+                              : "❌ Não"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Detalhes do Furo de Água - Se aplicável */}
+                    {selectedWork.type === "furo" && (
+                      <div className="border-l-4 border-cyan-500 pl-4">
+                        <h3 className="text-lg font-semibold text-cyan-700 mb-4">
+                          🚰 Detalhes do Furo de Água
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Profundidade do Furo
+                            </label>
+                            <p className="text-gray-900 font-mono">
+                              {selectedWork.boreDepth
+                                ? `${selectedWork.boreDepth} m`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Nível da Água
+                            </label>
+                            <p className="text-gray-900 font-mono">
+                              {selectedWork.waterLevel
+                                ? `${selectedWork.waterLevel} m`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Caudal do Furo
+                            </label>
+                            <p className="text-gray-900 font-mono">
+                              {selectedWork.flowRate
+                                ? `${selectedWork.flowRate} m³/h`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Profundidade da Bomba
+                            </label>
+                            <p className="text-gray-900 font-mono">
+                              {selectedWork.pumpDepth
+                                ? `${selectedWork.pumpDepth} m`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Tipo de Coluna
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.columnType || "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Diâmetro da Coluna
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.columnDiameter
+                                ? `${selectedWork.columnDiameter}"`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Modelo da Bomba
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.pumpModel || "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Potência do Motor
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.motorPower
+                                ? `${selectedWork.motorPower} HP`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Voltagem da Bomba
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.pumpVoltage || "Não especificado"}
+                            </p>
+                          </div>
+                        </div>
+                        {selectedWork.boreObservations && (
+                          <div className="mt-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Observações Específicas do Furo
+                            </label>
+                            <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
+                              <p className="text-gray-900">
+                                {selectedWork.boreObservations}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
                   {selectedWork.description && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Descrição
+                        Descriç��o
                       </label>
                       <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
                         {selectedWork.description}
