@@ -8308,9 +8308,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <h2 className="text-2xl font-bold text-gray-900">
                         Detalhes Completos da Obra
                       </h2>
-                      <p className="text-gray-600 text-sm">
-                        {selectedWork.title}
-                      </p>
                     </div>
                   </div>
                   <button
