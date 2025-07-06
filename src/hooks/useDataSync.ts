@@ -314,7 +314,6 @@ export function useDataSync(): SyncState & SyncActions {
     };
 
     try {
-      const works = recoverData("works");
       // Execute recovery
       const works = recoverData("works");
       const pools = recoverData("pools");
