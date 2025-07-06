@@ -1639,59 +1639,35 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Welcome Header - Exact Recreation */}
-                <div className="bg-gray-50 rounded-lg p-6 shadow-sm min-h-[420px] relative">
+                {/* Welcome Header - Compact Version */}
+                <div className="bg-gray-50 rounded-lg p-4 shadow-sm min-h-[280px] relative">
                   {/* Top Row */}
-                  <div className="flex items-center justify-between mb-4">
-                    {/* Left Side */}
-                    <div className="flex items-center space-x-6">
-                      {/* Hamburger Menu */}
-                      <button
-                        onClick={() => setSidebarOpen(true)}
-                        className="p-2 bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors"
-                      >
-                        <svg
-                          className="w-6 h-6 text-gray-700"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M4 6h16M4 12h16M4 18h16"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+                  <div className="flex items-center justify-between mb-3">
+                    {/* Left Side - Menu */}
+                    <button
+                      onClick={() => setSidebarOpen(true)}
+                      className="p-2 bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="w-5 h-5 flex flex-col justify-between">
+                        <div className="w-full h-0.5 bg-gray-700"></div>
+                        <div className="w-full h-0.5 bg-gray-700"></div>
+                        <div className="w-full h-0.5 bg-gray-700"></div>
+                      </div>
+                    </button>
 
                     {/* Right Side - Time */}
-                    <div className="flex items-center space-x-2 text-gray-600">
-                      <svg
-                        className="w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-lg font-medium">
-                        {new Date().toLocaleTimeString("pt-PT", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
-                    </div>
+                    <span className="text-lg font-medium text-gray-600">
+                      {new Date().toLocaleTimeString("pt-PT", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
                   </div>
 
-                  {/* Second Row - Logo and Back */}
-                  <div className="flex items-center space-x-4 mb-12">
+                  {/* Second Row - Logo and Progress */}
+                  <div className="flex items-center space-x-3 mb-6">
                     {/* Leirisonda Logo */}
-                    <div className="w-20 h-12 bg-white rounded-lg shadow-sm p-2">
+                    <div className="w-16 h-10 bg-white rounded-lg shadow-sm p-2">
                       <img
                         src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                         alt="Leirisonda Logo"
@@ -1701,8 +1677,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     {/* Progress Bar with Green Dot */}
                     <div className="flex items-center space-x-2">
-                      <div className="w-16 h-1 bg-gray-300 rounded-full"></div>
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                      <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+                      <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
                     </div>
 
                     {/* Back Arrow */}
@@ -1710,44 +1686,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => window.history.back()}
                       className="p-2 bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors"
                     >
-                      <svg
-                        className="w-6 h-6 text-gray-700"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                        />
-                      </svg>
+                      ←
                     </button>
                   </div>
 
                   {/* Main Content - Centered */}
                   <div className="text-center">
-                    <h1 className="text-5xl font-bold text-gray-900 mb-8 leading-tight">
-                      Olá, {currentUser?.name || "Gonçalo"}
-                      <br />
-                      {currentUser?.name?.split(" ")[1] || "Fonseca"}
+                    <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                      Olá, {currentUser?.name || "Gonçalo Fonseca"}
                     </h1>
 
-                    {/* Date with Calendar Icon */}
-                    <div className="flex items-center justify-center space-x-3 text-gray-600 text-lg mb-12">
-                      <svg
-                        className="w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span>
+                    {/* Date */}
+                    <div className="flex items-center justify-center space-x-2 text-gray-600 mb-6">
+                      <span className="text-base">
                         {new Date().toLocaleDateString("pt-PT", {
                           weekday: "long",
                           day: "2-digit",
@@ -1758,10 +1709,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
 
                   {/* Bottom Left - Online Status */}
-                  <div className="absolute bottom-6 left-6">
+                  <div className="absolute bottom-4 left-4">
                     <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                      <span className="text-gray-600 text-lg">Online</span>
+                      <div className="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+                      <span className="text-gray-600">Online</span>
                     </div>
                   </div>
                 </div>
