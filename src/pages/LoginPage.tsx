@@ -17,9 +17,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     password: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
-  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
-  const [advancedPassword, setAdvancedPassword] = useState("");
-  const [advancedPasswordError, setAdvancedPasswordError] = useState("");
 
   // Load saved credentials on component mount
   useEffect(() => {
@@ -68,85 +65,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     await onLogin(loginForm.email, loginForm.password);
   };
-
-  const handleAdvancedSettings = (e: React.FormEvent) => {
-    e.preventDefault();
-    const correctPassword = "19867";
-
-    if (advancedPassword === correctPassword) {
-      setAdvancedPasswordError("");
-      setShowAdvancedSettings(false);
-      setAdvancedPassword("");
-      // Navigate to administration
-      window.location.hash = "administracao";
-    } else {
-      setAdvancedPasswordError("Palavra-passe incorreta");
-    }
-  };
-
-  // Advanced Settings Modal
-  if (showAdvancedSettings) {
-    return (
-      <div className="min-h-screen bg-blue-600 flex items-center justify-center">
-        <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-          <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Settings className="h-8 w-8 text-blue-600" />
-            </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
-              Administração
-            </h2>
-            <p className="text-gray-600 text-sm">
-              Acesso à área de administração e configurações avançadas
-            </p>
-          </div>
-
-          <form onSubmit={handleAdvancedSettings} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Palavra-passe de Administração
-              </label>
-              <input
-                type="password"
-                value={advancedPassword}
-                onChange={(e) => setAdvancedPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="••••••"
-                required
-                autoFocus
-              />
-            </div>
-
-            {advancedPasswordError && (
-              <div className="text-red-600 text-sm text-center">
-                {advancedPasswordError}
-              </div>
-            )}
-
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowAdvancedSettings(false);
-                  setAdvancedPassword("");
-                  setAdvancedPasswordError("");
-                }}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Voltar
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-              >
-                Entrar
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-blue-600 flex items-center justify-center">
@@ -238,7 +156,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
       {/* Floating Settings Button (Bottom Right) */}
       <button
-        onClick={() => setShowAdvancedSettings(true)}
+        onClick={() => (window.location.hash = "administracao")}
         className="fixed bottom-4 right-4 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 hover:shadow-xl transition-all duration-200 hover:scale-105"
         disabled={isLoading}
         title="Administração"
