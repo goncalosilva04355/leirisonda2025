@@ -7488,18 +7488,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       />
                     </div>
 
-                    {/* DEBUG: Mostrar sempre os campos de furo para teste */}
-                    {editingWork && (
-                      <div className="bg-yellow-100 p-2 rounded mb-4 text-xs">
-                        <strong>DEBUG:</strong> editingWork.type = "
-                        {editingWork.type}" | editingWork.workType = "
-                        {editingWork.workType}" | editingWork.id = "
-                        {editingWork.id}"
-                      </div>
-                    )}
-
-                    {/* Detalhes do Furo de Água - TESTE: Sempre visível */}
-                    {editingWork && (
+                    {/* Detalhes do Furo de Água - Sempre visível para teste */}
+                    <div
                       <div
                         id="edit-furo-details"
                         className="border border-cyan-200 rounded-lg p-6 bg-cyan-50"
@@ -8406,7 +8396,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Tipo de Obra
                       </label>
                       <p className="text-gray-900 capitalize">
-                        {selectedWork.type || "Não especificado"}
+                        {selectedWork.type || "N��o especificado"}
                       </p>
                     </div>
                     <div>
