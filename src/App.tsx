@@ -15,6 +15,7 @@ import {
   Eye,
   EyeOff,
   Edit2,
+  Play,
   Trash2,
   Save,
   UserPlus,
@@ -47,7 +48,7 @@ import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
 
-// Mock users database
+// Production users - only real admin account
 const initialUsers = [
   {
     id: 1,
@@ -65,57 +66,6 @@ const initialUsers = [
     },
     active: true,
     createdAt: "2024-01-01",
-  },
-  {
-    id: 2,
-    name: "Maria Silva",
-    email: "maria.silva@leirisonda.pt",
-    password: "123456",
-    role: "manager",
-    permissions: {
-      obras: { view: true, create: true, edit: true, delete: false },
-      manutencoes: { view: true, create: true, edit: true, delete: false },
-      piscinas: { view: true, create: true, edit: true, delete: false },
-      utilizadores: { view: true, create: false, edit: false, delete: false },
-      relatorios: { view: true, create: true, edit: false, delete: false },
-      clientes: { view: true, create: true, edit: true, delete: false },
-    },
-    active: true,
-    createdAt: "2024-01-15",
-  },
-  {
-    id: 3,
-    name: "João Santos",
-    email: "joao.santos@leirisonda.pt",
-    password: "123456",
-    role: "technician",
-    permissions: {
-      obras: { view: true, create: false, edit: true, delete: false },
-      manutencoes: { view: true, create: true, edit: true, delete: false },
-      piscinas: { view: true, create: false, edit: true, delete: false },
-      utilizadores: { view: false, create: false, edit: false, delete: false },
-      relatorios: { view: true, create: false, edit: false, delete: false },
-      clientes: { view: true, create: false, edit: false, delete: false },
-    },
-    active: true,
-    createdAt: "2024-02-01",
-  },
-  {
-    id: 4,
-    name: "Alexandre",
-    email: "alexandre@leirisonda.pt",
-    password: "123456",
-    role: "technician",
-    permissions: {
-      obras: { view: true, create: false, edit: true, delete: false },
-      manutencoes: { view: true, create: true, edit: true, delete: false },
-      piscinas: { view: true, create: false, edit: true, delete: false },
-      utilizadores: { view: false, create: false, edit: false, delete: false },
-      relatorios: { view: true, create: false, edit: false, delete: false },
-      clientes: { view: true, create: false, edit: false, delete: false },
-    },
-    active: true,
-    createdAt: "2024-02-15",
   },
 ];
 
@@ -839,7 +789,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplica��ão agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -872,7 +822,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç��o: ${pool.location}
+   Localização: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -881,7 +831,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -891,7 +841,7 @@ ${index + 1}. ${pool.name}
 
   const generateMaintenancePDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO DE MANUTENÇÕES
+LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -935,12 +885,12 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç��������o: ${work.location}
+   Localização: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -991,7 +941,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
 - Manutenções Realizadas: ${maintenance.length}
-- Futuras Manutenções: ${futureMaintenance.length}
+- Futuras Manutenç���es: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
@@ -1033,7 +983,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-���� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+����� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -1161,7 +1111,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n����� Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1187,7 +1137,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificaç����es não est�����o ativadas. Active-as primeiro nas configurações.",
+        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -1454,7 +1404,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `������ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `������� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -1627,7 +1577,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     }
 
-    console.log("✅ renderContent: Auth state valid, rendering", {
+    console.log("�� renderContent: Auth state valid, rendering", {
       activeSection,
       userRole: currentUser?.role,
     });
@@ -1758,7 +1708,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <button
                             onClick={() => {
                               console.log(
-                                "🧪 Testando notificação para Alexandre...",
+                                "🧪 Testando notifica��ão para Alexandre...",
                               );
                               sendWorkAssignmentNotification(
                                 "Obra de Teste para Alexandre",
@@ -1848,7 +1798,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas
+                          Folhas n��o geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -1902,7 +1852,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `�� ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
+                                  `��� ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
                                 );
                               }
 
@@ -1970,13 +1920,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           .map((work) => (
                             <div
                               key={work.id}
-                              className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 cursor-pointer hover:bg-purple-100 transition-colors"
-                              onClick={() => {
-                                setSelectedWork(work);
-                                setViewingWork(true);
-                              }}
+                              className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
                             >
-                              <div className="space-y-2">
+                              <div className="space-y-3">
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
                                     📍 Morada:
@@ -1987,31 +1933,102 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    👤 Nome:
+                                    👤 Cliente:
                                   </span>
                                   <span className="text-sm text-gray-900">
                                     {work.client || "Não especificado"}
                                   </span>
                                 </div>
+                                {work.contact && (
+                                  <div className="flex items-center space-x-2">
+                                    <span className="text-sm font-medium text-gray-600">
+                                      📞 Contacto:
+                                    </span>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (enablePhoneDialer) {
+                                          window.location.href = `tel:${work.contact}`;
+                                        }
+                                      }}
+                                      className={`text-sm ${
+                                        enablePhoneDialer
+                                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                          : "text-gray-900"
+                                      }`}
+                                    >
+                                      {work.contact}
+                                    </button>
+                                  </div>
+                                )}
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    📋 Número:
-                                  </span>
-                                  <span className="text-sm text-gray-900 font-mono">
-                                    {work.workSheetNumber ||
-                                      work.title ||
-                                      "Sem número"}
-                                  </span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-sm font-medium text-gray-600">
-                                    🔧 Trabalho realizado:
+                                    🔧 Trabalho:
                                   </span>
                                   <span className="text-sm text-gray-900">
                                     {work.workPerformed ||
                                       work.type ||
                                       "Não especificado"}
                                   </span>
+                                </div>
+
+                                {/* Estado e Ações */}
+                                <div className="flex items-center justify-between pt-2 border-t border-purple-200">
+                                  <span
+                                    className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                      work.status === "pending"
+                                        ? "bg-red-100 text-red-700"
+                                        : work.status === "in_progress"
+                                          ? "bg-orange-100 text-orange-700"
+                                          : work.status === "completed"
+                                            ? "bg-green-100 text-green-700"
+                                            : "bg-gray-100 text-gray-700"
+                                    }`}
+                                  >
+                                    {work.status === "pending"
+                                      ? "Pendente"
+                                      : work.status === "in_progress"
+                                        ? "Em Progresso"
+                                        : work.status === "completed"
+                                          ? "Concluída"
+                                          : work.status}
+                                  </span>
+
+                                  <div className="flex items-center space-x-2">
+                                    {/* Botão Visualizar */}
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedWork(work);
+                                        setViewingWork(true);
+                                      }}
+                                      className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-colors"
+                                      title="Visualizar detalhes"
+                                    >
+                                      <Eye className="h-4 w-4" />
+                                    </button>
+
+                                    {/* Botão Iniciar Obra (só se pendente) */}
+                                    {work.status === "pending" && (
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          dataSync.updateWork(work.id, {
+                                            status: "in_progress",
+                                          });
+                                          showNotification(
+                                            "Obra Iniciada",
+                                            `A obra "${work.client}" foi iniciada`,
+                                            "success",
+                                          );
+                                        }}
+                                        className="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition-colors"
+                                        title="Iniciar obra"
+                                      >
+                                        <Play className="h-4 w-4" />
+                                      </button>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -2146,7 +2163,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">���</span>
+                      <span className="text-blue-600">📊</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -2186,8 +2203,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Não há dados para pesquisar
                             </p>
                             <p className="text-gray-400 text-xs mt-1">
-                              Adicione obras, piscinas, manuten��ões ou clientes
-                              primeiro
+                              Adicione obras, piscinas, manuten����ões ou
+                              clientes primeiro
                             </p>
                           </div>
                         ) : (
@@ -2584,7 +2601,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o de piscinas no sistema
+                          Gestão de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -2679,7 +2696,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {pool.name}
                             </h3>
                             <button
-                              onClick={() => handleAddressClick(pool.location)}
+                              onClick={() => {
+                                if (pool?.location) {
+                                  handleAddressClick(pool.location);
+                                }
+                              }}
                               className={`text-left ${
                                 enableMapsRedirect
                                   ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
@@ -2894,7 +2915,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��� {maint.clientContact}
+                                        📞 {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -2904,9 +2925,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <div>
                                   <span className="font-medium">Local:</span>{" "}
                                   <button
-                                    onClick={() =>
-                                      handleAddressClick(maint.location)
-                                    }
+                                    onClick={() => {
+                                      if (maint?.location) {
+                                        handleAddressClick(maint.location);
+                                      }
+                                    }}
                                     className={`text-xs ${
                                       enableMapsRedirect
                                         ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
@@ -2914,7 +2937,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    �� {maint.location}
+                                    📍 {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -2979,7 +3002,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç��es agendadas e programadas
+                          Manutenções agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -3146,7 +3169,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informa���ões Básicas
+                          Informações Básicas
                         </h3>
                       </div>
 
@@ -3289,7 +3312,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Users className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Viaturas e T��cnicos
+                          Viaturas e Técnicos
                         </h3>
                       </div>
 
@@ -3548,7 +3571,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     {/* Detalhes do Furo de Água - Conditional */}
                     {selectedWorkType === "furo" && (
-                      <div>
+                      <div id="furo-details">
                         <div className="flex items-center space-x-3 mb-6">
                           <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
                             <Waves className="h-4 w-4 text-cyan-600" />
@@ -3713,7 +3736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monof��sico)
+                                    230V (monofásico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -3724,7 +3747,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observaç��es Específicas do Furo
+                              Observações Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -4068,8 +4091,32 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                           });
 
-                          // Save water bore data if work type is "furo"
-                          if (selectedWorkType === "furo") {
+                          // Always capture bore data from the cyan section
+                          const furosSection =
+                            document.querySelector("#furo-details");
+                          if (furosSection) {
+                            // Get bore data from form
+                            const boreInputs = furosSection.querySelectorAll(
+                              "input, select, textarea",
+                            );
+
+                            // Update the existing work with bore data
+                            const boreDataUpdate = {
+                              boreDepth: boreInputs[0]?.value || "",
+                              waterLevel: boreInputs[1]?.value || "",
+                              staticLevel: boreInputs[2]?.value || "",
+                              dynamicLevel: boreInputs[3]?.value || "",
+                              flowRate: boreInputs[4]?.value || "",
+                              columnDiameter: boreInputs[5]?.value || "",
+                              pumpModel: boreInputs[6]?.value || "",
+                              motorPower: boreInputs[7]?.value || "",
+                              pumpVoltage: boreInputs[8]?.value || "",
+                              boreObservations: boreInputs[9]?.value || "",
+                            };
+
+                            // Update the work with bore data
+                            dataSync.updateWork(newWork.id, boreDataUpdate);
+
                             const waterBoreData = {
                               id: Date.now(),
                               workTitle: workTitle,
@@ -4077,6 +4124,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               photos: uploadedPhotos,
                               photoCount: uploadedPhotos.length,
                               workType: "furo",
+                              ...boreDataUpdate,
                             };
 
                             const savedWaterBores = JSON.parse(
@@ -4092,7 +4140,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           alert(
                             `Obra "${workTitle}" criada com sucesso! ` +
                               (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} respons����vel(eis).`
+                                ? `Notificações enviadas a ${assignedUsers.length} respons������vel(eis).`
                                 : "") +
                               (selectedWorkType === "furo"
                                 ? " Dados do furo registados."
@@ -4647,7 +4695,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manuten��ão
+                        Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar intervenção de manutenção
@@ -5302,7 +5350,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notificações foram bloqueadas. Por favor, ative-as nas configura��ões do navegador.",
                                   );
                                 }
                               } else {
@@ -5382,7 +5430,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                          ����
+                          ������
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
@@ -5533,7 +5581,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ��️ ATENÇÃO: Esta operação é irreversível!
+                              ����️ ATENÇÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -5646,7 +5694,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>��� Trabalhos realizados</li>
                         <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observaç��es</li>
+                        <li>• Estados e observaç���es</li>
                       </ul>
                     </div>
                     <button
@@ -5750,7 +5798,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>• Dados consolidados</li>
+                        <li>��� Dados consolidados</li>
                         <li>• Análise de performance</li>
                       </ul>
                     </div>
@@ -5780,7 +5828,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Crie relatórios com filtros específicos
+                        Crie relat��rios com filtros específicos
                       </p>
                       <div className="space-y-2">
                         <label className="flex items-center">
@@ -6044,17 +6092,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div>
                                 <p className="font-medium">Morada:</p>
                                 <button
-                                  onClick={() =>
-                                    handleAddressClick(client.address)
-                                  }
+                                  onClick={() => {
+                                    if (client?.address) {
+                                      handleAddressClick(client.address);
+                                    }
+                                  }}
                                   className={`text-left ${
                                     enableMapsRedirect
                                       ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
                                       : "text-gray-600"
                                   }`}
-                                  disabled={!enableMapsRedirect}
+                                  disabled={
+                                    !enableMapsRedirect || !client?.address
+                                  }
                                 >
-                                  📍 {client.address}
+                                  📍{" "}
+                                  {client?.address || "Endereço não disponível"}
                                 </button>
                               </div>
                               <div>
@@ -6441,15 +6494,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <div className="flex-1">
                             {/* Enhanced Header with Work ID */}
                             <div className="flex items-center space-x-3 mb-3">
-                              <div className="flex items-center space-x-2">
-                                <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                                  {work.id?.toUpperCase() ||
-                                    "ID-" + Date.now().toString().slice(-6)}
-                                </span>
-                                <h3 className="text-lg font-bold text-gray-900">
-                                  {work.title}
-                                </h3>
-                              </div>
+                              <div className="flex items-center space-x-2"></div>
                               <span
                                 className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                   work.status === "pending"
@@ -6514,9 +6559,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div>
                                 <span className="font-medium">Local:</span>{" "}
                                 <button
-                                  onClick={() =>
-                                    handleAddressClick(work.location)
-                                  }
+                                  onClick={() => {
+                                    if (work?.location) {
+                                      handleAddressClick(work.location);
+                                    }
+                                  }}
                                   className={`text-xs ${
                                     enableMapsRedirect
                                       ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
@@ -6549,7 +6596,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ����{work.budget}
+                                  €{work.budget}
                                 </div>
                               )}
                             </div>
@@ -6704,8 +6751,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manutenç��o</option>
-                            <option value="instalacao">Instalação</option>
+                            <option value="manutencao">Manutenção</option>
+                            <option value="instalacao">Instalaç��o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -6935,6 +6982,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Trabalho Realizado
+                          </label>
+                          <textarea
+                            defaultValue={editingWork?.workPerformed}
+                            rows={4}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Descrição do trabalho realizado..."
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
                             Observações sobre a obra
                           </label>
                           <textarea
@@ -6944,6 +7002,153 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             placeholder="Observações sobre a obra..."
                           />
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Detalhes do Furo de Água */}
+                    <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
+                      <h3 className="text-lg font-semibold text-cyan-700 mb-4">
+                        🚰 Detalhes do Furo de Água
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Profundidade do Furo (m)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            defaultValue={editingWork?.boreDepth}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            placeholder="Ex: 120.5"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Nível da Água (m)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            defaultValue={editingWork?.waterLevel}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            placeholder="Ex: 15.2"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Caudal do Furo (m³/h)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            defaultValue={editingWork?.flowRate}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            placeholder="Ex: 5.5"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Profundidade da Bomba (m)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.1"
+                            defaultValue={editingWork?.pumpDepth}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            placeholder="Ex: 80.0"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Tipo de Coluna
+                          </label>
+                          <select
+                            defaultValue={editingWork?.columnType}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                          >
+                            <option value="">Selecionar tipo</option>
+                            <option value="PEAD">PEAD</option>
+                            <option value="HIDROROSCADO">HIDROROSCADO</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Diâmetro da Coluna
+                          </label>
+                          <select
+                            defaultValue={editingWork?.columnDiameter}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                          >
+                            <option value="">Selecionar diâmetro</option>
+                            <option value="1">1 polegada</option>
+                            <option value="1.25">1¼ polegadas</option>
+                            <option value="1.5">1½ polegadas</option>
+                            <option value="2">2 polegadas</option>
+                            <option value="2.5">2½ polegadas</option>
+                            <option value="3">3 polegadas</option>
+                            <option value="4">4 polegadas</option>
+                            <option value="5">5 polegadas</option>
+                            <option value="6">6 polegadas</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Modelo da Bomba
+                          </label>
+                          <input
+                            type="text"
+                            defaultValue={editingWork?.pumpModel}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            placeholder="Ex: Grundfos SQ3-105"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Potência do Motor (HP)
+                          </label>
+                          <select
+                            defaultValue={editingWork?.motorPower}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                          >
+                            <option value="">Selecionar potência</option>
+                            <option value="0.5">0.5 HP</option>
+                            <option value="0.75">0.75 HP</option>
+                            <option value="1">1 HP</option>
+                            <option value="1.5">1.5 HP</option>
+                            <option value="2">2 HP</option>
+                            <option value="3">3 HP</option>
+                            <option value="5">5 HP</option>
+                            <option value="7.5">7.5 HP</option>
+                            <option value="10">10 HP</option>
+                            <option value="15">15 HP</option>
+                            <option value="20">20 HP</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Voltagem da Bomba
+                          </label>
+                          <select
+                            defaultValue={editingWork?.pumpVoltage}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                          >
+                            <option value="">Selecionar voltagem</option>
+                            <option value="230V">230V (monofásico)</option>
+                            <option value="400V">400V (trifásico)</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Observações Específicas do Furo
+                        </label>
+                        <textarea
+                          rows={3}
+                          defaultValue={editingWork?.boreObservations}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                        />
                       </div>
                     </div>
 
@@ -6989,11 +7194,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const workSheetCompleted = (
                             inputs[8] as HTMLInputElement
                           ).checked; // Folha preenchida
-                          const observations = (
+                          const workPerformed = (
                             inputs[9] as HTMLTextAreaElement
+                          ).value; // Trabalho Realizado
+                          const observations = (
+                            inputs[10] as HTMLTextAreaElement
                           ).value; // Observações
 
-                          dataSync.updateWork(editingWork.id, {
+                          // Prepare update data
+                          let updateData = {
                             workSheetNumber,
                             title: workSheetNumber,
                             type: workType,
@@ -7004,6 +7213,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             endTime,
                             status,
                             workSheetCompleted,
+                            workPerformed,
                             observations,
                             assignedTo:
                               editAssignedUsers.length > 0
@@ -7013,7 +7223,39 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : "",
                             assignedUsers: editAssignedUsers,
                             assignedUserIds: editAssignedUsers.map((u) => u.id),
-                          });
+                          };
+
+                          // Always capture bore data from the cyan section
+                          const boreSection =
+                            form.querySelector(".border-cyan-200");
+                          if (boreSection) {
+                            const boreInputs = boreSection.querySelectorAll(
+                              "input, select, textarea",
+                            );
+                            console.log(
+                              "🔍 DEBUG boreInputs found:",
+                              boreInputs.length,
+                            );
+                            updateData = {
+                              ...updateData,
+                              boreDepth: boreInputs[0]?.value || "",
+                              waterLevel: boreInputs[1]?.value || "",
+                              flowRate: boreInputs[2]?.value || "",
+                              pumpDepth: boreInputs[3]?.value || "",
+                              columnType: boreInputs[4]?.value || "",
+                              columnDiameter: boreInputs[5]?.value || "",
+                              pumpModel: boreInputs[6]?.value || "",
+                              motorPower: boreInputs[7]?.value || "",
+                              pumpVoltage: boreInputs[8]?.value || "",
+                              boreObservations: boreInputs[9]?.value || "",
+                            };
+                            console.log(
+                              "🔍 DEBUG updateData with bore:",
+                              updateData,
+                            );
+                          }
+
+                          dataSync.updateWork(editingWork.id, updateData);
 
                           alert("Obra atualizada com sucesso!");
                           setEditingWork(null);
@@ -7310,13 +7552,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          T��cnico *
+                          Técnico *
                         </label>
                         <input
                           type="text"
                           defaultValue={editingMaintenance?.technician}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Nome do t��cnico"
+                          placeholder="Nome do técnico"
                           required
                         />
                       </div>
@@ -7374,7 +7616,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Custo (€)
+                          Custo (��)
                         </label>
                         <input
                           type="number"
@@ -7402,7 +7644,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Conclus��o
+                          Data de Conclusão
                         </label>
                         <input
                           type="date"
@@ -7424,155 +7666,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         placeholder="Lista de materiais e produtos utilizados"
                       />
                     </div>
-
-                    {/* Detalhes do Furo de Água - Se aplicável */}
-                    {editingWork?.type === "furo" && (
-                      <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
-                        <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                          🚰 Detalhes do Furo de Água
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Profundidade do Furo (m)
-                            </label>
-                            <input
-                              type="number"
-                              step="0.1"
-                              defaultValue={editingWork?.boreDepth}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Ex: 120.5"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Nível da Água (m)
-                            </label>
-                            <input
-                              type="number"
-                              step="0.1"
-                              defaultValue={editingWork?.waterLevel}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Ex: 15.2"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Caudal do Furo (m³/h)
-                            </label>
-                            <input
-                              type="number"
-                              step="0.1"
-                              defaultValue={editingWork?.flowRate}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Ex: 5.5"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Profundidade da Bomba (m)
-                            </label>
-                            <input
-                              type="number"
-                              step="0.1"
-                              defaultValue={editingWork?.pumpDepth}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Ex: 80.0"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Tipo de Coluna
-                            </label>
-                            <select
-                              defaultValue={editingWork?.columnType}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            >
-                              <option value="">Selecionar tipo</option>
-                              <option value="PEAD">PEAD</option>
-                              <option value="HIDROROSCADO">HIDROROSCADO</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Diâmetro da Coluna
-                            </label>
-                            <select
-                              defaultValue={editingWork?.columnDiameter}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            >
-                              <option value="">Selecionar diâmetro</option>
-                              <option value="1">1 polegada</option>
-                              <option value="1.25">1¼ polegadas</option>
-                              <option value="1.5">1½ polegadas</option>
-                              <option value="2">2 polegadas</option>
-                              <option value="2.5">2�� polegadas</option>
-                              <option value="3">3 polegadas</option>
-                              <option value="4">4 polegadas</option>
-                              <option value="5">5 polegadas</option>
-                              <option value="6">6 polegadas</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Modelo da Bomba
-                            </label>
-                            <input
-                              type="text"
-                              defaultValue={editingWork?.pumpModel}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Ex: Grundfos SQ3-105"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Potência do Motor (HP)
-                            </label>
-                            <select
-                              defaultValue={editingWork?.motorPower}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            >
-                              <option value="">Selecionar potência</option>
-                              <option value="0.5">0.5 HP</option>
-                              <option value="0.75">0.75 HP</option>
-                              <option value="1">1 HP</option>
-                              <option value="1.5">1.5 HP</option>
-                              <option value="2">2 HP</option>
-                              <option value="3">3 HP</option>
-                              <option value="5">5 HP</option>
-                              <option value="7.5">7.5 HP</option>
-                              <option value="10">10 HP</option>
-                              <option value="15">15 HP</option>
-                              <option value="20">20 HP</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Voltagem da Bomba
-                            </label>
-                            <select
-                              defaultValue={editingWork?.pumpVoltage}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            >
-                              <option value="">Selecionar voltagem</option>
-                              <option value="230V">230V (monofásico)</option>
-                              <option value="400V">400V (trifásico)</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações Específicas do Furo
-                          </label>
-                          <textarea
-                            rows={3}
-                            defaultValue={editingWork?.boreObservations}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
-                          />
-                        </div>
-                      </div>
-                    )}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -7687,7 +7780,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => navigateToSection("utilizadores")}
                     className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                   >
-                    �� Voltar aos Utilizadores
+                    ← Voltar aos Utilizadores
                   </button>
                   <RegisterForm
                     onRegisterSuccess={() => {
@@ -8310,11 +8403,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <h2 className="text-2xl font-bold text-gray-900">
                         Detalhes Completos da Obra
                       </h2>
-                      <p className="text-gray-600 text-sm">
-                        {selectedWork.id?.toUpperCase() ||
-                          "ID-" + Date.now().toString().slice(-6)}{" "}
-                        → {selectedWork.title}
-                      </p>
                     </div>
                   </div>
                   <button
@@ -8330,14 +8418,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        N��mero da Folha de Obra
-                      </label>
-                      <p className="text-gray-900 font-mono">
-                        {selectedWork.workSheetNumber || selectedWork.title}
-                      </p>
-                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Tipo de Obra
@@ -8369,7 +8449,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enablePhoneDialer}
                         >
-                          �� {selectedWork.contact}
+                          📞 {selectedWork.contact}
                         </button>
                       )}
                     </div>
@@ -8378,9 +8458,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Local
                       </label>
                       <button
-                        onClick={() =>
-                          handleAddressClick(selectedWork.location)
-                        }
+                        onClick={() => {
+                          if (selectedWork?.location) {
+                            handleAddressClick(selectedWork.location);
+                          }
+                        }}
                         className={`text-left ${
                           enableMapsRedirect
                             ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
@@ -8399,14 +8481,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         {selectedWork.contact || "Não especificado"}
                       </p>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Folha de Obra
-                      </label>
-                      <p className="text-gray-900 font-mono">
-                        {selectedWork.workSheetNumber || "Não especificado"}
-                      </p>
-                    </div>
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Hora de Entrada
@@ -8548,16 +8623,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             {selectedWork.budget
                               ? `€${selectedWork.budget}`
                               : "Não especificado"}
-                          </p>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Folha de Obra Preenchida
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedWork.workSheetCompleted
-                              ? "✅ Sim"
-                              : "❌ Não"}
                           </p>
                         </div>
                       </div>
@@ -8714,22 +8779,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   )}
 
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Folha de Obra Concluída
-                      </label>
-                      <span
-                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                          selectedWork.workSheetCompleted
-                            ? "bg-green-100 text-green-700"
-                            : "bg-yellow-100 text-yellow-700"
-                        }`}
-                      >
-                        {selectedWork.workSheetCompleted
-                          ? "Concluída"
-                          : "Pendente"}
-                      </span>
-                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Data de Criação
