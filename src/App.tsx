@@ -1975,80 +1975,42 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setViewingWork(true);
                               }}
                             >
-                              <div className="flex items-start justify-between">
-                                <div className="flex items-start space-x-3">
-                                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                    <Building2 className="h-5 w-5 text-purple-600" />
-                                  </div>
-                                  <div>
-                                    <h3 className="font-semibold text-gray-900">
-                                      {work.title}
-                                    </h3>
-                                    <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                      <span>👤</span>
-                                      <span>
-                                        Atribu��da a:{" "}
-                                        {work.assignedUsers &&
-                                        work.assignedUsers.length > 0
-                                          ? work.assignedUsers
-                                              .map((u) => u.name)
-                                              .join(", ")
-                                          : work.assignedTo || "Não atribuída"}
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>📍</span>
-                                      <span>
-                                        Criada em:{" "}
-                                        {new Date(
-                                          work.createdAt,
-                                        ).toLocaleDateString("pt-PT")}
-                                      </span>
-                                    </div>
-                                    <span
-                                      className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
-                                        work.status === "in_progress"
-                                          ? "bg-yellow-100 text-yellow-800"
-                                          : work.status === "completed"
-                                            ? "bg-green-100 text-green-800"
-                                            : "bg-blue-100 text-blue-800"
-                                      }`}
-                                    >
-                                      {work.status}
-                                    </span>
-                                  </div>
+                              <div className="space-y-2">
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-600">
+                                    📍 Morada:
+                                  </span>
+                                  <span className="text-sm text-gray-900">
+                                    {work.location || "Não especificada"}
+                                  </span>
                                 </div>
-                                <div className="flex space-x-2">
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation(); // Prevent triggering the parent click
-                                      if (work.status !== "in_progress") {
-                                        dataSync.updateWork(work.id, {
-                                          status: "in_progress",
-                                        });
-                                      }
-                                    }}
-                                    className={`px-3 py-1 text-white text-sm rounded-lg transition-colors ${
-                                      work.status === "in_progress"
-                                        ? "bg-gray-400 cursor-not-allowed"
-                                        : "bg-purple-600 hover:bg-purple-700"
-                                    }`}
-                                    disabled={work.status === "in_progress"}
-                                  >
-                                    {work.status === "in_progress"
-                                      ? "Em Progresso"
-                                      : "Iniciar"}
-                                  </button>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation(); // Prevent triggering the parent click
-                                      setSelectedWork(work);
-                                      setViewingWork(true);
-                                    }}
-                                    className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded-lg transition-colors"
-                                  >
-                                    Ver Detalhes
-                                  </button>
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-600">
+                                    👤 Nome:
+                                  </span>
+                                  <span className="text-sm text-gray-900">
+                                    {work.client || "Não especificado"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-600">
+                                    📋 Número:
+                                  </span>
+                                  <span className="text-sm text-gray-900 font-mono">
+                                    {work.workSheetNumber ||
+                                      work.title ||
+                                      "Sem número"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-600">
+                                    🔧 Trabalho realizado:
+                                  </span>
+                                  <span className="text-sm text-gray-900">
+                                    {work.workPerformed ||
+                                      work.type ||
+                                      "Não especificado"}
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -3183,7 +3145,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informa��ões Básicas
+                          Informa���ões Básicas
                         </h3>
                       </div>
 
@@ -3937,19 +3899,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="Cliente"]',
+                                'input[placeholder*="João Silva"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
                             (
                               form.querySelector(
-                                'input[placeholder*="Contacto"]',
+                                'input[placeholder*="244 123 456"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const location =
                             (
                               form.querySelector(
-                                'input[placeholder*="Morada"]',
+                                'input[placeholder*="Rua das Flores"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const startTime =
@@ -3974,6 +3936,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             (
                               form.querySelector(
                                 'textarea[placeholder*="Descrição"]',
+                              ) as HTMLTextAreaElement
+                            )?.value || "";
+                          const observations =
+                            (
+                              form.querySelector(
+                                'textarea[placeholder*="Observações sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -4081,7 +4049,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             photoCount: uploadedPhotos
                               ? uploadedPhotos.length
                               : 0,
-                            observations: "",
+                            observations: observations || "",
                             workPerformed: "",
                             workSheetCompleted: false,
                             createdAt: new Date().toISOString(),
@@ -6697,321 +6665,289 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 {/* Edit Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <form className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          T��tulo da Obra *
-                        </label>
-                        <input
-                          type="text"
-                          defaultValue={editingWork?.title}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Ex: Instalação de Piscina"
-                          required
-                        />
+                  <form className="space-y-8">
+                    {/* Informações Básicas */}
+                    <div>
+                      <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Building2 className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Informações Básicas
+                        </h3>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Cliente *
-                        </label>
-                        <input
-                          type="text"
-                          defaultValue={editingWork?.client}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Nome do cliente"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Local *
-                        </label>
-                        <input
-                          type="text"
-                          defaultValue={editingWork?.location}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Morada da obra"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado
-                        </label>
-                        <select
-                          defaultValue={editingWork?.status}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option value="pending">Pendente</option>
-                          <option value="in_progress">Em Progresso</option>
-                          <option value="completed">Concluída</option>
-                          <option value="cancelled">Cancelada</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Início
-                        </label>
-                        <input
-                          type="date"
-                          defaultValue={editingWork?.startDate?.split("T")[0]}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Contacto
-                        </label>
-                        <input
-                          type="tel"
-                          defaultValue={editingWork?.contact}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Telefone/contacto"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Folha de Obra
-                        </label>
-                        <input
-                          type="text"
-                          defaultValue={editingWork?.workSheetNumber}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="LS-XXXX-XXX"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Orçamento (€)
-                        </label>
-                        <input
-                          type="number"
-                          defaultValue={editingWork?.budget}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="0.00"
-                          step="0.01"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Conclusão Prevista
-                        </label>
-                        <input
-                          type="date"
-                          defaultValue={
-                            editingWork?.expectedEndDate?.split("T")[0]
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Usuários Atribuídos ({users.length} utilizadores
-                          disponíveis)
-                        </label>
-                        <div className="flex space-x-2">
-                          <select
-                            value={currentEditAssignedUser}
-                            onChange={(e) =>
-                              setCurrentEditAssignedUser(e.target.value)
+
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Folha de Obra *
+                          </label>
+                          <input
+                            type="text"
+                            defaultValue={
+                              editingWork?.workSheetNumber || editingWork?.title
                             }
-                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="LS-2025-163"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Tipo de Trabalho *
+                          </label>
+                          <select
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            defaultValue={editingWork?.type || ""}
                           >
-                            <option value="">
-                              {users.length > 0
-                                ? "Selecionar usu��rio..."
-                                : "Nenhum utilizador disponível"}
-                            </option>
-                            {users
-                              .filter((user) => {
-                                console.log(
-                                  "User:",
-                                  user.name,
-                                  "Role:",
-                                  user.role,
-                                  "Active:",
-                                  user.active,
-                                );
-                                return (
-                                  user.role !== "viewer" &&
-                                  user.active !== false &&
-                                  !editAssignedUsers.some(
-                                    (assigned) =>
-                                      assigned.id === String(user.id),
-                                  )
-                                );
-                              })
-                              .map((user) => (
-                                <option key={user.id} value={user.id}>
-                                  {user.name}
-                                </option>
-                              ))}
+                            <option value="">Selecionar tipo</option>
+                            <option value="piscina">Piscina</option>
+                            <option value="manutencao">Manutenç��o</option>
+                            <option value="instalacao">Instalação</option>
+                            <option value="reparacao">Reparação</option>
+                            <option value="limpeza">Limpeza</option>
+                            <option value="furo">Furo de Água</option>
                           </select>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (currentEditAssignedUser) {
-                                const selectedUser = users.find(
-                                  (u) =>
-                                    String(u.id) === currentEditAssignedUser,
-                                );
-                                if (selectedUser) {
-                                  const userIdStr = String(selectedUser.id);
-                                  const isAlreadyAssigned =
-                                    editAssignedUsers.some(
-                                      (assigned) => assigned.id === userIdStr,
-                                    );
+                        </div>
 
-                                  console.log(
-                                    "Attempting to assign user:",
-                                    selectedUser.name,
-                                    "ID:",
-                                    userIdStr,
-                                    "Already assigned:",
-                                    isAlreadyAssigned,
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Nome do Cliente *
+                          </label>
+                          <input
+                            type="text"
+                            defaultValue={editingWork?.client}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Ex: João Silva"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Contacto *
+                          </label>
+                          <input
+                            type="tel"
+                            defaultValue={editingWork?.contact}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Ex: 244 123 456"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Morada *
+                          </label>
+                          <input
+                            type="text"
+                            defaultValue={editingWork?.location}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Ex: Rua das Flores, 123, Leiria"
+                            required
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Hora de Entrada *
+                            </label>
+                            <input
+                              type="datetime-local"
+                              defaultValue={editingWork?.startTime}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Hora de Saída
+                            </label>
+                            <input
+                              type="datetime-local"
+                              defaultValue={editingWork?.endTime}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Deixe vazio se ainda não terminou"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">
+                              Deixe vazio se ainda não terminou
+                            </p>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Estado da Obra *
+                          </label>
+                          <select
+                            defaultValue={editingWork?.status}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="pendente">Pendente</option>
+                            <option value="em-progresso">Em Progresso</option>
+                            <option value="concluida">Concluída</option>
+                            <option value="cancelada">Cancelada</option>
+                          </select>
+                        </div>
+
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id="folha-preenchida-edit"
+                            defaultChecked={editingWork?.workSheetCompleted}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <label
+                            htmlFor="folha-preenchida-edit"
+                            className="ml-2 text-sm text-gray-700"
+                          >
+                            Folha de obra preenchida/feita
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Técnicos Atribuídos */}
+                    <div>
+                      <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Users className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Técnicos Atribuídos
+                        </h3>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-sm text-gray-600 mb-2">
+                            Selecione os usuários responsáveis por esta obra
+                          </p>
+                          <div className="flex space-x-2">
+                            <select
+                              value={currentEditAssignedUser}
+                              onChange={(e) =>
+                                setCurrentEditAssignedUser(e.target.value)
+                              }
+                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="">
+                                {users.length > 0
+                                  ? "Selecionar usuário..."
+                                  : "Nenhum utilizador disponível"}
+                              </option>
+                              {users
+                                .filter((user) => {
+                                  return (
+                                    user.role !== "viewer" &&
+                                    user.active !== false &&
+                                    !editAssignedUsers.some(
+                                      (assigned) =>
+                                        assigned.id === String(user.id),
+                                    )
                                   );
+                                })
+                                .map((user) => (
+                                  <option key={user.id} value={user.id}>
+                                    {user.name}
+                                  </option>
+                                ))}
+                            </select>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (currentEditAssignedUser) {
+                                  const selectedUser = users.find(
+                                    (u) =>
+                                      String(u.id) === currentEditAssignedUser,
+                                  );
+                                  if (selectedUser) {
+                                    const userIdStr = String(selectedUser.id);
+                                    const isAlreadyAssigned =
+                                      editAssignedUsers.some(
+                                        (assigned) => assigned.id === userIdStr,
+                                      );
 
-                                  if (!isAlreadyAssigned) {
-                                    setEditAssignedUsers([
-                                      ...editAssignedUsers,
-                                      {
-                                        id: userIdStr,
-                                        name: selectedUser.name,
-                                      },
-                                    ]);
-                                    setCurrentEditAssignedUser("");
-                                    console.log("User assigned successfully!");
-                                  } else {
-                                    console.log(
-                                      "User already assigned, skipping",
-                                    );
+                                    if (!isAlreadyAssigned) {
+                                      setEditAssignedUsers([
+                                        ...editAssignedUsers,
+                                        {
+                                          id: userIdStr,
+                                          name: selectedUser.name,
+                                        },
+                                      ]);
+                                      setCurrentEditAssignedUser("");
+                                    }
                                   }
                                 }
-                              }
-                            }}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                          >
-                            Atribuir
-                          </button>
-                        </div>
-                        {editAssignedUsers.length > 0 && (
-                          <div className="mt-2 space-y-1">
-                            {editAssignedUsers.map((assignedUser, index) => (
-                              <div
-                                key={index}
-                                className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
-                              >
-                                <span className="text-sm text-blue-700 font-medium">
-                                  👤 {assignedUser.name}
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setEditAssignedUsers(
-                                      editAssignedUsers.filter(
-                                        (_, i) => i !== index,
-                                      ),
-                                    )
-                                  }
-                                  className="text-red-600 hover:text-red-800"
-                                >
-                                  <X className="h-4 w-4" />
-                                </button>
-                              </div>
-                            ))}
+                              }}
+                              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            >
+                              Atribuir
+                            </button>
                           </div>
-                        )}
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Valor Orçamentado (€)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          defaultValue={editingWork?.budgetValue}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="0.00"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Telefone do Cliente
-                        </label>
-                        <input
-                          type="tel"
-                          defaultValue={editingWork?.clientPhone}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="+351 912 345 678"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email do Cliente
-                        </label>
-                        <input
-                          type="email"
-                          defaultValue={editingWork?.clientEmail}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="cliente@email.com"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Prioridade
-                        </label>
-                        <select
-                          defaultValue={editingWork?.priority || "medium"}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option value="low">Baixa</option>
-                          <option value="medium">Média</option>
-                          <option value="high">Alta</option>
-                          <option value="urgent">Urgente</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Obra
-                        </label>
-                        <select
-                          defaultValue={editingWork?.workType || "installation"}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option value="installation">Instalação</option>
-                          <option value="maintenance">Manutenção</option>
-                          <option value="repair">Reparação</option>
-                          <option value="renovation">Renovação</option>
-                          <option value="inspection">Inspeção</option>
-                        </select>
+                          {editAssignedUsers.length > 0 && (
+                            <div className="mt-2 space-y-1">
+                              {editAssignedUsers.map((assignedUser, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
+                                >
+                                  <span className="text-sm text-blue-700 font-medium">
+                                    👤 {assignedUser.name}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setEditAssignedUsers(
+                                        editAssignedUsers.filter(
+                                          (_, i) => i !== index,
+                                        ),
+                                      )
+                                    }
+                                    className="text-red-600 hover:text-red-800"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
 
+                    {/* Observações */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Descrição
-                      </label>
-                      <textarea
-                        defaultValue={editingWork?.description}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        rows={4}
-                        placeholder="Descrição detalhada da obra"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações T��cnicas
-                      </label>
-                      <textarea
-                        defaultValue={editingWork?.technicalNotes}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        rows={3}
-                        placeholder="Observações técnicas, materiais necessários, etc."
-                      />
+                      <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <FileText className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Observações
+                        </h3>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Observações sobre a obra
+                          </label>
+                          <textarea
+                            defaultValue={editingWork?.observations}
+                            rows={4}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Observações sobre a obra..."
+                          />
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="flex space-x-4">
+                    {/* Actions */}
+                    <div className="flex space-x-4 pt-6 border-t border-gray-200">
                       <button
                         type="button"
                         onClick={() => {
@@ -7020,13 +6956,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           setCurrentEditAssignedUser("");
                           setActiveSection("obras");
                         }}
-                        className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
                       >
                         Cancelar
                       </button>
                       <button
-                        type="button"
+                        type="submit"
                         onClick={(e) => {
+                          e.preventDefault();
+
                           const form = (e.target as HTMLElement).closest(
                             "form",
                           );
@@ -7034,32 +6972,38 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             "input, select, textarea",
                           );
 
-                          const title = inputs[0].value; // Título da Obra
-                          const client = inputs[1].value; // Cliente
-                          const location = inputs[2].value; // Local
-                          const status = inputs[3].value; // Estado
-                          const startDate = inputs[4].value; // Data de Início
-                          const expectedEndDate = inputs[5].value; // Data de Conclusão Prevista
-                          // assignedTo now comes from editAssignedUsers state
-                          const budgetValue = inputs[6].value; // Valor Orçamentado
-                          const clientPhone = inputs[7].value; // Telefone do Cliente
-                          const clientEmail = inputs[8].value; // Email do Cliente
-                          const priority = inputs[9].value; // Prioridade
-                          const workType = inputs[10].value; // Tipo de Obra
-                          const description = inputs[12].value; // Descri��ão
-                          const technicalNotes = inputs[12].value; // Observações Técnicas
+                          const workSheetNumber = (
+                            inputs[0] as HTMLInputElement
+                          ).value; // Folha de Obra
+                          const workType = (inputs[1] as HTMLSelectElement)
+                            .value; // Tipo de Trabalho
+                          const client = (inputs[2] as HTMLInputElement).value; // Cliente
+                          const contact = (inputs[3] as HTMLInputElement).value; // Contacto
+                          const location = (inputs[4] as HTMLInputElement)
+                            .value; // Morada
+                          const startTime = (inputs[5] as HTMLInputElement)
+                            .value; // Hora de Entrada
+                          const endTime = (inputs[6] as HTMLInputElement).value; // Hora de Saída
+                          const status = (inputs[7] as HTMLSelectElement).value; // Estado
+                          const workSheetCompleted = (
+                            inputs[8] as HTMLInputElement
+                          ).checked; // Folha preenchida
+                          const observations = (
+                            inputs[9] as HTMLTextAreaElement
+                          ).value; // Observações
 
                           dataSync.updateWork(editingWork.id, {
-                            title,
+                            workSheetNumber,
+                            title: workSheetNumber,
+                            type: workType,
                             client,
+                            contact,
                             location,
+                            startTime,
+                            endTime,
                             status,
-                            startDate: startDate
-                              ? new Date(startDate).toISOString()
-                              : undefined,
-                            expectedEndDate: expectedEndDate
-                              ? new Date(expectedEndDate).toISOString()
-                              : undefined,
+                            workSheetCompleted,
+                            observations,
                             assignedTo:
                               editAssignedUsers.length > 0
                                 ? editAssignedUsers
@@ -7068,15 +7012,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : "",
                             assignedUsers: editAssignedUsers,
                             assignedUserIds: editAssignedUsers.map((u) => u.id),
-                            budgetValue: budgetValue
-                              ? parseFloat(budgetValue)
-                              : undefined,
-                            clientPhone,
-                            clientEmail,
-                            priority,
-                            workType,
-                            description,
-                            technicalNotes,
                           });
 
                           alert("Obra atualizada com sucesso!");
@@ -7085,9 +7020,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           setCurrentEditAssignedUser("");
                           setActiveSection("obras");
                         }}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
                       >
-                        Guardar Alterações
+                        <Building2 className="h-4 w-4" />
+                        <span>Guardar Alterações</span>
                       </button>
                     </div>
                   </form>
@@ -8152,7 +8088,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               setLoginError(result.error || "Credenciais inválidas");
             }
           } catch (error) {
-            console.error("❌ Login error:", error);
+            console.error("��� Login error:", error);
             setLoginError("Erro de sistema. Por favor, tente novamente.");
           }
         }}
@@ -8395,7 +8331,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        Número da Folha de Obra
+                        N��mero da Folha de Obra
                       </label>
                       <p className="text-gray-900 font-mono">
                         {selectedWork.workSheetNumber || selectedWork.title}
