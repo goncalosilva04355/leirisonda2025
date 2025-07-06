@@ -422,7 +422,7 @@ function App() {
             }
           })
           .catch((error) => {
-            console.error("��� Service Worker registration failed:", error);
+            console.error("❌ Service Worker registration failed:", error);
           });
       }, 1000);
     }
@@ -1416,6 +1416,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
     localStorage.setItem("enableMapsRedirect", enabled.toString());
+
+    // Show notification
+    console.log(`🗺️ Google Maps ${enabled ? "ativado" : "desativado"}`);
+
+    // You can add a toast notification here if needed
+    if (enabled) {
+      console.log(
+        "🗺️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+      );
+    }
   };
 
   const handleDeleteUser = (userId) => {
@@ -5743,7 +5753,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Estado e localização</li>
                         <li>• Informações de clientes</li>
-                        <li>• Histórico de manutenções</li>
+                        <li>�� Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -8568,7 +8578,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enablePhoneDialer}
                         >
-                          📞 {selectedWork.contact}
+                          ���� {selectedWork.contact}
                         </button>
                       )}
                     </div>
