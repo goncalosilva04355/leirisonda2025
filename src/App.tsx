@@ -845,7 +845,7 @@ LEIRISONDA - RELAT��RIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manutenções: ${maintenance.length}
+- Total de Manutenç��es: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -3002,7 +3002,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç��es agendadas e programadas
+                          Manuten����es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -7224,9 +7224,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           };
 
                           // If work type is "furo", include bore data
-                          if (workType === "furo") {
-                            const boreInputs = form.querySelectorAll(
-                              "#edit-furo-details input, #edit-furo-details select, #edit-furo-details textarea",
+                          // Always capture bore data from the cyan section
+                          const boreSection =
+                            form.querySelector(".border-cyan-200");
+                          if (boreSection) {
+                            const boreInputs = boreSection.querySelectorAll(
+                              "input, select, textarea",
                             );
                             console.log(
                               "��� DEBUG boreInputs found:",
