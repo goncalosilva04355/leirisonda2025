@@ -45,6 +45,7 @@ import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
+import { DataProtectionService } from "./utils/dataProtection";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
 
@@ -143,6 +144,29 @@ function App() {
 
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
+
+  // PROTEÇÃO CRÍTICA: Backup automático a cada 30 segundos
+  useEffect(() => {
+    // Backup inicial
+    DataProtectionService.createEmergencyBackup();
+
+    // Backup automático contínuo
+    const backupInterval = setInterval(() => {
+      DataProtectionService.createEmergencyBackup();
+    }, 30000); // A cada 30 segundos
+
+    return () => clearInterval(backupInterval);
+  }, []);
+
+  // PROTEÇÃO CRÍTICA: Verificar integridade ao iniciar
+  useEffect(() => {
+    const integrity = DataProtectionService.checkDataIntegrity();
+    if (!integrity.valid) {
+      console.error("🚨 DATA INTEGRITY ISSUES DETECTED:", integrity.issues);
+      // Tentar restaurar automaticamente
+      DataProtectionService.restoreFromLatestBackup();
+    }
+  }, []);
   const {
     pools,
     maintenance,
@@ -787,7 +811,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores ser��o mantidos. Confirma?",
+        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -944,7 +968,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
 - Manutenções Realizadas: ${maintenance.length}
-- Futuras Manutenç���es: ${futureMaintenance.length}
+- Futuras Manutenç����es: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
