@@ -932,7 +932,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç������o: ${work.location}
+   Localizaç��������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -7720,8 +7720,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   }
   // }, []);
 
-  // Always allow access for testing - bypass authentication
-  if (false) {
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
     console.log(
       "🛡️ SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
