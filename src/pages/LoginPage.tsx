@@ -87,7 +87,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   // Advanced Settings Modal
   if (showAdvancedSettings) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-blue-600 flex items-center justify-center">
         <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
           <div className="text-center mb-6">
             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -149,7 +149,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-blue-600 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
