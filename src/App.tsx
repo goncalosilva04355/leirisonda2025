@@ -46,6 +46,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
+import { MapsDebugButton } from "./components/MapsDebugButton";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
@@ -421,7 +422,7 @@ function App() {
             }
           })
           .catch((error) => {
-            console.error("❌ Service Worker registration failed:", error);
+            console.error("��� Service Worker registration failed:", error);
           });
       }, 1000);
     }
@@ -8948,6 +8949,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Install Prompt for Mobile */}
         <InstallPrompt />
+
+        {/* Debug Button for Maps */}
+        <MapsDebugButton />
 
         {/* Admin Login Modal */}
         {showAdminLogin && !isAdminAuthenticated && (
