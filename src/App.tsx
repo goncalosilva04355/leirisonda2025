@@ -787,7 +787,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores ser��o mantidos. Confirma?",
       )
     ) {
       try {
@@ -8168,31 +8168,63 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     return (
-      <LoginPage
-        onLogin={async (email: string, password: string) => {
-          console.log("🔐 Login attempt:", email);
-          setLoginForm({ email, password });
+      <div>
+        <LoginPage
+          onLogin={async (email: string, password: string) => {
+            console.log("🔐 Login attempt:", email);
+            setLoginForm({ email, password });
 
-          try {
-            const result = await authService.login(email, password);
+            try {
+              const result = await authService.login(email, password);
 
-            if (result.success && result.user) {
-              setCurrentUser(result.user);
-              setIsAuthenticated(true);
-              localStorage.setItem("currentUser", JSON.stringify(result.user));
-              setLoginForm({ email: "", password: "" });
-              console.log("✅ Login successful");
-            } else {
-              setLoginError(result.error || "Credenciais inválidas");
+              if (result.success && result.user) {
+                setCurrentUser(result.user);
+                setIsAuthenticated(true);
+                localStorage.setItem(
+                  "currentUser",
+                  JSON.stringify(result.user),
+                );
+                setLoginForm({ email: "", password: "" });
+                console.log("✅ Login successful");
+              } else {
+                setLoginError(result.error || "Credenciais inválidas");
+              }
+            } catch (error) {
+              console.error("��� Login error:", error);
+              setLoginError("Erro de sistema. Por favor, tente novamente.");
             }
-          } catch (error) {
-            console.error("��� Login error:", error);
-            setLoginError("Erro de sistema. Por favor, tente novamente.");
-          }
-        }}
-        loginError={loginError}
-        isLoading={false}
-      />
+          }}
+          loginError={loginError}
+          isLoading={false}
+        />
+
+        {/* Admin Login Modal - também funciona na página de login */}
+        {showAdminLogin && !isAdminAuthenticated && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg max-w-md w-full mx-4">
+              <AdminLogin
+                onLogin={() => {
+                  setIsAdminAuthenticated(true);
+                  setShowAdminLogin(false);
+                }}
+                onBack={() => setShowAdminLogin(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Admin Page - também funciona na página de login */}
+        {isAdminAuthenticated && (
+          <div className="fixed inset-0 bg-white z-50">
+            <AdminPage
+              onLogout={() => {
+                setIsAdminAuthenticated(false);
+                setShowAdminLogin(false);
+              }}
+            />
+          </div>
+        )}
+      </div>
     );
   }
 
