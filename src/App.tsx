@@ -320,7 +320,9 @@ function App() {
     setCurrentUser(null);
 
     // Firebase auth disabled to prevent crashes
-    console.log("��� SECURITY: Firebase auth listeners disabled for stability");
+    console.log(
+      "���� SECURITY: Firebase auth listeners disabled for stability",
+    );
     // Firebase auth code removed to fix syntax errors
 
     // DO NOT initialize default admin automatically - this was causing the security issue
@@ -1667,9 +1669,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div className="text-right">
                       <div className="text-xl font-medium text-gray-900">
-                        {new Date().toLocaleTimeString('pt-PT', {
-                          hour: '2-digit',
-                          minute: '2-digit'
+                        {new Date().toLocaleTimeString("pt-PT", {
+                          hour: "2-digit",
+                          minute: "2-digit",
                         })}
                       </div>
                     </div>
@@ -1681,14 +1683,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Olá, {currentUser?.name || "Utilizador"}
                     </h1>
                     <div className="flex items-center justify-center space-x-2 text-gray-600 mb-4">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                       <span>
-                        {new Date().toLocaleDateString('pt-PT', {
-                          weekday: 'long',
-                          day: '2-digit',
-                          month: 'long'
+                        {new Date().toLocaleDateString("pt-PT", {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "long",
                         })}
                       </span>
                     </div>
@@ -1703,7 +1713,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {currentUser?.name?.toLowerCase().includes("alexandre") && (
                   <div className="bg-white rounded-lg p-4 shadow-sm">
                     <div className="space-y-2">
-                      <h3 className="text-sm font-medium text-gray-700">Ferramentas de Debug</h3>
+                      <h3 className="text-sm font-medium text-gray-700">
+                        Ferramentas de Debug
+                      </h3>
                       {currentUser?.name
                         .toLowerCase()
                         .includes("alexandre") && (
@@ -1774,12 +1786,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </button>
                         </div>
                       )}
-                      <p className="text-gray-600 text-sm">
-                        Bem-vindo ao sistema Leirisonda
-                      </p>
                     </div>
                   </div>
-                </div>
+                )}
 
                 {/* Status Cards */}
                 <div className="space-y-3">
