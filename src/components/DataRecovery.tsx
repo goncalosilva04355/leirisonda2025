@@ -8,6 +8,7 @@ import {
   X,
 } from "lucide-react";
 import { DataProtectionService } from "../utils/dataProtection";
+import { EmergencyDataRecovery } from "../utils/emergencyDataRecovery";
 
 export const DataRecovery: React.FC = () => {
   const [protectionStatus, setProtectionStatus] = useState(() =>
@@ -265,6 +266,75 @@ export const DataRecovery: React.FC = () => {
             >
               <Download className="h-4 w-4" />
               <span>Criar Backup</span>
+            </button>
+          </div>
+
+          {/* RECUPERAÇÃO DE EMERGÊNCIA CRÍTICA */}
+          <div className="flex items-center justify-between p-4 bg-red-100 border-2 border-red-300 rounded-lg">
+            <div>
+              <h5 className="font-semibold text-red-900">
+                🚨 Recuperação de Emergência
+              </h5>
+              <p className="text-sm text-red-700">
+                <strong>USAR APENAS EM CASO DE PERDA TOTAL DE DADOS!</strong>
+                <br />
+                Procura dados em TODAS as fontes possíveis e reconstrói a base
+                de dados.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                if (
+                  confirm(
+                    "🚨 ATENÇÃO: Isto irá sobrescrever todos os dados atuais!\n\nEsta função procura dados perdidos em TODO o localStorage e reconstrói a base de dados.\n\nUsar apenas se perdeu TODOS os dados.\n\nContinuar?",
+                  )
+                ) {
+                  setIsRestoring(true);
+                  setRestoreResult(
+                    "🚨 Executando recuperação de emergência crítica...",
+                  );
+
+                  try {
+                    const result =
+                      EmergencyDataRecovery.performCompleteRecovery();
+
+                    if (result.success) {
+                      setRestoreResult(
+                        "✅ RECUPERAÇÃO DE EMERGÊNCIA CONCLUÍDA!\n\n" +
+                          result.message,
+                      );
+                      setTimeout(() => {
+                        window.location.reload();
+                      }, 3000);
+                    } else {
+                      setRestoreResult(
+                        "❌ RECUPERAÇÃO DE EMERGÊNCIA FALHOU!\n\n" +
+                          result.message,
+                      );
+                    }
+                  } catch (error) {
+                    setRestoreResult(
+                      `❌ Erro crítico na recuperação: ${error}`,
+                    );
+                  } finally {
+                    setIsRestoring(false);
+                  }
+                }
+              }}
+              disabled={isRestoring}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 flex items-center space-x-2"
+            >
+              {isRestoring ? (
+                <>
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  <span>Recuperando...</span>
+                </>
+              ) : (
+                <>
+                  <AlertTriangle className="h-4 w-4" />
+                  <span>SOS Recovery</span>
+                </>
+              )}
             </button>
           </div>
 
