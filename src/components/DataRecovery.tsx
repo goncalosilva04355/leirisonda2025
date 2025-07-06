@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { DataProtectionService } from "../utils/dataProtection";
 import { EmergencyDataRecovery } from "../utils/emergencyDataRecovery";
+import { ForceInitialization } from "../utils/forceInitialization";
 
 export const DataRecovery: React.FC = () => {
   const [protectionStatus, setProtectionStatus] = useState(() =>
@@ -138,18 +139,98 @@ export const DataRecovery: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* DIAGNÓSTICO CRÍTICO */}
+      <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
+        <div className="flex items-start">
+          <AlertTriangle className="h-6 w-6 text-yellow-600 mt-1 mr-3" />
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-yellow-900 mb-2">
+              🔍 Diagnóstico Instantâneo
+            </h3>
+            <p className="text-yellow-800 mb-4">
+              Execute primeiro para diagnosticar problemas no sistema.
+            </p>
+            <button
+              onClick={() => {
+                const report = ForceInitialization.diagnoseSystem();
+                setRestoreResult(`🔍 DIAGNÓSTICO COMPLETO:\n\n${report}`);
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
+            >
+              🔍 Diagnosticar Sistema
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* INICIALIZAÇÃO FORÇADA - SOLUÇÃO INSTANTÂNEA */}
+      <div className="bg-green-50 border-2 border-green-300 rounded-lg p-4">
+        <div className="flex items-start">
+          <Check className="h-6 w-6 text-green-600 mt-1 mr-3" />
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-green-900 mb-2">
+              ⚡ Inicialização Forçada - SOLUÇÃO INSTANTÂNEA
+            </h3>
+            <p className="text-green-800 mb-4">
+              <strong>RECOMENDADO:</strong> Cria estrutura funcional
+              imediatamente. Procura dados existentes ou cria dados de exemplo.
+              <br />
+              <strong>100% SEGURO</strong> - Não apaga nada, apenas cria o que
+              falta.
+            </p>
+            <button
+              onClick={() => {
+                setIsRestoring(true);
+                setRestoreResult("⚡ Executando inicialização forçada...");
+
+                try {
+                  const result =
+                    ForceInitialization.executeForceInitialization();
+
+                  setRestoreResult(
+                    "✅ INICIALIZAÇÃO FORÇADA CONCLUÍDA!\n\n" + result.message,
+                  );
+
+                  if (result.success) {
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 2000);
+                  }
+                } catch (error) {
+                  setRestoreResult(`❌ Erro na inicialização: ${error}`);
+                } finally {
+                  setIsRestoring(false);
+                }
+              }}
+              disabled={isRestoring}
+              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center space-x-2 font-semibold"
+            >
+              {isRestoring ? (
+                <>
+                  <RefreshCw className="h-5 w-5 animate-spin" />
+                  <span>Inicializando...</span>
+                </>
+              ) : (
+                <>
+                  <Check className="h-5 w-5" />
+                  <span>⚡ SOLUÇÃO INSTANTÂNEA</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Alert de emergência */}
       <div className="bg-red-50 border border-red-200 rounded-lg p-6">
         <div className="flex items-start">
           <AlertTriangle className="h-6 w-6 text-red-600 mt-1 mr-3" />
           <div>
             <h3 className="text-lg font-semibold text-red-900 mb-2">
-              🚨 Centro de Recuperação de Emergência
+              🚨 Centro de Recuperação Avançada
             </h3>
             <p className="text-red-800 mb-4">
-              Use esta área APENAS se as obras ou outros dados desapareceram.
-              Todas as operações aqui são monitorizadas e criam backups
-              automáticos.
+              Use estas opções APENAS se a "Solução Instantânea" não funcionar.
             </p>
           </div>
         </div>
