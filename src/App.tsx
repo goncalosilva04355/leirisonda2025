@@ -24,6 +24,7 @@ import {
   Download,
   ArrowLeft,
   Bell,
+  FileText,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
@@ -871,7 +872,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localização: ${pool.location}
+   Localizaç��o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -5735,7 +5736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório Completo
+                          Relat��rio Completo
                         </h3>
                         <p className="text-sm text-gray-600">
                           Todas as informações
@@ -7505,7 +7506,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <option value="1.25">1¼ polegadas</option>
                               <option value="1.5">1½ polegadas</option>
                               <option value="2">2 polegadas</option>
-                              <option value="2.5">2½ polegadas</option>
+                              <option value="2.5">2�� polegadas</option>
                               <option value="3">3 polegadas</option>
                               <option value="4">4 polegadas</option>
                               <option value="5">5 polegadas</option>
@@ -8533,7 +8534,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   {/* Detalhes Completos - Seções Expandidas */}
                   <div className="mt-6 space-y-6">
-                    {/* Informações Adicionais */}
+                    {/* Informa��ões Adicionais */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Informações Detalhadas
