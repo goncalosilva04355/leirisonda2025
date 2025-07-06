@@ -113,8 +113,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     },
     {
       id: "phone-settings" as AdminSection,
-      title: "Configurações de Telefone",
-      description: "Marcação automática e configurações de chamadas",
+      title: "Telefone & Navegação",
+      description: "Marcação automática e redirecionamento para Maps",
       icon: Settings,
       color: "bg-blue-500",
     },

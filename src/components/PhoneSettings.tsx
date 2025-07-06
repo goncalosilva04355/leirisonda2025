@@ -110,7 +110,7 @@ export const PhoneSettings: React.FC = () => {
         <div className="flex items-center mb-4">
           <Phone className="h-6 w-6 text-blue-600 mr-3" />
           <h3 className="text-lg font-semibold text-gray-900">
-            Configurações de Marcação Automática
+            Configurações de Telefone e Navegação
           </h3>
         </div>
 
