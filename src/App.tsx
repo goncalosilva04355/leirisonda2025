@@ -890,7 +890,7 @@ ${index + 1}. ${work.title}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Or���amento: ���${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: ��${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: ���${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -6404,11 +6404,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <div className="flex-1">
                             {/* Enhanced Header with Work ID */}
                             <div className="flex items-center space-x-3 mb-3">
-                              <div className="flex items-center space-x-2">
-                                <h3 className="text-lg font-bold text-gray-900">
-                                  {work.title}
-                                </h3>
-                              </div>
+                              <div className="flex items-center space-x-2"></div>
                               <span
                                 className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                   work.status === "pending"
@@ -8341,7 +8337,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enablePhoneDialer}
                         >
-                          �� {selectedWork.contact}
+                          ���� {selectedWork.contact}
                         </button>
                       )}
                     </div>
