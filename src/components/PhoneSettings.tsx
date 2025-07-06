@@ -269,13 +269,44 @@ export const PhoneSettings: React.FC = () => {
             <h4 className="font-medium text-yellow-900 mb-2">
               ℹ️ Informações Importantes
             </h4>
-            <ul className="text-yellow-800 text-sm space-y-1">
-              <li>• Funciona em iPhone, Android e desktop</li>
-              <li>• Usa o protocolo padrão tel: para máxima compatibilidade</li>
-              <li>• Limpa automaticamente números (remove espaços, traços)</li>
-              <li>• A configuração é sincronizada globalmente na aplicação</li>
-              <li>• Em desktop, pode abrir aplicações como Skype ou Teams</li>
-            </ul>
+            <div className="space-y-3">
+              <div>
+                <h5 className="font-medium text-yellow-900 mb-1">
+                  📞 Marcação Automática:
+                </h5>
+                <ul className="text-yellow-800 text-sm space-y-1 ml-4">
+                  <li>• Funciona em iPhone, Android e desktop</li>
+                  <li>
+                    • Usa o protocolo padrão tel: para máxima compatibilidade
+                  </li>
+                  <li>
+                    • Limpa automaticamente números (remove espaços, traços)
+                  </li>
+                  <li>
+                    • Em desktop, pode abrir aplicações como Skype ou Teams
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h5 className="font-medium text-yellow-900 mb-1">
+                  🗺️ Google Maps:
+                </h5>
+                <ul className="text-yellow-800 text-sm space-y-1 ml-4">
+                  <li>• Abre Google Maps numa nova aba/janela</li>
+                  <li>• Funciona em qualquer navegador e dispositivo</li>
+                  <li>• Codifica automaticamente caracteres especiais</li>
+                  <li>
+                    • Pode abrir apps nativas do Maps em dispositivos móveis
+                  </li>
+                </ul>
+              </div>
+
+              <p className="text-yellow-800 text-sm font-medium">
+                🔄 Ambas as configurações são sincronizadas globalmente na
+                aplicação
+              </p>
+            </div>
           </div>
 
           {/* Current Settings Display */}
@@ -285,7 +316,7 @@ export const PhoneSettings: React.FC = () => {
             </h4>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-gray-600">Marcação Automática:</span>
+                <span className="text-gray-600">📞 Marcação Automática:</span>
                 <span
                   className={`ml-2 font-medium ${
                     enablePhoneDialer ? "text-green-600" : "text-red-600"
@@ -295,9 +326,19 @@ export const PhoneSettings: React.FC = () => {
                 </span>
               </div>
               <div>
-                <span className="text-gray-600">Armazenamento:</span>
+                <span className="text-gray-600">🗺️ Google Maps:</span>
+                <span
+                  className={`ml-2 font-medium ${
+                    enableMapsRedirect ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {enableMapsRedirect ? "Ativado" : "Desativado"}
+                </span>
+              </div>
+              <div className="col-span-2">
+                <span className="text-gray-600">💾 Armazenamento:</span>
                 <span className="ml-2 font-medium text-blue-600">
-                  Local Storage
+                  Local Storage (sincronizado globalmente)
                 </span>
               </div>
             </div>
