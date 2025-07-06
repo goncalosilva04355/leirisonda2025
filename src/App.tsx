@@ -1111,7 +1111,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n���� Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n����� Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -7487,13 +7487,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         placeholder="Lista de materiais e produtos utilizados"
                       />
                     </div>
-
-                    {/* Debug - Ver tipo da obra */}
-                    {console.log(
-                      "🔍 DEBUG editingWork:",
-                      editingWork?.type,
-                      editingWork,
-                    )}
 
                     {/* Detalhes do Furo de Água - Se aplicável */}
                     {(editingWork?.type === "furo" ||
