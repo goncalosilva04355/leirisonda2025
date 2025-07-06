@@ -2022,9 +2022,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="text-sm font-medium text-gray-600">
                                     📍 Morada:
                                   </span>
-                                  <span className="text-sm text-gray-900">
-                                    {work.location || "Não especificada"}
-                                  </span>
+                                  {work.location ? (
+                                    <button
+                                      onClick={() =>
+                                        handleAddressClick(work.location)
+                                      }
+                                      className={`text-sm cursor-pointer hover:opacity-80 ${
+                                        enableMapsRedirect
+                                          ? "text-blue-600 hover:text-blue-800 underline"
+                                          : "text-gray-900 hover:text-blue-600"
+                                      }`}
+                                    >
+                                      {work.location}
+                                    </button>
+                                  ) : (
+                                    <span className="text-sm text-gray-500">
+                                      Não especificada
+                                    </span>
+                                  )}
                                 </div>
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
@@ -5788,7 +5803,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>��� Trabalhos realizados</li>
                         <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observaç���es</li>
+                        <li>��� Estados e observaç���es</li>
                       </ul>
                     </div>
                     <button
