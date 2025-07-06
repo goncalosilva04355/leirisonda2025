@@ -6551,9 +6551,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div>
                                 <span className="font-medium">Local:</span>{" "}
                                 <button
-                                  onClick={() =>
-                                    handleAddressClick(work.location)
-                                  }
+                                  onClick={() => {
+                                    if (work?.location) {
+                                      handleAddressClick(work.location);
+                                    }
+                                  }}
                                   className={`text-xs ${
                                     enableMapsRedirect
                                       ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
@@ -8446,9 +8448,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Local
                       </label>
                       <button
-                        onClick={() =>
-                          handleAddressClick(selectedWork.location)
-                        }
+                        onClick={() => {
+                          if (selectedWork?.location) {
+                            handleAddressClick(selectedWork.location);
+                          }
+                        }}
                         className={`text-left ${
                           enableMapsRedirect
                             ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
