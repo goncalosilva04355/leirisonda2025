@@ -7490,10 +7490,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     {/* Detalhes do Furo de Água - Sempre visível para teste */}
                     <div
-                      <div
-                        id="edit-furo-details"
-                        className="border border-cyan-200 rounded-lg p-6 bg-cyan-50"
-                      >
+                      id="edit-furo-details"
+                      className="border border-cyan-200 rounded-lg p-6 bg-cyan-50"
+                    >
                         <h3 className="text-lg font-semibold text-cyan-700 mb-4">
                           🚰 Detalhes do Furo de Água
                         </h3>
