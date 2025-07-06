@@ -771,6 +771,8 @@ function App() {
       // Clear all authentication data
       localStorage.removeItem("currentUser");
       localStorage.removeItem("isAuthenticated");
+      // Clear saved login credentials (auto-login) when user manually logs out
+      localStorage.removeItem("savedLoginCredentials");
 
       // Clear form
       setLoginForm({ email: "", password: "" });
@@ -1442,7 +1444,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
+              `��️ Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
