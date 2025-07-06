@@ -44,19 +44,18 @@ class MockAuthService {
         localStorage.setItem("mock-users", JSON.stringify(this.users));
       }
     } else {
-      // Initialize with default admin user
+      // Initialize with only real admin user - NO MOCK DATA
       this.users = [
         {
-          uid: "mock-admin-1",
+          uid: "admin-1",
           email: "gongonsilva@gmail.com",
-          password: "19867gsf", // Gonçalo's password
+          password: "19867gsf",
           name: "Gonçalo Fonseca",
           role: "super_admin",
           active: true,
           createdAt: new Date().toISOString(),
         },
       ];
-      // Save default users
       localStorage.setItem("mock-users", JSON.stringify(this.users));
     }
 
