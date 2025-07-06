@@ -13,8 +13,8 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Password de administração (pode ser configurado como variável de ambiente)
-    const adminPassword = "admin123"; // Mudança: usar uma palavra-passe mais segura em produção
+    // Password de administração (mesma que no LoginPage)
+    const adminPassword = "19867";
 
     if (password === adminPassword) {
       onLogin();
