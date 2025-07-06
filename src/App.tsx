@@ -1638,30 +1638,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           return (
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
-              <div className="px-4 py-4 space-y-4 relative">
-                {/* Floating Icons - Overlay */}
-                <div className="absolute top-6 left-6 z-20 flex space-x-3">
-                  {/* Menu Hamburger */}
-                  <button
-                    onClick={() => setSidebarOpen(true)}
-                    className="p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="w-5 h-5 flex flex-col justify-between">
-                      <div className="w-full h-0.5 bg-gray-700"></div>
-                      <div className="w-full h-0.5 bg-gray-700"></div>
-                      <div className="w-full h-0.5 bg-gray-700"></div>
-                    </div>
-                  </button>
-
-                  {/* Back Arrow */}
-                  <button
-                    onClick={() => window.history.back()}
-                    className="p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-colors text-gray-700 font-bold text-lg"
-                  >
-                    ←
-                  </button>
-                </div>
-
+              <div className="px-4 py-4 space-y-4">
                 {/* Simple Welcome Header */}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
@@ -2206,7 +2183,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">🔍</span>
+                      <span className="text-blue-600">���</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
