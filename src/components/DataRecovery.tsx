@@ -31,6 +31,8 @@ export const DataRecovery: React.FC = () => {
     setRestoreResult(null);
 
     try {
+      console.log("🚨 MANUAL RESTORE INITIATED");
+
       // Criar backup antes de restaurar
       DataProtectionService.createEmergencyBackup();
 
@@ -46,12 +48,36 @@ export const DataRecovery: React.FC = () => {
           window.location.reload();
         }, 2000);
       } else {
-        setRestoreResult(
-          "❌ Falha na restauração. Nenhum backup válido encontrado.",
-        );
+        // Se a restauração falhar, criar um backup de recuperação
+        console.log("🆘 Creating recovery backup...");
+        const recoveryId = DataProtectionService.createRecoveryBackup();
+
+        if (recoveryId) {
+          setRestoreResult(
+            "⚠️ Backup de recuperação criado. Dados inicializados como vazios. A página será recarregada...",
+          );
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          setRestoreResult(
+            "❌ Falha completa na restauração. Contacte o suporte técnico.",
+          );
+        }
       }
     } catch (error) {
-      setRestoreResult(`❌ Erro na restauração: ${error}`);
+      console.error("❌ Restoration error:", error);
+      setRestoreResult(`❌ Erro crítico na restauração: ${error}`);
+
+      // Tentar criar pelo menos um backup de emergência
+      try {
+        DataProtectionService.createRecoveryBackup();
+        setRestoreResult(
+          (prevResult) => `${prevResult}\n🆘 Backup de emergência criado.`,
+        );
+      } catch (secondError) {
+        console.error("❌ Even emergency backup failed:", secondError);
+      }
     } finally {
       setIsRestoring(false);
     }
