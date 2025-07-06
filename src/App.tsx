@@ -2163,7 +2163,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">���</span>
+                      <span className="text-blue-600">📊</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -2601,7 +2601,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o de piscinas no sistema
+                          Gestão de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -2787,7 +2787,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Hist��rico de manutenções realizadas
+                          Histórico de manutenções realizadas
                         </p>
                       </div>
                     </div>
@@ -2915,7 +2915,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��� {maint.clientContact}
+                                        📞 {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -2937,7 +2937,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    �� {maint.location}
+                                    📍 {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -3744,7 +3744,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observaç��es Específicas do Furo */}
+                          {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observaç��es Específicas do Furo
@@ -6245,7 +6245,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Secund��rio
+                            Email Secundário
                           </label>
                           <input
                             type="email"
@@ -6836,7 +6836,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="pendente">Pendente</option>
                             <option value="em-progresso">Em Progresso</option>
-                            <option value="concluida">Conclu��da</option>
+                            <option value="concluida">Concluída</option>
                             <option value="cancelada">Cancelada</option>
                           </select>
                         </div>
