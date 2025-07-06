@@ -1676,7 +1676,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">
                         Olá, {currentUser?.name || "Gonçalo Fonseca"}
                       </h1>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-gray-800 text-sm font-medium">
                         {new Date().toLocaleDateString("pt-PT", {
                           weekday: "long",
                           day: "2-digit",
@@ -1686,7 +1686,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
 
                     {/* Online Status */}
-                    <div className="flex items-center justify-center space-x-1 text-gray-600 text-sm">
+                    <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
                       <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
                       <span>Online</span>
                     </div>
@@ -5643,7 +5643,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>• Equipas responsáveis</li>
-                        <li>• Estados de progresso</li>
+                        <li>�� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
