@@ -214,13 +214,11 @@ export interface SyncActions {
 export function useDataSync(): SyncState & SyncActions {
   // Simple initial state - move complex recovery to useEffect
   const [state, setState] = useState<SyncState>({
-    pools: initialPools,
-    maintenance: initialMaintenance,
-    futureMaintenance: initialMaintenance.filter(
-      (m) => new Date(m.scheduledDate) >= new Date(),
-    ),
-    works: initialWorks,
-    clients: initialClients,
+    pools: [],
+    maintenance: [],
+    futureMaintenance: [],
+    works: [],
+    clients: [],
     lastSync: null,
   });
 
