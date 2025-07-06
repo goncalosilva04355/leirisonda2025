@@ -7840,11 +7840,42 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     return (
       <LoginPage
         onLogin={async (email: string, password: string) => {
+          // Set the form data first
           setLoginForm({ email, password });
-          const mockEvent = {
-            preventDefault: () => {},
-          } as React.FormEvent;
-          await handleLogin(mockEvent);
+
+          // Call login directly with the credentials
+          setLoginError("");
+
+          try {
+            console.log("🔐 Attempting login for:", email);
+
+            const result = await authService.login(email, password);
+            console.log("🔐 Auth result:", result);
+
+            if (result.success && result.user) {
+              console.log("✅ Login successful for:", result.user.email);
+
+              // Set user state and authentication
+              setCurrentUser(result.user);
+              setIsAuthenticated(true);
+              localStorage.setItem("currentUser", JSON.stringify(result.user));
+
+              // Clear login form
+              setLoginForm({ email: "", password: "" });
+
+              console.log("✅ Login state updated", {
+                user: result.user.email,
+                role: result.user.role,
+                isAuthenticated: true,
+              });
+            } else {
+              console.warn("⚠️ Login failed:", result.error);
+              setLoginError(result.error || "Credenciais inválidas");
+            }
+          } catch (error) {
+            console.error("❌ Login error:", error);
+            setLoginError("Erro de sistema. Por favor, tente novamente.");
+          }
         }}
         loginError={loginError}
         isLoading={false}
