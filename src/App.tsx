@@ -1027,7 +1027,7 @@ ${maintenance
   .map(
     (maint, index) => `
 ${index + 1}. ${maint.poolName} - ${maint.type}
-   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | T��cnico: ${maint.technician}
+   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | Técnico: ${maint.technician}
 `,
   )
   .join("")}
@@ -6757,6 +6757,40 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="date"
                           defaultValue={editingWork?.startDate?.split("T")[0]}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Contacto
+                        </label>
+                        <input
+                          type="tel"
+                          defaultValue={editingWork?.contact}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Telefone/contacto"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Folha de Obra
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingWork?.workSheetNumber}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="LS-XXXX-XXX"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Orçamento (€)
+                        </label>
+                        <input
+                          type="number"
+                          defaultValue={editingWork?.budget}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="0.00"
+                          step="0.01"
                         />
                       </div>
                       <div>
