@@ -3529,7 +3529,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Nível da Água (m) *
+                                  N��vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -8281,14 +8281,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        N��mero da Folha de Obra
-                      </label>
-                      <p className="text-gray-900 font-mono">
-                        {selectedWork.workSheetNumber || selectedWork.title}
-                      </p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
                         Tipo de Obra
                       </label>
                       <p className="text-gray-900 capitalize">
@@ -8348,14 +8340,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         {selectedWork.contact || "Não especificado"}
                       </p>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Folha de Obra
-                      </label>
-                      <p className="text-gray-900 font-mono">
-                        {selectedWork.workSheetNumber || "Não especificado"}
-                      </p>
-                    </div>
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Hora de Entrada
