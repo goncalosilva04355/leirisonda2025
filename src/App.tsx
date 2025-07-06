@@ -1655,6 +1655,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <h1 className="text-lg font-semibold text-gray-900">
                         Olá, {currentUser?.name || "Utilizador"}
                       </h1>
+                      <p className="text-gray-600 text-sm">
+                        Bem-vindo ao sistema Leirisonda
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Debug functions for Alexandre - keep existing functionality */}
+                {currentUser?.name?.toLowerCase().includes("alexandre") && (
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <div className="space-y-2">
+                      <h3 className="text-sm font-medium text-gray-700">
+                        Ferramentas de Debug
+                      </h3>
                       {currentUser?.name
                         .toLowerCase()
                         .includes("alexandre") && (
@@ -5418,7 +5432,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manutenções e piscinas
+                      Elimine todos os dados de obras, manuten��ões e piscinas
                       para começar com uma aplicaç��o limpa. Os utilizadores são
                       mantidos.
                     </p>
