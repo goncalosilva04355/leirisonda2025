@@ -363,15 +363,18 @@ function App() {
     // Handle URL hash for PWA shortcuts
     const handleHashChange = () => {
       const hash = window.location.hash.substring(1); // Remove the '#'
-      if (hash && isAuthenticated) {
+      if (hash === "administracao") {
+        // Handle admin access regardless of authentication state
+        setShowAdminLogin(true);
+        // Clear the hash to avoid loops
+        window.history.replaceState(null, "", window.location.pathname);
+      } else if (hash && isAuthenticated) {
         setActiveSection(hash);
       }
     };
 
-    // Check initial hash on load if authenticated
-    if (isAuthenticated) {
-      handleHashChange();
-    }
+    // Check initial hash on load
+    handleHashChange();
 
     // Listen for hash changes
     window.addEventListener("hashchange", handleHashChange);
@@ -2119,7 +2122,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>⏰</span>
+                                      <span>���</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -6107,7 +6110,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }
                                 >
                                   📍{" "}
-                                  {client?.address || "Endereço não disponível"}
+                                  {client?.address ||
+                                    "Endereço n��o disponível"}
                                 </button>
                               </div>
                               <div>
