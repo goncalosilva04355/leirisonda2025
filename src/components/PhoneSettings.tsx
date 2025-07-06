@@ -6,7 +6,14 @@ export const PhoneSettings: React.FC = () => {
     return localStorage.getItem("enablePhoneDialer") === "true";
   });
 
+  const [enableMapsRedirect, setEnableMapsRedirect] = useState(() => {
+    return localStorage.getItem("enableMapsRedirect") === "true";
+  });
+
   const [testNumber, setTestNumber] = useState("+351 912 345 678");
+  const [testAddress, setTestAddress] = useState(
+    "Quinta da Marinha, Cascais, Portugal",
+  );
   const [testResult, setTestResult] = useState<string | null>(null);
 
   const togglePhoneDialer = (enabled: boolean) => {
@@ -16,6 +23,18 @@ export const PhoneSettings: React.FC = () => {
     // Trigger a custom event to notify the main app
     window.dispatchEvent(
       new CustomEvent("phoneDialerToggled", {
+        detail: { enabled },
+      }),
+    );
+  };
+
+  const toggleMapsRedirect = (enabled: boolean) => {
+    setEnableMapsRedirect(enabled);
+    localStorage.setItem("enableMapsRedirect", enabled.toString());
+
+    // Trigger a custom event to notify the main app
+    window.dispatchEvent(
+      new CustomEvent("mapsRedirectToggled", {
         detail: { enabled },
       }),
     );
@@ -44,6 +63,37 @@ export const PhoneSettings: React.FC = () => {
       window.location.href = telLink;
 
       setTestResult("✅ Teste executado! Verifique se o marcador abriu.");
+
+      // Clear result after 3 seconds
+      setTimeout(() => {
+        setTestResult(null);
+      }, 3000);
+    } catch (error) {
+      setTestResult("❌ Erro no teste: " + error);
+    }
+  };
+
+  const testMapsRedirect = () => {
+    if (!enableMapsRedirect) {
+      setTestResult("❌ Redirecionamento para Maps está desativado");
+      return;
+    }
+
+    try {
+      if (!testAddress.trim()) {
+        setTestResult("❌ Endereço de teste vazio");
+        return;
+      }
+
+      // Open Google Maps with the address
+      const encodedAddress = encodeURIComponent(testAddress);
+      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+
+      window.open(mapsUrl, "_blank");
+
+      setTestResult(
+        "✅ Teste executado! Verifique se o Google Maps abriu numa nova aba.",
+      );
 
       // Clear result after 3 seconds
       setTimeout(() => {
