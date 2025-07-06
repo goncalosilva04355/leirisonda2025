@@ -215,68 +215,10 @@ export const userService = {
         createdAt: "2024-01-01",
       };
 
-      console.log("Creating admin user...");
-          email: "maria.silva@leirisonda.pt",
-          role: "manager" as const,
-          permissions: {
-            obras: { view: true, create: true, edit: true, delete: false },
-            manutencoes: {
-              view: true,
-              create: true,
-              edit: true,
-              delete: false,
-            },
-            piscinas: { view: true, create: true, edit: true, delete: false },
-            utilizadores: {
-              view: true,
-              create: false,
-              edit: false,
-              delete: false,
-            },
-            relatorios: {
-              view: true,
-              create: true,
-              edit: false,
-              delete: false,
-            },
-            clientes: { view: true, create: true, edit: true, delete: false },
-          },
-          active: true,
-          createdAt: "2024-01-15",
-        },
-        {
-          name: "João Santos",
-          email: "joao.santos@leirisonda.pt",
-          role: "technician" as const,
-          permissions: {
-            obras: { view: true, create: false, edit: true, delete: false },
-            manutencoes: {
-              view: true,
-              create: true,
-              edit: true,
-              delete: false,
-            },
-            piscinas: { view: true, create: false, edit: true, delete: false },
-            utilizadores: {
-              view: false,
-              create: false,
-              edit: false,
-              delete: false,
-            },
-            relatorios: {
-              view: true,
-              create: false,
-              edit: false,
-              delete: false,
-            },
-            clientes: { view: true, create: false, edit: false, delete: false },
-          },
-          active: true,
-          createdAt: "2024-02-01",
-        },
-      ];
-
-      for (const user of defaultUsers) {
+      await this.addUser(realAdmin);
+      console.log("✅ Admin user created successfully");
+    }
+  },
         await this.addUser(user);
       }
     }
