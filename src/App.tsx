@@ -885,7 +885,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç�����������o: ${work.location}
+   Localizaç�������������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -7552,7 +7552,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          T����cnico *
+                          Técnico *
                         </label>
                         <input
                           type="text"
@@ -8662,7 +8662,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <p className="text-gray-900 font-mono">
                               {selectedWork.flowRate
                                 ? `${selectedWork.flowRate} m³/h`
-                                : "Não especificado"}
+                                : "N��o especificado"}
                             </p>
                           </div>
                           <div>
