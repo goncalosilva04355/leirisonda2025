@@ -47,6 +47,7 @@ import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
+import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
@@ -160,13 +161,35 @@ function App() {
     return () => clearInterval(backupInterval);
   }, []);
 
-  // PROTEÇÃO CRÍTICA: Verificar integridade ao iniciar
+  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Inicialização forçada
   useEffect(() => {
+    console.log("🛡️ STARTING CRITICAL DATA PROTECTION...");
+
+    // STEP 1: Verificar se sistema precisa de inicialização forçada
+    const isEmpty = ForceInitialization.checkAbsoluteEmpty();
+
+    if (isEmpty) {
+      console.log("🚨 SYSTEM COMPLETELY EMPTY - FORCE INITIALIZING...");
+      const initResult = ForceInitialization.executeForceInitialization();
+
+      if (initResult.success) {
+        console.log("✅ FORCE INITIALIZATION SUCCESSFUL");
+        alert(initResult.message);
+        setTimeout(() => window.location.reload(), 2000);
+        return;
+      } else {
+        console.error("❌ FORCE INITIALIZATION FAILED");
+        alert(initResult.message);
+        return;
+      }
+    }
+
+    // STEP 2: Verificar integridade dos dados existentes
     const integrity = DataProtectionService.checkDataIntegrity();
     if (!integrity.valid) {
       console.error("🚨 DATA INTEGRITY ISSUES DETECTED:", integrity.issues);
 
-      // Primeira tentativa: Sistema normal de backup
+      // STEP 3: Primeira tentativa - Sistema normal de backup
       console.log("🔄 Attempting normal backup restoration...");
       const normalRecovery = DataProtectionService.restoreFromLatestBackup();
 
@@ -175,7 +198,7 @@ function App() {
           "❌ Normal backup restoration failed. Initiating EMERGENCY RECOVERY...",
         );
 
-        // EMERGÊNCIA: Recuperação crítica
+        // STEP 4: EMERGÊNCIA - Recuperação crítica
         const emergencyResult = EmergencyDataRecovery.performCompleteRecovery();
 
         if (emergencyResult.success) {
@@ -183,17 +206,23 @@ function App() {
           alert(
             "🚨 Dados recuperados com sucesso!\n\n" + emergencyResult.message,
           );
-          // Recarregar página para aplicar dados
           setTimeout(() => window.location.reload(), 2000);
         } else {
-          console.error("❌ EMERGENCY RECOVERY FAILED!");
-          alert(
-            "🚨 FALHA CRÍTICA DE RECUPERAÇÃO!\n\n" +
-              emergencyResult.message +
-              "\n\nContacte o suporte técnico.",
+          console.error(
+            "❌ EMERGENCY RECOVERY FAILED! Using FORCE INITIALIZATION...",
           );
+
+          // STEP 5: ÚLTIMO RECURSO - Inicialização forçada
+          const forceResult = ForceInitialization.executeForceInitialization();
+          alert("🚨 ÚLTIMO RECURSO ATIVADO!\n\n" + forceResult.message);
+
+          if (forceResult.success) {
+            setTimeout(() => window.location.reload(), 2000);
+          }
         }
       }
+    } else {
+      console.log("✅ Data integrity check passed");
     }
   }, []);
 
@@ -3166,7 +3195,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manuten��ões
+                      Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
                       Futuras Manutenções
@@ -4835,7 +4864,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenç��o
+                        Registar intervenção de manutenção
                       </p>
                     </div>
                   </div>
@@ -7404,7 +7433,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
                       >
                         <Building2 className="h-4 w-4" />
-                        <span>Guardar Alterações</span>
+                        <span>Guardar Alteraç��es</span>
                       </button>
                     </div>
                   </form>
