@@ -1641,29 +1641,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="px-4 py-4 space-y-4">
                 {/* Simple Welcome Header */}
                 <div className="bg-gray-50 rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    {/* Left - Menu */}
-                    <button
-                      onClick={() => setSidebarOpen(true)}
-                      className="p-1 bg-white rounded shadow-sm"
-                    >
-                      ☰
-                    </button>
-
-                    {/* Center - Logo and Greeting */}
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-8 bg-white rounded shadow-sm p-1">
-                        <img
-                          src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                          alt="Leirisonda Logo"
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-                      <div className="w-1 h-1 bg-green-500 rounded-full"></div>
-                      <button onClick={() => window.history.back()}>←</button>
+                  {/* Logo and Time Row */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-12 h-8 bg-white rounded shadow-sm p-1">
+                      <img
+                        src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                        alt="Leirisonda Logo"
+                        className="w-full h-full object-contain"
+                      />
                     </div>
-
-                    {/* Right - Time */}
                     <span className="text-sm text-gray-600">
                       {new Date().toLocaleTimeString("pt-PT", {
                         hour: "2-digit",
@@ -1673,7 +1659,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
 
                   {/* Main Content */}
-                  <div className="text-center mt-4 mb-3">
+                  <div className="text-center mb-3">
                     <h1 className="text-2xl font-bold text-gray-900 mb-2">
                       Olá, {currentUser?.name || "Gonçalo Fonseca"}
                     </h1>
@@ -5434,7 +5420,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As defini���ões são guardadas localmente no
+                              • As defini��ões são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
@@ -5608,7 +5594,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Trabalhos realizados</li>
                         <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observaç��es</li>
+                        <li>• Estados e observaç���es</li>
                       </ul>
                     </div>
                     <button
