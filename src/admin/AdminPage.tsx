@@ -23,6 +23,7 @@ import { FirebaseConfig } from "../components/FirebaseConfig";
 import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
 import { AutoSyncDemo } from "../components/AutoSyncDemo";
 import { PhoneSettings } from "../components/PhoneSettings";
+import { DataRecovery } from "../components/DataRecovery";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -148,6 +149,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <AutoSyncDemo />;
       case "phone-settings":
         return <PhoneSettings />;
+      case "data-recovery":
+        return <DataRecovery />;
       case "overview":
       default:
         return (
