@@ -7695,30 +7695,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // TEMPORARY: Bypass authentication for testing
-  useEffect(() => {
-    if (!currentUser) {
-      const testUser = {
-        id: 1,
-        name: "Gonçalo Fonseca",
-        email: "gongonsilva@gmail.com",
-        role: "super_admin",
-        permissions: {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          admin: { view: true, create: true, edit: true, delete: true },
-          dashboard: { view: true },
-        },
-      };
-      setCurrentUser(testUser);
-      setIsAuthenticated(true);
-      localStorage.setItem("currentUser", JSON.stringify(testUser));
-      localStorage.setItem("isAuthenticated", "true");
-    }
-  }, []);
+  // TEMPORARY: Bypass authentication for testing - COMMENTED OUT TO ALLOW LOGOUT
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     const testUser = {
+  //       id: 1,
+  //       name: "Gonçalo Fonseca",
+  //       email: "gongonsilva@gmail.com",
+  //       role: "super_admin",
+  //       permissions: {
+  //         obras: { view: true, create: true, edit: true, delete: true },
+  //         manutencoes: { view: true, create: true, edit: true, delete: true },
+  //         piscinas: { view: true, create: true, edit: true, delete: true },
+  //         relatorios: { view: true, create: true, edit: true, delete: true },
+  //         utilizadores: { view: true, create: true, edit: true, delete: true },
+  //         admin: { view: true, create: true, edit: true, delete: true },
+  //         dashboard: { view: true },
+  //       },
+  //     };
+  //     setCurrentUser(testUser);
+  //     setIsAuthenticated(true);
+  //     localStorage.setItem("currentUser", JSON.stringify(testUser));
+  //     localStorage.setItem("isAuthenticated", "true");
+  //   }
+  // }, []);
 
   // Always allow access for testing - bypass authentication
   if (false) {
