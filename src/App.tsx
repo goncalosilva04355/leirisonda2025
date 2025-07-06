@@ -1663,7 +1663,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           className="w-full h-full object-contain"
                         />
                       </div>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-gray-800 font-medium">
                         {new Date().toLocaleTimeString("pt-PT", {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -6822,7 +6822,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Valor Orçamentado (���)
+                          Valor Orçamentado (€)
                         </label>
                         <input
                           type="number"
