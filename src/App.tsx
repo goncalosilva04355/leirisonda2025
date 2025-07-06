@@ -8343,6 +8343,145 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     )}
                   </div>
 
+                  {/* Detalhes Completos - Seções Expandidas */}
+                  <div className="mt-6 space-y-6">
+                    {/* Informações Adicionais */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                        Informações Detalhadas
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Orçamento
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedWork.budget
+                              ? `€${selectedWork.budget}`
+                              : "Não especificado"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Folha de Obra Preenchida
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedWork.workSheetCompleted
+                              ? "✅ Sim"
+                              : "❌ Não"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Detalhes do Furo de Água - Se aplicável */}
+                    {selectedWork.type === "furo" && (
+                      <div className="border-l-4 border-cyan-500 pl-4">
+                        <h3 className="text-lg font-semibold text-cyan-700 mb-4">
+                          🚰 Detalhes do Furo de Água
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Profundidade do Furo
+                            </label>
+                            <p className="text-gray-900 font-mono">
+                              {selectedWork.boreDepth
+                                ? `${selectedWork.boreDepth} m`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Nível da Água
+                            </label>
+                            <p className="text-gray-900 font-mono">
+                              {selectedWork.waterLevel
+                                ? `${selectedWork.waterLevel} m`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Caudal do Furo
+                            </label>
+                            <p className="text-gray-900 font-mono">
+                              {selectedWork.flowRate
+                                ? `${selectedWork.flowRate} m³/h`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Profundidade da Bomba
+                            </label>
+                            <p className="text-gray-900 font-mono">
+                              {selectedWork.pumpDepth
+                                ? `${selectedWork.pumpDepth} m`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Tipo de Coluna
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.columnType || "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Diâmetro da Coluna
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.columnDiameter
+                                ? `${selectedWork.columnDiameter}"`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Modelo da Bomba
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.pumpModel || "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Potência do Motor
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.motorPower
+                                ? `${selectedWork.motorPower} HP`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Voltagem da Bomba
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.pumpVoltage || "Não especificado"}
+                            </p>
+                          </div>
+                        </div>
+                        {selectedWork.boreObservations && (
+                          <div className="mt-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Observações Específicas do Furo
+                            </label>
+                            <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
+                              <p className="text-gray-900">
+                                {selectedWork.boreObservations}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
                   {selectedWork.description && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
