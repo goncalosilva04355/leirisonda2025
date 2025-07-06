@@ -46,7 +46,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
-import { FirebaseReactivator } from "./components/FirebaseReactivator";
+
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
 
@@ -2404,7 +2404,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenç��es
+                                  Manutenções
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -8891,9 +8891,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Install Prompt for Mobile */}
         <InstallPrompt />
-
-        {/* Firebase Status and Data Protection */}
-        <FirebaseReactivator />
 
         {/* Admin Login Modal */}
         {showAdminLogin && !isAdminAuthenticated && (
