@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   RefreshCw,
   Play,
@@ -8,13 +8,34 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
-import { useAutoSync } from "./AutoSyncProvider";
+import { useAutoSync, AutoSyncContext } from "./AutoSyncProvider";
 import { SyncStatusBadge, useSyncStatusInfo } from "./SyncStatusIndicator";
 
 export const AutoSyncDemo: React.FC = () => {
+  // Verificar se estamos dentro do contexto
+  const context = useContext(AutoSyncContext);
+  const isInProvider = !!context;
+
+  // Usar valores padrão se não estivermos no contexto
+  const defaultValues = {
+    isActive: false,
+    syncing: false,
+    lastSync: null,
+    error: null,
+    forceSyncNow: () => {},
+    config: { syncInterval: 15000, collections: [], enabled: false },
+  };
+
   const { isActive, syncing, lastSync, error, forceSyncNow, config } =
-    useAutoSync();
-  const syncInfo = useSyncStatusInfo();
+    isInProvider ? useAutoSync() : defaultValues;
+
+  const syncInfo = isInProvider
+    ? useSyncStatusInfo()
+    : {
+        status: "disabled" as const,
+        statusText: "Sincronização não disponível",
+        color: "gray" as const,
+      };
   const [localTestData, setLocalTestData] = useState<string>("");
   const [logs, setLogs] = useState<string[]>([]);
 
