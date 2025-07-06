@@ -3002,7 +3002,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç��es agendadas e programadas
+                          Manutenções agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -3169,7 +3169,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informa���ões Básicas
+                          Informações Básicas
                         </h3>
                       </div>
 
@@ -3603,7 +3603,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N��vel da Água (m) *
+                                  Nível da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -3736,7 +3736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monof��sico)
+                                    230V (monofásico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -3747,7 +3747,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observaç��es Específicas do Furo
+                              Observações Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -6752,7 +6752,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalação</option>
+                            <option value="instalacao">Instalaç��o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -7616,7 +7616,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Custo (€)
+                          Custo (��)
                         </label>
                         <input
                           type="number"
