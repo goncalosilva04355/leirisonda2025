@@ -150,6 +150,41 @@ export const PhoneSettings: React.FC = () => {
             </div>
           </div>
 
+          {/* Google Maps Redirect Setting */}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div className="flex items-start space-x-3">
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                🗺️
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-medium text-green-900">
+                    Redirecionamento para Maps
+                  </h4>
+                  <button
+                    onClick={() => toggleMapsRedirect(!enableMapsRedirect)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      enableMapsRedirect ? "bg-green-600" : "bg-gray-300"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        enableMapsRedirect ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+                <p className="text-green-700 text-sm mb-3">
+                  Quando ativado, clicar numa morada abrirá diretamente o Google
+                  Maps numa nova aba.
+                </p>
+                <p className="text-green-600 text-xs">
+                  Estado: {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Test Section */}
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <h4 className="font-medium text-gray-900 mb-3">
@@ -195,6 +230,37 @@ export const PhoneSettings: React.FC = () => {
                   {testResult}
                 </div>
               )}
+            </div>
+
+            <div className="space-y-3 mt-4 pt-4 border-t border-gray-200">
+              <h5 className="font-medium text-gray-900">Teste Google Maps</h5>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Endereço de Teste
+                </label>
+                <input
+                  type="text"
+                  value={testAddress}
+                  onChange={(e) => setTestAddress(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Quinta da Marinha, Cascais, Portugal"
+                />
+              </div>
+
+              <button
+                onClick={testMapsRedirect}
+                className={`w-full px-4 py-2 rounded-md font-medium transition-colors ${
+                  enableMapsRedirect
+                    ? "bg-green-600 text-white hover:bg-green-700"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+                disabled={!enableMapsRedirect}
+              >
+                {enableMapsRedirect
+                  ? "🗺️ Testar Google Maps"
+                  : "❌ Ativar primeiro"}
+              </button>
             </div>
           </div>
 
