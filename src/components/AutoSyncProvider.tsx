@@ -18,7 +18,7 @@ interface AutoSyncContextType {
   };
 }
 
-const AutoSyncContext = createContext<AutoSyncContextType | null>(null);
+export const AutoSyncContext = createContext<AutoSyncContextType | null>(null);
 
 interface AutoSyncProviderProps {
   children: React.ReactNode;

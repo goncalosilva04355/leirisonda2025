@@ -22,6 +22,8 @@ import { DataManagementPanel } from "../components/DataManagementPanel";
 import { FirebaseConfig } from "../components/FirebaseConfig";
 import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
 import { AutoSyncDemo } from "../components/AutoSyncDemo";
+import { PhoneSettings } from "../components/PhoneSettings";
+import { DataRecovery } from "../components/DataRecovery";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -37,7 +39,9 @@ type AdminSection =
   | "data-management"
   | "firebase-config"
   | "cross-device-users"
-  | "auto-sync-demo";
+  | "auto-sync-demo"
+  | "phone-settings"
+  | "data-recovery";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
@@ -107,6 +111,20 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       icon: RefreshCw,
       color: "bg-emerald-500",
     },
+    {
+      id: "phone-settings" as AdminSection,
+      title: "Telefone & Navegação",
+      description: "Marcação automática e redirecionamento para Maps",
+      icon: Settings,
+      color: "bg-blue-500",
+    },
+    {
+      id: "data-recovery" as AdminSection,
+      title: "🚨 Recuperação de Dados",
+      description: "EMERGÊNCIA: Restaurar obras e dados perdidos",
+      icon: AlertTriangle,
+      color: "bg-red-500",
+    },
   ];
 
   const renderCurrentSection = () => {
@@ -129,6 +147,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <CrossDeviceUserManager />;
       case "auto-sync-demo":
         return <AutoSyncDemo />;
+      case "phone-settings":
+        return <PhoneSettings />;
+      case "data-recovery":
+        return <DataRecovery />;
       case "overview":
       default:
         return (
@@ -178,9 +200,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white shadow-sm border-b flex-shrink-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
@@ -214,8 +236,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {renderCurrentSection()}
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {renderCurrentSection()}
+        </div>
       </div>
     </div>
   );

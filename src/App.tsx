@@ -45,6 +45,10 @@ import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
+import { DataProtectionService } from "./utils/dataProtection";
+import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
+import { ForceInitialization } from "./utils/forceInitialization";
+
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
 
@@ -143,6 +147,125 @@ function App() {
 
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
+
+  // PROTEÇÃO CRÍTICA: Backup automático a cada 30 segundos
+  useEffect(() => {
+    // Backup inicial
+    DataProtectionService.createEmergencyBackup();
+
+    // Backup automático contínuo
+    const backupInterval = setInterval(() => {
+      DataProtectionService.createEmergencyBackup();
+    }, 30000); // A cada 30 segundos
+
+    return () => clearInterval(backupInterval);
+  }, []);
+
+  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Inicialização forçada
+  useEffect(() => {
+    console.log("🛡️ STARTING CRITICAL DATA PROTECTION...");
+
+    // STEP 1: Verificar se sistema precisa de inicialização forçada
+    const isEmpty = ForceInitialization.checkAbsoluteEmpty();
+
+    if (isEmpty) {
+      console.log("🚨 SYSTEM COMPLETELY EMPTY - FORCE INITIALIZING...");
+      const initResult = ForceInitialization.executeForceInitialization();
+
+      if (initResult.success) {
+        console.log("✅ FORCE INITIALIZATION SUCCESSFUL");
+        alert(initResult.message);
+        setTimeout(() => window.location.reload(), 2000);
+        return;
+      } else {
+        console.error("❌ FORCE INITIALIZATION FAILED");
+        alert(initResult.message);
+        return;
+      }
+    }
+
+    // STEP 2: Verificar integridade dos dados existentes
+    const integrity = DataProtectionService.checkDataIntegrity();
+    if (!integrity.valid) {
+      console.error("🚨 DATA INTEGRITY ISSUES DETECTED:", integrity.issues);
+
+      // STEP 3: Primeira tentativa - Sistema normal de backup
+      console.log("🔄 Attempting normal backup restoration...");
+      const normalRecovery = DataProtectionService.restoreFromLatestBackup();
+
+      if (!normalRecovery) {
+        console.error(
+          "❌ Normal backup restoration failed. Initiating EMERGENCY RECOVERY...",
+        );
+
+        // STEP 4: EMERGÊNCIA - Recuperação crítica
+        const emergencyResult = EmergencyDataRecovery.performCompleteRecovery();
+
+        if (emergencyResult.success) {
+          console.log("✅ EMERGENCY RECOVERY SUCCESSFUL!");
+          alert(
+            "🚨 Dados recuperados com sucesso!\n\n" + emergencyResult.message,
+          );
+          setTimeout(() => window.location.reload(), 2000);
+        } else {
+          console.error(
+            "❌ EMERGENCY RECOVERY FAILED! Using FORCE INITIALIZATION...",
+          );
+
+          // STEP 5: ÚLTIMO RECURSO - Inicialização forçada
+          const forceResult = ForceInitialization.executeForceInitialization();
+          alert("🚨 ÚLTIMO RECURSO ATIVADO!\n\n" + forceResult.message);
+
+          if (forceResult.success) {
+            setTimeout(() => window.location.reload(), 2000);
+          }
+        }
+      }
+    } else {
+      console.log("✅ Data integrity check passed");
+    }
+  }, []);
+
+  // Sincronizar configurações entre componentes
+  useEffect(() => {
+    const handlePhoneDialerToggle = (event: CustomEvent) => {
+      setEnablePhoneDialer(event.detail.enabled);
+      localStorage.setItem(
+        "enablePhoneDialer",
+        event.detail.enabled.toString(),
+      );
+      console.log("📞 Phone dialer synchronized:", event.detail.enabled);
+    };
+
+    const handleMapsRedirectToggle = (event: CustomEvent) => {
+      setEnableMapsRedirect(event.detail.enabled);
+      localStorage.setItem(
+        "enableMapsRedirect",
+        event.detail.enabled.toString(),
+      );
+      console.log("🗺️ Maps redirect synchronized:", event.detail.enabled);
+    };
+
+    window.addEventListener(
+      "phoneDialerToggled",
+      handlePhoneDialerToggle as EventListener,
+    );
+    window.addEventListener(
+      "mapsRedirectToggled",
+      handleMapsRedirectToggle as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "phoneDialerToggled",
+        handlePhoneDialerToggle as EventListener,
+      );
+      window.removeEventListener(
+        "mapsRedirectToggled",
+        handleMapsRedirectToggle as EventListener,
+      );
+    };
+  }, []);
   const {
     pools,
     maintenance,
@@ -363,15 +486,18 @@ function App() {
     // Handle URL hash for PWA shortcuts
     const handleHashChange = () => {
       const hash = window.location.hash.substring(1); // Remove the '#'
-      if (hash && isAuthenticated) {
+      if (hash === "administracao") {
+        // Handle admin access regardless of authentication state
+        setShowAdminLogin(true);
+        // Clear the hash to avoid loops
+        window.history.replaceState(null, "", window.location.pathname);
+      } else if (hash && isAuthenticated) {
         setActiveSection(hash);
       }
     };
 
-    // Check initial hash on load if authenticated
-    if (isAuthenticated) {
-      handleHashChange();
-    }
+    // Check initial hash on load
+    handleHashChange();
 
     // Listen for hash changes
     window.addEventListener("hashchange", handleHashChange);
@@ -1311,13 +1437,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
+    console.log("🗺️ Address clicked:", address);
+    console.log("🗺️ Maps redirect enabled:", enableMapsRedirect);
+
     if (enableMapsRedirect && address) {
       // Open Google Maps with the address
       const encodedAddress = encodeURIComponent(address);
-      window.open(
-        `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`,
-        "_blank",
-      );
+      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+
+      console.log("🗺️ Opening Google Maps:", mapsUrl);
+
+      try {
+        window.open(mapsUrl, "_blank");
+        console.log("✅ Google Maps opened successfully");
+      } catch (error) {
+        console.error("❌ Error opening Google Maps:", error);
+      }
+    } else {
+      if (!enableMapsRedirect) {
+        console.warn("⚠️ Maps redirect is disabled");
+      }
+      if (!address) {
+        console.warn("⚠️ No address provided");
+      }
     }
   };
 
@@ -1330,6 +1472,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
     localStorage.setItem("enableMapsRedirect", enabled.toString());
+
+    // Show notification
+    console.log(`🗺️ Google Maps ${enabled ? "ativado" : "desativado"}`);
+
+    // You can add a toast notification here if needed
+    if (enabled) {
+      console.log(
+        "🗺️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+      );
+    }
   };
 
   const handleDeleteUser = (userId) => {
@@ -1927,9 +2079,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="text-sm font-medium text-gray-600">
                                     📍 Morada:
                                   </span>
-                                  <span className="text-sm text-gray-900">
-                                    {work.location || "Não especificada"}
-                                  </span>
+                                  {work.location ? (
+                                    <button
+                                      onClick={() =>
+                                        handleAddressClick(work.location)
+                                      }
+                                      className={`text-sm cursor-pointer hover:opacity-80 ${
+                                        enableMapsRedirect
+                                          ? "text-blue-600 hover:text-blue-800 underline"
+                                          : "text-gray-900 hover:text-blue-600"
+                                      }`}
+                                    >
+                                      {work.location}
+                                    </button>
+                                  ) : (
+                                    <span className="text-sm text-gray-500">
+                                      Não especificada
+                                    </span>
+                                  )}
                                 </div>
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
@@ -2119,7 +2286,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>⏰</span>
+                                      <span>���</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -2701,12 +2868,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   handleAddressClick(pool.location);
                                 }
                               }}
-                              className={`text-left ${
+                              className={`text-left cursor-pointer hover:opacity-80 ${
                                 enableMapsRedirect
-                                  ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                  : "text-gray-600"
+                                  ? "text-blue-600 hover:text-blue-800 underline"
+                                  : "text-gray-600 hover:text-blue-600"
                               }`}
-                              disabled={!enableMapsRedirect}
                             >
                               📍 {pool.location}
                             </button>
@@ -6107,7 +6273,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }
                                 >
                                   📍{" "}
-                                  {client?.address || "Endereço não disponível"}
+                                  {client?.address ||
+                                    "Endereço n��o disponível"}
                                 </button>
                               </div>
                               <div>
@@ -7266,7 +7433,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
                       >
                         <Building2 className="h-4 w-4" />
-                        <span>Guardar Alterações</span>
+                        <span>Guardar Alteraç��es</span>
                       </button>
                     </div>
                   </form>
@@ -8164,31 +8331,63 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     return (
-      <LoginPage
-        onLogin={async (email: string, password: string) => {
-          console.log("🔐 Login attempt:", email);
-          setLoginForm({ email, password });
+      <div>
+        <LoginPage
+          onLogin={async (email: string, password: string) => {
+            console.log("🔐 Login attempt:", email);
+            setLoginForm({ email, password });
 
-          try {
-            const result = await authService.login(email, password);
+            try {
+              const result = await authService.login(email, password);
 
-            if (result.success && result.user) {
-              setCurrentUser(result.user);
-              setIsAuthenticated(true);
-              localStorage.setItem("currentUser", JSON.stringify(result.user));
-              setLoginForm({ email: "", password: "" });
-              console.log("✅ Login successful");
-            } else {
-              setLoginError(result.error || "Credenciais inválidas");
+              if (result.success && result.user) {
+                setCurrentUser(result.user);
+                setIsAuthenticated(true);
+                localStorage.setItem(
+                  "currentUser",
+                  JSON.stringify(result.user),
+                );
+                setLoginForm({ email: "", password: "" });
+                console.log("✅ Login successful");
+              } else {
+                setLoginError(result.error || "Credenciais inválidas");
+              }
+            } catch (error) {
+              console.error("��� Login error:", error);
+              setLoginError("Erro de sistema. Por favor, tente novamente.");
             }
-          } catch (error) {
-            console.error("��� Login error:", error);
-            setLoginError("Erro de sistema. Por favor, tente novamente.");
-          }
-        }}
-        loginError={loginError}
-        isLoading={false}
-      />
+          }}
+          loginError={loginError}
+          isLoading={false}
+        />
+
+        {/* Admin Login Modal - também funciona na página de login */}
+        {showAdminLogin && !isAdminAuthenticated && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg max-w-md w-full mx-4">
+              <AdminLogin
+                onLogin={() => {
+                  setIsAdminAuthenticated(true);
+                  setShowAdminLogin(false);
+                }}
+                onBack={() => setShowAdminLogin(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Admin Page - também funciona na página de login */}
+        {isAdminAuthenticated && (
+          <div className="fixed inset-0 bg-white z-50">
+            <AdminPage
+              onLogout={() => {
+                setIsAdminAuthenticated(false);
+                setShowAdminLogin(false);
+              }}
+            />
+          </div>
+        )}
+      </div>
     );
   }
 

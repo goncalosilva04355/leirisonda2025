@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   RefreshCw,
   Play,
@@ -8,13 +8,34 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
-import { useAutoSync } from "./AutoSyncProvider";
+import { useAutoSync, AutoSyncContext } from "./AutoSyncProvider";
 import { SyncStatusBadge, useSyncStatusInfo } from "./SyncStatusIndicator";
 
 export const AutoSyncDemo: React.FC = () => {
+  // Verificar se estamos dentro do contexto
+  const context = useContext(AutoSyncContext);
+  const isInProvider = !!context;
+
+  // Usar valores padrão se não estivermos no contexto
+  const defaultValues = {
+    isActive: false,
+    syncing: false,
+    lastSync: null,
+    error: null,
+    forceSyncNow: () => {},
+    config: { syncInterval: 15000, collections: [], enabled: false },
+  };
+
   const { isActive, syncing, lastSync, error, forceSyncNow, config } =
-    useAutoSync();
-  const syncInfo = useSyncStatusInfo();
+    isInProvider ? useAutoSync() : defaultValues;
+
+  const syncInfo = isInProvider
+    ? useSyncStatusInfo()
+    : {
+        status: "disabled" as const,
+        statusText: "Sincronização não disponível",
+        color: "gray" as const,
+      };
   const [localTestData, setLocalTestData] = useState<string>("");
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -70,6 +91,38 @@ export const AutoSyncDemo: React.FC = () => {
     addLog("🧹 Dados de teste removidos");
     setLocalTestData("");
   };
+
+  // Se não estiver no contexto, mostrar aviso
+  if (!isInProvider) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+          <div className="flex items-start">
+            <AlertCircle className="h-6 w-6 text-yellow-600 mt-1 mr-3" />
+            <div>
+              <h3 className="text-lg font-semibold text-yellow-900 mb-2">
+                AutoSync não disponível
+              </h3>
+              <p className="text-yellow-800 mb-4">
+                O sistema de sincronização automática não está ativo nesta área.
+                Este demo funciona apenas na aplicação principal.
+              </p>
+              <div className="bg-yellow-100 p-3 rounded border border-yellow-300">
+                <h4 className="font-medium text-yellow-900 mb-2">
+                  Como ativar:
+                </h4>
+                <ol className="text-yellow-800 text-sm space-y-1">
+                  <li>1. Faça login na aplicação principal</li>
+                  <li>2. Vá às configurações da aplicação</li>
+                  <li>3. A sincronização automática estará disponível</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
