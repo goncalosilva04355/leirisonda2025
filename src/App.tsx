@@ -1027,7 +1027,7 @@ ${maintenance
   .map(
     (maint, index) => `
 ${index + 1}. ${maint.poolName} - ${maint.type}
-   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | Técnico: ${maint.technician}
+   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | T��cnico: ${maint.technician}
 `,
   )
   .join("")}
@@ -3982,6 +3982,74 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 'input[placeholder*="Orçamento"]',
                               ) as HTMLInputElement
                             )?.value || "";
+
+                          // Extract bore/water hole specific data if work type is "furo"
+                          let boreData = {};
+                          if (selectedWorkType === "furo") {
+                            boreData = {
+                              boreDepth:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder*="Profundidade do Furo"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              waterLevel:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder*="Nível da Água"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              pumpDepth:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder*="Profundidade da Bomba"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              flowRate:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder*="Caudal do Furo"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              columnType:
+                                (
+                                  form.querySelector(
+                                    "select",
+                                  ) as HTMLSelectElement
+                                )?.value || "",
+                              columnDiameter:
+                                (
+                                  form.querySelectorAll(
+                                    "select",
+                                  )[1] as HTMLSelectElement
+                                )?.value || "",
+                              pumpModel:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder*="Modelo da Bomba"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              motorPower:
+                                (
+                                  form.querySelectorAll(
+                                    "select",
+                                  )[2] as HTMLSelectElement
+                                )?.value || "",
+                              pumpVoltage:
+                                (
+                                  form.querySelectorAll(
+                                    "select",
+                                  )[3] as HTMLSelectElement
+                                )?.value || "",
+                              boreObservations:
+                                (
+                                  form.querySelector(
+                                    'textarea[placeholder*="Condições do terreno"]',
+                                  ) as HTMLTextAreaElement
+                                )?.value || "",
+                            };
+                          }
+
                           // Create complete work data object
                           const workData = {
                             id: Date.now(),
@@ -3997,6 +4065,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             endTime: endTime || "",
                             status: status || "pending",
                             description: description || "",
+                            ...boreData, // Spread bore-specific data if applicable
                             budget: budget ? parseFloat(budget) : null,
                             assignedTo:
                               assignedUsers.length > 0
