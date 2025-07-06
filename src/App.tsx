@@ -7480,8 +7480,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       />
                     </div>
 
+                    {/* Debug - Ver tipo da obra */}
+                    {console.log(
+                      "🔍 DEBUG editingWork:",
+                      editingWork?.type,
+                      editingWork,
+                    )}
+
                     {/* Detalhes do Furo de Água - Se aplicável */}
-                    {editingWork?.type === "furo" && (
+                    {(editingWork?.type === "furo" ||
+                      editingWork?.workType === "furo") && (
                       <div
                         id="edit-furo-details"
                         className="border border-cyan-200 rounded-lg p-6 bg-cyan-50"
@@ -7768,7 +7776,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Página não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A seção solicitada não foi encontrada.
+                  A se��ão solicitada não foi encontrada.
                 </p>
               </div>
             </div>
