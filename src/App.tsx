@@ -168,6 +168,47 @@ function App() {
       DataProtectionService.restoreFromLatestBackup();
     }
   }, []);
+
+  // Sincronizar configurações entre componentes
+  useEffect(() => {
+    const handlePhoneDialerToggle = (event: CustomEvent) => {
+      setEnablePhoneDialer(event.detail.enabled);
+      localStorage.setItem(
+        "enablePhoneDialer",
+        event.detail.enabled.toString(),
+      );
+      console.log("📞 Phone dialer synchronized:", event.detail.enabled);
+    };
+
+    const handleMapsRedirectToggle = (event: CustomEvent) => {
+      setEnableMapsRedirect(event.detail.enabled);
+      localStorage.setItem(
+        "enableMapsRedirect",
+        event.detail.enabled.toString(),
+      );
+      console.log("🗺️ Maps redirect synchronized:", event.detail.enabled);
+    };
+
+    window.addEventListener(
+      "phoneDialerToggled",
+      handlePhoneDialerToggle as EventListener,
+    );
+    window.addEventListener(
+      "mapsRedirectToggled",
+      handleMapsRedirectToggle as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "phoneDialerToggled",
+        handlePhoneDialerToggle as EventListener,
+      );
+      window.removeEventListener(
+        "mapsRedirectToggled",
+        handleMapsRedirectToggle as EventListener,
+      );
+    };
+  }, []);
   const {
     pools,
     maintenance,
