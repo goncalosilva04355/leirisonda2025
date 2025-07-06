@@ -885,7 +885,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç�������������o: ${work.location}
+   Localizaç�����������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
@@ -3312,7 +3312,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Users className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Viaturas e T��cnicos
+                          Viaturas e Técnicos
                         </h3>
                       </div>
 
@@ -7558,7 +7558,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingMaintenance?.technician}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Nome do t��cnico"
+                          placeholder="Nome do técnico"
                           required
                         />
                       </div>
@@ -8449,7 +8449,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enablePhoneDialer}
                         >
-                          ���� {selectedWork.contact}
+                          📞 {selectedWork.contact}
                         </button>
                       )}
                     </div>
@@ -8662,7 +8662,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <p className="text-gray-900 font-mono">
                               {selectedWork.flowRate
                                 ? `${selectedWork.flowRate} m³/h`
-                                : "N��o especificado"}
+                                : "Não especificado"}
                             </p>
                           </div>
                           <div>
