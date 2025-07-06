@@ -890,7 +890,7 @@ ${index + 1}. ${work.title}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: ��${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -940,7 +940,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
 - Manutenções Realizadas: ${maintenance.length}
-- Futuras Manutenções: ${futureMaintenance.length}
+- Futuras Manutenç��es: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
@@ -3497,7 +3497,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     {/* Detalhes do Furo de Água - Conditional */}
                     {selectedWorkType === "furo" && (
-                      <div>
+                      <div id="furo-details">
                         <div className="flex items-center space-x-3 mb-6">
                           <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
                             <Waves className="h-4 w-4 text-cyan-600" />
@@ -4019,6 +4019,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Save water bore data if work type is "furo"
                           if (selectedWorkType === "furo") {
+                            // Get bore data from form
+                            const boreInputs = document.querySelectorAll(
+                              "#furo-details input, #furo-details select, #furo-details textarea",
+                            );
+
+                            // Update the existing work with bore data
+                            const boreDataUpdate = {
+                              boreDepth: boreInputs[0]?.value || "",
+                              waterLevel: boreInputs[1]?.value || "",
+                              staticLevel: boreInputs[2]?.value || "",
+                              dynamicLevel: boreInputs[3]?.value || "",
+                              flowRate: boreInputs[4]?.value || "",
+                              columnDiameter: boreInputs[5]?.value || "",
+                              pumpModel: boreInputs[6]?.value || "",
+                              motorPower: boreInputs[7]?.value || "",
+                              pumpVoltage: boreInputs[8]?.value || "",
+                              boreObservations: boreInputs[9]?.value || "",
+                            };
+
+                            // Update the work with bore data
+                            dataSync.updateWork(newWork.id, boreDataUpdate);
+
                             const waterBoreData = {
                               id: Date.now(),
                               workTitle: workTitle,
@@ -4026,6 +4048,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               photos: uploadedPhotos,
                               photoCount: uploadedPhotos.length,
                               workType: "furo",
+                              ...boreDataUpdate,
                             };
 
                             const savedWaterBores = JSON.parse(
@@ -6942,7 +6965,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             inputs[9] as HTMLTextAreaElement
                           ).value; // Observações
 
-                          dataSync.updateWork(editingWork.id, {
+                          // Prepare update data
+                          let updateData = {
                             workSheetNumber,
                             title: workSheetNumber,
                             type: workType,
@@ -6962,7 +6986,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : "",
                             assignedUsers: editAssignedUsers,
                             assignedUserIds: editAssignedUsers.map((u) => u.id),
-                          });
+                          };
+
+                          // If work type is "furo", include bore data
+                          if (workType === "furo") {
+                            const boreInputs = form.querySelectorAll(
+                              "#edit-furo-details input, #edit-furo-details select, #edit-furo-details textarea",
+                            );
+                            updateData = {
+                              ...updateData,
+                              boreDepth: boreInputs[0]?.value || "",
+                              waterLevel: boreInputs[1]?.value || "",
+                              staticLevel: boreInputs[2]?.value || "",
+                              dynamicLevel: boreInputs[3]?.value || "",
+                              flowRate: boreInputs[4]?.value || "",
+                              columnDiameter: boreInputs[5]?.value || "",
+                              pumpModel: boreInputs[6]?.value || "",
+                              motorPower: boreInputs[7]?.value || "",
+                              pumpVoltage: boreInputs[8]?.value || "",
+                              boreObservations: boreInputs[9]?.value || "",
+                            };
+                          }
+
+                          dataSync.updateWork(editingWork.id, updateData);
 
                           alert("Obra atualizada com sucesso!");
                           setEditingWork(null);
@@ -7376,7 +7422,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     {/* Detalhes do Furo de Água - Se aplicável */}
                     {editingWork?.type === "furo" && (
-                      <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
+                      <div
+                        id="edit-furo-details"
+                        className="border border-cyan-200 rounded-lg p-6 bg-cyan-50"
+                      >
                         <h3 className="text-lg font-semibold text-cyan-700 mb-4">
                           🚰 Detalhes do Furo de Água
                         </h3>
