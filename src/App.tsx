@@ -1380,13 +1380,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
+    console.log("🗺️ Address clicked:", address);
+    console.log("🗺️ Maps redirect enabled:", enableMapsRedirect);
+
     if (enableMapsRedirect && address) {
       // Open Google Maps with the address
       const encodedAddress = encodeURIComponent(address);
-      window.open(
-        `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`,
-        "_blank",
-      );
+      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+
+      console.log("🗺️ Opening Google Maps:", mapsUrl);
+
+      try {
+        window.open(mapsUrl, "_blank");
+        console.log("✅ Google Maps opened successfully");
+      } catch (error) {
+        console.error("❌ Error opening Google Maps:", error);
+      }
+    } else {
+      if (!enableMapsRedirect) {
+        console.warn("⚠️ Maps redirect is disabled");
+      }
+      if (!address) {
+        console.warn("⚠️ No address provided");
+      }
     }
   };
 
