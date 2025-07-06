@@ -1707,7 +1707,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <button
                             onClick={() => {
                               console.log(
-                                "🧪 Testando notificação para Alexandre...",
+                                "🧪 Testando notifica��ão para Alexandre...",
                               );
                               sendWorkAssignmentNotification(
                                 "Obra de Teste para Alexandre",
@@ -1919,13 +1919,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           .map((work) => (
                             <div
                               key={work.id}
-                              className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 cursor-pointer hover:bg-purple-100 transition-colors"
-                              onClick={() => {
-                                setSelectedWork(work);
-                                setViewingWork(true);
-                              }}
+                              className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
                             >
-                              <div className="space-y-2">
+                              <div className="space-y-3">
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
                                     📍 Morada:
@@ -1936,22 +1932,102 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    ��� Nome:
+                                    👤 Cliente:
                                   </span>
                                   <span className="text-sm text-gray-900">
                                     {work.client || "Não especificado"}
                                   </span>
                                 </div>
-
+                                {work.contact && (
+                                  <div className="flex items-center space-x-2">
+                                    <span className="text-sm font-medium text-gray-600">
+                                      📞 Contacto:
+                                    </span>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (enablePhoneDialer) {
+                                          window.location.href = `tel:${work.contact}`;
+                                        }
+                                      }}
+                                      className={`text-sm ${
+                                        enablePhoneDialer
+                                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                          : "text-gray-900"
+                                      }`}
+                                    >
+                                      {work.contact}
+                                    </button>
+                                  </div>
+                                )}
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    🔧 Trabalho realizado:
+                                    🔧 Trabalho:
                                   </span>
                                   <span className="text-sm text-gray-900">
                                     {work.workPerformed ||
                                       work.type ||
                                       "Não especificado"}
                                   </span>
+                                </div>
+
+                                {/* Estado e Ações */}
+                                <div className="flex items-center justify-between pt-2 border-t border-purple-200">
+                                  <span
+                                    className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                      work.status === "pending"
+                                        ? "bg-red-100 text-red-700"
+                                        : work.status === "in_progress"
+                                          ? "bg-orange-100 text-orange-700"
+                                          : work.status === "completed"
+                                            ? "bg-green-100 text-green-700"
+                                            : "bg-gray-100 text-gray-700"
+                                    }`}
+                                  >
+                                    {work.status === "pending"
+                                      ? "Pendente"
+                                      : work.status === "in_progress"
+                                        ? "Em Progresso"
+                                        : work.status === "completed"
+                                          ? "Concluída"
+                                          : work.status}
+                                  </span>
+
+                                  <div className="flex items-center space-x-2">
+                                    {/* Botão Visualizar */}
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedWork(work);
+                                        setViewingWork(true);
+                                      }}
+                                      className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-colors"
+                                      title="Visualizar detalhes"
+                                    >
+                                      <Eye className="h-4 w-4" />
+                                    </button>
+
+                                    {/* Botão Iniciar Obra (só se pendente) */}
+                                    {work.status === "pending" && (
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          dataSync.updateWork(work.id, {
+                                            status: "in_progress",
+                                          });
+                                          showNotification(
+                                            "Obra Iniciada",
+                                            `A obra "${work.client}" foi iniciada`,
+                                            "success",
+                                          );
+                                        }}
+                                        className="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition-colors"
+                                        title="Iniciar obra"
+                                      >
+                                        <Play className="h-4 w-4" />
+                                      </button>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </div>
