@@ -767,16 +767,21 @@ function App() {
       // Clear current user state immediately for better UX
       setCurrentUser(null);
       setIsAuthenticated(false);
-      localStorage.removeItem("currentUser");
 
-      // Clear form and navigate to dashboard
+      // Clear all authentication data
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("isAuthenticated");
+
+      // Clear form
       setLoginForm({ email: "", password: "" });
-      navigateToSection("dashboard");
+
+      // Clear URL hash to go back to login
+      window.location.hash = "";
 
       // Perform actual logout
       await authService.logout();
 
-      console.log("��� Logout completed successfully");
+      console.log("��� Logout completed successfully - redirected to login");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -785,10 +790,15 @@ function App() {
       setCurrentUser(null);
       setIsAuthenticated(false);
       localStorage.removeItem("currentUser");
+      localStorage.removeItem("isAuthenticated");
       setLoginForm({ email: "", password: "" });
-      navigateToSection("dashboard");
 
-      console.log("🔧 Forced logout state clear completed");
+      // Clear URL hash
+      window.location.hash = "";
+
+      console.log(
+        "🔧 Forced logout state clear completed - redirected to login",
+      );
     }
   };
 
