@@ -2696,7 +2696,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {pool.name}
                             </h3>
                             <button
-                              onClick={() => handleAddressClick(pool.location)}
+                              onClick={() => {
+                                if (pool?.location) {
+                                  handleAddressClick(pool.location);
+                                }
+                              }}
                               className={`text-left ${
                                 enableMapsRedirect
                                   ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
@@ -2921,9 +2925,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <div>
                                   <span className="font-medium">Local:</span>{" "}
                                   <button
-                                    onClick={() =>
-                                      handleAddressClick(maint.location)
-                                    }
+                                    onClick={() => {
+                                      if (maint?.location) {
+                                        handleAddressClick(maint.location);
+                                      }
+                                    }}
                                     className={`text-xs ${
                                       enableMapsRedirect
                                         ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
@@ -5573,7 +5579,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ��️ ATENÇÃO: Esta operação é irreversível!
+                              ����️ ATENÇÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
