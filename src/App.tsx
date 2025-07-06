@@ -1644,9 +1644,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
                   style={{
                     backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fe6dd131c94c1407994895f6f7cf7f1c7?format=webp&width=800')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat'
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
                   }}
                 >
                   {/* Overlay para melhor legibilidade do texto */}
@@ -1654,41 +1654,42 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   {/* Conteúdo por cima do overlay */}
                   <div className="relative z-10">
-                  {/* Logo and Time Row */}
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="w-12 h-8 bg-white rounded shadow-sm p-1">
-                      <img
-                        src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                        alt="Leirisonda Logo"
-                        className="w-full h-full object-contain"
-                      />
+                    {/* Logo and Time Row */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="w-12 h-8 bg-white rounded shadow-sm p-1">
+                        <img
+                          src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                          alt="Leirisonda Logo"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <span className="text-sm text-gray-600">
+                        {new Date().toLocaleTimeString("pt-PT", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
                     </div>
-                    <span className="text-sm text-gray-600">
-                      {new Date().toLocaleTimeString("pt-PT", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  </div>
 
-                  {/* Main Content */}
-                  <div className="text-center mb-3">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                      Olá, {currentUser?.name || "Gonçalo Fonseca"}
-                    </h1>
-                    <p className="text-gray-600 text-sm">
-                      {new Date().toLocaleDateString("pt-PT", {
-                        weekday: "long",
-                        day: "2-digit",
-                        month: "long",
-                      })}
-                    </p>
-                  </div>
+                    {/* Main Content */}
+                    <div className="text-center mb-3">
+                      <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                        Olá, {currentUser?.name || "Gonçalo Fonseca"}
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        {new Date().toLocaleDateString("pt-PT", {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "long",
+                        })}
+                      </p>
+                    </div>
 
-                  {/* Online Status */}
-                  <div className="flex items-center justify-center space-x-1 text-gray-600 text-sm">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                    <span>Online</span>
+                    {/* Online Status */}
+                    <div className="flex items-center justify-center space-x-1 text-gray-600 text-sm">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                      <span>Online</span>
+                    </div>
                   </div>
                 </div>
 
@@ -6448,7 +6449,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
                                   <span className="font-semibold text-gray-700 block mb-1">
-                                    👤 Cliente:
+                                    �� Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
                                     {work.client}
