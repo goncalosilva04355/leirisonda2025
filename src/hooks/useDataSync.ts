@@ -157,26 +157,8 @@ const mockMaintenance: Maintenance[] = [
 const mockWorks: Work[] = [];
 
 // Mock clients data
-const mockClients: Client[] = [
-  {
-    id: "client-1",
-    name: "João Silva",
-    email: "joao.silva@email.com",
-    phone: "912345678",
-    address: "Quinta da Marinha, Cascais",
-    pools: ["pool-1"],
-    createdAt: "2025-01-01",
-  },
-  {
-    id: "client-2",
-    name: "Ana Costa",
-    email: "ana.costa@email.com",
-    phone: "923456789",
-    address: "Sintra",
-    pools: [],
-    createdAt: "2025-01-18",
-  },
-];
+// Production - no mock data
+const mockClients: Client[] = [];
 
 export interface SyncState {
   pools: Pool[];

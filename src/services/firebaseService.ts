@@ -219,9 +219,6 @@ export const userService = {
       console.log("✅ Admin user created successfully");
     }
   },
-        await this.addUser(user);
-      }
-    }
   },
 };
 
