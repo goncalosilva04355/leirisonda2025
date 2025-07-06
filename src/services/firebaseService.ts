@@ -219,7 +219,6 @@ export const userService = {
       console.log("✅ Admin user created successfully");
     }
   },
-  },
 };
 
 // Pool Services
