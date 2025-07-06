@@ -46,6 +46,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
+import { FirebaseReactivator } from "./components/FirebaseReactivator";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
 
@@ -968,7 +969,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
 - Manutenções Realizadas: ${maintenance.length}
-- Futuras Manutenç����es: ${futureMaintenance.length}
+- Futuras Manutenç���es: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
@@ -2403,7 +2404,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenções
+                                  Manutenç��es
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -8890,6 +8891,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Install Prompt for Mobile */}
         <InstallPrompt />
+
+        {/* Firebase Status and Data Protection */}
+        <FirebaseReactivator />
 
         {/* Admin Login Modal */}
         {showAdminLogin && !isAdminAuthenticated && (
