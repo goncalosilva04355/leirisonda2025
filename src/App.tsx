@@ -1639,47 +1639,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Modern Welcome Header - Recreation of Design */}
-                <div className="bg-gray-100 rounded-lg p-6 shadow-sm min-h-[400px] relative">
-                  {/* Top Navigation Bar */}
-                  <div className="flex items-center justify-between mb-8">
-                    {/* Left Side - Menu and Logo */}
-                    <div className="flex items-center space-x-4">
+                {/* Welcome Header - Exact Recreation */}
+                <div className="bg-gray-50 rounded-lg p-6 shadow-sm min-h-[420px] relative">
+                  {/* Top Row */}
+                  <div className="flex items-center justify-between mb-4">
+                    {/* Left Side */}
+                    <div className="flex items-center space-x-6">
                       {/* Hamburger Menu */}
                       <button
                         onClick={() => setSidebarOpen(true)}
-                        className="p-3 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
-                      >
-                        <div className="w-5 h-5 flex flex-col justify-between">
-                          <div className="w-full h-0.5 bg-gray-700"></div>
-                          <div className="w-full h-0.5 bg-gray-700"></div>
-                          <div className="w-full h-0.5 bg-gray-700"></div>
-                        </div>
-                      </button>
-
-                      {/* Logo with Progress Bar */}
-                      <div className="flex items-center space-x-3">
-                        <div className="w-16 h-12 bg-white rounded-lg shadow-sm p-2">
-                          <img
-                            src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                            alt="Leirisonda Logo"
-                            className="w-full h-full object-contain"
-                          />
-                        </div>
-                        {/* Progress/Status Bar */}
-                        <div className="flex items-center space-x-1">
-                          <div className="w-8 h-1 bg-gray-300 rounded-full"></div>
-                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                        </div>
-                      </div>
-
-                      {/* Back Button */}
-                      <button
-                        onClick={() => window.history.back()}
-                        className="p-3 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+                        className="p-2 bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors"
                       >
                         <svg
-                          className="w-5 h-5 text-gray-700"
+                          className="w-6 h-6 text-gray-700"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -1688,28 +1660,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                            d="M4 6h16M4 12h16M4 18h16"
                           />
                         </svg>
                       </button>
                     </div>
 
                     {/* Right Side - Time */}
-                    <div className="flex items-center space-x-2 text-gray-700">
+                    <div className="flex items-center space-x-2 text-gray-600">
                       <svg
                         className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
                       >
                         <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                          clipRule="evenodd"
                         />
                       </svg>
-                      <span className="text-xl font-medium">
+                      <span className="text-lg font-medium">
                         {new Date().toLocaleTimeString("pt-PT", {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -1718,16 +1688,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
 
-                  {/* Center Content - Main Greeting */}
-                  <div className="text-center mt-12 mb-16">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-6">
-                      Olá, {currentUser?.name || "Utilizador"}
-                    </h1>
+                  {/* Second Row - Logo and Back */}
+                  <div className="flex items-center space-x-4 mb-12">
+                    {/* Leirisonda Logo */}
+                    <div className="w-20 h-12 bg-white rounded-lg shadow-sm p-2">
+                      <img
+                        src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                        alt="Leirisonda Logo"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
 
-                    {/* Date with Calendar Icon */}
-                    <div className="flex items-center justify-center space-x-3 text-gray-600 mb-8">
+                    {/* Progress Bar with Green Dot */}
+                    <div className="flex items-center space-x-2">
+                      <div className="w-16 h-1 bg-gray-300 rounded-full"></div>
+                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    </div>
+
+                    {/* Back Arrow */}
+                    <button
+                      onClick={() => window.history.back()}
+                      className="p-2 bg-white rounded-md shadow-sm hover:bg-gray-50 transition-colors"
+                    >
                       <svg
-                        className="w-5 h-5"
+                        className="w-6 h-6 text-gray-700"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -1736,10 +1720,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          d="M10 19l-7-7m0 0l7-7m-7 7h18"
                         />
                       </svg>
-                      <span className="text-lg">
+                    </button>
+                  </div>
+
+                  {/* Main Content - Centered */}
+                  <div className="text-center">
+                    <h1 className="text-5xl font-bold text-gray-900 mb-8 leading-tight">
+                      Olá, {currentUser?.name || "Gonçalo"}
+                      <br />
+                      {currentUser?.name?.split(" ")[1] || "Fonseca"}
+                    </h1>
+
+                    {/* Date with Calendar Icon */}
+                    <div className="flex items-center justify-center space-x-3 text-gray-600 text-lg mb-12">
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>
                         {new Date().toLocaleDateString("pt-PT", {
                           weekday: "long",
                           day: "2-digit",
@@ -1749,11 +1757,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
 
-                  {/* Bottom Status */}
+                  {/* Bottom Left - Online Status */}
                   <div className="absolute bottom-6 left-6">
                     <div className="flex items-center space-x-2">
                       <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                      <span className="text-gray-600 font-medium">Online</span>
+                      <span className="text-gray-600 text-lg">Online</span>
                     </div>
                   </div>
                 </div>
@@ -6969,7 +6977,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         defaultValue={editingWork?.technicalNotes}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={3}
-                        placeholder="Observa��ões técnicas, materiais necessários, etc."
+                        placeholder="Observações técnicas, materiais necessários, etc."
                       />
                     </div>
 
