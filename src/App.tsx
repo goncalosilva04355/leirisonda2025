@@ -40,6 +40,7 @@ import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
+import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -7217,7 +7218,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingMaintenance?.technician}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Nome do técnico"
+                          placeholder="Nome do t��cnico"
                           required
                         />
                       </div>
