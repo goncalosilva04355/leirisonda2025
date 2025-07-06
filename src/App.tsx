@@ -845,7 +845,7 @@ LEIRISONDA - RELAT��RIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manutenç��es: ${maintenance.length}
+- Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -891,7 +891,7 @@ ${index + 1}. ${work.title}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Or���amento: ���${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: ���${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: ����${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -3002,7 +3002,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manuten����es agendadas e programadas
+                          Manutenç��es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -7223,7 +7223,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             assignedUserIds: editAssignedUsers.map((u) => u.id),
                           };
 
-                          // If work type is "furo", include bore data
                           // Always capture bore data from the cyan section
                           const boreSection =
                             form.querySelector(".border-cyan-200");
@@ -8113,7 +8112,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Shield className="h-8 w-8 text-red-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                Área Protegida
+                ��rea Protegida
               </h1>
               <p className="text-gray-600">
                 Insira a palavra-passe para aceder às configurações avançadas
