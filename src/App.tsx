@@ -1650,7 +1650,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   }}
                 >
                   {/* Overlay para melhor legibilidade do texto */}
-                  <div className="absolute inset-0 bg-white bg-opacity-70 rounded-lg"></div>
+                  <div className="absolute inset-0 bg-white bg-opacity-60 rounded-lg"></div>
 
                   {/* Conteúdo por cima do overlay */}
                   <div className="relative z-10">
@@ -6449,7 +6449,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
                                   <span className="font-semibold text-gray-700 block mb-1">
-                                    �� Cliente:
+                                    👤 Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
                                     {work.client}
@@ -6822,7 +6822,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Valor Orçamentado (€)
+                          Valor Orçamentado (���)
                         </label>
                         <input
                           type="number"
