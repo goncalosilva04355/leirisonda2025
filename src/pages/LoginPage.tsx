@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Settings, Bug, RefreshCw } from "lucide-react";
-import { LoginDebugger } from "../components/LoginDebugger";
-import { SyncDiagnostic } from "../components/SyncDiagnostic";
+import { Settings } from "lucide-react";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
