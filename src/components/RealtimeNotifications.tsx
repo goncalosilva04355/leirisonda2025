@@ -55,7 +55,7 @@ export const RealtimeNotifications: React.FC = () => {
   // Listen to sync events
   useEffect(() => {
     const handleFirebaseSync = (event: CustomEvent) => {
-      const { type, collection, changeType } = event.detail;
+      const { type, collection, changeType, documentId } = event.detail;
 
       const collectionNames: Record<string, string> = {
         users: "usuários",
@@ -92,6 +92,48 @@ export const RealtimeNotifications: React.FC = () => {
       }
     };
 
+    // Listen to work assignment events
+    const handleWorkAssignment = (event: CustomEvent) => {
+      const { workTitle, assignedTo, type: assignmentType } = event.detail;
+
+      if (assignmentType === "assigned") {
+        addNotification({
+          type: "info",
+          title: "Trabalho Atribuído",
+          message: `"${workTitle}" foi atribuído a ${assignedTo}`,
+          autoHide: true,
+        });
+      } else if (assignmentType === "updated") {
+        addNotification({
+          type: "warning",
+          title: "Trabalho Atualizado",
+          message: `"${workTitle}" foi atualizado`,
+          autoHide: true,
+        });
+      }
+    };
+
+    // Listen to user events
+    const handleUserEvents = (event: CustomEvent) => {
+      addNotification({
+        type: "info",
+        title: "Utilizadores Atualizados",
+        message: "Lista de utilizadores foi atualizada",
+        autoHide: true,
+      });
+    };
+
+    // Listen to custom notifications
+    const handleCustomNotification = (event: CustomEvent) => {
+      const { title, message, type, autoHide } = event.detail;
+      addNotification({
+        type: type || "info",
+        title: title || "Notificação",
+        message: message || "",
+        autoHide: autoHide !== false,
+      });
+    };
+
     window.addEventListener(
       "firebase-sync",
       handleFirebaseSync as EventListener,
@@ -99,6 +141,15 @@ export const RealtimeNotifications: React.FC = () => {
     window.addEventListener(
       "firebase-auto-sync",
       handleFirebaseSync as EventListener,
+    );
+    window.addEventListener(
+      "workAssignment",
+      handleWorkAssignment as EventListener,
+    );
+    window.addEventListener("usersUpdated", handleUserEvents as EventListener);
+    window.addEventListener(
+      "customNotification",
+      handleCustomNotification as EventListener,
     );
 
     return () => {
@@ -109,6 +160,18 @@ export const RealtimeNotifications: React.FC = () => {
       window.removeEventListener(
         "firebase-auto-sync",
         handleFirebaseSync as EventListener,
+      );
+      window.removeEventListener(
+        "workAssignment",
+        handleWorkAssignment as EventListener,
+      );
+      window.removeEventListener(
+        "usersUpdated",
+        handleUserEvents as EventListener,
+      );
+      window.removeEventListener(
+        "customNotification",
+        handleCustomNotification as EventListener,
       );
     };
   }, []);
