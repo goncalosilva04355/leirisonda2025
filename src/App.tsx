@@ -44,7 +44,7 @@ import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
-import { useDataSync } from "./hooks/useDataSync_simple";
+import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 
 function App() {
