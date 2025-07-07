@@ -119,7 +119,7 @@ class MockAuthService {
 
   async logout(): Promise<void> {
     this.currentUser = null;
-    localStorage.removeItem("mock-current-user");
+    // Firebase will handle persistence automatically
   }
 
   getCurrentUser(): MockUser | null {
