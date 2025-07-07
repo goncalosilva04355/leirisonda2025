@@ -55,15 +55,24 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
   const [showSettings, setShowSettings] = useState(false);
 
   // Check geolocation permission status
-  useEffect(() => {
+  const checkPermission = async () => {
     if ("permissions" in navigator) {
-      navigator.permissions.query({ name: "geolocation" }).then((result) => {
+      try {
+        const result = await navigator.permissions.query({
+          name: "geolocation",
+        });
         setPermission(result.state);
         result.addEventListener("change", () => {
           setPermission(result.state);
         });
-      });
+      } catch (error) {
+        console.warn("Erro ao verificar permissões:", error);
+      }
     }
+  };
+
+  useEffect(() => {
+    checkPermission();
   }, []);
 
   // Auto-refresh location
