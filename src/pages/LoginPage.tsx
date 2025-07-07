@@ -106,9 +106,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
 
-        {/* Pre-Login Sync Status */}
-        <PreLoginSync />
-
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
