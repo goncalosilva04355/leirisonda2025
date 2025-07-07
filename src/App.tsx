@@ -165,23 +165,15 @@ function App() {
   useEffect(() => {
     console.log("🛡️ STARTING CRITICAL DATA PROTECTION...");
 
-    // STEP 1: Verificar se sistema precisa de inicialização forçada
+    // STEP 1: Sistema vazio é normal - não criar dados automáticos
     const isEmpty = ForceInitialization.checkAbsoluteEmpty();
 
     if (isEmpty) {
-      console.log("🚨 SYSTEM COMPLETELY EMPTY - FORCE INITIALIZING...");
-      const initResult = ForceInitialization.executeForceInitialization();
-
-      if (initResult.success) {
-        console.log("✅ FORCE INITIALIZATION SUCCESSFUL");
-        alert(initResult.message);
-        setTimeout(() => window.location.reload(), 2000);
-        return;
-      } else {
-        console.error("❌ FORCE INITIALIZATION FAILED");
-        alert(initResult.message);
-        return;
-      }
+      console.log(
+        "ℹ️ System is empty - this is normal for a fresh application",
+      );
+      // Não executar inicialização automática - deixar o utilizador adicionar dados
+      return;
     }
 
     // STEP 2: Verificar integridade dos dados existentes
@@ -1235,7 +1227,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -7172,7 +7164,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        🚰 Detalhes do Furo de Água
+                        �� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -8138,7 +8130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>���</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
