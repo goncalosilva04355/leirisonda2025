@@ -5844,7 +5844,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>• Informações de clientes</li>
+                        <li>• Informaç��es de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
@@ -7984,6 +7984,32 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
 
         case "localizacoes":
+          // SECURITY: Only admin and super_admin can access location features
+          if (
+            currentUser?.role !== "admin" &&
+            currentUser?.role !== "super_admin"
+          ) {
+            return (
+              <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                  <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                  <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                    Acesso Restrito
+                  </h1>
+                  <p className="text-gray-600 mb-4">
+                    Apenas administradores podem aceder às funcionalidades de
+                    localização.
+                  </p>
+                  <button
+                    onClick={() => navigateToSection("dashboard")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Voltar ao Dashboard
+                  </button>
+                </div>
+              </div>
+            );
+          }
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4">
@@ -8171,7 +8197,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>����</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
