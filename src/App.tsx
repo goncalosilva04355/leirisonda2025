@@ -55,7 +55,6 @@ import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import { ForceInitialization } from "./utils/forceInitialization";
-import { autoExecuteEmergencyLogout } from "./utils/executeEmergencyLogout";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
@@ -3674,7 +3673,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi��ões do Furo
+                              Medições do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4519,7 +4518,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
                           <option value="manutencao">Em Manutenção</option>
-                          <option value="construcao">Em Construção</option>
+                          <option value="construcao">Em Constru��ão</option>
                         </select>
                       </div>
                     </div>
@@ -4600,7 +4599,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resist��ncia Elétrica
+                            Resistência Elétrica
                           </option>
                           <option value="gas">Aquecimento a Gás</option>
                         </select>
@@ -7096,7 +7095,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descrição do trabalho realizado..."
+                            placeholder="Descriç��o do trabalho realizado..."
                           />
                         </div>
                         <div>
