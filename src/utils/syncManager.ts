@@ -58,7 +58,7 @@ export const syncManager = {
       }
     }
 
-    return true; // Always enabled per user request
+    return true; // Reactivated after quota increase confirmed
   },
 
   // Mark quota as exceeded with emergency measures
@@ -166,9 +166,16 @@ export const syncManager = {
     };
   },
 
-  // Normal sync intervals
+  // Safe sync intervals with quota protection
   getSafeInterval(): number {
-    return 60000; // 1 minute - conservative but functional
+    const status = this.getSyncStatus();
+
+    if (status.quotaExceeded || status.emergencyShutdown) {
+      return 0; // No sync when quota exceeded
+    }
+
+    // Conservative but functional interval for paid plan
+    return 60000; // 1 minute - safe for increased quota
   },
 
   // Check if Firebase operations should be allowed
