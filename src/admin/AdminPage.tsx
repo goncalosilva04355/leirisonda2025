@@ -28,6 +28,7 @@ import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
 import { MobileSettings } from "../components/MobileSettings";
 import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
+import { LoginFixer } from "../components/LoginFixer";
 
 interface AdminPageProps {
   onLogout: () => void;
