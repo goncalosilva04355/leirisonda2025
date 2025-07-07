@@ -1647,7 +1647,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "configuracoes",
       icon: Settings,
-      label: "Configurações",
+      label: "Configura��ões",
       path: "/configuracoes",
     },
     {
@@ -3841,7 +3841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa��ões sobre a obra..."
+                            placeholder="Observa���ões sobre a obra..."
                           />
                         </div>
 
@@ -5362,12 +5362,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 {/* Notifications Section */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <div className="flex items-center mb-4">
-                    <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Notificações Push
-                    </h3>
-                  </div>
+                  {/* Seção de notificações removida */}
                   <p className="text-gray-600 mb-6">
                     Ative as notificações para receber alertas sobre novas obras
                     atribuídas e atualizações importantes.
@@ -5375,9 +5370,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   <div className="space-y-4">
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
-                        <div className="flex-1">
+                      {/* Ícones de notificação removidos */}
                           <h4 className="font-medium text-blue-900 mb-2">
                             Notificações de Obras
                           </h4>
@@ -7551,7 +7544,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const dimensions = inputs[5].value; // Dimensões
                           const volume = inputs[6].value; // Volume
                           const filtrationSystem = inputs[7].value; // Sistema de Filtração
-                          const installationDate = inputs[8].value; // Data de Instalação
+                          const installationDate = inputs[8].value; // Data de Instalaç��o
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente
                           const observations = inputs[11].value; // Observações
@@ -8104,7 +8097,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>��</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
