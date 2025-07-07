@@ -170,13 +170,20 @@ class DataCleanupService {
         }
       });
 
-      // DISABLED - NEVER delete user data
-      // localStorage.removeItem("pools");
-      // localStorage.removeItem("works");
-      // localStorage.removeItem("maintenance");
-      // localStorage.removeItem("interventions");
-      // localStorage.removeItem("clients");
-      console.log("🚫 Data cleanup disabled - preserving user data");
+      // Limpar apenas dados automáticos/mock, manter dados do utilizador
+      const pools = JSON.parse(localStorage.getItem("pools") || "[]");
+      const cleanPools = pools.filter(
+        (pool: any) =>
+          !pool.name?.includes("Piscina Principal") &&
+          !pool.name?.includes("Piscina Exemplo") &&
+          !pool.name?.includes("Villa Marina") &&
+          !pool.client?.includes("Cliente Exemplo"),
+      );
+
+      localStorage.setItem("pools", JSON.stringify(cleanPools));
+      console.log(
+        `🧹 Cleaned ${pools.length - cleanPools.length} automatic pools, kept ${cleanPools.length} user pools`,
+      );
 
       // Remove cleanup and sync flags
       localStorage.removeItem("demo-data-cleaned");
