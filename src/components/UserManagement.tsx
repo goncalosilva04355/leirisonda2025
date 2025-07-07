@@ -71,6 +71,7 @@ export const UserManagement: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isCreatingUser, setIsCreatingUser] = useState(false);
   const [createError, setCreateError] = useState<string>("");
+  const [createSuccess, setCreateSuccess] = useState<string>("");
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showPasswords, setShowPasswords] = useState<{
     [key: string]: boolean;
