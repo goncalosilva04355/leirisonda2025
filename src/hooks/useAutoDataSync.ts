@@ -311,8 +311,8 @@ export const useDataMutationSync = () => {
       return async (...args: T): Promise<R> => {
         const result = await fn(...args);
 
-        // Força sincronização após mutação
-        setTimeout(forceSyncNow, 50);
+        // Força sincronização instantânea após mutação
+        setTimeout(forceSyncNow, 10);
 
         return result;
       };
