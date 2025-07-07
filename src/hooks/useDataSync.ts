@@ -4,10 +4,10 @@ import { realFirebaseService } from "../services/realFirebaseService";
 import { clearQuotaProtection } from "../utils/clearQuotaProtection";
 
 // Clear any quota protection flags and enable Firebase sync
-clearQuotaProtection();
+// clearQuotaProtection(); // Temporarily disabled
 
 // Firebase initialization enabled for cross-device synchronization
-realFirebaseService.initialize();
+// realFirebaseService.initialize(); // Temporarily disabled
 
 // Simulate data types
 export interface Pool {
