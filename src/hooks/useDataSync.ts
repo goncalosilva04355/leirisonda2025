@@ -703,13 +703,21 @@ export function useDataSync(): SyncState & SyncActions {
     withAutoSync(async (workData: Omit<Work, "id" | "createdAt">) => {
       console.log("🔧 addWork called with data:", workData);
 
+      // Get current user info for tracking who created the work
+      const currentUser = JSON.parse(
+        localStorage.getItem("currentUser") || "null",
+      );
+
       const newWork: Work = {
         ...workData,
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
+        createdBy: currentUser ? currentUser.name : "Sistema",
+        createdByUser: currentUser ? currentUser.uid : "system",
       };
 
       console.log("🆕 Creating new work:", newWork);
+      console.log("👤 Created by user:", currentUser?.name || "Unknown");
 
       setState((prev) => {
         const updatedWorks = [...prev.works, newWork];
