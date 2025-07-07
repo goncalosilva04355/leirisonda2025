@@ -3540,21 +3540,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </option>
                               {users
                                 .filter((user) => {
-                                  console.log(
-                                    "Nova obra - User:",
-                                    user.name,
-                                    "Role:",
-                                    user.role,
-                                    "Active:",
-                                    user.active,
+                                  const roleCheck = user.role !== "viewer";
+                                  const activeCheck = user.active !== false;
+                                  const alreadyAssigned = assignedUsers.some(
+                                    (assigned) =>
+                                      assigned.id === String(user.id),
                                   );
+
+                                  console.log(
+                                    "🔍 FILTRO UTILIZADOR:",
+                                    user.name,
+                                    "| Role:",
+                                    user.role,
+                                    "| Ativo:",
+                                    user.active,
+                                    "| Role OK:",
+                                    roleCheck,
+                                    "| Ativo OK:",
+                                    activeCheck,
+                                    "| Já atribuído:",
+                                    alreadyAssigned,
+                                    "| PASSA FILTRO:",
+                                    roleCheck &&
+                                      activeCheck &&
+                                      !alreadyAssigned,
+                                  );
+
                                   return (
-                                    user.role !== "viewer" &&
-                                    user.active !== false &&
-                                    !assignedUsers.some(
-                                      (assigned) =>
-                                        assigned.id === String(user.id),
-                                    )
+                                    roleCheck && activeCheck && !alreadyAssigned
                                   );
                                 })
                                 .map((user) => (
@@ -7283,7 +7296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             .value; // Morada
                           const startTime = (inputs[5] as HTMLInputElement)
                             .value; // Hora de Entrada
-                          const endTime = (inputs[6] as HTMLInputElement).value; // Hora de Saída
+                          const endTime = (inputs[6] as HTMLInputElement).value; // Hora de Sa��da
                           const status = (inputs[7] as HTMLSelectElement).value; // Estado
                           const workSheetCompleted = (
                             inputs[8] as HTMLInputElement
