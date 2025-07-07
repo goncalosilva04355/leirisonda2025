@@ -234,7 +234,7 @@ function App() {
         "enablePhoneDialer",
         event.detail.enabled.toString(),
       );
-      console.log("�� Phone dialer synchronized:", event.detail.enabled);
+      console.log("📞 Phone dialer synchronized:", event.detail.enabled);
     };
 
     const handleMapsRedirectToggle = (event: CustomEvent) => {
@@ -394,7 +394,7 @@ function App() {
     setCurrentUser(null);
 
     // Firebase auth disabled to prevent crashes
-    console.log("�� SECURITY: Firebase auth listeners disabled for stability");
+    console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
     // Firebase auth code removed to fix syntax errors
 
     // DO NOT initialize default admin automatically - this was causing the security issue
@@ -1235,7 +1235,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n����� Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1961,7 +1961,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </button>
 
-                  {/* Obras Atribu��das */}
+                  {/* Obras Atribuídas */}
                   <button
                     onClick={() => navigateToSection("obras")}
                     className="w-full bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
@@ -5181,7 +5181,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de filtros",
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
-                          "Verificação alimentaç��o",
+                          "Verificação alimentação",
                           "Enchimento automático",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
