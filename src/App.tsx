@@ -713,7 +713,7 @@ function App() {
         loginForm.password,
       );
 
-      console.log("��� Auth result:", result);
+      console.log("���� Auth result:", result);
 
       if (result.success && result.user) {
         console.log("✅ Login successful for:", result.user.email);
@@ -2906,7 +2906,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���� {maint.clientContact}
+                                        ������ {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -6161,7 +6161,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }
                                 >
                                   📍{" "}
-                                  {client?.address || "Endereço não disponível"}
+                                  {client?.address ||
+                                    "Endereço n��o disponível"}
                                 </button>
                               </div>
                               <div>
@@ -7303,15 +7304,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                             updateData = {
                               ...updateData,
-                              boreDepth: boreInputs[0]?.value || "",
-                              waterLevel: boreInputs[1]?.value || "",
-                              flowRate: boreInputs[2]?.value || "",
-                              pumpDepth: boreInputs[3]?.value || "",
-                              columnType: boreInputs[4]?.value || "",
-                              columnDiameter: boreInputs[5]?.value || "",
-                              pumpModel: boreInputs[6]?.value || "",
-                              motorPower: boreInputs[7]?.value || "",
-                              pumpVoltage: boreInputs[8]?.value || "",
+                              boreDepth:
+                                (boreInputs[0] as HTMLInputElement)?.value ||
+                                "",
+                              waterLevel:
+                                (boreInputs[1] as HTMLInputElement)?.value ||
+                                "",
+                              flowRate:
+                                (boreInputs[2] as HTMLInputElement)?.value ||
+                                "",
+                              pumpDepth:
+                                (boreInputs[3] as HTMLInputElement)?.value ||
+                                "",
+                              columnType:
+                                (boreInputs[4] as HTMLInputElement)?.value ||
+                                "",
+                              columnDiameter:
+                                (boreInputs[5] as HTMLInputElement)?.value ||
+                                "",
+                              pumpModel:
+                                (boreInputs[6] as HTMLInputElement)?.value ||
+                                "",
+                              motorPower:
+                                (boreInputs[7] as HTMLInputElement)?.value ||
+                                "",
+                              pumpVoltage:
+                                (boreInputs[8] as HTMLInputElement)?.value ||
+                                "",
                               boreObservations: boreInputs[9]?.value || "",
                             };
                             console.log(
