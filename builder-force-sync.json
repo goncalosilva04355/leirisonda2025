@@ -23,9 +23,11 @@
     }
   },
   "syncTrigger": {
-    "timestamp": "2024-12-28T15:40:00Z",
-    "method": "manual-fix",
-    "priority": "high",
-    "retryCount": 0
+    "timestamp": "2024-12-28T15:52:00Z",
+    "method": "force-retry",
+    "priority": "critical",
+    "retryCount": 1,
+    "forceNewAttempt": true,
+    "bypassCache": true
   }
 }
