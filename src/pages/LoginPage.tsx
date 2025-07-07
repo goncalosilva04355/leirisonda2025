@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Settings } from "lucide-react";
 
 interface LoginPageProps {
@@ -16,71 +16,16 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     email: "",
     password: "",
   });
-  const [rememberMe, setRememberMe] = useState(false);
-
-  // Load saved credentials on component mount
-  useEffect(() => {
-    console.log("🔄 Loading saved credentials...");
-    const savedCredentials = localStorage.getItem("savedLoginCredentials");
-    if (savedCredentials) {
-      try {
-        const {
-          email,
-          password,
-          rememberMe: savedRememberMe,
-        } = JSON.parse(savedCredentials);
-
-        console.log("📋 Found saved credentials:", {
-          email,
-          hasPassword: !!password,
-          rememberMe: savedRememberMe,
-        });
-
-        if (savedRememberMe && email && password) {
-          setLoginForm({ email: email || "", password: password || "" });
-          setRememberMe(true);
-
-          // Do NOT auto-login to prevent screen shaking/loops
-          // Just populate the form for user convenience
-          console.log("📋 Auto-filled login form from saved credentials");
-        } else {
-          console.log("⚠️ Incomplete saved credentials, skipping auto-login");
-        }
-      } catch (error) {
-        console.error("❌ Error loading saved credentials:", error);
-        localStorage.removeItem("savedLoginCredentials");
-      }
-    } else {
-      console.log("📭 No saved credentials found");
-    }
-  }, [onLogin]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     console.log("🚀 LoginPage: Form submitted");
-    console.log("📧 Email:", loginForm.email);
-    console.log("🔐 Password length:", loginForm.password?.length || 0);
 
     // Basic validation
     if (!loginForm.email.trim() || !loginForm.password.trim()) {
       console.warn("❌ LoginPage: Empty fields detected");
-      return; // Let HTML5 validation handle this
-    }
-
-    // Save credentials if remember me is checked
-    if (rememberMe) {
-      console.log("💾 Saving credentials to localStorage");
-      localStorage.setItem(
-        "savedLoginCredentials",
-        JSON.stringify({
-          email: loginForm.email.trim(),
-          password: loginForm.password,
-          rememberMe: true,
-        }),
-      );
-    } else {
-      localStorage.removeItem("savedLoginCredentials");
+      return;
     }
 
     try {
@@ -142,24 +87,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               autoComplete="current-password"
               placeholder="Digite sua senha"
             />
-          </div>
-
-          {/* Remember Me Checkbox */}
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="remember-me"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              disabled={isLoading}
-            />
-            <label
-              htmlFor="remember-me"
-              className="ml-2 block text-sm text-gray-700"
-            >
-              Lembrar-me (auto-login)
-            </label>
           </div>
 
           {/* Error Message */}
