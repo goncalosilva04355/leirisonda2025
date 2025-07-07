@@ -77,48 +77,6 @@ export const fixUserPasswords = (): { fixed: number; errors: string[] } => {
   try {
     // No users to fix - only super admin exists
     console.log("🔧 No problematic users to fix - only super admin exists");
-
-    // Fix app users
-    const appUsersData = localStorage.getItem("app-users");
-    if (appUsersData) {
-      const appUsers = JSON.parse(appUsersData);
-      let appUpdated = false;
-
-      // Fix Alexandre in app users
-      const alexandreAppIndex = appUsers.findIndex(
-        (user: any) =>
-          user.name.toLowerCase().includes("alexandre") ||
-          user.email.toLowerCase().includes("alexandre"),
-      );
-
-      if (alexandreAppIndex !== -1) {
-        appUsers[alexandreAppIndex].password = "69alexandre";
-        appUsers[alexandreAppIndex].active = true;
-        appUpdated = true;
-      }
-
-      // Fix Yuri in app users
-      const yuriAppIndex = appUsers.findIndex(
-        (user: any) =>
-          user.name.toLowerCase().includes("yuri") ||
-          user.email.toLowerCase().includes("yuri"),
-      );
-
-      if (yuriAppIndex !== -1) {
-        const yuriUser = appUsers[yuriAppIndex];
-        if (yuriUser.email.includes("leirisonda.pt")) {
-          appUsers[yuriAppIndex].password = "yuripass123";
-        } else {
-          appUsers[yuriAppIndex].password = "password123";
-        }
-        appUsers[yuriAppIndex].active = true;
-        appUpdated = true;
-      }
-
-      if (appUpdated) {
-        localStorage.setItem("app-users", JSON.stringify(appUsers));
-      }
-    }
   } catch (error: any) {
     errors.push(`Erro ao corrigir passwords: ${error.message}`);
   }
