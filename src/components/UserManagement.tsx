@@ -78,6 +78,9 @@ export const UserManagement: React.FC = () => {
   const [createError, setCreateError] = useState<string>("");
   const [createSuccess, setCreateSuccess] = useState<string>("");
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editingPermissions, setEditingPermissions] = useState<User | null>(
+    null,
+  );
   const [showPasswords, setShowPasswords] = useState<{
     [key: string]: boolean;
   }>({});
