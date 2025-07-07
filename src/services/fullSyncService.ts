@@ -372,15 +372,23 @@ class FullSyncService {
 
           // Also fix in Firebase if available
           if (db) {
-            const userRef = doc(db, "users", users[alexandreIndex].uid);
-            await setDoc(
-              userRef,
-              {
-                ...users[alexandreIndex],
-                updatedAt: new Date().toISOString(),
-              },
-              { merge: true },
-            );
+            try {
+              const userRef = doc(db, "users", users[alexandreIndex].uid);
+              await setDoc(
+                userRef,
+                {
+                  ...users[alexandreIndex],
+                  updatedAt: new Date().toISOString(),
+                },
+                { merge: true },
+              );
+            } catch (error) {
+              console.log(
+                "⏸️ Firebase operation skipped - quota protection mode",
+              );
+            }
+          } else {
+            console.log("⏸️ Firebase not available - local fix only");
           }
 
           // Reload mock service
