@@ -2900,7 +2900,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Lista de Manuten��ões */}
+                {/* Lista de Manutenções */}
                 <div className="space-y-4">
                   {maintenance.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
@@ -3513,7 +3513,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             users,
                           )}
                           <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuários responsáveis por esta obra
+                            Selecione os usuários responsáveis por esta obra.
+                            Utilizadores inativos são marcados como "(Inativo)".
                           </p>
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
@@ -5815,7 +5816,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
-                        <li>��� Prazos e cronogramas</li>
+                        <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
                         <li>• Estados de progresso</li>
                       </ul>
@@ -6961,7 +6962,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div>
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra (
-                            {users.length} utilizadores disponíveis)
+                            {users.length} utilizadores disponíveis).
+                            Utilizadores inativos são marcados como "(Inativo)".
                           </p>
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
