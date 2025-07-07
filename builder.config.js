@@ -7,7 +7,7 @@ module.exports = {
   github: {
     owner: "GoncaloFonseca86",
     repo: "Builder-stellar-landing",
-    branch: "ai_main_9fcae005c620",
+    branch: "main",
     baseBranch: "main",
   },
 
