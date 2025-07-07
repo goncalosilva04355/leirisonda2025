@@ -41,6 +41,7 @@ import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
+import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 
@@ -1137,7 +1138,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -3449,7 +3450,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠️ Nenhum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuição de
+                                Administração → "🔧 Corre��ão de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -5371,7 +5372,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                           >
-                            Ativar Notificaç��es
+                            Ativar Notificaç����es
                           </button>
                         </div>
                       </div>
@@ -6193,7 +6194,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente �� base de dados
+                        Adicionar cliente ���� base de dados
                       </p>
                     </div>
                   </div>
@@ -9024,6 +9025,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           )}
         </div>
+
+        {/* Firebase Reactivated Notification */}
+        <FirebaseReactivatedNotification />
 
         {/* Realtime Notifications - Disabled per user request */}
         {/* <RealtimeNotifications /> */}

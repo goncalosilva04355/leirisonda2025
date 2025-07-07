@@ -58,6 +58,13 @@ export const syncManager = {
       }
     }
 
+    // Force clear all quota flags since quota was increased
+    this.clearQuotaExceeded();
+    localStorage.removeItem("firebase-emergency-shutdown");
+    localStorage.removeItem("firebase-emergency-time");
+    this.circuitBreakerOpen = false;
+    this.quotaErrorCount = 0;
+
     return true; // Reactivated after quota increase confirmed
   },
 
