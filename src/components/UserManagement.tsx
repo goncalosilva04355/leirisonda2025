@@ -20,7 +20,7 @@ import {
   XCircle,
   UserMinus,
 } from "lucide-react";
-import { cleanUserData } from "../utils/cleanUserData";
+// cleanUserData removido - usando apenas Firebase
 import AuthTroubleshootingGuide from "./AuthTroubleshootingGuide";
 
 interface User {
