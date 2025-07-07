@@ -181,7 +181,16 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
 
   // Calculate map center
   const getMapCenter = () => {
-    if (userLocations.length === 0) return { lat: 38.7223, lng: -9.1393 };
+    if (userLocations.length === 0) {
+      // Try to get current user location from localStorage
+      const currentUserLocation = localStorage.getItem("current-user-location");
+      if (currentUserLocation) {
+        const location = JSON.parse(currentUserLocation);
+        return { lat: location.latitude, lng: location.longitude };
+      }
+      // Default to Lisbon center
+      return { lat: 38.7223, lng: -9.1393 };
+    }
 
     const avgLat =
       userLocations.reduce((sum, loc) => sum + loc.latitude, 0) /
