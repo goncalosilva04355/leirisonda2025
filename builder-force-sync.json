@@ -7,10 +7,10 @@
   },
   "github": {
     "repository": "GoncaloFonseca86/Builder-stellar-landing",
-    "branch": "ai_main_9fcae005c620",
+    "branch": "main",
     "commitsToPush": 5,
-    "lastAttempt": "2024-12-28T15:40:00Z",
-    "status": "ready"
+    "lastAttempt": "2024-12-28T16:00:00Z",
+    "status": "force-main-branch"
   },
   "application": {
     "name": "Leirisonda",
