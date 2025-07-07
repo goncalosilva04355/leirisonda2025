@@ -44,7 +44,8 @@ import "./utils/clearModalStates";
 // Security: Startup cleanup to prevent blocked users from accessing
 import "./utils/startupCleanup";
 
-// Componentes de sincronização removidos conforme solicitado
+// Proteção aprimorada contra perda de dados
+import { enhancedDataProtection } from "./utils/dataProtectionEnhanced";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 
