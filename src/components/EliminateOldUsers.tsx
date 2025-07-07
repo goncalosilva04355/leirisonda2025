@@ -65,10 +65,36 @@ const EliminateOldUsers: React.FC = () => {
               </p>
               <p className="text-sm mt-1">{result.message}</p>
 
-              {result.success && (
-                <p className="text-xs mt-2 text-gray-600">
-                  A aplicação irá recarregar automaticamente...
-                </p>
+              {result.success && result.details && (
+                <div className="mt-3 text-xs space-y-1">
+                  {result.details.usersEliminated.length > 0 && (
+                    <p>
+                      🗑️ Eliminados: {result.details.usersEliminated.join(", ")}
+                    </p>
+                  )}
+                  {result.details.systemsCleaned.length > 0 && (
+                    <p>
+                      🧹 Sistemas limpos:{" "}
+                      {result.details.systemsCleaned.join(", ")}
+                    </p>
+                  )}
+                  <p className="text-gray-600 mt-2">
+                    A aplicação irá recarregar automaticamente...
+                  </p>
+                </div>
+              )}
+
+              {result.details?.errors.length > 0 && (
+                <div className="mt-2 text-xs">
+                  <p className="font-medium">Erros:</p>
+                  <ul className="list-disc list-inside">
+                    {result.details.errors.map(
+                      (error: string, index: number) => (
+                        <li key={index}>{error}</li>
+                      ),
+                    )}
+                  </ul>
+                </div>
               )}
             </div>
           )}
