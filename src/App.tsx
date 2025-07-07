@@ -39,9 +39,6 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import EliminateOldUsers from "./components/EliminateOldUsers";
 
-// EXECUÇÃO IMEDIATA: Eliminar usuários específicos AGORA
-import "./executeNow";
-
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
@@ -698,7 +695,7 @@ function App() {
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
-          description: "Manutenção programada automaticamente",
+          description: "Manutenç��o programada automaticamente",
           notes: "Agendada automaticamente após manutenção anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
@@ -1185,7 +1182,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         assignedTo.toLowerCase().includes(currentUser?.name.toLowerCase()) ||
         currentUser?.name.toLowerCase().includes(assignedTo.toLowerCase()));
 
-    console.log("��� DEBUG: Assignment check:", {
+    console.log("🔍 DEBUG: Assignment check:", {
       currentUser: currentUser?.name,
       assignedTo,
       exactMatch: currentUser?.name === assignedTo,
@@ -4607,7 +4604,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequ��ncia de Manutenção
+                          Frequência de Manutenção
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -5821,7 +5818,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Orçamentos e custos</li>
+                        <li>�� Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
                         <li>• Estados de progresso</li>
