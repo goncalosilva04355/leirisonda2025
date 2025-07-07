@@ -11,6 +11,7 @@ import {
   Smartphone,
   Monitor,
   ArrowLeft,
+  Shield,
 } from "lucide-react";
 
 interface LocationData {
