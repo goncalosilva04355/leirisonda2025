@@ -42,11 +42,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           setRememberMe(true);
           console.log("📋 Auto-filled login form from saved credentials");
 
-          // Auto-login if user had "remember me" checked
-          setTimeout(() => {
-            console.log("🚀 Auto-login triggered...");
-            onLogin(email, password);
-          }, 500);
+          // SECURITY: Auto-login DISABLED for security
+          console.log(
+            "🔒 Auto-login disabled for security - user must login manually",
+          );
         } else {
           console.log("⚠️ Incomplete saved credentials, skipping auto-login");
         }

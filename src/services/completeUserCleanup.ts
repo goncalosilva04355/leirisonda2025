@@ -306,7 +306,7 @@ class CompleteUserCleanupService {
 
       // Create super admin in app-users
       const appSuperAdmin = {
-        id: "1",
+        id: 1,
         name: superAdminData.name,
         email: superAdminData.email,
         password: superAdminData.password,

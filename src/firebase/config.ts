@@ -99,13 +99,13 @@ try {
         auth = getAuth(app);
         // Firebase Auth persistence is automatic by default (indexedDB/localStorage handled internally)
         if (auth) {
-          // Explicitly set persistence to LOCAL for auto-login across browser sessions
+          // SECURITY: Set persistence to SESSION only (no auto-login between browser sessions)
           import("firebase/auth").then(
-            ({ setPersistence, browserLocalPersistence }) => {
-              setPersistence(auth, browserLocalPersistence)
+            ({ setPersistence, browserSessionPersistence }) => {
+              setPersistence(auth, browserSessionPersistence)
                 .then(() => {
                   console.log(
-                    "🔐 Firebase Auth LOCAL persistence enabled for auto-login",
+                    "🔐 Firebase Auth SESSION persistence enabled (no auto-login between sessions)",
                   );
                 })
                 .catch((error) => {

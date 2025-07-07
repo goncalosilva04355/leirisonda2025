@@ -33,6 +33,7 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { InstallPrompt } from "./components/InstallPrompt";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
+import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
@@ -261,7 +262,7 @@ function App() {
         // Initialize with default admin user and save to localStorage
         const defaultUsers = [
           {
-            id: "1",
+            id: 1,
             name: "Gonçalo Fonseca",
             email: "gongonsilva@gmail.com",
             active: true,
@@ -392,7 +393,7 @@ function App() {
         const unsubscribe = authService.onAuthStateChanged((user) => {
           if (user) {
             console.log(
-              "✅ Firebase Auth: User automatically restored",
+              "��� Firebase Auth: User automatically restored",
               user.email,
             );
             setCurrentUser(user);
@@ -605,7 +606,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "Não tem permissão para criar manutenções. Contacte o administrador.",
+        "N��o tem permissão para criar manutenções. Contacte o administrador.",
       );
       return;
     }
@@ -962,7 +963,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observações: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -1207,7 +1208,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura��ões para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1407,7 +1408,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("����️ Address clicked:", address);
+    console.log("������ Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -1521,7 +1522,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+              `⚠️ Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -1752,17 +1753,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
                       <div
                         className={`w-1.5 h-1.5 rounded-full ${
-                          autoSyncData.isActive && !autoSyncData.error
+                          syncStatus === "completed"
                             ? "bg-green-500"
-                            : autoSyncData.error
+                            : syncStatus === "error"
                               ? "bg-red-500"
                               : "bg-blue-500"
                         }`}
                       ></div>
                       <span>
-                        {autoSyncData.isActive && !autoSyncData.error
+                        {syncStatus === "completed"
                           ? "Sincronizado"
-                          : autoSyncData.error
+                          : syncStatus === "error"
                             ? "Erro Sync"
                             : "Conectando"}
                       </span>
@@ -2886,7 +2887,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <input
                       type="text"
-                      placeholder="Pesquisar manutenções..."
+                      placeholder="Pesquisar manuten��ões..."
                       className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -5346,6 +5347,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
                 <UserPermissionsManager />
+                <EmergencyLogoutManager />
               </div>
             </div>
           );
@@ -5466,9 +5468,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Configurações de Localização Individual - Apenas para admin e super_admin */}
-                    {(currentUser?.role === "admin" ||
-                      currentUser?.role === "super_admin") && (
+                    {/* Configurações de Localização Individual - Apenas para super_admin */}
+                    {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
 
@@ -5484,8 +5485,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               • As notificações funcionam apenas com HTTPS
                             </li>
                             <li>
-                              • Certifique-se de que permite notificações no seu
-                              navegador
+                              • Certifique-se de que permite notifica��ões no
+                              seu navegador
                             </li>
                             <li>
                               • Em dispositivos móveis, adicione a app ao ecrã
@@ -7105,7 +7106,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        �� Detalhes do Furo de Água
+                        ��� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -8543,9 +8544,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Localizações - Apenas para admin e super_admin */}
-                {(currentUser?.role === "admin" ||
-                  currentUser?.role === "super_admin") && (
+                {/* Localizações - Apenas para super_admin */}
+                {currentUser?.role === "super_admin" && (
                   <button
                     onClick={() => {
                       navigateToSection("localizacoes");
