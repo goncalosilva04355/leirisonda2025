@@ -5468,9 +5468,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Configurações de Localização Individual - Apenas para admin e super_admin */}
-                    {(currentUser?.role === "admin" ||
-                      currentUser?.role === "super_admin") && (
+                    {/* Configurações de Localização Individual - Apenas para super_admin */}
+                    {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
 
