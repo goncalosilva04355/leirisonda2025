@@ -147,10 +147,11 @@ export const getFirebaseStatus = () => {
   };
 };
 
-// Function to mark quota exceeded
+// Function to mark quota exceeded - Firebase handles this automatically
 export const markQuotaExceeded = () => {
-  localStorage.setItem("firebase-quota-exceeded", Date.now().toString());
-  console.warn("🚨 Firebase quota exceeded - marking for cooldown period");
+  console.warn(
+    "🚨 Firebase quota exceeded - Firebase will handle cooldown automatically",
+  );
 };
 
 // Function to clear quota exceeded flag
