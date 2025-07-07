@@ -2051,7 +2051,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       : work.status === "in_progress"
                                         ? "Em Progresso"
                                         : work.status === "completed"
-                                          ? "Concluída"
+                                          ? "Conclu��da"
                                           : work.status}
                                   </span>
 
@@ -2975,7 +2975,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������ {maint.clientContact}
+                                        ������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3341,11 +3341,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Estado da Obra *
                           </label>
-                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="pendente">Pendente</option>
-                            <option value="em-progresso">Em Progresso</option>
-                            <option value="concluida">Concluída</option>
-                            <option value="cancelada">Cancelada</option>
+                          <select
+                            name="status"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="pending">Pendente</option>
+                            <option value="in_progress">Em Progresso</option>
+                            <option value="completed">Concluída</option>
+                            <option value="cancelled">Cancelada</option>
                           </select>
                         </div>
 
@@ -5747,7 +5750,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten��ões</li>
+                        <li>• Histórico de manuten����ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -6921,13 +6924,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Estado da Obra *
                           </label>
                           <select
+                            name="status"
                             defaultValue={editingWork?.status}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
-                            <option value="pendente">Pendente</option>
-                            <option value="em-progresso">Em Progresso</option>
-                            <option value="concluida">Concluída</option>
-                            <option value="cancelada">Cancelada</option>
+                            <option value="pending">Pendente</option>
+                            <option value="in_progress">Em Progresso</option>
+                            <option value="completed">Concluída</option>
+                            <option value="cancelled">Cancelada</option>
                           </select>
                         </div>
 
@@ -7309,7 +7313,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             location,
                             startTime,
                             endTime,
-                            status,
+                            // Only update status if it's actually different from current status
+                            ...(status !== editingWork?.status && { status }),
                             workSheetCompleted,
                             workPerformed,
                             observations,
