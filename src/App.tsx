@@ -1093,7 +1093,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTENÇÕES RECENTES ===
+=== MANUTENÇ��ES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -6920,7 +6920,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="pendente">Pendente</option>
                             <option value="em-progresso">Em Progresso</option>
-                            <option value="concluida">Concluída</option>
+                            <option value="concluida">Conclu��da</option>
                             <option value="cancelada">Cancelada</option>
                           </select>
                         </div>
@@ -8391,10 +8391,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   }
 
+  // Use sync manager to determine if sync should be enabled
+  const syncStatus = syncManager.getSyncStatus();
+  const syncInterval = syncManager.getSafeInterval();
+
   return (
     <AutoSyncProvider
-      enabled={false}
-      syncInterval={300000}
+      enabled={syncStatus.enabled}
+      syncInterval={syncInterval}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={true}
     >
