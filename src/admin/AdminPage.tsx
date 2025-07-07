@@ -229,6 +229,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <DataBackupManager />;
       case "firebase-quota":
         return <FirebaseQuotaManager />;
+      case "user-deletion":
+        return <DangerousUserDeletion />;
       case "overview":
       default:
         return (
