@@ -44,6 +44,14 @@ import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
 import { syncManager } from "./utils/syncManager";
 
+// EMERGENCY: Force quota protection due to repeated quota exceeded errors
+import { forceQuotaProtection } from "./utils/forceQuotaProtection";
+
+// Execute emergency protection on load
+if (typeof window !== "undefined") {
+  forceQuotaProtection();
+}
+
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
@@ -1033,7 +1041,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Push Notification functions
   const requestNotificationPermission = async () => {
-    console.log("🔔 Requesting notification permission...");
+    console.log("�� Requesting notification permission...");
     if ("Notification" in window) {
       try {
         const permission = await Notification.requestPermission();
@@ -2594,7 +2602,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o de piscinas no sistema
+                          Gestão de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -3091,7 +3099,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                👨‍🔧 {maint.technician}
+                                👨‍�� {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -7506,7 +7514,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const dimensions = inputs[5].value; // Dimensões
                           const volume = inputs[6].value; // Volume
                           const filtrationSystem = inputs[7].value; // Sistema de Filtração
-                          const installationDate = inputs[8].value; // Data de Instalação
+                          const installationDate = inputs[8].value; // Data de Instalaç��o
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente
                           const observations = inputs[11].value; // Observações
