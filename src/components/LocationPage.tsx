@@ -1,20 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  MapPin,
-  Navigation,
-  RefreshCw,
-  Settings,
-  AlertCircle,
-  Check,
-  X,
-  ExternalLink,
-  Smartphone,
-  Monitor,
-  ArrowLeft,
-  Shield,
-  Users,
-  Map,
-} from "lucide-react";
+import React from "react";
+import { ArrowLeft } from "lucide-react";
 import { UserLocationMap } from "./UserLocationMap";
 
 interface LocationData {
@@ -539,7 +524,7 @@ export const LocationPage: React.FC<LocationPageProps> = ({
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Localizaç��o Atual
+                        Localização Atual
                       </h3>
                       {location && (
                         <div className="space-y-2">
@@ -627,7 +612,7 @@ export const LocationPage: React.FC<LocationPageProps> = ({
                         Localização
                       </p>
                       <p>
-                        ���� <strong>Dica:</strong> Use o botão "Verificar
+                        💡 <strong>Dica:</strong> Use o botão "Verificar
                         Permissões" para atualizar o estado
                       </p>
                     </div>
