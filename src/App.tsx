@@ -8389,7 +8389,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   return (
     <AutoSyncProvider
       enabled={true}
-      syncInterval={15000}
+      syncInterval={300000}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={true}
     >
