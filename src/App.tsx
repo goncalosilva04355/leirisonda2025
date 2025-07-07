@@ -7567,10 +7567,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const filtrationSystem = (
                             inputs[7] as HTMLInputElement
                           ).value; // Sistema de Filtração
-                          const installationDate = inputs[8].value; // Data de Instalação
-                          const clientPhone = inputs[9].value; // Telefone do Cliente
-                          const clientEmail = inputs[10].value; // Email do Cliente
-                          const observations = inputs[11].value; // Observações
+                          const installationDate = (
+                            inputs[8] as HTMLInputElement
+                          ).value; // Data de Instalação
+                          const clientPhone = (inputs[9] as HTMLInputElement)
+                            .value; // Telefone do Cliente
+                          const clientEmail = (inputs[10] as HTMLInputElement)
+                            .value; // Email do Cliente
+                          const observations = (inputs[11] as HTMLInputElement)
+                            .value; // Observações
 
                           dataSync.updatePool(editingPool.id, {
                             name,
