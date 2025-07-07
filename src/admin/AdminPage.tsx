@@ -44,6 +44,7 @@ type AdminSection =
   | "overview"
   | "user-management"
   | "work-assignment-fix"
+  | "works-data-diagnostic"
   | "auth-diagnostic"
   | "sync-manager"
   | "firebase-status"
