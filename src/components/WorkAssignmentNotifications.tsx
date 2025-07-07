@@ -80,42 +80,46 @@ export const WorkAssignmentNotifications: React.FC<
     }
   }, [currentUser]);
 
+  // Função para processar mudanças nos trabalhos
+  const handleWorksChange = useCallback(() => {
+    if (!currentUser) return;
+
+    try {
+      const worksData = localStorage.getItem("works");
+      if (!worksData) return;
+
+      const currentWorks: Work[] = JSON.parse(worksData);
+      const previousWorks = previousWorksRef.current;
+
+      // Se não há trabalhos anteriores, salvar o estado atual e sair
+      if (previousWorks.length === 0) {
+        previousWorksRef.current = currentWorks;
+        return;
+      }
+
+      // Detectar novos trabalhos atribuídos ao usuário atual
+      checkForNewAssignments(currentWorks, previousWorks, currentUser);
+
+      // Detectar mudanças em trabalhos existentes
+      checkForAssignmentUpdates(currentWorks, previousWorks, currentUser);
+
+      // Atualizar estado anterior
+      previousWorksRef.current = currentWorks;
+    } catch (error) {
+      console.error("Erro ao processar mudanças de trabalhos:", error);
+    }
+  }, [currentUser]);
+
   // Monitorar mudanças nos trabalhos
   useEffect(() => {
     if (!currentUser) return;
-
-    const handleWorksChange = () => {
-      try {
-        const worksData = localStorage.getItem("works");
-        if (!worksData) return;
-
-        const currentWorks: Work[] = JSON.parse(worksData);
-
-        // Se não há trabalhos anteriores, salvar o estado atual e sair
-        if (previousWorks.length === 0) {
-          setPreviousWorks(currentWorks);
-          return;
-        }
-
-        // Detectar novos trabalhos atribuídos ao usuário atual
-        checkForNewAssignments(currentWorks, previousWorks, currentUser);
-
-        // Detectar mudanças em trabalhos existentes
-        checkForAssignmentUpdates(currentWorks, previousWorks, currentUser);
-
-        // Atualizar estado anterior
-        setPreviousWorks(currentWorks);
-      } catch (error) {
-        console.error("Erro ao processar mudanças de trabalhos:", error);
-      }
-    };
 
     // Carregar estado inicial
     const initialWorksData = localStorage.getItem("works");
     if (initialWorksData) {
       try {
         const initialWorks = JSON.parse(initialWorksData);
-        setPreviousWorks(initialWorks);
+        previousWorksRef.current = initialWorks;
       } catch (error) {
         console.error("Erro ao carregar trabalhos iniciais:", error);
       }
@@ -136,7 +140,7 @@ export const WorkAssignmentNotifications: React.FC<
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("worksUpdated", handleWorksChange);
     };
-  }, [currentUser, previousWorks]);
+  }, [currentUser, handleWorksChange]);
 
   const checkForNewAssignments = (
     currentWorks: Work[],
