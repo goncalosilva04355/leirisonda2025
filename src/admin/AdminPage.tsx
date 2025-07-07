@@ -27,6 +27,7 @@ import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
 import { MobileSettings } from "../components/MobileSettings";
+import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -35,6 +36,7 @@ interface AdminPageProps {
 type AdminSection =
   | "overview"
   | "user-management"
+  | "work-assignment-fix"
   | "auth-diagnostic"
   | "sync-manager"
   | "firebase-status"
@@ -59,6 +61,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       description: "Criar, editar e gerir utilizadores do sistema",
       icon: Users,
       color: "bg-indigo-600",
+    },
+    {
+      id: "work-assignment-fix" as AdminSection,
+      title: "🔧 Correção de Atribuição de Obras",
+      description: "Corrigir problemas na atribuição de utilizadores às obras",
+      icon: Users,
+      color: "bg-orange-600",
     },
     {
       id: "auth-diagnostic" as AdminSection,
@@ -151,6 +160,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     switch (currentSection) {
       case "user-management":
         return <UserManagement />;
+      case "work-assignment-fix":
+        return <WorkAssignmentFix />;
       case "auth-diagnostic":
         return <AuthSyncDiagnostic />;
       case "sync-manager":
