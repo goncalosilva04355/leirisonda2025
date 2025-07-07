@@ -856,7 +856,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç��o: ${pool.location}
+   Localizaç���o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -1337,7 +1337,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("🗺️ Address clicked:", address);
+    console.log("����️ Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -1699,9 +1699,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
                 </div>
-
-                {/* Firebase Quota Alert */}
-                <FirebaseQuotaAlert />
 
                 {/* Status Cards */}
                 <div className="space-y-3">
@@ -4711,7 +4708,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar interven��ão de manutenção
+                        Registar intervenção de manutenção
                       </p>
                     </div>
                   </div>
