@@ -487,7 +487,7 @@ function App() {
       } else if (permission === "denied") {
         console.warn("❌ Notifications denied by user");
       } else {
-        console.log("�� Notifications permission not yet requested");
+        console.log("⏳ Notifications permission not yet requested");
       }
     } else {
       console.warn("⚠️ Notifications not supported in this browser");
@@ -2900,7 +2900,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Lista de Manutenções */}
+                {/* Lista de Manuten��ões */}
                 <div className="space-y-4">
                   {maintenance.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
@@ -3562,7 +3562,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 })
                                 .map((user) => (
                                   <option key={user.id} value={user.id}>
-                                    {user.name}
+                                    {user.name}{" "}
+                                    {user.active === false ? "(Inativo)" : ""}
                                   </option>
                                 ))}
                             </select>
@@ -5814,7 +5815,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
-                        <li>• Prazos e cronogramas</li>
+                        <li>��� Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
                         <li>• Estados de progresso</li>
                       </ul>
@@ -6993,7 +6994,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 })
                                 .map((user) => (
                                   <option key={user.id} value={user.id}>
-                                    {user.name}
+                                    {user.name}{" "}
+                                    {user.active === false ? "(Inativo)" : ""}
                                   </option>
                                 ))}
                             </select>
