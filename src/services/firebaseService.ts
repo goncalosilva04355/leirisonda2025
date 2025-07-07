@@ -492,10 +492,23 @@ export const maintenanceService = {
 export const workService = {
   // Listen to real-time changes
   subscribeToWorks(callback: (works: Work[]) => void) {
-    // Use localStorage to prevent Firebase quota
-    const works = JSON.parse(localStorage.getItem("works") || "[]");
-    callback(works);
-    return () => {};
+    if (!isFirebaseAvailable()) {
+      const works = JSON.parse(localStorage.getItem("works") || "[]");
+      callback(works);
+      return () => {};
+    }
+
+    const q = query(
+      collection(db, COLLECTIONS.WORKS),
+      orderBy("createdAt", "desc"),
+    );
+    return onSnapshot(q, (snapshot) => {
+      const works = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Work[];
+      callback(works);
+    });
   },
 
   // Add new work
