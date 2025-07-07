@@ -16,6 +16,7 @@ import {
   Play,
   Loader2,
 } from "lucide-react";
+import ActivationSummary from "./ActivationSummary";
 
 interface ActivationStep {
   id: string;
@@ -647,6 +648,9 @@ export const CompleteDeviceActivation: React.FC = () => {
           </li>
         </ul>
       </div>
+
+      {/* Summary of Features */}
+      <ActivationSummary />
     </div>
   );
 };
