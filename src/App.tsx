@@ -886,7 +886,7 @@ ${index + 1}. ${pool.name}
 
   const generateMaintenancePDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
+LEIRISONDA - RELATÓRIO DE MANUTENÇ��ES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1237,7 +1237,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
-    const fakeEvent = { target: { files } };
+    const fakeEvent = {
+      target: { files },
+    } as React.ChangeEvent<HTMLInputElement>;
     handlePhotoUpload(fakeEvent);
   };
 
@@ -3794,7 +3796,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa��ões sobre a obra..."
+                            placeholder="Observa���ões sobre a obra..."
                           />
                         </div>
 
@@ -4670,7 +4672,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç��o criada para nova piscina:",
+                                "Futura manutenç����o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
