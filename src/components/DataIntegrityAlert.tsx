@@ -114,7 +114,7 @@ export const DataIntegrityAlert: React.FC<DataIntegrityAlertProps> = ({
         .replace(/�/g, "")
         .replace(/ç��o/g, "ção")
         .replace(/manuten��ão/g, "manutenção")
-        .replace(/atribu��da/g, "atribuída")
+        .replace(/atribu��da/g, "atribu��da")
         .replace(/filtração/g, "filtração")
         .replace(/orçamento/g, "orçamento")
         .replace(/configurações/g, "configurações");
