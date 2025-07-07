@@ -5526,8 +5526,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               inicial
                             </li>
                             <li>
-                              • A localização requer permissão específica do
-                              navegador
+                              • Configure a sua localização abaixo e veja o mapa
+                              da equipa na página "Localizações"
                             </li>
                           </ul>
                         </div>
