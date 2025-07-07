@@ -24,6 +24,7 @@ import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
 import { AutoSyncDemo } from "../components/AutoSyncDemo";
 import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
+import { UserManagement } from "../components/UserManagement";
 
 interface AdminPageProps {
   onLogout: () => void;
