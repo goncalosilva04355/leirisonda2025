@@ -7488,7 +7488,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Instalação
+                          Data de Instala��ão
                         </label>
                         <input
                           type="date"
@@ -7582,7 +7582,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             client,
                             location,
                             status,
-                            poolType,
+                            type: poolType,
                             dimensions,
                             volume: volume ? parseInt(volume) : undefined,
                             filtrationSystem,
