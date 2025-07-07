@@ -29,7 +29,11 @@ interface LocationSettings {
   refreshInterval: number;
 }
 
-export const LocationPage: React.FC = () => {
+interface LocationPageProps {
+  onBack?: () => void;
+}
+
+export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
   const [location, setLocation] = useState<LocationData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
