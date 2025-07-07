@@ -307,8 +307,6 @@ export const UserManagement: React.FC = () => {
         authRole,
       );
 
-      console.log("AuthService registration result:", result);
-
       if (result.success) {
         // Create local user record for UI management
         const newUser: User = {
@@ -331,9 +329,8 @@ export const UserManagement: React.FC = () => {
             "../services/mockAuthService"
           );
           mockAuthService.reloadUsers();
-          console.log("🔄 Synchronized with mock auth service");
         } catch (syncError) {
-          console.warn("Could not sync with mock auth:", syncError);
+          // Silent sync error
         }
 
         // Refresh all user data to ensure sync
@@ -348,22 +345,15 @@ export const UserManagement: React.FC = () => {
           active: true,
         });
 
-        console.log("✅ Utilizador criado com sucesso!");
         setCreateError("");
         setCreateSuccess("✅ Utilizador criado com sucesso e está ativo!");
-        // Show success message briefly
-        console.log("🎉 Success! User has been created and is active");
       } else {
-        console.error("Registration failed:", result.error);
         const errorMsg = `Erro ao criar utilizador: ${result.error || "Erro desconhecido"}`;
         setCreateError(errorMsg);
-        console.error(`❌ ${errorMsg}`);
       }
     } catch (error: any) {
-      console.error("Erro ao criar utilizador:", error);
       const errorMsg = "Erro inesperado ao criar utilizador. Tente novamente.";
       setCreateError(errorMsg);
-      console.error(`❌ ${errorMsg}`);
     } finally {
       setIsCreatingUser(false);
     }
