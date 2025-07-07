@@ -355,16 +355,22 @@ export const UserManagement: React.FC = () => {
         });
 
         console.log("✅ Utilizador criado com sucesso!");
-        alert("✅ Utilizador criado com sucesso e está ativo!");
+        setCreateError("");
+        // Use a shorter, less intrusive notification
+        setTimeout(() => {
+          alert("✅ Utilizador criado com sucesso!");
+        }, 100);
       } else {
         console.error("Registration failed:", result.error);
-        alert(
-          `❌ Erro ao criar utilizador: ${result.error || "Erro desconhecido"}`,
-        );
+        const errorMsg = `Erro ao criar utilizador: ${result.error || "Erro desconhecido"}`;
+        setCreateError(errorMsg);
+        alert(`�� ${errorMsg}`);
       }
     } catch (error: any) {
       console.error("Erro ao criar utilizador:", error);
-      alert("❌ Erro inesperado ao criar utilizador. Tente novamente.");
+      const errorMsg = "Erro inesperado ao criar utilizador. Tente novamente.";
+      setCreateError(errorMsg);
+      alert(`❌ ${errorMsg}`);
     } finally {
       setIsCreatingUser(false);
     }
