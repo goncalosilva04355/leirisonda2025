@@ -64,6 +64,7 @@ import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
+import { userRestoreService } from "./services/userRestoreService";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -664,7 +665,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç��o Regular",
+      type: "Manutenç���o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
