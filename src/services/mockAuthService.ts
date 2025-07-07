@@ -44,7 +44,7 @@ class MockAuthService {
         localStorage.setItem("mock-users", JSON.stringify(this.users));
       }
     } else {
-      // Initialize with only real admin user
+      // Initialize with only super admin user
       this.users = [
         {
           uid: "admin-1",
