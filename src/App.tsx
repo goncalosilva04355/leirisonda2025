@@ -606,7 +606,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "N��o tem permissão para criar manutenções. Contacte o administrador.",
+        "N����o tem permissão para criar manutenções. Contacte o administrador.",
       );
       return;
     }
@@ -6622,7 +6622,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
                                   <span className="font-semibold text-gray-700 block mb-1">
-                                    �� Cliente:
+                                    ��� Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
                                     {work.client}
@@ -8544,9 +8544,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Localizações - Apenas para admin e super_admin */}
-                {(currentUser?.role === "admin" ||
-                  currentUser?.role === "super_admin") && (
+                {/* Localizações - Apenas para super_admin */}
+                {currentUser?.role === "super_admin" && (
                   <button
                     onClick={() => {
                       navigateToSection("localizacoes");
