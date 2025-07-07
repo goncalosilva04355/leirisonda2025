@@ -47,6 +47,7 @@ import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
 import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
 import { syncManager } from "./utils/syncManager";
+import CleanupExecutor from "./components/CleanupExecutor";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 
 // SECURITY: RegisterForm removed - only super admin can create users
@@ -2994,7 +2995,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    📍 {maint.location}
+                                    ��� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -5614,7 +5615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               • A marcação automática funciona melhor em
                               dispositivos móveis
                             </li>
-                            <li>• O Google Maps abre numa nova janela/tab</li>
+                            <li>��� O Google Maps abre numa nova janela/tab</li>
                             <li>
                               • Pode ativar ou desativar cada funcionalidade
                               independentemente
@@ -6966,7 +6967,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠️ Nenhum utilizador encontrado. Vá à Área de
+                                ⚠��� Nenhum utilizador encontrado. Vá à Área de
                                 Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
@@ -9098,6 +9099,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
+
+        {/* Temporary Cleanup Executor */}
+        <CleanupExecutor />
       </InstantSyncManager>
     </AutoSyncProvider>
   );
