@@ -1,0 +1,468 @@
+import React, { useState, useEffect } from "react";
+import {
+  MapPin,
+  ExternalLink,
+  RefreshCw,
+  Users,
+  Navigation,
+  AlertCircle,
+  User,
+} from "lucide-react";
+
+interface UserLocation {
+  id: string;
+  name: string;
+  email: string;
+  latitude: number;
+  longitude: number;
+  accuracy: number;
+  timestamp: number;
+  address?: string;
+}
+
+interface UserLocationMapProps {
+  currentUser?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+export const UserLocationMap: React.FC<UserLocationMapProps> = ({
+  currentUser,
+}) => {
+  const [userLocations, setUserLocations] = useState<UserLocation[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserLocation | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load user locations from localStorage and simulate some data
+  const loadUserLocations = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Get saved locations from localStorage
+      const savedLocations = localStorage.getItem("user-locations");
+      let locations: UserLocation[] = savedLocations
+        ? JSON.parse(savedLocations)
+        : [];
+
+      // Add current user's location if available
+      if (currentUser) {
+        const currentUserLocation = localStorage.getItem(
+          "current-user-location",
+        );
+        if (currentUserLocation) {
+          const location = JSON.parse(currentUserLocation);
+          const existingIndex = locations.findIndex(
+            (loc) => loc.email === currentUser.email,
+          );
+
+          const userLoc: UserLocation = {
+            id: currentUser.id,
+            name: currentUser.name,
+            email: currentUser.email,
+            ...location,
+          };
+
+          if (existingIndex >= 0) {
+            locations[existingIndex] = userLoc;
+          } else {
+            locations.push(userLoc);
+          }
+        }
+      }
+
+      // Add some demo locations if no real data exists
+      if (locations.length === 0) {
+        locations = [
+          {
+            id: "demo-1",
+            name: "Gonçalo Fonseca",
+            email: "gongonsilva@gmail.com",
+            latitude: 38.7223,
+            longitude: -9.1393,
+            accuracy: 10,
+            timestamp: Date.now(),
+            address: "Lisboa, Portugal",
+          },
+          {
+            id: "demo-2",
+            name: "Técnico - João Santos",
+            email: "joao@leirisonda.pt",
+            latitude: 38.6979,
+            longitude: -9.2075,
+            accuracy: 15,
+            timestamp: Date.now() - 300000,
+            address: "Cascais, Portugal",
+          },
+          {
+            id: "demo-3",
+            name: "Manager - Maria Silva",
+            email: "maria@leirisonda.pt",
+            latitude: 38.7071,
+            longitude: -9.1689,
+            accuracy: 20,
+            timestamp: Date.now() - 600000,
+            address: "Oeiras, Portugal",
+          },
+        ];
+      }
+
+      setUserLocations(locations);
+
+      // Save updated locations
+      localStorage.setItem("user-locations", JSON.stringify(locations));
+    } catch (err) {
+      setError("Erro ao carregar localiza��ões dos utilizadores");
+      console.error("Error loading user locations:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadUserLocations();
+  }, [currentUser]);
+
+  // Get current user location and save it
+  const shareMyLocation = () => {
+    if (!navigator.geolocation) {
+      setError("Geolocalização não é suportada neste navegador");
+      return;
+    }
+
+    if (!currentUser) {
+      setError("É necessário estar autenticado para partilhar localização");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const locationData = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+          timestamp: position.timestamp,
+        };
+
+        // Try to get address
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${locationData.latitude}&lon=${locationData.longitude}&zoom=18&addressdetails=1`,
+          );
+          if (response.ok) {
+            const data = await response.json();
+            if (data.display_name) {
+              locationData.address = data.display_name;
+            }
+          }
+        } catch (err) {
+          locationData.address = `${locationData.latitude.toFixed(6)}, ${locationData.longitude.toFixed(6)}`;
+        }
+
+        // Save current user location
+        localStorage.setItem(
+          "current-user-location",
+          JSON.stringify(locationData),
+        );
+
+        // Reload all locations
+        await loadUserLocations();
+        setIsLoading(false);
+      },
+      (error) => {
+        let errorMessage = "Erro desconhecido";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "Permissão de localização negada";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Localização não disponível";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "Tempo limite excedido";
+            break;
+        }
+        setError(errorMessage);
+        setIsLoading(false);
+      },
+    );
+  };
+
+  // Open location in Google Maps
+  const openInMaps = (location: UserLocation) => {
+    const url = `https://maps.google.com/maps?q=${location.latitude},${location.longitude}&z=15`;
+    window.open(url, "_blank");
+  };
+
+  // Open all locations in Google Maps
+  const openAllInMaps = () => {
+    if (userLocations.length === 0) return;
+
+    // Create a URL with multiple markers
+    const markers = userLocations
+      .map((loc) => `${loc.latitude},${loc.longitude}`)
+      .join("|");
+
+    const url = `https://maps.google.com/maps?q=${userLocations[0].latitude},${userLocations[0].longitude}&z=12`;
+    window.open(url, "_blank");
+  };
+
+  // Calculate map center
+  const getMapCenter = () => {
+    if (userLocations.length === 0) return { lat: 38.7223, lng: -9.1393 };
+
+    const avgLat =
+      userLocations.reduce((sum, loc) => sum + loc.latitude, 0) /
+      userLocations.length;
+    const avgLng =
+      userLocations.reduce((sum, loc) => sum + loc.longitude, 0) /
+      userLocations.length;
+
+    return { lat: avgLat, lng: avgLng };
+  };
+
+  const formatTimestamp = (timestamp: number) => {
+    const now = Date.now();
+    const diff = now - timestamp;
+    const minutes = Math.floor(diff / 60000);
+
+    if (minutes < 1) return "Agora";
+    if (minutes < 60) return `${minutes}min atrás`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h atrás`;
+
+    const days = Math.floor(hours / 24);
+    return `${days}d atrás`;
+  };
+
+  const mapCenter = getMapCenter();
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">
+            Mapa de Utilizadores
+          </h2>
+          <p className="text-gray-600 text-sm">
+            Localizações de todos os utilizadores da equipa
+          </p>
+        </div>
+        <div className="flex space-x-2">
+          <button
+            onClick={shareMyLocation}
+            disabled={isLoading}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+          >
+            <Navigation
+              className={`h-4 w-4 ${isLoading ? "animate-pulse" : ""}`}
+            />
+            <span>Partilhar Localização</span>
+          </button>
+          <button
+            onClick={loadUserLocations}
+            disabled={isLoading}
+            className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:bg-gray-400"
+          >
+            <RefreshCw
+              className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+            />
+            <span>Atualizar</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="flex items-center">
+            <AlertCircle className="h-5 w-5 text-red-400 mr-3" />
+            <p className="text-sm text-red-700">{error}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white p-4 rounded-lg border border-gray-200">
+          <div className="flex items-center space-x-3">
+            <Users className="h-5 w-5 text-blue-600" />
+            <div>
+              <p className="text-sm font-medium text-gray-900">
+                Utilizadores Online
+              </p>
+              <p className="text-xs text-blue-600">{userLocations.length}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg border border-gray-200">
+          <div className="flex items-center space-x-3">
+            <MapPin className="h-5 w-5 text-green-600" />
+            <div>
+              <p className="text-sm font-medium text-gray-900">
+                Localizações Ativas
+              </p>
+              <p className="text-xs text-green-600">
+                {
+                  userLocations.filter(
+                    (loc) => Date.now() - loc.timestamp < 3600000,
+                  ).length
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg border border-gray-200">
+          <div className="flex items-center space-x-3">
+            <ExternalLink className="h-5 w-5 text-purple-600" />
+            <div>
+              <p className="text-sm font-medium text-gray-900">
+                Centro do Mapa
+              </p>
+              <p className="text-xs text-purple-600">
+                {mapCenter.lat.toFixed(4)}, {mapCenter.lng.toFixed(4)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Map Placeholder with Google Maps Embed */}
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Mapa da Equipa
+            </h3>
+            <button
+              onClick={openAllInMaps}
+              className="flex items-center space-x-2 px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+            >
+              <ExternalLink className="h-3 w-3" />
+              <span>Abrir no Google Maps</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="relative">
+          {/* Google Maps Embed */}
+          <iframe
+            src={`https://maps.google.com/maps?q=${mapCenter.lat},${mapCenter.lng}&z=12&output=embed`}
+            width="100%"
+            height="400"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="w-full"
+          />
+
+          {/* Overlay with user markers info */}
+          <div className="absolute top-4 left-4 bg-white bg-opacity-90 rounded-lg p-3 shadow-lg">
+            <div className="flex items-center space-x-2">
+              <MapPin className="h-4 w-4 text-red-500" />
+              <span className="text-sm font-medium">
+                {userLocations.length} localizações
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* User List */}
+      <div className="bg-white rounded-lg border border-gray-200">
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900">Utilizadores</h3>
+          <p className="text-sm text-gray-600">
+            Clique num utilizador para ver no Google Maps
+          </p>
+        </div>
+
+        <div className="divide-y divide-gray-200">
+          {userLocations.length === 0 ? (
+            <div className="p-8 text-center">
+              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Nenhuma localização disponível
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Partilhe a sua localização ou aguarde que outros utilizadores
+                partilhem as suas.
+              </p>
+              <button
+                onClick={shareMyLocation}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Partilhar a Minha Localização
+              </button>
+            </div>
+          ) : (
+            userLocations.map((location) => (
+              <div
+                key={location.id}
+                className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
+                  selectedUser?.id === location.id
+                    ? "bg-blue-50 border-l-4 border-blue-500"
+                    : ""
+                }`}
+                onClick={() => {
+                  setSelectedUser(location);
+                  openInMaps(location);
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <User className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">
+                        {location.name}
+                      </h4>
+                      <p className="text-sm text-gray-600">{location.email}</p>
+                      {location.address && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          {location.address}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                      <MapPin className="h-4 w-4" />
+                      <span>±{Math.round(location.accuracy)}m</span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {formatTimestamp(location.timestamp)}
+                    </p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openInMaps(location);
+                      }}
+                      className="mt-2 flex items-center space-x-1 px-2 py-1 bg-green-100 text-green-700 rounded text-xs hover:bg-green-200"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      <span>Ver no Maps</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
