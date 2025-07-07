@@ -286,12 +286,8 @@ function App() {
   const [viewingWork, setViewingWork] = useState(false);
 
   // Clickable links settings
-  const [enablePhoneDialer, setEnablePhoneDialer] = useState(() => {
-    return localStorage.getItem("enablePhoneDialer") === "true";
-  });
-  const [enableMapsRedirect, setEnableMapsRedirect] = useState(() => {
-    return localStorage.getItem("enableMapsRedirect") === "true";
-  });
+  const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
+  const [enableMapsRedirect, setEnableMapsRedirect] = useState(false);
 
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
@@ -5659,7 +5655,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manutenções</li>
+                        <li>• Histórico de manuten��ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
