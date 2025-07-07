@@ -28,6 +28,7 @@ import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
 import { MobileSettings } from "../components/MobileSettings";
 import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
+import { WorksDataDiagnostic } from "../components/WorksDataDiagnostic";
 import { LoginFixer } from "../components/LoginFixer";
 import { DataBackupManager } from "../components/DataBackupManager";
 import { FirebaseQuotaManager } from "../components/FirebaseQuotaManager";
@@ -43,6 +44,7 @@ type AdminSection =
   | "overview"
   | "user-management"
   | "work-assignment-fix"
+  | "works-data-diagnostic"
   | "auth-diagnostic"
   | "sync-manager"
   | "firebase-status"
@@ -80,6 +82,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       description: "Corrigir problemas na atribuição de utilizadores às obras",
       icon: Users,
       color: "bg-orange-600",
+    },
+    {
+      id: "works-data-diagnostic" as AdminSection,
+      title: "🏗️ Diagnóstico: 0 Obras",
+      description: "URGENTE: Resolver problema de 0 obras aparecendo na app",
+      icon: AlertTriangle,
+      color: "bg-red-600",
     },
     {
       id: "nuclear-cleanup" as AdminSection,
@@ -218,6 +227,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <UserManagement />;
       case "work-assignment-fix":
         return <WorkAssignmentFix />;
+      case "works-data-diagnostic":
+        return <WorksDataDiagnostic />;
       case "login-fix":
         return <LoginFixer />;
       case "auth-diagnostic":
