@@ -1148,7 +1148,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n���� Atribuída a: ${assignedTo}\n\n���� Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n���� Atribuída a: ${assignedTo}\n\n������ Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -7717,7 +7717,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Custo (€)
+                          Custo (���)
                         </label>
                         <input
                           type="number"
@@ -7913,7 +7913,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         case "localizacoes":
           // SECURITY: Only admin and super_admin can access location features
           if (
-            currentUser?.role !== "admin" &&
+            currentUser?.role !== "manager" &&
             currentUser?.role !== "super_admin"
           ) {
             return (
