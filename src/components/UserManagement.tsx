@@ -154,9 +154,8 @@ export const UserManagement: React.FC = () => {
             "../services/mockAuthService"
           );
           mockAuthService.reloadUsers();
-          console.log("Synchronized with mock auth service");
         } catch (error) {
-          console.warn("Could not sync with mock auth service:", error);
+          // Silent sync error
         }
       } catch (error) {
         console.error("Error loading users:", error);
