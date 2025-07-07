@@ -241,19 +241,88 @@ function App() {
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
 
-  // Firebase handles user persistence automatically
+  // Load users from localStorage on app start
   useEffect(() => {
-    console.log("🔥 Firebase handles user data automatically");
-    // Initialize with default admin user only
-    setUsers([
-      {
-        id: "1",
-        name: "Gonçalo Fonseca",
-        email: "gongonsilva@gmail.com",
-        active: true,
-        role: "super_admin",
-      },
-    ]);
+    console.log("🔄 Loading users from localStorage on app start...");
+
+    try {
+      // Load users from localStorage (app-users)
+      const savedUsers = localStorage.getItem("app-users");
+      if (savedUsers) {
+        const parsedUsers = JSON.parse(savedUsers);
+        console.log(
+          "✅ Users loaded successfully:",
+          parsedUsers.length,
+          parsedUsers,
+        );
+        setUsers(parsedUsers);
+      } else {
+        console.log("📝 No saved users found, initializing with default users");
+        // Initialize with default admin user and save to localStorage
+        const defaultUsers = [
+          {
+            id: "1",
+            name: "Gonçalo Fonseca",
+            email: "gongonsilva@gmail.com",
+            active: true,
+            role: "super_admin",
+            password: "19867gsf",
+            permissions: {
+              obras: { view: true, create: true, edit: true, delete: true },
+              manutencoes: {
+                view: true,
+                create: true,
+                edit: true,
+                delete: true,
+              },
+              piscinas: { view: true, create: true, edit: true, delete: true },
+              utilizadores: {
+                view: true,
+                create: true,
+                edit: true,
+                delete: true,
+              },
+              relatorios: {
+                view: true,
+                create: true,
+                edit: true,
+                delete: true,
+              },
+              clientes: { view: true, create: true, edit: true, delete: true },
+            },
+            createdAt: "2024-01-01",
+          },
+        ];
+        setUsers(defaultUsers);
+        localStorage.setItem("app-users", JSON.stringify(defaultUsers));
+      }
+    } catch (error) {
+      console.error("❌ Error loading users:", error);
+      // Fallback to initial users
+      setUsers(initialUsers);
+    }
+
+    // Listen for user updates from other components
+    const handleUsersUpdated = () => {
+      console.log("🔄 Users updated event received, reloading...");
+      try {
+        const savedUsers = localStorage.getItem("app-users");
+        if (savedUsers) {
+          const parsedUsers = JSON.parse(savedUsers);
+          console.log(
+            "✅ Users reloaded after update:",
+            parsedUsers.length,
+            parsedUsers,
+          );
+          setUsers(parsedUsers);
+        }
+      } catch (error) {
+        console.error("❌ Error reloading users:", error);
+      }
+    };
+
+    window.addEventListener("usersUpdated", handleUsersUpdated);
+    return () => window.removeEventListener("usersUpdated", handleUsersUpdated);
   }, []);
 
   // Firebase handles user updates automatically via real-time listeners
