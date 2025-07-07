@@ -82,46 +82,86 @@ export const UserManagement: React.FC = () => {
     active: true,
   });
 
-  // Load users from localStorage
+  // Load users from localStorage and sync with auth services
   useEffect(() => {
-    const savedUsers = localStorage.getItem("app-users");
-    if (savedUsers) {
+    const loadUsers = async () => {
       try {
-        const parsedUsers = JSON.parse(savedUsers);
-        setUsers(parsedUsers);
-      } catch (error) {
-        console.error("Erro ao carregar utilizadores:", error);
-        setUsers([]);
-      }
-    } else {
-      // Initialize with default admin user
-      const defaultUsers: User[] = [
-        {
-          id: "1",
-          name: "Gonçalo Fonseca",
-          email: "gongonsilva@gmail.com",
-          password: "19867gsf",
-          role: "super_admin",
-          permissions: {
-            obras: { view: true, create: true, edit: true, delete: true },
-            manutencoes: { view: true, create: true, edit: true, delete: true },
-            piscinas: { view: true, create: true, edit: true, delete: true },
-            utilizadores: {
-              view: true,
-              create: true,
-              edit: true,
-              delete: true,
+        // Load from localStorage first
+        const savedUsers = localStorage.getItem("app-users");
+        if (savedUsers) {
+          try {
+            const parsedUsers = JSON.parse(savedUsers);
+            setUsers(parsedUsers);
+          } catch (error) {
+            console.error("Erro ao carregar utilizadores:", error);
+            setUsers([]);
+          }
+        } else {
+          // Initialize with default admin user
+          const defaultUsers: User[] = [
+            {
+              id: "1",
+              name: "Gonçalo Fonseca",
+              email: "gongonsilva@gmail.com",
+              password: "19867gsf",
+              role: "super_admin",
+              permissions: {
+                obras: { view: true, create: true, edit: true, delete: true },
+                manutencoes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                piscinas: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                utilizadores: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                relatorios: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                clientes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+              },
+              active: true,
+              createdAt: "2024-01-01",
             },
-            relatorios: { view: true, create: true, edit: true, delete: true },
-            clientes: { view: true, create: true, edit: true, delete: true },
-          },
-          active: true,
-          createdAt: "2024-01-01",
-        },
-      ];
-      setUsers(defaultUsers);
-      localStorage.setItem("app-users", JSON.stringify(defaultUsers));
-    }
+          ];
+          setUsers(defaultUsers);
+          localStorage.setItem("app-users", JSON.stringify(defaultUsers));
+        }
+
+        // Also sync with mock auth service
+        try {
+          const { mockAuthService } = await import(
+            "../services/mockAuthService"
+          );
+          mockAuthService.reloadUsers();
+          console.log("Synchronized with mock auth service");
+        } catch (error) {
+          console.warn("Could not sync with mock auth service:", error);
+        }
+      } catch (error) {
+        console.error("Error loading users:", error);
+      }
+    };
+
+    loadUsers();
   }, []);
 
   // Save users to localStorage
