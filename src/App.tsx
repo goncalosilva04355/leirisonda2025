@@ -1408,7 +1408,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("����️ Address clicked:", address);
+    console.log("������ Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -5347,6 +5347,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
                 <UserPermissionsManager />
+                <EmergencyLogoutManager />
               </div>
             </div>
           );
