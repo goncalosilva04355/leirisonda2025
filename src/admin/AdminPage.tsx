@@ -28,6 +28,7 @@ import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
 import { MobileSettings } from "../components/MobileSettings";
 import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
+import { WorksDataDiagnostic } from "../components/WorksDataDiagnostic";
 import { LoginFixer } from "../components/LoginFixer";
 import { DataBackupManager } from "../components/DataBackupManager";
 import { FirebaseQuotaManager } from "../components/FirebaseQuotaManager";
