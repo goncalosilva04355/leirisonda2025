@@ -591,6 +591,26 @@ export const WorkAssignmentFix: React.FC = () => {
 
           <button
             onClick={() => {
+              const appUsers = JSON.parse(
+                localStorage.getItem("app-users") || "[]",
+              );
+              const mockUsers = JSON.parse(
+                localStorage.getItem("mock-users") || "[]",
+              );
+              console.table(appUsers);
+              console.table(mockUsers);
+              alert(
+                `DEBUG UTILIZADORES:\n\n📊 App Users: ${appUsers.length}\n📊 Mock Users: ${mockUsers.length}\n\nDetalhes no console (F12)`,
+              );
+            }}
+            className="px-6 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 flex items-center space-x-2"
+          >
+            <AlertCircle className="h-4 w-4" />
+            <span>Debug Utilizadores</span>
+          </button>
+
+          <button
+            onClick={() => {
               // Force trigger the usersUpdated event to test if it works
               window.dispatchEvent(new CustomEvent("usersUpdated"));
               alert(
