@@ -5514,7 +5514,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notificações foram bloqueadas. Por favor, ative-as nas configura����ões do navegador.",
+                                    "Notificações foram bloqueadas. Por favor, ative-as nas configura��ões do navegador.",
                                   );
                                 }
                               } else {
@@ -5856,7 +5856,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>��� Trabalhos realizados</li>
-                        <li>• Técnicos respons��veis</li>
+                        <li>• Técnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observaç���es</li>
                       </ul>
