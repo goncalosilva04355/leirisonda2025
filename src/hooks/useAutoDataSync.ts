@@ -158,8 +158,9 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
             performAutoSync();
           }, quotaBackoffTime);
         } else {
-          const nextInterval =
-            finalConfig.syncInterval * backoffMultiplier.current;
+          const baseInterval =
+            finalConfig.syncInterval === 0 ? 1000 : finalConfig.syncInterval; // Min 1s para erros
+          const nextInterval = baseInterval * backoffMultiplier.current;
           console.log(
             `⏰ Reagendando sincronização em ${nextInterval / 1000}s`,
           );
