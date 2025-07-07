@@ -119,6 +119,26 @@ export const WorkAssignmentFix: React.FC = () => {
       }
     });
 
+    // Log detailed user information for debugging
+    console.log("=== ANÁLISE DETALHADA DE UTILIZADORES ===");
+    console.log("App Users:", appUsers.length, appUsers);
+    console.log("Mock Users:", mockUsers.length, mockUsers);
+    console.log("Sync Issues:", syncIssues);
+
+    // Check active vs inactive users
+    const activeAppUsers = appUsers.filter((u) => u.active);
+    const inactiveAppUsers = appUsers.filter((u) => !u.active);
+    console.log(
+      "Utilizadores ativos:",
+      activeAppUsers.length,
+      activeAppUsers.map((u) => u.name),
+    );
+    console.log(
+      "Utilizadores inativos:",
+      inactiveAppUsers.length,
+      inactiveAppUsers.map((u) => u.name),
+    );
+
     setUsersAnalysis({
       appUsers,
       mockUsers,
