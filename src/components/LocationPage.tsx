@@ -110,19 +110,21 @@ export const LocationPage: React.FC = () => {
           timestamp: position.timestamp,
         };
 
-        // Try to get address from coordinates
+        // Try to get address from coordinates using a free service
         try {
           const response = await fetch(
-            `https://api.opencagedata.com/geocode/v1/json?q=${locationData.latitude}+${locationData.longitude}&key=YOUR_API_KEY&language=pt&pretty=1`,
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${locationData.latitude}&lon=${locationData.longitude}&zoom=18&addressdetails=1`,
           );
           if (response.ok) {
             const data = await response.json();
-            if (data.results && data.results[0]) {
-              locationData.address = data.results[0].formatted;
+            if (data.display_name) {
+              locationData.address = data.display_name;
             }
           }
         } catch (err) {
           console.warn("Não foi possível obter o endereço:", err);
+          // Fallback: create a simple address with coordinates
+          locationData.address = `Lat: ${locationData.latitude.toFixed(6)}, Lon: ${locationData.longitude.toFixed(6)}`;
         }
 
         setLocation(locationData);
