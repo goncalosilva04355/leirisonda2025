@@ -442,38 +442,115 @@ class UserDeletionService {
    * Clear user sessions but preserve super admin if currently logged in
    */
   private async clearUserSessions(): Promise<void> {
-    console.log("🧹 Clearing user sessions...");
+    console.log("🧹 Starting COMPLETE session clearing...");
 
     try {
-      // Check if super admin is currently logged in
-      const currentUser = localStorage.getItem("mock-current-user");
-      let preserveSession = false;
+      // Check ALL possible session storage locations
+      const sessionKeys = [
+        "currentUser",
+        "mock-current-user",
+        "user",
+        "authUser",
+        "loggedInUser",
+        "activeUser",
+        "savedLoginCredentials",
+      ];
 
-      if (currentUser) {
-        const userData = JSON.parse(currentUser);
-        if (
-          userData.email?.toLowerCase() === this.SUPER_ADMIN_EMAIL.toLowerCase()
-        ) {
-          console.log(
-            "🛡️ Super admin currently logged in - preserving session",
-          );
-          preserveSession = true;
+      let preserveSuperAdminSession = false;
+      let superAdminSessionData = null;
+
+      // First, check if super admin is logged in anywhere
+      for (const key of sessionKeys) {
+        try {
+          const data = localStorage.getItem(key);
+          if (data) {
+            const userData = JSON.parse(data);
+            if (
+              userData.email?.toLowerCase() ===
+              this.SUPER_ADMIN_EMAIL.toLowerCase()
+            ) {
+              console.log(`🛡️ Super admin found in ${key} - will preserve`);
+              preserveSuperAdminSession = true;
+              superAdminSessionData = userData;
+              break;
+            }
+          }
+        } catch (e) {
+          // Invalid JSON, will be cleared anyway
         }
       }
 
-      if (!preserveSession) {
-        // Clear all session data
-        localStorage.removeItem("mock-current-user");
-        localStorage.removeItem("currentUser");
-        sessionStorage.clear();
-        console.log("🧹 All user sessions cleared");
+      // Clear all session-related data except super admin
+      for (const key of sessionKeys) {
+        try {
+          const data = localStorage.getItem(key);
+          if (data) {
+            try {
+              const userData = JSON.parse(data);
+              if (
+                userData.email?.toLowerCase() !==
+                this.SUPER_ADMIN_EMAIL.toLowerCase()
+              ) {
+                localStorage.removeItem(key);
+                console.log(`🗑️ Cleared session data from ${key}`);
+              }
+            } catch (e) {
+              // Invalid JSON, remove it
+              localStorage.removeItem(key);
+              console.log(`🗑️ Removed invalid session data from ${key}`);
+            }
+          }
+        } catch (error) {
+          console.error(`❌ Error clearing ${key}:`, error);
+        }
+      }
+
+      // Clear all sessionStorage
+      sessionStorage.clear();
+      console.log("🧹 Cleared all session storage");
+
+      // Clear any cached authentication data
+      const authKeys = [
+        "firebase-auth",
+        "firebase-user",
+        "auth-token",
+        "access-token",
+        "refresh-token",
+      ];
+
+      for (const key of authKeys) {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+      }
+
+      // Restore super admin session if it was active
+      if (preserveSuperAdminSession && superAdminSessionData) {
+        localStorage.setItem(
+          "mock-current-user",
+          JSON.stringify(superAdminSessionData),
+        );
+        console.log("🛡️ Restored super admin session");
+      }
+
+      // Force reload any auth services
+      try {
+        if (
+          typeof mockAuthService !== "undefined" &&
+          mockAuthService.reloadUsers
+        ) {
+          mockAuthService.reloadUsers();
+          console.log("🔄 Reloaded mock auth service");
+        }
+      } catch (e) {
+        console.error("❌ Error reloading auth service:", e);
       }
 
       // Dispatch event to notify other components that users were updated
       window.dispatchEvent(new CustomEvent("usersUpdated"));
-      console.log("📢 usersUpdated event dispatched after user deletion");
+      window.dispatchEvent(new CustomEvent("userSessionsCleared"));
+      console.log("📢 User update events dispatched after session clearing");
     } catch (error: any) {
-      console.error("❌ Error clearing sessions:", error);
+      console.error("❌ Error in complete session clearing:", error);
       throw error;
     }
   }
