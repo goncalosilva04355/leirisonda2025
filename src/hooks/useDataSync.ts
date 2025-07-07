@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { realFirebaseService } from "../services/realFirebaseService";
 import { useDataMutationSync } from "./useAutoDataSync";
+import { clearQuotaProtection } from "../utils/clearQuotaProtection";
+
+// Clear any quota protection flags and enable Firebase sync
+clearQuotaProtection();
 
 // Firebase initialization enabled for cross-device synchronization
 realFirebaseService.initialize();
