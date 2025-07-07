@@ -69,14 +69,9 @@ let app: any = null;
 let db: any = null;
 let auth: any = null;
 
-// Check if quota was previously exceeded
+// Check if quota was previously exceeded - Firebase handles this internally
 const isQuotaExceeded = () => {
-  const quotaFlag = localStorage.getItem("firebase-quota-exceeded");
-  if (quotaFlag) {
-    const quotaTime = parseInt(quotaFlag);
-    const cooldownPeriod = 30 * 60 * 1000; // 30 minutes cooldown
-    return Date.now() - quotaTime < cooldownPeriod;
-  }
+  // Firebase handles quota management automatically
   return false;
 };
 
