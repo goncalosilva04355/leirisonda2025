@@ -5370,12 +5370,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 )}
 
 
-                  <div className="space-y-4">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      {/* Ícones de notificação removidos */}
-                          <h4 className="font-medium text-blue-900 mb-2">
-                            Notificações de Obras
-                          </h4>
                           <p className="text-blue-700 text-sm mb-3">
                             Receba notificações quando uma nova obra for
                             atribuída a si.
@@ -5855,7 +5849,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Relatório consolidado de todo o sistema
+                        Relat��rio consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
@@ -7549,7 +7543,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const installationDate = inputs[8].value; // Data de Instalaç��o
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente
-                          const observations = inputs[11].value; // Observações
+                          const observations = inputs[11].value; // Observa��ões
 
                           dataSync.updatePool(editingPool.id, {
                             name,
