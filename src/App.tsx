@@ -8523,6 +8523,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Piscinas</span>
                 </button>
               )}
+
+              {/* Localizações */}
+              <button
+                onClick={() => {
+                  navigateToSection("localizacoes");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "localizacoes"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <MapPin className="h-5 w-5" />
+                <span>Localizações</span>
+              </button>
             </nav>
 
             {/* User Section */}
