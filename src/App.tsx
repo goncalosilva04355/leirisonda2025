@@ -8332,9 +8332,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   return (
     <AutoSyncProvider
-      enabled={true}
-      syncInterval={60000}
-      collections={["users", "pools", "maintenance", "works", "clients"]}
+      enabled={false}
+      syncInterval={0}
+      collections={[]}
       showNotifications={false}
     >
       <InstantSyncManager>
