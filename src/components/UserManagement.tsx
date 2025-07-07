@@ -236,17 +236,9 @@ export const UserManagement: React.FC = () => {
 
   // Create new user
   const handleCreateUser = async () => {
-    console.log("🔄 handleCreateUser called");
-    console.log("📝 Form data:", formData);
-    console.log("🔒 isCreatingUser:", isCreatingUser);
-
-    if (isCreatingUser) {
-      console.log("❌ Already creating user, preventing double submission");
-      return; // Prevent multiple submissions
-    }
+    if (isCreatingUser) return; // Prevent multiple submissions
 
     if (!formData.name || !formData.email || !formData.password) {
-      console.log("❌ Missing required fields");
       setCreateError("Por favor, preencha todos os campos obrigatórios.");
       return;
     }
@@ -254,13 +246,11 @@ export const UserManagement: React.FC = () => {
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      console.log("❌ Invalid email format");
       setCreateError("Por favor, insira um email válido.");
       return;
     }
 
     if (formData.password.length < 6) {
-      console.log("❌ Password too short");
       setCreateError("Password deve ter pelo menos 6 caracteres.");
       return;
     }
@@ -271,7 +261,6 @@ export const UserManagement: React.FC = () => {
         (user) => user.email.toLowerCase() === formData.email.toLowerCase(),
       )
     ) {
-      console.log("❌ Email already exists in local users");
       setCreateError("Já existe um utilizador com este email.");
       return;
     }
@@ -285,15 +274,13 @@ export const UserManagement: React.FC = () => {
           (user) => user.email.toLowerCase() === formData.email.toLowerCase(),
         )
       ) {
-        console.log("❌ Email already exists in auth service");
         setCreateError("Este email já está registado no sistema.");
         return;
       }
     } catch (error) {
-      console.warn("Could not check auth service for duplicates:", error);
+      // Silent fail for duplicate check
     }
 
-    console.log("✅ All validations passed, starting user creation");
     setCreateError("");
     setCreateSuccess("");
     setIsCreatingUser(true);
