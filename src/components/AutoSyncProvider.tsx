@@ -5,6 +5,8 @@ import {
 } from "../hooks/useAutoDataSync";
 import { SyncErrorBoundary } from "./SyncErrorBoundary";
 
+// Instant sync provider - enables real-time synchronization
+
 interface AutoSyncContextType {
   isActive: boolean;
   syncing: boolean;
