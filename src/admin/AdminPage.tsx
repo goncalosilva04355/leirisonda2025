@@ -36,6 +36,7 @@ interface AdminPageProps {
 type AdminSection =
   | "overview"
   | "user-management"
+  | "work-assignment-fix"
   | "auth-diagnostic"
   | "sync-manager"
   | "firebase-status"
