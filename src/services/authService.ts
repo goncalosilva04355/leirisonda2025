@@ -9,6 +9,7 @@ import {
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db, isFirebaseReady } from "../firebase/config";
 import { mockAuthService } from "./mockAuthService";
+import { QuotaManager } from "../utils/quotaManager";
 
 export interface UserProfile {
   uid: string;
@@ -394,7 +395,7 @@ class AuthService {
         console.log("🔐 Firebase auth error:", error.code);
       }
 
-      let errorMessage = "Credenciais inv��lidas";
+      let errorMessage = "Credenciais inválidas";
       if (error.code === "auth/user-not-found") {
         errorMessage = "Utilizador não encontrado";
       } else if (
