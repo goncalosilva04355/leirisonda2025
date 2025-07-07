@@ -1239,7 +1239,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     const files = Array.from(e.dataTransfer.files);
     const fakeEvent = {
       target: { files },
-    } as React.ChangeEvent<HTMLInputElement>;
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
     handlePhotoUpload(fakeEvent);
   };
 
@@ -1464,7 +1464,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+              `⚠��� Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -5114,7 +5114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Gerais
+                          Observaç��es Gerais
                         </label>
                         <textarea
                           rows={4}
