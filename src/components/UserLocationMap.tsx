@@ -76,6 +76,13 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
 
       // Only keep real user locations, no demo data
 
+      // Sort locations to show current user first
+      locations.sort((a, b) => {
+        if (a.email === currentUser?.email) return -1;
+        if (b.email === currentUser?.email) return 1;
+        return b.timestamp - a.timestamp; // Then by most recent
+      });
+
       setUserLocations(locations);
 
       // Save updated locations
