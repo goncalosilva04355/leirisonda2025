@@ -906,7 +906,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -5216,6 +5216,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
                 </div>
+                */}
 
                 {/* Mobile Interaction Settings */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
