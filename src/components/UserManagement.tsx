@@ -342,6 +342,17 @@ export const UserManagement: React.FC = () => {
         const updatedUsers = [...users, newUser];
         saveUsers(updatedUsers);
 
+        // Force sync with all auth systems
+        try {
+          const { mockAuthService } = await import(
+            "../services/mockAuthService"
+          );
+          mockAuthService.reloadUsers();
+          console.log("🔄 Synchronized with mock auth service");
+        } catch (syncError) {
+          console.warn("Could not sync with mock auth:", syncError);
+        }
+
         // Refresh all user data to ensure sync
         await refreshUsers();
 
