@@ -35,6 +35,7 @@ import { FirebaseQuotaManager } from "../components/FirebaseQuotaManager";
 import { DangerousUserDeletion } from "../components/DangerousUserDeletion";
 import { NotificationDemo } from "../components/NotificationDemo";
 import NuclearUserCleanup from "../components/NuclearUserCleanup";
+import CompleteDeviceActivation from "../components/CompleteDeviceActivation";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -42,6 +43,7 @@ interface AdminPageProps {
 
 type AdminSection =
   | "overview"
+  | "complete-activation"
   | "user-management"
   | "work-assignment-fix"
   | "works-data-diagnostic"
@@ -69,6 +71,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     useState<AdminSection>("overview");
 
   const adminSections = [
+    {
+      id: "complete-activation" as AdminSection,
+      title: "🚀 ATIVAÇÃO COMPLETA DO DISPOSITIVO",
+      description:
+        "ATIVA TUDO: Notificações, localização, sincronização, utilizadores, PWA - tudo num só botão!",
+      icon: Zap,
+      color: "bg-gradient-to-r from-green-600 to-blue-600",
+    },
     {
       id: "user-management" as AdminSection,
       title: "Gestão de Utilizadores",
