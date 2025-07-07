@@ -117,6 +117,9 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
+        // Se conseguimos obter a localização, a permissão foi concedida
+        setPermission("granted");
+
         const locationData: LocationData = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
