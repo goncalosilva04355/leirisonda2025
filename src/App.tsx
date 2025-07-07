@@ -5217,6 +5217,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
                 </div>
+                */}
 
                 {/* Mobile Interaction Settings */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
