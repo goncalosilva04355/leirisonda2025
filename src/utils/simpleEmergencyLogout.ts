@@ -87,7 +87,7 @@ export const simpleEmergencyLogout = async (): Promise<void> => {
           uid: "admin-1",
           email: "gongonsilva@gmail.com",
           password: "19867gsf",
-          name: "Gon��alo Fonseca",
+          name: "Gonçalo Fonseca",
           role: "super_admin",
           active: true,
           createdAt: new Date().toISOString(),
@@ -118,8 +118,5 @@ export const simpleEmergencyLogout = async (): Promise<void> => {
   }
 };
 
-// Execute immediately when this module is loaded
-console.log("🚨 AUTO-EXECUTING SIMPLE EMERGENCY LOGOUT");
-simpleEmergencyLogout();
-
+// Available for manual execution only
 export default simpleEmergencyLogout;
