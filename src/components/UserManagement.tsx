@@ -316,6 +316,10 @@ export const UserManagement: React.FC = () => {
 
         const updatedUsers = [...users, newUser];
         saveUsers(updatedUsers);
+
+        // Refresh all user data to ensure sync
+        await refreshUsers();
+
         setIsCreating(false);
         setFormData({
           name: "",
