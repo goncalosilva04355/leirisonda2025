@@ -3847,7 +3847,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observações sobre a obra..."
+                            placeholder="Observa��ões sobre a obra..."
                           />
                         </div>
 
@@ -6951,8 +6951,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuários responsáveis por esta obra
+                            Selecione os usuários responsáveis por esta obra (
+                            {users.length} utilizadores disponíveis)
                           </p>
+                          {users.length === 0 && (
+                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
+                              <p className="text-sm text-yellow-800">
+                                ⚠️ Nenhum utilizador encontrado. Vá à Área de
+                                Administração → "🔧 Correção de Atribuição de
+                                Obras" para corrigir este problema.
+                              </p>
+                            </div>
+                          )}
                           <div className="flex space-x-2">
                             <select
                               value={currentEditAssignedUser}
@@ -7602,7 +7612,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manutenção
+                        Editar Manutenç��o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
