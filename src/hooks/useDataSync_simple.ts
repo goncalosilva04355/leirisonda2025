@@ -114,6 +114,14 @@ export function useDataSync(): SyncState & SyncActions {
         setIsLoading(true);
         setError(null);
 
+        // Initialize Firebase service if not already initialized
+        if (!realFirebaseService.isReady()) {
+          const initSuccess = realFirebaseService.initialize();
+          if (!initSuccess) {
+            throw new Error("Failed to initialize Firebase service");
+          }
+        }
+
         const [worksData, poolsData, maintenanceData, clientsData] =
           await Promise.all([
             realFirebaseService.loadWorks(),
