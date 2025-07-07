@@ -891,7 +891,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manutenções: ${futureMaintenance.length}
+- Futuras Manutenç��es: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
 ${maintenance
@@ -6124,7 +6124,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     : "bg-gray-100 text-gray-800"
                                 }`}
                               >
-                                {client.status}
+                                {(client as any).status}
                               </span>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
