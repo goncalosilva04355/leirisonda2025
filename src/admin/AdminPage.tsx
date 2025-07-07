@@ -33,6 +33,7 @@ import { DataBackupManager } from "../components/DataBackupManager";
 import { FirebaseQuotaManager } from "../components/FirebaseQuotaManager";
 import { DangerousUserDeletion } from "../components/DangerousUserDeletion";
 import { NotificationDemo } from "../components/NotificationDemo";
+import NuclearUserCleanup from "../components/NuclearUserCleanup";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -58,7 +59,8 @@ type AdminSection =
   | "firebase-quota"
   | "login-fix"
   | "user-deletion"
-  | "notification-demo";
+  | "notification-demo"
+  | "nuclear-cleanup";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
@@ -78,6 +80,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       description: "Corrigir problemas na atribuição de utilizadores às obras",
       icon: Users,
       color: "bg-orange-600",
+    },
+    {
+      id: "nuclear-cleanup" as AdminSection,
+      title: "🚨 LIMPEZA NUCLEAR (MELHORADA)",
+      description:
+        "ELIMINA completamente Firebase Auth persistence - resolve utilizadores antigos",
+      icon: AlertTriangle,
+      color: "bg-red-800",
     },
     {
       id: "login-fix" as AdminSection,
@@ -242,6 +252,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <DangerousUserDeletion />;
       case "notification-demo":
         return <NotificationDemo />;
+      case "nuclear-cleanup":
+        return <NuclearUserCleanup />;
       case "overview":
       default:
         return (

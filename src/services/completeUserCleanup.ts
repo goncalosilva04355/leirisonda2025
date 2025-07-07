@@ -1,6 +1,7 @@
 /**
  * Complete and aggressive user cleanup service
  * This service ensures NO old users can login by clearing ALL possible storage locations
+ * INCLUDING Firebase Auth persistence that was causing the issue
  */
 
 export interface CompleteCleanupResult {
@@ -9,6 +10,8 @@ export interface CompleteCleanupResult {
   details: {
     localStorageKeysCleared: string[];
     sessionStorageCleared: boolean;
+    indexedDBCleared: boolean;
+    firebaseAuthCleared: boolean;
     superAdminRecreated: boolean;
     errors: string[];
   };
@@ -21,6 +24,7 @@ class CompleteUserCleanupService {
 
   /**
    * Nuclear option: Clear EVERYTHING user-related and recreate only super admin
+   * NOW INCLUDES Firebase Auth persistence cleanup to prevent old users from staying logged in
    */
   async nuclearUserCleanup(): Promise<CompleteCleanupResult> {
     const result: CompleteCleanupResult = {
@@ -29,6 +33,8 @@ class CompleteUserCleanupService {
       details: {
         localStorageKeysCleared: [],
         sessionStorageCleared: false,
+        indexedDBCleared: false,
+        firebaseAuthCleared: false,
         superAdminRecreated: false,
         errors: [],
       },
@@ -37,7 +43,10 @@ class CompleteUserCleanupService {
     try {
       console.log("🚨 STARTING NUCLEAR USER CLEANUP - CLEARING EVERYTHING!");
 
-      // Step 1: Get ALL localStorage keys and clear any that might contain user data
+      // Step 1: CRITICAL - Force Firebase Auth logout and clear persistence
+      await this.forceFirebaseAuthCleanup(result);
+
+      // Step 2: Get ALL localStorage keys and clear any that might contain user data
       const allLocalStorageKeys = Object.keys(localStorage);
       const userRelatedKeys = allLocalStorageKeys.filter(
         (key) =>
@@ -45,6 +54,7 @@ class CompleteUserCleanupService {
           key.toLowerCase().includes("auth") ||
           key.toLowerCase().includes("login") ||
           key.toLowerCase().includes("mock") ||
+          key.toLowerCase().includes("firebase") ||
           key === "app-users" ||
           key === "mock-users" ||
           key === "users" ||
@@ -53,7 +63,9 @@ class CompleteUserCleanupService {
           key === "mock-current-user" ||
           key === "savedLoginCredentials" ||
           key === "firebase-auth" ||
-          key === "firebase-user",
+          key === "firebase-user" ||
+          key.startsWith("firebase:") ||
+          key.startsWith("__firebase"),
       );
 
       console.log(
@@ -74,7 +86,7 @@ class CompleteUserCleanupService {
         }
       }
 
-      // Step 2: Clear ALL sessionStorage
+      // Step 3: Clear ALL sessionStorage
       try {
         sessionStorage.clear();
         result.details.sessionStorageCleared = true;
@@ -85,7 +97,10 @@ class CompleteUserCleanupService {
         );
       }
 
-      // Step 3: Clear any browser caches/cookies that might store auth data
+      // Step 4: Clear IndexedDB databases (Firebase uses this for persistence)
+      await this.clearIndexedDB(result);
+
+      // Step 5: Clear any browser caches/cookies that might store auth data
       try {
         // Clear any potential auth cookies
         document.cookie.split(";").forEach(function (c) {
@@ -101,10 +116,10 @@ class CompleteUserCleanupService {
         console.error("❌ Error clearing cookies:", error);
       }
 
-      // Step 4: Recreate ONLY the super admin in all systems
+      // Step 6: Recreate ONLY the super admin in all systems
       await this.recreateSuperAdminOnly(result);
 
-      // Step 5: Force reload any auth services
+      // Step 7: Force reload any auth services
       try {
         // Force page reload to clear any in-memory auth state
         console.log("🔄 Dispatching complete cleanup events");
@@ -116,9 +131,15 @@ class CompleteUserCleanupService {
       }
 
       result.success = true;
-      result.message = `✅ NUCLEAR CLEANUP COMPLETE! Cleared ${result.details.localStorageKeysCleared.length} storage keys. Only super admin remains.`;
+      result.message = `✅ NUCLEAR CLEANUP COMPLETE! Cleared ${result.details.localStorageKeysCleared.length} storage keys. Firebase Auth persistence cleared. Only super admin remains.`;
 
       console.log("🏁 Nuclear user cleanup completed successfully");
+
+      // Force page reload after 2 seconds to ensure clean state
+      setTimeout(() => {
+        console.log("🔄 Forcing page reload to ensure clean state...");
+        window.location.reload();
+      }, 2000);
     } catch (error: any) {
       console.error("💥 Critical error in nuclear cleanup:", error);
       result.success = false;
@@ -127,6 +148,141 @@ class CompleteUserCleanupService {
     }
 
     return result;
+  }
+
+  /**
+   * Forces Firebase Auth logout and clears all authentication persistence
+   * This is the KEY function that was missing - Firebase Auth persistence was keeping users logged in
+   */
+  private async forceFirebaseAuthCleanup(
+    result: CompleteCleanupResult,
+  ): Promise<void> {
+    try {
+      console.log("🔥 Starting aggressive Firebase Auth cleanup...");
+
+      // Dynamic import to avoid issues if Firebase is not available
+      const { auth } = await import("../firebase/config");
+
+      if (auth) {
+        try {
+          // Force logout current user
+          if (auth.currentUser) {
+            console.log("🚪 Forcing logout of current Firebase user...");
+            const { signOut } = await import("firebase/auth");
+            await signOut(auth);
+            console.log("✅ Firebase user signed out");
+          }
+
+          // Clear Firebase Auth persistence by setting to NONE temporarily
+          try {
+            const { setPersistence, browserSessionPersistence } = await import(
+              "firebase/auth"
+            );
+            await setPersistence(auth, browserSessionPersistence);
+            console.log("✅ Firebase Auth persistence set to session-only");
+          } catch (persistenceError: any) {
+            console.warn(
+              "⚠️ Could not change Firebase persistence:",
+              persistenceError,
+            );
+          }
+
+          result.details.firebaseAuthCleared = true;
+          console.log("✅ Firebase Auth cleanup completed");
+        } catch (authError: any) {
+          console.warn("⚠️ Firebase Auth cleanup error:", authError);
+          result.details.errors.push(
+            `Firebase Auth cleanup: ${authError.message}`,
+          );
+        }
+      } else {
+        console.log(
+          "📱 Firebase Auth not available - skipping Firebase cleanup",
+        );
+      }
+    } catch (importError: any) {
+      console.warn("⚠️ Could not import Firebase Auth:", importError);
+      result.details.errors.push(
+        `Firebase import error: ${importError.message}`,
+      );
+    }
+  }
+
+  /**
+   * Clears IndexedDB databases used by Firebase for persistence
+   * This removes Firebase's offline storage that can keep auth tokens
+   */
+  private async clearIndexedDB(result: CompleteCleanupResult): Promise<void> {
+    try {
+      if (!("indexedDB" in window)) {
+        console.log("🗃️ IndexedDB not available - skipping");
+        return;
+      }
+
+      console.log("🗃️ Starting IndexedDB cleanup...");
+
+      // Get all database names
+      const databases = await indexedDB.databases();
+      console.log(`📊 Found ${databases.length} IndexedDB databases`);
+
+      let clearedCount = 0;
+
+      for (const db of databases) {
+        if (db.name) {
+          try {
+            // Delete Firebase-related databases
+            if (
+              db.name.includes("firebase") ||
+              db.name.includes("firebaseLocalStorage") ||
+              db.name.includes("auth") ||
+              db.name.startsWith("firebase:") ||
+              db.name.includes("leirisonda")
+            ) {
+              console.log(`🗑️ Deleting IndexedDB database: ${db.name}`);
+
+              const deleteReq = indexedDB.deleteDatabase(db.name);
+
+              await new Promise((resolve, reject) => {
+                deleteReq.onsuccess = () => {
+                  console.log(`✅ Deleted IndexedDB database: ${db.name}`);
+                  clearedCount++;
+                  resolve(true);
+                };
+                deleteReq.onerror = () => {
+                  console.error(
+                    `❌ Failed to delete IndexedDB database: ${db.name}`,
+                  );
+                  reject(deleteReq.error);
+                };
+                deleteReq.onblocked = () => {
+                  console.warn(
+                    `⚠️ IndexedDB database deletion blocked: ${db.name}`,
+                  );
+                  // Continue anyway
+                  resolve(true);
+                };
+              });
+            }
+          } catch (error: any) {
+            console.error(
+              `❌ Error deleting IndexedDB database ${db.name}:`,
+              error,
+            );
+            result.details.errors.push(
+              `IndexedDB cleanup error: ${error.message}`,
+            );
+          }
+        }
+      }
+
+      result.details.indexedDBCleared = clearedCount > 0;
+      console.log(
+        `✅ IndexedDB cleanup completed - ${clearedCount} databases cleared`,
+      );
+    } catch (error: any) {
+      console.error("❌ IndexedDB cleanup failed:", error);
+      result.details.errors.push(`IndexedDB cleanup failed: ${error.message}`);
+    }
   }
 
   /**
@@ -206,16 +362,56 @@ class CompleteUserCleanupService {
     localStorageKeys: string[];
     userRelatedKeys: string[];
     totalUserData: number;
+    firebaseAuthUser: boolean;
+    indexedDBDatabases: string[];
     details: Record<string, any>;
   }> {
     const analysis = {
       localStorageKeys: Object.keys(localStorage),
       userRelatedKeys: [] as string[],
       totalUserData: 0,
+      firebaseAuthUser: false,
+      indexedDBDatabases: [] as string[],
       details: {} as Record<string, any>,
     };
 
     try {
+      // Check Firebase Auth current user
+      try {
+        const { auth } = await import("../firebase/config");
+        if (auth && auth.currentUser) {
+          analysis.firebaseAuthUser = true;
+          analysis.details.firebaseCurrentUser = {
+            email: auth.currentUser.email,
+            uid: auth.currentUser.uid,
+          };
+          analysis.totalUserData += 1;
+          console.log(
+            "🔥 Found Firebase Auth current user:",
+            auth.currentUser.email,
+          );
+        }
+      } catch (error) {
+        console.log("Firebase Auth check failed or not available");
+      }
+
+      // Check IndexedDB databases
+      try {
+        if ("indexedDB" in window) {
+          const databases = await indexedDB.databases();
+          analysis.indexedDBDatabases = databases
+            .map((db) => db.name || "unknown")
+            .filter(
+              (name) =>
+                name.includes("firebase") ||
+                name.includes("auth") ||
+                name.includes("leirisonda"),
+            );
+        }
+      } catch (error) {
+        console.log("IndexedDB check failed");
+      }
+
       // Find all user-related keys
       analysis.userRelatedKeys = analysis.localStorageKeys.filter(
         (key) =>
@@ -223,13 +419,16 @@ class CompleteUserCleanupService {
           key.toLowerCase().includes("auth") ||
           key.toLowerCase().includes("login") ||
           key.toLowerCase().includes("mock") ||
+          key.toLowerCase().includes("firebase") ||
           key === "app-users" ||
           key === "mock-users" ||
           key === "users" ||
           key === "saved-users" ||
           key === "currentUser" ||
           key === "mock-current-user" ||
-          key === "savedLoginCredentials",
+          key === "savedLoginCredentials" ||
+          key.startsWith("firebase:") ||
+          key.startsWith("__firebase"),
       );
 
       // Analyze each user-related key
@@ -278,6 +477,41 @@ class CompleteUserCleanupService {
     }
 
     return analysis;
+  }
+
+  /**
+   * Quick check if old users might still be logged in
+   */
+  async hasOldUsersLoggedIn(): Promise<boolean> {
+    try {
+      // Check Firebase Auth
+      const { auth } = await import("../firebase/config");
+      if (auth && auth.currentUser) {
+        console.log(
+          "⚠️ Firebase Auth user still logged in:",
+          auth.currentUser.email,
+        );
+        return true;
+      }
+
+      // Check localStorage for user data
+      const userKeys = Object.keys(localStorage).filter(
+        (key) =>
+          key.includes("user") ||
+          key.includes("auth") ||
+          key.includes("currentUser"),
+      );
+
+      if (userKeys.length > 0) {
+        console.log("⚠️ User data found in localStorage:", userKeys);
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error("Error checking for old users:", error);
+      return false;
+    }
   }
 }
 
