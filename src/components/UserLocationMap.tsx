@@ -90,6 +90,13 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
 
   useEffect(() => {
     loadUserLocations();
+
+    // Auto-refresh locations every 2 minutes
+    const interval = setInterval(() => {
+      loadUserLocations();
+    }, 120000);
+
+    return () => clearInterval(interval);
   }, [currentUser]);
 
   // Get current user location and save it
