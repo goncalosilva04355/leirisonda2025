@@ -38,10 +38,8 @@ export function useRealtimeSync() {
 
     const initializeAndSubscribe = async () => {
       try {
-        // Firebase temporarily paused - running in offline mode
-        console.log("⏸️ Realtime sync paused - offline mode active");
-        setState((prev) => ({ ...prev, loading: false, error: null }));
-        return;
+        // Firebase realtime sync re-enabled for cross-device functionality
+        console.log("🔥 Realtime sync active - cross-device updates enabled");
 
         // Firebase is always configured with fixed settings
         console.log("🔄 Firebase sync available with fixed configuration");
