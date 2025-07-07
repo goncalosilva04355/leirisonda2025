@@ -252,36 +252,35 @@ class AuthService {
       return { success: false, error: "Por favor, insira um email válido" };
     }
 
-    // Try Firebase first for cross-device access, but only if properly initialized
-    if (isFirebaseReady()) {
-      console.log("🔥 Attempting Firebase login for cross-device access...");
-      try {
-        // Set a timeout to prevent hanging
-        const result = await Promise.race([
-          this.loginWithFirebase(email, password),
-          new Promise<{ success: boolean; error: string }>((_, reject) =>
-            setTimeout(() => reject(new Error("Firebase timeout")), 8000),
-          ),
-        ]);
+    // Try Firebase first for cross-device access with quota protection
+    const quotaStatus = QuotaManager.getQuotaStatus();
 
-        if (result.success) {
-          console.log(
-            "✅ Firebase login successful - cross-device access enabled",
-          );
-          return result;
-        }
-      } catch (error: any) {
-        // Only log specific errors, not all Firebase errors
-        if (error.message === "Firebase timeout") {
-          console.log("⏱️ Firebase login timeout, using local auth");
-        } else if (error.code === "auth/network-request-failed") {
-          console.log("🌐 Network error, using local auth");
-        } else {
-          console.log("🔄 Firebase unavailable, using local auth");
-        }
+    if (isFirebaseReady() && quotaStatus.canSync) {
+      console.log("🔥 Attempting Firebase login for cross-device access...");
+
+      const firebaseLoginResult = await QuotaManager.executeWithQuotaProtection(
+        () => this.loginWithFirebase(email, password),
+        "user-login",
+      );
+
+      if (firebaseLoginResult.success && firebaseLoginResult.data?.success) {
+        console.log(
+          "✅ Firebase login successful - cross-device access enabled",
+        );
+        return firebaseLoginResult.data;
+      } else if (firebaseLoginResult.error?.includes("quota")) {
+        console.log(
+          "🚨 Firebase quota exceeded during login, using local auth",
+        );
+      } else {
+        console.log("🔄 Firebase login failed, using local auth");
       }
+    } else if (!quotaStatus.canSync) {
+      console.log(
+        `⏸️ Firebase login blocked: ${quotaStatus.recommendedAction}`,
+      );
     } else {
-      console.log("📱 Firebase not configured, using local authentication");
+      console.log("📱 Firebase not ready, using local authentication");
     }
 
     // Fallback to mock auth for local-only users
