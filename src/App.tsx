@@ -1753,9 +1753,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
                       <div
                         className={`w-1.5 h-1.5 rounded-full ${
-                          autoSyncData.isActive && !autoSyncData.error
+                          syncStatus === "completed"
                             ? "bg-green-500"
-                            : autoSyncData.error
+                            : syncStatus === "error"
                               ? "bg-red-500"
                               : "bg-blue-500"
                         }`}
