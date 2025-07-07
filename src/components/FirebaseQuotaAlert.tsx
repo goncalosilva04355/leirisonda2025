@@ -65,7 +65,17 @@ export const FirebaseQuotaAlert: React.FC = () => {
             <div className="mt-3">
               <p className="font-medium">Para reativar a sincronização:</p>
               <ul className="list-disc list-inside ml-2 space-y-1">
-                <li>Aguarde algumas horas para o limite de quota reiniciar</li>
+                {syncStatus.hoursUntilRetry &&
+                syncStatus.hoursUntilRetry > 0 ? (
+                  <li>
+                    Aguarde {syncStatus.hoursUntilRetry} hora(s) para o limite
+                    de quota reiniciar
+                  </li>
+                ) : (
+                  <li>
+                    O limite de quota já deveria ter reiniciado - tente reativar
+                  </li>
+                )}
                 <li>Ou configure um plano Firebase pago para quota superior</li>
               </ul>
             </div>
