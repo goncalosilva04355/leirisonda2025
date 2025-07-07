@@ -1041,7 +1041,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Push Notification functions
   const requestNotificationPermission = async () => {
-    console.log("�� Requesting notification permission...");
+    console.log("🔔 Requesting notification permission...");
     if ("Notification" in window) {
       try {
         const permission = await Notification.requestPermission();
@@ -1690,19 +1690,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
                       <div
                         className={`w-1.5 h-1.5 rounded-full ${
-                          autoSyncData.isActive && !autoSyncData.error
-                            ? "bg-green-500"
-                            : autoSyncData.error
-                              ? "bg-red-500"
-                              : "bg-gray-500"
+                          localStorage.getItem("firebase-quota-exceeded") ===
+                          "true"
+                            ? "bg-orange-500"
+                            : autoSyncData.isActive && !autoSyncData.error
+                              ? "bg-green-500"
+                              : autoSyncData.error
+                                ? "bg-red-500"
+                                : "bg-gray-500"
                         }`}
                       ></div>
                       <span>
-                        {autoSyncData.isActive && !autoSyncData.error
-                          ? "Sincronizado"
-                          : autoSyncData.error
-                            ? "Erro Sync"
-                            : "Offline"}
+                        {localStorage.getItem("firebase-quota-exceeded") ===
+                        "true"
+                          ? "Quota Pausada"
+                          : autoSyncData.isActive && !autoSyncData.error
+                            ? "Sincronizado"
+                            : autoSyncData.error
+                              ? "Erro Sync"
+                              : "Offline"}
                       </span>
                     </div>
                   </div>
@@ -3099,7 +3105,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                👨‍�� {maint.technician}
+                                👨‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -7514,7 +7520,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const dimensions = inputs[5].value; // Dimensões
                           const volume = inputs[6].value; // Volume
                           const filtrationSystem = inputs[7].value; // Sistema de Filtração
-                          const installationDate = inputs[8].value; // Data de Instalaç��o
+                          const installationDate = inputs[8].value; // Data de Instalação
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente
                           const observations = inputs[11].value; // Observações
