@@ -949,6 +949,168 @@ export const UserManagement: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Permissions Management Modal */}
+      {editingPermissions && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Gestão de Permissões
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Utilizador:{" "}
+                  <span className="font-medium">{editingPermissions.name}</span>{" "}
+                  ({editingPermissions.email})
+                </p>
+              </div>
+              <button
+                onClick={() => setEditingPermissions(null)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Role Warning */}
+            {editingPermissions.role === "super_admin" && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+                <div className="flex items-start">
+                  <Shield className="h-5 w-5 text-amber-600 mt-0.5 mr-3" />
+                  <div>
+                    <h4 className="text-sm font-medium text-amber-800">
+                      Super Administrador
+                    </h4>
+                    <p className="text-sm text-amber-700 mt-1">
+                      Este utilizador tem permissões completas no sistema. As
+                      alterações aqui podem não ter efeito.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Permissions Grid */}
+            <div className="space-y-6">
+              {Object.entries(editingPermissions.permissions).map(
+                ([section, permissions]) => (
+                  <div key={section} className="bg-gray-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-lg font-semibold text-gray-900 flex items-center">
+                        <Shield className="h-5 w-5 mr-2 text-blue-600" />
+                        {getSectionDisplayName(section)}
+                      </h4>
+
+                      {/* Quick toggle buttons */}
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => {
+                            // Enable all permissions for this section
+                            Object.keys(permissions).forEach((action) => {
+                              togglePermission(
+                                section as keyof User["permissions"],
+                                action as any,
+                                true,
+                              );
+                            });
+                          }}
+                          className="flex items-center px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200"
+                        >
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Todas
+                        </button>
+                        <button
+                          onClick={() => {
+                            // Disable all permissions for this section
+                            Object.keys(permissions).forEach((action) => {
+                              togglePermission(
+                                section as keyof User["permissions"],
+                                action as any,
+                                false,
+                              );
+                            });
+                          }}
+                          className="flex items-center px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200"
+                        >
+                          <XCircle className="h-3 w-3 mr-1" />
+                          Nenhuma
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {Object.entries(permissions).map(
+                        ([action, hasPermission]) => (
+                          <div
+                            key={action}
+                            className="flex items-center justify-between p-3 bg-white rounded border"
+                          >
+                            <div className="flex items-center">
+                              <div
+                                className={`w-3 h-3 rounded-full mr-3 ${hasPermission ? "bg-green-500" : "bg-red-500"}`}
+                              ></div>
+                              <span className="text-sm font-medium text-gray-700">
+                                {getActionDisplayName(action)}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() =>
+                                  togglePermission(
+                                    section as keyof User["permissions"],
+                                    action as any,
+                                    true,
+                                  )
+                                }
+                                className={`p-1 rounded ${hasPermission ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-400 hover:bg-green-100 hover:text-green-600"}`}
+                                title="Permitir"
+                              >
+                                <Unlock className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  togglePermission(
+                                    section as keyof User["permissions"],
+                                    action as any,
+                                    false,
+                                  )
+                                }
+                                className={`p-1 rounded ${!hasPermission ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-400 hover:bg-red-100 hover:text-red-600"}`}
+                                title="Negar"
+                              >
+                                <Lock className="h-3 w-3" />
+                              </button>
+                            </div>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                ),
+              )}
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200">
+              <button
+                onClick={() => setEditingPermissions(null)}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleUpdatePermissions}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center space-x-2"
+              >
+                <Save className="h-4 w-4" />
+                <span>Guardar Permissões</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
