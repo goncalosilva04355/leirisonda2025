@@ -262,7 +262,7 @@ function App() {
         // Initialize with default admin user and save to localStorage
         const defaultUsers = [
           {
-            id: "1",
+            id: 1,
             name: "Gonçalo Fonseca",
             email: "gongonsilva@gmail.com",
             active: true,
@@ -606,7 +606,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "Não tem permissão para criar manutenções. Contacte o administrador.",
+        "N��o tem permissão para criar manutenções. Contacte o administrador.",
       );
       return;
     }
