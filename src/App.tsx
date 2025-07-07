@@ -65,6 +65,7 @@ import { ForceInitialization } from "./utils/forceInitialization";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
 import { userRestoreService } from "./services/userRestoreService";
+import UserRestoreNotification from "./components/UserRestoreNotification";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -8740,7 +8741,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? new Date(selectedWork.endTime).toLocaleString(
                                 "pt-PT",
                               )
-                            : "N��o especificado"}
+                            : "Não especificado"}
                         </p>
                       </div>
                       <div>
