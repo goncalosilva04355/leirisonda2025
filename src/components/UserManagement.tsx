@@ -175,8 +175,22 @@ export const UserManagement: React.FC = () => {
 
   // Create new user
   const handleCreateUser = async () => {
+    if (isCreatingUser) return; // Prevent multiple submissions
+
     if (!formData.name || !formData.email || !formData.password) {
       alert("Por favor, preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("Por favor, insira um email válido.");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      alert("Password deve ter pelo menos 6 caracteres.");
       return;
     }
 
@@ -186,22 +200,32 @@ export const UserManagement: React.FC = () => {
       return;
     }
 
+    setIsCreatingUser(true);
+
     try {
       // Import authService dynamically to ensure proper initialization
       const { authService } = await import("../services/authService");
 
+      console.log("Creating user with data:", {
+        email: formData.email,
+        name: formData.name,
+        role: formData.role,
+      });
+
       // Create user through authService for proper sync
       const result = await authService.register(
-        formData.email,
+        formData.email.trim(),
         formData.password,
-        formData.name,
+        formData.name.trim(),
         formData.role as "super_admin" | "manager" | "technician",
       );
 
+      console.log("AuthService registration result:", result);
+
       if (result.success) {
-        // Create local user record
+        // Create local user record for UI management
         const newUser: User = {
-          id: Date.now().toString(),
+          id: result.user?.uid || Date.now().toString(),
           name: formData.name,
           email: formData.email,
           password: formData.password,
@@ -222,13 +246,19 @@ export const UserManagement: React.FC = () => {
           active: true,
         });
 
-        alert("Utilizador criado com sucesso!");
+        console.log("✅ Utilizador criado com sucesso!");
+        alert("✅ Utilizador criado com sucesso e está ativo!");
       } else {
-        alert(`Erro ao criar utilizador: ${result.error}`);
+        console.error("Registration failed:", result.error);
+        alert(
+          `❌ Erro ao criar utilizador: ${result.error || "Erro desconhecido"}`,
+        );
       }
     } catch (error: any) {
       console.error("Erro ao criar utilizador:", error);
-      alert("Erro inesperado ao criar utilizador. Tente novamente.");
+      alert("❌ Erro inesperado ao criar utilizador. Tente novamente.");
+    } finally {
+      setIsCreatingUser(false);
     }
   };
 
