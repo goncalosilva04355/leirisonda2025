@@ -669,7 +669,7 @@ function App() {
         // Set user state and authentication
         setCurrentUser(result.user);
         setIsAuthenticated(true);
-        localStorage.setItem("currentUser", JSON.stringify(result.user));
+        // Firebase handles user persistence automatically
 
         // Clear login form
         setLoginForm({ email: "", password: "" });
