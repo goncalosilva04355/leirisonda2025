@@ -39,7 +39,6 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
-import { SyncStatusIndicator } from "./components/SyncStatusIndicator";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
@@ -1573,7 +1572,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "nova-manutencao",
       icon: Wrench,
-      label: "Nova Manutenção",
+      label: "Nova Manuten��ão",
       path: "/manutencao/nova",
     },
     {
