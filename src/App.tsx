@@ -8113,7 +8113,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Dados da intervenção</span>
+                  <span>Dados da intervenç��o</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>������</span>
@@ -8236,13 +8236,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               syncWithFirebase,
               enableSync,
             }}
-            notifications={{
-              pushPermission,
-              notificationsEnabled,
-              requestNotificationPermission,
-              testPushNotification,
-              sendWorkAssignmentNotification,
-            }}
+            // Notificações removidas conforme solicitado
           />
         );
       }
