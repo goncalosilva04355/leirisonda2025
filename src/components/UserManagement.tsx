@@ -609,7 +609,6 @@ export const UserManagement: React.FC = () => {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log("🔴 Button clicked!");
                 handleCreateUser();
               }}
               disabled={isCreatingUser}
