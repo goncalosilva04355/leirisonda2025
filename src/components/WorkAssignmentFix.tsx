@@ -368,7 +368,7 @@ export const WorkAssignmentFix: React.FC = () => {
 
         {/* Analysis Results */}
         <div className="space-y-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-blue-50 p-4 rounded-lg">
               <div className="flex items-center">
                 <Users className="h-5 w-5 text-blue-600 mr-2" />
@@ -395,6 +395,18 @@ export const WorkAssignmentFix: React.FC = () => {
               </div>
             </div>
 
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              <div className="flex items-center">
+                <UserCheck className="h-5 w-5 text-yellow-600 mr-2" />
+                <div>
+                  <div className="text-sm text-yellow-600">Ativos</div>
+                  <div className="text-lg font-semibold text-yellow-900">
+                    {usersAnalysis.appUsers.filter((u) => u.active).length}
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-red-50 p-4 rounded-lg">
               <div className="flex items-center">
                 <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
@@ -407,6 +419,33 @@ export const WorkAssignmentFix: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Quick Summary */}
+          {usersAnalysis.appUsers.length <= 1 && (
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5 mr-2" />
+                <div>
+                  <h4 className="text-sm font-medium text-orange-800">
+                    Problema Identificado: Poucos Utilizadores
+                  </h4>
+                  <p className="text-sm text-orange-700 mt-1">
+                    Só existe {usersAnalysis.appUsers.length} utilizador(es) no
+                    sistema. Para atribuir obras a diferentes pessoas, precisa
+                    de criar mais utilizadores.
+                  </p>
+                  <p className="text-sm text-orange-700 mt-1">
+                    Vá a{" "}
+                    <strong>
+                      Configurações → Área de Administração → Gestão de
+                      Utilizadores
+                    </strong>{" "}
+                    para criar novos utilizadores.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Issues List */}
           {usersAnalysis.syncIssues.length > 0 && (
