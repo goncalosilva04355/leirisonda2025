@@ -8,6 +8,7 @@ const PROBLEMATIC_EMAILS = [
   "yrzamr01@gmail.com",
   "alexkamaryta@gmail.com",
   "davidcarreiraa92@gmail.com",
+  // Add any additional emails that need to be blocked
 ];
 
 const SUPER_ADMIN_EMAIL = "gongonsilva@gmail.com";

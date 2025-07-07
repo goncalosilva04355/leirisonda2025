@@ -307,6 +307,23 @@ class AuthService {
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
+      // Check if user is in the blocked list
+      const blockedEmails = [
+        "yrzamr@gmail.com",
+        "yrzamr01@gmail.com",
+        "alexkamaryta@gmail.com",
+        "davidcarreiraa92@gmail.com",
+      ];
+
+      if (
+        blockedEmails.some(
+          (blocked) => blocked.toLowerCase() === email.trim().toLowerCase(),
+        )
+      ) {
+        console.log("🚫 Blocked user attempt:", email);
+        return { success: false, error: "Acesso negado" };
+      }
+
       // Check if Firebase Auth is available
       if (!auth) {
         console.warn("Firebase Auth not available, falling back to mock auth");
@@ -426,6 +443,23 @@ class AuthService {
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
+      // Check if user is in the blocked list
+      const blockedEmails = [
+        "yrzamr@gmail.com",
+        "yrzamr01@gmail.com",
+        "alexkamaryta@gmail.com",
+        "davidcarreiraa92@gmail.com",
+      ];
+
+      if (
+        blockedEmails.some(
+          (blocked) => blocked.toLowerCase() === email.trim().toLowerCase(),
+        )
+      ) {
+        console.log("🚫 Blocked user attempt:", email);
+        return { success: false, error: "Acesso negado" };
+      }
+
       // First, try to get login diagnostics and auto-sync if needed
       const { UserSyncManager } = await import("../utils/userSyncManager");
       const diagnostics = UserSyncManager.getLoginDiagnostics(email, password);

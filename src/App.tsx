@@ -47,7 +47,6 @@ import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
 import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
 import { syncManager } from "./utils/syncManager";
-import CleanupExecutor from "./components/CleanupExecutor";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 
 // SECURITY: RegisterForm removed - only super admin can create users
@@ -9099,9 +9098,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
-
-        {/* Temporary Cleanup Executor */}
-        <CleanupExecutor />
       </InstantSyncManager>
     </AutoSyncProvider>
   );
