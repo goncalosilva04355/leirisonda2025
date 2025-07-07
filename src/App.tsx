@@ -241,10 +241,45 @@ function App() {
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
 
+  // Initialize users from localStorage on app start
+  useEffect(() => {
+    const loadUsersFromStorage = () => {
+      console.log("🔄 Loading users from localStorage on app start...");
+      try {
+        const savedUsers = localStorage.getItem("app-users");
+        if (savedUsers) {
+          const parsedUsers = JSON.parse(savedUsers);
+          setUsers(parsedUsers);
+          console.log(
+            "✅ Users loaded successfully:",
+            parsedUsers.length,
+            parsedUsers,
+          );
+        } else {
+          console.log(
+            "📝 No saved users found, initializing with default users",
+          );
+          // Save initial users to localStorage if not exists
+          localStorage.setItem("app-users", JSON.stringify(initialUsers));
+          setUsers(initialUsers);
+        }
+      } catch (error) {
+        console.error("❌ Error loading users:", error);
+        // Fallback to initial users
+        setUsers(initialUsers);
+      }
+    };
+
+    // Load users immediately on component mount
+    loadUsersFromStorage();
+  }, []);
+
   // Listen for user updates from WorkAssignmentFix component
   useEffect(() => {
     const handleUsersUpdated = () => {
-      console.log("🔄 Reloading users from localStorage...");
+      console.log(
+        "🔄 Reloading users from localStorage due to update event...",
+      );
       try {
         const savedUsers = localStorage.getItem("app-users");
         if (savedUsers) {
