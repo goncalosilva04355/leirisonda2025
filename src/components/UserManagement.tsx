@@ -805,13 +805,22 @@ export const UserManagement: React.FC = () => {
                       <button
                         onClick={() => setEditingUser(user)}
                         className="text-blue-600 hover:text-blue-900"
+                        title="Editar utilizador"
                       >
                         <Edit2 className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => setEditingPermissions(user)}
+                        className="text-green-600 hover:text-green-900"
+                        title="Gerir permissões"
+                      >
+                        <Settings className="h-4 w-4" />
                       </button>
                       {user.role !== "super_admin" && (
                         <button
                           onClick={() => handleDeleteUser(user.id)}
                           className="text-red-600 hover:text-red-900"
+                          title="Eliminar utilizador"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
