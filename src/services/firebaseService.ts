@@ -117,8 +117,7 @@ const COLLECTIONS = {
 
 // Helper function to check if Firebase is available
 const isFirebaseAvailable = () => {
-  // EMERGENCY: Force disable until quota issue resolved
-  return false;
+  return db !== null;
 };
 
 // Critical: Wrapper for Firebase operations with quota protection
