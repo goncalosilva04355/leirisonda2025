@@ -586,34 +586,17 @@ export const WorkAssignmentFix: React.FC = () => {
           </button>
 
           {usersAnalysis.appUsers.length <= 1 && (
-            <>
-              <button
-                onClick={() => {
-                  const count = createExampleUsers();
-                  analyzeUsers(); // Re-analyze after creating users
-                  window.dispatchEvent(new CustomEvent("usersUpdated"));
-                  alert(
-                    `✅ Criados ${count} utilizadores de exemplo!\n\nUtilizadores criados:\n- José Silva\n- Maria Santos\n- António Costa\n\nAgora já pode atribuir obras a estes utilizadores.`,
-                  );
-                }}
-                className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2"
-              >
-                <UserPlus className="h-4 w-4" />
-                <span>Criar Utilizadores de Exemplo</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  alert(
-                    "Para criar novos utilizadores manualmente:\n\n1. Clique em 'Configurações' no menu\n2. Vá a 'Área de Administração'\n3. Clique em 'Gestão de Utilizadores'\n4. Use o botão 'Novo Utilizador'\n\nOu use o botão 'Criar Utilizadores de Exemplo' aqui para criar automaticamente alguns utilizadores.",
-                  );
-                }}
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center space-x-2"
-              >
-                <Users className="h-4 w-4" />
-                <span>Como Criar Utilizadores</span>
-              </button>
-            </>
+            <button
+              onClick={() => {
+                alert(
+                  "Para criar novos utilizadores:\n\n1. Clique em 'Configurações' no menu\n2. Vá a 'Área de Administração'\n3. Clique em 'Gestão de Utilizadores'\n4. Use o botão 'Novo Utilizador' para adicionar colaboradores reais\n\nDepois volte aqui e clique em 'Corrigir Sincronização' para atualizar a lista.",
+                );
+              }}
+              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center space-x-2"
+            >
+              <UserPlus className="h-4 w-4" />
+              <span>Como Criar Utilizadores</span>
+            </button>
           )}
         </div>
 
