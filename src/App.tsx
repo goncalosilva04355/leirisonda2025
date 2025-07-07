@@ -3439,9 +3439,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Usuários Atribuídos ({users.length} utilizadores
                             disponíveis)
                           </label>
-                          {/* Debug: {users.length} utilizadores carregados */}
-                            users,
-                          )}
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra
                           </p>
@@ -5377,7 +5374,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                           >
-                            Ativar Notificaç��es
+                            Ativar Notifica����es
                           </button>
                         </div>
                       </div>
