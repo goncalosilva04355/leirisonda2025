@@ -253,23 +253,47 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {adminSections.map((section) => {
                 const IconComponent = section.icon;
+                const isDangerous = section.id === "user-deletion";
                 return (
                   <button
                     key={section.id}
                     onClick={() => setCurrentSection(section.id)}
-                    className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow text-left"
+                    className={`p-6 rounded-lg shadow-sm border transition-shadow text-left ${
+                      isDangerous
+                        ? "bg-red-50 border-red-300 hover:bg-red-100 hover:shadow-lg"
+                        : "bg-white border-gray-200 hover:shadow-md"
+                    }`}
                   >
                     <div className="flex items-center mb-3">
-                      <div className={`${section.color} p-2 rounded-lg mr-3`}>
+                      <div
+                        className={`${section.color} p-2 rounded-lg mr-3 ${
+                          isDangerous ? "animate-pulse" : ""
+                        }`}
+                      >
                         <IconComponent className="h-6 w-6 text-white" />
                       </div>
-                      <h3 className="text-lg font-semibold text-gray-900">
+                      <h3
+                        className={`text-lg font-semibold ${
+                          isDangerous ? "text-red-900" : "text-gray-900"
+                        }`}
+                      >
                         {section.title}
                       </h3>
                     </div>
-                    <p className="text-gray-600 text-sm">
+                    <p
+                      className={`text-sm ${
+                        isDangerous
+                          ? "text-red-700 font-medium"
+                          : "text-gray-600"
+                      }`}
+                    >
                       {section.description}
                     </p>
+                    {isDangerous && (
+                      <div className="mt-3 text-xs text-red-600 font-bold">
+                        ⚠️ OPERAÇÃO IRREVERSÍVEL
+                      </div>
+                    )}
                   </button>
                 );
               })}
