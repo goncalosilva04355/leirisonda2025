@@ -35,13 +35,13 @@ export const DataIntegrityAlert: React.FC<DataIntegrityAlertProps> = ({
     window.addEventListener("data-integrity-check", handleIntegrityCheck);
     window.addEventListener("force-data-recovery", handleForceRecovery);
 
-    // Verificação periódica a cada 2 minutos
-    const interval = setInterval(performIntegrityCheck, 120000);
+    // Verificação periódica desabilitada para melhorar performance
+    // const interval = setInterval(performIntegrityCheck, 120000);
 
     return () => {
       window.removeEventListener("data-integrity-check", handleIntegrityCheck);
       window.removeEventListener("force-data-recovery", handleForceRecovery);
-      clearInterval(interval);
+      // clearInterval(interval);
     };
   }, []);
 
