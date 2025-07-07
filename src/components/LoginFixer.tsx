@@ -6,11 +6,11 @@ import {
   RefreshCw,
   CheckCircle,
 } from "lucide-react";
-import {
-  runCompleteUserFix,
-  diagnoseUserLoginIssues,
-  UserLoginIssue,
-} from "../utils/userLoginFix";
+// userLoginFix removido - usando apenas Firebase
+interface UserLoginIssue {
+  type: string;
+  description: string;
+}
 
 export const LoginFixer: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
@@ -158,7 +158,7 @@ export const LoginFixer: React.FC = () => {
                 <div className="text-red-800 font-medium">Erros:</div>
                 {result.errors.map((error, index) => (
                   <div key={index} className="text-red-700 text-xs">
-                    • {error}
+                    �� {error}
                   </div>
                 ))}
               </div>

@@ -13,7 +13,7 @@ import {
   RefreshCw,
   Bug,
 } from "lucide-react";
-import { LoginDebugger } from "./LoginDebugger";
+// LoginDebugger removido
 import { SyncDiagnostic } from "./SyncDiagnostic";
 
 export const MobileSettings: React.FC = () => {
