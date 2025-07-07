@@ -601,7 +601,13 @@ export const UserManagement: React.FC = () => {
               Cancelar
             </button>
             <button
-              onClick={handleCreateUser}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log("🔴 Button clicked!");
+                handleCreateUser();
+              }}
               disabled={isCreatingUser}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2"
             >
