@@ -33,6 +33,7 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { InstallPrompt } from "./components/InstallPrompt";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
+import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
@@ -2886,7 +2887,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <input
                       type="text"
-                      placeholder="Pesquisar manutenções..."
+                      placeholder="Pesquisar manuten��ões..."
                       className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
