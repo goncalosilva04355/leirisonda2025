@@ -182,6 +182,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       icon: AlertTriangle,
       color: "bg-red-600",
     },
+    {
+      id: "user-deletion" as AdminSection,
+      title: "💀 ELIMINAR TODOS OS UTILIZADORES",
+      description: "PERIGO: Eliminar todos os utilizadores exceto super admin",
+      icon: Users,
+      color: "bg-red-800",
+    },
   ];
 
   const renderCurrentSection = () => {
