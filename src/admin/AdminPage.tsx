@@ -84,6 +84,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       color: "bg-orange-600",
     },
     {
+      id: "works-data-diagnostic" as AdminSection,
+      title: "🏗️ Diagnóstico: 0 Obras",
+      description: "URGENTE: Resolver problema de 0 obras aparecendo na app",
+      icon: AlertTriangle,
+      color: "bg-red-600",
+    },
+    {
       id: "nuclear-cleanup" as AdminSection,
       title: "🚨 LIMPEZA NUCLEAR (MELHORADA)",
       description:
