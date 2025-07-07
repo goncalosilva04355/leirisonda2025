@@ -1364,7 +1364,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         window.open(mapsUrl, "_blank");
         console.log("✅ Google Maps opened successfully");
       } catch (error) {
-        console.error("��� Error opening Google Maps:", error);
+        console.error("���� Error opening Google Maps:", error);
       }
     } else {
       if (!enableMapsRedirect) {
@@ -6044,7 +6044,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes Ativos
                         </p>
                         <p className="text-2xl font-bold text-gray-900">
-                          {clients.filter((c) => c.status === "Ativo").length}
+                          {
+                            clients.filter((c) => (c as any).status === "Ativo")
+                              .length
+                          }
                         </p>
                       </div>
                     </div>
@@ -7627,7 +7630,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Manutenção
+                          Tipo de Manuten��ão
                         </label>
                         <select
                           defaultValue={editingMaintenance?.type}
