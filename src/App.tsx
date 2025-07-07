@@ -36,6 +36,7 @@ import { InstallPrompt } from "./components/InstallPrompt";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
+import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { SyncStatusIcon } from "./components/SyncStatusIndicator";
