@@ -10,6 +10,7 @@ import {
   AlertTriangle,
   Wifi,
   RefreshCw,
+  Smartphone,
 } from "lucide-react";
 
 // Import dos componentes de teste e configuração
@@ -25,6 +26,7 @@ import { AutoSyncDemo } from "../components/AutoSyncDemo";
 import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
+import { MobileSettings } from "../components/MobileSettings";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -43,6 +45,7 @@ type AdminSection =
   | "cross-device-users"
   | "auto-sync-demo"
   | "phone-settings"
+  | "mobile-settings"
   | "data-recovery";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
@@ -128,6 +131,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       color: "bg-blue-500",
     },
     {
+      id: "mobile-settings" as AdminSection,
+      title: "📱 Configurações Mobile",
+      description:
+        "Notificações, localização e configurações para dispositivos móveis",
+      icon: Smartphone,
+      color: "bg-indigo-600",
+    },
+    {
       id: "data-recovery" as AdminSection,
       title: "🚨 Recuperação de Dados",
       description: "EMERGÊNCIA: Restaurar obras e dados perdidos",
@@ -160,6 +171,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <AutoSyncDemo />;
       case "phone-settings":
         return <PhoneSettings />;
+      case "mobile-settings":
+        return <MobileSettings />;
       case "data-recovery":
         return <DataRecovery />;
       case "overview":
