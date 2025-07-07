@@ -394,9 +394,7 @@ function App() {
     setCurrentUser(null);
 
     // Firebase auth disabled to prevent crashes
-    console.log(
-      "���� SECURITY: Firebase auth listeners disabled for stability",
-    );
+    console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
     // Firebase auth code removed to fix syntax errors
 
     // DO NOT initialize default admin automatically - this was causing the security issue
@@ -794,7 +792,7 @@ function App() {
       console.log("🔐 Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("���� Login successful for:", result.user.email);
+        console.log("✅ Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -6274,7 +6272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   📍{" "}
                                   {client?.address ||
-                                    "Endereço n���o disponível"}
+                                    "Endereço n��o disponível"}
                                 </button>
                               </div>
                               <div>
