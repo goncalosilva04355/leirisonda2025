@@ -51,6 +51,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
 
   const adminSections = [
     {
+      id: "user-management" as AdminSection,
+      title: "Gestão de Utilizadores",
+      description: "Criar, editar e gerir utilizadores do sistema",
+      icon: Users,
+      color: "bg-indigo-600",
+    },
+    {
       id: "auth-diagnostic" as AdminSection,
       title: "Diagnóstico de Autenticação",
       description: "Teste e debug do sistema de autenticação",
