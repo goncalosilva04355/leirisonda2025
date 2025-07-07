@@ -499,7 +499,7 @@ export const UserManagement: React.FC = () => {
             Gestão de Utilizadores
           </h2>
           <p className="text-gray-600">
-            Criar, editar e gerir utilizadores do sistema
+            Criar, editar e gerir utilizadores e permissões do sistema
           </p>
         </div>
         <button
@@ -509,6 +509,36 @@ export const UserManagement: React.FC = () => {
           <UserPlus className="h-4 w-4" />
           <span>Novo Utilizador</span>
         </button>
+      </div>
+
+      {/* Information Banner */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="flex items-start">
+          <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3" />
+          <div>
+            <h3 className="text-sm font-medium text-blue-800">
+              Gestão Completa de Utilizadores e Permissões
+            </h3>
+            <div className="text-sm text-blue-700 mt-1 space-y-1">
+              <p>
+                • <strong>Editar:</strong> Use o ícone de lápis para alterar
+                dados básicos do utilizador
+              </p>
+              <p>
+                • <strong>Permissões:</strong> Use o ícone de engrenagem para
+                gerir detalhadamente o que cada utilizador pode fazer
+              </p>
+              <p>
+                • <strong>Eliminar:</strong> Use o ícone de lixo para remover
+                utilizadores (Super Admins não podem ser eliminados)
+              </p>
+              <p>
+                • <strong>Estado:</strong> Clique no estado para
+                ativar/desativar utilizadores instantaneamente
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Statistics */}
