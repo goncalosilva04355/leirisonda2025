@@ -740,7 +740,7 @@ function App() {
           // Handle any pending hash navigation after login
           const hash = window.location.hash.substring(1);
           if (hash && hash !== "login") {
-            console.log("🔄 Navigating to hash section:", hash);
+            console.log("��� Navigating to hash section:", hash);
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
@@ -4181,7 +4181,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           alert(
                             `Obra "${workTitle}" criada com sucesso! ` +
                               (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} responsável(eis).`
+                                ? `Notificaç��es enviadas a ${assignedUsers.length} responsável(eis).`
                                 : "") +
                               (selectedWorkType === "furo"
                                 ? " Dados do furo registados."
@@ -7798,17 +7798,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             "input, select, textarea",
                           );
 
-                          const scheduledDate = inputs[0].value; // Data
-                          const technician = inputs[1].value; // Técnico
-                          const type = inputs[2].value; // Tipo de Manutenção
-                          const status = inputs[3].value; // Estado
-                          const estimatedDuration = inputs[4].value; // Duração Estimada
-                          const actualDuration = inputs[5].value; // Duração Real
-                          const cost = inputs[6].value; // Custo
-                          const priority = inputs[7].value; // Prioridade
-                          const completedDate = inputs[8].value; // Data de Conclusão
-                          const materialsUsed = inputs[9].value; // Materiais Utilizados
-                          const observations = inputs[10].value; // Observações
+                          const scheduledDate = (inputs[0] as HTMLInputElement)
+                            .value; // Data
+                          const technician = (inputs[1] as HTMLInputElement)
+                            .value; // Técnico
+                          const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
+                          const status = (inputs[3] as HTMLInputElement).value; // Estado
+                          const estimatedDuration = (
+                            inputs[4] as HTMLInputElement
+                          ).value; // Duração Estimada
+                          const actualDuration = (inputs[5] as HTMLInputElement)
+                            .value; // Duração Real
+                          const cost = (inputs[6] as HTMLInputElement).value; // Custo
+                          const priority = (inputs[7] as HTMLInputElement)
+                            .value; // Prioridade
+                          const completedDate = (inputs[8] as HTMLInputElement)
+                            .value; // Data de Conclusão
+                          const materialsUsed = (inputs[9] as HTMLInputElement)
+                            .value; // Materiais Utilizados
+                          const observations = (inputs[10] as HTMLInputElement)
+                            .value; // Observações
 
                           dataSync.updateMaintenance(editingMaintenance.id, {
                             scheduledDate: scheduledDate
