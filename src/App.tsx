@@ -760,7 +760,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      console.log("🚪 Initiating logout process...");
+      console.log("���� Initiating logout process...");
 
       // Close sidebar immediately
       setSidebarOpen(false);
@@ -6175,7 +6175,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </p>
                               </div>
                             </div>
-                            {client.notes && (
+                            {(client as any).notes && (
                               <div className="mt-3 p-3 bg-gray-50 rounded-lg">
                                 <p className="text-sm text-gray-600">
                                   <strong>Notas:</strong> {client.notes}
@@ -7670,7 +7670,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duração Real (horas)
+                          Duraç��o Real (horas)
                         </label>
                         <input
                           type="number"
