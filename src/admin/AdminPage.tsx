@@ -31,6 +31,7 @@ import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
 import { LoginFixer } from "../components/LoginFixer";
 import { DataBackupManager } from "../components/DataBackupManager";
 import { FirebaseQuotaManager } from "../components/FirebaseQuotaManager";
+import { DangerousUserDeletion } from "../components/DangerousUserDeletion";
 
 interface AdminPageProps {
   onLogout: () => void;
