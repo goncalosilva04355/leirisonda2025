@@ -483,7 +483,7 @@ export const WorkAssignmentFix: React.FC = () => {
             {isFixing ? (
               <RefreshCw className="h-4 w-4 animate-spin" />
             ) : (
-              <Sync className="h-4 w-4" />
+              <RotateCw className="h-4 w-4" />
             )}
             <span>{isFixing ? "A corrigir..." : "Corrigir Sincronização"}</span>
           </button>
