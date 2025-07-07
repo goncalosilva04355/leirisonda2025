@@ -4155,7 +4155,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             // Update the work with bore data
                             dataSync.updateWork(
                               workData.id.toString(),
-                              boreDataUpdate,
+                              boreDataUpdate as any,
                             );
 
                             const waterBoreData = {
@@ -5743,7 +5743,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📋 Trabalhos realizados</li>
-                        <li>�� Técnicos responsáveis</li>
+                        <li>���� Técnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -7144,7 +7144,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar diâmetro</option>
                             <option value="1">1 polegada</option>
                             <option value="1.25">1¼ polegadas</option>
-                            <option value="1.5">1½ polegadas</option>
+                            <option value="1.5">1�� polegadas</option>
                             <option value="2">2 polegadas</option>
                             <option value="2.5">2½ polegadas</option>
                             <option value="3">3 polegadas</option>
