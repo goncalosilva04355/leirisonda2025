@@ -41,6 +41,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
 import { SyncStatusIndicator } from "./components/SyncStatusIndicator";
+import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
 import { syncManager } from "./utils/syncManager";
@@ -986,7 +987,7 @@ ESTATÍSTICAS:
 - Manutenções Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
-PR��XIMAS AÇÕES:
+PRÓXIMAS AÇÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -2894,7 +2895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������ {maint.clientContact}
+                                        ���� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -9023,6 +9024,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           )}
         </div>
+
+        {/* Realtime Notifications */}
+        <RealtimeNotifications />
       </InstantSyncManager>
     </AutoSyncProvider>
   );
