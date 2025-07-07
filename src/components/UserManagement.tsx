@@ -21,6 +21,7 @@ import {
   UserMinus,
 } from "lucide-react";
 import { cleanUserData } from "../utils/cleanUserData";
+import AuthTroubleshootingGuide from "./AuthTroubleshootingGuide";
 
 interface User {
   id: string;
@@ -86,6 +87,8 @@ export const UserManagement: React.FC = () => {
   const [showPasswords, setShowPasswords] = useState<{
     [key: string]: boolean;
   }>({});
+  const [showTroubleshootingGuide, setShowTroubleshootingGuide] =
+    useState(false);
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
     email: "",
@@ -522,6 +525,13 @@ export const UserManagement: React.FC = () => {
           </p>
         </div>
         <div className="flex space-x-2">
+          <button
+            onClick={() => setShowTroubleshootingGuide(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+          >
+            <AlertCircle className="h-4 w-4" />
+            <span>Resolução de Problemas</span>
+          </button>
           <button
             onClick={async () => {
               if (
@@ -1275,6 +1285,12 @@ export const UserManagement: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Troubleshooting Guide Modal */}
+      <AuthTroubleshootingGuide
+        isOpen={showTroubleshootingGuide}
+        onClose={() => setShowTroubleshootingGuide(false)}
+      />
     </div>
   );
 };
