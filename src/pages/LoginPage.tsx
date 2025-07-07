@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Settings } from "lucide-react";
+import { Settings, Bug } from "lucide-react";
+import { LoginDebugger } from "../components/LoginDebugger";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -17,6 +18,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     password: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
+  const [showDebugger, setShowDebugger] = useState(false);
 
   // Load saved credentials on component mount
   useEffect(() => {
@@ -172,6 +174,22 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       >
         <Settings className="h-5 w-5" />
       </button>
+
+      {/* Debug Button (Bottom Left) */}
+      <button
+        onClick={() => setShowDebugger(true)}
+        className="fixed bottom-4 left-4 w-12 h-12 bg-orange-500 border border-orange-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-orange-600 hover:shadow-xl transition-all duration-200 hover:scale-105"
+        disabled={isLoading}
+        title="Debug Login"
+      >
+        <Bug className="h-5 w-5" />
+      </button>
+
+      {/* Login Debugger */}
+      <LoginDebugger
+        isVisible={showDebugger}
+        onClose={() => setShowDebugger(false)}
+      />
     </div>
   );
 };
