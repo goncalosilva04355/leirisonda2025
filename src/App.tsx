@@ -1647,7 +1647,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "configuracoes",
       icon: Settings,
-      label: "Configura��ões",
+      label: "Configura����es",
       path: "/configuracoes",
     },
     {
@@ -5368,10 +5368,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <PersonalLocationSettings />
                   </div>
                 )}
-                  <p className="text-gray-600 mb-6">
-                    Ative as notificações para receber alertas sobre novas obras
-                    atribuídas e atualizações importantes.
-                  </p>
+
 
                   <div className="space-y-4">
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
