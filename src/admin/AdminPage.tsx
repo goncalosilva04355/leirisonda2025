@@ -55,7 +55,8 @@ type AdminSection =
   | "data-recovery"
   | "data-backup"
   | "firebase-quota"
-  | "login-fix";
+  | "login-fix"
+  | "user-deletion";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
