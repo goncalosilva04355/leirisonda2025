@@ -26,6 +26,7 @@ import {
   ArrowLeft,
   Bell,
   FileText,
+  MapPin,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
@@ -206,7 +207,7 @@ function App() {
 
           // STEP 5: ÚLTIMO RECURSO - Inicialização forçada
           const forceResult = ForceInitialization.executeForceInitialization();
-          alert("🚨 ÚLTIMO RECURSO ATIVADO!\n\n" + forceResult.message);
+          alert("���� ÚLTIMO RECURSO ATIVADO!\n\n" + forceResult.message);
 
           if (forceResult.success) {
             setTimeout(() => window.location.reload(), 2000);
@@ -781,7 +782,7 @@ function App() {
         loginForm.password,
       );
 
-      console.log("🔐 Auth result:", result);
+      console.log("��� Auth result:", result);
 
       if (result.success && result.user) {
         console.log("✅ Login successful for:", result.user.email);
@@ -5814,7 +5815,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>• Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
-                        <li>• Próximas intervenções</li>
+                        <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
                     <button
