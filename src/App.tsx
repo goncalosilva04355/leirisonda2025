@@ -963,7 +963,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observações: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -1761,9 +1761,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                       ></div>
                       <span>
-                        {autoSyncData.isActive && !autoSyncData.error
+                        {syncStatus === "completed"
                           ? "Sincronizado"
-                          : autoSyncData.error
+                          : syncStatus === "error"
                             ? "Erro Sync"
                             : "Conectando"}
                       </span>
