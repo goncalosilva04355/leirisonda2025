@@ -18,7 +18,9 @@ import {
   Unlock,
   CheckCircle,
   XCircle,
+  UserMinus,
 } from "lucide-react";
+import { cleanUserData } from "../utils/cleanUserData";
 
 interface User {
   id: string;
