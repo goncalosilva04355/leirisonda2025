@@ -46,6 +46,7 @@ import { RegisterForm } from "./components/RegisterForm";
 // import { AutoSyncProvider } from "./components/AutoSyncProvider"; // Temporarily disabled due to React hook error
 // import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Temporarily disabled due to AutoSyncProvider dependency
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
+import { SilentDataProtection } from "./components/SilentDataProtection";
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
