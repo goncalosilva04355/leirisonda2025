@@ -230,7 +230,7 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
 
       if (finalConfig.collections.includes(key) && hadItem) {
         console.log(`🔍 localStorage removeItem detectado: ${key}`);
-        setTimeout(forceSyncNow, 100);
+        setTimeout(forceSyncNow, 10); // Delay mínimo para sincronização instantânea
       }
     };
 
