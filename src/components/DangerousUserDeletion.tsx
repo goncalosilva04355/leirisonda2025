@@ -342,17 +342,90 @@ export const DangerousUserDeletion: React.FC = () => {
               </div>
             </div>
           ) : (
-            <button
-              onClick={startConfirmationProcess}
-              disabled={isLoading}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
-            >
-              <Trash2 className="h-6 w-6" />
-              <span>
-                💀 ELIMINAR {getTotalUsersToDelete()} UTILIZADOR
-                {getTotalUsersToDelete() !== 1 ? "ES" : ""}
-              </span>
-            </button>
+            <div className="space-y-4">
+              <button
+                onClick={startConfirmationProcess}
+                disabled={isLoading}
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+              >
+                <Trash2 className="h-6 w-6" />
+                <span>
+                  💀 ELIMINAR {getTotalUsersToDelete()} UTILIZADOR
+                  {getTotalUsersToDelete() !== 1 ? "ES" : ""}
+                </span>
+              </button>
+
+              <div className="border-t border-red-200 pt-4">
+                <div className="bg-red-100 border border-red-300 rounded-lg p-4 mb-4">
+                  <h4 className="font-bold text-red-900 mb-2 flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5" />
+                    💥 OPÇÃO NUCLEAR
+                  </h4>
+                  <p className="text-red-800 text-sm mb-3">
+                    Se a eliminação normal não funcionou e ainda consegue entrar
+                    com utilizadores antigos, use esta opção que limpa
+                    COMPLETAMENTE todos os dados de autenticação.
+                  </p>
+                  <p className="text-red-900 font-semibold text-sm">
+                    ⚠️ Esta opção força o recarregamento da página após a
+                    limpeza!
+                  </p>
+                </div>
+
+                {!showNuclearConfirm ? (
+                  <button
+                    onClick={() => setShowNuclearConfirm(true)}
+                    disabled={isLoading}
+                    className="w-full bg-red-800 hover:bg-red-900 text-white font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 animate-pulse"
+                  >
+                    <Zap className="h-5 w-5" />
+                    <span>💥 LIMPEZA NUCLEAR COMPLETA</span>
+                  </button>
+                ) : (
+                  <div className="space-y-3">
+                    <p className="text-red-800 font-semibold text-center">
+                      Digite "NUCLEAR" para confirmar a limpeza completa:
+                    </p>
+                    <input
+                      type="text"
+                      value={confirmationText}
+                      onChange={(e) => setConfirmationText(e.target.value)}
+                      className="w-full px-4 py-2 border-2 border-red-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 text-center font-mono"
+                      placeholder="Digite: NUCLEAR"
+                      autoFocus
+                    />
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => {
+                          setShowNuclearConfirm(false);
+                          setConfirmationText("");
+                        }}
+                        className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        onClick={handleNuclearCleanup}
+                        disabled={confirmationText !== "NUCLEAR" || isLoading}
+                        className="flex-1 bg-red-800 hover:bg-red-900 text-white py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        {isLoading ? (
+                          <>
+                            <RefreshCw className="h-4 w-4 animate-spin" />A
+                            limpar...
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="h-4 w-4" />
+                            EXECUTAR NUCLEAR
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           )}
         </div>
       ) : (
