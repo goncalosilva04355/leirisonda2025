@@ -1072,7 +1072,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         if (permission === "granted") {
           setNotificationsEnabled(true);
           showNotification(
-            "Notificações Ativadas",
+            "Notificaç��es Ativadas",
             "Agora vai receber notificações de obras atribuídas",
             "success",
           );
@@ -1658,11 +1658,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         </div>
       );
     }
-
-    console.log("🔄 renderContent: Auth state valid, rendering", {
-      activeSection,
-      userRole: currentUser?.role,
-    });
 
     // Add error boundary
     try {
@@ -6607,7 +6602,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <span className="font-medium">
-                                  Atribu��da a:
+                                  Atribu����da a:
                                 </span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
