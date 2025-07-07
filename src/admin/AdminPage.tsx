@@ -59,7 +59,8 @@ type AdminSection =
   | "firebase-quota"
   | "login-fix"
   | "user-deletion"
-  | "notification-demo";
+  | "notification-demo"
+  | "nuclear-cleanup";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
