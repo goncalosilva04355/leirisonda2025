@@ -487,7 +487,7 @@ function App() {
       } else if (permission === "denied") {
         console.warn("❌ Notifications denied by user");
       } else {
-        console.log("⏳ Notifications permission not yet requested");
+        console.log("�� Notifications permission not yet requested");
       }
     } else {
       console.warn("⚠️ Notifications not supported in this browser");
@@ -3539,8 +3539,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </option>
                               {users
                                 .filter((user) => {
-                                  // Remover restrição de role - todos os usuários ativos podem ser atribuídos
-                                  const activeCheck = user.active !== false;
+                                  // Show ALL users (active and inactive) but mark inactive ones
                                   const alreadyAssigned = assignedUsers.some(
                                     (assigned) =>
                                       assigned.id === String(user.id),
@@ -3553,15 +3552,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     user.role,
                                     "| Ativo:",
                                     user.active,
-                                    "| Ativo OK:",
-                                    activeCheck,
                                     "| Já atribuído:",
                                     alreadyAssigned,
                                     "| PASSA FILTRO:",
-                                    activeCheck && !alreadyAssigned,
+                                    !alreadyAssigned,
                                   );
 
-                                  return activeCheck && !alreadyAssigned;
+                                  return !alreadyAssigned;
                                 })
                                 .map((user) => (
                                   <option key={user.id} value={user.id}>
@@ -6989,12 +6986,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </option>
                               {users
                                 .filter((user) => {
-                                  return (
-                                    user.active !== false &&
-                                    !editAssignedUsers.some(
-                                      (assigned) =>
-                                        assigned.id === String(user.id),
-                                    )
+                                  return !editAssignedUsers.some(
+                                    (assigned) =>
+                                      assigned.id === String(user.id),
                                   );
                                 })
                                 .map((user) => (
