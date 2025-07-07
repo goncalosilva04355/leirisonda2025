@@ -113,18 +113,8 @@ class MockAuthService {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Debug logging
-    console.log("🔍 Mock login attempt:");
-    console.log("📧 Email:", email.trim().toLowerCase());
-    console.log("🔑 Password length:", password.length);
-    console.log(
-      "👥 Available users:",
-      this.users.map((u) => ({
-        email: u.email.toLowerCase(),
-        passwordLength: u.password?.length || 0,
-        active: u.active,
-      })),
-    );
+    // Basic logging for troubleshooting
+    console.log("🔐 Login attempt for:", email.trim().toLowerCase());
 
     const user = this.users.find(
       (u) =>
