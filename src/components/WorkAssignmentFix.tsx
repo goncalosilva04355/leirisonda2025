@@ -314,11 +314,28 @@ export const WorkAssignmentFix: React.FC = () => {
         results.push("⚠️ Erro ao sincronizar com mockAuthService");
       }
 
-      // Force reload of app users in the main component
+      // Force reload of app users in the main component multiple times
       window.dispatchEvent(new CustomEvent("usersUpdated"));
+      setTimeout(
+        () => window.dispatchEvent(new CustomEvent("usersUpdated")),
+        100,
+      );
+      setTimeout(
+        () => window.dispatchEvent(new CustomEvent("usersUpdated")),
+        500,
+      );
+
+      // Force reload the page state
+      window.location.hash = "#refresh";
+      setTimeout(() => {
+        window.location.hash = "";
+      }, 100);
 
       results.push(
         "🎉 Sincronização completa! Os utilizadores devem agora aparecer na lista de atribuição.",
+      );
+      results.push(
+        `📊 Total de utilizadores após sincronização: ${appUsers.length}`,
       );
     } catch (error) {
       console.error("Erro durante a correção:", error);
