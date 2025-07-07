@@ -801,6 +801,41 @@ export const UserManagement: React.FC = () => {
                     </button>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div className="flex flex-wrap gap-1">
+                      {Object.entries(user.permissions).map(
+                        ([section, permissions]) => {
+                          const hasAnyPermission = Object.values(
+                            permissions,
+                          ).some((p) => p);
+                          if (!hasAnyPermission) return null;
+
+                          const totalPermissions =
+                            Object.values(permissions).length;
+                          const activePermissions = Object.values(
+                            permissions,
+                          ).filter((p) => p).length;
+
+                          return (
+                            <span
+                              key={section}
+                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                activePermissions === totalPermissions
+                                  ? "bg-green-100 text-green-800"
+                                  : activePermissions > 0
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-gray-100 text-gray-800"
+                              }`}
+                              title={`${getSectionDisplayName(section)}: ${activePermissions}/${totalPermissions} permissões`}
+                            >
+                              {getSectionDisplayName(section)} (
+                              {activePermissions}/{totalPermissions})
+                            </span>
+                          );
+                        },
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {user.createdAt}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
