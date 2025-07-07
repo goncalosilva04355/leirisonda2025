@@ -21,6 +21,7 @@ class CompleteUserCleanupService {
 
   /**
    * Nuclear option: Clear EVERYTHING user-related and recreate only super admin
+   * Now uses emergency logout service for complete session revocation
    */
   async nuclearUserCleanup(): Promise<CompleteCleanupResult> {
     const result: CompleteCleanupResult = {
