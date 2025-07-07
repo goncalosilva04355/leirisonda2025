@@ -1337,7 +1337,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const handleAddressClick = (address: string) => {
     console.log("🗺️ Address clicked:", address);
-    console.log("���️ Maps redirect enabled:", enableMapsRedirect);
+    console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
       // Open Google Maps with the address
@@ -1681,25 +1681,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
                       <div
                         className={`w-1.5 h-1.5 rounded-full ${
-                          localStorage.getItem("firebase-quota-exceeded") ===
-                          "true"
-                            ? "bg-orange-500"
-                            : autoSyncData.isActive && !autoSyncData.error
-                              ? "bg-green-500"
-                              : autoSyncData.error
-                                ? "bg-red-500"
-                                : "bg-gray-500"
+                          autoSyncData.isActive && !autoSyncData.error
+                            ? "bg-green-500"
+                            : autoSyncData.error
+                              ? "bg-red-500"
+                              : "bg-gray-500"
                         }`}
                       ></div>
                       <span>
-                        {localStorage.getItem("firebase-quota-exceeded") ===
-                        "true"
-                          ? "Quota Pausada"
-                          : autoSyncData.isActive && !autoSyncData.error
-                            ? "Sincronizado"
-                            : autoSyncData.error
-                              ? "Erro Sync"
-                              : "Offline"}
+                        {autoSyncData.isActive && !autoSyncData.error
+                          ? "Sincronizado"
+                          : autoSyncData.error
+                            ? "Erro Sync"
+                            : "Offline"}
                       </span>
                     </div>
                   </div>
