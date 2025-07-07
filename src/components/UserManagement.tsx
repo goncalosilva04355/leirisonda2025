@@ -362,6 +362,10 @@ export const UserManagement: React.FC = () => {
         // Refresh all user data to ensure sync
         await refreshUsers();
 
+        // Dispatch event to notify other components (like App.tsx) that users were updated
+        window.dispatchEvent(new CustomEvent("usersUpdated"));
+        console.log("📢 usersUpdated event dispatched after user creation");
+
         setIsCreating(false);
         setFormData({
           name: "",
@@ -866,7 +870,7 @@ export const UserManagement: React.FC = () => {
                   Criado
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ações
+                  Aç��es
                 </th>
               </tr>
             </thead>
