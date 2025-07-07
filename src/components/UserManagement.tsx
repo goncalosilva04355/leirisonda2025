@@ -400,6 +400,10 @@ export const UserManagement: React.FC = () => {
     );
     saveUsers(updatedUsers);
     setEditingUser(null);
+
+    // Dispatch event to notify other components that users were updated
+    window.dispatchEvent(new CustomEvent("usersUpdated"));
+    console.log("📢 usersUpdated event dispatched after user update");
   };
 
   // Delete user
@@ -870,7 +874,7 @@ export const UserManagement: React.FC = () => {
                   Criado
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Aç��es
+                  Ações
                 </th>
               </tr>
             </thead>
