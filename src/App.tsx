@@ -99,16 +99,6 @@ function App() {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("mock-current-user");
     console.log("🔒 SECURITY: Auth data cleared - manual login required");
-
-    // Initialize Alexandre user account if needed
-    import("./utils/fixAlexandrePassword")
-      .then(({ fixAlexandrePassword }) => {
-        const result = fixAlexandrePassword();
-        console.log("🔧 Alexandre user initialization:", result.message);
-      })
-      .catch((error) => {
-        console.warn("Could not initialize Alexandre user:", error);
-      });
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -6603,7 +6593,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
                                   <span className="font-semibold text-gray-700 block mb-1">
-                                    👤 Cliente:
+                                    �� Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
                                     {work.client}

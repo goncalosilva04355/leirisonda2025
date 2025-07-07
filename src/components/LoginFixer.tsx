@@ -11,7 +11,6 @@ import {
   diagnoseUserLoginIssues,
   UserLoginIssue,
 } from "../utils/userLoginFix";
-import { fixAlexandrePassword } from "../utils/fixAlexandrePassword";
 
 export const LoginFixer: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
@@ -31,12 +30,6 @@ export const LoginFixer: React.FC = () => {
   const runFix = async () => {
     setIsRunning(true);
     try {
-      // First fix Alexandre specifically
-      console.log("🔧 Fixing Alexandre user account...");
-      const alexandreResult = fixAlexandrePassword();
-      console.log("Alexandre fix result:", alexandreResult);
-
-      // Then run complete user fix
       const fixResult = runCompleteUserFix();
       setResult({
         passwordsFixed: fixResult.passwordsFixed,
@@ -51,8 +44,7 @@ export const LoginFixer: React.FC = () => {
         `🔑 Passwords corrigidas: ${fixResult.passwordsFixed}\n` +
         `👤 Utilizadores criados: ${fixResult.usersCreated}\n` +
         `❌ Erros: ${fixResult.errors.length}\n\n` +
-        `Alexandre: ${alexandreResult.message}\n` +
-        `Super admin disponível: Gonçalo Fonseca`;
+        `Sistema limpo para criação manual de utilizadores`;
 
       alert(message);
     } catch (error: any) {
@@ -96,12 +88,12 @@ export const LoginFixer: React.FC = () => {
 
       <div className="bg-orange-50 border border-orange-200 rounded p-3">
         <h4 className="text-sm font-medium text-orange-800 mb-2">
-          Problemas Reportados:
+          Estado do Sistema:
         </h4>
         <ul className="text-sm text-orange-700 space-y-1">
-          <li>• Alexandre não consegue fazer login</li>
-          <li>• Utilizador Alexandre removido do sistema</li>
-          <li>• Necessário recriar conta do Alexandre</li>
+          <li>• Sistema limpo de utilizadores antigos</li>
+          <li>• Apenas super admin disponível</li>
+          <li>• Pronto para criação manual de novos utilizadores</li>
         </ul>
       </div>
 
@@ -191,17 +183,17 @@ export const LoginFixer: React.FC = () => {
         </ol>
       </div>
 
-      {/* Credenciais de teste */}
+      {/* Credenciais disponíveis */}
       <div className="bg-gray-50 border border-gray-200 rounded p-3">
         <h4 className="text-sm font-medium text-gray-900 mb-2">
-          Credenciais Corretas (após correção):
+          Credenciais Disponíveis:
         </h4>
         <div className="text-sm text-gray-700 space-y-1 font-mono">
           <div>
             • <strong>Super Admin:</strong> gongonsilva@gmail.com / 19867gsf
           </div>
-          <div>
-            • <strong>Alexandre:</strong> alexandre@leirisonda.com / 123456
+          <div className="text-xs text-gray-500 mt-2">
+            Para criar novos utilizadores, use a interface de administração
           </div>
         </div>
       </div>
