@@ -55,6 +55,7 @@ import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import { ForceInitialization } from "./utils/forceInitialization";
+import { autoExecuteEmergencyLogout } from "./utils/executeEmergencyLogout";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
@@ -1208,7 +1209,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura��ões para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1522,7 +1523,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+              `⚠️ Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
