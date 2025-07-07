@@ -858,7 +858,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç����o: ${pool.location}
+   Localizaç��o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -8372,8 +8372,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                     </div>
-                    {/* Sync Status Indicator */}
-                    <SyncStatusIndicator />
                     {/* Close button for mobile */}
                     <button
                       onClick={() => setSidebarOpen(false)}
