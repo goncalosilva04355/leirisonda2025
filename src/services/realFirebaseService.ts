@@ -81,7 +81,9 @@ class RealFirebaseService {
   initialize(): boolean {
     try {
       if (!firebaseApp) {
-        console.error("Firebase app not available from config");
+        console.log(
+          "⏸️ Firebase app not available from config - quota protection mode",
+        );
         return false;
       }
 
