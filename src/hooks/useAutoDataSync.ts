@@ -117,12 +117,11 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
         console.log("✅ Nenhuma mudança detectada - skip sync");
       }
 
-      // 3. Agenda próxima verificação SEMPRE (mas só sync se houver mudanças)
+      // 3. Agenda próxima verificação - instantânea se intervalo for 0
       if (finalConfig.enabled) {
-        syncTimeoutRef.current = setTimeout(
-          performAutoSync,
-          finalConfig.syncInterval,
-        );
+        const interval =
+          finalConfig.syncInterval === 0 ? 100 : finalConfig.syncInterval; // Verificação contínua se 0
+        syncTimeoutRef.current = setTimeout(performAutoSync, interval);
       }
     } catch (error: any) {
       syncStatus.current.error = error.message;
