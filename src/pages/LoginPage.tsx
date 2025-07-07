@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Settings } from "lucide-react";
+import { PreLoginSync } from "../components/PreLoginSync";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
