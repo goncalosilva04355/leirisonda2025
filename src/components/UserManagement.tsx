@@ -423,6 +423,73 @@ export const UserManagement: React.FC = () => {
     }
   };
 
+  // Update user permissions
+  const handleUpdatePermissions = () => {
+    if (!editingPermissions) return;
+
+    const updatedUsers = users.map((user) =>
+      user.id === editingPermissions.id ? editingPermissions : user,
+    );
+    saveUsers(updatedUsers);
+    setEditingPermissions(null);
+  };
+
+  // Toggle specific permission
+  const togglePermission = (
+    section: keyof User["permissions"],
+    action: keyof User["permissions"][keyof User["permissions"]],
+    value: boolean,
+  ) => {
+    if (!editingPermissions) return;
+
+    setEditingPermissions({
+      ...editingPermissions,
+      permissions: {
+        ...editingPermissions.permissions,
+        [section]: {
+          ...editingPermissions.permissions[section],
+          [action]: value,
+        },
+      },
+    });
+  };
+
+  // Get permission section display name
+  const getSectionDisplayName = (section: string) => {
+    switch (section) {
+      case "obras":
+        return "Obras";
+      case "manutencoes":
+        return "Manutenções";
+      case "piscinas":
+        return "Piscinas";
+      case "utilizadores":
+        return "Utilizadores";
+      case "relatorios":
+        return "Relatórios";
+      case "clientes":
+        return "Clientes";
+      default:
+        return section;
+    }
+  };
+
+  // Get action display name
+  const getActionDisplayName = (action: string) => {
+    switch (action) {
+      case "view":
+        return "Visualizar";
+      case "create":
+        return "Criar";
+      case "edit":
+        return "Editar";
+      case "delete":
+        return "Eliminar";
+      default:
+        return action;
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
