@@ -67,7 +67,7 @@ const getFirebaseApp = () => {
 
     // Initialize new app only if none exists
     const app = initializeApp(firebaseConfig);
-    console.log("Fresh Firebase app initialized");
+    console.log("Firebase app initialized successfully");
     return app;
   } catch (error) {
     console.error("Firebase app initialization failed:", error);
@@ -77,78 +77,29 @@ const getFirebaseApp = () => {
       console.log("Using existing Firebase app after error");
       return existingApps[0];
     }
-    return null;
+    throw error;
   }
 };
 
-// Initialize Firebase services with error handling and quota control
-console.log("🔥 Firebase initialization enabled - controlled sync mode");
+// Initialize Firebase services
+console.log("🔥 Initializing Firebase services...");
 let app: any = null;
 let db: any = null;
 let auth: any = null;
 
-// Check if quota was previously exceeded
-const isQuotaExceeded = () => {
-  const quotaFlag = localStorage.getItem("firebase-quota-exceeded");
-  if (quotaFlag) {
-    const quotaTime = parseInt(quotaFlag);
-    const cooldownPeriod = 30 * 60 * 1000; // 30 minutes cooldown
-    return Date.now() - quotaTime < cooldownPeriod;
-  }
-  return false;
-};
-
-// Initialize Firebase services with quota protection
 try {
-  if (isQuotaExceeded()) {
-    console.log(
-      "⏸️ Firebase temporarily disabled due to quota exceeded - will retry automatically",
-    );
-    app = null;
-    db = null;
-    auth = null;
+  app = getFirebaseApp();
+
+  if (app) {
+    db = getFirestore(app);
+    auth = getAuth(app);
+    console.log("✅ Firebase services initialized successfully");
   } else {
-    app = getFirebaseApp();
-    if (app) {
-      try {
-        db = getFirestore(app);
-        console.log("✅ Firestore initialized successfully");
-      } catch (error) {
-        console.warn("⚠️ Firestore initialization failed:", error);
-        db = null;
-      }
-
-      try {
-        auth = getAuth(app);
-        // Set auth persistence to allow login across devices and browser sessions
-        if (auth) {
-          // Use local persistence to allow users to stay logged in across devices
-          // This is needed for users to login on different devices
-          console.log(
-            "🔐 Firebase Auth persistence set to local for cross-device login",
-          );
-        }
-        console.log("✅ Firebase Auth initialized successfully");
-      } catch (error) {
-        console.warn("⚠️ Firebase Auth initialization failed:", error);
-        auth = null;
-      }
-
-      console.log("✅ Firebase services initialized successfully");
-    } else {
-      console.warn(
-        "⚠️ Firebase app not available, services will use fallback mode",
-      );
-    }
+    throw new Error("Failed to initialize Firebase app");
   }
 } catch (error) {
-  console.warn(
-    "⚠️ Firebase services initialization failed, using fallback mode:",
-    error,
-  );
-  app = null;
-  db = null;
-  auth = null;
+  console.error("❌ Firebase services initialization failed:", error);
+  throw error;
 }
 
 // Function to check if Firebase is properly initialized and ready
@@ -168,56 +119,7 @@ export const getFirebaseStatus = () => {
     auth: !!auth,
     db: !!db,
     ready: isFirebaseReady(),
-    quotaExceeded: isQuotaExceeded(),
   };
-};
-
-// Function to mark quota exceeded
-export const markQuotaExceeded = () => {
-  localStorage.setItem("firebase-quota-exceeded", Date.now().toString());
-  console.warn("🚨 Firebase quota exceeded - marking for cooldown period");
-};
-
-// Function to clear quota exceeded flag
-export const clearQuotaExceeded = () => {
-  localStorage.removeItem("firebase-quota-exceeded");
-  console.log("✅ Firebase quota flag cleared - services can be reinitialized");
-};
-
-// Function to attempt Firebase reinitialization
-export const reinitializeFirebase = async (): Promise<boolean> => {
-  try {
-    if (isQuotaExceeded()) {
-      console.log("⏳ Firebase still in cooldown period");
-      return false;
-    }
-
-    // Clear previous quota flag
-    clearQuotaExceeded();
-
-    // Attempt to reinitialize
-    const newApp = getFirebaseApp();
-    if (newApp) {
-      const { getFirestore, getAuth } = await import("firebase/firestore");
-
-      try {
-        db = getFirestore(newApp);
-        auth = getAuth(newApp);
-        app = newApp;
-
-        console.log("✅ Firebase successfully reinitialized");
-        return true;
-      } catch (error) {
-        console.warn("⚠️ Firebase reinitialization failed:", error);
-        return false;
-      }
-    }
-
-    return false;
-  } catch (error) {
-    console.warn("⚠️ Firebase reinitialization error:", error);
-    return false;
-  }
 };
 
 export { app, db, auth };

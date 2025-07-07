@@ -8,8 +8,6 @@ import {
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db, isFirebaseReady } from "../firebase/config";
-import { mockAuthService } from "./mockAuthService";
-import { QuotaManager } from "../utils/quotaManager";
 
 export interface UserProfile {
   uid: string;
@@ -77,65 +75,11 @@ class AuthService {
       return { success: false, error: "Nome é obrigatório" };
     }
 
-    // Try Firebase first for cross-device access, but only if properly initialized
-    if (isFirebaseReady()) {
-      console.log(
-        "🔥 Attempting Firebase registration for cross-device access...",
-      );
-      try {
-        const result = await this.registerWithFirebase(
-          email,
-          password,
-          name,
-          role,
-        );
-        if (result.success) {
-          console.log(
-            "✅ Firebase registration successful - user can access from any device",
-          );
-          return result;
-        }
-      } catch (error: any) {
-        // Check for quota exceeded
-        if (
-          error.message?.includes("quota") ||
-          error.message?.includes("resource-exhausted")
-        ) {
-          const { markQuotaExceeded } = await import("../firebase/config");
-          markQuotaExceeded();
-          console.warn(
-            "🚨 Firebase quota exceeded during registration, using local auth",
-          );
-        } else {
-          console.warn(
-            "⚠️ Firebase registration failed, falling back to local:",
-            error,
-          );
-        }
-      }
-    } else {
-      console.log("📱 Firebase not ready, using local auth");
+    // Check if Firebase is ready
+    if (!isFirebaseReady()) {
+      return { success: false, error: "Firebase não está disponível" };
     }
 
-    // Fallback to mock authentication (device-specific only)
-    console.log(
-      "Using local authentication - access limited to this device...",
-    );
-    const result = await this.registerWithMock(email, password, name, role);
-    if (result.success) {
-      console.log(
-        "⚠️ Local registration successful - user can only access from this device",
-      );
-    }
-    return result;
-  }
-
-  private async registerWithFirebase(
-    email: string,
-    password: string,
-    name: string,
-    role: "super_admin" | "manager" | "technician",
-  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
       // Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
@@ -167,9 +111,6 @@ class AuthService {
       return { success: true, user: userProfile };
     } catch (error: any) {
       console.error("Registration error:", error);
-      console.error("Error code:", error.code);
-      console.error("Error message:", error.message);
-      console.error("Full error:", JSON.stringify(error, null, 2));
 
       let errorMessage = "Erro ao criar conta";
       if (error.code === "auth/email-already-in-use") {
@@ -197,45 +138,6 @@ class AuthService {
     }
   }
 
-  private async registerWithMock(
-    email: string,
-    password: string,
-    name: string,
-    role: "super_admin" | "manager" | "technician",
-  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-    try {
-      const mockResult = await mockAuthService.register(
-        email,
-        password,
-        name,
-        role,
-      );
-
-      if (mockResult.success && mockResult.user) {
-        // Convert mock user to UserProfile format
-        const userProfile: UserProfile = {
-          uid: mockResult.user.uid,
-          email: mockResult.user.email,
-          name: mockResult.user.name,
-          role: mockResult.user.role,
-          permissions: this.getDefaultPermissions(mockResult.user.role),
-          active: mockResult.user.active,
-          createdAt: mockResult.user.createdAt,
-        };
-
-        return { success: true, user: userProfile };
-      } else {
-        return {
-          success: false,
-          error: mockResult.error || "Erro na autenticação local",
-        };
-      }
-    } catch (error: any) {
-      console.error("Mock auth registration failed:", error);
-      return { success: false, error: "Erro na autenticação local" };
-    }
-  }
-
   // Login user
   async login(
     email: string,
@@ -252,77 +154,12 @@ class AuthService {
       return { success: false, error: "Por favor, insira um email válido" };
     }
 
-    // Try Firebase first for cross-device access with quota protection
-    const quotaStatus = QuotaManager.getQuotaStatus();
-
-    if (isFirebaseReady() && quotaStatus.canSync) {
-      console.log("🔥 Attempting Firebase login for cross-device access...");
-
-      const firebaseLoginResult = await QuotaManager.executeWithQuotaProtection(
-        () => this.loginWithFirebase(email, password),
-        "user-login",
-      );
-
-      if (firebaseLoginResult.success && firebaseLoginResult.data?.success) {
-        console.log(
-          "✅ Firebase login successful - cross-device access enabled",
-        );
-        return firebaseLoginResult.data;
-      } else if (firebaseLoginResult.error?.includes("quota")) {
-        console.log(
-          "🚨 Firebase quota exceeded during login, using local auth",
-        );
-      } else {
-        console.log("🔄 Firebase login failed, using local auth");
-      }
-    } else if (!quotaStatus.canSync) {
-      console.log(
-        `⏸️ Firebase login blocked: ${quotaStatus.recommendedAction}`,
-      );
-    } else {
-      console.log("📱 Firebase not ready, using local authentication");
+    // Check if Firebase is ready
+    if (!isFirebaseReady()) {
+      return { success: false, error: "Firebase não está disponível" };
     }
 
-    // Fallback to mock auth for local-only users
-    console.log("Using local authentication as fallback...");
     try {
-      const result = await this.loginWithMock(email, password);
-      if (result.success) {
-        console.log("⚠️ Local login successful - device-specific access only");
-        return result;
-      } else {
-        return result;
-      }
-    } catch (mockError: any) {
-      console.error("Local auth failed:", mockError);
-      return {
-        success: false,
-        error: "Credenciais inválidas",
-      };
-    }
-  }
-
-  private async loginWithFirebase(
-    email: string,
-    password: string,
-  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-    try {
-      // Check if Firebase Auth is available
-      if (!auth) {
-        console.warn("Firebase Auth not available, falling back to mock auth");
-        throw new Error("Firebase Auth not initialized");
-      }
-
-      // Check if Firestore is available
-      if (!db) {
-        console.warn("Firestore not available, falling back to mock auth");
-        throw new Error("Firestore not initialized");
-      }
-
-      if (!email || !password) {
-        throw new Error("Email and password are required");
-      }
-
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email.trim(),
@@ -330,17 +167,8 @@ class AuthService {
       );
       const firebaseUser = userCredential.user;
 
-      // Get user profile from Firestore with error handling
-      let userDoc;
-      try {
-        if (!db) {
-          throw new Error("Firestore not available");
-        }
-        userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
-      } catch (firestoreError: any) {
-        console.warn("Firestore access failed:", firestoreError.message);
-        throw new Error("Firestore not available");
-      }
+      // Get user profile from Firestore
+      const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
 
       if (!userDoc.exists()) {
         // Auto-create profile for existing Firebase Auth users
@@ -367,17 +195,7 @@ class AuthService {
           createdAt: new Date().toISOString(),
         };
 
-        try {
-          await setDoc(doc(db, "users", firebaseUser.uid), userProfile);
-          console.log("User profile created successfully");
-        } catch (createError: any) {
-          console.warn(
-            "Failed to create user profile in Firestore:",
-            createError.message,
-          );
-          throw new Error("Failed to create user profile");
-        }
-
+        await setDoc(doc(db, "users", firebaseUser.uid), userProfile);
         return { success: true, user: userProfile };
       }
 
@@ -389,10 +207,7 @@ class AuthService {
 
       return { success: true, user: userProfile };
     } catch (error: any) {
-      // Only log actual authentication errors, not network/initialization errors
-      if (error.code && error.code.startsWith("auth/")) {
-        console.log("🔐 Firebase auth error:", error.code);
-      }
+      console.error("Login error:", error);
 
       let errorMessage = "Credenciais inválidas";
       if (error.code === "auth/user-not-found") {
@@ -404,172 +219,58 @@ class AuthService {
         errorMessage = "Password incorreta";
       } else if (error.code === "auth/too-many-requests") {
         errorMessage = "Muitas tentativas. Tente novamente mais tarde";
-      } else if (
-        error.code === "auth/network-request-failed" ||
-        error.message === "Firebase timeout" ||
-        error.message === "Firebase Auth not initialized" ||
-        error.message === "Firestore not initialized"
-      ) {
-        // Network or initialization error - throw to trigger fallback to mock auth
-        throw error;
-      } else if (error.message && error.message.includes("fetch")) {
-        // General network fetch error - throw to trigger fallback
-        throw error;
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage = "Erro de rede. Verifique a conexão à internet";
       }
 
       return { success: false, error: errorMessage };
     }
   }
 
-  private async loginWithMock(
-    email: string,
-    password: string,
-  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-    try {
-      // First, try to get login diagnostics and auto-sync if needed
-      const { UserSyncManager } = await import("../utils/userSyncManager");
-      const diagnostics = UserSyncManager.getLoginDiagnostics(email, password);
-
-      console.log("🔍 Login diagnostics:", {
-        email,
-        userExists: diagnostics.userExists,
-        emailExists: diagnostics.emailExists,
-        passwordMatches: diagnostics.passwordMatches,
-        isActive: diagnostics.isActive,
-        suggestions: diagnostics.suggestions,
-      });
-
-      // If user exists but login might fail due to sync issues, perform sync
-      if (diagnostics.userExists && !diagnostics.passwordMatches) {
-        console.log("🔄 Performing user sync before login attempt...");
-        UserSyncManager.performFullSync();
-      }
-
-      const mockResult = await mockAuthService.login(email, password);
-
-      if (mockResult.success && mockResult.user) {
-        // Convert mock user to UserProfile format
-        const userProfile: UserProfile = {
-          uid: mockResult.user.uid,
-          email: mockResult.user.email,
-          name: mockResult.user.name,
-          role: mockResult.user.role,
-          permissions: this.getDefaultPermissions(mockResult.user.role),
-          active: mockResult.user.active,
-          createdAt: mockResult.user.createdAt,
-        };
-
-        return { success: true, user: userProfile };
-      } else {
-        // Enhanced error message with diagnostics
-        let errorMessage = mockResult.error || "Credenciais inválidas";
-
-        if (diagnostics.userExists) {
-          if (!diagnostics.isActive) {
-            errorMessage =
-              "Conta desativada. Contacte o administrador para reativar.";
-          } else if (!diagnostics.passwordMatches) {
-            errorMessage = "Password incorreta. Verifique as suas credenciais.";
-          }
-        } else {
-          errorMessage =
-            "Utilizador não encontrado. Verifique o email ou contacte o administrador.";
-        }
-
-        return {
-          success: false,
-          error: errorMessage,
-        };
-      }
-    } catch (error: any) {
-      console.error("Mock auth login failed:", error);
-      return {
-        success: false,
-        error: "Erro de autenticação. Tente novamente.",
-      };
-    }
-  }
-
   // Logout user
   async logout(): Promise<void> {
     try {
-      // Clear mock auth state
-      await mockAuthService.logout();
-
-      // Clear Firebase auth state
       if (auth) {
         await signOut(auth);
       }
-
-      // Clear any remaining local storage auth data
-      localStorage.removeItem("mock-current-user");
-      localStorage.removeItem("mock-users");
-
-      // Clear session storage
-      sessionStorage.clear();
-
-      console.log("Complete logout performed - all auth data cleared");
+      console.log("Logout realizado com sucesso");
     } catch (error) {
       console.error("Error during logout:", error);
-
-      // Force clear everything even if logout fails
-      localStorage.removeItem("mock-current-user");
-      localStorage.removeItem("mock-users");
-      sessionStorage.clear();
     }
   }
 
   // Listen to auth state changes
   onAuthStateChanged(callback: (user: UserProfile | null) => void): () => void {
-    // Try Firebase first if available
-    if (auth && db) {
-      console.log("Setting up Firebase auth state listener");
-      return onAuthStateChanged(
-        auth,
-        async (firebaseUser: FirebaseUser | null) => {
-          if (firebaseUser) {
-            try {
-              const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
-              if (userDoc.exists()) {
-                const userProfile = userDoc.data() as UserProfile;
-                callback(userProfile.active ? userProfile : null);
-              } else {
-                // Force logout if no valid user profile found
-                console.log("No valid user profile found, forcing logout");
-                await this.logout();
-                callback(null);
-              }
-            } catch (error) {
-              console.error("Error getting user profile:", error);
-              // Force logout on error for security
+    if (!auth || !db) {
+      console.warn("Firebase não está disponível");
+      callback(null);
+      return () => {};
+    }
+
+    return onAuthStateChanged(
+      auth,
+      async (firebaseUser: FirebaseUser | null) => {
+        if (firebaseUser) {
+          try {
+            const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+            if (userDoc.exists()) {
+              const userProfile = userDoc.data() as UserProfile;
+              callback(userProfile.active ? userProfile : null);
+            } else {
+              console.log("No valid user profile found, forcing logout");
               await this.logout();
               callback(null);
             }
-          } else {
+          } catch (error) {
+            console.error("Error getting user profile:", error);
+            await this.logout();
             callback(null);
           }
-        },
-      );
-    } else {
-      // Fallback to mock authentication
-      console.log("Setting up mock auth state listener");
-      return mockAuthService.onAuthStateChanged((mockUser) => {
-        if (mockUser) {
-          const userProfile: UserProfile = {
-            uid: mockUser.uid,
-            email: mockUser.email,
-            name: mockUser.name,
-            role: mockUser.role,
-            permissions: this.getDefaultPermissions(mockUser.role),
-            active: mockUser.active,
-            createdAt: mockUser.createdAt,
-          };
-          callback(userProfile);
         } else {
           callback(null);
         }
-      });
-    }
+      },
+    );
   }
 
   // Get current user profile
@@ -628,12 +329,9 @@ class AuthService {
     }
   }
 
-  // Initialize default super admin if no users exist - REMOVED FOR SECURITY
-  // This function was causing automatic login which is a security risk
-  // Users must always login manually
+  // Initialize default super admin if no users exist
   async initializeDefaultAdmin(): Promise<void> {
-    // Function disabled for security - no automatic login allowed
-    console.log("Automatic admin initialization disabled for security");
+    console.log("Manual admin initialization only for security");
     return;
   }
 }
