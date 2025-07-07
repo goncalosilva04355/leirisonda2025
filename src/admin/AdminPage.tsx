@@ -160,6 +160,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     switch (currentSection) {
       case "user-management":
         return <UserManagement />;
+      case "work-assignment-fix":
+        return <WorkAssignmentFix />;
       case "auth-diagnostic":
         return <AuthSyncDiagnostic />;
       case "sync-manager":
