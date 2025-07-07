@@ -3027,7 +3027,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {maint.clientContact}
+                                        ���� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -5473,7 +5473,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                           >
-                            Ativar Notificações
+                            Ativar Notificaç��es
                           </button>
                         </div>
                       </div>
@@ -7967,7 +7967,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4">
-                <LocationPage />
+                <LocationPage
+                  currentUser={
+                    currentUser
+                      ? {
+                          id: currentUser.uid || "unknown",
+                          name: currentUser.name || "Utilizador",
+                          email: currentUser.email || "",
+                        }
+                      : undefined
+                  }
+                />
               </div>
             </div>
           );
@@ -8880,7 +8890,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <p className="text-gray-900 font-mono">
                               {selectedWork.waterLevel
                                 ? `${selectedWork.waterLevel} m`
-                                : "Não especificado"}
+                                : "N��o especificado"}
                             </p>
                           </div>
                           <div>
