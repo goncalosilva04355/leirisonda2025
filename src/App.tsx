@@ -67,7 +67,7 @@ function App() {
 
   if (!isAuthenticated || !currentUser) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-blue-50 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-md">
           <h1 className="text-2xl font-bold mb-4">Leirisonda</h1>
           <button
@@ -85,7 +85,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-blue-50">
       {/* Sidebar */}
       <div
         className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
