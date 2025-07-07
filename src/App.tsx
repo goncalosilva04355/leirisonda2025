@@ -1464,7 +1464,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠��� Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
+              `⚠️ Utilizador ${userForm.name} criado localmente. Sincronização Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -4153,7 +4153,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             };
 
                             // Update the work with bore data
-                            dataSync.updateWork(workData.id, boreDataUpdate);
+                            dataSync.updateWork(
+                              workData.id.toString(),
+                              boreDataUpdate,
+                            );
 
                             const waterBoreData = {
                               id: Date.now(),
@@ -5114,7 +5117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Gerais
+                          Observações Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -7452,7 +7455,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="sand">Areia</option>
                           <option value="cartridge">Cartucho</option>
-                          <option value="diatomaceous">Terra Diatomácea</option>
+                          <option value="diatomaceous">
+                            Terra Diatom��cea
+                          </option>
                           <option value="other">Outro</option>
                         </select>
                       </div>
