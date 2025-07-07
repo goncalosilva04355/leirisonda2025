@@ -695,7 +695,7 @@ function App() {
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
-          description: "Manutenç��o programada automaticamente",
+          description: "Manutenção programada automaticamente",
           notes: "Agendada automaticamente após manutenção anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
@@ -5163,7 +5163,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç��es, recomendações, próxima manutenção..."
+                          placeholder="Observaç��es, recomendações, próxima manuten��ão..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5616,7 +5616,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               dispositivo
                             </li>
                             <li>
-                              • A marcação automática funciona melhor em
+                              • A marcaç��o automática funciona melhor em
                               dispositivos móveis
                             </li>
                             <li>• O Google Maps abre numa nova janela/tab</li>
@@ -5818,7 +5818,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Orçamentos e custos</li>
+                        <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
                         <li>• Estados de progresso</li>
@@ -7769,7 +7769,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa��ões
+                        Observa���ões
                       </label>
                       <textarea
                         defaultValue={editingMaintenance?.observations}
@@ -9103,11 +9103,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
-
-        {/* Eliminação de Usuários Específicos - Só para Super Admin */}
-        {currentUser?.role === "super_admin" && showEliminateOldUsers && (
-          <EliminateOldUsers />
-        )}
       </InstantSyncManager>
     </AutoSyncProvider>
   );
