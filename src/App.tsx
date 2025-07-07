@@ -55,7 +55,6 @@ import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import { ForceInitialization } from "./utils/forceInitialization";
-import "./utils/clearEmergencyFlags"; // Clear emergency flags to stop loop
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
@@ -5486,8 +5485,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               • As notificações funcionam apenas com HTTPS
                             </li>
                             <li>
-                              • Certifique-se de que permite notificações no seu
-                              navegador
+                              • Certifique-se de que permite notifica��ões no
+                              seu navegador
                             </li>
                             <li>
                               • Em dispositivos móveis, adicione a app ao ecrã
@@ -7107,7 +7106,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        �� Detalhes do Furo de Água
+                        ��� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
