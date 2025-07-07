@@ -31,7 +31,7 @@ interface AutoSyncProviderProps {
 export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
   children,
   enabled = true,
-  syncInterval = 300000, // 5 minutos (reduzido de 1s para melhorar performance)
+  syncInterval = 600000, // 10 minutos (conservativo para evitar quota exceeded)
   collections = ["users", "pools", "maintenance", "works", "clients"],
   showNotifications = false,
 }) => {
