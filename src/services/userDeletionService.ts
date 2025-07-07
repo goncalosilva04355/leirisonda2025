@@ -578,23 +578,45 @@ class UserDeletionService {
         stats.firestore = usersSnapshot.docs.length;
       }
 
-      // Count localStorage users
-      const appUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
-      const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "[]");
-      stats.localStorage = appUsers.length + mockUsers.length;
+      // Count ALL localStorage users from all possible locations
+      const userDataKeys = ["app-users", "mock-users", "users", "saved-users"];
+      let localStorageTotal = 0;
+
+      for (const key of userDataKeys) {
+        try {
+          const data = localStorage.getItem(key);
+          if (data) {
+            const users = JSON.parse(data);
+            if (Array.isArray(users)) {
+              localStorageTotal += users.length;
+              console.log(`📊 Found ${users.length} users in ${key}`);
+            }
+          }
+        } catch (e) {
+          console.error(`Error counting users in ${key}:`, e);
+        }
+      }
+
+      stats.localStorage = localStorageTotal;
 
       // Count mock auth users
-      const allMockUsers = mockAuthService.getAllUsers();
-      stats.mockAuth = allMockUsers.length;
+      try {
+        const allMockUsers = mockAuthService.getAllUsers();
+        stats.mockAuth = allMockUsers.length;
+      } catch (e) {
+        console.error("Error counting mock auth users:", e);
+      }
 
-      // Calculate total (deduplicated estimate)
+      // Calculate total (use highest count as estimate)
       stats.total = Math.max(
         stats.firestore,
         stats.localStorage,
         stats.mockAuth,
       );
+
+      console.log("📊 User Statistics:", stats);
     } catch (error) {
-      console.error("Error getting user statistics:", error);
+      console.error("❌ Error getting user statistics:", error);
     }
 
     return stats;
