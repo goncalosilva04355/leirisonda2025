@@ -171,6 +171,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <AutoSyncDemo />;
       case "phone-settings":
         return <PhoneSettings />;
+      case "mobile-settings":
+        return <MobileSettings />;
       case "data-recovery":
         return <DataRecovery />;
       case "overview":
