@@ -38,8 +38,8 @@ export const FirebaseStatus: React.FC = () => {
 
     checkStatus();
 
-    // Check status every 30 seconds
-    const interval = setInterval(checkStatus, 30000);
+    // Check status every 2 minutes (reduzido para melhorar performance)
+    const interval = setInterval(checkStatus, 120000);
 
     return () => clearInterval(interval);
   }, []);
