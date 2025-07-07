@@ -364,7 +364,7 @@ export const UserManagement: React.FC = () => {
         console.error("Registration failed:", result.error);
         const errorMsg = `Erro ao criar utilizador: ${result.error || "Erro desconhecido"}`;
         setCreateError(errorMsg);
-        alert(`�� ${errorMsg}`);
+        alert(`❌ ${errorMsg}`);
       }
     } catch (error: any) {
       console.error("Erro ao criar utilizador:", error);
@@ -530,9 +530,10 @@ export const UserManagement: React.FC = () => {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, name: e.target.value });
+                  setCreateError("");
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Nome completo"
               />
