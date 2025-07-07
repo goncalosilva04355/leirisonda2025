@@ -51,6 +51,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<
     | "firebase"
+    | "device-sync"
     | "sync-test"
     | "notifications"
     | "auth-diagnostic"
@@ -130,7 +131,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
       // Test 5: Simulate data operation
       tests.push("✅ Estrutura de dados validada");
-      tests.push("✅ Permissões básicas verificadas");
+      tests.push("✅ Permissões b��sicas verificadas");
 
       setSyncTest({
         status: "success",
@@ -1102,7 +1103,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                       onClick={() => {
                         if (onNavigateToSection) {
                           console.log(
-                            "🔄 Redirecionando para Configurações...",
+                            "🔄 Redirecionando para Configura��ões...",
                           );
                           onNavigateToSection("configuracoes");
                           onBack();
