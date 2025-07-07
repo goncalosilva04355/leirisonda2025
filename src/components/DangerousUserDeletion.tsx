@@ -525,6 +525,118 @@ export const DangerousUserDeletion: React.FC = () => {
         </div>
       )}
 
+      {/* Nuclear Cleanup Result */}
+      {nuclearCleanupResult && (
+        <div
+          className={`rounded-lg border-2 p-6 ${
+            nuclearCleanupResult.success
+              ? "bg-green-50 border-green-200"
+              : "bg-red-50 border-red-200"
+          }`}
+        >
+          <div className="flex items-start gap-3">
+            {nuclearCleanupResult.success ? (
+              <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
+            ) : (
+              <XCircle className="h-6 w-6 text-red-600 mt-0.5 flex-shrink-0" />
+            )}
+            <div className="space-y-3 flex-1">
+              <h4
+                className={`font-semibold ${
+                  nuclearCleanupResult.success
+                    ? "text-green-900"
+                    : "text-red-900"
+                }`}
+              >
+                💥 Resultado da Limpeza Nuclear
+              </h4>
+
+              <p
+                className={`${
+                  nuclearCleanupResult.success
+                    ? "text-green-800"
+                    : "text-red-800"
+                }`}
+              >
+                {nuclearCleanupResult.message}
+              </p>
+
+              {/* Detailed Results */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <div className="text-center p-3 bg-white rounded border">
+                  <div className="text-sm text-gray-600">Chaves Limpas</div>
+                  <div className="font-bold text-blue-600">
+                    {
+                      nuclearCleanupResult.details.localStorageKeysCleared
+                        .length
+                    }
+                  </div>
+                </div>
+                <div className="text-center p-3 bg-white rounded border">
+                  <div className="text-sm text-gray-600">Session Storage</div>
+                  <div
+                    className={`font-bold ${
+                      nuclearCleanupResult.details.sessionStorageCleared
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {nuclearCleanupResult.details.sessionStorageCleared
+                      ? "✅ Limpo"
+                      : "❌ Falhou"}
+                  </div>
+                </div>
+                <div className="text-center p-3 bg-white rounded border">
+                  <div className="text-sm text-gray-600">Super Admin</div>
+                  <div
+                    className={`font-bold ${
+                      nuclearCleanupResult.details.superAdminRecreated
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {nuclearCleanupResult.details.superAdminRecreated
+                      ? "✅ Recriado"
+                      : "❌ Falhou"}
+                  </div>
+                </div>
+              </div>
+
+              {/* Cleared Keys */}
+              {nuclearCleanupResult.details.localStorageKeysCleared.length >
+                0 && (
+                <div className="mt-4 p-3 bg-blue-100 border border-blue-200 rounded">
+                  <h5 className="font-medium text-blue-900 mb-2">
+                    Chaves localStorage Limpas:
+                  </h5>
+                  <div className="text-sm text-blue-800 space-y-1 max-h-32 overflow-y-auto">
+                    {nuclearCleanupResult.details.localStorageKeysCleared.map(
+                      (key, index) => (
+                        <div key={index} className="font-mono">
+                          • {key}
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Errors */}
+              {nuclearCleanupResult.details.errors.length > 0 && (
+                <div className="mt-4 p-3 bg-red-100 border border-red-200 rounded">
+                  <h5 className="font-medium text-red-900 mb-2">Erros:</h5>
+                  <ul className="text-sm text-red-800 space-y-1">
+                    {nuclearCleanupResult.details.errors.map((error, index) => (
+                      <li key={index}>• {error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Last Result */}
       {lastResult && (
         <div
