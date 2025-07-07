@@ -170,6 +170,25 @@ export const UserManagement: React.FC = () => {
     localStorage.setItem("app-users", JSON.stringify(updatedUsers));
   };
 
+  // Refresh users from all sources
+  const refreshUsers = async () => {
+    try {
+      // Reload from localStorage
+      const savedUsers = localStorage.getItem("app-users");
+      if (savedUsers) {
+        const parsedUsers = JSON.parse(savedUsers);
+        setUsers(parsedUsers);
+      }
+
+      // Sync with auth services
+      const { mockAuthService } = await import("../services/mockAuthService");
+      mockAuthService.reloadUsers();
+      console.log("Users refreshed from all sources");
+    } catch (error) {
+      console.error("Error refreshing users:", error);
+    }
+  };
+
   // Generate default permissions based on role
   const getDefaultPermissions = (role: string) => {
     switch (role) {
