@@ -189,24 +189,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
 
-            {/* Debug Button - Only show in development */}
-            {window.location.hostname === "localhost" && (
-              <button
-                type="button"
-                onClick={() => {
-                  // Import and call debug function
-                  import("../services/mockAuthService").then(
-                    ({ mockAuthService }) => {
-                      mockAuthService.debugUsers();
-                    },
-                  );
-                }}
-                className="w-full bg-yellow-500 text-white py-1 px-2 rounded text-xs hover:bg-yellow-600 mb-2"
-              >
-                🔍 Debug: Ver utilizadores guardados
-              </button>
-            )}
-
             {/* Quick Test Login - Only show in development */}
             {window.location.hostname === "localhost" && (
               <button
