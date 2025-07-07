@@ -208,7 +208,7 @@ export const useDataMutationIntercept = () => {
 
       if (collections.includes(key)) {
         console.log(`🗑️ Dados removidos de ${key}, forçando sincronização...`);
-        setTimeout(() => forceSyncNow(), 100);
+        setTimeout(() => forceSyncNow(), 10);
       }
 
       return result;
