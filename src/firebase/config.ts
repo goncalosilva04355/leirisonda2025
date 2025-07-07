@@ -168,7 +168,56 @@ export const getFirebaseStatus = () => {
     auth: !!auth,
     db: !!db,
     ready: isFirebaseReady(),
+    quotaExceeded: isQuotaExceeded(),
   };
+};
+
+// Function to mark quota exceeded
+export const markQuotaExceeded = () => {
+  localStorage.setItem("firebase-quota-exceeded", Date.now().toString());
+  console.warn("🚨 Firebase quota exceeded - marking for cooldown period");
+};
+
+// Function to clear quota exceeded flag
+export const clearQuotaExceeded = () => {
+  localStorage.removeItem("firebase-quota-exceeded");
+  console.log("✅ Firebase quota flag cleared - services can be reinitialized");
+};
+
+// Function to attempt Firebase reinitialization
+export const reinitializeFirebase = async (): Promise<boolean> => {
+  try {
+    if (isQuotaExceeded()) {
+      console.log("⏳ Firebase still in cooldown period");
+      return false;
+    }
+
+    // Clear previous quota flag
+    clearQuotaExceeded();
+
+    // Attempt to reinitialize
+    const newApp = getFirebaseApp();
+    if (newApp) {
+      const { getFirestore, getAuth } = await import("firebase/firestore");
+
+      try {
+        db = getFirestore(newApp);
+        auth = getAuth(newApp);
+        app = newApp;
+
+        console.log("✅ Firebase successfully reinitialized");
+        return true;
+      } catch (error) {
+        console.warn("⚠️ Firebase reinitialization failed:", error);
+        return false;
+      }
+    }
+
+    return false;
+  } catch (error) {
+    console.warn("⚠️ Firebase reinitialization error:", error);
+    return false;
+  }
 };
 
 export { app, db, auth };
