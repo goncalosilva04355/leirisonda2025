@@ -47,6 +47,9 @@ import { syncManager } from "./utils/syncManager";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
+
+// Enable console cleanup commands
+import "./utils/consoleCleanup";
 import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
@@ -3792,7 +3795,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descrição do trabalho realizado..."
+                            placeholder="Descriç��o do trabalho realizado..."
                           />
                         </div>
                       </div>
@@ -7031,7 +7034,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        �� Detalhes do Furo de Água
+                        �� Detalhes do Furo de ��gua
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
