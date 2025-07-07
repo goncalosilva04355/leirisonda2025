@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import ErrorBoundary from "./components/ErrorBoundary";
+import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 import "./index.css";
 
 // Chrome-specific fixes for PWA compatibility
