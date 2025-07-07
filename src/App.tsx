@@ -5083,7 +5083,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendações, próxima manutenção..."
+                          placeholder="Observaç��es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7690,7 +7690,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
+                        Observa��ões
                       </label>
                       <textarea
                         defaultValue={editingMaintenance?.observations}
@@ -8057,7 +8057,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observações e próxima manutenção</span>
+                  <span>Observaç��es e próxima manutenção</span>
                 </div>
               </div>
             </div>
@@ -8328,10 +8328,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       <FirebaseQuotaAlert />
 
       <AutoSyncProvider
-        enabled={false}
-        syncInterval={0}
+        enabled={true}
+        syncInterval={30000}
         collections={["users", "pools", "maintenance", "works", "clients"]}
-        showNotifications={true}
+        showNotifications={false}
       >
         <InstantSyncManager>
           <div className="min-h-screen bg-gray-50">
@@ -9029,8 +9029,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             )}
           </div>
 
-          {/* Realtime Notifications */}
-          <RealtimeNotifications />
+          {/* Realtime Notifications - Disabled per user request */}
+          {/* <RealtimeNotifications /> */}
         </InstantSyncManager>
       </AutoSyncProvider>
     </>
