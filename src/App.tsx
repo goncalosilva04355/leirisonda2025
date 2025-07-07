@@ -402,16 +402,10 @@ function App() {
             setCurrentUser(user);
             setIsAuthenticated(true);
 
-            // Navigate to dashboard after auto-login
-            setTimeout(() => {
-              const hash = window.location.hash.substring(1);
-              if (!hash || hash === "login") {
-                console.log(
-                  "���� Auto-navigating to dashboard after auto-login",
-                );
-                navigateToSection("dashboard");
-              }
-            }, 100);
+            // Auto-navegação removida para evitar loop de login
+            console.log(
+              "✅ User authenticated - avoiding auto-navigation loop",
+            );
           } else {
             console.log("🔒 Firebase Auth: No user session found");
             setCurrentUser(null);
@@ -5855,7 +5849,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>• Piscinas associadas</li>
+                        <li>�� Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
@@ -6643,7 +6637,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {work.contact}
+                                        ���� {work.contact}
                                       </button>
                                     </div>
                                   )}
