@@ -2,23 +2,6 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { UserLocationMap } from "./UserLocationMap";
 
-interface LocationData {
-  latitude: number;
-  longitude: number;
-  accuracy: number;
-  timestamp: number;
-  address?: string;
-}
-
-interface LocationSettings {
-  enabled: boolean;
-  highAccuracy: boolean;
-  timeout: number;
-  maxAge: number;
-  autoRefresh: boolean;
-  refreshInterval: number;
-}
-
 interface LocationPageProps {
   onBack?: () => void;
   currentUser?: {
