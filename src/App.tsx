@@ -168,7 +168,7 @@ function App() {
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
 
-  // Sincronizar configurações entre componentes
+  // Sincronizar configura��ões entre componentes
   useEffect(() => {
     const handlePhoneDialerToggle = (event: CustomEvent) => {
       setEnablePhoneDialer(event.detail.enabled);
@@ -3023,7 +3023,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -6119,7 +6119,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </h3>
                               <span
                                 className={`text-xs px-2 py-1 rounded-full font-medium ${
-                                  client.status === "Ativo"
+                                  (client as any).status === "Ativo"
                                     ? "bg-green-100 text-green-800"
                                     : "bg-gray-100 text-gray-800"
                                 }`}
