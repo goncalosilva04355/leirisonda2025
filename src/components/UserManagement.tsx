@@ -289,12 +289,6 @@ export const UserManagement: React.FC = () => {
       // Import authService dynamically to ensure proper initialization
       const { authService } = await import("../services/authService");
 
-      console.log("Creating user with data:", {
-        email: formData.email,
-        name: formData.name,
-        role: formData.role,
-      });
-
       // Map role from UserManagement to authService format
       let authRole: "super_admin" | "manager" | "technician" = "technician";
       if (formData.role === "super_admin") {
