@@ -14,6 +14,9 @@ export const FirebaseStatus: React.FC = () => {
 
   useEffect(() => {
     const checkStatus = async () => {
+      // Check if Firebase is disabled for quota protection
+      const isFirebaseDisabled = !app && !db && !auth;
+
       const newStatus = {
         app: !!app,
         auth: !!auth,
@@ -21,6 +24,13 @@ export const FirebaseStatus: React.FC = () => {
         database: false,
         lastCheck: new Date(),
       };
+
+      // Skip Firebase checks if it's disabled for quota protection
+      if (isFirebaseDisabled) {
+        console.log("⏸️ Firebase status check skipped - quota protection mode");
+        setStatus(newStatus);
+        return;
+      }
 
       // Check database service
       try {
