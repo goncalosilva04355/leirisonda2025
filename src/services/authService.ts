@@ -414,6 +414,25 @@ class AuthService {
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
+      // First, try to get login diagnostics and auto-sync if needed
+      const { UserSyncManager } = await import("../utils/userSyncManager");
+      const diagnostics = UserSyncManager.getLoginDiagnostics(email, password);
+
+      console.log("🔍 Login diagnostics:", {
+        email,
+        userExists: diagnostics.userExists,
+        emailExists: diagnostics.emailExists,
+        passwordMatches: diagnostics.passwordMatches,
+        isActive: diagnostics.isActive,
+        suggestions: diagnostics.suggestions,
+      });
+
+      // If user exists but login might fail due to sync issues, perform sync
+      if (diagnostics.userExists && !diagnostics.passwordMatches) {
+        console.log("🔄 Performing user sync before login attempt...");
+        UserSyncManager.performFullSync();
+      }
+
       const mockResult = await mockAuthService.login(email, password);
 
       if (mockResult.success && mockResult.user) {
@@ -430,14 +449,32 @@ class AuthService {
 
         return { success: true, user: userProfile };
       } else {
+        // Enhanced error message with diagnostics
+        let errorMessage = mockResult.error || "Credenciais inválidas";
+
+        if (diagnostics.userExists) {
+          if (!diagnostics.isActive) {
+            errorMessage =
+              "Conta desativada. Contacte o administrador para reativar.";
+          } else if (!diagnostics.passwordMatches) {
+            errorMessage = "Password incorreta. Verifique as suas credenciais.";
+          }
+        } else {
+          errorMessage =
+            "Utilizador não encontrado. Verifique o email ou contacte o administrador.";
+        }
+
         return {
           success: false,
-          error: mockResult.error || "Credenciais inválidas",
+          error: errorMessage,
         };
       }
     } catch (error: any) {
       console.error("Mock auth login failed:", error);
-      return { success: false, error: "Credenciais inválidas" };
+      return {
+        success: false,
+        error: "Erro de autenticação. Tente novamente.",
+      };
     }
   }
 

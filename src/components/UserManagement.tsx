@@ -21,6 +21,7 @@ import {
   UserMinus,
 } from "lucide-react";
 import { cleanUserData } from "../utils/cleanUserData";
+import AuthTroubleshootingGuide from "./AuthTroubleshootingGuide";
 
 interface User {
   id: string;
@@ -86,6 +87,8 @@ export const UserManagement: React.FC = () => {
   const [showPasswords, setShowPasswords] = useState<{
     [key: string]: boolean;
   }>({});
+  const [showTroubleshootingGuide, setShowTroubleshootingGuide] =
+    useState(false);
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
     email: "",
@@ -273,7 +276,7 @@ export const UserManagement: React.FC = () => {
       return;
     }
 
-    // Also check with mock auth service for additional validation
+    // Check with mock auth service for additional validation
     try {
       const { mockAuthService } = await import("../services/mockAuthService");
       const allUsers = mockAuthService.getAllUsers();
@@ -282,11 +285,13 @@ export const UserManagement: React.FC = () => {
           (user) => user.email.toLowerCase() === formData.email.toLowerCase(),
         )
       ) {
-        setCreateError("Este email já está registado no sistema.");
+        setCreateError(
+          "Este email já está registado no sistema. Se o utilizador existe mas não consegue fazer login, contacte o administrador para reativar a conta.",
+        );
         return;
       }
     } catch (error) {
-      // Silent fail for duplicate check
+      console.warn("Erro ao verificar duplicados no mock auth:", error);
     }
 
     setCreateError("");
@@ -331,14 +336,27 @@ export const UserManagement: React.FC = () => {
         const updatedUsers = [...users, newUser];
         saveUsers(updatedUsers);
 
-        // Force sync with all auth systems
+        // Comprehensive sync with all auth systems
         try {
           const { mockAuthService } = await import(
             "../services/mockAuthService"
           );
+
+          // First, sync the user to mock auth service with the correct data
+          await mockAuthService.register(
+            formData.email.trim(),
+            formData.password,
+            formData.name.trim(),
+            authRole,
+          );
+
+          console.log("✅ User synchronized to mock auth service");
+
+          // Reload users to ensure consistency
           mockAuthService.reloadUsers();
         } catch (syncError) {
-          // Silent sync error
+          console.warn("⚠️ Sync error with mock auth service:", syncError);
+          // Don't fail creation if sync fails
         }
 
         // Refresh all user data to ensure sync
@@ -354,7 +372,9 @@ export const UserManagement: React.FC = () => {
         });
 
         setCreateError("");
-        setCreateSuccess("✅ Utilizador criado com sucesso e está ativo!");
+        setCreateSuccess(
+          "✅ Utilizador criado com sucesso e está ativo! Pode agora fazer login com as credenciais fornecidas.",
+        );
       } else {
         const errorMsg = `Erro ao criar utilizador: ${result.error || "Erro desconhecido"}`;
         setCreateError(errorMsg);
@@ -506,6 +526,43 @@ export const UserManagement: React.FC = () => {
         </div>
         <div className="flex space-x-2">
           <button
+            onClick={() => setShowTroubleshootingGuide(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+          >
+            <AlertCircle className="h-4 w-4" />
+            <span>Resolução de Problemas</span>
+          </button>
+          <button
+            onClick={async () => {
+              if (
+                confirm(
+                  "🔄 Sincronizar todos os utilizadores entre os sistemas de autenticação?",
+                )
+              ) {
+                try {
+                  const { UserSyncManager } = await import(
+                    "../utils/userSyncManager"
+                  );
+                  const result = UserSyncManager.performFullSync();
+                  if (result.synced) {
+                    alert(
+                      `✅ Sincronização completa! Local: ${result.localUsers}, Mock: ${result.mockUsers}`,
+                    );
+                    await refreshUsers();
+                  } else {
+                    alert("❌ Erro na sincronização.");
+                  }
+                } catch (error) {
+                  alert("❌ Erro ao executar sincronização.");
+                }
+              }
+            }}
+            className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            <CheckCircle className="h-4 w-4" />
+            <span>Sincronizar</span>
+          </button>
+          <button
             onClick={() => {
               if (
                 confirm(
@@ -517,7 +574,7 @@ export const UserManagement: React.FC = () => {
                   alert(
                     "✅ Utilizadores limpos! Apenas o super admin Gonçalo permanece.",
                   );
-                  loadUsers(); // Reload the users list
+                  refreshUsers(); // Changed from loadUsers to refreshUsers
                 } else {
                   alert("❌ Erro na limpeza de utilizadores.");
                 }
@@ -562,6 +619,11 @@ export const UserManagement: React.FC = () => {
               <p>
                 • <strong>Estado:</strong> Clique no estado para
                 ativar/desativar utilizadores instantaneamente
+              </p>
+              <p>
+                • <strong>Sincronizar:</strong> Se um utilizador existe mas não
+                consegue fazer login, use o botão "Sincronizar" para resolver
+                problemas de autenticação
               </p>
             </div>
           </div>
@@ -1223,6 +1285,12 @@ export const UserManagement: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Troubleshooting Guide Modal */}
+      <AuthTroubleshootingGuide
+        isOpen={showTroubleshootingGuide}
+        onClose={() => setShowTroubleshootingGuide(false)}
+      />
     </div>
   );
 };
