@@ -332,8 +332,7 @@ function App() {
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [pushPermission, setPushPermission] = useState("default");
+  // Notificações removidas conforme configuração
   const [assignedWorks, setAssignedWorks] = useState<any[]>([]);
   const [uploadedPhotos, setUploadedPhotos] = useState<any[]>([]);
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
@@ -470,25 +469,9 @@ function App() {
   //   return () => clearInterval(authCheckInterval);
   // }, [isAuthenticated, currentUser]);
 
-  // Initialize notification permission state and register service worker
+  // Inicialização simplificada sem notificações
   useEffect(() => {
-    console.log("🔔 Initializing notifications...");
-    if ("Notification" in window) {
-      const permission = Notification.permission;
-      console.log("🔔 Current notification permission:", permission);
-      setPushPermission(permission);
-      setNotificationsEnabled(permission === "granted");
-
-      if (permission === "granted") {
-        console.log("✅ Notifications already granted");
-      } else if (permission === "denied") {
-        console.warn("❌ Notifications denied by user");
-      } else {
-        console.log("⏳ Notifications permission not yet requested");
-      }
-    } else {
-      console.warn("⚠️ Notifications not supported in this browser");
-    }
+    console.log("⚙️ Initializing app...");
 
     // Register service worker for better push notification support
     if ("serviceWorker" in navigator) {
@@ -5096,7 +5079,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza do fundo",
                           "Limpeza das paredes",
                           "Limpeza skimmers",
-                          "Verificação equipamentos",
+                          "Verifica��ão equipamentos",
                         ].map((task, index) => (
                           <label key={index} className="flex items-center">
                             <input
