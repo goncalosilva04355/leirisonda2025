@@ -77,6 +77,23 @@ class MockAuthService {
     email: string,
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: MockUser }> {
+    // Check if user is in the blocked list
+    const blockedEmails = [
+      "yrzamr@gmail.com",
+      "yrzamr01@gmail.com",
+      "alexkamaryta@gmail.com",
+      "davidcarreiraa92@gmail.com",
+    ];
+
+    if (
+      blockedEmails.some(
+        (blocked) => blocked.toLowerCase() === email.trim().toLowerCase(),
+      )
+    ) {
+      console.log("🚫 Blocked user attempt:", email);
+      return { success: false, error: "Acesso negado" };
+    }
+
     // Validate inputs
     if (!email?.trim() || !password?.trim()) {
       return { success: false, error: "Email e password são obrigatórios" };

@@ -41,13 +41,15 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
 
+// Security: Startup cleanup to prevent blocked users from accessing
+import "./utils/startupCleanup";
+
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
 import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
 import { syncManager } from "./utils/syncManager";
-import CleanupExecutor from "./components/CleanupExecutor";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 
 // SECURITY: RegisterForm removed - only super admin can create users
@@ -925,7 +927,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç���o: ${pool.location}
+   Localizaç����o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -3263,7 +3265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalação</option>
+                            <option value="instalacao">Instalaç��o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -9099,9 +9101,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
-
-        {/* Temporary Cleanup Executor */}
-        <CleanupExecutor />
       </InstantSyncManager>
     </AutoSyncProvider>
   );
