@@ -1093,7 +1093,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTENÇ��ES RECENTES ===
+=== MANUTENÇÕES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -6920,7 +6920,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="pendente">Pendente</option>
                             <option value="em-progresso">Em Progresso</option>
-                            <option value="concluida">Conclu��da</option>
+                            <option value="concluida">Concluída</option>
                             <option value="cancelada">Cancelada</option>
                           </select>
                         </div>
@@ -8210,7 +8210,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 (!isAuthenticated || !currentUser)
               ) {
                 console.log(
-                  "❌ Access denied: User management requires authentication",
+                  "��� Access denied: User management requires authentication",
                 );
                 setLoginError(
                   "Por favor, faça login primeiro para aceder à gestão de utilizadores",
@@ -8392,12 +8392,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   }
 
   // Use sync manager to determine if sync should be enabled
-  const syncStatus = syncManager.getSyncStatus();
+  const quotaStatus = syncManager.getSyncStatus();
   const syncInterval = syncManager.getSafeInterval();
 
   return (
     <AutoSyncProvider
-      enabled={syncStatus.enabled}
+      enabled={quotaStatus.enabled}
       syncInterval={syncInterval}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={true}
