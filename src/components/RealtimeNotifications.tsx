@@ -55,7 +55,7 @@ export const RealtimeNotifications: React.FC = () => {
   // Listen to sync events
   useEffect(() => {
     const handleFirebaseSync = (event: CustomEvent) => {
-      const { type, collection, changeType } = event.detail;
+      const { type, collection, changeType, documentId } = event.detail;
 
       const collectionNames: Record<string, string> = {
         users: "usuários",
@@ -90,6 +90,37 @@ export const RealtimeNotifications: React.FC = () => {
           autoHide: true,
         });
       }
+    };
+
+    // Listen to work assignment events
+    const handleWorkAssignment = (event: CustomEvent) => {
+      const { workTitle, assignedTo, type: assignmentType } = event.detail;
+
+      if (assignmentType === "assigned") {
+        addNotification({
+          type: "info",
+          title: "Trabalho Atribuído",
+          message: `"${workTitle}" foi atribuído a ${assignedTo}`,
+          autoHide: true,
+        });
+      } else if (assignmentType === "updated") {
+        addNotification({
+          type: "warning",
+          title: "Trabalho Atualizado",
+          message: `"${workTitle}" foi atualizado`,
+          autoHide: true,
+        });
+      }
+    };
+
+    // Listen to user events
+    const handleUserEvents = (event: CustomEvent) => {
+      addNotification({
+        type: "info",
+        title: "Utilizadores Atualizados",
+        message: "Lista de utilizadores foi atualizada",
+        autoHide: true,
+      });
     };
 
     window.addEventListener(
