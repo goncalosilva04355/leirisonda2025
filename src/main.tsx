@@ -6,6 +6,8 @@ import "./index.css";
 
 // Executar limpeza imediata de utilizadores problemáticos
 import "./utils/immediateCleanup";
+// Testar se a limpeza foi bem-sucedida
+import "./utils/testCleanup";
 
 // Chrome-specific fixes for PWA compatibility
 if (typeof window !== "undefined") {
