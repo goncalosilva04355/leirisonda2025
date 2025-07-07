@@ -63,6 +63,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       color: "bg-indigo-600",
     },
     {
+      id: "work-assignment-fix" as AdminSection,
+      title: "🔧 Correção de Atribuição de Obras",
+      description: "Corrigir problemas na atribuição de utilizadores às obras",
+      icon: Users,
+      color: "bg-orange-600",
+    },
+    {
       id: "auth-diagnostic" as AdminSection,
       title: "Diagnóstico de Autenticação",
       description: "Teste e debug do sistema de autenticação",
