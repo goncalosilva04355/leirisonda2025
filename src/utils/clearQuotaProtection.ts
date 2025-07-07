@@ -13,7 +13,13 @@ export const clearQuotaProtection = () => {
   return true;
 };
 
-// Auto-clear on import
+// Auto-clear on import and force enable Firebase
 if (typeof window !== "undefined") {
   clearQuotaProtection();
+
+  // Additional cleanup for any remaining flags
+  localStorage.removeItem("firebase-sync-disabled");
+  localStorage.removeItem("quota-error-count");
+
+  console.log("🚀 Firebase reactivated after quota increase");
 }
