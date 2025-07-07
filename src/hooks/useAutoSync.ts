@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { fullSyncService } from "../services/fullSyncService";
+import { clearQuotaProtection } from "../utils/clearQuotaProtection";
+
+// Clear quota protection to ensure sync works
+clearQuotaProtection();
 
 export const useAutoSync = () => {
   const [syncStatus, setSyncStatus] = useState<
