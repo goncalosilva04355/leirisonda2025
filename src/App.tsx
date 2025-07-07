@@ -876,7 +876,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -1958,7 +1958,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     🔧 Trabalho:
                                   </span>
                                   <span className="text-sm text-gray-900">
-                                    {work.workPerformed ||
+                                    {work.description ||
                                       work.type ||
                                       "Não especificado"}
                                   </span>
@@ -6361,7 +6361,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Nome da pessoa responsável"
+                            placeholder="Nome da pessoa respons��vel"
                           />
                         </div>
                         <div>
