@@ -80,41 +80,11 @@ export const WorkAssignmentNotifications: React.FC<
     }
   }, [currentUser]);
 
-  // Função para processar mudanças nos trabalhos
-  const handleWorksChange = useCallback(() => {
-    if (!currentUser) return;
-
-    try {
-      const worksData = localStorage.getItem("works");
-      if (!worksData) return;
-
-      const currentWorks: Work[] = JSON.parse(worksData);
-      const previousWorks = previousWorksRef.current;
-
-      // Se não há trabalhos anteriores, salvar o estado atual e sair
-      if (previousWorks.length === 0) {
-        previousWorksRef.current = currentWorks;
-        return;
-      }
-
-      // Detectar novos trabalhos atribuídos ao usuário atual
-      checkForNewAssignments(currentWorks, previousWorks, currentUser);
-
-      // Detectar mudanças em trabalhos existentes
-      checkForAssignmentUpdates(currentWorks, previousWorks, currentUser);
-
-      // Atualizar estado anterior
-      previousWorksRef.current = currentWorks;
-    } catch (error) {
-      console.error("Erro ao processar mudanças de trabalhos:", error);
-    }
-  }, [currentUser]);
-
-  // Monitorar mudanças nos trabalhos
+  // Setup inicial - carregar estado apenas uma vez
   useEffect(() => {
     if (!currentUser) return;
 
-    // Carregar estado inicial
+    // Carregar estado inicial sem monitoramento
     const initialWorksData = localStorage.getItem("works");
     if (initialWorksData) {
       try {
@@ -124,6 +94,38 @@ export const WorkAssignmentNotifications: React.FC<
         console.error("Erro ao carregar trabalhos iniciais:", error);
       }
     }
+  }, [currentUser]);
+
+  // Monitorar mudanças - SEM dependências que causam loops
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const handleWorksChange = () => {
+      try {
+        const worksData = localStorage.getItem("works");
+        if (!worksData) return;
+
+        const currentWorks: Work[] = JSON.parse(worksData);
+        const previousWorks = previousWorksRef.current;
+
+        // Se não há trabalhos anteriores, salvar o estado atual e sair
+        if (previousWorks.length === 0) {
+          previousWorksRef.current = currentWorks;
+          return;
+        }
+
+        // Detectar novos trabalhos atribuídos ao usuário atual
+        checkForNewAssignments(currentWorks, previousWorks, currentUser);
+
+        // Detectar mudanças em trabalhos existentes
+        checkForAssignmentUpdates(currentWorks, previousWorks, currentUser);
+
+        // Atualizar estado anterior
+        previousWorksRef.current = currentWorks;
+      } catch (error) {
+        console.error("Erro ao processar mudanças de trabalhos:", error);
+      }
+    };
 
     // Listener para mudanças no localStorage
     const handleStorageChange = (e: StorageEvent) => {
@@ -140,7 +142,7 @@ export const WorkAssignmentNotifications: React.FC<
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("worksUpdated", handleWorksChange);
     };
-  }, [currentUser, handleWorksChange]);
+  }, []); // VAZIO - sem dependências que mudam
 
   const checkForNewAssignments = (
     currentWorks: Work[],
