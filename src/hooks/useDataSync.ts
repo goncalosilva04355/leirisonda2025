@@ -569,10 +569,8 @@ export function useDataSync(): SyncState & SyncActions {
     withAutoSync(async (workData: Omit<Work, "id" | "createdAt">) => {
       console.log("🔧 addWork called with data:", workData);
 
-      // Get current user info for tracking who created the work
-      const currentUser = JSON.parse(
-        localStorage.getItem("currentUser") || "null",
-      );
+      // Firebase auth provides current user info automatically
+      const currentUser = null; // Firebase will handle user tracking
 
       const newWork: Work = {
         ...workData,
