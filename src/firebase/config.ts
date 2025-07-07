@@ -17,26 +17,8 @@ const defaultFirebaseConfig = {
 
 // Function to get Firebase config from localStorage or use default
 const getFirebaseConfig = () => {
-  try {
-    const storedConfig = localStorage.getItem("firebase-config");
-    if (storedConfig) {
-      const parsedConfig = JSON.parse(storedConfig);
-      console.log("🔧 Firebase: Using configuration from localStorage");
-      return parsedConfig;
-    }
-  } catch (error) {
-    console.warn(
-      "🔧 Firebase: Error loading config from localStorage, using default:",
-      error,
-    );
-  }
-
-  // Store default config to localStorage for future use
-  localStorage.setItem(
-    "firebase-config",
-    JSON.stringify(defaultFirebaseConfig),
-  );
-  console.log("🔧 Firebase: Stored default configuration to localStorage");
+  // Use default config directly - Firebase will handle persistence automatically
+  console.log("🔧 Firebase: Using default configuration");
   return defaultFirebaseConfig;
 };
 
