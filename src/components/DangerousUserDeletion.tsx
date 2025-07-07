@@ -104,6 +104,51 @@ export const DangerousUserDeletion: React.FC = () => {
     }
   };
 
+  const handleNuclearCleanup = async () => {
+    setIsLoading(true);
+    setNuclearCleanupResult(null);
+
+    try {
+      console.log("💥 STARTING NUCLEAR USER CLEANUP...");
+      const result = await completeUserCleanupService.nuclearUserCleanup();
+      setNuclearCleanupResult(result);
+
+      if (result.success) {
+        // Refresh statistics after nuclear cleanup
+        await refreshUserStats();
+
+        // Reset confirmation state
+        setShowNuclearConfirm(false);
+
+        console.log("🚀 Nuclear cleanup completed successfully");
+
+        // Force page reload to clear any remaining auth state
+        setTimeout(() => {
+          alert(
+            "✅ Limpeza nuclear completa! A página irá recarregar para garantir que não há sessões antigas.",
+          );
+          window.location.reload();
+        }, 2000);
+      } else {
+        console.error("❌ Nuclear cleanup failed:", result.message);
+      }
+    } catch (error: any) {
+      console.error("💥 Critical error during nuclear cleanup:", error);
+      setNuclearCleanupResult({
+        success: false,
+        message: `❌ Erro crítico na limpeza nuclear: ${error.message}`,
+        details: {
+          localStorageKeysCleared: [],
+          sessionStorageCleared: false,
+          superAdminRecreated: false,
+          errors: [error.message],
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const startConfirmationProcess = () => {
     setShowConfirmation(true);
     setConfirmationStep(1);
