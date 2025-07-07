@@ -49,12 +49,17 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Basic validation
+    if (!loginForm.email.trim() || !loginForm.password.trim()) {
+      return; // Let HTML5 validation handle this
+    }
+
     // Save credentials if remember me is checked
     if (rememberMe) {
       localStorage.setItem(
         "savedLoginCredentials",
         JSON.stringify({
-          email: loginForm.email,
+          email: loginForm.email.trim(),
           password: loginForm.password,
           rememberMe: true,
         }),
@@ -63,7 +68,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       localStorage.removeItem("savedLoginCredentials");
     }
 
-    await onLogin(loginForm.email, loginForm.password);
+    try {
+      await onLogin(loginForm.email.trim(), loginForm.password);
+    } catch (error) {
+      console.error("Login form error:", error);
+    }
   };
 
   return (
