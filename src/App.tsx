@@ -6924,13 +6924,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Estado da Obra *
                           </label>
                           <select
+                            name="status"
                             defaultValue={editingWork?.status}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
-                            <option value="pendente">Pendente</option>
-                            <option value="em-progresso">Em Progresso</option>
-                            <option value="concluida">Concluída</option>
-                            <option value="cancelada">Cancelada</option>
+                            <option value="pending">Pendente</option>
+                            <option value="in_progress">Em Progresso</option>
+                            <option value="completed">Concluída</option>
+                            <option value="cancelled">Cancelada</option>
                           </select>
                         </div>
 
