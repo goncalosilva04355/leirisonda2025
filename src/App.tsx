@@ -41,6 +41,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { SyncStatusIcon } from "./components/SyncStatusIndicator";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
+import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -365,7 +366,7 @@ function App() {
       try {
         const user = JSON.parse(storedUser);
         console.log(
-          "�� App init: Restoring user from localStorage:",
+          "🔄 App init: Restoring user from localStorage:",
           user.email,
         );
         setCurrentUser(user);
@@ -1687,7 +1688,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "admin",
       icon: Shield,
-      label: "Administra��ão",
+      label: "Administração",
       path: "/admin",
       requiresAuth: true,
     },
@@ -2975,7 +2976,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����� {maint.clientContact}
+                                        ���� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -6846,7 +6847,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             type="text"
                             defaultValue={editingWork?.client}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: Jo��o Silva"
+                            placeholder="Ex: João Silva"
                             required
                           />
                         </div>
@@ -8125,7 +8126,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observações e próxima manutenç��o</span>
+                  <span>Observações e próxima manutenção</span>
                 </div>
               </div>
             </div>
