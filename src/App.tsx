@@ -2775,7 +2775,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Manutenções
+                          Manuten��ões
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Histórico de manutenções realizadas
@@ -6178,7 +6178,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             {(client as any).notes && (
                               <div className="mt-3 p-3 bg-gray-50 rounded-lg">
                                 <p className="text-sm text-gray-600">
-                                  <strong>Notas:</strong> {client.notes}
+                                  <strong>Notas:</strong>{" "}
+                                  {(client as any).notes}
                                 </p>
                               </div>
                             )}
@@ -7410,7 +7411,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenção">Em Manutenç��o</option>
+                          <option value="Em Manutenção">Em Manutenç���o</option>
                         </select>
                       </div>
                       <div>
