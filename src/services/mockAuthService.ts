@@ -111,7 +111,8 @@ class MockAuthService {
     }
 
     this.currentUser = user;
-    localStorage.setItem("mock-current-user", JSON.stringify(user));
+
+    // Firebase will handle persistence automatically
 
     return { success: true, user };
   }
