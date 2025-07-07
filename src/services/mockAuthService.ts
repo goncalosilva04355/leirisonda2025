@@ -44,7 +44,7 @@ class MockAuthService {
         localStorage.setItem("mock-users", JSON.stringify(this.users));
       }
     } else {
-      // Initialize with only real admin user - NO MOCK DATA
+      // Initialize with only real admin user
       this.users = [
         {
           uid: "admin-1",
@@ -83,9 +83,9 @@ class MockAuthService {
     // Create new user
     const newUser: MockUser = {
       uid: `mock-${Date.now()}`,
-      email,
-      password, // Store password
-      name,
+      email: email.trim(),
+      password: password.trim(), // Store password without spaces
+      name: name.trim(),
       role,
       active: true,
       createdAt: new Date().toISOString(),
@@ -113,10 +113,13 @@ class MockAuthService {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
+    // Basic logging for troubleshooting
+    console.log("🔐 Login attempt for:", email.trim().toLowerCase());
+
     const user = this.users.find(
       (u) =>
         u.email.toLowerCase() === email.trim().toLowerCase() &&
-        u.password === password &&
+        u.password === password.trim() &&
         u.active,
     );
 
@@ -125,6 +128,7 @@ class MockAuthService {
       const userExists = this.users.find(
         (u) => u.email.toLowerCase() === email.trim().toLowerCase(),
       );
+
       if (userExists && !userExists.active) {
         return { success: false, error: "Conta desativada" };
       } else if (userExists) {
