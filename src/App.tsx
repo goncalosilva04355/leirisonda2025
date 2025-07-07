@@ -746,7 +746,7 @@ function App() {
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
-      console.log("🔐 Password length:", loginForm.password?.length || 0);
+      console.log("�� Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
         loginForm.email,
@@ -5370,10 +5370,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 )}
 
 
-                          <p className="text-blue-700 text-sm mb-3">
-                            Receba notificações quando uma nova obra for
-                            atribuída a si.
-                          </p>
+
                           <button
                             onClick={() => {
                               if ("Notification" in window) {
@@ -6650,7 +6647,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.budget && (
                                 <div>
                                   <span className="font-medium">
-                                    Orçamento:
+                                    Or��amento:
                                   </span>{" "}
                                   €{work.budget}
                                 </div>
