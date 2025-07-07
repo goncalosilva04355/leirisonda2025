@@ -44,6 +44,7 @@ type AdminSection =
   | "cross-device-users"
   | "auto-sync-demo"
   | "phone-settings"
+  | "mobile-settings"
   | "data-recovery";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
