@@ -246,7 +246,7 @@ export const UserManagement: React.FC = () => {
 
     if (!formData.name || !formData.email || !formData.password) {
       console.log("❌ Missing required fields");
-      alert("Por favor, preencha todos os campos obrigatórios.");
+      setCreateError("Por favor, preencha todos os campos obrigatórios.");
       return;
     }
 
@@ -254,13 +254,13 @@ export const UserManagement: React.FC = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       console.log("❌ Invalid email format");
-      alert("Por favor, insira um email válido.");
+      setCreateError("Por favor, insira um email válido.");
       return;
     }
 
     if (formData.password.length < 6) {
       console.log("❌ Password too short");
-      alert("Password deve ter pelo menos 6 caracteres.");
+      setCreateError("Password deve ter pelo menos 6 caracteres.");
       return;
     }
 
@@ -271,7 +271,7 @@ export const UserManagement: React.FC = () => {
       )
     ) {
       console.log("❌ Email already exists in local users");
-      alert("Já existe um utilizador com este email.");
+      setCreateError("Já existe um utilizador com este email.");
       return;
     }
 
@@ -285,7 +285,7 @@ export const UserManagement: React.FC = () => {
         )
       ) {
         console.log("❌ Email already exists in auth service");
-        alert("Este email já está registado no sistema.");
+        setCreateError("Este email já está registado no sistema.");
         return;
       }
     } catch (error) {
