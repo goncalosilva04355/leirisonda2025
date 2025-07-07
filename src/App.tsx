@@ -836,7 +836,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      console.log("�� Initiating logout process...");
+      console.log("🚪 Initiating logout process...");
 
       // Close sidebar immediately
       setSidebarOpen(false);
@@ -860,7 +860,7 @@ function App() {
       // Perform actual logout
       await authService.logout();
 
-      console.log("��� Logout completed successfully - redirected to login");
+      console.log("✅ Logout completed successfully - redirected to login");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -1235,7 +1235,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n����� Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n����� Atribu�����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -2128,7 +2128,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 )}
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    🔧 Trabalho:
+                                    �� Trabalho:
                                   </span>
                                   <span className="text-sm text-gray-900">
                                     {work.workPerformed ||
@@ -3937,7 +3937,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações
+                            Observa��ões
                           </label>
                           <textarea
                             rows={3}
@@ -4200,7 +4200,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condições do terreno"]',
+                                    'textarea[placeholder*="Condi��ões do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
