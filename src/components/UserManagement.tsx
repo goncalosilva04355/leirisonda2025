@@ -413,6 +413,10 @@ export const UserManagement: React.FC = () => {
     ) {
       const updatedUsers = users.filter((user) => user.id !== userId);
       saveUsers(updatedUsers);
+
+      // Dispatch event to notify other components that users were updated
+      window.dispatchEvent(new CustomEvent("usersUpdated"));
+      console.log("📢 usersUpdated event dispatched after user deletion");
     }
   };
 
@@ -422,6 +426,10 @@ export const UserManagement: React.FC = () => {
       user.id === userId ? { ...user, active: !user.active } : user,
     );
     saveUsers(updatedUsers);
+
+    // Dispatch event to notify other components that users were updated
+    window.dispatchEvent(new CustomEvent("usersUpdated"));
+    console.log("📢 usersUpdated event dispatched after user status change");
   };
 
   // Toggle password visibility
