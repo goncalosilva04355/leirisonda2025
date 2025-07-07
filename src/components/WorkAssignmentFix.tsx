@@ -433,16 +433,17 @@ export const WorkAssignmentFix: React.FC = () => {
                   </h4>
                   <p className="text-sm text-orange-700 mt-1">
                     Só existe {usersAnalysis.appUsers.length} utilizador(es) no
-                    sistema. Para atribuir obras a diferentes pessoas, precisa
-                    de criar mais utilizadores.
+                    sistema. Para atribuir obras a diferentes colaboradores,
+                    precisa de criar mais utilizadores.
                   </p>
                   <p className="text-sm text-orange-700 mt-1">
-                    Vá a{" "}
+                    <strong>Solução:</strong> Vá a{" "}
                     <strong>
                       Configurações → Área de Administração → Gestão de
                       Utilizadores
                     </strong>{" "}
-                    para criar novos utilizadores.
+                    e crie contas para os seus colaboradores (técnicos,
+                    gestores, etc.).
                   </p>
                 </div>
               </div>
