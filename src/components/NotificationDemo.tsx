@@ -19,14 +19,18 @@ export const NotificationDemo: React.FC = () => {
     // Simular criação de trabalho
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Notificar criação com atribuição
-    notifyWorkCreated(
-      "Limpeza de Piscina Villa Marina",
-      ["João Silva", "Maria Santos"],
-      "Gonçalo Fonseca",
-      "Villa Marina Resort",
-      "Cascais",
-      "2024-01-15",
+    // Disparar evento simples para notificação
+    window.dispatchEvent(
+      new CustomEvent("worksUpdated", {
+        detail: {
+          type: "assignment",
+          workId: `work-${Date.now()}`,
+          workTitle: "Limpeza de Piscina Villa Marina",
+          client: "Villa Marina Resort",
+          location: "Cascais",
+          startDate: "2024-01-15",
+        },
+      }),
     );
 
     setIsLoading(false);
