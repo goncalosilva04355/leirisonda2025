@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Bell,
   CheckCircle,
@@ -60,9 +60,8 @@ export const WorkAssignmentNotifications: React.FC<
   const [notifications, setNotifications] = useState<WorkNotification[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const previousWorksRef = useRef<Work[]>([]);
 
-  // Carregar notificações salvas do usuário
+  // Carregar notificações salvas do usuário - SEM LOOPS
   useEffect(() => {
     if (!currentUser) return;
 
@@ -73,212 +72,65 @@ export const WorkAssignmentNotifications: React.FC<
       try {
         const parsed = JSON.parse(savedNotifications);
         setNotifications(parsed);
-        updateUnreadCount(parsed);
+        const unread = parsed.filter((n: WorkNotification) => !n.read).length;
+        setUnreadCount(unread);
       } catch (error) {
         console.error("Erro ao carregar notificações:", error);
       }
     }
-  }, [currentUser]);
+  }, [currentUser?.uid]); // Apenas UID como dependência
 
-  // Setup inicial - carregar estado apenas uma vez
+  // Listener para eventos de trabalho - SEM LOOPS
   useEffect(() => {
     if (!currentUser) return;
 
-    // Carregar estado inicial sem monitoramento
-    const initialWorksData = localStorage.getItem("works");
-    if (initialWorksData) {
-      try {
-        const initialWorks = JSON.parse(initialWorksData);
-        previousWorksRef.current = initialWorks;
-      } catch (error) {
-        console.error("Erro ao carregar trabalhos iniciais:", error);
-      }
-    }
-  }, [currentUser]);
+    const handleWorkEvent = (event: CustomEvent) => {
+      const { type, workId, workTitle, client, location, startDate } =
+        event.detail;
 
-  // Monitorar mudanças - SEM dependências que causam loops
-  useEffect(() => {
-    if (!currentUser) return;
+      if (type === "assignment") {
+        // Criar notificação simples
+        const notification: WorkNotification = {
+          id: `${workId}-${Date.now()}`,
+          workId,
+          workTitle,
+          client: client || "Cliente",
+          location: location || "Local",
+          startDate: startDate || new Date().toISOString(),
+          type: "new_assignment",
+          timestamp: Date.now(),
+          read: false,
+          urgent: false,
+        };
 
-    const handleWorksChange = () => {
-      try {
-        const worksData = localStorage.getItem("works");
-        if (!worksData) return;
-
-        const currentWorks: Work[] = JSON.parse(worksData);
-        const previousWorks = previousWorksRef.current;
-
-        // Se não há trabalhos anteriores, salvar o estado atual e sair
-        if (previousWorks.length === 0) {
-          previousWorksRef.current = currentWorks;
-          return;
-        }
-
-        // Detectar novos trabalhos atribuídos ao usuário atual
-        checkForNewAssignments(currentWorks, previousWorks, currentUser);
-
-        // Detectar mudanças em trabalhos existentes
-        checkForAssignmentUpdates(currentWorks, previousWorks, currentUser);
-
-        // Atualizar estado anterior
-        previousWorksRef.current = currentWorks;
-      } catch (error) {
-        console.error("Erro ao processar mudanças de trabalhos:", error);
+        setNotifications((prev) => {
+          const updated = [notification, ...prev.slice(0, 19)];
+          localStorage.setItem(
+            `work-notifications-${currentUser.uid}`,
+            JSON.stringify(updated),
+          );
+          setUnreadCount(updated.filter((n) => !n.read).length);
+          showSimpleToast(notification);
+          return updated;
+        });
       }
     };
 
-    // Listener para mudanças no localStorage
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "works") {
-        handleWorksChange();
-      }
-    };
-
-    // Listener customizado para atualizações
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("worksUpdated", handleWorksChange);
+    window.addEventListener("worksUpdated", handleWorkEvent as EventListener);
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("worksUpdated", handleWorksChange);
-    };
-  }, []); // VAZIO - sem dependências que mudam
-
-  const checkForNewAssignments = (
-    currentWorks: Work[],
-    previousWorks: Work[],
-    user: User,
-  ) => {
-    currentWorks.forEach((work) => {
-      const previousWork = previousWorks.find((w) => w.id === work.id);
-
-      // Se é um trabalho completamente novo
-      if (!previousWork) {
-        if (isAssignedToUser(work, user)) {
-          addNotification({
-            workId: work.id,
-            workTitle: work.title,
-            client: work.client,
-            location: work.location,
-            startDate: work.startDate,
-            type: "new_assignment",
-            urgent: isUrgentWork(work),
-          });
-        }
-        return;
-      }
-
-      // Se é um trabalho existente que agora foi atribuído ao usuário
-      const wasAssigned = isAssignedToUser(previousWork, user);
-      const isNowAssigned = isAssignedToUser(work, user);
-
-      if (!wasAssigned && isNowAssigned) {
-        addNotification({
-          workId: work.id,
-          workTitle: work.title,
-          client: work.client,
-          location: work.location,
-          startDate: work.startDate,
-          type: "new_assignment",
-          urgent: isUrgentWork(work),
-        });
-      }
-    });
-  };
-
-  const checkForAssignmentUpdates = (
-    currentWorks: Work[],
-    previousWorks: Work[],
-    user: User,
-  ) => {
-    currentWorks.forEach((work) => {
-      const previousWork = previousWorks.find((w) => w.id === work.id);
-      if (!previousWork || !isAssignedToUser(work, user)) return;
-
-      // Verificar mudanças importantes
-      const hasImportantChanges =
-        work.startDate !== previousWork.startDate ||
-        work.location !== previousWork.location ||
-        work.status !== previousWork.status ||
-        work.description !== previousWork.description;
-
-      if (hasImportantChanges) {
-        addNotification({
-          workId: work.id,
-          workTitle: work.title,
-          client: work.client,
-          location: work.location,
-          startDate: work.startDate,
-          type: "assignment_updated",
-          urgent: work.status === "cancelled",
-        });
-      }
-    });
-  };
-
-  const isAssignedToUser = (work: Work, user: User): boolean => {
-    // Verificar se está no assignedTo (string)
-    if (work.assignedTo?.toLowerCase().includes(user.name.toLowerCase())) {
-      return true;
-    }
-
-    // Verificar se está na lista assignedUsers
-    if (work.assignedUsers && work.assignedUsers.length > 0) {
-      return work.assignedUsers.some(
-        (assignedUser) =>
-          assignedUser.name.toLowerCase() === user.name.toLowerCase() ||
-          assignedUser.id === user.uid,
+      window.removeEventListener(
+        "worksUpdated",
+        handleWorkEvent as EventListener,
       );
-    }
-
-    // Verificar se está na lista assignedUserIds
-    if (work.assignedUserIds && work.assignedUserIds.length > 0) {
-      return work.assignedUserIds.includes(user.uid);
-    }
-
-    return false;
-  };
-
-  const isUrgentWork = (work: Work): boolean => {
-    if (!work.startDate) return false;
-
-    const startDate = new Date(work.startDate);
-    const now = new Date();
-    const timeDiff = startDate.getTime() - now.getTime();
-    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-
-    // Urgente se começar em menos de 2 dias
-    return daysDiff <= 2 && daysDiff >= 0;
-  };
-
-  const addNotification = (
-    notificationData: Omit<WorkNotification, "id" | "timestamp" | "read">,
-  ) => {
-    const notification: WorkNotification = {
-      ...notificationData,
-      id: `${notificationData.workId}-${Date.now()}`,
-      timestamp: Date.now(),
-      read: false,
     };
+  }, [currentUser?.uid]); // Apenas UID como dependência
 
-    setNotifications((prev) => {
-      const updated = [notification, ...prev.slice(0, 19)]; // Manter apenas 20 notificações
-      saveNotifications(updated);
-      updateUnreadCount(updated);
-
-      // Mostrar toast de notificação
-      showToastNotification(notification);
-
-      return updated;
-    });
-  };
-
-  const showToastNotification = (notification: WorkNotification) => {
-    // Criar toast notification temporário
+  const showSimpleToast = (notification: WorkNotification) => {
+    // Toast simples sem dependências complexas
     const toast = document.createElement("div");
-    toast.className = `fixed top-4 right-4 z-50 bg-blue-600 text-white p-4 rounded-lg shadow-lg max-w-sm transition-all duration-300 ${
-      notification.urgent ? "bg-red-600" : "bg-blue-600"
-    }`;
+    toast.className =
+      "fixed top-4 right-4 z-50 bg-blue-600 text-white p-4 rounded-lg shadow-lg max-w-sm";
 
     toast.innerHTML = `
       <div class="flex items-start space-x-3">
@@ -288,20 +140,16 @@ export const WorkAssignmentNotifications: React.FC<
           </svg>
         </div>
         <div class="flex-1">
-          <h4 class="font-semibold">${
-            notification.type === "new_assignment"
-              ? "🔔 Novo Trabalho Atribuído!"
-              : "📝 Trabalho Atualizado"
-          }</h4>
+          <h4 class="font-semibold">🔔 Novo Trabalho Atribuído!</h4>
           <p class="text-sm opacity-90">${notification.workTitle}</p>
-          <p class="text-xs opacity-75">${notification.client} • ${notification.location}</p>
+          <p class="text-xs opacity-75">${notification.client}</p>
         </div>
       </div>
     `;
 
     document.body.appendChild(toast);
 
-    // Remover após 5 segundos
+    // Auto-remove
     setTimeout(() => {
       toast.style.transform = "translateX(100%)";
       setTimeout(() => {
@@ -309,20 +157,7 @@ export const WorkAssignmentNotifications: React.FC<
           document.body.removeChild(toast);
         }
       }, 300);
-    }, 5000);
-  };
-
-  const saveNotifications = (notifications: WorkNotification[]) => {
-    if (!currentUser) return;
-    localStorage.setItem(
-      `work-notifications-${currentUser.uid}`,
-      JSON.stringify(notifications),
-    );
-  };
-
-  const updateUnreadCount = (notifications: WorkNotification[]) => {
-    const count = notifications.filter((n) => !n.read).length;
-    setUnreadCount(count);
+    }, 4000);
   };
 
   const markAsRead = (notificationId: string) => {
@@ -330,8 +165,13 @@ export const WorkAssignmentNotifications: React.FC<
       const updated = prev.map((n) =>
         n.id === notificationId ? { ...n, read: true } : n,
       );
-      saveNotifications(updated);
-      updateUnreadCount(updated);
+      if (currentUser) {
+        localStorage.setItem(
+          `work-notifications-${currentUser.uid}`,
+          JSON.stringify(updated),
+        );
+      }
+      setUnreadCount(updated.filter((n) => !n.read).length);
       return updated;
     });
   };
@@ -339,8 +179,13 @@ export const WorkAssignmentNotifications: React.FC<
   const markAllAsRead = () => {
     setNotifications((prev) => {
       const updated = prev.map((n) => ({ ...n, read: true }));
-      saveNotifications(updated);
-      updateUnreadCount(updated);
+      if (currentUser) {
+        localStorage.setItem(
+          `work-notifications-${currentUser.uid}`,
+          JSON.stringify(updated),
+        );
+      }
+      setUnreadCount(0);
       return updated;
     });
   };
@@ -348,8 +193,13 @@ export const WorkAssignmentNotifications: React.FC<
   const deleteNotification = (notificationId: string) => {
     setNotifications((prev) => {
       const updated = prev.filter((n) => n.id !== notificationId);
-      saveNotifications(updated);
-      updateUnreadCount(updated);
+      if (currentUser) {
+        localStorage.setItem(
+          `work-notifications-${currentUser.uid}`,
+          JSON.stringify(updated),
+        );
+      }
+      setUnreadCount(updated.filter((n) => !n.read).length);
       return updated;
     });
   };
@@ -365,19 +215,6 @@ export const WorkAssignmentNotifications: React.FC<
     if (hours > 0) return `${hours}h atrás`;
     if (minutes > 0) return `${minutes}m atrás`;
     return "Agora";
-  };
-
-  const getNotificationIcon = (type: string) => {
-    switch (type) {
-      case "new_assignment":
-        return <Briefcase className="w-5 h-5 text-blue-600" />;
-      case "assignment_updated":
-        return <AlertCircle className="w-5 h-5 text-yellow-600" />;
-      case "assignment_cancelled":
-        return <X className="w-5 h-5 text-red-600" />;
-      default:
-        return <Bell className="w-5 h-5 text-gray-600" />;
-    }
   };
 
   if (!currentUser) return null;
@@ -442,24 +279,12 @@ export const WorkAssignmentNotifications: React.FC<
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-3 flex-1">
                       <div className="flex-shrink-0 mt-1">
-                        {getNotificationIcon(notification.type)}
+                        <Briefcase className="w-5 h-5 text-blue-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="text-sm font-medium text-gray-900">
-                            {notification.type === "new_assignment" &&
-                              "🆕 Novo Trabalho"}
-                            {notification.type === "assignment_updated" &&
-                              "📝 Atualização"}
-                            {notification.type === "assignment_cancelled" &&
-                              "❌ Cancelado"}
-                          </h4>
-                          {notification.urgent && (
-                            <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium">
-                              Urgente
-                            </span>
-                          )}
-                        </div>
+                        <h4 className="text-sm font-medium text-gray-900 mb-1">
+                          🆕 Novo Trabalho
+                        </h4>
                         <p className="text-sm text-gray-900 font-medium">
                           {notification.workTitle}
                         </p>
@@ -471,12 +296,6 @@ export const WorkAssignmentNotifications: React.FC<
                           <span className="flex items-center gap-1">
                             <MapPin className="w-3 h-3" />
                             {notification.location}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            {new Date(
-                              notification.startDate,
-                            ).toLocaleDateString("pt-PT")}
                           </span>
                         </div>
                         <p className="text-xs text-gray-400 mt-1">
