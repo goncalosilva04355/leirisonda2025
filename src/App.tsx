@@ -249,7 +249,7 @@ function App() {
     // Initialize with default admin user only
     setUsers([
       {
-        id: "1",
+        id: 1,
         name: "Gonçalo Fonseca",
         email: "gongonsilva@gmail.com",
         active: true,
@@ -2894,7 +2894,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���� {maint.clientContact}
+                                        ������ {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
