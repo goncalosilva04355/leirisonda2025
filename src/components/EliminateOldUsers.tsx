@@ -35,14 +35,23 @@ const EliminateOldUsers: React.FC = () => {
       <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-600 mb-4">
-            🚨 Eliminando Usuários Antigos
+            🎯 Eliminando Usuários Específicos
           </h2>
+
+          <div className="mb-4 text-sm text-gray-600">
+            <p>📧 Alvos identificados:</p>
+            <ul className="list-disc list-inside mt-1">
+              <li>yrzamr01@gmail.com</li>
+              <li>alexkamaryta@gmail.com</li>
+              <li>davidcarreiraa92@gmail.com</li>
+            </ul>
+          </div>
 
           {isExecuting && (
             <div className="mb-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
               <p className="text-gray-700">
-                Executando limpeza nuclear... Por favor aguarde.
+                Eliminando usuários específicos... Por favor aguarde.
               </p>
             </div>
           )}
