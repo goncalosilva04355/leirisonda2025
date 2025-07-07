@@ -25,8 +25,8 @@ const getFirebaseConfig = () => {
 // Function to save Firebase config to localStorage
 export const saveFirebaseConfig = (config: any) => {
   try {
-    localStorage.setItem("firebase-config", JSON.stringify(config));
-    console.log("🔧 Firebase: Configuration saved to localStorage");
+    // Firebase config handled automatically - no localStorage needed
+    console.log("🔧 Firebase: Configuration using default settings");
     return true;
   } catch (error) {
     console.error("�� Firebase: Error saving config to localStorage:", error);
