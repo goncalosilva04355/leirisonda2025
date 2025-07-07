@@ -34,7 +34,7 @@ import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
-import { SyncStatusIcon } from "./components/SyncStatusIndicator";
+// import { SyncStatusIcon } from "./components/SyncStatusIndicator";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 
 // SECURITY: RegisterForm removed - only super admin can create users
