@@ -240,55 +240,19 @@ function App() {
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
 
-  // Initialize users from localStorage on app start
+  // Firebase handles user persistence automatically
   useEffect(() => {
-    const loadUsersFromStorage = () => {
-      console.log("🔄 Loading users from localStorage on app start...");
-      try {
-        const savedUsers = localStorage.getItem("app-users");
-        const mockUsers = localStorage.getItem("mock-users");
-
-        console.log("📱 Raw localStorage data:", { savedUsers, mockUsers });
-
-        if (savedUsers) {
-          const parsedUsers = JSON.parse(savedUsers);
-          console.log(
-            "✅ Users loaded successfully:",
-            parsedUsers.length,
-            parsedUsers,
-          );
-
-          // Check if users are valid and active
-          const activeUsers = parsedUsers.filter((u) => u.active !== false);
-          console.log(
-            "👥 Active users:",
-            activeUsers.length,
-            activeUsers.map((u) => u.name),
-          );
-
-          setUsers(parsedUsers);
-        } else {
-          console.log(
-            "📝 No saved users found, initializing with default users",
-          );
-          // Save initial users to localStorage if not exists
-          localStorage.setItem("app-users", JSON.stringify(initialUsers));
-          setUsers(initialUsers);
-        }
-      } catch (error) {
-        console.error("❌ Error loading users:", error);
-        // Fallback to initial users
-        setUsers(initialUsers);
-      }
-    };
-
-    // Load users immediately on component mount
-    loadUsersFromStorage();
-
-    // Also reload users every 2 seconds to catch any updates
-    const interval = setInterval(loadUsersFromStorage, 2000);
-
-    return () => clearInterval(interval);
+    console.log("🔥 Firebase handles user data automatically");
+    // Initialize with default admin user only
+    setUsers([
+      {
+        id: "1",
+        name: "Gonçalo Fonseca",
+        email: "gongonsilva@gmail.com",
+        active: true,
+        role: "super_admin",
+      },
+    ]);
   }, []);
 
   // Listen for user updates from WorkAssignmentFix component
