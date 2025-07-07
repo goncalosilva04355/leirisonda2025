@@ -1148,7 +1148,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n���� Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1364,7 +1364,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         window.open(mapsUrl, "_blank");
         console.log("✅ Google Maps opened successfully");
       } catch (error) {
-        console.error("❌ Error opening Google Maps:", error);
+        console.error("��� Error opening Google Maps:", error);
       }
     } else {
       if (!enableMapsRedirect) {
@@ -4068,7 +4068,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             location: location || "",
                             startTime: startTime || "",
                             endTime: endTime || "",
-                            status: status || "pending",
+                            status:
+                              (status as
+                                | "pending"
+                                | "in_progress"
+                                | "completed"
+                                | "cancelled") || "pending",
                             description: description || "",
                             ...boreData, // Spread bore-specific data if applicable
                             budget: budget ? parseFloat(budget) : null,
@@ -5816,7 +5821,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Relatório consolidado de todo o sistema
+                        Relat��rio consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
