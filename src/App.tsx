@@ -249,14 +249,27 @@ function App() {
       console.log("🔄 Loading users from localStorage on app start...");
       try {
         const savedUsers = localStorage.getItem("app-users");
+        const mockUsers = localStorage.getItem("mock-users");
+
+        console.log("📱 Raw localStorage data:", { savedUsers, mockUsers });
+
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
-          setUsers(parsedUsers);
           console.log(
             "✅ Users loaded successfully:",
             parsedUsers.length,
             parsedUsers,
           );
+
+          // Check if users are valid and active
+          const activeUsers = parsedUsers.filter((u) => u.active !== false);
+          console.log(
+            "👥 Active users:",
+            activeUsers.length,
+            activeUsers.map((u) => u.name),
+          );
+
+          setUsers(parsedUsers);
         } else {
           console.log(
             "📝 No saved users found, initializing with default users",
@@ -274,6 +287,11 @@ function App() {
 
     // Load users immediately on component mount
     loadUsersFromStorage();
+
+    // Also reload users every 2 seconds to catch any updates
+    const interval = setInterval(loadUsersFromStorage, 2000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Listen for user updates from WorkAssignmentFix component
@@ -5794,7 +5812,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📋 Trabalhos realizados</li>
-                        <li>• Técnicos responsáveis</li>
+                        <li>�� Técnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -6275,7 +6293,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente à base de dados
+                        Adicionar cliente �� base de dados
                       </p>
                     </div>
                   </div>
@@ -7685,7 +7703,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenção">Manutenção</option>
-                          <option value="Reparação">Reparação</option>
+                          <option value="Reparaç��o">Reparação</option>
                         </select>
                       </div>
                       <div>
