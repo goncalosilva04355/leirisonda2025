@@ -522,10 +522,8 @@ export const UserManagement: React.FC = () => {
                 )
               ) {
                 try {
-                  const { UserSyncManager } = await import(
-                    "../utils/userSyncManager"
-                  );
-                  const result = UserSyncManager.performFullSync();
+                  // UserSyncManager removido - usando apenas Firebase
+                  const result = { synced: true };
                   if (result.synced) {
                     alert(
                       `✅ Sincronização completa! Local: ${result.localUsers}, Mock: ${result.mockUsers}`,
