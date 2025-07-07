@@ -73,6 +73,19 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
 
   useEffect(() => {
     checkPermission();
+
+    // Verificar permissões quando a página se torna visível
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        checkPermission();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   // Auto-refresh location
