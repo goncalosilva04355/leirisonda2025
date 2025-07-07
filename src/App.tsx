@@ -37,6 +37,8 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+import { SharedDataManager } from "./components/SharedDataManager";
+import { DataSharingFixManager } from "./components/DataSharingFixManager";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -142,6 +144,7 @@ function App() {
   const [settingsPassword, setSettingsPassword] = useState("");
   const [settingsPasswordError, setSettingsPasswordError] = useState("");
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
+  const [showDataSharingFix, setShowDataSharingFix] = useState(false);
   const [advancedPassword, setAdvancedPassword] = useState("");
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
@@ -864,7 +867,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "🔧 Forced logout state clear completed - redirected to login",
+        "�� Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -5439,7 +5442,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                   );
                                 }
                               } else {
@@ -5490,7 +5493,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As notificações funcionam apenas com HTTPS
+                              • As notificaç��es funcionam apenas com HTTPS
                             </li>
                             <li>
                               • Certifique-se de que permite notifica��ões no
@@ -5785,7 +5788,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenções
+                        <strong>{maintenance.length}</strong> manutenç��es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -8586,6 +8589,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-sm text-gray-500">{currentUser?.role}</p>
                   </div>
                 </div>
+                {/* Data Sharing Fix Button - Only for super admin */}
+                {currentUser?.role === "super_admin" && (
+                  <button
+                    onClick={() => setShowDataSharingFix(true)}
+                    className="w-full flex items-center space-x-3 px-4 py-2 mb-2 text-red-700 hover:bg-red-50 rounded-lg transition-colors border border-red-200"
+                  >
+                    <Share className="h-5 w-5" />
+                    <span>🚨 Resolver Partilha de Dados</span>
+                  </button>
+                )}
+
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
@@ -9074,6 +9088,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           {/* Install Prompt for Mobile */}
           <InstallPrompt />
+
+          {/* Data Sharing Fix Manager */}
+          {showDataSharingFix && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                <div className="flex items-center justify-between p-6 border-b">
+                  <h2 className="text-xl font-bold text-gray-900">
+                    🚨 Resolver Problema: Dados Não Partilhados Entre
+                    Utilizadores
+                  </h2>
+                  <button
+                    onClick={() => setShowDataSharingFix(false)}
+                    className="p-2 hover:bg-gray-100 rounded-lg"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                <div className="p-6">
+                  <DataSharingFixManager
+                    onClose={() => setShowDataSharingFix(false)}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Admin Login Modal */}
           {showAdminLogin && !isAdminAuthenticated && (
