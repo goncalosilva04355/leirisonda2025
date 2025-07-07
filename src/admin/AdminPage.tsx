@@ -25,6 +25,7 @@ import { AutoSyncDemo } from "../components/AutoSyncDemo";
 import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
+import { MobileSettings } from "../components/MobileSettings";
 
 interface AdminPageProps {
   onLogout: () => void;
