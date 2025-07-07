@@ -11,6 +11,7 @@ import {
   Wifi,
   RefreshCw,
   Smartphone,
+  Zap,
 } from "lucide-react";
 
 // Import dos componentes de teste e configuração
@@ -233,6 +234,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
 
   const renderCurrentSection = () => {
     switch (currentSection) {
+      case "complete-activation":
+        return <CompleteDeviceActivation />;
       case "user-management":
         return <UserManagement />;
       case "work-assignment-fix":
