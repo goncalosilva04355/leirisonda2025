@@ -5107,7 +5107,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Notifications Section */}
+                {/* Notifications Section - REMOVIDA CONFORME SOLICITADO
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <div className="flex items-center mb-4">
                     <Bell className="h-6 w-6 text-blue-600 mr-3" />
