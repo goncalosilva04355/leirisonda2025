@@ -22,10 +22,7 @@ export const useAutoSync = () => {
 
       if (hasAutoSynced) {
         setSyncStatus("completed");
-        const lastSyncTime = localStorage.getItem("last-full-sync");
-        if (lastSyncTime) {
-          setLastSync(new Date(lastSyncTime));
-        }
+        // Firebase handles sync timing automatically
         return;
       }
 
