@@ -74,41 +74,7 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
         }
       }
 
-      // Add some demo locations if no real data exists
-      if (locations.length === 0) {
-        locations = [
-          {
-            id: "demo-1",
-            name: "Gonçalo Fonseca",
-            email: "gongonsilva@gmail.com",
-            latitude: 38.7223,
-            longitude: -9.1393,
-            accuracy: 10,
-            timestamp: Date.now(),
-            address: "Lisboa, Portugal",
-          },
-          {
-            id: "demo-2",
-            name: "Técnico - João Santos",
-            email: "joao@leirisonda.pt",
-            latitude: 38.6979,
-            longitude: -9.2075,
-            accuracy: 15,
-            timestamp: Date.now() - 300000,
-            address: "Cascais, Portugal",
-          },
-          {
-            id: "demo-3",
-            name: "Manager - Maria Silva",
-            email: "maria@leirisonda.pt",
-            latitude: 38.7071,
-            longitude: -9.1689,
-            accuracy: 20,
-            timestamp: Date.now() - 600000,
-            address: "Oeiras, Portugal",
-          },
-        ];
-      }
+      // Only keep real user locations, no demo data
 
       setUserLocations(locations);
 
