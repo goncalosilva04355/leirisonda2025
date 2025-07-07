@@ -76,10 +76,10 @@ class AuthService {
       return { success: false, error: "Nome é obrigatório" };
     }
 
-    // Try Firebase first for cross-device access
-    if (auth && db) {
+    // Try Firebase first for cross-device access, but only if properly initialized
+    if (isFirebaseReady()) {
       console.log(
-        "Attempting Firebase registration for cross-device access...",
+        "🔥 Attempting Firebase registration for cross-device access...",
       );
       try {
         const result = await this.registerWithFirebase(
@@ -95,13 +95,25 @@ class AuthService {
           return result;
         }
       } catch (error: any) {
-        console.warn(
-          "Firebase registration failed, falling back to local:",
-          error,
-        );
+        // Check for quota exceeded
+        if (
+          error.message?.includes("quota") ||
+          error.message?.includes("resource-exhausted")
+        ) {
+          const { markQuotaExceeded } = await import("../firebase/config");
+          markQuotaExceeded();
+          console.warn(
+            "🚨 Firebase quota exceeded during registration, using local auth",
+          );
+        } else {
+          console.warn(
+            "⚠️ Firebase registration failed, falling back to local:",
+            error,
+          );
+        }
       }
     } else {
-      console.log("Firebase not available, using local auth");
+      console.log("📱 Firebase not ready, using local auth");
     }
 
     // Fallback to mock authentication (device-specific only)
@@ -382,7 +394,7 @@ class AuthService {
         console.log("🔐 Firebase auth error:", error.code);
       }
 
-      let errorMessage = "Credenciais inválidas";
+      let errorMessage = "Credenciais inv��lidas";
       if (error.code === "auth/user-not-found") {
         errorMessage = "Utilizador não encontrado";
       } else if (
