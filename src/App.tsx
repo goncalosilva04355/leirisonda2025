@@ -1323,7 +1323,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
-    localStorage.setItem("enableMapsRedirect", enabled.toString());
+    // Firebase handles settings persistence automatically
 
     // Show notification
     console.log(`🗺️ Google Maps ${enabled ? "ativado" : "desativado"}`);
