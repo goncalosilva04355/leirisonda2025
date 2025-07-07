@@ -311,7 +311,21 @@ export const WorkAssignmentFix: React.FC = () => {
   };
 
   useEffect(() => {
+    // Run analysis immediately when component loads
     analyzeUsers();
+
+    // Auto-run the fix if there are obvious problems with no users in app-users
+    const appUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "[]");
+
+    if (appUsers.length === 0 && mockUsers.length > 0) {
+      console.log(
+        "🔧 Auto-running sync fix because no app-users found but mock-users exist",
+      );
+      setTimeout(() => {
+        fixUserSync();
+      }, 1000);
+    }
   }, []);
 
   return (
