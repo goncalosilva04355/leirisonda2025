@@ -18,7 +18,7 @@ interface SyncStatus {
 export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   const defaultConfig: AutoSyncConfig = {
     enabled: true,
-    syncInterval: 15000, // 15 segundos - balance entre responsividade e quota
+    syncInterval: 300000, // 5 minutos - conservativo para evitar quota exceeded
     collections: ["users", "pools", "maintenance", "works", "clients"],
   };
 
