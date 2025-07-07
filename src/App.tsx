@@ -6166,7 +6166,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <p className="font-medium">Informações:</p>
-                                <p>Tipo: {client.type}</p>
+                                <p>Tipo: {(client as any).type}</p>
                                 <p>
                                   Cliente desde:{" "}
                                   {new Date(
