@@ -1139,7 +1139,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error("⚠️ Error requesting notification permission:", error);
+        console.error("���️ Error requesting notification permission:", error);
         return "error";
       }
     }
@@ -8210,7 +8210,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 (!isAuthenticated || !currentUser)
               ) {
                 console.log(
-                  "��� Access denied: User management requires authentication",
+                  "❌ Access denied: User management requires authentication",
                 );
                 setLoginError(
                   "Por favor, faça login primeiro para aceder à gestão de utilizadores",
@@ -8397,7 +8397,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   return (
     <AutoSyncProvider
-      enabled={quotaStatus.enabled}
+      enabled={false}
       syncInterval={syncInterval}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={true}
