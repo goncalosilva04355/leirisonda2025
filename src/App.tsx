@@ -448,7 +448,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("⚠�� Notifications not supported in this browser");
+      console.warn("⚠️ Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -6070,9 +6070,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           return waterBores.length;
                         })()}
                       </div>
-                      <div className="text-sm text-gray-600">
-                        Furos de ��gua
-                      </div>
+                      <div className="text-sm text-gray-600">Furos de Água</div>
                     </div>
                   </div>
                 </div>
@@ -7782,7 +7780,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Custo (��)
+                          Custo (€)
                         </label>
                         <input
                           type="number"
@@ -8352,7 +8350,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error) {
-              console.error("��� Login error:", error);
+              console.error("❌ Login error:", error);
               setLoginError("Erro de sistema. Por favor, tente novamente.");
             }
           }}
