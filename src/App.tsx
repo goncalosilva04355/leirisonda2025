@@ -1624,7 +1624,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 notificationPermission: Notification.permission,
                               };
                               console.log(
-                                "🔍 Alexandre Debug Info:",
+                                "���� Alexandre Debug Info:",
                                 debugInfo,
                               );
                               alert(
@@ -7873,8 +7873,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-sm text-gray-500">Gestão de Serviços</p>
                   </div>
                 </div>
-                {/* Sync Status Indicator */}
-                <SyncStatusIcon className="ml-2" />
+                {/* Sync Status Indicator - DISABLED */}
+                {/* <SyncStatusIcon className="ml-2" /> */}
                 {/* Close button for mobile */}
                 <button
                   onClick={() => setSidebarOpen(false)}
