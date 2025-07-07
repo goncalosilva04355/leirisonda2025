@@ -255,7 +255,7 @@ function App() {
       if (savedUsers) {
         const parsedUsers = JSON.parse(savedUsers);
         console.log(
-          "��� Users loaded successfully:",
+          "✅ Users loaded successfully:",
           parsedUsers.length,
           parsedUsers,
         );
@@ -301,7 +301,7 @@ function App() {
         localStorage.setItem("app-users", JSON.stringify(defaultUsers));
       }
     } catch (error) {
-      console.error("❌ Error loading users:", error);
+      console.error("��� Error loading users:", error);
       // Fallback to initial users
       setUsers(initialUsers);
     }
@@ -1878,7 +1878,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `�� ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
+                                  `📊 ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
                                 );
                               }
 
@@ -3504,7 +3504,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠️ Nenhum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Corre��ão de Atribuição de
+                                Administração �� "🔧 Corre��ão de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -9050,7 +9050,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         )}
       </div>
 
-      {/* Todas as notificações removidas conforme solicitado */}
+      {/* Proteção silenciosa de dados em segundo plano */}
+      <SilentDataProtection />
     </div>
   );
 }
