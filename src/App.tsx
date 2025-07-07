@@ -37,6 +37,7 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+import { SharedDataManager } from "./components/SharedDataManager";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
