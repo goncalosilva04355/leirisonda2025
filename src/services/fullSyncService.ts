@@ -127,13 +127,53 @@ class FullSyncService {
         };
       }
 
-      details.push(`❌ Erro na sincronização: ${error.message}`);
+      details.push(`�� Erro na sincronização: ${error.message}`);
       return {
         success: false,
         message: "Erro durante sincronização",
         details,
         stats,
       };
+    }
+  }
+
+  private async syncUsersWithQuotaProtection(): Promise<{
+    details: string[];
+    stats: { local: number; firebase: number; merged: number };
+  }> {
+    try {
+      return await this.syncUsers();
+    } catch (error: any) {
+      if (
+        error.message?.includes("quota") ||
+        error.message?.includes("resource-exhausted")
+      ) {
+        const { markQuotaExceeded } = await import("../firebase/config");
+        markQuotaExceeded();
+        throw error;
+      }
+      throw error;
+    }
+  }
+
+  private async syncCollectionWithQuotaProtection(
+    collectionName: string,
+  ): Promise<{
+    details: string[];
+    stats: { local: number; firebase: number; merged: number };
+  }> {
+    try {
+      return await this.syncCollection(collectionName);
+    } catch (error: any) {
+      if (
+        error.message?.includes("quota") ||
+        error.message?.includes("resource-exhausted")
+      ) {
+        const { markQuotaExceeded } = await import("../firebase/config");
+        markQuotaExceeded();
+        throw error;
+      }
+      throw error;
     }
   }
 
