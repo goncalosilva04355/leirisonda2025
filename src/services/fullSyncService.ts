@@ -33,14 +33,8 @@ class FullSyncService {
       clientsSync: { local: 0, firebase: 0, merged: 0 },
     };
 
-    // Firebase temporarily paused - running in offline mode
-    console.log("⏸️ Firebase sync paused - app running in offline mode");
-    return {
-      success: true,
-      message: "App running in offline mode",
-      details: ["Using local storage only - Firebase sync temporarily paused"],
-      stats,
-    };
+    // Firebase sync re-enabled for cross-device functionality
+    console.log("🔥 Firebase sync enabled - cross-device sync active");
 
     if (!db) {
       return {

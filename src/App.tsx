@@ -8227,27 +8227,55 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       <div>
         <LoginPage
           onLogin={async (email: string, password: string) => {
-            console.log("🔐 Login attempt:", email);
-            setLoginForm({ email, password });
+            console.log("🔐 Login attempt for:", email);
+
+            // Clear any previous errors
+            setLoginError("");
+
+            // Basic validation
+            if (!email?.trim() || !password?.trim()) {
+              setLoginError("Por favor, preencha todos os campos");
+              return;
+            }
 
             try {
-              const result = await authService.login(email, password);
+              const result = await authService.login(email.trim(), password);
+
+              console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
+                console.log("✅ Login successful for:", result.user.email);
+
+                // Update state
                 setCurrentUser(result.user);
                 setIsAuthenticated(true);
                 localStorage.setItem(
                   "currentUser",
                   JSON.stringify(result.user),
                 );
+                localStorage.setItem("isAuthenticated", "true");
+
+                // Clear login form
                 setLoginForm({ email: "", password: "" });
-                console.log("✅ Login successful");
+
+                // Navigate to dashboard or requested section
+                const hash = window.location.hash.substring(1);
+                if (hash && hash !== "login") {
+                  setActiveSection(hash);
+                } else {
+                  navigateToSection("dashboard");
+                }
+
+                console.log("✅ Login state updated successfully");
               } else {
+                console.warn("❌ Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
               }
-            } catch (error) {
+            } catch (error: any) {
               console.error("❌ Login error:", error);
-              setLoginError("Erro de sistema. Por favor, tente novamente.");
+              setLoginError(
+                "Erro de conexão. Verifique sua internet e tente novamente.",
+              );
             }
           }}
           loginError={loginError}

@@ -105,14 +105,33 @@ class MockAuthService {
     email: string,
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: MockUser }> {
+    // Validate inputs
+    if (!email?.trim() || !password?.trim()) {
+      return { success: false, error: "Email e password são obrigatórios" };
+    }
+
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     const user = this.users.find(
-      (u) => u.email === email && u.password === password && u.active,
+      (u) =>
+        u.email.toLowerCase() === email.trim().toLowerCase() &&
+        u.password === password &&
+        u.active,
     );
+
     if (!user) {
-      return { success: false, error: "Credenciais inválidas" };
+      // More specific error messages for debugging
+      const userExists = this.users.find(
+        (u) => u.email.toLowerCase() === email.trim().toLowerCase(),
+      );
+      if (userExists && !userExists.active) {
+        return { success: false, error: "Conta desativada" };
+      } else if (userExists) {
+        return { success: false, error: "Password incorreta" };
+      } else {
+        return { success: false, error: "Utilizador não encontrado" };
+      }
     }
 
     this.currentUser = user;

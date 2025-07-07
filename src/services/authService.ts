@@ -229,8 +229,14 @@ class AuthService {
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     // Validate inputs first
-    if (!email || !password) {
+    if (!email?.trim() || !password?.trim()) {
       return { success: false, error: "Email e password são obrigatórios" };
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return { success: false, error: "Por favor, insira um email válido" };
     }
 
     // Try Firebase first for cross-device access, but only if properly initialized

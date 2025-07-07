@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Settings } from "lucide-react";
+import { Settings, Bug, RefreshCw } from "lucide-react";
+import { LoginDebugger } from "../components/LoginDebugger";
+import { SyncDiagnostic } from "../components/SyncDiagnostic";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -17,9 +19,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     password: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
+  const [showDebugger, setShowDebugger] = useState(false);
+  const [showSyncDiagnostic, setShowSyncDiagnostic] = useState(false);
 
   // Load saved credentials on component mount
   useEffect(() => {
+    console.log("🔄 Loading saved credentials...");
     const savedCredentials = localStorage.getItem("savedLoginCredentials");
     if (savedCredentials) {
       try {
@@ -28,33 +33,60 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           password,
           rememberMe: savedRememberMe,
         } = JSON.parse(savedCredentials);
-        if (savedRememberMe) {
+
+        console.log("📋 Found saved credentials:", {
+          email,
+          hasPassword: !!password,
+          rememberMe: savedRememberMe,
+        });
+
+        if (savedRememberMe && email && password) {
           setLoginForm({ email: email || "", password: password || "" });
           setRememberMe(true);
 
           // Auto-login if credentials are saved and rememberMe is true
-          if (email && password) {
-            setTimeout(() => {
-              onLogin(email, password);
-            }, 500);
-          }
+          console.log("🔄 Attempting auto-login...");
+          setTimeout(async () => {
+            try {
+              await onLogin(email, password);
+              console.log("✅ Auto-login successful");
+            } catch (error) {
+              console.error("❌ Auto-login failed:", error);
+              // Don't clear credentials on auto-login failure
+            }
+          }, 800);
+        } else {
+          console.log("⚠️ Incomplete saved credentials, skipping auto-login");
         }
       } catch (error) {
-        console.error("Error loading saved credentials:", error);
+        console.error("❌ Error loading saved credentials:", error);
         localStorage.removeItem("savedLoginCredentials");
       }
+    } else {
+      console.log("📭 No saved credentials found");
     }
   }, [onLogin]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log("🚀 LoginPage: Form submitted");
+    console.log("📧 Email:", loginForm.email);
+    console.log("🔐 Password length:", loginForm.password?.length || 0);
+
+    // Basic validation
+    if (!loginForm.email.trim() || !loginForm.password.trim()) {
+      console.warn("❌ LoginPage: Empty fields detected");
+      return; // Let HTML5 validation handle this
+    }
+
     // Save credentials if remember me is checked
     if (rememberMe) {
+      console.log("💾 Saving credentials to localStorage");
       localStorage.setItem(
         "savedLoginCredentials",
         JSON.stringify({
-          email: loginForm.email,
+          email: loginForm.email.trim(),
           password: loginForm.password,
           rememberMe: true,
         }),
@@ -63,7 +95,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       localStorage.removeItem("savedLoginCredentials");
     }
 
-    await onLogin(loginForm.email, loginForm.password);
+    try {
+      console.log("📤 LoginPage: Calling onLogin function...");
+      await onLogin(loginForm.email.trim(), loginForm.password);
+      console.log("✅ LoginPage: onLogin completed");
+    } catch (error) {
+      console.error("❌ LoginPage: Login form error:", error);
+    }
   };
 
   return (
@@ -96,6 +134,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               required
               disabled={isLoading}
               autoComplete="email"
+              placeholder="exemplo@email.com"
             />
           </div>
 
@@ -113,6 +152,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               required
               disabled={isLoading}
               autoComplete="current-password"
+              placeholder="Digite sua senha"
             />
           </div>
 
@@ -136,7 +176,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
           {/* Error Message */}
           {loginError && (
-            <div className="text-red-600 text-sm text-center bg-red-50 p-2 rounded">
+            <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded border border-red-200">
+              <strong>Erro de Login:</strong>
+              <br />
               {loginError}
             </div>
           )}
@@ -150,6 +192,26 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             >
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
+
+            {/* Quick Test Login - Only show in development */}
+            {window.location.hostname === "localhost" && (
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginForm({
+                    email: "gongonsilva@gmail.com",
+                    password: "19867gsf",
+                  });
+                  setTimeout(() => {
+                    onLogin("gongonsilva@gmail.com", "19867gsf");
+                  }, 100);
+                }}
+                disabled={isLoading}
+                className="w-full bg-green-600 text-white py-1 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+              >
+                🧪 Login Teste (Admin)
+              </button>
+            )}
           </div>
         </form>
       </div>
@@ -163,6 +225,38 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       >
         <Settings className="h-5 w-5" />
       </button>
+
+      {/* Debug Button (Bottom Left) */}
+      <button
+        onClick={() => setShowDebugger(true)}
+        className="fixed bottom-4 left-4 w-12 h-12 bg-orange-500 border border-orange-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-orange-600 hover:shadow-xl transition-all duration-200 hover:scale-105"
+        disabled={isLoading}
+        title="Debug Login"
+      >
+        <Bug className="h-5 w-5" />
+      </button>
+
+      {/* Sync Diagnostic Button (Bottom Left, second button) */}
+      <button
+        onClick={() => setShowSyncDiagnostic(true)}
+        className="fixed bottom-4 left-20 w-12 h-12 bg-purple-500 border border-purple-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-purple-600 hover:shadow-xl transition-all duration-200 hover:scale-105"
+        disabled={isLoading}
+        title="Diagnóstico de Sincronização"
+      >
+        <RefreshCw className="h-5 w-5" />
+      </button>
+
+      {/* Login Debugger */}
+      <LoginDebugger
+        isVisible={showDebugger}
+        onClose={() => setShowDebugger(false)}
+      />
+
+      {/* Sync Diagnostic */}
+      <SyncDiagnostic
+        isVisible={showSyncDiagnostic}
+        onClose={() => setShowSyncDiagnostic(false)}
+      />
     </div>
   );
 };
