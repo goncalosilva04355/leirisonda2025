@@ -185,6 +185,34 @@ class MockAuthService {
     return this.users;
   }
 
+  // Debug function to check stored users
+  debugUsers(): void {
+    console.log("🔍 DEBUG: All stored users:");
+    this.users.forEach((user, index) => {
+      console.log(`👤 User ${index + 1}:`, {
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        active: user.active,
+        passwordLength: user.password?.length || 0,
+        hasPassword: !!user.password,
+      });
+    });
+
+    // Also check localStorage
+    const storedUsers = localStorage.getItem("mock-users");
+    if (storedUsers) {
+      const parsed = JSON.parse(storedUsers);
+      console.log(
+        "💾 localStorage users:",
+        parsed.map((u: any) => ({
+          email: u.email,
+          passwordLength: u.password?.length || 0,
+        })),
+      );
+    }
+  }
+
   onAuthStateChanged(callback: (user: MockUser | null) => void): () => void {
     // Do NOT immediately call with current user - this was causing automatic login
     // Only call callback when user actually logs in
