@@ -148,6 +148,108 @@ export const WorkAssignmentFix: React.FC = () => {
     });
   };
 
+  // Create example users if only Gonçalo exists
+  const createExampleUsers = () => {
+    const exampleUsers = [
+      {
+        id: "2",
+        name: "José Silva",
+        email: "jose.silva@leirisonda.com",
+        password: "123456",
+        role: "user",
+        permissions: {
+          obras: { view: true, create: false, edit: false, delete: false },
+          manutencoes: { view: true, create: true, edit: true, delete: false },
+          piscinas: { view: true, create: false, edit: false, delete: false },
+          utilizadores: {
+            view: false,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: false, edit: false, delete: false },
+          clientes: { view: true, create: false, edit: false, delete: false },
+        },
+        active: true,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        id: "3",
+        name: "Maria Santos",
+        email: "maria.santos@leirisonda.com",
+        password: "123456",
+        role: "user",
+        permissions: {
+          obras: { view: true, create: false, edit: false, delete: false },
+          manutencoes: { view: true, create: true, edit: true, delete: false },
+          piscinas: { view: true, create: false, edit: false, delete: false },
+          utilizadores: {
+            view: false,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: false, edit: false, delete: false },
+          clientes: { view: true, create: false, edit: false, delete: false },
+        },
+        active: true,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        id: "4",
+        name: "António Costa",
+        email: "antonio.costa@leirisonda.com",
+        password: "123456",
+        role: "user",
+        permissions: {
+          obras: { view: true, create: false, edit: false, delete: false },
+          manutencoes: { view: true, create: true, edit: true, delete: false },
+          piscinas: { view: true, create: false, edit: false, delete: false },
+          utilizadores: {
+            view: false,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: false, edit: false, delete: false },
+          clientes: { view: true, create: false, edit: false, delete: false },
+        },
+        active: true,
+        createdAt: new Date().toISOString(),
+      },
+    ];
+
+    // Get existing users
+    const appUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "[]");
+
+    // Add example users to app-users
+    const updatedAppUsers = [...appUsers, ...exampleUsers];
+    localStorage.setItem("app-users", JSON.stringify(updatedAppUsers));
+
+    // Add to mock-users too
+    const mockExampleUsers = exampleUsers.map((user) => ({
+      uid: `mock-${user.id}`,
+      email: user.email,
+      password: user.password,
+      name: user.name,
+      role:
+        user.role === "super_admin"
+          ? "super_admin"
+          : user.role === "admin"
+            ? "manager"
+            : "technician",
+      active: user.active,
+      createdAt: user.createdAt,
+    }));
+
+    const updatedMockUsers = [...mockUsers, ...mockExampleUsers];
+    localStorage.setItem("mock-users", JSON.stringify(updatedMockUsers));
+
+    console.log("✅ Utilizadores de exemplo criados:", exampleUsers.length);
+    return exampleUsers.length;
+  };
+
   // Fix user synchronization issues
   const fixUserSync = async () => {
     setIsFixing(true);
