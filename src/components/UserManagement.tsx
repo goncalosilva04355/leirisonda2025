@@ -13,6 +13,11 @@ import {
   AlertCircle,
   UserCheck,
   UserX,
+  Settings,
+  Lock,
+  Unlock,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
 
 interface User {
