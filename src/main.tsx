@@ -43,7 +43,7 @@ if (typeof window !== "undefined") {
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ErrorBoundary>
+  <ImprovedErrorBoundary>
     <App />
-  </ErrorBoundary>,
+  </ImprovedErrorBoundary>,
 );
