@@ -295,6 +295,7 @@ export const UserManagement: React.FC = () => {
 
     console.log("✅ All validations passed, starting user creation");
     setCreateError("");
+    setCreateSuccess("");
     setIsCreatingUser(true);
 
     try {
