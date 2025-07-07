@@ -252,6 +252,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <DangerousUserDeletion />;
       case "notification-demo":
         return <NotificationDemo />;
+      case "nuclear-cleanup":
+        return <NuclearUserCleanup />;
       case "overview":
       default:
         return (
