@@ -460,6 +460,23 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
             </div>
           )}
 
+          {activeTab === "device-sync" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <Smartphone className="w-16 h-16 text-blue-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Sincronização Entre Dispositivos
+                </h3>
+                <p className="text-gray-600 max-w-md mx-auto">
+                  Gerir a sincronização de dados entre diferentes dispositivos e
+                  controlar o acesso multi-dispositivo.
+                </p>
+              </div>
+
+              <DeviceSyncManager />
+            </div>
+          )}
+
           {activeTab === "sync-test" && (
             <div className="space-y-6">
               <div className="text-center">
