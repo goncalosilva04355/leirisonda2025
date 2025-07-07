@@ -1,52 +1,11 @@
 // SISTEMA DE INICIALIZAÇÃO FORÇADA - SEMPRE FUNCIONA
 export class ForceInitialization {
-  // Dados básicos OBRIGATÓRIOS para funcionamento
+  // Estrutura mínima SEM dados automáticos
   private static readonly REQUIRED_STRUCTURE = {
     works: [],
-    pools: [
-      {
-        id: `pool_${Date.now()}`,
-        name: "Piscina Principal",
-        location: "Cascais, Portugal",
-        client: "Cliente Exemplo",
-        type: "Residencial",
-        status: "Ativa",
-        lastMaintenance: new Date().toISOString().split("T")[0],
-        nextMaintenance: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .split("T")[0],
-        createdAt: new Date().toISOString(),
-      },
-    ],
-    maintenance: [
-      {
-        id: `maint_${Date.now()}`,
-        poolId: `pool_${Date.now()}`,
-        poolName: "Piscina Principal",
-        type: "Limpeza",
-        status: "scheduled" as const,
-        description: "Manutenção de exemplo",
-        scheduledDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .split("T")[0],
-        technician: "Técnico Exemplo",
-        clientName: "Cliente Exemplo",
-        clientContact: "+351 912 345 678",
-        location: "Cascais, Portugal",
-        createdAt: new Date().toISOString(),
-      },
-    ],
-    clients: [
-      {
-        id: `client_${Date.now()}`,
-        name: "Cliente Exemplo",
-        email: "cliente@exemplo.com",
-        phone: "+351 912 345 678",
-        address: "Cascais, Portugal",
-        pools: [`pool_${Date.now()}`],
-        createdAt: new Date().toISOString(),
-      },
-    ],
+    pools: [],
+    maintenance: [],
+    clients: [],
   };
 
   // STEP 1: Verificação absoluta - existe ALGUMA coisa?

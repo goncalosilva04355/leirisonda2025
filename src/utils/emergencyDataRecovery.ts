@@ -1,31 +1,11 @@
 // SISTEMA DE RECUPERAÇÃO DE EMERGÊNCIA CRÍTICA
 export class EmergencyDataRecovery {
-  // Dados mínimos para fazer a aplicação funcionar
+  // Dados mínimos SEM exemplos automáticos
   private static readonly MINIMAL_DATA = {
     works: [],
-    pools: [
-      {
-        id: "emergency-pool-1",
-        name: "Piscina Exemplo",
-        location: "Localização a definir",
-        client: "Cliente a definir",
-        type: "Residencial",
-        status: "Ativa",
-        createdAt: new Date().toISOString(),
-      },
-    ],
+    pools: [],
     maintenance: [],
-    clients: [
-      {
-        id: "emergency-client-1",
-        name: "Cliente Exemplo",
-        email: "cliente@exemplo.com",
-        phone: "+351 000 000 000",
-        address: "Endereço a definir",
-        pools: [],
-        createdAt: new Date().toISOString(),
-      },
-    ],
+    clients: [],
   };
 
   // RECOVERY STEP 1: Scan all localStorage for any data
