@@ -777,6 +777,8 @@ function App() {
       setSidebarOpen(false);
       setCurrentUser(null);
       setIsAuthenticated(false);
+      // Clear saved login credentials on emergency logout
+      sessionStorage.removeItem("savedLoginCredentials");
       // Firebase handles auth state clearing automatically
       setLoginForm({ email: "", password: "" });
 
