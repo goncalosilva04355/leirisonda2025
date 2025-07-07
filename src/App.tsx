@@ -1042,7 +1042,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         if (permission === "granted") {
           setNotificationsEnabled(true);
           showNotification(
-            "Notifica����es Ativadas",
+            "Notificaç��es Ativadas",
             "Agora vai receber notificações de obras atribuídas",
             "success",
           );
@@ -1680,22 +1680,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     {/* Sync Status */}
                     <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
-                      <div
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          autoSyncData.isActive && !autoSyncData.error
-                            ? "bg-green-500"
-                            : autoSyncData.error
-                              ? "bg-red-500"
-                              : "bg-blue-500"
-                        }`}
-                      ></div>
-                      <span>
-                        {autoSyncData.isActive && !autoSyncData.error
-                          ? "Sincronizado"
-                          : autoSyncData.error
-                            ? "Erro Sync"
-                            : "Ativo"}
-                      </span>
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                      <span>Modo Local</span>
                     </div>
                   </div>
                 </div>
@@ -8332,9 +8318,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   return (
     <AutoSyncProvider
-      enabled={true}
-      syncInterval={30000}
-      collections={["users", "pools", "maintenance", "works", "clients"]}
+      enabled={false}
+      syncInterval={0}
+      collections={[]}
       showNotifications={false}
     >
       <InstantSyncManager>
@@ -8796,7 +8782,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                            🚰 Detalhes do Furo de Água
+                            �� Detalhes do Furo de Água
                           </h3>
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
@@ -8844,7 +8830,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 Tipo de Coluna
                               </label>
                               <p className="text-gray-900">
-                                {selectedWork.columnType || "Não especificado"}
+                                {selectedWork.columnType || "N��o especificado"}
                               </p>
                             </div>
                             <div>
