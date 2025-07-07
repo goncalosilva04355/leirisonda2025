@@ -75,54 +75,8 @@ export const fixUserPasswords = (): { fixed: number; errors: string[] } => {
   let fixed = 0;
 
   try {
-    // Fix mock users
-    const mockUsersData = localStorage.getItem("mock-users");
-    if (mockUsersData) {
-      const mockUsers = JSON.parse(mockUsersData);
-      let mockUpdated = false;
-
-      // Fix Alexandre
-      const alexandreIndex = mockUsers.findIndex(
-        (user: any) =>
-          user.name.toLowerCase().includes("alexandre") ||
-          user.email.toLowerCase().includes("alexandre"),
-      );
-
-      if (alexandreIndex !== -1) {
-        mockUsers[alexandreIndex].password = "69alexandre";
-        mockUsers[alexandreIndex].active = true;
-        fixed++;
-        mockUpdated = true;
-        console.log("✅ Alexandre password fixed to: 69alexandre");
-      }
-
-      // Fix Yuri
-      const yuriIndex = mockUsers.findIndex(
-        (user: any) =>
-          user.name.toLowerCase().includes("yuri") ||
-          user.email.toLowerCase().includes("yuri"),
-      );
-
-      if (yuriIndex !== -1) {
-        // Determine which password to use based on email
-        const yuriUser = mockUsers[yuriIndex];
-        if (yuriUser.email.includes("leirisonda.pt")) {
-          mockUsers[yuriIndex].password = "yuripass123";
-        } else {
-          mockUsers[yuriIndex].password = "password123";
-        }
-        mockUsers[yuriIndex].active = true;
-        fixed++;
-        mockUpdated = true;
-        console.log(
-          `✅ Yuri password fixed to: ${mockUsers[yuriIndex].password}`,
-        );
-      }
-
-      if (mockUpdated) {
-        localStorage.setItem("mock-users", JSON.stringify(mockUsers));
-      }
-    }
+    // No users to fix - only super admin exists
+    console.log("🔧 No problematic users to fix - only super admin exists");
 
     // Fix app users
     const appUsersData = localStorage.getItem("app-users");
