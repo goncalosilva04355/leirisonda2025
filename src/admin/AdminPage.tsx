@@ -193,6 +193,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       icon: Users,
       color: "bg-red-800",
     },
+    {
+      id: "notification-demo" as AdminSection,
+      title: "🔔 Demo de Notificações",
+      description: "Testar sistema de notificações em tempo real",
+      icon: AlertTriangle,
+      color: "bg-blue-600",
+    },
   ];
 
   const renderCurrentSection = () => {
