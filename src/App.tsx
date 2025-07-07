@@ -3513,6 +3513,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Usuários Atribuídos ({users.length} utilizadores
                             disponíveis)
                           </label>
+                          {console.log(
+                            "📊 TOTAL UTILIZADORES CARREGADOS:",
+                            users.length,
+                            users,
+                          )}
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra
                           </p>
@@ -7296,7 +7301,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             .value; // Morada
                           const startTime = (inputs[5] as HTMLInputElement)
                             .value; // Hora de Entrada
-                          const endTime = (inputs[6] as HTMLInputElement).value; // Hora de Sa��da
+                          const endTime = (inputs[6] as HTMLInputElement).value; // Hora de Saída
                           const status = (inputs[7] as HTMLSelectElement).value; // Estado
                           const workSheetCompleted = (
                             inputs[8] as HTMLInputElement
