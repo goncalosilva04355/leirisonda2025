@@ -582,6 +582,20 @@ export const WorkAssignmentFix: React.FC = () => {
             <CheckCircle className="h-4 w-4" />
             <span>Testar Correção</span>
           </button>
+
+          {usersAnalysis.appUsers.length <= 1 && (
+            <button
+              onClick={() => {
+                alert(
+                  "Para criar novos utilizadores:\n\n1. Clique em 'Configurações' no menu\n2. Vá a 'Área de Administração'\n3. Clique em 'Gestão de Utilizadores'\n4. Use o botão 'Novo Utilizador' para criar utilizadores adicionais\n\nDepois volte aqui e clique em 'Corrigir Sincronização'",
+                );
+              }}
+              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2"
+            >
+              <UserPlus className="h-4 w-4" />
+              <span>Como Criar Utilizadores</span>
+            </button>
+          )}
         </div>
 
         {/* Fix Results */}
