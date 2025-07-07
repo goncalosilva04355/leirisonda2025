@@ -858,7 +858,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç��o: ${pool.location}
+   Localizaç����o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -1680,10 +1680,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                     </div>
 
-                    {/* Online Status */}
+                    {/* Sync Status */}
                     <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
-                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                      <span>Online</span>
+                      <div
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          autoSyncData.isActive && !autoSyncData.error
+                            ? "bg-green-500"
+                            : autoSyncData.error
+                              ? "bg-red-500"
+                              : "bg-gray-500"
+                        }`}
+                      ></div>
+                      <span>
+                        {autoSyncData.isActive && !autoSyncData.error
+                          ? "Sincronizado"
+                          : autoSyncData.error
+                            ? "Erro Sync"
+                            : "Offline"}
+                      </span>
                     </div>
                   </div>
                 </div>
