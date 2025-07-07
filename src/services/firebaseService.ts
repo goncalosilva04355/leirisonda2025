@@ -166,23 +166,10 @@ const safeFirebaseOperation = async <T>(
 export const userService = {
   // Listen to real-time changes
   subscribeToUsers(callback: (users: User[]) => void) {
-    if (!db) {
-      // Return empty unsubscribe function if db is not available
-      callback([]);
-      return () => {};
-    }
-
-    const q = query(
-      collection(db, COLLECTIONS.USERS),
-      orderBy("createdAt", "desc"),
-    );
-    return onSnapshot(q, (snapshot) => {
-      const users = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as User[];
-      callback(users);
-    });
+    // Always use localStorage instead of Firebase to prevent quota
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    callback(users);
+    return () => {};
   },
 
   // Add new user
