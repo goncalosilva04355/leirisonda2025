@@ -82,6 +82,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       color: "bg-orange-600",
     },
     {
+      id: "nuclear-cleanup" as AdminSection,
+      title: "🚨 LIMPEZA NUCLEAR (MELHORADA)",
+      description:
+        "ELIMINA completamente Firebase Auth persistence - resolve utilizadores antigos",
+      icon: AlertTriangle,
+      color: "bg-red-800",
+    },
+    {
       id: "login-fix" as AdminSection,
       title: "🔑 Correção de Login",
       description:
