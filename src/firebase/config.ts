@@ -120,12 +120,10 @@ try {
 
       try {
         auth = getAuth(app);
-        // Set auth persistence to allow login across devices and browser sessions
+        // Firebase Auth persistence is automatic by default (indexedDB/localStorage handled internally)
         if (auth) {
-          // Use local persistence to allow users to stay logged in across devices
-          // This is needed for users to login on different devices
           console.log(
-            "🔐 Firebase Auth persistence set to local for cross-device login",
+            "🔐 Firebase Auth automatic persistence enabled for cross-device login",
           );
         }
         console.log("✅ Firebase Auth initialized successfully");
