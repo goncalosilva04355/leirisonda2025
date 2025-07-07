@@ -29,6 +29,7 @@ import { UserManagement } from "../components/UserManagement";
 import { MobileSettings } from "../components/MobileSettings";
 import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
 import { LoginFixer } from "../components/LoginFixer";
+import { UserDuplicateCleanupComponent } from "../components/UserDuplicateCleanup";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -37,6 +38,7 @@ interface AdminPageProps {
 type AdminSection =
   | "overview"
   | "user-management"
+  | "user-duplicate-cleanup"
   | "work-assignment-fix"
   | "auth-diagnostic"
   | "sync-manager"
