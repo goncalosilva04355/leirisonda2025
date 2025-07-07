@@ -369,6 +369,7 @@ export const UserManagement: React.FC = () => {
 
         console.log("✅ Utilizador criado com sucesso!");
         setCreateError("");
+        setCreateSuccess("✅ Utilizador criado com sucesso e está ativo!");
         // Show success message briefly
         console.log("🎉 Success! User has been created and is active");
       } else {
