@@ -71,8 +71,20 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       return; // Let HTML5 validation handle this
     }
 
-    // Firebase handles auth persistence automatically
-    console.log("🔥 Firebase will handle login persistence automatically");
+    // Save credentials if remember me is checked (using sessionStorage + Firebase persistence)
+    if (rememberMe) {
+      console.log("💾 Saving credentials for auto-login");
+      sessionStorage.setItem(
+        "savedLoginCredentials",
+        JSON.stringify({
+          email: loginForm.email.trim(),
+          password: loginForm.password,
+          rememberMe: true,
+        }),
+      );
+    } else {
+      sessionStorage.removeItem("savedLoginCredentials");
+    }
 
     try {
       console.log("📤 LoginPage: Calling onLogin function...");
