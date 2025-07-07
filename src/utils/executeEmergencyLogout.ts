@@ -15,10 +15,8 @@ export const executeEmergencyLogout = async (): Promise<void> => {
       console.log("✅ EMERGENCY LOGOUT SUCCESSFUL:", result.message);
       console.log("📊 Details:", result.details);
 
-      // Notify user of success
-      alert(
-        "✅ Emergency Logout executado com sucesso! Todos os utilizadores foram deslogados. A página será recarregada.",
-      );
+      // Log success without alert to avoid persistent popups
+      console.log("✅ Emergency Logout completed successfully");
 
       // Force page reload
       window.location.reload();
