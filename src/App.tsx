@@ -39,6 +39,9 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import EliminateOldUsers from "./components/EliminateOldUsers";
 
+// Limpar estados que causam modais indesejados
+import "./utils/clearModalStates";
+
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
@@ -395,7 +398,7 @@ function App() {
         const unsubscribe = authService.onAuthStateChanged((user) => {
           if (user) {
             console.log(
-              "��� Firebase Auth: User automatically restored",
+              "���� Firebase Auth: User automatically restored",
               user.email,
             );
             setCurrentUser(user);
@@ -511,7 +514,7 @@ function App() {
           .register("/sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "✅ Service Worker registered successfully:",
+              "�� Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -666,7 +669,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenção Regular",
+      type: "Manutenç��o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -5163,7 +5166,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç��es, recomendações, próxima manuten��ão..."
+                          placeholder="Observaç��es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5616,7 +5619,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               dispositivo
                             </li>
                             <li>
-                              • A marcaç��o automática funciona melhor em
+                              • A marcação automática funciona melhor em
                               dispositivos móveis
                             </li>
                             <li>• O Google Maps abre numa nova janela/tab</li>
@@ -6806,7 +6809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Edit Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informações Básicas */}
+                    {/* Informa��ões Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -7769,7 +7772,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa���ões
+                        Observa��ões
                       </label>
                       <textarea
                         defaultValue={editingMaintenance?.observations}
