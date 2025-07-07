@@ -2,29 +2,32 @@
   "builderIo": {
     "apiKey": "24b5ff5dbb9f4bb493659e90291d92bc",
     "spaceId": "24b5ff5dbb9f4bb493659e90291d92bc",
-    "lastModified": "2024-06-28T10:30:00Z",
+    "lastModified": "2024-12-28T15:40:00Z",
     "forceSync": true
   },
   "github": {
     "repository": "GoncaloFonseca86/Builder-stellar-landing",
-    "branch": "ai_main_92a33b97ea03",
-    "commitsToPush": 80,
-    "lastAttempt": "2024-06-28T10:30:00Z"
+    "branch": "main",
+    "commitsToPush": 5,
+    "lastAttempt": "2024-12-28T16:00:00Z",
+    "status": "force-main-branch"
   },
   "application": {
     "name": "Leirisonda",
     "version": "1.0.0",
     "status": "functional",
     "components": {
-      "login": "code/client/pages/Login.tsx",
-      "authProvider": "code/client/components/AuthProvider.tsx",
-      "mainApp": "code/client/main.tsx"
+      "login": "src/pages/LoginPage.tsx",
+      "authProvider": "src/App.tsx",
+      "mainApp": "src/main.tsx"
     }
   },
   "syncTrigger": {
-    "timestamp": "2024-06-28T10:30:00Z",
-    "method": "force-push",
-    "priority": "high",
-    "retryCount": 0
+    "timestamp": "2024-12-28T15:52:00Z",
+    "method": "force-retry",
+    "priority": "critical",
+    "retryCount": 1,
+    "forceNewAttempt": true,
+    "bypassCache": true
   }
 }

@@ -1,0 +1,18 @@
+{
+  "projectId": "24b5ff5dbb9f4bb493659e90291d92bc",
+  "apiKey": "24b5ff5dbb9f4bb493659e90291d92bc",
+  "github": {
+    "owner": "GoncaloFonseca86",
+    "repo": "Builder-stellar-landing",
+    "branch": "main",
+    "syncEnabled": true,
+    "autoSync": true
+  },
+  "settings": {
+    "framework": "react",
+    "typescript": true,
+    "builderVersion": "latest"
+  },
+  "lastSync": "2024-12-28T15:50:00Z",
+  "status": "ready"
+}

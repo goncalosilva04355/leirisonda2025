@@ -185,44 +185,129 @@ class UserDeletionService {
   private async deleteFromLocalStorage(
     result: UserDeletionResult,
   ): Promise<void> {
-    console.log("💾 Starting localStorage users deletion...");
+    console.log("💾 Starting COMPLETE localStorage users deletion...");
 
-    // Handle app-users
-    const appUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
-    console.log(`Found ${appUsers.length} users in app-users localStorage`);
+    // ALL possible localStorage keys that might contain user data
+    const userDataKeys = [
+      "app-users",
+      "mock-users",
+      "users",
+      "saved-users",
+      "currentUser",
+      "mock-current-user",
+      "savedLoginCredentials",
+    ];
 
-    const preservedAppUsers = appUsers.filter((user: any) => {
-      const userEmail = user.email?.toLowerCase();
-      if (userEmail === this.SUPER_ADMIN_EMAIL.toLowerCase()) {
-        console.log(`🛡️ Preserving super admin in app-users: ${userEmail}`);
-        result.details.superAdminPreserved = true;
-        return true;
+    let totalDeleted = 0;
+
+    // Check each possible storage location
+    for (const key of userDataKeys) {
+      try {
+        const data = localStorage.getItem(key);
+        if (!data) continue;
+
+        console.log(`🔍 Found data in ${key}:`, data.substring(0, 100));
+
+        if (key === "currentUser" || key === "mock-current-user") {
+          // Handle single user objects
+          try {
+            const userData = JSON.parse(data);
+            const userEmail = userData.email?.toLowerCase();
+
+            if (
+              userEmail &&
+              userEmail !== this.SUPER_ADMIN_EMAIL.toLowerCase()
+            ) {
+              localStorage.removeItem(key);
+              totalDeleted++;
+              console.log(`🗑️ Deleted current user session: ${userEmail}`);
+            } else if (userEmail === this.SUPER_ADMIN_EMAIL.toLowerCase()) {
+              console.log(`🛡️ Preserving super admin session in ${key}`);
+              result.details.superAdminPreserved = true;
+            }
+          } catch (e) {
+            // If not JSON, just remove it to be safe
+            localStorage.removeItem(key);
+            console.log(`🗑️ Removed non-JSON data from ${key}`);
+          }
+          continue;
+        }
+
+        if (key === "savedLoginCredentials") {
+          // Handle login credentials
+          try {
+            const credentials = JSON.parse(data);
+            if (
+              credentials.email?.toLowerCase() !==
+              this.SUPER_ADMIN_EMAIL.toLowerCase()
+            ) {
+              localStorage.removeItem(key);
+              totalDeleted++;
+              console.log(
+                `🗑️ Deleted saved credentials for: ${credentials.email}`,
+              );
+            } else {
+              console.log(`🛡️ Preserving super admin credentials`);
+            }
+          } catch (e) {
+            localStorage.removeItem(key);
+            console.log(`🗑️ Removed invalid credentials data`);
+          }
+          continue;
+        }
+
+        // Handle user arrays
+        try {
+          const users = JSON.parse(data);
+          if (!Array.isArray(users)) {
+            console.log(`⚠️ ${key} is not an array, skipping`);
+            continue;
+          }
+
+          console.log(`📊 Found ${users.length} users in ${key}`);
+
+          const preservedUsers = users.filter((user: any) => {
+            const userEmail = user.email?.toLowerCase();
+            if (userEmail === this.SUPER_ADMIN_EMAIL.toLowerCase()) {
+              console.log(`🛡️ Preserving super admin in ${key}: ${userEmail}`);
+              result.details.superAdminPreserved = true;
+              return true;
+            }
+            totalDeleted++;
+            console.log(
+              `🗑️ Deleted ${key} user: ${userEmail || user.id || user.uid}`,
+            );
+            return false;
+          });
+
+          localStorage.setItem(key, JSON.stringify(preservedUsers));
+          console.log(
+            `✅ Updated ${key} with ${preservedUsers.length} preserved users`,
+          );
+        } catch (e) {
+          console.error(`❌ Error processing ${key}:`, e);
+          // If we can't parse it, remove it to be safe
+          localStorage.removeItem(key);
+          console.log(`🗑️ Removed unparseable data from ${key}`);
+        }
+      } catch (error: any) {
+        console.error(`❌ Error handling ${key}:`, error);
+        result.details.errors.push(`localStorage ${key}: ${error.message}`);
       }
-      result.details.localStorageUsersDeleted++;
-      console.log(`🗑️ Deleted app-users user: ${userEmail || user.id}`);
-      return false;
-    });
+    }
 
-    localStorage.setItem("app-users", JSON.stringify(preservedAppUsers));
+    result.details.localStorageUsersDeleted = totalDeleted;
 
-    // Handle mock-users
-    const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "[]");
-    console.log(`Found ${mockUsers.length} users in mock-users localStorage`);
-
-    const preservedMockUsers = mockUsers.filter((user: any) => {
-      const userEmail = user.email?.toLowerCase();
-      if (userEmail === this.SUPER_ADMIN_EMAIL.toLowerCase()) {
-        console.log(`🛡️ Preserving super admin in mock-users: ${userEmail}`);
-        return true;
-      }
-      console.log(`🗑️ Deleted mock-users user: ${userEmail || user.uid}`);
-      return false;
-    });
-
-    localStorage.setItem("mock-users", JSON.stringify(preservedMockUsers));
+    // Also clear any session storage that might have user data
+    try {
+      sessionStorage.clear();
+      console.log("🧹 Cleared all session storage");
+    } catch (e) {
+      console.error("❌ Error clearing session storage:", e);
+    }
 
     console.log(
-      `✅ localStorage deletion complete: ${result.details.localStorageUsersDeleted} users deleted`,
+      `✅ COMPLETE localStorage deletion finished: ${result.details.localStorageUsersDeleted} users deleted`,
     );
   }
 
@@ -357,38 +442,115 @@ class UserDeletionService {
    * Clear user sessions but preserve super admin if currently logged in
    */
   private async clearUserSessions(): Promise<void> {
-    console.log("🧹 Clearing user sessions...");
+    console.log("🧹 Starting COMPLETE session clearing...");
 
     try {
-      // Check if super admin is currently logged in
-      const currentUser = localStorage.getItem("mock-current-user");
-      let preserveSession = false;
+      // Check ALL possible session storage locations
+      const sessionKeys = [
+        "currentUser",
+        "mock-current-user",
+        "user",
+        "authUser",
+        "loggedInUser",
+        "activeUser",
+        "savedLoginCredentials",
+      ];
 
-      if (currentUser) {
-        const userData = JSON.parse(currentUser);
-        if (
-          userData.email?.toLowerCase() === this.SUPER_ADMIN_EMAIL.toLowerCase()
-        ) {
-          console.log(
-            "🛡️ Super admin currently logged in - preserving session",
-          );
-          preserveSession = true;
+      let preserveSuperAdminSession = false;
+      let superAdminSessionData = null;
+
+      // First, check if super admin is logged in anywhere
+      for (const key of sessionKeys) {
+        try {
+          const data = localStorage.getItem(key);
+          if (data) {
+            const userData = JSON.parse(data);
+            if (
+              userData.email?.toLowerCase() ===
+              this.SUPER_ADMIN_EMAIL.toLowerCase()
+            ) {
+              console.log(`🛡️ Super admin found in ${key} - will preserve`);
+              preserveSuperAdminSession = true;
+              superAdminSessionData = userData;
+              break;
+            }
+          }
+        } catch (e) {
+          // Invalid JSON, will be cleared anyway
         }
       }
 
-      if (!preserveSession) {
-        // Clear all session data
-        localStorage.removeItem("mock-current-user");
-        localStorage.removeItem("currentUser");
-        sessionStorage.clear();
-        console.log("🧹 All user sessions cleared");
+      // Clear all session-related data except super admin
+      for (const key of sessionKeys) {
+        try {
+          const data = localStorage.getItem(key);
+          if (data) {
+            try {
+              const userData = JSON.parse(data);
+              if (
+                userData.email?.toLowerCase() !==
+                this.SUPER_ADMIN_EMAIL.toLowerCase()
+              ) {
+                localStorage.removeItem(key);
+                console.log(`🗑️ Cleared session data from ${key}`);
+              }
+            } catch (e) {
+              // Invalid JSON, remove it
+              localStorage.removeItem(key);
+              console.log(`🗑️ Removed invalid session data from ${key}`);
+            }
+          }
+        } catch (error) {
+          console.error(`❌ Error clearing ${key}:`, error);
+        }
+      }
+
+      // Clear all sessionStorage
+      sessionStorage.clear();
+      console.log("🧹 Cleared all session storage");
+
+      // Clear any cached authentication data
+      const authKeys = [
+        "firebase-auth",
+        "firebase-user",
+        "auth-token",
+        "access-token",
+        "refresh-token",
+      ];
+
+      for (const key of authKeys) {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+      }
+
+      // Restore super admin session if it was active
+      if (preserveSuperAdminSession && superAdminSessionData) {
+        localStorage.setItem(
+          "mock-current-user",
+          JSON.stringify(superAdminSessionData),
+        );
+        console.log("🛡️ Restored super admin session");
+      }
+
+      // Force reload any auth services
+      try {
+        if (
+          typeof mockAuthService !== "undefined" &&
+          mockAuthService.reloadUsers
+        ) {
+          mockAuthService.reloadUsers();
+          console.log("🔄 Reloaded mock auth service");
+        }
+      } catch (e) {
+        console.error("❌ Error reloading auth service:", e);
       }
 
       // Dispatch event to notify other components that users were updated
       window.dispatchEvent(new CustomEvent("usersUpdated"));
-      console.log("📢 usersUpdated event dispatched after user deletion");
+      window.dispatchEvent(new CustomEvent("userSessionsCleared"));
+      console.log("📢 User update events dispatched after session clearing");
     } catch (error: any) {
-      console.error("❌ Error clearing sessions:", error);
+      console.error("❌ Error in complete session clearing:", error);
       throw error;
     }
   }
@@ -416,23 +578,45 @@ class UserDeletionService {
         stats.firestore = usersSnapshot.docs.length;
       }
 
-      // Count localStorage users
-      const appUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
-      const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "[]");
-      stats.localStorage = appUsers.length + mockUsers.length;
+      // Count ALL localStorage users from all possible locations
+      const userDataKeys = ["app-users", "mock-users", "users", "saved-users"];
+      let localStorageTotal = 0;
+
+      for (const key of userDataKeys) {
+        try {
+          const data = localStorage.getItem(key);
+          if (data) {
+            const users = JSON.parse(data);
+            if (Array.isArray(users)) {
+              localStorageTotal += users.length;
+              console.log(`📊 Found ${users.length} users in ${key}`);
+            }
+          }
+        } catch (e) {
+          console.error(`Error counting users in ${key}:`, e);
+        }
+      }
+
+      stats.localStorage = localStorageTotal;
 
       // Count mock auth users
-      const allMockUsers = mockAuthService.getAllUsers();
-      stats.mockAuth = allMockUsers.length;
+      try {
+        const allMockUsers = mockAuthService.getAllUsers();
+        stats.mockAuth = allMockUsers.length;
+      } catch (e) {
+        console.error("Error counting mock auth users:", e);
+      }
 
-      // Calculate total (deduplicated estimate)
+      // Calculate total (use highest count as estimate)
       stats.total = Math.max(
         stats.firestore,
         stats.localStorage,
         stats.mockAuth,
       );
+
+      console.log("📊 User Statistics:", stats);
     } catch (error) {
-      console.error("Error getting user statistics:", error);
+      console.error("❌ Error getting user statistics:", error);
     }
 
     return stats;
