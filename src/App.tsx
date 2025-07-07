@@ -255,27 +255,7 @@ function App() {
     ]);
   }, []);
 
-  // Listen for user updates from WorkAssignmentFix component
-  useEffect(() => {
-    const handleUsersUpdated = () => {
-      console.log(
-        "🔄 Reloading users from localStorage due to update event...",
-      );
-      try {
-        const savedUsers = localStorage.getItem("app-users");
-        if (savedUsers) {
-          const parsedUsers = JSON.parse(savedUsers);
-          setUsers(parsedUsers);
-          console.log("✅ Users reloaded successfully:", parsedUsers.length);
-        }
-      } catch (error) {
-        console.error("❌ Error reloading users:", error);
-      }
-    };
-
-    window.addEventListener("usersUpdated", handleUsersUpdated);
-    return () => window.removeEventListener("usersUpdated", handleUsersUpdated);
-  }, []);
+  // Firebase handles user updates automatically via real-time listeners
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
@@ -989,7 +969,7 @@ RESUMO EXECUTIVO:
 
 ESTATÍSTICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenções Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
 PRÓXIMAS AÇÕES:
