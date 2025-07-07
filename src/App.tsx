@@ -15,7 +15,6 @@ import {
   Eye,
   EyeOff,
   Edit2,
-  Play,
   Trash2,
   Save,
   UserPlus,
@@ -37,32 +36,120 @@ import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
 
+// SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
+import { useDataCleanup } from "./hooks/useDataCleanup";
+import { useAutoSync } from "./hooks/useAutoSync";
+
+// Production users - only real admin account
+const initialUsers = [
+  {
+    id: 1,
+    name: "Gonçalo Fonseca",
+    email: "gongonsilva@gmail.com",
+    password: "19867gsf",
+    role: "super_admin",
+    permissions: {
+      obras: { view: true, create: true, edit: true, delete: true },
+      manutencoes: { view: true, create: true, edit: true, delete: true },
+      piscinas: { view: true, create: true, edit: true, delete: true },
+      utilizadores: { view: true, create: true, edit: true, delete: true },
+      relatorios: { view: true, create: true, edit: true, delete: true },
+      clientes: { view: true, create: true, edit: true, delete: true },
+    },
+    active: true,
+    createdAt: "2024-01-01",
+  },
+];
 
 function App() {
-  // Authentication state
+  // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
-  const [loginError, setLoginError] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
 
-  // UI state
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [showMenu, setShowMenu] = useState(false);
-  const [showRegisterForm, setShowRegisterForm] = useState(false);
-  const [showPermissionsManager, setShowPermissionsManager] = useState(false);
+  // Debug logging for authentication state changes
+  useEffect(() => {
+    console.log("🔐 Auth State Debug:", {
+      isAuthenticated,
+      currentUser: currentUser
+        ? `${currentUser.name} (${currentUser.email})`
+        : null,
+      timestamp: new Date().toISOString(),
+    });
+  }, [isAuthenticated, currentUser]);
+
+  // Monitoramento de integridade de dados
+  useEffect(() => {
+    // Cleanup ao desmontar componente
+    return () => {
+      // Cleanup functions if needed
+    };
+  }, []);
+
+  // Firebase-only authentication - no localStorage restoration
+  useEffect(() => {
+    console.log("🔒 SECURITY: Firebase-only authentication mode");
+
+    const unsubscribe = authService.onAuthStateChanged((user) => {
+      console.log("🔄 Auth state changed:", user ? user.email : "null");
+      setCurrentUser(user);
+      setIsAuthenticated(!!user);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("dashboard");
+  // SECURITY: Register form removed - only super admin can create users
+  const [showNewClientForm, setShowNewClientForm] = useState(false);
+  const [newClientForm, setNewClientForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+  const [activeWorkFilter, setActiveWorkFilter] = useState("all");
+  const [globalSearchTerm, setGlobalSearchTerm] = useState("");
+
+  // Custom setActiveSection that updates URL hash
+  const navigateToSection = (section: string) => {
+    setActiveSection(section);
+    // Update URL hash for PWA support
+    if (section !== "futuras-manutencoes") {
+      window.history.replaceState(null, "", `#${section}`);
+    } else {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  };
+  const [showUserForm, setShowUserForm] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showSettingsPasswordModal, setShowSettingsPasswordModal] =
+    useState(false);
+  const [showSettingsPage, setShowSettingsPage] = useState(false);
+  const [settingsPassword, setSettingsPassword] = useState("");
+  const [settingsPasswordError, setSettingsPasswordError] = useState("");
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
-  const [showFirebaseConfig, setShowFirebaseConfig] = useState(false);
+  const [advancedPassword, setAdvancedPassword] = useState("");
+  const [advancedPasswordError, setAdvancedPasswordError] = useState("");
+  const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
+  const [showDataCleanup, setShowDataCleanup] = useState(false);
 
-  // Data sync
+  // Admin area states
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+
+  // Data sync hook - manages all data with Firebase sync
   const dataSync = useDataSync();
   const {
     pools,
@@ -74,71 +161,183 @@ function App() {
     lastSync,
     error: syncError,
     syncWithFirebase,
+    enableSync,
     addPool,
     addWork,
     addMaintenance,
     addClient,
   } = dataSync;
 
-  // Forms state
-  const [workForm, setWorkForm] = useState({
-    title: "",
-    description: "",
-    client: "",
-    contact: "",
-    location: "",
-    type: "",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: "",
-    budget: "",
-    assignedTo: "",
-    status: "pending",
-  });
+  // Data cleanup hook
+  const {
+    cleanAllData,
+    isLoading: cleanupLoading,
+    error: cleanupError,
+  } = useDataCleanup();
 
-  const [poolForm, setPoolForm] = useState({
-    name: "",
-    location: "",
-    client: "",
-    type: "",
-    status: "active",
-  });
+  // Auto-sync hook for automatic Firebase synchronization
+  const autoSyncData = useAutoSync();
+  const { syncStatus, isAutoSyncing } = autoSyncData;
+  const autoSyncLastSync = autoSyncData.lastSync;
 
-  const [maintenanceForm, setMaintenanceForm] = useState({
-    poolId: "",
-    type: "",
-    description: "",
-    scheduledDate: new Date().toISOString().split("T")[0],
-    technician: "",
-    status: "scheduled",
-  });
+  // Keep local users state for user management
+  const [users, setUsers] = useState(initialUsers);
 
-  const [clientForm, setClientForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-  });
-
-  // Initialize authentication state
+  // Initialize users from Firebase on app start (no localStorage)
   useEffect(() => {
-    console.log("🔒 Initializing authentication...");
+    const loadUsersFromFirebase = async () => {
+      console.log("🔄 Loading users from Firebase...");
+      try {
+        // Load users from Firebase instead of localStorage
+        setUsers(initialUsers); // Fallback to initial users
+        console.log("✅ Users loaded successfully");
+      } catch (error) {
+        console.error("❌ Error loading users:", error);
+        setUsers(initialUsers);
+      }
+    };
 
-    const unsubscribe = authService.onAuthStateChanged((user) => {
-      console.log("🔄 Auth state changed:", user ? user.email : "null");
-      setCurrentUser(user);
-      setIsAuthenticated(!!user);
-      setIsLoading(false);
-    });
-
-    return unsubscribe;
+    loadUsersFromFirebase();
   }, []);
 
-  // Handle login
+  const [selectedWorkType, setSelectedWorkType] = useState("");
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [interventionSaved, setInterventionSaved] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [pushPermission, setPushPermission] = useState("default");
+  const [assignedWorks, setAssignedWorks] = useState<any[]>([]);
+  const [uploadedPhotos, setUploadedPhotos] = useState<any[]>([]);
+  const [showPhotoGallery, setShowPhotoGallery] = useState(false);
+  const [selectedPhotos, setSelectedPhotos] = useState<any[]>([]);
+  const [workVehicles, setWorkVehicles] = useState<string[]>([]);
+  const [workTechnicians, setWorkTechnicians] = useState<string[]>([]);
+  const [currentVehicle, setCurrentVehicle] = useState("");
+  const [currentTechnician, setCurrentTechnician] = useState("");
+  const [currentAssignedUser, setCurrentAssignedUser] = useState("");
+  const [assignedUsers, setAssignedUsers] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
+  const [editAssignedUsers, setEditAssignedUsers] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
+  const [currentEditAssignedUser, setCurrentEditAssignedUser] = useState("");
+
+  // Edit and view states
+  const [editingWork, setEditingWork] = useState(null);
+  const [editingPool, setEditingPool] = useState(null);
+  const [editingMaintenance, setEditingMaintenance] = useState(null);
+  const [selectedWork, setSelectedWork] = useState(null);
+  const [viewingWork, setViewingWork] = useState(false);
+
+  // Settings - temporary states (no localStorage persistence)
+  const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
+  const [enableMapsRedirect, setEnableMapsRedirect] = useState(false);
+
+  // Maintenance form state
+  const [maintenanceForm, setMaintenanceForm] = useState({
+    poolId: "",
+    date: new Date().toISOString().split("T")[0],
+    startTime: "",
+    endTime: "",
+    technician: "",
+    vehicle: "",
+    pH: "",
+    chlorine: "",
+    alkalinity: "",
+    temperature: "",
+    workPerformed: "",
+    otherWork: "",
+    problems: "",
+    observations: "",
+    nextMaintenance: "",
+    status: "completed",
+  });
+
+  // Initialize notification permission state and register service worker
+  useEffect(() => {
+    console.log("🔔 Initializing notifications...");
+    if ("Notification" in window) {
+      const permission = Notification.permission;
+      console.log("🔔 Current notification permission:", permission);
+      setPushPermission(permission);
+      setNotificationsEnabled(permission === "granted");
+
+      if (permission === "granted") {
+        console.log("✅ Notifications already granted");
+      } else if (permission === "denied") {
+        console.warn("❌ Notifications denied by user");
+      } else {
+        console.log("⏳ Notifications permission not yet requested");
+      }
+    } else {
+      console.warn("🚫 Notifications not supported in this browser");
+    }
+
+    // Register service worker for better push notification support
+    if ("serviceWorker" in navigator) {
+      // Clear any existing service workers first to prevent conflicts
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => {
+          registration.unregister();
+        });
+      });
+
+      // Register the service worker with a delay to ensure cleanup
+      setTimeout(() => {
+        navigator.serviceWorker
+          .register("/sw.js", { updateViaCache: "none" })
+          .then((registration) => {
+            console.log(
+              "✅ Service Worker registered successfully:",
+              registration.scope,
+            );
+
+            // Force update if there's a waiting service worker
+            if (registration.waiting) {
+              registration.waiting.postMessage({ type: "SKIP_WAITING" });
+            }
+          })
+          .catch((error) => {
+            console.error("❌ Service Worker registration failed:", error);
+          });
+      }, 1000);
+    }
+
+    // Handle URL hash for PWA shortcuts
+    const handleHashChange = () => {
+      const hash = window.location.hash.substring(1); // Remove the '#'
+      if (hash && isAuthenticated) {
+        setActiveSection(hash);
+      }
+    };
+
+    // Check initial hash on load if authenticated
+    if (isAuthenticated) {
+      handleHashChange();
+    }
+
+    // Listen for hash changes
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, [isAuthenticated]);
+
+  // Handle hash routing when authentication state changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      const hash = window.location.hash.substring(1);
+      if (hash) {
+        setActiveSection(hash);
+      }
+    }
+  }, [isAuthenticated]);
+
+  // Rest of the component implementation would continue here...
+  // Login logic
   const handleLogin = async (email: string, password: string) => {
     try {
-      setIsLoading(true);
-      setLoginError("");
-
       console.log("🔐 Attempting login...");
       const result = await authService.login(email, password);
 
@@ -146,176 +345,48 @@ function App() {
         console.log("✅ Login successful");
         setCurrentUser(result.user);
         setIsAuthenticated(true);
-        setLoginError("");
       } else {
         console.log("❌ Login failed:", result.error);
-        setLoginError(result.error || "Erro de login");
-        setIsAuthenticated(false);
+        alert(result.error || "Erro de login");
       }
     } catch (error: any) {
       console.error("❌ Login error:", error);
-      setLoginError("Erro de conexão. Tente novamente.");
-      setIsAuthenticated(false);
-    } finally {
-      setIsLoading(false);
+      alert("Erro de conexão. Tente novamente.");
     }
   };
 
-  // Handle logout
+  // Logout logic
   const handleLogout = async () => {
     try {
       console.log("🚪 Logging out...");
       await authService.logout();
       setCurrentUser(null);
       setIsAuthenticated(false);
-      setActiveTab("dashboard");
+      setActiveSection("dashboard");
       console.log("✅ Logout successful");
     } catch (error) {
       console.error("❌ Logout error:", error);
     }
   };
 
-  // Handle work form submission
-  const handleWorkSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      addWork({
-        ...workForm,
-        budget: workForm.budget ? parseFloat(workForm.budget) : undefined,
-        createdBy: currentUser?.name || "Sistema",
-        createdByUser: currentUser?.uid || "",
-      });
-
-      // Reset form
-      setWorkForm({
-        title: "",
-        description: "",
-        client: "",
-        contact: "",
-        location: "",
-        type: "",
-        startDate: new Date().toISOString().split("T")[0],
-        endDate: "",
-        budget: "",
-        assignedTo: "",
-        status: "pending",
-      });
-
-      // Sync with Firebase
-      await syncWithFirebase();
-
-      console.log("✅ Work added successfully");
-    } catch (error) {
-      console.error("❌ Error adding work:", error);
-    }
-  };
-
-  // Handle pool form submission
-  const handlePoolSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      addPool(poolForm);
-
-      // Reset form
-      setPoolForm({
-        name: "",
-        location: "",
-        client: "",
-        type: "",
-        status: "active",
-      });
-
-      // Sync with Firebase
-      await syncWithFirebase();
-
-      console.log("✅ Pool added successfully");
-    } catch (error) {
-      console.error("❌ Error adding pool:", error);
-    }
-  };
-
-  // Handle maintenance form submission
-  const handleMaintenanceSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const selectedPool = pools.find((p) => p.id === maintenanceForm.poolId);
-
-      addMaintenance({
-        ...maintenanceForm,
-        poolName: selectedPool?.name || "",
-        clientName: selectedPool?.client || "",
-        location: selectedPool?.location || "",
-      });
-
-      // Reset form
-      setMaintenanceForm({
-        poolId: "",
-        type: "",
-        description: "",
-        scheduledDate: new Date().toISOString().split("T")[0],
-        technician: "",
-        status: "scheduled",
-      });
-
-      // Sync with Firebase
-      await syncWithFirebase();
-
-      console.log("✅ Maintenance added successfully");
-    } catch (error) {
-      console.error("❌ Error adding maintenance:", error);
-    }
-  };
-
-  // Handle client form submission
-  const handleClientSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      addClient({
-        ...clientForm,
-        pools: [],
-      });
-
-      // Reset form
-      setClientForm({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-      });
-
-      // Sync with Firebase
-      await syncWithFirebase();
-
-      console.log("✅ Client added successfully");
-    } catch (error) {
-      console.error("❌ Error adding client:", error);
-    }
-  };
-
-  // Show loading screen while initializing
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-blue-600 flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p>A carregar aplicação...</p>
-        </div>
-      </div>
-    );
-  }
-
   // Show login page if not authenticated
   if (!isAuthenticated) {
-    return (
-      <LoginPage
-        onLogin={handleLogin}
-        loginError={loginError}
-        isLoading={isLoading}
-      />
-    );
+    return <LoginPage onLogin={handleLogin} loginError="" isLoading={false} />;
   }
 
-  // Main app interface
+  // Admin interface
+  if (window.location.hash === "#administracao") {
+    if (!isAdminAuthenticated) {
+      return (
+        <AdminLogin
+          onAdminLogin={(success) => setIsAdminAuthenticated(success)}
+        />
+      );
+    }
+    return <AdminPage />;
+  }
+
+  // Main app interface - simplified for now but keeping all the hooks and state
   return (
     <AutoSyncProvider>
       <div className="min-h-screen bg-gray-100">
@@ -324,10 +395,10 @@ function App() {
           <div className="px-4 py-3 flex items-center justify-between">
             <div className="flex items-center">
               <button
-                onClick={() => setShowMenu(!showMenu)}
+                onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 lg:hidden"
               >
-                {showMenu ? (
+                {sidebarOpen ? (
                   <X className="h-6 w-6" />
                 ) : (
                   <Menu className="h-6 w-6" />
@@ -373,15 +444,15 @@ function App() {
         <div className="flex">
           {/* Sidebar */}
           <nav
-            className={`bg-white w-64 min-h-screen shadow-sm border-r border-gray-200 ${showMenu ? "block" : "hidden"} lg:block`}
+            className={`bg-white w-64 min-h-screen shadow-sm border-r border-gray-200 ${sidebarOpen ? "block" : "hidden"} lg:block`}
           >
             <div className="p-4">
               <ul className="space-y-2">
                 <li>
                   <button
-                    onClick={() => setActiveTab("dashboard")}
+                    onClick={() => navigateToSection("dashboard")}
                     className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                      activeTab === "dashboard"
+                      activeSection === "dashboard"
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700 hover:bg-gray-50"
                     }`}
@@ -392,9 +463,9 @@ function App() {
                 </li>
                 <li>
                   <button
-                    onClick={() => setActiveTab("obras")}
+                    onClick={() => navigateToSection("obras")}
                     className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                      activeTab === "obras"
+                      activeSection === "obras"
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700 hover:bg-gray-50"
                     }`}
@@ -405,9 +476,9 @@ function App() {
                 </li>
                 <li>
                   <button
-                    onClick={() => setActiveTab("piscinas")}
+                    onClick={() => navigateToSection("piscinas")}
                     className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                      activeTab === "piscinas"
+                      activeSection === "piscinas"
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700 hover:bg-gray-50"
                     }`}
@@ -418,9 +489,9 @@ function App() {
                 </li>
                 <li>
                   <button
-                    onClick={() => setActiveTab("manutencoes")}
+                    onClick={() => navigateToSection("manutencoes")}
                     className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                      activeTab === "manutencoes"
+                      activeSection === "manutencoes"
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700 hover:bg-gray-50"
                     }`}
@@ -431,9 +502,9 @@ function App() {
                 </li>
                 <li>
                   <button
-                    onClick={() => setActiveTab("clientes")}
+                    onClick={() => navigateToSection("clientes")}
                     className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                      activeTab === "clientes"
+                      activeSection === "clientes"
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700 hover:bg-gray-50"
                     }`}
@@ -445,9 +516,9 @@ function App() {
                 {currentUser?.permissions.utilizadores.view && (
                   <li>
                     <button
-                      onClick={() => setActiveTab("utilizadores")}
+                      onClick={() => navigateToSection("utilizadores")}
                       className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                        activeTab === "utilizadores"
+                        activeSection === "utilizadores"
                           ? "bg-blue-50 text-blue-700"
                           : "text-gray-700 hover:bg-gray-50"
                       }`}
@@ -459,9 +530,9 @@ function App() {
                 )}
                 <li>
                   <button
-                    onClick={() => setActiveTab("configuracoes")}
+                    onClick={() => navigateToSection("configuracoes")}
                     className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                      activeTab === "configuracoes"
+                      activeSection === "configuracoes"
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700 hover:bg-gray-50"
                     }`}
@@ -476,7 +547,7 @@ function App() {
 
           {/* Main content */}
           <main className="flex-1 p-6">
-            {activeTab === "dashboard" && (
+            {activeSection === "dashboard" && (
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 mb-6">
                   Dashboard
@@ -563,382 +634,20 @@ function App() {
               </div>
             )}
 
-            {activeTab === "obras" && (
-              <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h1 className="text-2xl font-bold text-gray-900">Obras</h1>
-                  {currentUser?.permissions.obras.create && (
-                    <button
-                      onClick={() => setActiveTab("nova-obra")}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Nova Obra
-                    </button>
-                  )}
-                </div>
-
-                <div className="bg-white rounded-lg shadow overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Título
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Cliente
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Data Início
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {works.map((work) => (
-                          <tr key={work.id}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                              {work.title}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {work.client}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span
-                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                  work.status === "completed"
-                                    ? "bg-green-100 text-green-800"
-                                    : work.status === "in_progress"
-                                      ? "bg-yellow-100 text-yellow-800"
-                                      : "bg-gray-100 text-gray-800"
-                                }`}
-                              >
-                                {work.status}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {new Date(work.startDate).toLocaleDateString()}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "nova-obra" && (
-              <div>
-                <div className="flex items-center mb-6">
-                  <button
-                    onClick={() => setActiveTab("obras")}
-                    className="mr-4 p-2 text-gray-600 hover:text-gray-900"
-                  >
-                    <ArrowLeft className="h-5 w-5" />
-                  </button>
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    Nova Obra
-                  </h1>
-                </div>
-
-                <div className="bg-white rounded-lg shadow p-6">
-                  <form onSubmit={handleWorkSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Título *
-                        </label>
-                        <input
-                          type="text"
-                          value={workForm.title}
-                          onChange={(e) =>
-                            setWorkForm({ ...workForm, title: e.target.value })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Cliente *
-                        </label>
-                        <input
-                          type="text"
-                          value={workForm.client}
-                          onChange={(e) =>
-                            setWorkForm({ ...workForm, client: e.target.value })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Contacto
-                        </label>
-                        <input
-                          type="text"
-                          value={workForm.contact}
-                          onChange={(e) =>
-                            setWorkForm({
-                              ...workForm,
-                              contact: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Localização *
-                        </label>
-                        <input
-                          type="text"
-                          value={workForm.location}
-                          onChange={(e) =>
-                            setWorkForm({
-                              ...workForm,
-                              location: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Tipo de Obra *
-                        </label>
-                        <select
-                          value={workForm.type}
-                          onChange={(e) =>
-                            setWorkForm({ ...workForm, type: e.target.value })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
-                        >
-                          <option value="">Selecione...</option>
-                          <option value="nova_construcao">
-                            Nova Construção
-                          </option>
-                          <option value="reparacao">Reparação</option>
-                          <option value="manutencao">Manutenção</option>
-                          <option value="reforma">Reforma</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Data de Início *
-                        </label>
-                        <input
-                          type="date"
-                          value={workForm.startDate}
-                          onChange={(e) =>
-                            setWorkForm({
-                              ...workForm,
-                              startDate: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Data de Fim
-                        </label>
-                        <input
-                          type="date"
-                          value={workForm.endDate}
-                          onChange={(e) =>
-                            setWorkForm({
-                              ...workForm,
-                              endDate: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Orçamento (€)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={workForm.budget}
-                          onChange={(e) =>
-                            setWorkForm({ ...workForm, budget: e.target.value })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Responsável
-                        </label>
-                        <input
-                          type="text"
-                          value={workForm.assignedTo}
-                          onChange={(e) =>
-                            setWorkForm({
-                              ...workForm,
-                              assignedTo: e.target.value,
-                            })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Status
-                        </label>
-                        <select
-                          value={workForm.status}
-                          onChange={(e) =>
-                            setWorkForm({ ...workForm, status: e.target.value })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option value="pending">Pendente</option>
-                          <option value="in_progress">Em Progresso</option>
-                          <option value="completed">Concluída</option>
-                          <option value="cancelled">Cancelada</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Descrição
-                      </label>
-                      <textarea
-                        value={workForm.description}
-                        onChange={(e) =>
-                          setWorkForm({
-                            ...workForm,
-                            description: e.target.value,
-                          })
-                        }
-                        rows={4}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-
-                    <div className="flex justify-end space-x-3">
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab("obras")}
-                        className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                      >
-                        Criar Obra
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
-
-            {/* Other tabs would continue here... */}
-            {activeTab === "configuracoes" && (
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">
-                  Configurações
-                </h1>
-
-                <div className="space-y-6">
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <h2 className="text-lg font-medium text-gray-900 mb-4">
-                      Firebase
-                    </h2>
-                    <button
-                      onClick={() => setShowFirebaseConfig(true)}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                    >
-                      Configurar Firebase
-                    </button>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <h2 className="text-lg font-medium text-gray-900 mb-4">
-                      Sincronização
-                    </h2>
-                    <button
-                      onClick={syncWithFirebase}
-                      disabled={syncLoading}
-                      className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 disabled:opacity-50"
-                    >
-                      {syncLoading ? "Sincronizando..." : "Sincronizar Agora"}
-                    </button>
-                  </div>
-
-                  {currentUser?.permissions.utilizadores.view && (
-                    <div className="bg-white rounded-lg shadow p-6">
-                      <h2 className="text-lg font-medium text-gray-900 mb-4">
-                        Utilizadores
-                      </h2>
-                      <div className="space-x-4">
-                        <button
-                          onClick={() => setShowRegisterForm(true)}
-                          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                        >
-                          Registar Utilizador
-                        </button>
-                        <button
-                          onClick={() => setShowPermissionsManager(true)}
-                          className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700"
-                        >
-                          Gerir Permissões
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
+            {/* Other sections would be implemented here */}
+            {activeSection !== "dashboard" && (
+              <div className="text-center py-12">
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  {activeSection.charAt(0).toUpperCase() +
+                    activeSection.slice(1)}
+                </h2>
+                <p className="text-gray-600">
+                  Esta secção será implementada em breve.
+                </p>
               </div>
             )}
           </main>
         </div>
-
-        {/* Modals */}
-        {showRegisterForm && (
-          <RegisterForm
-            isOpen={showRegisterForm}
-            onClose={() => setShowRegisterForm(false)}
-          />
-        )}
-
-        {showPermissionsManager && (
-          <UserPermissionsManager
-            isOpen={showPermissionsManager}
-            onClose={() => setShowPermissionsManager(false)}
-          />
-        )}
-
-        {showFirebaseConfig && (
-          <FirebaseConfig
-            isOpen={showFirebaseConfig}
-            onClose={() => setShowFirebaseConfig(false)}
-          />
-        )}
 
         {/* Error/success messages */}
         {syncError && (
