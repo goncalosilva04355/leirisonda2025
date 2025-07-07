@@ -19,24 +19,12 @@ export const diagnoseUserLoginIssues = (): UserLoginIssue[] => {
   const appUsersData = localStorage.getItem("app-users");
   const appUsers = appUsersData ? JSON.parse(appUsersData) : [];
 
-  // Common problematic users
-  const problematicUsers = [
-    {
-      name: "Alexandre",
-      email: "alexandre@leirisonda.pt",
-      expectedPassword: "69alexandre",
-    },
-    {
-      name: "Yuri",
-      email: "yuri@leirisonda.pt",
-      expectedPassword: "yuripass123",
-    },
-    {
-      name: "Yuri",
-      email: "yuri@example.com",
-      expectedPassword: "password123",
-    },
-  ];
+  // No problematic users - only super admin exists
+  const problematicUsers: Array<{
+    name: string;
+    email: string;
+    expectedPassword: string;
+  }> = [];
 
   problematicUsers.forEach((user) => {
     const mockUser = mockUsers.find(
@@ -87,96 +75,8 @@ export const fixUserPasswords = (): { fixed: number; errors: string[] } => {
   let fixed = 0;
 
   try {
-    // Fix mock users
-    const mockUsersData = localStorage.getItem("mock-users");
-    if (mockUsersData) {
-      const mockUsers = JSON.parse(mockUsersData);
-      let mockUpdated = false;
-
-      // Fix Alexandre
-      const alexandreIndex = mockUsers.findIndex(
-        (user: any) =>
-          user.name.toLowerCase().includes("alexandre") ||
-          user.email.toLowerCase().includes("alexandre"),
-      );
-
-      if (alexandreIndex !== -1) {
-        mockUsers[alexandreIndex].password = "69alexandre";
-        mockUsers[alexandreIndex].active = true;
-        fixed++;
-        mockUpdated = true;
-        console.log("✅ Alexandre password fixed to: 69alexandre");
-      }
-
-      // Fix Yuri
-      const yuriIndex = mockUsers.findIndex(
-        (user: any) =>
-          user.name.toLowerCase().includes("yuri") ||
-          user.email.toLowerCase().includes("yuri"),
-      );
-
-      if (yuriIndex !== -1) {
-        // Determine which password to use based on email
-        const yuriUser = mockUsers[yuriIndex];
-        if (yuriUser.email.includes("leirisonda.pt")) {
-          mockUsers[yuriIndex].password = "yuripass123";
-        } else {
-          mockUsers[yuriIndex].password = "password123";
-        }
-        mockUsers[yuriIndex].active = true;
-        fixed++;
-        mockUpdated = true;
-        console.log(
-          `✅ Yuri password fixed to: ${mockUsers[yuriIndex].password}`,
-        );
-      }
-
-      if (mockUpdated) {
-        localStorage.setItem("mock-users", JSON.stringify(mockUsers));
-      }
-    }
-
-    // Fix app users
-    const appUsersData = localStorage.getItem("app-users");
-    if (appUsersData) {
-      const appUsers = JSON.parse(appUsersData);
-      let appUpdated = false;
-
-      // Fix Alexandre in app users
-      const alexandreAppIndex = appUsers.findIndex(
-        (user: any) =>
-          user.name.toLowerCase().includes("alexandre") ||
-          user.email.toLowerCase().includes("alexandre"),
-      );
-
-      if (alexandreAppIndex !== -1) {
-        appUsers[alexandreAppIndex].password = "69alexandre";
-        appUsers[alexandreAppIndex].active = true;
-        appUpdated = true;
-      }
-
-      // Fix Yuri in app users
-      const yuriAppIndex = appUsers.findIndex(
-        (user: any) =>
-          user.name.toLowerCase().includes("yuri") ||
-          user.email.toLowerCase().includes("yuri"),
-      );
-
-      if (yuriAppIndex !== -1) {
-        const yuriUser = appUsers[yuriAppIndex];
-        if (yuriUser.email.includes("leirisonda.pt")) {
-          appUsers[yuriAppIndex].password = "yuripass123";
-        } else {
-          appUsers[yuriAppIndex].password = "password123";
-        }
-        appUsers[yuriAppIndex].active = true;
-        appUpdated = true;
-      }
-
-      if (appUpdated) {
-        localStorage.setItem("app-users", JSON.stringify(appUsers));
-      }
-    }
+    // No users to fix - only super admin exists
+    console.log("🔧 No problematic users to fix - only super admin exists");
   } catch (error: any) {
     errors.push(`Erro ao corrigir passwords: ${error.message}`);
   }
@@ -195,23 +95,14 @@ export const createMissingUsers = (): { created: number; errors: string[] } => {
     const appUsersData = localStorage.getItem("app-users");
     const appUsers = appUsersData ? JSON.parse(appUsersData) : [];
 
-    // Default users to ensure exist
-    const defaultUsers = [
-      {
-        name: "Alexandre",
-        email: "alexandre@leirisonda.pt",
-        password: "69alexandre",
-        role: "technician",
-        active: true,
-      },
-      {
-        name: "Yuri",
-        email: "yuri@leirisonda.pt",
-        password: "yuripass123",
-        role: "technician",
-        active: true,
-      },
-    ];
+    // No default users to create - only super admin exists
+    const defaultUsers: Array<{
+      name: string;
+      email: string;
+      password: string;
+      role: string;
+      active: boolean;
+    }> = [];
 
     defaultUsers.forEach((defaultUser) => {
       // Check if user exists in mock

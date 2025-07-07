@@ -18,7 +18,9 @@ import {
   Unlock,
   CheckCircle,
   XCircle,
+  UserMinus,
 } from "lucide-react";
+import { cleanUserData } from "../utils/cleanUserData";
 
 interface User {
   id: string;
@@ -502,13 +504,38 @@ export const UserManagement: React.FC = () => {
             Criar, editar e gerir utilizadores e permissões do sistema
           </p>
         </div>
-        <button
-          onClick={() => setIsCreating(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          <UserPlus className="h-4 w-4" />
-          <span>Novo Utilizador</span>
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => {
+              if (
+                confirm(
+                  "⚠️ ATENÇÃO: Isto irá remover TODOS os utilizadores exceto o super admin Gonçalo. Confirma?",
+                )
+              ) {
+                const success = cleanUserData();
+                if (success) {
+                  alert(
+                    "✅ Utilizadores limpos! Apenas o super admin Gonçalo permanece.",
+                  );
+                  loadUsers(); // Reload the users list
+                } else {
+                  alert("❌ Erro na limpeza de utilizadores.");
+                }
+              }
+            }}
+            className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            <UserMinus className="h-4 w-4" />
+            <span>Limpar Utilizadores</span>
+          </button>
+          <button
+            onClick={() => setIsCreating(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            <UserPlus className="h-4 w-4" />
+            <span>Novo Utilizador</span>
+          </button>
+        </div>
       </div>
 
       {/* Information Banner */}

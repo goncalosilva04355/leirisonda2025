@@ -352,58 +352,6 @@ class FullSyncService {
         };
     }
   }
-
-  // Function to fix Alexandre's password specifically
-  async fixAlexandrePassword(): Promise<boolean> {
-    try {
-      // Fix in localStorage
-      const mockUsers = localStorage.getItem("mock-users");
-      if (mockUsers) {
-        const users = JSON.parse(mockUsers);
-        const alexandreIndex = users.findIndex(
-          (user: any) =>
-            user.name.toLowerCase().includes("alexandre") ||
-            user.email.toLowerCase().includes("alexandre"),
-        );
-
-        if (alexandreIndex !== -1) {
-          users[alexandreIndex].password = "69alexandre";
-          localStorage.setItem("mock-users", JSON.stringify(users));
-
-          // Also fix in Firebase if available
-          if (db) {
-            try {
-              const userRef = doc(db, "users", users[alexandreIndex].uid);
-              await setDoc(
-                userRef,
-                {
-                  ...users[alexandreIndex],
-                  updatedAt: new Date().toISOString(),
-                },
-                { merge: true },
-              );
-            } catch (error) {
-              console.log(
-                "⏸️ Firebase operation skipped - quota protection mode",
-              );
-            }
-          } else {
-            console.log("⏸️ Firebase not available - local fix only");
-          }
-
-          // Reload mock service
-          mockAuthService.reloadUsers();
-
-          console.log("✅ Password do Alexandre corrigida para: 69alexandre");
-          return true;
-        }
-      }
-      return false;
-    } catch (error) {
-      console.error("Erro ao corrigir password do Alexandre:", error);
-      return false;
-    }
-  }
 }
 
 export const fullSyncService = new FullSyncService();

@@ -530,65 +530,6 @@ function App() {
     }
   }, [isAuthenticated]);
 
-  // Notify Alexandre about assigned works when he logs in
-  useEffect(() => {
-    if (
-      currentUser?.name.toLowerCase().includes("alexandre") &&
-      works.length > 0
-    ) {
-      console.log("🔍 DEBUG Alexandre - Data loaded:", {
-        currentUser: currentUser?.name,
-        worksCount: works.length,
-        works: works.map((w) => ({
-          id: w.id,
-          title: w.title,
-          assignedTo: w.assignedTo,
-          assignedUsers: w.assignedUsers,
-        })),
-        localStorage: {
-          pools: JSON.parse(localStorage.getItem("pools") || "[]").length,
-          works: JSON.parse(localStorage.getItem("works") || "[]").length,
-          maintenance: JSON.parse(localStorage.getItem("maintenance") || "[]")
-            .length,
-        },
-      });
-
-      // Find works assigned to Alexandre
-      const alexandreWorks = works.filter(
-        (work) =>
-          work &&
-          work.assignedTo &&
-          (work.assignedTo.toLowerCase().includes("alexandre") ||
-            work.assignedUsers?.some(
-              (user) =>
-                user.name && user.name.toLowerCase().includes("alexandre"),
-            )),
-      );
-
-      // Notify Alexandre about his assigned works
-      if (
-        alexandreWorks.length > 0 &&
-        notificationsEnabled &&
-        Notification.permission === "granted"
-      ) {
-        console.log(
-          "🔔 Sending notification to Alexandre about assigned works:",
-          alexandreWorks.length,
-        );
-
-        setTimeout(() => {
-          showNotification(
-            "Obras Atribuídas",
-            `Olá Alexandre! Tens ${alexandreWorks.length} obra${alexandreWorks.length > 1 ? "s" : ""} atribuída${alexandreWorks.length > 1 ? "s" : ""}.`,
-            "work",
-          );
-        }, 2000); // Delay to ensure notification system is ready
-      } else if (alexandreWorks.length > 0) {
-        console.log("ℹ️ Alexandre has works but notifications are not enabled");
-      }
-    }
-  }, [currentUser, works, notificationsEnabled]);
-
   // Login form state
   const [loginForm, setLoginForm] = useState({
     email: "",

@@ -32,10 +32,7 @@ export const useAutoSync = () => {
       setSyncStatus("syncing");
 
       try {
-        // First fix Alexandre's password
-        await fullSyncService.fixAlexandrePassword();
-
-        // Then perform full sync
+        // Perform full sync
         const result = await fullSyncService.syncAllData();
 
         if (result.success) {
