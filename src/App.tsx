@@ -40,6 +40,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
+import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
 import { syncManager } from "./utils/syncManager";
@@ -663,7 +664,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manuten��ão Regular",
+      type: "Manutenção Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -3158,7 +3159,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ���‍🔧 {maint.technician}
+                                👨‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -6045,7 +6046,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <option>Todos os tipos</option>
                       <option>Particular</option>
                       <option>Empresa</option>
-                      <option>Condomínio</option>
+                      <option>Condom��nio</option>
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
                       <option>Todos os estados</option>
