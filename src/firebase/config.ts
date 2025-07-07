@@ -47,7 +47,7 @@ export const saveFirebaseConfig = (config: any) => {
     console.log("🔧 Firebase: Configuration saved to localStorage");
     return true;
   } catch (error) {
-    console.error("🔧 Firebase: Error saving config to localStorage:", error);
+    console.error("�� Firebase: Error saving config to localStorage:", error);
     return false;
   }
 };
@@ -130,6 +130,7 @@ try {
   db = null;
   auth = null;
 }
+*/
 
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
