@@ -6808,7 +6808,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalação</option>
+                            <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -7837,9 +7837,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             // estimatedDuration: estimatedDuration
                             //   ? parseFloat(estimatedDuration)
                             //   : undefined,
-                            // actualDuration: actualDuration // Property doesn't exist in Maintenance type
-                              ? parseFloat(actualDuration)
-                              : undefined,
+                            // actualDuration: actualDuration ? parseFloat(actualDuration) : undefined, // Property doesn't exist in Maintenance type
                             cost: cost ? parseFloat(cost) : undefined,
                             priority,
                             completedDate: completedDate
