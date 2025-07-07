@@ -188,7 +188,7 @@ export const UserManagement: React.FC = () => {
       }
 
       // Sync with auth services
-          // mockAuthService removido - usando apenas Firebase
+      // mockAuthService removido - usando apenas Firebase
     } catch (error) {
       console.error("Error refreshing users:", error);
     }
@@ -271,7 +271,8 @@ export const UserManagement: React.FC = () => {
     // Check with mock auth service for additional validation
     try {
       // mockAuthService removido - usando apenas Firebase
-      if (false && // Disabled
+      if (
+        false && // Disabled
         allUsers.some(
           (user) => user.email.toLowerCase() === formData.email.toLowerCase(),
         )
@@ -332,12 +333,7 @@ export const UserManagement: React.FC = () => {
           // mockAuthService removido - usando apenas Firebase
 
           // Firebase registration would go here
-            formData.password,
-            formData.name.trim(),
-            authRole,
-          );
-
-          console.log("✅ User synchronized to mock auth service");
+          console.log("✅ User would be synchronized via Firebase");
 
           // Firebase consistency handled automatically
         } catch (syncError) {
