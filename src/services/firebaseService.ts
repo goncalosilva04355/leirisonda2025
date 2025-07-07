@@ -296,10 +296,23 @@ export const userService = {
 export const poolService = {
   // Listen to real-time changes
   subscribeToPools(callback: (pools: Pool[]) => void) {
-    // Use localStorage to prevent Firebase quota
-    const pools = JSON.parse(localStorage.getItem("pools") || "[]");
-    callback(pools);
-    return () => {};
+    if (!isFirebaseAvailable()) {
+      const pools = JSON.parse(localStorage.getItem("pools") || "[]");
+      callback(pools);
+      return () => {};
+    }
+
+    const q = query(
+      collection(db, COLLECTIONS.POOLS),
+      orderBy("createdAt", "desc"),
+    );
+    return onSnapshot(q, (snapshot) => {
+      const pools = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Pool[];
+      callback(pools);
+    });
   },
 
   // Add new pool
