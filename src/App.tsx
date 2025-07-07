@@ -714,11 +714,7 @@ function App() {
       setCurrentUser(null);
       setIsAuthenticated(false);
 
-      // Clear all authentication data
-      localStorage.removeItem("currentUser");
-      localStorage.removeItem("isAuthenticated");
-      // Clear saved login credentials (auto-login) when user manually logs out
-      localStorage.removeItem("savedLoginCredentials");
+      // Firebase handles auth state clearing automatically
 
       // Clear form
       setLoginForm({ email: "", password: "" });
@@ -8238,7 +8234,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 console.log("✅ Login state updated successfully");
               } else {
                 console.warn("❌ Login failed:", result.error);
-                setLoginError(result.error || "Credenciais inválidas");
+                setLoginError(result.error || "Credenciais inv��lidas");
               }
             } catch (error: any) {
               console.error("❌ Login error:", error);
