@@ -327,7 +327,7 @@ function App() {
     console.log("🔒 SECURITY: App initialization started");
 
     // Firebase Auth listener for automatic login restoration
-    console.log("🔥 Setting up Firebase Auth auto-login...");
+    console.log("��� Setting up Firebase Auth auto-login...");
 
     const initializeAuth = async () => {
       try {
@@ -3440,7 +3440,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             disponíveis)
                           </label>
                           <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuários responsáveis por esta obra
+                            Selecione os usu��rios responsáveis por esta obra
                           </p>
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
@@ -8508,7 +8508,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               )}
 
               {/* Localizações - Apenas para admin e super_admin */}
-              {(currentUser?.role === "admin" ||
+              {(currentUser?.role === "manager" ||
                 currentUser?.role === "super_admin") && (
                 <button
                   onClick={() => {
@@ -8799,7 +8799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   {/* Detalhes Completos - Seções Expandidas */}
                   <div className="mt-6 space-y-6">
-                    {/* Informações Adicionais */}
+                    {/* Informaç��es Adicionais */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Informações Detalhadas
