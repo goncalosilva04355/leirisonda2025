@@ -41,7 +41,6 @@ import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
-import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
@@ -4734,7 +4733,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç��o criada para nova piscina:",
+                                "Futura manutenç����o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -7533,7 +7532,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
+                        Observa��ões
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
@@ -8809,7 +8808,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         selectedWork.vehicles.length > 0 && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
-                              Veículos
+                              Ve��culos
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.vehicles.join(", ")}
