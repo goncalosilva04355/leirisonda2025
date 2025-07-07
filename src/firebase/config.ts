@@ -1,9 +1,9 @@
-import { initializeApp, getApps, getApp, deleteApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-// Default Firebase config
-const defaultFirebaseConfig = {
+// Firebase config - using only default configuration
+const firebaseConfig = {
   apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
   authDomain: "leirisonda-16f8b.firebaseapp.com",
   databaseURL:
@@ -14,46 +14,6 @@ const defaultFirebaseConfig = {
   appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
   measurementId: "G-R9W43EHH2C",
 };
-
-// Function to get Firebase config from localStorage or use default
-const getFirebaseConfig = () => {
-  try {
-    const storedConfig = localStorage.getItem("firebase-config");
-    if (storedConfig) {
-      const parsedConfig = JSON.parse(storedConfig);
-      console.log("🔧 Firebase: Using configuration from localStorage");
-      return parsedConfig;
-    }
-  } catch (error) {
-    console.warn(
-      "🔧 Firebase: Error loading config from localStorage, using default:",
-      error,
-    );
-  }
-
-  // Store default config to localStorage for future use
-  localStorage.setItem(
-    "firebase-config",
-    JSON.stringify(defaultFirebaseConfig),
-  );
-  console.log("🔧 Firebase: Stored default configuration to localStorage");
-  return defaultFirebaseConfig;
-};
-
-// Function to save Firebase config to localStorage
-export const saveFirebaseConfig = (config: any) => {
-  try {
-    localStorage.setItem("firebase-config", JSON.stringify(config));
-    console.log("🔧 Firebase: Configuration saved to localStorage");
-    return true;
-  } catch (error) {
-    console.error("�� Firebase: Error saving config to localStorage:", error);
-    return false;
-  }
-};
-
-// Get current Firebase config (from localStorage or default)
-const firebaseConfig = getFirebaseConfig();
 
 // Function to get or create Firebase app
 const getFirebaseApp = () => {
