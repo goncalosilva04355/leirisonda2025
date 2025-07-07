@@ -80,7 +80,7 @@ function App() {
 
   // Debug logging for authentication state changes
   useEffect(() => {
-    console.log("�� Auth State Debug:", {
+    console.log("🔍 Auth State Debug:", {
       isAuthenticated,
       currentUser: currentUser
         ? `${currentUser?.name} (${currentUser?.email})`
@@ -293,7 +293,7 @@ function App() {
   const cleanupLoading = false;
   const cleanupError = null;
 
-  // Auto-sync hook for automatic Firebase �� localStorage synchronization
+  // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
   const autoSyncData = useAutoSync();
   const { syncStatus, isAutoSyncing } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
@@ -370,7 +370,7 @@ function App() {
       try {
         const user = JSON.parse(storedUser);
         console.log(
-          "����� App init: Restoring user from localStorage:",
+          "🔄 App init: Restoring user from localStorage:",
           user.email,
         );
         setCurrentUser(user);
@@ -402,7 +402,7 @@ function App() {
     // DO NOT initialize default admin automatically - this was causing the security issue
     // Users must always login manually for security
     console.log(
-      "��� SECURITY: No automatic admin initialization - manual login required",
+      "🔒 SECURITY: No automatic admin initialization - manual login required",
     );
 
     // Return empty cleanup function since unsubscribe is handled inside the promise
@@ -450,7 +450,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("��� Notifications not supported in this browser");
+      console.warn("⚠️ Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -822,12 +822,12 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("��� Navigating to dashboard");
+            console.log("🧭 Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
       } else {
-        console.warn("�� Login failed:", result.error);
+        console.warn("❌ Login failed:", result.error);
         setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
@@ -6274,7 +6274,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   📍{" "}
                                   {client?.address ||
-                                    "Endereço n��o disponível"}
+                                    "Endereço n���o disponível"}
                                 </button>
                               </div>
                               <div>
@@ -8938,7 +8938,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {selectedWork.description && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Descriç��o
+                        Descrição
                       </label>
                       <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
                         {selectedWork.description}
