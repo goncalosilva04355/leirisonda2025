@@ -219,7 +219,7 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
 
       if (finalConfig.collections.includes(key) && value !== oldValue) {
         console.log(`🔍 localStorage setItem detectado: ${key}`);
-        setTimeout(forceSyncNow, 100); // Pequeno delay para garantir que a operação terminou
+        setTimeout(forceSyncNow, 10); // Delay mínimo para sincronização instantânea
       }
     };
 
