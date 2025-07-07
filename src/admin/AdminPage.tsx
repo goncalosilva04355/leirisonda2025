@@ -227,6 +227,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <UserManagement />;
       case "work-assignment-fix":
         return <WorkAssignmentFix />;
+      case "works-data-diagnostic":
+        return <WorksDataDiagnostic />;
       case "login-fix":
         return <LoginFixer />;
       case "auth-diagnostic":
