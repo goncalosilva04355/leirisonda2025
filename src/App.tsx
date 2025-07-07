@@ -7341,7 +7341,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                           }
 
-                          dataSync.updateWork(editingWork.id, updateData);
+                          dataSync.updateWork(
+                            editingWork.id,
+                            updateData as any,
+                          );
 
                           alert("Obra atualizada com sucesso!");
                           setEditingWork(null);
