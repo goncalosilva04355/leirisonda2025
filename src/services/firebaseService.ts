@@ -13,6 +13,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../firebase/config";
+import { syncManager } from "../utils/syncManager";
 
 // Types
 export interface User {
@@ -117,6 +118,47 @@ const COLLECTIONS = {
 // Helper function to check if Firebase is available
 const isFirebaseAvailable = () => {
   return db !== null;
+};
+
+// Critical: Wrapper for Firebase operations with quota protection
+const safeFirebaseOperation = async <T>(
+  operation: () => Promise<T>,
+  operationName: string,
+): Promise<T> => {
+  // Check if Firebase operations are allowed
+  if (!syncManager.isFirebaseOperationAllowed()) {
+    const status = syncManager.getSyncStatus();
+    if (status.emergencyShutdown) {
+      throw new Error(
+        "Firebase em shutdown de emergência - operação bloqueada",
+      );
+    }
+    if (status.quotaExceeded) {
+      throw new Error(
+        `Firebase quota excedida - aguarde ${status.hoursUntilRetry || 24} horas`,
+      );
+    }
+    throw new Error("Firebase operação bloqueada por proteção de quota");
+  }
+
+  try {
+    return await operation();
+  } catch (error: any) {
+    // Check for quota exceeded errors
+    if (
+      error.code === "resource-exhausted" ||
+      error.message?.includes("quota") ||
+      error.message?.includes("Quota exceeded")
+    ) {
+      console.error(`🚨 QUOTA EXCEEDED in ${operationName}:`, error);
+      syncManager.markQuotaExceeded();
+
+      throw new Error("Firebase quota excedida - sincronização desabilitada");
+    }
+
+    // Re-throw other errors
+    throw error;
+  }
 };
 
 // User Services
