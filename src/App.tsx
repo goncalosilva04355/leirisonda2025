@@ -2594,7 +2594,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão de piscinas no sistema
+                          Gest��o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -7007,7 +7007,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa��ões
+                          Observações
                         </h3>
                       </div>
 
@@ -8339,8 +8339,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       <FirebaseQuotaAlert />
 
       <AutoSyncProvider
-        enabled={true}
-        syncInterval={30000}
+        enabled={false}
+        syncInterval={0}
         collections={["users", "pools", "maintenance", "works", "clients"]}
         showNotifications={false}
       >
