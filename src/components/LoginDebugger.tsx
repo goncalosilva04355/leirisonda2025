@@ -17,6 +17,8 @@ export const LoginDebugger: React.FC<LoginDebuggerProps> = ({
     password: "19867gsf",
   });
 
+  const [testResults, setTestResults] = useState<any[]>([]);
+
   useEffect(() => {
     if (isVisible) {
       loadDebugInfo();
@@ -85,6 +87,64 @@ export const LoginDebugger: React.FC<LoginDebuggerProps> = ({
     loadDebugInfo();
   };
 
+  const runAllTests = async () => {
+    const results = [];
+    setTestResults([]);
+
+    // Test scenarios
+    const scenarios = [
+      {
+        email: "gongonsilva@gmail.com",
+        password: "19867gsf",
+        label: "Admin - Correct",
+      },
+      {
+        email: "gongonsilva@gmail.com",
+        password: "wrong",
+        label: "Admin - Wrong Password",
+      },
+      { email: "invalid@test.com", password: "123456", label: "Invalid User" },
+      { email: "", password: "123456", label: "Empty Email" },
+      { email: "test@test.com", password: "", label: "Empty Password" },
+      {
+        email: "   gongonsilva@gmail.com   ",
+        password: "19867gsf",
+        label: "Admin - With Spaces",
+      },
+    ];
+
+    for (const scenario of scenarios) {
+      try {
+        const mockResult = await mockAuthService.login(
+          scenario.email,
+          scenario.password,
+        );
+        const authResult = await authService.login(
+          scenario.email,
+          scenario.password,
+        );
+
+        results.push({
+          scenario: scenario.label,
+          email: scenario.email,
+          password: scenario.password,
+          mockResult: mockResult.success ? "SUCCESS" : mockResult.error,
+          authResult: authResult.success ? "SUCCESS" : authResult.error,
+        });
+      } catch (error) {
+        results.push({
+          scenario: scenario.label,
+          email: scenario.email,
+          password: scenario.password,
+          mockResult: `ERROR: ${error}`,
+          authResult: `ERROR: ${error}`,
+        });
+      }
+    }
+
+    setTestResults(results);
+  };
+
   if (!isVisible) return null;
 
   return (
@@ -134,7 +194,7 @@ export const LoginDebugger: React.FC<LoginDebuggerProps> = ({
                 />
               </div>
             </div>
-            <div className="mt-4 flex gap-2">
+            <div className="mt-4 flex gap-2 flex-wrap">
               <button
                 onClick={testMockLogin}
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -146,6 +206,12 @@ export const LoginDebugger: React.FC<LoginDebuggerProps> = ({
                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
               >
                 Test Auth Service
+              </button>
+              <button
+                onClick={runAllTests}
+                className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
+              >
+                Run All Tests
               </button>
               <button
                 onClick={clearAllData}
@@ -162,25 +228,62 @@ export const LoginDebugger: React.FC<LoginDebuggerProps> = ({
             </div>
           </div>
 
+          {/* Test Results */}
+          {testResults.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold mb-2">Test Results:</h3>
+              <div className="bg-gray-100 p-3 rounded overflow-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-1">Scenario</th>
+                      <th className="text-left p-1">Email</th>
+                      <th className="text-left p-1">Mock Result</th>
+                      <th className="text-left p-1">Auth Result</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {testResults.map((result, index) => (
+                      <tr key={index} className="border-b">
+                        <td className="p-1">{result.scenario}</td>
+                        <td className="p-1">{result.email}</td>
+                        <td
+                          className={`p-1 ${result.mockResult === "SUCCESS" ? "text-green-600" : "text-red-600"}`}
+                        >
+                          {result.mockResult}
+                        </td>
+                        <td
+                          className={`p-1 ${result.authResult === "SUCCESS" ? "text-green-600" : "text-red-600"}`}
+                        >
+                          {result.authResult}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
           {/* Debug Information */}
           <div className="space-y-4">
             <div>
               <h3 className="font-semibold mb-2">LocalStorage Data:</h3>
-              <pre className="bg-gray-100 p-3 rounded text-xs overflow-auto">
+              <pre className="bg-gray-100 p-3 rounded text-xs overflow-auto max-h-32">
                 {JSON.stringify(debugInfo.localStorage, null, 2)}
               </pre>
             </div>
 
             <div>
               <h3 className="font-semibold mb-2">Mock Users:</h3>
-              <pre className="bg-gray-100 p-3 rounded text-xs overflow-auto">
+              <pre className="bg-gray-100 p-3 rounded text-xs overflow-auto max-h-32">
                 {JSON.stringify(debugInfo.mockUsers, null, 2)}
               </pre>
             </div>
 
             <div>
               <h3 className="font-semibold mb-2">Firebase Status:</h3>
-              <pre className="bg-gray-100 p-3 rounded text-xs overflow-auto">
+              <pre className="bg-gray-100 p-3 rounded text-xs overflow-auto max-h-32">
                 {JSON.stringify(debugInfo.firebaseConfig, null, 2)}
               </pre>
             </div>
