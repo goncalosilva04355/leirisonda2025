@@ -44,9 +44,7 @@ export const LoginFixer: React.FC = () => {
         `🔑 Passwords corrigidas: ${fixResult.passwordsFixed}\n` +
         `👤 Utilizadores criados: ${fixResult.usersCreated}\n` +
         `❌ Erros: ${fixResult.errors.length}\n\n` +
-        `Tente fazer login novamente:\n` +
-        `• Alexandre: alexandre@leirisonda.pt / 69alexandre\n` +
-        `• Yuri: yuri@leirisonda.pt / yuripass123`;
+        `Apenas super admin disponível: Gonçalo Fonseca`;
 
       alert(message);
     } catch (error: any) {
