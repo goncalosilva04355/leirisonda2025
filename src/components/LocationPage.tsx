@@ -12,7 +12,10 @@ import {
   Monitor,
   ArrowLeft,
   Shield,
+  Users,
+  Map,
 } from "lucide-react";
+import { UserLocationMap } from "./UserLocationMap";
 
 interface LocationData {
   latitude: number;
