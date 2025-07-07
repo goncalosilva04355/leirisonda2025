@@ -240,6 +240,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <FirebaseQuotaManager />;
       case "user-deletion":
         return <DangerousUserDeletion />;
+      case "notification-demo":
+        return <NotificationDemo />;
       case "overview":
       default:
         return (
