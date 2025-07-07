@@ -113,6 +113,19 @@ class MockAuthService {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
+    // Debug logging
+    console.log("🔍 Mock login attempt:");
+    console.log("📧 Email:", email.trim().toLowerCase());
+    console.log("🔑 Password length:", password.length);
+    console.log(
+      "👥 Available users:",
+      this.users.map((u) => ({
+        email: u.email.toLowerCase(),
+        passwordLength: u.password?.length || 0,
+        active: u.active,
+      })),
+    );
+
     const user = this.users.find(
       (u) =>
         u.email.toLowerCase() === email.trim().toLowerCase() &&
@@ -125,11 +138,22 @@ class MockAuthService {
       const userExists = this.users.find(
         (u) => u.email.toLowerCase() === email.trim().toLowerCase(),
       );
-      if (userExists && !userExists.active) {
-        return { success: false, error: "Conta desativada" };
-      } else if (userExists) {
-        return { success: false, error: "Password incorreta" };
+
+      if (userExists) {
+        console.log("🚨 User found but login failed:");
+        console.log("📧 Stored email:", userExists.email);
+        console.log("🔑 Stored password:", userExists.password);
+        console.log("🔑 Input password:", password);
+        console.log("🔄 Password match:", userExists.password === password);
+        console.log("✅ Account active:", userExists.active);
+
+        if (!userExists.active) {
+          return { success: false, error: "Conta desativada" };
+        } else {
+          return { success: false, error: "Password incorreta" };
+        }
       } else {
+        console.log("❌ User not found");
         return { success: false, error: "Utilizador não encontrado" };
       }
     }
