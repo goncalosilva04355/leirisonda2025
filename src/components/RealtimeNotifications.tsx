@@ -147,6 +147,10 @@ export const RealtimeNotifications: React.FC = () => {
       handleWorkAssignment as EventListener,
     );
     window.addEventListener("usersUpdated", handleUserEvents as EventListener);
+    window.addEventListener(
+      "customNotification",
+      handleCustomNotification as EventListener,
+    );
 
     return () => {
       window.removeEventListener(
