@@ -81,56 +81,75 @@ const getFirebaseApp = () => {
   }
 };
 
-// Initialize Firebase services with error handling
-// EMERGENCY: Firebase initialization disabled to prevent quota exceeded
-console.log("⏸️ Firebase initialization disabled - quota protection mode");
+// Initialize Firebase services with error handling and quota control
+console.log("🔥 Firebase initialization enabled - controlled sync mode");
 let app: any = null;
 let db: any = null;
 let auth: any = null;
 
-/*
-DISABLED TO PREVENT QUOTA EXCEEDED:
+// Check if quota was previously exceeded
+const isQuotaExceeded = () => {
+  const quotaFlag = localStorage.getItem("firebase-quota-exceeded");
+  if (quotaFlag) {
+    const quotaTime = parseInt(quotaFlag);
+    const cooldownPeriod = 30 * 60 * 1000; // 30 minutes cooldown
+    return Date.now() - quotaTime < cooldownPeriod;
+  }
+  return false;
+};
+
+// Initialize Firebase services with quota protection
 try {
-  app = getFirebaseApp();
-  if (app) {
-    try {
-      db = getFirestore(app);
-      console.log("Firestore initialized successfully");
-    } catch (error) {
-      console.warn("Firestore initialization failed:", error);
-      db = null;
-    }
-
-    try {
-      auth = getAuth(app);
-      // Set auth persistence to allow login across devices and browser sessions
-      if (auth) {
-        // Use local persistence to allow users to stay logged in across devices
-        // This is needed for users to login on different devices
-        console.log(
-          "Firebase Auth persistence set to local for cross-device login",
-        );
-      }
-      console.log("Firebase Auth initialized successfully");
-    } catch (error) {
-      console.warn("Firebase Auth initialization failed:", error);
-      auth = null;
-    }
-
-    console.log("Firebase services initialized successfully");
+  if (isQuotaExceeded()) {
+    console.log(
+      "⏸️ Firebase temporarily disabled due to quota exceeded - will retry automatically",
+    );
+    app = null;
+    db = null;
+    auth = null;
   } else {
-    console.warn("Firebase app not available, services will use fallback mode");
+    app = getFirebaseApp();
+    if (app) {
+      try {
+        db = getFirestore(app);
+        console.log("✅ Firestore initialized successfully");
+      } catch (error) {
+        console.warn("⚠️ Firestore initialization failed:", error);
+        db = null;
+      }
+
+      try {
+        auth = getAuth(app);
+        // Set auth persistence to allow login across devices and browser sessions
+        if (auth) {
+          // Use local persistence to allow users to stay logged in across devices
+          // This is needed for users to login on different devices
+          console.log(
+            "🔐 Firebase Auth persistence set to local for cross-device login",
+          );
+        }
+        console.log("✅ Firebase Auth initialized successfully");
+      } catch (error) {
+        console.warn("⚠️ Firebase Auth initialization failed:", error);
+        auth = null;
+      }
+
+      console.log("✅ Firebase services initialized successfully");
+    } else {
+      console.warn(
+        "⚠️ Firebase app not available, services will use fallback mode",
+      );
+    }
   }
 } catch (error) {
   console.warn(
-    "Firebase services initialization failed, using fallback mode:",
+    "⚠️ Firebase services initialization failed, using fallback mode:",
     error,
   );
   app = null;
   db = null;
   auth = null;
 }
-*/
 
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
