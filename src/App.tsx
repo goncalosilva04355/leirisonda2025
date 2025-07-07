@@ -36,6 +36,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { SyncStatusIcon } from "./components/SyncStatusIndicator";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
+import { SilentDataProtection } from "./components/SilentDataProtection";
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -5532,7 +5533,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>• Equipas responsáveis</li>
+                        <li>��� Equipas responsáveis</li>
                         <li>• Estados de progresso</li>
                       </ul>
                     </div>
@@ -8373,6 +8374,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             />
           </div>
         )}
+
+        {/* Proteção silenciosa de dados em segundo plano */}
+        <SilentDataProtection />
       </div>
     </AutoSyncProvider>
   );
