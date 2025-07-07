@@ -7,6 +7,8 @@ import {
   Wrench,
   Database,
   RotateCw,
+  UserPlus,
+  UserCheck,
 } from "lucide-react";
 
 interface User {
