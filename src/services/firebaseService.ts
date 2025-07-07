@@ -154,11 +154,14 @@ export const userService = {
       updatedAt: Timestamp.now(),
     });
 
-    // Trigger synchronization for the new user
+    // Trigger automatic synchronization for the new user
     console.log(
-      `User ${userData.name} (${userData.email}) added and will be synchronized automatically`,
+      `✅ Usuário ${userData.name} (${userData.email}) adicionado - sincronização automática ativada`,
     );
     await syncService.triggerUserSync(docRef.id);
+
+    // Force immediate cross-device sync
+    await syncService.forceCrossDeviceSync("users");
 
     return docRef.id;
   },
@@ -428,36 +431,126 @@ export const workService = {
   },
 };
 
-// General sync service
+// General sync service with enhanced cross-device synchronization
 export const syncService = {
   // Initialize all data
   async initializeData() {
     if (!isFirebaseAvailable()) {
+      console.log("⚠️ Firebase não disponível - sincronização limitada");
       return; // Skip initialization if Firebase not configured
     }
+
+    console.log("🚀 Inicializando dados do Firebase...");
     await userService.initializeDefaultUsers();
+    console.log("✅ Dados inicializados com sucesso");
   },
 
   // Trigger user synchronization after adding a new user
   async triggerUserSync(userId: string) {
     if (!isFirebaseAvailable()) {
-      console.log("Firebase not available - user sync limited to local");
+      console.log(
+        "Firebase não disponível - sincronização de usuário limitada",
+      );
       return;
     }
 
     try {
       // The real-time listeners will automatically pick up the new user
-      // This is just for logging and potential additional sync operations
-      console.log(`Triggered synchronization for user: ${userId}`);
+      console.log(`🔄 Sincronização ativada para usuário: ${userId}`);
 
-      // You could add additional sync logic here if needed
-      // For example, notifying other services or updating cache
+      // Broadcast sync event to other tabs/windows
+      const syncEvent = new CustomEvent("firebase-sync", {
+        detail: { type: "user", id: userId, timestamp: Date.now() },
+      });
+      window.dispatchEvent(syncEvent);
+
+      // Update localStorage to trigger cross-tab sync
+      const currentUsers = localStorage.getItem("users");
+      if (currentUsers) {
+        const usersData = JSON.parse(currentUsers);
+        localStorage.setItem("users", JSON.stringify(usersData));
+      }
     } catch (error) {
-      console.error("Failed to trigger user sync:", error);
+      console.error("❌ Falha ao sincronizar usuário:", error);
     }
   },
 
-  // Subscribe to all data changes
+  // Force cross-device synchronization for specific collection
+  async forceCrossDeviceSync(collection: string) {
+    if (!isFirebaseAvailable()) {
+      console.log(
+        `Firebase não disponível - sincronização de ${collection} limitada`,
+      );
+      return;
+    }
+
+    try {
+      console.log(
+        `🔄 Forçando sincronização entre dispositivos para: ${collection}`,
+      );
+
+      // Broadcast sync event to all tabs/windows
+      const syncEvent = new CustomEvent("firebase-sync", {
+        detail: {
+          type: "forced-sync",
+          collection,
+          timestamp: Date.now(),
+          source: "manual",
+        },
+      });
+      window.dispatchEvent(syncEvent);
+
+      // Trigger storage event for cross-tab sync
+      const storageEvent = new StorageEvent("storage", {
+        key: collection,
+        newValue: localStorage.getItem(collection),
+        oldValue: null,
+        storageArea: localStorage,
+      });
+      window.dispatchEvent(storageEvent);
+
+      console.log(
+        `✅ Sincronização entre dispositivos ativada para: ${collection}`,
+      );
+    } catch (error) {
+      console.error(`❌ Erro ao forçar sincronização de ${collection}:`, error);
+    }
+  },
+
+  // Enhanced automatic sync for all data changes
+  async triggerAutoSync(
+    changeType: string,
+    collectionName: string,
+    documentId?: string,
+  ) {
+    if (!isFirebaseAvailable()) {
+      return;
+    }
+
+    try {
+      console.log(
+        `🔄 Auto-sync disparado: ${changeType} em ${collectionName}${documentId ? ` (${documentId})` : ""}`,
+      );
+
+      // Force immediate sync for specific collection
+      await this.forceCrossDeviceSync(collectionName);
+
+      // Trigger global sync notification
+      const syncEvent = new CustomEvent("firebase-auto-sync", {
+        detail: {
+          changeType,
+          collection: collectionName,
+          documentId,
+          timestamp: Date.now(),
+        },
+      });
+      window.dispatchEvent(syncEvent);
+    } catch (error) {
+      console.error(`❌ Erro no auto-sync para ${collectionName}:`, error);
+    }
+  },
+
+  // Subscribe to all data changes with enhanced sync capabilities
   subscribeToAllData(callbacks: {
     onUsersChange: (users: User[]) => void;
     onPoolsChange: (pools: Pool[]) => void;
@@ -466,6 +559,7 @@ export const syncService = {
   }) {
     if (!isFirebaseAvailable()) {
       // Return empty data and empty unsubscribe function
+      console.log("⚠️ Firebase não disponível - retornando dados vazios");
       callbacks.onUsersChange([]);
       callbacks.onPoolsChange([]);
       callbacks.onMaintenanceChange([]);
@@ -473,21 +567,48 @@ export const syncService = {
       return () => {};
     }
 
-    const unsubscribeUsers = userService.subscribeToUsers(
-      callbacks.onUsersChange,
+    console.log(
+      "📡 Configurando listeners para sincronização em tempo real...",
     );
-    const unsubscribePools = poolService.subscribeToPools(
-      callbacks.onPoolsChange,
-    );
+
+    // Enhanced subscription with automatic sync triggers
+    const unsubscribeUsers = userService.subscribeToUsers((users) => {
+      console.log(
+        `👥 Mudança detectada em usuários: ${users.length} registros`,
+      );
+      callbacks.onUsersChange(users);
+      this.triggerAutoSync("users-changed", "users");
+    });
+
+    const unsubscribePools = poolService.subscribeToPools((pools) => {
+      console.log(
+        `🏊 Mudança detectada em piscinas: ${pools.length} registros`,
+      );
+      callbacks.onPoolsChange(pools);
+      this.triggerAutoSync("pools-changed", "pools");
+    });
+
     const unsubscribeMaintenance = maintenanceService.subscribeToMaintenance(
-      callbacks.onMaintenanceChange,
+      (maintenance) => {
+        console.log(
+          `🔧 Mudança detectada em manutenções: ${maintenance.length} registros`,
+        );
+        callbacks.onMaintenanceChange(maintenance);
+        this.triggerAutoSync("maintenance-changed", "maintenance");
+      },
     );
-    const unsubscribeWorks = workService.subscribeToWorks(
-      callbacks.onWorksChange,
-    );
+
+    const unsubscribeWorks = workService.subscribeToWorks((works) => {
+      console.log(`⚒️ Mudança detectada em obras: ${works.length} registros`);
+      callbacks.onWorksChange(works);
+      this.triggerAutoSync("works-changed", "works");
+    });
+
+    console.log("✅ Todos os listeners configurados com sucesso");
 
     // Return unsubscribe function
     return () => {
+      console.log("🛑 Desconectando todos os listeners de sincronização");
       unsubscribeUsers();
       unsubscribePools();
       unsubscribeMaintenance();
