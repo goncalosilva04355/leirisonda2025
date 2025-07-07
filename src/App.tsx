@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Building2, Menu, X, Home, Plus, Settings, LogOut } from "lucide-react";
+import {
+  Building2,
+  Menu,
+  X,
+  Home,
+  Plus,
+  Settings,
+  LogOut,
+  Wrench,
+  Waves,
+  BarChart3,
+  Users,
+  UserCheck,
+} from "lucide-react";
 
 interface UserProfile {
   id: number;
@@ -34,6 +47,11 @@ function App() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
+
+  // Simple data management without complex sync hooks
+  const [works, setWorks] = useState<any[]>([]);
+  const [pools, setPools] = useState<any[]>([]);
+  const [maintenance, setMaintenance] = useState<any[]>([]);
 
   // Simple auto-login for testing
   useEffect(() => {
@@ -129,6 +147,51 @@ function App() {
             >
               <Building2 className="h-5 w-5" />
               <span>Obras</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveSection("nova-obra");
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                activeSection === "nova-obra"
+                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Plus className="h-5 w-5" />
+              <span>Nova Obra</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveSection("manutencoes");
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                activeSection === "manutencoes"
+                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Wrench className="h-5 w-5" />
+              <span>Manutenções</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveSection("piscinas");
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                activeSection === "piscinas"
+                  ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Waves className="h-5 w-5" />
+              <span>Piscinas</span>
             </button>
           </nav>
 
