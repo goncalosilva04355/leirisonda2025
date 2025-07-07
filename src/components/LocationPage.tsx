@@ -169,9 +169,13 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
   const requestPermission = async () => {
     try {
       await getCurrentLocation();
+      // Verificar novamente o estado da permissão após tentar obter localização
+      await checkPermission();
       setSettings((prev) => ({ ...prev, enabled: true }));
     } catch (err) {
       console.error("Erro ao solicitar permissão:", err);
+      // Verificar permissão mesmo em caso de erro
+      await checkPermission();
     }
   };
 
