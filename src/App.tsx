@@ -150,15 +150,15 @@ function App() {
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
 
-  // PROTEÇÃO CRÍTICA: Backup automático a cada 30 segundos
+  // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
   useEffect(() => {
     // Backup inicial
     DataProtectionService.createEmergencyBackup();
 
-    // Backup automático contínuo
+    // Backup automático contínuo (reduzido para 10 minutos)
     const backupInterval = setInterval(() => {
       DataProtectionService.createEmergencyBackup();
-    }, 30000); // A cada 30 segundos
+    }, 600000); // A cada 10 minutos
 
     return () => clearInterval(backupInterval);
   }, []);
