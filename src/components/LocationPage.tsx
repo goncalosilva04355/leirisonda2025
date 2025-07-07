@@ -216,6 +216,15 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span className="text-sm">Voltar às Configurações</span>
+            </button>
+          )}
           <h1 className="text-2xl font-bold text-gray-900">Localizações</h1>
           <p className="text-gray-600 text-sm">
             Visualize e gerencie a localização do dispositivo
