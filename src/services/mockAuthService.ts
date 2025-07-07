@@ -129,7 +129,7 @@ class MockAuthService {
     const user = this.users.find(
       (u) =>
         u.email.toLowerCase() === email.trim().toLowerCase() &&
-        u.password === password &&
+        u.password === password.trim() &&
         u.active,
     );
 
