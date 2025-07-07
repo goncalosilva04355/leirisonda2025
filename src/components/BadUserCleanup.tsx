@@ -1,57 +1,69 @@
-import React, { useEffect, useState } from "react";
-import { eliminateSpecificUsers } from "../utils/eliminateSpecificUsers";
+import React, { useState } from "react";
+import { executeCompleteCleanup } from "../utils/completeBadUserCleanup";
 
-const EliminateOldUsers: React.FC = () => {
+interface CleanupResult {
+  success: boolean;
+  message: string;
+  details: {
+    emailsFound: string[];
+    emailsRemoved: string[];
+    systemsCleaned: string[];
+    errors: string[];
+  };
+}
+
+const BadUserCleanup: React.FC = () => {
   const [isExecuting, setIsExecuting] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<CleanupResult | null>(null);
 
   const executeCleanup = async () => {
     if (isExecuting) return;
 
     setIsExecuting(true);
-    console.log("🎯 Gonçalo solicitou eliminação dos usuários específicos...");
     console.log(
-      "📧 Alvos: yrzamr01@gmail.com, alexkamaryta@gmail.com, davidcarreiraa92@gmail.com",
+      "🧹 Gonçalo solicitou limpeza de utilizadores problemáticos...",
     );
 
     try {
-      const cleanupResult = await eliminateSpecificUsers();
+      const cleanupResult = await executeCompleteCleanup();
       setResult(cleanupResult);
     } catch (error) {
       console.error("Erro na execução:", error);
-      setResult({ success: false, message: `Erro: ${error}` });
+      setResult({
+        success: false,
+        message: `Erro: ${error}`,
+        details: {
+          emailsFound: [],
+          emailsRemoved: [],
+          systemsCleaned: [],
+          errors: [`${error}`],
+        },
+      });
     } finally {
       setIsExecuting(false);
     }
   };
-
-  // Auto-execução REMOVIDA - agora só executa quando clicado
-  // useEffect(() => {
-  //   executeCleanup();
-  // }, []);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-600 mb-4">
-            🎯 Eliminando Usuários Específicos
+            🧹 Limpeza de Utilizadores
           </h2>
 
           <div className="mb-4 text-sm text-gray-600">
-            <p>📧 Alvos identificados:</p>
-            <ul className="list-disc list-inside mt-1">
-              <li>yrzamr01@gmail.com</li>
-              <li>alexkamaryta@gmail.com</li>
-              <li>davidcarreiraa92@gmail.com</li>
-            </ul>
+            <p>
+              Esta operação irá remover completamente todos os utilizadores
+              problemáticos que ainda possam existir no sistema.
+            </p>
           </div>
 
           {isExecuting && (
             <div className="mb-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
               <p className="text-gray-700">
-                Eliminando usuários específicos... Por favor aguarde.
+                Executando limpeza... Por favor aguarde.
               </p>
             </div>
           )}
@@ -67,15 +79,14 @@ const EliminateOldUsers: React.FC = () => {
 
               {result.success && result.details && (
                 <div className="mt-3 text-xs space-y-1">
-                  {result.details.usersEliminated.length > 0 && (
+                  {result.details.emailsRemoved.length > 0 && (
                     <p>
-                      🗑️ Eliminados: {result.details.usersEliminated.join(", ")}
+                      🗑️ Emails removidos: {result.details.emailsRemoved.length}
                     </p>
                   )}
                   {result.details.systemsCleaned.length > 0 && (
                     <p>
-                      🧹 Sistemas limpos:{" "}
-                      {result.details.systemsCleaned.join(", ")}
+                      🧹 Sistemas limpos: {result.details.systemsCleaned.length}
                     </p>
                   )}
                   <p className="text-gray-600 mt-2">
@@ -104,7 +115,7 @@ const EliminateOldUsers: React.FC = () => {
               onClick={executeCleanup}
               className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium"
             >
-              🎯 Eliminar Usuários Específicos Agora
+              🧹 Executar Limpeza Agora
             </button>
           )}
         </div>
@@ -113,4 +124,4 @@ const EliminateOldUsers: React.FC = () => {
   );
 };
 
-export default EliminateOldUsers;
+export default BadUserCleanup;

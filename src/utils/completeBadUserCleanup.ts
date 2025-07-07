@@ -1,9 +1,10 @@
 /**
- * Script para eliminar usuários específicos pelos emails fornecidos
- * Emails alvo: yrzamr01@gmail.com, alexkamaryta@gmail.com, davidcarreiraa92@gmail.com
+ * Utilidade para remover completamente utilizadores problemáticos
+ * Remove todos os vestígios dos emails especificados de todos os sistemas
  */
 
-const TARGET_EMAILS = [
+const PROBLEMATIC_EMAILS = [
+  "yrzamr@gmail.com",
   "yrzamr01@gmail.com",
   "alexkamaryta@gmail.com",
   "davidcarreiraa92@gmail.com",
@@ -11,64 +12,62 @@ const TARGET_EMAILS = [
 
 const SUPER_ADMIN_EMAIL = "gongonsilva@gmail.com";
 
-export interface EliminationResult {
+export interface CleanupResult {
   success: boolean;
   message: string;
   details: {
-    usersFound: string[];
-    usersEliminated: string[];
-    errors: string[];
+    emailsFound: string[];
+    emailsRemoved: string[];
     systemsCleaned: string[];
+    errors: string[];
   };
 }
 
-export const eliminateSpecificUsers = async (): Promise<EliminationResult> => {
-  console.log("🎯 INICIANDO ELIMINAÇÃO DE USUÁRIOS ESPECÍFICOS...");
-  console.log("📧 Emails alvo:", TARGET_EMAILS);
+export const executeCompleteCleanup = async (): Promise<CleanupResult> => {
+  console.log("🧹 INICIANDO LIMPEZA COMPLETA DE UTILIZADORES PROBLEMÁTICOS...");
 
-  const result: EliminationResult = {
+  const result: CleanupResult = {
     success: false,
     message: "",
     details: {
-      usersFound: [],
-      usersEliminated: [],
-      errors: [],
+      emailsFound: [],
+      emailsRemoved: [],
       systemsCleaned: [],
+      errors: [],
     },
   };
 
   try {
-    // 1. FIREBASE AUTH - Forçar logout se algum desses usuários estiver logado
+    // 1. Limpar Firebase Auth se utilizador problemático estiver logado
     await cleanFirebaseAuth(result);
 
-    // 2. LOCALSTORAGE - Limpar de todas as chaves de usuários
+    // 2. Limpar localStorage completamente
     await cleanLocalStorage(result);
 
-    // 3. SESSIONSTORAGE - Limpar completamente
+    // 3. Limpar sessionStorage
     await cleanSessionStorage(result);
 
-    // 4. INDEXEDDB - Limpar bases do Firebase
+    // 4. Limpar IndexedDB
     await cleanIndexedDB(result);
 
     // 5. Recriar apenas o super admin
     await recreateSuperAdmin(result);
 
-    // 6. Forçar eventos de atualização
+    // 6. Disparar eventos de limpeza
     dispatchCleanupEvents();
 
     result.success = true;
-    result.message = `✅ USUÁRIOS ELIMINADOS! Removidos: ${result.details.usersEliminated.join(", ")}`;
+    result.message = `✅ Limpeza completa! ${result.details.emailsRemoved.length} emails problemáticos removidos.`;
 
-    console.log("🎉 ELIMINAÇÃO ESPECÍFICA CONCLUÍDA!");
-    console.log("📊 Resultado:", result);
+    console.log("🎉 LIMPEZA COMPLETA CONCLUÍDA!", result);
 
     // Forçar reload após 2 segundos
     setTimeout(() => {
-      console.log("🔄 Recarregando para garantir estado limpo...");
+      console.log("🔄 Recarregando aplicação...");
       window.location.reload();
     }, 2000);
   } catch (error: any) {
-    console.error("💥 ERRO NA ELIMINAÇÃO:", error);
+    console.error("💥 ERRO NA LIMPEZA:", error);
     result.success = false;
     result.message = `❌ Erro: ${error.message}`;
     result.details.errors.push(`Erro crítico: ${error.message}`);
@@ -77,42 +76,42 @@ export const eliminateSpecificUsers = async (): Promise<EliminationResult> => {
   return result;
 };
 
-async function cleanFirebaseAuth(result: EliminationResult): Promise<void> {
+async function cleanFirebaseAuth(result: CleanupResult): Promise<void> {
   try {
     console.log("🔥 Verificando Firebase Auth...");
 
     const { auth } = await import("../firebase/config");
 
-    if (auth && auth.currentUser) {
-      const currentEmail = auth.currentUser.email;
-      console.log("👤 Usuário Firebase atual:", currentEmail);
+    if (auth?.currentUser?.email) {
+      const currentEmail = auth.currentUser.email.toLowerCase();
+      console.log("👤 Utilizador Firebase atual:", currentEmail);
 
-      if (currentEmail && TARGET_EMAILS.includes(currentEmail.toLowerCase())) {
-        console.log(
-          "🚨 USUÁRIO ALVO DETECTADO NO FIREBASE AUTH! Forçando logout...",
-        );
-        result.details.usersFound.push(currentEmail);
+      if (
+        PROBLEMATIC_EMAILS.some((email) => email.toLowerCase() === currentEmail)
+      ) {
+        console.log("🚨 UTILIZADOR PROBLEMÁTICO DETECTADO! Forçando logout...");
+        result.details.emailsFound.push(currentEmail);
 
         const { signOut } = await import("firebase/auth");
         await signOut(auth);
 
-        result.details.usersEliminated.push(currentEmail);
+        result.details.emailsRemoved.push(currentEmail);
         result.details.systemsCleaned.push("Firebase Auth");
-        console.log("✅ Usuário deslogado do Firebase");
+        console.log("✅ Logout do Firebase executado");
       }
     }
 
-    // Limpar persistência do Firebase Auth
+    // Limpar persistência do Firebase
     try {
       const { setPersistence, browserSessionPersistence } = await import(
         "firebase/auth"
       );
       if (auth) {
         await setPersistence(auth, browserSessionPersistence);
-        console.log("✅ Persistência do Firebase Auth limpa");
+        console.log("✅ Persistência do Firebase limpa");
       }
     } catch (error) {
-      console.warn("⚠️ Erro ao limpar persistência:", error);
+      console.warn("⚠️ Erro ao limpar persistência do Firebase:", error);
     }
   } catch (error: any) {
     console.warn("⚠️ Erro no Firebase Auth:", error);
@@ -120,10 +119,9 @@ async function cleanFirebaseAuth(result: EliminationResult): Promise<void> {
   }
 }
 
-async function cleanLocalStorage(result: EliminationResult): Promise<void> {
+async function cleanLocalStorage(result: CleanupResult): Promise<void> {
   console.log("💾 Limpando localStorage...");
 
-  // Buscar todas as chaves que podem conter usuários
   const userKeys = [
     "app-users",
     "mock-users",
@@ -138,38 +136,49 @@ async function cleanLocalStorage(result: EliminationResult): Promise<void> {
     try {
       const data = localStorage.getItem(key);
       if (data) {
-        const parsedData = JSON.parse(data);
+        let parsedData = JSON.parse(data);
+        let modified = false;
 
         if (Array.isArray(parsedData)) {
-          // Array de usuários
+          // Array de utilizadores
           const originalLength = parsedData.length;
-          const filteredUsers = parsedData.filter((user: any) => {
+          parsedData = parsedData.filter((user: any) => {
             const userEmail = user.email?.toLowerCase();
-            if (userEmail && TARGET_EMAILS.includes(userEmail)) {
-              result.details.usersFound.push(userEmail);
-              result.details.usersEliminated.push(userEmail);
+            if (
+              userEmail &&
+              PROBLEMATIC_EMAILS.some(
+                (email) => email.toLowerCase() === userEmail,
+              )
+            ) {
+              result.details.emailsFound.push(userEmail);
+              result.details.emailsRemoved.push(userEmail);
               console.log(`🗑️ Removendo ${userEmail} de ${key}`);
-              return false; // Remover este usuário
+              modified = true;
+              return false; // Remover este utilizador
             }
-            return true; // Manter outros usuários
+            return true; // Manter outros utilizadores
           });
 
-          if (filteredUsers.length !== originalLength) {
-            localStorage.setItem(key, JSON.stringify(filteredUsers));
+          if (modified) {
+            localStorage.setItem(key, JSON.stringify(parsedData));
             result.details.systemsCleaned.push(`localStorage:${key}`);
             console.log(
-              `✅ ${key} limpo: ${originalLength} → ${filteredUsers.length} usuários`,
+              `✅ ${key} limpo: ${originalLength} → ${parsedData.length} utilizadores`,
             );
           }
-        } else if (parsedData.email) {
-          // Usuário único
+        } else if (parsedData?.email) {
+          // Utilizador único
           const userEmail = parsedData.email.toLowerCase();
-          if (TARGET_EMAILS.includes(userEmail)) {
-            result.details.usersFound.push(userEmail);
-            result.details.usersEliminated.push(userEmail);
+          if (
+            PROBLEMATIC_EMAILS.some(
+              (email) => email.toLowerCase() === userEmail,
+            )
+          ) {
+            result.details.emailsFound.push(userEmail);
+            result.details.emailsRemoved.push(userEmail);
             localStorage.removeItem(key);
             result.details.systemsCleaned.push(`localStorage:${key}`);
-            console.log(`🗑️ Removido usuário único ${userEmail} de ${key}`);
+            console.log(`🗑️ Removido utilizador único ${userEmail} de ${key}`);
           }
         }
       }
@@ -179,7 +188,7 @@ async function cleanLocalStorage(result: EliminationResult): Promise<void> {
     }
   }
 
-  // Limpar também qualquer chave relacionada ao Firebase que possa ter dados dos usuários
+  // Limpar chaves do Firebase que possam conter dados dos utilizadores
   const allKeys = Object.keys(localStorage);
   const firebaseKeys = allKeys.filter(
     (key) =>
@@ -199,7 +208,7 @@ async function cleanLocalStorage(result: EliminationResult): Promise<void> {
   }
 }
 
-async function cleanSessionStorage(result: EliminationResult): Promise<void> {
+async function cleanSessionStorage(result: CleanupResult): Promise<void> {
   try {
     const itemCount = sessionStorage.length;
     sessionStorage.clear();
@@ -211,7 +220,7 @@ async function cleanSessionStorage(result: EliminationResult): Promise<void> {
   }
 }
 
-async function cleanIndexedDB(result: EliminationResult): Promise<void> {
+async function cleanIndexedDB(result: CleanupResult): Promise<void> {
   try {
     if (!("indexedDB" in window)) {
       console.log("🗃️ IndexedDB não disponível");
@@ -238,7 +247,7 @@ async function cleanIndexedDB(result: EliminationResult): Promise<void> {
               resolve(true);
             };
             deleteReq.onerror = () => reject(deleteReq.error);
-            deleteReq.onblocked = () => resolve(true); // Continue mesmo se bloqueado
+            deleteReq.onblocked = () => resolve(true); // Continuar mesmo se bloqueado
           });
         } catch (error) {
           console.warn(`⚠️ Erro ao remover IndexedDB ${db.name}:`, error);
@@ -255,7 +264,7 @@ async function cleanIndexedDB(result: EliminationResult): Promise<void> {
   }
 }
 
-async function recreateSuperAdmin(result: EliminationResult): Promise<void> {
+async function recreateSuperAdmin(result: CleanupResult): Promise<void> {
   console.log("🛡️ Recriando super admin...");
 
   try {
@@ -306,9 +315,15 @@ function dispatchCleanupEvents(): void {
   try {
     window.dispatchEvent(new CustomEvent("usersUpdated"));
     window.dispatchEvent(new CustomEvent("authStateChanged"));
-    window.dispatchEvent(new CustomEvent("specificUsersEliminated"));
+    window.dispatchEvent(new CustomEvent("problematicUsersRemoved"));
     console.log("📡 Eventos de limpeza disparados");
   } catch (error) {
     console.warn("⚠️ Erro ao disparar eventos:", error);
   }
 }
+
+// Função para execução automática se necessário
+export const executeCleanupNow = () => {
+  console.log("🚀 Executando limpeza de utilizadores problemáticos agora...");
+  return executeCompleteCleanup();
+};

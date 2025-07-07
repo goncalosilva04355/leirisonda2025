@@ -37,7 +37,6 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
-import EliminateOldUsers from "./components/EliminateOldUsers";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -143,7 +142,6 @@ function App() {
   // Admin area states
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
-  const [showEliminateOldUsers, setShowEliminateOldUsers] = useState(false);
 
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
@@ -1234,7 +1232,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     if (Notification.permission === "granted") {
       showNotification(
         "Teste de Notificação",
-        "As notificações estão a funcionar corretamente!",
+        "As notificaç��es estão a funcionar corretamente!",
         "test",
       );
     } else {

@@ -4,6 +4,11 @@ import App from "./App";
 import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 import "./index.css";
 
+// Executar limpeza imediata de utilizadores problemáticos
+import "./utils/immediateCleanup";
+// Testar se a limpeza foi bem-sucedida
+import "./utils/testCleanup";
+
 // Chrome-specific fixes for PWA compatibility
 if (typeof window !== "undefined") {
   // Clear any cached data that might be causing issues in Chrome
