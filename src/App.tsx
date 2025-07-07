@@ -5633,7 +5633,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manutenções e piscinas
+                      Elimine todos os dados de obras, manuten��ões e piscinas
                       para começar com uma aplicação limpa. Os utilizadores são
                       mantidos.
                     </p>
@@ -8425,8 +8425,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-sm text-gray-500">Gestão de Serviços</p>
                   </div>
                 </div>
-                {/* Sync Status Indicator */}
-                <SyncStatusIcon className="ml-2" />
+                {/* Sync Status Indicator - Removed */}
+                {/* <SyncStatusIcon className="ml-2" /> */}
                 {/* Close button for mobile */}
                 <button
                   onClick={() => setSidebarOpen(false)}
