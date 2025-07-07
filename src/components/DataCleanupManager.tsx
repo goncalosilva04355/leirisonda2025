@@ -35,6 +35,7 @@ export function DataCleanupManager({
     error,
     cleanupStats,
     cleanAllData,
+    clearDeviceMemory,
     initializeCleanApp,
     ensureUserSync,
     refreshStats,
@@ -66,6 +67,22 @@ export function DataCleanupManager({
 
   const handleEnsureSync = async () => {
     await ensureUserSync();
+  };
+
+  const handleClearDeviceMemory = async () => {
+    const confirmMessage =
+      "⚠️ ATENÇÃO: Esta operação irá eliminar TODA a memória do dispositivo!\n\n" +
+      "Isto inclui:\n" +
+      "• Todos os dados da aplicação\n" +
+      "• Preferências e configurações\n" +
+      "• Cache do navegador\n" +
+      "• Dados de sessão\n\n" +
+      "A página será recarregada automaticamente após a limpeza.\n\n" +
+      "Tem a certeza que pretende continuar?";
+
+    if (window.confirm(confirmMessage)) {
+      await clearDeviceMemory();
+    }
   };
 
   const formatDate = (dateString: string | null) => {
@@ -149,6 +166,16 @@ export function DataCleanupManager({
             >
               <Trash2 className="h-4 w-4" />
               {isLoading ? "A Limpar..." : "Limpar Dados"}
+            </Button>
+
+            <Button
+              onClick={handleClearDeviceMemory}
+              disabled={isLoading}
+              variant="destructive"
+              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 border-red-600"
+            >
+              <Database className="h-4 w-4" />
+              {isLoading ? "A Limpar..." : "Limpar Memória do Dispositivo"}
             </Button>
 
             <Button
@@ -313,6 +340,12 @@ export function DataCleanupManager({
               e piscinas dos sistemas Firebase e armazenamento local.
             </p>
             <p>
+              <strong>Limpar Memória do Dispositivo:</strong> Remove TODA a
+              memória do dispositivo incluindo localStorage, sessionStorage,
+              cache e dados de sessão. A página será recarregada
+              automaticamente.
+            </p>
+            <p>
               <strong>Inicialização Limpa:</strong> Faz uma limpeza completa e
               configura a aplicação para um estado inicial limpo.
             </p>
@@ -320,9 +353,10 @@ export function DataCleanupManager({
               <strong>Verificar Sincronização:</strong> Testa e configura a
               sincronização de utilizadores com o Firebase.
             </p>
-            <p className="text-amber-600">
-              <strong>Aviso:</strong> Estas operações são irreversíveis.
-              Certifique-se de que tem backups se necessário.
+            <p className="text-red-600">
+              <strong>⚠️ Aviso:</strong> Estas operações são irreversíveis,
+              especialmente a limpeza da memória do dispositivo. Certifique-se
+              de que tem backups se necessário.
             </p>
           </div>
         </CardContent>

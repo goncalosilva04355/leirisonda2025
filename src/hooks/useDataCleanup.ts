@@ -17,6 +17,7 @@ export interface UseDataCleanupReturn {
 
   // Actions
   cleanAllData: () => Promise<CleanupResult>;
+  clearDeviceMemory: () => Promise<CleanupResult>;
   initializeCleanApp: () => Promise<void>;
   ensureUserSync: () => Promise<boolean>;
 
@@ -86,6 +87,48 @@ export function useDataCleanup(): UseDataCleanupReturn {
     }
   }, [refreshStats]);
 
+  // Clear complete device memory
+  const clearDeviceMemory = useCallback(async (): Promise<CleanupResult> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await dataCleanupService.clearDeviceMemory();
+      setLastResult(result);
+
+      if (!result.success) {
+        setError(result.message);
+      }
+
+      // Note: We don't refresh stats here because the page will reload
+      return result;
+    } catch (err: any) {
+      const errorMessage = `Erro inesperado na limpeza da memória: ${err.message}`;
+      setError(errorMessage);
+
+      const errorResult: CleanupResult = {
+        success: false,
+        message: errorMessage,
+        details: {
+          firestoreDeleted: {
+            pools: 0,
+            works: 0,
+            maintenance: 0,
+            clients: 0,
+            interventions: 0,
+          },
+          realtimeDbCleared: false,
+          localStorageCleared: false,
+        },
+      };
+
+      setLastResult(errorResult);
+      return errorResult;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   // Initialize clean application
   const initializeCleanApp = useCallback(async (): Promise<void> => {
     setIsLoading(true);
@@ -142,6 +185,7 @@ export function useDataCleanup(): UseDataCleanupReturn {
 
     // Actions
     cleanAllData,
+    clearDeviceMemory,
     initializeCleanApp,
     ensureUserSync,
 
