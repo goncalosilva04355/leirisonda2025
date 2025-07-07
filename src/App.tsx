@@ -184,7 +184,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺️ Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺�� Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -1340,7 +1340,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const handleAddressClick = (address: string) => {
     console.log("🗺️ Address clicked:", address);
-    console.log("🗺️ Maps redirect enabled:", enableMapsRedirect);
+    console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
       // Open Google Maps with the address
@@ -5941,7 +5941,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão da base de dados de clientes
+                          Gest��o da base de dados de clientes
                         </p>
                       </div>
                     </div>
@@ -6911,7 +6911,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {users
                                 .filter((user) => {
                                   return (
-                                    user.role !== "viewer" &&
                                     user.active !== false &&
                                     !editAssignedUsers.some(
                                       (assigned) =>
