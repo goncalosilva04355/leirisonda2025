@@ -6593,7 +6593,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
                                   <span className="font-semibold text-gray-700 block mb-1">
-                                    👤 Cliente:
+                                    �� Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
                                     {work.client}

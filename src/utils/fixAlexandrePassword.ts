@@ -1,1 +1,1 @@
-// No longer needed - Alexandre user removed
+// File cleaned - Alexandre user removed for manual recreation

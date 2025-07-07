@@ -19,7 +19,7 @@ export const diagnoseUserLoginIssues = (): UserLoginIssue[] => {
   const appUsersData = localStorage.getItem("app-users");
   const appUsers = appUsersData ? JSON.parse(appUsersData) : [];
 
-  // No problematic users - only super admin exists
+  // No problematic users - system cleaned
   const problematicUsers: Array<{
     name: string;
     email: string;
@@ -95,7 +95,7 @@ export const createMissingUsers = (): { created: number; errors: string[] } => {
     const appUsersData = localStorage.getItem("app-users");
     const appUsers = appUsersData ? JSON.parse(appUsersData) : [];
 
-    // No default users to create - only super admin exists
+    // No default users to create - system cleaned for manual user creation
     const defaultUsers: Array<{
       name: string;
       email: string;
