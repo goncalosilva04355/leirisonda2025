@@ -1129,15 +1129,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     };
     setAssignedWorks((prev) => [newAssignedWork, ...prev]);
 
-    // Debug: Check notification conditions
-    console.log("🔍 DEBUG: Notification conditions:", {
-      hasCurrentUser: !!currentUser,
-      currentUserName: currentUser?.name,
-      assignedTo: assignedTo,
-      userMatches: currentUser?.name === assignedTo,
-      notificationsEnabled,
-      permissionGranted: Notification.permission === "granted",
-    });
+    // Check notification conditions
 
     // Check if current user is the one assigned (exact match or partial match for combined assignments)
     const isAssignedToCurrentUser =
