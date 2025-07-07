@@ -99,6 +99,16 @@ function App() {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("mock-current-user");
     console.log("🔒 SECURITY: Auth data cleared - manual login required");
+
+    // Initialize Alexandre user account if needed
+    import("./utils/fixAlexandrePassword")
+      .then(({ fixAlexandrePassword }) => {
+        const result = fixAlexandrePassword();
+        console.log("🔧 Alexandre user initialization:", result.message);
+      })
+      .catch((error) => {
+        console.warn("Could not initialize Alexandre user:", error);
+      });
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
