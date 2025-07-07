@@ -49,7 +49,8 @@ type AdminSection =
   | "auto-sync-demo"
   | "phone-settings"
   | "mobile-settings"
-  | "data-recovery";
+  | "data-recovery"
+  | "login-fix";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
@@ -69,6 +70,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       description: "Corrigir problemas na atribuição de utilizadores às obras",
       icon: Users,
       color: "bg-orange-600",
+    },
+    {
+      id: "login-fix" as AdminSection,
+      title: "🔑 Correção de Login",
+      description:
+        "Resolver problemas de login (Alexandre, Yuri, tremor do ecrã)",
+      icon: Shield,
+      color: "bg-red-600",
     },
     {
       id: "auth-diagnostic" as AdminSection,
