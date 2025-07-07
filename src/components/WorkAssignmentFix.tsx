@@ -488,7 +488,7 @@ export const WorkAssignmentFix: React.FC = () => {
         </div>
 
         {/* Fix Button */}
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap space-x-4 gap-2">
           <button
             onClick={fixUserSync}
             disabled={isFixing}
@@ -508,6 +508,20 @@ export const WorkAssignmentFix: React.FC = () => {
           >
             <RefreshCw className="h-4 w-4" />
             <span>Analisar Novamente</span>
+          </button>
+
+          <button
+            onClick={() => {
+              // Force trigger the usersUpdated event to test if it works
+              window.dispatchEvent(new CustomEvent("usersUpdated"));
+              alert(
+                "Evento de atualização de utilizadores enviado! Vá à secção 'Nova Obra' para verificar se os utilizadores aparecem agora.",
+              );
+            }}
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center space-x-2"
+          >
+            <CheckCircle className="h-4 w-4" />
+            <span>Testar Correção</span>
           </button>
         </div>
 
