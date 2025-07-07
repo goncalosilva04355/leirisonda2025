@@ -123,6 +123,17 @@ export const RealtimeNotifications: React.FC = () => {
       });
     };
 
+    // Listen to custom notifications
+    const handleCustomNotification = (event: CustomEvent) => {
+      const { title, message, type, autoHide } = event.detail;
+      addNotification({
+        type: type || "info",
+        title: title || "Notificação",
+        message: message || "",
+        autoHide: autoHide !== false,
+      });
+    };
+
     window.addEventListener(
       "firebase-sync",
       handleFirebaseSync as EventListener,
