@@ -4153,7 +4153,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             };
 
                             // Update the work with bore data
-                            dataSync.updateWork(newWork.id, boreDataUpdate);
+                            dataSync.updateWork(workData.id, boreDataUpdate);
 
                             const waterBoreData = {
                               id: Date.now(),
