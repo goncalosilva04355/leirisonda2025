@@ -252,13 +252,5 @@ export class ForceInitialization {
 // Exportar para console
 (window as any).ForceInitialization = ForceInitialization;
 
-// Auto-executar se detectar problema crítico
-if (typeof window !== "undefined") {
-  setTimeout(() => {
-    const isEmpty = ForceInitialization.checkAbsoluteEmpty();
-    if (isEmpty) {
-      console.log("🚨 AUTO-EXECUTING FORCE INITIALIZATION...");
-      ForceInitialization.executeForceInitialization();
-    }
-  }, 1000);
-}
+// Auto-execução desabilitada - dados criados manualmente pelo utilizador
+// Sistema vazio é comportamento normal para aplicação limpa
