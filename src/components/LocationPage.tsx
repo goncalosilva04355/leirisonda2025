@@ -519,6 +519,13 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
                     />
                     <span>{isLoading ? "A obter..." : "Atualizar"}</span>
                   </button>
+                  <button
+                    onClick={checkPermission}
+                    className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                  >
+                    <Shield className="h-4 w-4" />
+                    <span>Verificar Permissões</span>
+                  </button>
                   {location && (
                     <button
                       onClick={openInMaps}
