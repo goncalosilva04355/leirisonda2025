@@ -2051,7 +2051,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       : work.status === "in_progress"
                                         ? "Em Progresso"
                                         : work.status === "completed"
-                                          ? "Concluída"
+                                          ? "Conclu��da"
                                           : work.status}
                                   </span>
 
@@ -7313,7 +7313,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             location,
                             startTime,
                             endTime,
-                            status,
+                            // Only update status if it's actually different from current status
+                            ...(status !== editingWork?.status && { status }),
                             workSheetCompleted,
                             workPerformed,
                             observations,
