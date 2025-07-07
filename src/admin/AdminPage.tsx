@@ -10,6 +10,7 @@ import {
   AlertTriangle,
   Wifi,
   RefreshCw,
+  Smartphone,
 } from "lucide-react";
 
 // Import dos componentes de teste e configuração
