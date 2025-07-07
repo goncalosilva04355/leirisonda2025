@@ -58,7 +58,7 @@ export const syncManager = {
       }
     }
 
-    return false; // CRITICAL: Quota exceeded again - emergency disable
+    return true; // Always enabled per user request
   },
 
   // Mark quota as exceeded with emergency measures
@@ -166,9 +166,9 @@ export const syncManager = {
     };
   },
 
-  // EMERGENCY: All sync disabled due to quota exceeded
+  // Normal sync intervals
   getSafeInterval(): number {
-    return 0; // Complete disable until manual recovery
+    return 60000; // 1 minute - conservative but functional
   },
 
   // Check if Firebase operations should be allowed
