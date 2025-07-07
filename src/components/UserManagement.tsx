@@ -610,6 +610,11 @@ export const UserManagement: React.FC = () => {
                 • <strong>Estado:</strong> Clique no estado para
                 ativar/desativar utilizadores instantaneamente
               </p>
+              <p>
+                • <strong>Sincronizar:</strong> Se um utilizador existe mas não
+                consegue fazer login, use o botão "Sincronizar" para resolver
+                problemas de autenticação
+              </p>
             </div>
           </div>
         </div>
