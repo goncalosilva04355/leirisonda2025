@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Settings, Bug, Sync } from "lucide-react";
+import { Settings, Bug, RefreshCw } from "lucide-react";
 import { LoginDebugger } from "../components/LoginDebugger";
 import { SyncDiagnostic } from "../components/SyncDiagnostic";
 
@@ -243,7 +243,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         disabled={isLoading}
         title="Diagnóstico de Sincronização"
       >
-        <Sync className="h-5 w-5" />
+        <RefreshCw className="h-5 w-5" />
       </button>
 
       {/* Login Debugger */}
