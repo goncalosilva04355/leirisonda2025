@@ -445,7 +445,7 @@ function App() {
       } else if (permission === "denied") {
         console.warn("❌ Notifications denied by user");
       } else {
-        console.log("⏳ Notifications permission not yet requested");
+        console.log("�� Notifications permission not yet requested");
       }
     } else {
       console.warn("⚠️ Notifications not supported in this browser");
@@ -1065,7 +1065,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
 - Manutenções Realizadas: ${maintenance.length}
-- Futuras Manutenç���es: ${futureMaintenance.length}
+- Futuras Manutenções: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
@@ -1142,7 +1142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error("��� Error requesting notification permission:", error);
+        console.error("⚠️ Error requesting notification permission:", error);
         return "error";
       }
     }
@@ -1727,7 +1727,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     }
 
-    console.log("�� renderContent: Auth state valid, rendering", {
+    console.log("🔄 renderContent: Auth state valid, rendering", {
       activeSection,
       userRole: currentUser?.role,
     });
@@ -1858,7 +1858,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <button
                             onClick={() => {
                               console.log(
-                                "🧪 Testando notifica��ão para Alexandre...",
+                                "🧪 Testando notificação para Alexandre...",
                               );
                               sendWorkAssignmentNotification(
                                 "Obra de Teste para Alexandre",
@@ -1948,7 +1948,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas n��o geradas
+                          Folhas não geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -2002,7 +2002,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `��� ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
+                                  `📊 ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
                                 );
                               }
 
@@ -2284,7 +2284,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>���</span>
+                                      <span>🕒</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -2516,7 +2516,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} �� {pool.location}
+                                            {pool.client} • {pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -2649,7 +2649,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {client.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {client.email} ��� {client.phone}
+                                            {client.email} • {client.phone}
                                           </p>
                                         </div>
                                       </div>
@@ -2729,7 +2729,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">���</div>
+                                  <div className="text-gray-400 mb-2">📋</div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -3746,7 +3746,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
 
                         <div className="space-y-6">
-                          {/* Medições do Furo */}
+                          {/* Mediç��es do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
                               Medições do Furo
