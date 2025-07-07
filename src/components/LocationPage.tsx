@@ -36,9 +36,17 @@ interface LocationSettings {
 
 interface LocationPageProps {
   onBack?: () => void;
+  currentUser?: {
+    id: string;
+    name: string;
+    email: string;
+  };
 }
 
-export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
+export const LocationPage: React.FC<LocationPageProps> = ({
+  onBack,
+  currentUser,
+}) => {
   const [location, setLocation] = useState<LocationData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
