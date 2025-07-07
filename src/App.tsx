@@ -3326,7 +3326,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informações B��sicas */}
+                    {/* Informações Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -5519,7 +5519,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador n��o suporta notificações.",
+                                  "Este navegador não suporta notificações.",
                                 );
                               }
                             }}
@@ -5641,7 +5641,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-medium text-green-900">
-                              Navega���ão Maps
+                              Navegação Maps
                             </h4>
                             <button
                               onClick={() =>
@@ -5684,7 +5684,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As defini��ões são guardadas localmente no
+                              • As definições são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
@@ -5741,7 +5741,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 • Todas as piscinas ({pools.length} registos)
                               </li>
                               <li>
-                                ��� Dados do Firebase e armazenamento local
+                                🔥 Dados do Firebase e armazenamento local
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
