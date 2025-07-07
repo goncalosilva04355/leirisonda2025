@@ -1318,7 +1318,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // Settings persistence functions
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
-    localStorage.setItem("enablePhoneDialer", enabled.toString());
+    // Firebase handles settings persistence automatically
   };
 
   const toggleMapsRedirect = (enabled: boolean) => {
