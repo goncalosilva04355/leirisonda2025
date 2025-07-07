@@ -94,8 +94,11 @@ function App() {
 
   // Debug logging disabled for production
 
-  // Monitoramento de integridade de dados
+  // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
+    // Restaurar utilizadores automaticamente se necessário
+    userRestoreService.autoRestore();
+
     // Cleanup ao desmontar componente
     return () => {
       // Cleanup functions if needed
@@ -8737,7 +8740,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? new Date(selectedWork.endTime).toLocaleString(
                                 "pt-PT",
                               )
-                            : "Não especificado"}
+                            : "N��o especificado"}
                         </p>
                       </div>
                       <div>
