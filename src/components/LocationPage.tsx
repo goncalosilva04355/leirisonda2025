@@ -65,6 +65,7 @@ export const LocationPage: React.FC<LocationPageProps> = ({
         };
   });
   const [showSettings, setShowSettings] = useState(false);
+  const [activeTab, setActiveTab] = useState<"personal" | "team">("personal");
 
   // Check geolocation permission status
   const checkPermission = async () => {
@@ -472,7 +473,7 @@ export const LocationPage: React.FC<LocationPageProps> = ({
               </h3>
               <p className="text-gray-600 mb-4">
                 Para usar esta funcionalidade, é necessário conceder permissão
-                de acesso à localização.
+                de acesso �� localização.
               </p>
               <div className="space-y-2">
                 <button
