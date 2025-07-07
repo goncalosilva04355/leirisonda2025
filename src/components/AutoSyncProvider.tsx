@@ -44,8 +44,8 @@ export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
     collections,
   });
 
-  // Hook para listeners em tempo real do Firebase
-  useFirebaseRealtimeSync();
+  // Hook para listeners em tempo real do Firebase - DISABLED to prevent quota exceeded
+  // useFirebaseRealtimeSync();
 
   // Estado para notificações
   const [lastNotificationTime, setLastNotificationTime] = useState<number>(0);
