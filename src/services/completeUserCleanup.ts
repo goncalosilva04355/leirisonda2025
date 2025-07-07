@@ -38,6 +38,34 @@ class CompleteUserCleanupService {
     try {
       console.log("🚨 STARTING NUCLEAR USER CLEANUP - CLEARING EVERYTHING!");
 
+      // Step 0: Execute emergency logout to revoke ALL sessions
+      try {
+        const { emergencyLogoutService } = await import(
+          "./emergencyLogoutService"
+        );
+        const emergencyResult =
+          await emergencyLogoutService.forceLogoutAllUsers();
+
+        if (emergencyResult.success) {
+          console.log(
+            "✅ Emergency logout completed as part of nuclear cleanup",
+          );
+        } else {
+          console.warn(
+            "⚠️ Emergency logout had issues, continuing with manual cleanup",
+          );
+          result.details.errors.push(...emergencyResult.details.errors);
+        }
+      } catch (emergencyError: any) {
+        console.warn(
+          "⚠️ Emergency logout failed, continuing with manual cleanup:",
+          emergencyError,
+        );
+        result.details.errors.push(
+          `Emergency logout failed: ${emergencyError.message}`,
+        );
+      }
+
       // Step 1: Get ALL localStorage keys and clear any that might contain user data
       const allLocalStorageKeys = Object.keys(localStorage);
       const userRelatedKeys = allLocalStorageKeys.filter(
