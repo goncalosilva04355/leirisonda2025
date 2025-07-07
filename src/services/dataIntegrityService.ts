@@ -27,10 +27,10 @@ class DataIntegrityService {
    * Inicia o monitoramento contínuo da integridade dos dados
    */
   startIntegrityMonitoring() {
-    // Verifica integridade a cada 30 segundos
+    // Verifica integridade a cada 5 minutos (reduzido para melhorar performance)
     this.integrityCheckInterval = setInterval(() => {
       this.performIntegrityCheck();
-    }, 30000);
+    }, 300000);
 
     // Integrity monitoring started silently
   }

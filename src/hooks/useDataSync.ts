@@ -63,95 +63,11 @@ export interface Client {
   createdAt: string;
 }
 
-// Mock data for demonstration
-const mockPools: Pool[] = [
-  {
-    id: "pool-1",
-    name: "Piscina Villa Marina",
-    location: "Quinta da Marinha, Cascais",
-    client: "João Silva",
-    type: "Residencial",
-    status: "Ativa",
-    lastMaintenance: "2025-01-15",
-    nextMaintenance: "2025-02-15",
-    createdAt: "2025-01-01",
-  },
-  {
-    id: "pool-2",
-    name: "Piscina Condomínio Sol",
-    location: "Estoril",
-    client: "Condomínio Sol Nascente",
-    type: "Comunitária",
-    status: "Ativa",
-    lastMaintenance: "2025-01-10",
-    nextMaintenance: "2025-02-10",
-    createdAt: "2025-01-02",
-  },
-];
+// Mock data removed - no auto-populated test data
+const mockPools: Pool[] = [];
 
-// Mock maintenance data
-const mockMaintenance: Maintenance[] = [
-  {
-    id: "maint-1",
-    poolId: "pool-1",
-    poolName: "Piscina Villa Marina",
-    type: "Limpeza",
-    status: "completed",
-    description: "Limpeza completa e tratamento químico",
-    scheduledDate: "2025-01-15",
-    completedDate: "2025-01-15",
-    technician: "Maria Santos",
-    notes: "Piscina em excelentes condições",
-    clientName: "João Silva",
-    clientContact: "912345678",
-    location: "Quinta da Marinha, Cascais",
-    createdAt: "2025-01-10",
-  },
-  {
-    id: "maint-2",
-    poolId: "pool-2",
-    poolName: "Piscina Condomínio Sol",
-    type: "Manutenção",
-    status: "completed",
-    description: "Verificação de equipamentos e limpeza",
-    scheduledDate: "2025-01-10",
-    completedDate: "2025-01-10",
-    technician: "João Santos",
-    notes: "Bomba a precisar de revisão",
-    clientName: "Condomínio Sol Nascente",
-    clientContact: "213456789",
-    location: "Estoril",
-    createdAt: "2025-01-05",
-  },
-  {
-    id: "maint-3",
-    poolId: "pool-1",
-    poolName: "Piscina Villa Marina",
-    type: "Limpeza",
-    status: "scheduled",
-    description: "Limpeza mensal programada",
-    scheduledDate: "2025-02-15",
-    technician: "Maria Santos",
-    clientName: "João Silva",
-    clientContact: "912345678",
-    location: "Quinta da Marinha, Cascais",
-    createdAt: "2025-01-15",
-  },
-  {
-    id: "maint-4",
-    poolId: "pool-2",
-    poolName: "Piscina Condomínio Sol",
-    type: "Tratamento",
-    status: "scheduled",
-    description: "Tratamento químico e análise da água",
-    scheduledDate: "2025-02-10",
-    technician: "João Santos",
-    clientName: "Condomínio Sol Nascente",
-    clientContact: "213456789",
-    location: "Estoril",
-    createdAt: "2025-01-10",
-  },
-];
+// Mock maintenance data removed - no auto-populated test data
+const mockMaintenance: Maintenance[] = [];
 
 // Mock works data - DISABLED to prevent auto-populated test data
 const mockWorks: Work[] = [];

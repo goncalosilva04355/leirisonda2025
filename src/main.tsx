@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import ErrorBoundary from "./components/ErrorBoundary";
+import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 import "./index.css";
 
 // Chrome-specific fixes for PWA compatibility
@@ -43,7 +43,7 @@ if (typeof window !== "undefined") {
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ErrorBoundary>
+  <ImprovedErrorBoundary>
     <App />
-  </ErrorBoundary>,
+  </ImprovedErrorBoundary>,
 );

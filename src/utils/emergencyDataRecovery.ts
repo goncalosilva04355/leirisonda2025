@@ -1,31 +1,11 @@
 // SISTEMA DE RECUPERAÇÃO DE EMERGÊNCIA CRÍTICA
 export class EmergencyDataRecovery {
-  // Dados mínimos para fazer a aplicação funcionar
+  // Dados mínimos SEM exemplos automáticos
   private static readonly MINIMAL_DATA = {
     works: [],
-    pools: [
-      {
-        id: "emergency-pool-1",
-        name: "Piscina Exemplo",
-        location: "Localização a definir",
-        client: "Cliente a definir",
-        type: "Residencial",
-        status: "Ativa",
-        createdAt: new Date().toISOString(),
-      },
-    ],
+    pools: [],
     maintenance: [],
-    clients: [
-      {
-        id: "emergency-client-1",
-        name: "Cliente Exemplo",
-        email: "cliente@exemplo.com",
-        phone: "+351 000 000 000",
-        address: "Endereço a definir",
-        pools: [],
-        createdAt: new Date().toISOString(),
-      },
-    ],
+    clients: [],
   };
 
   // RECOVERY STEP 1: Scan all localStorage for any data
@@ -223,7 +203,7 @@ export class EmergencyDataRecovery {
         JSON.stringify(emergencyBackup),
       );
 
-      console.log("✅ EMERGENCY RECOVERY COMPLETED");
+      console.log("��� EMERGENCY RECOVERY COMPLETED");
       console.log("📊 Final counts:", {
         works: finalData.works.length,
         pools: finalData.pools.length,
@@ -312,7 +292,7 @@ export class EmergencyDataRecovery {
       return {
         success: validation.success,
         message: validation.success
-          ? `✅ RECOVERY SUCCESSFUL!\n\n${validation.report}\n\n🔄 Please refresh the page.`
+          ? `✅ RECOVERY SUCCESSFUL!\n\n${validation.report}\n\n��� Please refresh the page.`
           : `⚠️ PARTIAL RECOVERY:\n\n${validation.report}\n\n🔄 Please refresh the page and check data.`,
       };
     } catch (error) {
@@ -325,5 +305,4 @@ export class EmergencyDataRecovery {
   }
 }
 
-// Export for console debugging
-(window as any).EmergencyDataRecovery = EmergencyDataRecovery;
+// Debug export disabled for production

@@ -24,6 +24,7 @@ import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
 import { AutoSyncDemo } from "../components/AutoSyncDemo";
 import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
+import { UserManagement } from "../components/UserManagement";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -31,6 +32,7 @@ interface AdminPageProps {
 
 type AdminSection =
   | "overview"
+  | "user-management"
   | "auth-diagnostic"
   | "sync-manager"
   | "firebase-status"
@@ -48,6 +50,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     useState<AdminSection>("overview");
 
   const adminSections = [
+    {
+      id: "user-management" as AdminSection,
+      title: "Gestão de Utilizadores",
+      description: "Criar, editar e gerir utilizadores do sistema",
+      icon: Users,
+      color: "bg-indigo-600",
+    },
     {
       id: "auth-diagnostic" as AdminSection,
       title: "Diagnóstico de Autenticação",
@@ -129,6 +138,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
 
   const renderCurrentSection = () => {
     switch (currentSection) {
+      case "user-management":
+        return <UserManagement />;
       case "auth-diagnostic":
         return <AuthSyncDiagnostic />;
       case "sync-manager":
