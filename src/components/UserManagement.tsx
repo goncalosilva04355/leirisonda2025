@@ -496,9 +496,13 @@ export const UserManagement: React.FC = () => {
             </button>
             <button
               onClick={handleCreateUser}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              disabled={isCreatingUser}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2"
             >
-              Criar Utilizador
+              {isCreatingUser && (
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              )}
+              <span>{isCreatingUser ? "A criar..." : "Criar Utilizador"}</span>
             </button>
           </div>
         </div>
