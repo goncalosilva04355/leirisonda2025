@@ -1548,7 +1548,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠��� Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
             syncError,
           );
         }
@@ -1996,7 +1996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `📊 ${assignedWorks.length} obra(s) atribu��da(s) a ${currentUser?.name}`,
+                                  `📊 ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
                                 );
                               }
 
@@ -8560,21 +8560,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </button>
               )}
 
-              {/* Localizações */}
-              <button
-                onClick={() => {
-                  navigateToSection("localizacoes");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "localizacoes"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <MapPin className="h-5 w-5" />
-                <span>Localizações</span>
-              </button>
+              {/* Localizações - Apenas para admin e super_admin */}
+              {(currentUser?.role === "admin" ||
+                currentUser?.role === "super_admin") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("localizacoes");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "localizacoes"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <MapPin className="h-5 w-5" />
+                  <span>Localizações</span>
+                </button>
+              )}
             </nav>
 
             {/* User Section */}
