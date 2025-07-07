@@ -955,7 +955,7 @@ ${index + 1}. ${maint.poolName}
    Tipo: ${maint.type}
    Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
-   Técnico: ${maint.technician}
+   T��cnico: ${maint.technician}
    Descrição: ${maint.description}
    ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
 `,
@@ -4160,13 +4160,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Use sync system to add work (will handle Firebase and localStorage)
                           addWork(workData);
 
-                          // Send notifications to all assigned users
-                          assignedUsers.forEach((assignedUser) => {
-                            sendWorkAssignmentNotification(
-                              workTitle,
-                              assignedUser.name,
-                            );
-                          });
+                          // Notificações removidas conforme solicitado
 
                           // Always capture bore data from the cyan section
                           const furosSection =
@@ -8113,7 +8107,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Dados da intervenç��o</span>
+                  <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>������</span>
