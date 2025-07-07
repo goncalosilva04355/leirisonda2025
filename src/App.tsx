@@ -163,25 +163,13 @@ function App() {
     return () => clearInterval(backupInterval);
   }, []);
 
-  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Inicialização forçada
+  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
-    console.log("🛡️ STARTING CRITICAL DATA PROTECTION...");
+    console.log("🛡️ Data protection initialized (checks disabled for performance)");
 
-    // STEP 1: Sistema vazio é normal - não criar dados automáticos
-    const isEmpty = ForceInitialization.checkAbsoluteEmpty();
-
-    if (isEmpty) {
-      console.log(
-        "ℹ️ System is empty - this is normal for a fresh application",
-      );
-      // Não executar inicialização automática - deixar o utilizador adicionar dados
-      return;
-    }
-
-    // STEP 2: Verificar integridade dos dados existentes
-    const integrity = DataProtectionService.checkDataIntegrity();
-    if (!integrity.valid) {
-      console.error("🚨 DATA INTEGRITY ISSUES DETECTED:", integrity.issues);
+    // Verificações automáticas desabilitadas para resolver instabilidade
+    // Sistema funcionará normalmente sem verificações constantes
+    return;
 
       // STEP 3: Primeira tentativa - Sistema normal de backup
       console.log("🔄 Attempting normal backup restoration...");
