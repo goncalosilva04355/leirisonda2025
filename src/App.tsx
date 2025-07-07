@@ -93,12 +93,9 @@ function App() {
     };
   }, []);
 
-  // No auto-login - users must login manually
+  // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    // Clear any existing auth data on app start
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("mock-current-user");
-    console.log("🔒 SECURITY: Auth data cleared - manual login required");
+    console.log("🔥 Firebase handles auth state automatically");
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -6389,7 +6386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplicável)
+                            Pessoa de Contacto (se aplic��vel)
                           </label>
                           <input
                             type="text"
@@ -8090,7 +8087,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>����</span>
+                  <span>������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
