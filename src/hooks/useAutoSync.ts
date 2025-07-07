@@ -9,13 +9,8 @@ export const useAutoSync = () => {
 
   useEffect(() => {
     const performAutoSync = async () => {
-      // Firebase temporarily disabled due to quota - running in offline mode
-      console.log("⏸️ Firebase sync paused - running in offline mode");
-      setSyncStatus("completed");
-      const now = new Date();
-      setLastSync(now);
-      sessionStorage.setItem("auto-sync-completed", "true");
-      return;
+      // Firebase auto-sync enabled for cross-device synchronization
+      console.log("🔄 Firebase auto-sync enabled");
 
       // Check if we should auto-sync (e.g., only once per session)
       const hasAutoSynced = sessionStorage.getItem("auto-sync-completed");
