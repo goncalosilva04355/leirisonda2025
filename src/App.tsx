@@ -2615,7 +2615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                               disabled={!enableMapsRedirect}
                             >
-                              📍 {pool.location}
+                              �� {pool.location}
                             </button>
                             <div className="flex items-center space-x-4 mt-2">
                               <span className="text-sm text-gray-500">
@@ -8271,7 +8271,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {selectedWork.observations && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
+                        Observaç��es
                       </label>
                       <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
                         {selectedWork.observations}
@@ -8375,8 +8375,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Proteção silenciosa de dados em segundo plano */}
-        <SilentDataProtection />
+        {/* Proteção silenciosa de dados em segundo plano - TEMPORARILY DISABLED */}
+        {/* <SilentDataProtection /> */}
       </div>
     </AutoSyncProvider>
   );
