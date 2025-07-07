@@ -1548,7 +1548,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠��� Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
             syncError,
           );
         }
@@ -1996,7 +1996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `📊 ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
+                                  `📊 ${assignedWorks.length} obra(s) atribu��da(s) a ${currentUser?.name}`,
                                 );
                               }
 
@@ -5545,6 +5545,27 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <MapPin className="h-5 w-5 text-orange-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-orange-900 mb-2">
+                            Localização
+                          </h4>
+                          <p className="text-orange-700 text-sm mb-3">
+                            Permita o acesso à localização para funcionalidades
+                            avançadas de mapeamento e navegação.
+                          </p>
+                          <button
+                            onClick={() => navigateToSection("localizacoes")}
+                            className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm"
+                          >
+                            Configurar Localização
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
@@ -5563,6 +5584,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <li>
                               • Em dispositivos móveis, adicione a app ao ecrã
                               inicial
+                            </li>
+                            <li>
+                              • A localização requer permissão específica do
+                              navegador
                             </li>
                           </ul>
                         </div>
