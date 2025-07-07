@@ -42,7 +42,6 @@ import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
-import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
 import { syncManager } from "./utils/syncManager";
 
 // SECURITY: RegisterForm removed - only super admin can create users
@@ -1572,7 +1571,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "nova-manutencao",
       icon: Wrench,
-      label: "Nova Manuten��ão",
+      label: "Nova Manutenção",
       path: "/manutencao/nova",
     },
     {
@@ -7008,7 +7007,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observações
+                          Observa��ões
                         </h3>
                       </div>
 
