@@ -756,6 +756,8 @@ function App() {
       setCurrentUser(null);
       setIsAuthenticated(false);
 
+      // Clear saved login credentials when user manually logs out
+      sessionStorage.removeItem("savedLoginCredentials");
       // Firebase handles auth state clearing automatically
 
       // Clear form
