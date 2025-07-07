@@ -876,7 +876,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+���� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -5429,7 +5429,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
 
                     {/* Configurações de Localização Individual - Apenas para admin e super_admin */}
-                    {(currentUser?.role === "admin" ||
+                    {(currentUser?.role === "manager" ||
                       currentUser?.role === "super_admin") && (
                       <PersonalLocationSettings />
                     )}
@@ -7144,7 +7144,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar diâmetro</option>
                             <option value="1">1 polegada</option>
                             <option value="1.25">1¼ polegadas</option>
-                            <option value="1.5">1�� polegadas</option>
+                            <option value="1.5">1���� polegadas</option>
                             <option value="2">2 polegadas</option>
                             <option value="2.5">2½ polegadas</option>
                             <option value="3">3 polegadas</option>
