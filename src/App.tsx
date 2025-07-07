@@ -1042,7 +1042,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         if (permission === "granted") {
           setNotificationsEnabled(true);
           showNotification(
-            "Notificaç��es Ativadas",
+            "Notifica����es Ativadas",
             "Agora vai receber notificações de obras atribuídas",
             "success",
           );
@@ -1680,8 +1680,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     {/* Sync Status */}
                     <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
-                      <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                      <span>Online</span>
+                      <div
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          autoSyncData.isActive && !autoSyncData.error
+                            ? "bg-green-500"
+                            : autoSyncData.error
+                              ? "bg-red-500"
+                              : "bg-blue-500"
+                        }`}
+                      ></div>
+                      <span>
+                        {autoSyncData.isActive && !autoSyncData.error
+                          ? "Sincronizado"
+                          : autoSyncData.error
+                            ? "Erro Sync"
+                            : "Ativo"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -8318,9 +8332,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   return (
     <AutoSyncProvider
-      enabled={false}
-      syncInterval={0}
-      collections={[]}
+      enabled={true}
+      syncInterval={30000}
+      collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={false}
     >
       <InstantSyncManager>

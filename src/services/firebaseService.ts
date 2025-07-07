@@ -117,8 +117,7 @@ const COLLECTIONS = {
 
 // Helper function to check if Firebase is available
 const isFirebaseAvailable = () => {
-  // Always return false to prevent quota errors
-  return false;
+  return db !== null;
 };
 
 // Critical: Wrapper for Firebase operations with quota protection
@@ -174,22 +173,39 @@ export const userService = {
 
   // Add new user
   async addUser(userData: Omit<User, "id" | "createdAt" | "updatedAt">) {
-    // Use only localStorage to prevent Firebase quota
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const newUser = {
-      ...userData,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    if (!db) {
+      // Fallback to localStorage if Firebase not available
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const newUser = {
+        ...userData,
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
 
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
 
-    console.log(
-      `✅ Usuário ${userData.name} (${userData.email}) adicionado localmente`,
-    );
-    return newUser.id;
+      console.log(
+        `✅ Usuário ${userData.name} (${userData.email}) adicionado localmente`,
+      );
+      return newUser.id;
+    }
+
+    return await safeFirebaseOperation(async () => {
+      const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
+        ...userData,
+        createdAt: new Date().toISOString(),
+        updatedAt: Timestamp.now(),
+      });
+
+      console.log(
+        `✅ Usuário ${userData.name} (${userData.email}) adicionado no Firebase`,
+      );
+      await syncService.triggerAutoSync("create", "users", docRef.id);
+
+      return docRef.id;
+    }, "addUser");
   },
 
   // Update user
