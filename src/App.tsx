@@ -3513,7 +3513,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             users,
                           )}
                           <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuários responsáveis por esta obra
+                            Selecione os usuários responsáveis por esta obra.
+                            Utilizadores inativos são marcados como "(Inativo)".
                           </p>
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
@@ -3539,8 +3540,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </option>
                               {users
                                 .filter((user) => {
-                                  // Remover restrição de role - todos os usuários ativos podem ser atribuídos
-                                  const activeCheck = user.active !== false;
+                                  // Show ALL users (active and inactive) but mark inactive ones
                                   const alreadyAssigned = assignedUsers.some(
                                     (assigned) =>
                                       assigned.id === String(user.id),
@@ -3553,19 +3553,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     user.role,
                                     "| Ativo:",
                                     user.active,
-                                    "| Ativo OK:",
-                                    activeCheck,
                                     "| Já atribuído:",
                                     alreadyAssigned,
                                     "| PASSA FILTRO:",
-                                    activeCheck && !alreadyAssigned,
+                                    !alreadyAssigned,
                                   );
 
-                                  return activeCheck && !alreadyAssigned;
+                                  return !alreadyAssigned;
                                 })
                                 .map((user) => (
                                   <option key={user.id} value={user.id}>
-                                    {user.name}
+                                    {user.name}{" "}
+                                    {user.active === false ? "(Inativo)" : ""}
                                   </option>
                                 ))}
                             </select>
@@ -6963,7 +6962,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div>
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra (
-                            {users.length} utilizadores disponíveis)
+                            {users.length} utilizadores disponíveis).
+                            Utilizadores inativos são marcados como "(Inativo)".
                           </p>
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
@@ -6989,17 +6989,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </option>
                               {users
                                 .filter((user) => {
-                                  return (
-                                    user.active !== false &&
-                                    !editAssignedUsers.some(
-                                      (assigned) =>
-                                        assigned.id === String(user.id),
-                                    )
+                                  return !editAssignedUsers.some(
+                                    (assigned) =>
+                                      assigned.id === String(user.id),
                                   );
                                 })
                                 .map((user) => (
                                   <option key={user.id} value={user.id}>
-                                    {user.name}
+                                    {user.name}{" "}
+                                    {user.active === false ? "(Inativo)" : ""}
                                   </option>
                                 ))}
                             </select>
