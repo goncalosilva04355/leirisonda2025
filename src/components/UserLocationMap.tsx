@@ -209,27 +209,36 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
     window.open(url, "_blank");
   };
 
-  // Calculate map center
+  // Calculate map center - prioritize current user location
   const getMapCenter = () => {
-    if (userLocations.length === 0) {
-      // Try to get current user location from localStorage
-      const currentUserLocation = localStorage.getItem("current-user-location");
-      if (currentUserLocation) {
-        const location = JSON.parse(currentUserLocation);
-        return { lat: location.latitude, lng: location.longitude };
-      }
-      // Default to Lisbon center
-      return { lat: 38.7223, lng: -9.1393 };
+    // First priority: current user's location if available
+    const currentUserLoc = userLocations.find(
+      (loc) => loc.email === currentUser?.email,
+    );
+    if (currentUserLoc) {
+      return { lat: currentUserLoc.latitude, lng: currentUserLoc.longitude };
     }
 
-    const avgLat =
-      userLocations.reduce((sum, loc) => sum + loc.latitude, 0) /
-      userLocations.length;
-    const avgLng =
-      userLocations.reduce((sum, loc) => sum + loc.longitude, 0) /
-      userLocations.length;
+    // Second priority: get from localStorage
+    const currentUserLocation = localStorage.getItem("current-user-location");
+    if (currentUserLocation) {
+      const location = JSON.parse(currentUserLocation);
+      return { lat: location.latitude, lng: location.longitude };
+    }
 
-    return { lat: avgLat, lng: avgLng };
+    // Third priority: calculate average if other users exist
+    if (userLocations.length > 0) {
+      const avgLat =
+        userLocations.reduce((sum, loc) => sum + loc.latitude, 0) /
+        userLocations.length;
+      const avgLng =
+        userLocations.reduce((sum, loc) => sum + loc.longitude, 0) /
+        userLocations.length;
+      return { lat: avgLat, lng: avgLng };
+    }
+
+    // Default to Portugal center (more generic)
+    return { lat: 39.5, lng: -8.0 };
   };
 
   const formatTimestamp = (timestamp: number) => {
