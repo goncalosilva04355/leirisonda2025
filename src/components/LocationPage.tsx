@@ -452,7 +452,7 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
                 Ativar Localização
               </button>
             </div>
-          ) : permission !== "granted" ? (
+          ) : permission !== "granted" && !location ? (
             <div className="text-center py-8">
               <AlertCircle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -462,12 +462,20 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
                 Para usar esta funcionalidade, é necessário conceder permissão
                 de acesso à localização.
               </p>
-              <button
-                onClick={requestPermission}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Solicitar Permissão
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={requestPermission}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Solicitar Permissão
+                </button>
+                <button
+                  onClick={getCurrentLocation}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                >
+                  Tentar Obter Localização
+                </button>
+              </div>
             </div>
           ) : (
             <div className="space-y-6">
