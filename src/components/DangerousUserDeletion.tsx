@@ -182,6 +182,7 @@ export const DangerousUserDeletion: React.FC = () => {
     setShowConfirmation(false);
     setConfirmationStep(0);
     setConfirmationText("");
+    setShowNuclearConfirm(false);
   };
 
   const getTotalUsersToDelete = () => {
