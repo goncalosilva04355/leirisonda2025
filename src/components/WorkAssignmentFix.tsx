@@ -6,7 +6,7 @@ import {
   RefreshCw,
   Wrench,
   Database,
-  Sync,
+  RotateCw,
 } from "lucide-react";
 
 interface User {
