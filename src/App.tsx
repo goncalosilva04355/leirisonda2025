@@ -39,6 +39,9 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import EliminateOldUsers from "./components/EliminateOldUsers";
 
+// EXECUÇÃO IMEDIATA: Eliminar usuários específicos AGORA
+import "./executeNow";
+
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
@@ -1182,7 +1185,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         assignedTo.toLowerCase().includes(currentUser?.name.toLowerCase()) ||
         currentUser?.name.toLowerCase().includes(assignedTo.toLowerCase()));
 
-    console.log("🔍 DEBUG: Assignment check:", {
+    console.log("��� DEBUG: Assignment check:", {
       currentUser: currentUser?.name,
       assignedTo,
       exactMatch: currentUser?.name === assignedTo,
@@ -4604,7 +4607,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenção
+                          Frequ��ncia de Manutenção
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
