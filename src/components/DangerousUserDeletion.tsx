@@ -41,6 +41,9 @@ export const DangerousUserDeletion: React.FC = () => {
   const [confirmationStep, setConfirmationStep] = useState(0);
   const [confirmationText, setConfirmationText] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [nuclearCleanupResult, setNuclearCleanupResult] =
+    useState<CompleteCleanupResult | null>(null);
+  const [showNuclearConfirm, setShowNuclearConfirm] = useState(false);
 
   // Load user statistics on component mount
   useEffect(() => {
