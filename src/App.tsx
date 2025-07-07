@@ -42,6 +42,7 @@ import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { SyncStatusIcon } from "./components/SyncStatusIndicator";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
+import { syncManager } from "./utils/syncManager";
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -3750,7 +3751,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <option value="1.25">1¼ polegadas</option>
                                   <option value="1.5">1½ polegadas</option>
                                   <option value="2">2 polegadas</option>
-                                  <option value="2.5">2�� polegadas</option>
+                                  <option value="2.5">2½ polegadas</option>
                                   <option value="3">3 polegadas</option>
                                   <option value="4">4 polegadas</option>
                                   <option value="5">5 polegadas</option>
@@ -5154,7 +5155,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendaç��es, próxima manutenção..."
+                          placeholder="Observações, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -8940,7 +8941,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         {selectedWork.boreObservations && (
                           <div className="mt-4">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observaç��es Específicas do Furo
+                              Observações Específicas do Furo
                             </label>
                             <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
                               <p className="text-gray-900">
