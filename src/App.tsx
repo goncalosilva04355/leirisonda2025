@@ -1388,7 +1388,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������ Address clicked:", address);
+    console.log("�������� Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -3042,7 +3042,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenções agendadas e programadas
+                          Manutenç��es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -5360,9 +5360,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Notifications Section */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  {/* Seção de notificações removida */}
+                {/* Seção de notificações removida completamente conforme solicitado */}
+
+                {/* Configurações de Localização Individual - Apenas para super_admin */}
+                {currentUser?.role === "super_admin" && (
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <PersonalLocationSettings />
+                  </div>
+                )}
                   <p className="text-gray-600 mb-6">
                     Ative as notificações para receber alertas sobre novas obras
                     atribuídas e atualizações importantes.
