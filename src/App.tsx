@@ -42,6 +42,7 @@ import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { syncManager } from "./utils/syncManager";
+import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -4710,7 +4711,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenção
+                        Registar interven��ão de manutenção
                       </p>
                     </div>
                   </div>
