@@ -1845,7 +1845,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 `Debug Alexandre:\n` +
                                   `Obras no sistema: ${works.length}\n` +
                                   `Obras atribuídas ao Alexandre: ${alexandreWorks.length}\n` +
-                                  `Notificaç��es ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
+                                  `Notificações ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
                                   `Permissão notificações: ${Notification.permission}\n\n` +
                                   `Ver console para mais detalhes`,
                               );
@@ -1867,7 +1867,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }}
                             className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
                           >
-                            Testar Notifica����o
+                            Testar Notificação
                           </button>
                         </div>
                       )}
