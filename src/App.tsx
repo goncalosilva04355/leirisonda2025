@@ -7952,6 +7952,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
+        case "localizacoes":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4">
+                <LocationPage />
+              </div>
+            </div>
+          );
+
         default:
           return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
