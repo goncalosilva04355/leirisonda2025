@@ -1,0 +1,351 @@
+/**
+ * User Synchronization Manager
+ *
+ * This utility helps resolve conflicts between different user storage systems:
+ * - UserManagement localStorage ("app-users")
+ * - MockAuth localStorage ("mock-users")
+ * - Firebase Auth (when available)
+ */
+
+interface LocalUser {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: "user" | "admin" | "super_admin";
+  active: boolean;
+  createdAt: string;
+}
+
+interface MockUser {
+  uid: string;
+  email: string;
+  password: string;
+  name: string;
+  role: "super_admin" | "manager" | "technician";
+  active: boolean;
+  createdAt: string;
+}
+
+export class UserSyncManager {
+  /**
+   * Get all users from UserManagement localStorage
+   */
+  private static getLocalUsers(): LocalUser[] {
+    try {
+      const savedUsers = localStorage.getItem("app-users");
+      return savedUsers ? JSON.parse(savedUsers) : [];
+    } catch (error) {
+      console.error("Error loading local users:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Get all users from MockAuth localStorage
+   */
+  private static getMockUsers(): MockUser[] {
+    try {
+      const savedUsers = localStorage.getItem("mock-users");
+      return savedUsers ? JSON.parse(savedUsers) : [];
+    } catch (error) {
+      console.error("Error loading mock users:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Convert UserManagement role to MockAuth role
+   */
+  private static convertRole(
+    localRole: string,
+  ): "super_admin" | "manager" | "technician" {
+    switch (localRole) {
+      case "super_admin":
+        return "super_admin";
+      case "admin":
+        return "manager";
+      default:
+        return "technician";
+    }
+  }
+
+  /**
+   * Convert MockAuth role to UserManagement role
+   */
+  private static convertRoleReverse(
+    mockRole: string,
+  ): "user" | "admin" | "super_admin" {
+    switch (mockRole) {
+      case "super_admin":
+        return "super_admin";
+      case "manager":
+        return "admin";
+      default:
+        return "user";
+    }
+  }
+
+  /**
+   * Sync a user from UserManagement to MockAuth
+   */
+  static syncToMockAuth(localUser: LocalUser): void {
+    try {
+      const mockUsers = this.getMockUsers();
+
+      // Check if user already exists in mock auth
+      const existingIndex = mockUsers.findIndex(
+        (u) => u.email.toLowerCase() === localUser.email.toLowerCase(),
+      );
+
+      const mockUser: MockUser = {
+        uid: localUser.id.startsWith("mock-")
+          ? localUser.id
+          : `mock-${localUser.id}`,
+        email: localUser.email,
+        password: localUser.password,
+        name: localUser.name,
+        role: this.convertRole(localUser.role),
+        active: localUser.active,
+        createdAt: localUser.createdAt,
+      };
+
+      if (existingIndex >= 0) {
+        // Update existing user
+        mockUsers[existingIndex] = mockUser;
+        console.log(`✅ Updated user in mock auth: ${localUser.email}`);
+      } else {
+        // Add new user
+        mockUsers.push(mockUser);
+        console.log(`✅ Added user to mock auth: ${localUser.email}`);
+      }
+
+      localStorage.setItem("mock-users", JSON.stringify(mockUsers));
+    } catch (error) {
+      console.error("Error syncing to mock auth:", error);
+    }
+  }
+
+  /**
+   * Sync a user from MockAuth to UserManagement
+   */
+  static syncToLocalUsers(mockUser: MockUser): void {
+    try {
+      const localUsers = this.getLocalUsers();
+
+      // Check if user already exists in local users
+      const existingIndex = localUsers.findIndex(
+        (u) => u.email.toLowerCase() === mockUser.email.toLowerCase(),
+      );
+
+      const localUser: LocalUser = {
+        id: mockUser.uid,
+        name: mockUser.name,
+        email: mockUser.email,
+        password: mockUser.password,
+        role: this.convertRoleReverse(mockUser.role),
+        active: mockUser.active,
+        createdAt: mockUser.createdAt,
+        permissions: this.getDefaultPermissions(
+          this.convertRoleReverse(mockUser.role),
+        ),
+      } as any;
+
+      if (existingIndex >= 0) {
+        // Update existing user
+        localUsers[existingIndex] = localUser;
+        console.log(`✅ Updated user in local storage: ${mockUser.email}`);
+      } else {
+        // Add new user
+        localUsers.push(localUser);
+        console.log(`✅ Added user to local storage: ${mockUser.email}`);
+      }
+
+      localStorage.setItem("app-users", JSON.stringify(localUsers));
+    } catch (error) {
+      console.error("Error syncing to local users:", error);
+    }
+  }
+
+  /**
+   * Perform full bidirectional sync between all user stores
+   */
+  static performFullSync(): {
+    localUsers: number;
+    mockUsers: number;
+    synced: boolean;
+  } {
+    try {
+      const localUsers = this.getLocalUsers();
+      const mockUsers = this.getMockUsers();
+
+      console.log("🔄 Starting full user sync...");
+      console.log(
+        `Local users: ${localUsers.length}, Mock users: ${mockUsers.length}`,
+      );
+
+      // Sync all local users to mock auth
+      localUsers.forEach((localUser) => {
+        this.syncToMockAuth(localUser);
+      });
+
+      // Sync all mock users to local storage (only if they don't exist locally)
+      mockUsers.forEach((mockUser) => {
+        const existsLocally = localUsers.some(
+          (u) => u.email.toLowerCase() === mockUser.email.toLowerCase(),
+        );
+        if (!existsLocally) {
+          this.syncToLocalUsers(mockUser);
+        }
+      });
+
+      console.log("✅ Full user sync completed");
+
+      return {
+        localUsers: localUsers.length,
+        mockUsers: mockUsers.length,
+        synced: true,
+      };
+    } catch (error) {
+      console.error("❌ Full sync failed:", error);
+      return {
+        localUsers: 0,
+        mockUsers: 0,
+        synced: false,
+      };
+    }
+  }
+
+  /**
+   * Check if a user exists in any auth system
+   */
+  static userExists(email: string): {
+    inLocal: boolean;
+    inMock: boolean;
+    user?: LocalUser | MockUser;
+  } {
+    const localUsers = this.getLocalUsers();
+    const mockUsers = this.getMockUsers();
+
+    const localUser = localUsers.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase(),
+    );
+    const mockUser = mockUsers.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase(),
+    );
+
+    return {
+      inLocal: !!localUser,
+      inMock: !!mockUser,
+      user: localUser || mockUser,
+    };
+  }
+
+  /**
+   * Get login troubleshooting information for a user
+   */
+  static getLoginDiagnostics(
+    email: string,
+    password: string,
+  ): {
+    userExists: boolean;
+    emailExists: boolean;
+    passwordMatches: boolean;
+    isActive: boolean;
+    suggestions: string[];
+  } {
+    const { inLocal, inMock, user } = this.userExists(email);
+
+    const suggestions: string[] = [];
+    let userExists = inLocal || inMock;
+    let emailExists = userExists;
+    let passwordMatches = false;
+    let isActive = false;
+
+    if (user) {
+      passwordMatches = user.password === password;
+      isActive = user.active;
+
+      if (!passwordMatches) {
+        suggestions.push("Verifique se a password está correta");
+      }
+
+      if (!isActive) {
+        suggestions.push("A conta está desativada - contacte o administrador");
+      }
+
+      if (!inMock && inLocal) {
+        suggestions.push(
+          "Utilizador existe apenas no armazenamento local - será sincronizado automaticamente",
+        );
+        this.syncToMockAuth(user as LocalUser);
+      }
+
+      if (inMock && !inLocal) {
+        suggestions.push(
+          "Utilizador existe apenas no sistema de autenticação - será sincronizado automaticamente",
+        );
+        this.syncToLocalUsers(user as MockUser);
+      }
+    } else {
+      suggestions.push(
+        "Utilizador não encontrado - verifique o email ou crie uma nova conta",
+      );
+    }
+
+    return {
+      userExists,
+      emailExists,
+      passwordMatches,
+      isActive,
+      suggestions,
+    };
+  }
+
+  /**
+   * Generate default permissions based on role
+   */
+  private static getDefaultPermissions(role: string) {
+    switch (role) {
+      case "super_admin":
+        return {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
+        };
+      case "admin":
+        return {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: {
+            view: true,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: true, edit: true, delete: false },
+          clientes: { view: true, create: true, edit: true, delete: false },
+        };
+      default: // user
+        return {
+          obras: { view: true, create: false, edit: false, delete: false },
+          manutencoes: { view: true, create: true, edit: true, delete: false },
+          piscinas: { view: true, create: false, edit: false, delete: false },
+          utilizadores: {
+            view: false,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: false, edit: false, delete: false },
+          clientes: { view: true, create: false, edit: false, delete: false },
+        };
+    }
+  }
+}
+
+export default UserSyncManager;
