@@ -103,15 +103,7 @@ export const simpleEmergencyLogout = async (): Promise<void> => {
 
     console.log("✅ SIMPLE EMERGENCY LOGOUT COMPLETED!");
 
-    // Show success message
-    alert(
-      "✅ Emergency Logout executado com sucesso!\n\nTodos os utilizadores foram deslogados.\nApenas o super admin Gonçalo pode aceder.\n\nA página será recarregada.",
-    );
-
-    // Force page reload
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+    // No alert message to avoid persistent popups
   } catch (error: any) {
     console.error("❌ Simple emergency logout failed:", error);
     alert(`❌ Emergency logout falhou: ${error.message}`);
