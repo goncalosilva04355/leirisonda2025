@@ -195,8 +195,7 @@ export const UserManagement: React.FC = () => {
       }
 
       // Sync with auth services
-      const { mockAuthService } = await import("../services/mockAuthService");
-      mockAuthService.reloadUsers();
+      // mockAuthService removido - usando apenas Firebase
     } catch (error) {
       console.error("Error refreshing users:", error);
     }
