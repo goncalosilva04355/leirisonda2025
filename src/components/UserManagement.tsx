@@ -291,12 +291,22 @@ export const UserManagement: React.FC = () => {
         role: formData.role,
       });
 
+      // Map role from UserManagement to authService format
+      let authRole: "super_admin" | "manager" | "technician" = "technician";
+      if (formData.role === "super_admin") {
+        authRole = "super_admin";
+      } else if (formData.role === "admin") {
+        authRole = "manager";
+      } else {
+        authRole = "technician";
+      }
+
       // Create user through authService for proper sync
       const result = await authService.register(
         formData.email.trim(),
         formData.password,
         formData.name.trim(),
-        formData.role as "super_admin" | "manager" | "technician",
+        authRole,
       );
 
       console.log("AuthService registration result:", result);
