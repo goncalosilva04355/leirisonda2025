@@ -13,6 +13,11 @@ import {
   AlertCircle,
   UserCheck,
   UserX,
+  Settings,
+  Lock,
+  Unlock,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
 
 interface User {
@@ -73,6 +78,9 @@ export const UserManagement: React.FC = () => {
   const [createError, setCreateError] = useState<string>("");
   const [createSuccess, setCreateSuccess] = useState<string>("");
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editingPermissions, setEditingPermissions] = useState<User | null>(
+    null,
+  );
   const [showPasswords, setShowPasswords] = useState<{
     [key: string]: boolean;
   }>({});
@@ -415,6 +423,73 @@ export const UserManagement: React.FC = () => {
     }
   };
 
+  // Update user permissions
+  const handleUpdatePermissions = () => {
+    if (!editingPermissions) return;
+
+    const updatedUsers = users.map((user) =>
+      user.id === editingPermissions.id ? editingPermissions : user,
+    );
+    saveUsers(updatedUsers);
+    setEditingPermissions(null);
+  };
+
+  // Toggle specific permission
+  const togglePermission = (
+    section: keyof User["permissions"],
+    action: keyof User["permissions"][keyof User["permissions"]],
+    value: boolean,
+  ) => {
+    if (!editingPermissions) return;
+
+    setEditingPermissions({
+      ...editingPermissions,
+      permissions: {
+        ...editingPermissions.permissions,
+        [section]: {
+          ...editingPermissions.permissions[section],
+          [action]: value,
+        },
+      },
+    });
+  };
+
+  // Get permission section display name
+  const getSectionDisplayName = (section: string) => {
+    switch (section) {
+      case "obras":
+        return "Obras";
+      case "manutencoes":
+        return "Manutenções";
+      case "piscinas":
+        return "Piscinas";
+      case "utilizadores":
+        return "Utilizadores";
+      case "relatorios":
+        return "Relatórios";
+      case "clientes":
+        return "Clientes";
+      default:
+        return section;
+    }
+  };
+
+  // Get action display name
+  const getActionDisplayName = (action: string) => {
+    switch (action) {
+      case "view":
+        return "Visualizar";
+      case "create":
+        return "Criar";
+      case "edit":
+        return "Editar";
+      case "delete":
+        return "Eliminar";
+      default:
+        return action;
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -424,7 +499,7 @@ export const UserManagement: React.FC = () => {
             Gestão de Utilizadores
           </h2>
           <p className="text-gray-600">
-            Criar, editar e gerir utilizadores do sistema
+            Criar, editar e gerir utilizadores e permissões do sistema
           </p>
         </div>
         <button
@@ -436,8 +511,38 @@ export const UserManagement: React.FC = () => {
         </button>
       </div>
 
+      {/* Information Banner */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="flex items-start">
+          <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3" />
+          <div>
+            <h3 className="text-sm font-medium text-blue-800">
+              Gestão Completa de Utilizadores e Permissões
+            </h3>
+            <div className="text-sm text-blue-700 mt-1 space-y-1">
+              <p>
+                • <strong>Editar:</strong> Use o ícone de lápis para alterar
+                dados básicos do utilizador
+              </p>
+              <p>
+                • <strong>Permissões:</strong> Use o ícone de engrenagem para
+                gerir detalhadamente o que cada utilizador pode fazer
+              </p>
+              <p>
+                • <strong>Eliminar:</strong> Use o ícone de lixo para remover
+                utilizadores (Super Admins não podem ser eliminados)
+              </p>
+              <p>
+                • <strong>Estado:</strong> Clique no estado para
+                ativar/desativar utilizadores instantaneamente
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div className="bg-white p-4 rounded-lg border border-gray-200">
           <div className="flex items-center">
             <Users className="h-5 w-5 text-blue-600" />
@@ -482,6 +587,23 @@ export const UserManagement: React.FC = () => {
               <p className="text-sm font-medium text-gray-900">Inativos</p>
               <p className="text-lg font-semibold text-gray-600">
                 {users.filter((u) => !u.active).length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white p-4 rounded-lg border border-gray-200">
+          <div className="flex items-center">
+            <Settings className="h-5 w-5 text-purple-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-900">Acesso Total</p>
+              <p className="text-lg font-semibold text-purple-600">
+                {
+                  users.filter((u) => {
+                    return Object.values(u.permissions).every((section) =>
+                      Object.values(section).every((permission) => permission),
+                    );
+                  }).length
+                }
               </p>
             </div>
           </div>
@@ -649,6 +771,9 @@ export const UserManagement: React.FC = () => {
                   Estado
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Permissões
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Criado
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -723,6 +848,41 @@ export const UserManagement: React.FC = () => {
                     </button>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div className="flex flex-wrap gap-1">
+                      {Object.entries(user.permissions).map(
+                        ([section, permissions]) => {
+                          const hasAnyPermission = Object.values(
+                            permissions,
+                          ).some((p) => p);
+                          if (!hasAnyPermission) return null;
+
+                          const totalPermissions =
+                            Object.values(permissions).length;
+                          const activePermissions = Object.values(
+                            permissions,
+                          ).filter((p) => p).length;
+
+                          return (
+                            <span
+                              key={section}
+                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                activePermissions === totalPermissions
+                                  ? "bg-green-100 text-green-800"
+                                  : activePermissions > 0
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-gray-100 text-gray-800"
+                              }`}
+                              title={`${getSectionDisplayName(section)}: ${activePermissions}/${totalPermissions} permissões`}
+                            >
+                              {getSectionDisplayName(section)} (
+                              {activePermissions}/{totalPermissions})
+                            </span>
+                          );
+                        },
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {user.createdAt}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -730,13 +890,22 @@ export const UserManagement: React.FC = () => {
                       <button
                         onClick={() => setEditingUser(user)}
                         className="text-blue-600 hover:text-blue-900"
+                        title="Editar utilizador"
                       >
                         <Edit2 className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => setEditingPermissions(user)}
+                        className="text-green-600 hover:text-green-900"
+                        title="Gerir permissões"
+                      >
+                        <Settings className="h-4 w-4" />
                       </button>
                       {user.role !== "super_admin" && (
                         <button
                           onClick={() => handleDeleteUser(user.id)}
                           className="text-red-600 hover:text-red-900"
+                          title="Eliminar utilizador"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -860,6 +1029,168 @@ export const UserManagement: React.FC = () => {
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               >
                 Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Permissions Management Modal */}
+      {editingPermissions && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Gestão de Permissões
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Utilizador:{" "}
+                  <span className="font-medium">{editingPermissions.name}</span>{" "}
+                  ({editingPermissions.email})
+                </p>
+              </div>
+              <button
+                onClick={() => setEditingPermissions(null)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Role Warning */}
+            {editingPermissions.role === "super_admin" && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+                <div className="flex items-start">
+                  <Shield className="h-5 w-5 text-amber-600 mt-0.5 mr-3" />
+                  <div>
+                    <h4 className="text-sm font-medium text-amber-800">
+                      Super Administrador
+                    </h4>
+                    <p className="text-sm text-amber-700 mt-1">
+                      Este utilizador tem permissões completas no sistema. As
+                      alterações aqui podem não ter efeito.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Permissions Grid */}
+            <div className="space-y-6">
+              {Object.entries(editingPermissions.permissions).map(
+                ([section, permissions]) => (
+                  <div key={section} className="bg-gray-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-lg font-semibold text-gray-900 flex items-center">
+                        <Shield className="h-5 w-5 mr-2 text-blue-600" />
+                        {getSectionDisplayName(section)}
+                      </h4>
+
+                      {/* Quick toggle buttons */}
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => {
+                            // Enable all permissions for this section
+                            Object.keys(permissions).forEach((action) => {
+                              togglePermission(
+                                section as keyof User["permissions"],
+                                action as any,
+                                true,
+                              );
+                            });
+                          }}
+                          className="flex items-center px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200"
+                        >
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Todas
+                        </button>
+                        <button
+                          onClick={() => {
+                            // Disable all permissions for this section
+                            Object.keys(permissions).forEach((action) => {
+                              togglePermission(
+                                section as keyof User["permissions"],
+                                action as any,
+                                false,
+                              );
+                            });
+                          }}
+                          className="flex items-center px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200"
+                        >
+                          <XCircle className="h-3 w-3 mr-1" />
+                          Nenhuma
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {Object.entries(permissions).map(
+                        ([action, hasPermission]) => (
+                          <div
+                            key={action}
+                            className="flex items-center justify-between p-3 bg-white rounded border"
+                          >
+                            <div className="flex items-center">
+                              <div
+                                className={`w-3 h-3 rounded-full mr-3 ${hasPermission ? "bg-green-500" : "bg-red-500"}`}
+                              ></div>
+                              <span className="text-sm font-medium text-gray-700">
+                                {getActionDisplayName(action)}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() =>
+                                  togglePermission(
+                                    section as keyof User["permissions"],
+                                    action as any,
+                                    true,
+                                  )
+                                }
+                                className={`p-1 rounded ${hasPermission ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-400 hover:bg-green-100 hover:text-green-600"}`}
+                                title="Permitir"
+                              >
+                                <Unlock className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  togglePermission(
+                                    section as keyof User["permissions"],
+                                    action as any,
+                                    false,
+                                  )
+                                }
+                                className={`p-1 rounded ${!hasPermission ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-400 hover:bg-red-100 hover:text-red-600"}`}
+                                title="Negar"
+                              >
+                                <Lock className="h-3 w-3" />
+                              </button>
+                            </div>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                ),
+              )}
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200">
+              <button
+                onClick={() => setEditingPermissions(null)}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleUpdatePermissions}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center space-x-2"
+              >
+                <Save className="h-4 w-4" />
+                <span>Guardar Permissões</span>
               </button>
             </div>
           </div>
