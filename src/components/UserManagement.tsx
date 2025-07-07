@@ -173,7 +173,7 @@ export const UserManagement: React.FC = () => {
   };
 
   // Create new user
-  const handleCreateUser = () => {
+  const handleCreateUser = async () => {
     if (!formData.name || !formData.email || !formData.password) {
       alert("Por favor, preencha todos os campos obrigatórios.");
       return;
@@ -185,27 +185,50 @@ export const UserManagement: React.FC = () => {
       return;
     }
 
-    const newUser: User = {
-      id: Date.now().toString(),
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      role: formData.role,
-      permissions: getDefaultPermissions(formData.role),
-      active: formData.active,
-      createdAt: new Date().toISOString().split("T")[0],
-    };
+    try {
+      // Import authService dynamically to ensure proper initialization
+      const { authService } = await import("../services/authService");
 
-    const updatedUsers = [...users, newUser];
-    saveUsers(updatedUsers);
-    setIsCreating(false);
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-      role: "user",
-      active: true,
-    });
+      // Create user through authService for proper sync
+      const result = await authService.register(
+        formData.email,
+        formData.password,
+        formData.name,
+        formData.role as "super_admin" | "manager" | "technician",
+      );
+
+      if (result.success) {
+        // Create local user record
+        const newUser: User = {
+          id: Date.now().toString(),
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+          permissions: getDefaultPermissions(formData.role),
+          active: formData.active,
+          createdAt: new Date().toISOString().split("T")[0],
+        };
+
+        const updatedUsers = [...users, newUser];
+        saveUsers(updatedUsers);
+        setIsCreating(false);
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          role: "user",
+          active: true,
+        });
+
+        alert("Utilizador criado com sucesso!");
+      } else {
+        alert(`Erro ao criar utilizador: ${result.error}`);
+      }
+    } catch (error: any) {
+      console.error("Erro ao criar utilizador:", error);
+      alert("Erro inesperado ao criar utilizador. Tente novamente.");
+    }
   };
 
   // Update user
