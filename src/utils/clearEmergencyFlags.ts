@@ -16,7 +16,6 @@ export const clearEmergencyFlags = (): void => {
   }
 };
 
-// Auto-execute to clear flags immediately
-clearEmergencyFlags();
+// Available for manual execution only
 
 export default clearEmergencyFlags;
