@@ -38,6 +38,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import { SharedDataManager } from "./components/SharedDataManager";
+import { DataSharingFixManager } from "./components/DataSharingFixManager";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -143,6 +144,7 @@ function App() {
   const [settingsPassword, setSettingsPassword] = useState("");
   const [settingsPasswordError, setSettingsPasswordError] = useState("");
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
+  const [showDataSharingFix, setShowDataSharingFix] = useState(false);
   const [advancedPassword, setAdvancedPassword] = useState("");
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
@@ -865,7 +867,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "🔧 Forced logout state clear completed - redirected to login",
+        "�� Forced logout state clear completed - redirected to login",
       );
     }
   };
