@@ -3175,7 +3175,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç��o</span>
+                      <span>Agendar Manutenção</span>
                     </button>
                   </div>
                 </div>
@@ -3326,7 +3326,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informações Básicas */}
+                    {/* Informações B��sicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -5303,7 +5303,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Eye className="h-4 w-4 text-green-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Fotografias da Manutenç��o
+                          Fotografias da Manutenção
                         </h3>
                       </div>
 
