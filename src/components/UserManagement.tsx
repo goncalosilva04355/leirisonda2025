@@ -523,6 +523,36 @@ export const UserManagement: React.FC = () => {
         </div>
         <div className="flex space-x-2">
           <button
+            onClick={async () => {
+              if (
+                confirm(
+                  "🔄 Sincronizar todos os utilizadores entre os sistemas de autenticação?",
+                )
+              ) {
+                try {
+                  const { UserSyncManager } = await import(
+                    "../utils/userSyncManager"
+                  );
+                  const result = UserSyncManager.performFullSync();
+                  if (result.synced) {
+                    alert(
+                      `✅ Sincronização completa! Local: ${result.localUsers}, Mock: ${result.mockUsers}`,
+                    );
+                    await refreshUsers();
+                  } else {
+                    alert("❌ Erro na sincronização.");
+                  }
+                } catch (error) {
+                  alert("❌ Erro ao executar sincronização.");
+                }
+              }
+            }}
+            className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            <CheckCircle className="h-4 w-4" />
+            <span>Sincronizar</span>
+          </button>
+          <button
             onClick={() => {
               if (
                 confirm(
@@ -534,7 +564,7 @@ export const UserManagement: React.FC = () => {
                   alert(
                     "✅ Utilizadores limpos! Apenas o super admin Gonçalo permanece.",
                   );
-                  loadUsers(); // Reload the users list
+                  refreshUsers(); // Changed from loadUsers to refreshUsers
                 } else {
                   alert("❌ Erro na limpeza de utilizadores.");
                 }
