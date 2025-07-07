@@ -234,10 +234,30 @@ export const UserManagement: React.FC = () => {
       return;
     }
 
-    // Check if email already exists
-    if (users.some((user) => user.email === formData.email)) {
+    // Check if email already exists in local users
+    if (
+      users.some(
+        (user) => user.email.toLowerCase() === formData.email.toLowerCase(),
+      )
+    ) {
       alert("Já existe um utilizador com este email.");
       return;
+    }
+
+    // Also check with mock auth service for additional validation
+    try {
+      const { mockAuthService } = await import("../services/mockAuthService");
+      const allUsers = mockAuthService.getAllUsers();
+      if (
+        allUsers.some(
+          (user) => user.email.toLowerCase() === formData.email.toLowerCase(),
+        )
+      ) {
+        alert("Este email já está registado no sistema.");
+        return;
+      }
+    } catch (error) {
+      console.warn("Could not check auth service for duplicates:", error);
     }
 
     setIsCreatingUser(true);
