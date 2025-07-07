@@ -388,8 +388,12 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                      <User className="h-5 w-5 text-white" />
+                    <div
+                      className={`w-10 h-10 ${location.email === currentUser?.email ? "bg-gradient-to-r from-orange-500 to-red-600" : "bg-gradient-to-r from-blue-500 to-purple-600"} rounded-full flex items-center justify-center`}
+                    >
+                      <span className="text-white font-bold text-sm">
+                        {location.name.charAt(0).toUpperCase()}
+                      </span>
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900">
