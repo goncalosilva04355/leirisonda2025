@@ -376,25 +376,101 @@ export function useDataSync(): SyncState & SyncActions {
     if (syncEnabled) {
       const performInitialSync = async () => {
         try {
+          console.log("🚀 Initializing Firebase for cross-device sync...");
+
           const initialized = realFirebaseService.initialize();
           if (initialized) {
             setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
             try {
+              console.log("🔄 Testing Firebase connection...");
               const connectionOk = await realFirebaseService.testConnection();
               if (!connectionOk) {
                 console.warn(
-                  "Firebase connection test failed, using local mode",
+                  "⚠️ Firebase connection test failed, using local mode only",
                 );
                 setState((prev) => ({
                   ...prev,
                   isLoading: false,
-                  error: null,
+                  error: "Modo Local - Sem sincronização entre dispositivos",
                 }));
                 return;
               }
 
-              // Set successful sync immediately to remove "waiting" status
+              console.log(
+                "✅ Firebase connected successfully - cross-device sync enabled",
+              );
+
+              // Perform initial data sync to pull any existing data
+              try {
+                const firebaseData = await realFirebaseService.syncAllData();
+                if (firebaseData) {
+                  console.log("📥 Syncing existing Firebase data:", {
+                    works: firebaseData.works.length,
+                    pools: firebaseData.pools.length,
+                    maintenance: firebaseData.maintenance.length,
+                    clients: firebaseData.clients.length,
+                  });
+
+                  // Merge Firebase data with local data
+                  setState((prev) => {
+                    const mergedWorks = [...prev.works];
+                    const mergedPools = [...prev.pools];
+                    const mergedMaintenance = [...prev.maintenance];
+                    const mergedClients = [...prev.clients];
+
+                    // Add Firebase data that's not already in local storage
+                    firebaseData.works.forEach((work: Work) => {
+                      if (!mergedWorks.find((w) => w.id === work.id)) {
+                        mergedWorks.push(work);
+                      }
+                    });
+
+                    firebaseData.pools.forEach((pool: Pool) => {
+                      if (!mergedPools.find((p) => p.id === pool.id)) {
+                        mergedPools.push(pool);
+                      }
+                    });
+
+                    firebaseData.maintenance.forEach((maint: Maintenance) => {
+                      if (!mergedMaintenance.find((m) => m.id === maint.id)) {
+                        mergedMaintenance.push(maint);
+                      }
+                    });
+
+                    firebaseData.clients.forEach((client: Client) => {
+                      if (!mergedClients.find((c) => c.id === client.id)) {
+                        mergedClients.push(client);
+                      }
+                    });
+
+                    const today = new Date();
+                    const futureMaintenance = mergedMaintenance.filter(
+                      (m) => new Date(m.scheduledDate) >= today,
+                    );
+
+                    console.log("🔄 Merged data counts:", {
+                      works: mergedWorks.length,
+                      pools: mergedPools.length,
+                      maintenance: mergedMaintenance.length,
+                      clients: mergedClients.length,
+                    });
+
+                    return {
+                      ...prev,
+                      works: mergedWorks,
+                      pools: mergedPools,
+                      maintenance: mergedMaintenance,
+                      futureMaintenance,
+                      clients: mergedClients,
+                    };
+                  });
+                }
+              } catch (syncError) {
+                console.warn("⚠️ Initial data sync failed:", syncError);
+              }
+
+              // Set successful sync status
               setState((prev) => ({
                 ...prev,
                 isLoading: false,
@@ -402,32 +478,28 @@ export function useDataSync(): SyncState & SyncActions {
                 error: null,
               }));
             } catch (error: any) {
-              console.warn(
-                "Initial Firebase sync failed, using local mode:",
-                error,
-              );
+              console.warn("⚠️ Firebase sync failed, using local mode:", error);
               setState((prev) => ({
                 ...prev,
                 isLoading: false,
-                error: null, // Don't show error, just use local mode
+                error: "Modo Local - Sem sincronização entre dispositivos",
               }));
             }
           } else {
-            // Clear error when Firebase is not configured - should show "Modo Local"
+            console.warn(
+              "❌ Firebase initialization failed - using local mode",
+            );
             setState((prev) => ({
               ...prev,
-              error: null,
+              error: "Modo Local - Firebase não configurado",
               isLoading: false,
             }));
           }
         } catch (error: any) {
-          console.warn(
-            "Firebase initialization error, using local mode:",
-            error,
-          );
+          console.error("❌ Firebase initialization error:", error);
           setState((prev) => ({
             ...prev,
-            error: null,
+            error: `Erro na inicialização: ${error.message}`,
             isLoading: false,
           }));
         }
