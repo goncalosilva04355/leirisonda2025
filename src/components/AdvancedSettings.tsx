@@ -14,8 +14,10 @@ import {
   BarChart3,
   Users,
   Key,
+  Smartphone,
 } from "lucide-react";
 import { FirebaseConfig } from "./FirebaseConfig";
+import { DeviceSyncManager } from "./DeviceSyncManager";
 
 interface AdvancedSettingsProps {
   onBack: () => void;
@@ -49,6 +51,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<
     | "firebase"
+    | "device-sync"
     | "sync-test"
     | "notifications"
     | "auth-diagnostic"
@@ -128,7 +131,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
       // Test 5: Simulate data operation
       tests.push("✅ Estrutura de dados validada");
-      tests.push("✅ Permissões básicas verificadas");
+      tests.push("✅ Permissões b��sicas verificadas");
 
       setSyncTest({
         status: "success",
@@ -300,6 +303,19 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               </div>
             </button>
             <button
+              onClick={() => setActiveTab("device-sync")}
+              className={`py-4 px-3 text-center font-medium transition-colors ${
+                activeTab === "device-sync"
+                  ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex flex-col items-center space-y-1">
+                <Smartphone className="w-4 h-4" />
+                <span>Dispositivos</span>
+              </div>
+            </button>
+            <button
               onClick={() => setActiveTab("sync-test")}
               className={`py-4 px-3 text-center font-medium transition-colors ${
                 activeTab === "sync-test"
@@ -444,6 +460,23 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
             </div>
           )}
 
+          {activeTab === "device-sync" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <Smartphone className="w-16 h-16 text-blue-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Sincronização Entre Dispositivos
+                </h3>
+                <p className="text-gray-600 max-w-md mx-auto">
+                  Gerir a sincronização de dados entre diferentes dispositivos e
+                  controlar o acesso multi-dispositivo.
+                </p>
+              </div>
+
+              <DeviceSyncManager />
+            </div>
+          )}
+
           {activeTab === "sync-test" && (
             <div className="space-y-6">
               <div className="text-center">
@@ -542,7 +575,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
               {/* Additional Info */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-medium text-blue-900 mb-2">Informações</h4>
+                <h4 className="font-medium text-blue-900 mb-2">Informa��ões</h4>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Configure o Firebase primeiro antes de testar</li>
                   <li>• Os testes verificam conectividade e funcionalidades</li>
@@ -1100,7 +1133,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                       onClick={() => {
                         if (onNavigateToSection) {
                           console.log(
-                            "🔄 Redirecionando para Configurações...",
+                            "🔄 Redirecionando para Configura��ões...",
                           );
                           onNavigateToSection("configuracoes");
                           onBack();

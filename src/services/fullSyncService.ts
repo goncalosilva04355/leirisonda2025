@@ -24,20 +24,26 @@ export interface SyncResult {
 
 class FullSyncService {
   async syncAllData(): Promise<SyncResult> {
-    // EMERGENCY: Firebase sync disabled to prevent quota exceeded
-    console.log("⏸️ Firebase sync disabled - quota protection mode");
-    return {
-      success: true,
-      message: "Sync disabled - quota protection mode",
-      details: ["Firebase sync disabled to prevent quota exceeded"],
-      stats: {
-        usersSync: { local: 0, firebase: 0, merged: 0 },
-        poolsSync: { local: 0, firebase: 0, merged: 0 },
-        worksSync: { local: 0, firebase: 0, merged: 0 },
-        maintenanceSync: { local: 0, firebase: 0, merged: 0 },
-        clientsSync: { local: 0, firebase: 0, merged: 0 },
-      },
-    };
+    // Check if Firebase is available and not in quota cooldown
+    const { isFirebaseReady, getFirebaseStatus, markQuotaExceeded } =
+      await import("../firebase/config");
+    const status = getFirebaseStatus();
+
+    if (status.quotaExceeded) {
+      console.log("⏸️ Firebase sync paused - quota cooldown period");
+      return {
+        success: true,
+        message: "Sync paused - quota cooldown period",
+        details: ["Firebase temporarily paused due to quota limit"],
+        stats: {
+          usersSync: { local: 0, firebase: 0, merged: 0 },
+          poolsSync: { local: 0, firebase: 0, merged: 0 },
+          worksSync: { local: 0, firebase: 0, merged: 0 },
+          maintenanceSync: { local: 0, firebase: 0, merged: 0 },
+          clientsSync: { local: 0, firebase: 0, merged: 0 },
+        },
+      };
+    }
 
     const details: string[] = [];
     const stats = {
@@ -48,14 +54,19 @@ class FullSyncService {
       clientsSync: { local: 0, firebase: 0, merged: 0 },
     };
 
-    // Firebase sync re-enabled for cross-device functionality
-    console.log("🔥 Firebase sync enabled - cross-device sync active");
+    // Firebase sync enabled for cross-device functionality with quota protection
+    console.log(
+      "🔥 Firebase sync enabled - cross-device sync with quota protection",
+    );
 
     if (!db) {
+      console.log("📱 Firebase not available - working in local-only mode");
       return {
-        success: false,
-        message: "Firebase não disponível",
-        details: ["Firestore não está configurado"],
+        success: true,
+        message: "Local-only mode - Firebase não disponível",
+        details: [
+          "Dados mantidos apenas localmente - Firebase não configurado",
+        ],
         stats,
       };
     }
@@ -63,28 +74,30 @@ class FullSyncService {
     try {
       details.push("🔄 Iniciando sincronização completa...");
 
-      // 1. Sync Users
-      const usersResult = await this.syncUsers();
+      // 1. Sync Users with quota protection
+      const usersResult = await this.syncUsersWithQuotaProtection();
       details.push(...usersResult.details);
       stats.usersSync = usersResult.stats;
 
       // 2. Sync Pools
-      const poolsResult = await this.syncCollection("pools");
+      const poolsResult = await this.syncCollectionWithQuotaProtection("pools");
       details.push(...poolsResult.details);
       stats.poolsSync = poolsResult.stats;
 
       // 3. Sync Works
-      const worksResult = await this.syncCollection("works");
+      const worksResult = await this.syncCollectionWithQuotaProtection("works");
       details.push(...worksResult.details);
       stats.worksSync = worksResult.stats;
 
       // 4. Sync Maintenance
-      const maintenanceResult = await this.syncCollection("maintenance");
+      const maintenanceResult =
+        await this.syncCollectionWithQuotaProtection("maintenance");
       details.push(...maintenanceResult.details);
       stats.maintenanceSync = maintenanceResult.stats;
 
       // 5. Sync Clients
-      const clientsResult = await this.syncCollection("clients");
+      const clientsResult =
+        await this.syncCollectionWithQuotaProtection("clients");
       details.push(...clientsResult.details);
       stats.clientsSync = clientsResult.stats;
 
@@ -97,13 +110,70 @@ class FullSyncService {
         stats,
       };
     } catch (error: any) {
-      details.push(`❌ Erro na sincronização: ${error.message}`);
+      // Check if it's a quota exceeded error
+      if (
+        error.message?.includes("quota") ||
+        error.message?.includes("resource-exhausted")
+      ) {
+        markQuotaExceeded();
+        details.push(
+          "🚨 Quota Firebase excedido - sincronização pausada temporariamente",
+        );
+        return {
+          success: false,
+          message: "Quota Firebase excedido",
+          details,
+          stats,
+        };
+      }
+
+      details.push(`�� Erro na sincronização: ${error.message}`);
       return {
         success: false,
         message: "Erro durante sincronização",
         details,
         stats,
       };
+    }
+  }
+
+  private async syncUsersWithQuotaProtection(): Promise<{
+    details: string[];
+    stats: { local: number; firebase: number; merged: number };
+  }> {
+    try {
+      return await this.syncUsers();
+    } catch (error: any) {
+      if (
+        error.message?.includes("quota") ||
+        error.message?.includes("resource-exhausted")
+      ) {
+        const { markQuotaExceeded } = await import("../firebase/config");
+        markQuotaExceeded();
+        throw error;
+      }
+      throw error;
+    }
+  }
+
+  private async syncCollectionWithQuotaProtection(
+    collectionName: string,
+  ): Promise<{
+    details: string[];
+    stats: { local: number; firebase: number; merged: number };
+  }> {
+    try {
+      return await this.syncCollection(collectionName);
+    } catch (error: any) {
+      if (
+        error.message?.includes("quota") ||
+        error.message?.includes("resource-exhausted")
+      ) {
+        const { markQuotaExceeded } = await import("../firebase/config");
+        markQuotaExceeded();
+        throw error;
+      }
+      throw error;
     }
   }
 

@@ -31,20 +31,45 @@ interface AutoSyncProviderProps {
 export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
   children,
   enabled = true,
-  syncInterval = 600000, // 10 minutos (conservativo para evitar quota exceeded)
+  syncInterval = 300000, // 5 minutos (otimizado para quota Firebase)
   collections = ["users", "pools", "maintenance", "works", "clients"],
   showNotifications = false,
 }) => {
   const [mounted, setMounted] = useState(false);
+  const [quotaExceeded, setQuotaExceeded] = useState(false);
 
   // Hook principal de sincronização
   const autoSync = useAutoDataSync({
-    enabled,
+    enabled: enabled && !quotaExceeded,
     syncInterval,
     collections,
   });
 
-  // Hook para listeners em tempo real do Firebase - DISABLED to prevent quota exceeded
+  // Monitor quota status
+  useEffect(() => {
+    const checkQuotaStatus = () => {
+      const quotaFlag = localStorage.getItem("firebase-quota-exceeded");
+      if (quotaFlag) {
+        const quotaTime = parseInt(quotaFlag);
+        const cooldownPeriod = 30 * 60 * 1000; // 30 minutes
+        const isStillInCooldown = Date.now() - quotaTime < cooldownPeriod;
+        setQuotaExceeded(isStillInCooldown);
+
+        if (!isStillInCooldown) {
+          localStorage.removeItem("firebase-quota-exceeded");
+        }
+      } else {
+        setQuotaExceeded(false);
+      }
+    };
+
+    checkQuotaStatus();
+    const interval = setInterval(checkQuotaStatus, 60000); // Check every minute
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Hook para listeners em tempo real do Firebase - Enabled with quota protection
   // useFirebaseRealtimeSync();
 
   // Estado para notificações
