@@ -7,6 +7,8 @@ import {
   Wrench,
   Database,
   RotateCw,
+  UserPlus,
+  UserCheck,
 } from "lucide-react";
 
 interface User {
@@ -118,6 +120,26 @@ export const WorkAssignmentFix: React.FC = () => {
         );
       }
     });
+
+    // Log detailed user information for debugging
+    console.log("=== ANÁLISE DETALHADA DE UTILIZADORES ===");
+    console.log("App Users:", appUsers.length, appUsers);
+    console.log("Mock Users:", mockUsers.length, mockUsers);
+    console.log("Sync Issues:", syncIssues);
+
+    // Check active vs inactive users
+    const activeAppUsers = appUsers.filter((u) => u.active);
+    const inactiveAppUsers = appUsers.filter((u) => !u.active);
+    console.log(
+      "Utilizadores ativos:",
+      activeAppUsers.length,
+      activeAppUsers.map((u) => u.name),
+    );
+    console.log(
+      "Utilizadores inativos:",
+      inactiveAppUsers.length,
+      inactiveAppUsers.map((u) => u.name),
+    );
 
     setUsersAnalysis({
       appUsers,
@@ -292,11 +314,28 @@ export const WorkAssignmentFix: React.FC = () => {
         results.push("⚠️ Erro ao sincronizar com mockAuthService");
       }
 
-      // Force reload of app users in the main component
+      // Force reload of app users in the main component multiple times
       window.dispatchEvent(new CustomEvent("usersUpdated"));
+      setTimeout(
+        () => window.dispatchEvent(new CustomEvent("usersUpdated")),
+        100,
+      );
+      setTimeout(
+        () => window.dispatchEvent(new CustomEvent("usersUpdated")),
+        500,
+      );
+
+      // Force reload the page state
+      window.location.hash = "#refresh";
+      setTimeout(() => {
+        window.location.hash = "";
+      }, 100);
 
       results.push(
         "🎉 Sincronização completa! Os utilizadores devem agora aparecer na lista de atribuição.",
+      );
+      results.push(
+        `📊 Total de utilizadores após sincronização: ${appUsers.length}`,
       );
     } catch (error) {
       console.error("Erro durante a correção:", error);
@@ -311,7 +350,21 @@ export const WorkAssignmentFix: React.FC = () => {
   };
 
   useEffect(() => {
+    // Run analysis immediately when component loads
     analyzeUsers();
+
+    // Auto-run the fix if there are obvious problems with no users in app-users
+    const appUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "[]");
+
+    if (appUsers.length === 0 && mockUsers.length > 0) {
+      console.log(
+        "🔧 Auto-running sync fix because no app-users found but mock-users exist",
+      );
+      setTimeout(() => {
+        fixUserSync();
+      }, 1000);
+    }
   }, []);
 
   return (
@@ -334,7 +387,7 @@ export const WorkAssignmentFix: React.FC = () => {
 
         {/* Analysis Results */}
         <div className="space-y-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-blue-50 p-4 rounded-lg">
               <div className="flex items-center">
                 <Users className="h-5 w-5 text-blue-600 mr-2" />
@@ -361,6 +414,18 @@ export const WorkAssignmentFix: React.FC = () => {
               </div>
             </div>
 
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              <div className="flex items-center">
+                <UserCheck className="h-5 w-5 text-yellow-600 mr-2" />
+                <div>
+                  <div className="text-sm text-yellow-600">Ativos</div>
+                  <div className="text-lg font-semibold text-yellow-900">
+                    {usersAnalysis.appUsers.filter((u) => u.active).length}
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-red-50 p-4 rounded-lg">
               <div className="flex items-center">
                 <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
@@ -373,6 +438,34 @@ export const WorkAssignmentFix: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Quick Summary */}
+          {usersAnalysis.appUsers.length <= 1 && (
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5 mr-2" />
+                <div>
+                  <h4 className="text-sm font-medium text-orange-800">
+                    Problema Identificado: Poucos Utilizadores
+                  </h4>
+                  <p className="text-sm text-orange-700 mt-1">
+                    Só existe {usersAnalysis.appUsers.length} utilizador(es) no
+                    sistema. Para atribuir obras a diferentes colaboradores,
+                    precisa de criar mais utilizadores.
+                  </p>
+                  <p className="text-sm text-orange-700 mt-1">
+                    <strong>Solução:</strong> Vá a{" "}
+                    <strong>
+                      Configurações → Área de Administração → Gestão de
+                      Utilizadores
+                    </strong>{" "}
+                    e crie contas para os seus colaboradores (técnicos,
+                    gestores, etc.).
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Issues List */}
           {usersAnalysis.syncIssues.length > 0 && (
@@ -474,7 +567,7 @@ export const WorkAssignmentFix: React.FC = () => {
         </div>
 
         {/* Fix Button */}
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap space-x-4 gap-2">
           <button
             onClick={fixUserSync}
             disabled={isFixing}
@@ -495,6 +588,54 @@ export const WorkAssignmentFix: React.FC = () => {
             <RefreshCw className="h-4 w-4" />
             <span>Analisar Novamente</span>
           </button>
+
+          <button
+            onClick={() => {
+              const appUsers = JSON.parse(
+                localStorage.getItem("app-users") || "[]",
+              );
+              const mockUsers = JSON.parse(
+                localStorage.getItem("mock-users") || "[]",
+              );
+              console.table(appUsers);
+              console.table(mockUsers);
+              alert(
+                `DEBUG UTILIZADORES:\n\n📊 App Users: ${appUsers.length}\n📊 Mock Users: ${mockUsers.length}\n\nDetalhes no console (F12)`,
+              );
+            }}
+            className="px-6 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 flex items-center space-x-2"
+          >
+            <AlertCircle className="h-4 w-4" />
+            <span>Debug Utilizadores</span>
+          </button>
+
+          <button
+            onClick={() => {
+              // Force trigger the usersUpdated event to test if it works
+              window.dispatchEvent(new CustomEvent("usersUpdated"));
+              alert(
+                "Evento de atualização de utilizadores enviado! Vá à secção 'Nova Obra' para verificar se os utilizadores aparecem agora.",
+              );
+            }}
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center space-x-2"
+          >
+            <CheckCircle className="h-4 w-4" />
+            <span>Testar Correção</span>
+          </button>
+
+          {usersAnalysis.appUsers.length <= 1 && (
+            <button
+              onClick={() => {
+                alert(
+                  "Para criar novos utilizadores:\n\n1. Clique em 'Configurações' no menu\n2. Vá a 'Área de Administração'\n3. Clique em 'Gestão de Utilizadores'\n4. Use o botão 'Novo Utilizador' para adicionar colaboradores reais\n\nDepois volte aqui e clique em 'Corrigir Sincronização' para atualizar a lista.",
+                );
+              }}
+              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center space-x-2"
+            >
+              <UserPlus className="h-4 w-4" />
+              <span>Como Criar Utilizadores</span>
+            </button>
+          )}
         </div>
 
         {/* Fix Results */}

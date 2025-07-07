@@ -138,11 +138,64 @@ Após aplicar esta solução:
 - O sistema manterá sincronização automática
 - Notificações de obras atribuídas funcionarão
 
-## 🆘 Suporte
+## 🔍 Diagnóstico Rápido
 
-Se o problema persistir após seguir todos os passos:
+### Verificar se os utilizadores estão a ser carregados:
 
-1. Verifique os logs no console do navegador (F12)
-2. Execute o diagnóstico novamente
-3. Contacte o administrador do sistema
-4. Forneça screenshots dos resultados do diagnóstico
+1. Pressione **F12** no navegador para abrir as ferramentas de desenvolvimento
+2. Vá ao separador **Console**
+3. Procure por mensagens como:
+   - `✅ Users loaded successfully: [número] [array de utilizadores]`
+   - `🔄 Loading users from localStorage on app start...`
+   - `📝 No saved users found, initializing with default users`
+
+### Se não vir essas mensagens:
+
+1. No console, escreva: `localStorage.getItem("app-users")`
+2. Se retornar `null`, execute: `localStorage.setItem("app-users", JSON.stringify([{"id":"1","name":"Teste","email":"teste@teste.com","active":true,"role":"user"}]))`
+3. Recarregue a página
+
+## 🆘 Suporte e Troubleshooting
+
+### Problema: Utilizadores não aparecem na lista
+
+**Solução 1**: Execute a correção automática
+
+1. Vá à **Área de Administração** → **"🔧 Correção de Atribuição de Obras"**
+2. Clique em **"Corrigir Sincronização"**
+3. Clique em **"Testar Correção"**
+4. Vá à secção **"Nova Obra"** e verifique
+
+**Solução 2**: Verificação manual
+
+1. Console do navegador (F12)
+2. Execute: `console.log("Users:", JSON.parse(localStorage.getItem("app-users") || "[]"))`
+3. Se vazio, execute a correção
+
+**Solução 3**: Reset completo
+
+1. Console: `localStorage.removeItem("app-users")`
+2. Console: `localStorage.removeItem("mock-users")`
+3. Recarregue a página
+4. Vá à **Gestão de Utilizadores** e crie utilizadores novamente
+
+### Problema: "Nenhum utilizador disponível" aparece
+
+Isto indica que:
+
+- Os utilizadores existem mas estão inativos
+- Há problema na filtragem dos utilizadores
+- Execute a correção para ativar utilizadores inativos
+
+### Se o problema persistir:
+
+1. **Verifique os logs** no console do navegador (F12)
+2. **Execute o diagnóstico** novamente na área de administração
+3. **Contacte o suporte** com os seguintes dados:
+   - Screenshots dos resultados do diagnóstico
+   - Logs do console (cópie e cole as mensagens)
+   - Versão do navegador utilizado
+4. **Dados a fornecer**:
+   - Quantos utilizadores aparecem no diagnóstico
+   - Se há erros vermelhos no console
+   - Passos exatos que seguiu antes do problema

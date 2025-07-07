@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useRef } from "react";
 import { fullSyncService } from "../services/fullSyncService";
 import { realFirebaseService } from "../services/realFirebaseService";
+import { syncManager } from "../utils/syncManager";
 
 interface AutoSyncConfig {
   enabled: boolean;
@@ -18,7 +19,7 @@ interface SyncStatus {
 export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   const defaultConfig: AutoSyncConfig = {
     enabled: true,
-    syncInterval: 15000, // 15 segundos - balance entre responsividade e quota
+    syncInterval: 300000, // 5 minutos - conservativo para evitar quota exceeded
     collections: ["users", "pools", "maintenance", "works", "clients"],
   };
 
@@ -132,24 +133,12 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
         error.message?.includes("quota") ||
         error.message?.includes("resource-exhausted")
       ) {
-        quotaExceededCount.current += 1;
-        isQuotaExceeded.current = true;
-
-        // Open circuit breaker after 3 quota exceeded errors
-        if (quotaExceededCount.current >= 3) {
-          circuitBreakerOpen.current = true;
-          console.error(
-            `🚨 CIRCUIT BREAKER OPEN - Firebase sync DISABLED after ${quotaExceededCount.current} quota exceeded errors`,
-          );
-          syncStatus.current.error =
-            "Firebase sync disabled - quota limit reached";
-          return; // Stop all sync operations
-        }
-
-        backoffMultiplier.current = Math.min(backoffMultiplier.current * 2, 32); // Max 32x backoff
-        console.warn(
-          `🔥 Firebase quota exceeded (${quotaExceededCount.current}/3). Using ${backoffMultiplier.current}x backoff`,
-        );
+        // Use sync manager to handle quota exceeded
+        syncManager.markQuotaExceeded();
+        circuitBreakerOpen.current = true;
+        syncStatus.current.error = "Firebase quota exceeded - sync disabled";
+        console.error("🚨 Firebase quota exceeded - sync stopped");
+        return; // Stop all sync operations
       } else {
         // Reset quota count for non-quota errors
         quotaExceededCount.current = 0;

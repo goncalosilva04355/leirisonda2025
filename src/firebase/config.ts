@@ -47,7 +47,7 @@ export const saveFirebaseConfig = (config: any) => {
     console.log("🔧 Firebase: Configuration saved to localStorage");
     return true;
   } catch (error) {
-    console.error("🔧 Firebase: Error saving config to localStorage:", error);
+    console.error("�� Firebase: Error saving config to localStorage:", error);
     return false;
   }
 };
@@ -82,10 +82,14 @@ const getFirebaseApp = () => {
 };
 
 // Initialize Firebase services with error handling
+// EMERGENCY: Firebase initialization disabled to prevent quota exceeded
+console.log("⏸️ Firebase initialization disabled - quota protection mode");
 let app: any = null;
 let db: any = null;
 let auth: any = null;
 
+/*
+DISABLED TO PREVENT QUOTA EXCEEDED:
 try {
   app = getFirebaseApp();
   if (app) {
@@ -126,6 +130,7 @@ try {
   db = null;
   auth = null;
 }
+*/
 
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {

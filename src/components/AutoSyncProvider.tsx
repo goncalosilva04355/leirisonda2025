@@ -31,7 +31,7 @@ interface AutoSyncProviderProps {
 export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
   children,
   enabled = true,
-  syncInterval = 300000, // 5 minutos (reduzido de 1s para melhorar performance)
+  syncInterval = 600000, // 10 minutos (conservativo para evitar quota exceeded)
   collections = ["users", "pools", "maintenance", "works", "clients"],
   showNotifications = false,
 }) => {
@@ -44,8 +44,8 @@ export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
     collections,
   });
 
-  // Hook para listeners em tempo real do Firebase
-  useFirebaseRealtimeSync();
+  // Hook para listeners em tempo real do Firebase - DISABLED to prevent quota exceeded
+  // useFirebaseRealtimeSync();
 
   // Estado para notificações
   const [lastNotificationTime, setLastNotificationTime] = useState<number>(0);

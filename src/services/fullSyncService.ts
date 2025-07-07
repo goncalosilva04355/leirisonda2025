@@ -24,6 +24,21 @@ export interface SyncResult {
 
 class FullSyncService {
   async syncAllData(): Promise<SyncResult> {
+    // EMERGENCY: Firebase sync disabled to prevent quota exceeded
+    console.log("⏸️ Firebase sync disabled - quota protection mode");
+    return {
+      success: true,
+      message: "Sync disabled - quota protection mode",
+      details: ["Firebase sync disabled to prevent quota exceeded"],
+      stats: {
+        usersSync: { local: 0, firebase: 0, merged: 0 },
+        poolsSync: { local: 0, firebase: 0, merged: 0 },
+        worksSync: { local: 0, firebase: 0, merged: 0 },
+        maintenanceSync: { local: 0, firebase: 0, merged: 0 },
+        clientsSync: { local: 0, firebase: 0, merged: 0 },
+      },
+    };
+
     const details: string[] = [];
     const stats = {
       usersSync: { local: 0, firebase: 0, merged: 0 },
@@ -357,15 +372,23 @@ class FullSyncService {
 
           // Also fix in Firebase if available
           if (db) {
-            const userRef = doc(db, "users", users[alexandreIndex].uid);
-            await setDoc(
-              userRef,
-              {
-                ...users[alexandreIndex],
-                updatedAt: new Date().toISOString(),
-              },
-              { merge: true },
-            );
+            try {
+              const userRef = doc(db, "users", users[alexandreIndex].uid);
+              await setDoc(
+                userRef,
+                {
+                  ...users[alexandreIndex],
+                  updatedAt: new Date().toISOString(),
+                },
+                { merge: true },
+              );
+            } catch (error) {
+              console.log(
+                "⏸️ Firebase operation skipped - quota protection mode",
+              );
+            }
+          } else {
+            console.log("⏸️ Firebase not available - local fix only");
           }
 
           // Reload mock service

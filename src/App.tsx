@@ -39,8 +39,10 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
-import { SyncStatusIcon } from "./components/SyncStatusIndicator";
+// import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Removed to eliminate sync indicator
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
+import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
+import { syncManager } from "./utils/syncManager";
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -241,10 +243,63 @@ function App() {
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
 
+  // Initialize users from localStorage on app start
+  useEffect(() => {
+    const loadUsersFromStorage = () => {
+      console.log("🔄 Loading users from localStorage on app start...");
+      try {
+        const savedUsers = localStorage.getItem("app-users");
+        const mockUsers = localStorage.getItem("mock-users");
+
+        console.log("📱 Raw localStorage data:", { savedUsers, mockUsers });
+
+        if (savedUsers) {
+          const parsedUsers = JSON.parse(savedUsers);
+          console.log(
+            "✅ Users loaded successfully:",
+            parsedUsers.length,
+            parsedUsers,
+          );
+
+          // Check if users are valid and active
+          const activeUsers = parsedUsers.filter((u) => u.active !== false);
+          console.log(
+            "👥 Active users:",
+            activeUsers.length,
+            activeUsers.map((u) => u.name),
+          );
+
+          setUsers(parsedUsers);
+        } else {
+          console.log(
+            "📝 No saved users found, initializing with default users",
+          );
+          // Save initial users to localStorage if not exists
+          localStorage.setItem("app-users", JSON.stringify(initialUsers));
+          setUsers(initialUsers);
+        }
+      } catch (error) {
+        console.error("❌ Error loading users:", error);
+        // Fallback to initial users
+        setUsers(initialUsers);
+      }
+    };
+
+    // Load users immediately on component mount
+    loadUsersFromStorage();
+
+    // Also reload users every 2 seconds to catch any updates
+    const interval = setInterval(loadUsersFromStorage, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   // Listen for user updates from WorkAssignmentFix component
   useEffect(() => {
     const handleUsersUpdated = () => {
-      console.log("🔄 Reloading users from localStorage...");
+      console.log(
+        "🔄 Reloading users from localStorage due to update event...",
+      );
       try {
         const savedUsers = localStorage.getItem("app-users");
         if (savedUsers) {
@@ -1102,7 +1157,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error("⚠️ Error requesting notification permission:", error);
+        console.error("���️ Error requesting notification permission:", error);
         return "error";
       }
     }
@@ -1735,6 +1790,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
                 </div>
+
+                {/* Firebase Quota Alert */}
+                <FirebaseQuotaAlert />
 
                 {/* Status Cards */}
                 <div className="space-y-3">
@@ -3473,9 +3531,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Usuários Atribuídos ({users.length} utilizadores
                             disponíveis)
                           </label>
+                          {console.log(
+                            "📊 TOTAL UTILIZADORES CARREGADOS:",
+                            users.length,
+                            users,
+                          )}
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra
                           </p>
+                          {users.length === 0 && (
+                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
+                              <p className="text-sm text-yellow-800">
+                                ⚠️ Nenhum utilizador encontrado. Vá à Área de
+                                Administração → "🔧 Correção de Atribuição de
+                                Obras" para corrigir este problema.
+                              </p>
+                            </div>
+                          )}
                           <div className="flex space-x-2">
                             <select
                               value={currentAssignedUser}
@@ -3491,21 +3563,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </option>
                               {users
                                 .filter((user) => {
-                                  console.log(
-                                    "Nova obra - User:",
-                                    user.name,
-                                    "Role:",
-                                    user.role,
-                                    "Active:",
-                                    user.active,
+                                  const roleCheck = user.role !== "viewer";
+                                  const activeCheck = user.active !== false;
+                                  const alreadyAssigned = assignedUsers.some(
+                                    (assigned) =>
+                                      assigned.id === String(user.id),
                                   );
+
+                                  console.log(
+                                    "🔍 FILTRO UTILIZADOR:",
+                                    user.name,
+                                    "| Role:",
+                                    user.role,
+                                    "| Ativo:",
+                                    user.active,
+                                    "| Role OK:",
+                                    roleCheck,
+                                    "| Ativo OK:",
+                                    activeCheck,
+                                    "| Já atribuído:",
+                                    alreadyAssigned,
+                                    "| PASSA FILTRO:",
+                                    roleCheck &&
+                                      activeCheck &&
+                                      !alreadyAssigned,
+                                  );
+
                                   return (
-                                    user.role !== "viewer" &&
-                                    user.active !== false &&
-                                    !assignedUsers.some(
-                                      (assigned) =>
-                                        assigned.id === String(user.id),
-                                    )
+                                    roleCheck && activeCheck && !alreadyAssigned
                                   );
                                 })
                                 .map((user) => (
@@ -3803,7 +3888,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observações sobre a obra..."
+                            placeholder="Observa��ões sobre a obra..."
                           />
                         </div>
 
@@ -5584,7 +5669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manutenções e piscinas
+                      Elimine todos os dados de obras, manuten��ões e piscinas
                       para começar com uma aplicação limpa. Os utilizadores são
                       mantidos.
                     </p>
@@ -5727,7 +5812,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📋 Trabalhos realizados</li>
-                        <li>• Técnicos responsáveis</li>
+                        <li>�� Técnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -6208,7 +6293,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente à base de dados
+                        Adicionar cliente �� base de dados
                       </p>
                     </div>
                   </div>
@@ -6907,8 +6992,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuários responsáveis por esta obra
+                            Selecione os usuários responsáveis por esta obra (
+                            {users.length} utilizadores disponíveis)
                           </p>
+                          {users.length === 0 && (
+                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
+                              <p className="text-sm text-yellow-800">
+                                ⚠️ Nenhum utilizador encontrado. Vá à Área de
+                                Administração → "🔧 Correção de Atribuição de
+                                Obras" para corrigir este problema.
+                              </p>
+                            </div>
+                          )}
                           <div className="flex space-x-2">
                             <select
                               value={currentEditAssignedUser}
@@ -7558,7 +7653,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manutenção
+                        Editar Manutenç��o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
@@ -7608,7 +7703,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenção">Manutenção</option>
-                          <option value="Reparação">Reparação</option>
+                          <option value="Reparaç��o">Reparação</option>
                         </select>
                       </div>
                       <div>
@@ -8332,10 +8427,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   }
 
+  // Use sync manager to determine if sync should be enabled
+  const quotaStatus = syncManager.getSyncStatus();
+  const syncInterval = syncManager.getSafeInterval();
+
   return (
     <AutoSyncProvider
-      enabled={true}
-      syncInterval={15000}
+      enabled={false}
+      syncInterval={syncInterval}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={true}
     >
@@ -8362,8 +8461,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-sm text-gray-500">Gestão de Serviços</p>
                   </div>
                 </div>
-                {/* Sync Status Indicator */}
-                <SyncStatusIcon className="ml-2" />
+                {/* Sync Status Indicator - Removed */}
+                {/* <SyncStatusIcon className="ml-2" /> */}
                 {/* Close button for mobile */}
                 <button
                   onClick={() => setSidebarOpen(false)}

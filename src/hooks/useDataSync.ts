@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { realFirebaseService } from "../services/realFirebaseService";
 import { useDataMutationSync } from "./useAutoDataSync";
 
-// Ensure Firebase is initialized on import
-realFirebaseService.initialize();
+// Firebase initialization disabled to prevent quota exceeded
+// realFirebaseService.initialize();
 
 // Simulate data types
 export interface Pool {
