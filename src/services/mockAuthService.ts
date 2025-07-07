@@ -83,9 +83,9 @@ class MockAuthService {
     // Create new user
     const newUser: MockUser = {
       uid: `mock-${Date.now()}`,
-      email,
-      password, // Store password
-      name,
+      email: email.trim(),
+      password: password.trim(), // Store password without spaces
+      name: name.trim(),
       role,
       active: true,
       createdAt: new Date().toISOString(),
