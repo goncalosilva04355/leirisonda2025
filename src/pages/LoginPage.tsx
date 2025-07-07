@@ -225,38 +225,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       >
         <Settings className="h-5 w-5" />
       </button>
-
-      {/* Debug Button (Bottom Left) */}
-      <button
-        onClick={() => setShowDebugger(true)}
-        className="fixed bottom-4 left-4 w-12 h-12 bg-orange-500 border border-orange-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-orange-600 hover:shadow-xl transition-all duration-200 hover:scale-105"
-        disabled={isLoading}
-        title="Debug Login"
-      >
-        <Bug className="h-5 w-5" />
-      </button>
-
-      {/* Sync Diagnostic Button (Bottom Left, second button) */}
-      <button
-        onClick={() => setShowSyncDiagnostic(true)}
-        className="fixed bottom-4 left-20 w-12 h-12 bg-purple-500 border border-purple-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-purple-600 hover:shadow-xl transition-all duration-200 hover:scale-105"
-        disabled={isLoading}
-        title="Diagnóstico de Sincronização"
-      >
-        <RefreshCw className="h-5 w-5" />
-      </button>
-
-      {/* Login Debugger */}
-      <LoginDebugger
-        isVisible={showDebugger}
-        onClose={() => setShowDebugger(false)}
-      />
-
-      {/* Sync Diagnostic */}
-      <SyncDiagnostic
-        isVisible={showSyncDiagnostic}
-        onClose={() => setShowSyncDiagnostic(false)}
-      />
     </div>
   );
 };
