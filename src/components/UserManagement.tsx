@@ -273,7 +273,7 @@ export const UserManagement: React.FC = () => {
       return;
     }
 
-    // Also check with mock auth service for additional validation
+    // Check with mock auth service for additional validation
     try {
       const { mockAuthService } = await import("../services/mockAuthService");
       const allUsers = mockAuthService.getAllUsers();
@@ -282,11 +282,13 @@ export const UserManagement: React.FC = () => {
           (user) => user.email.toLowerCase() === formData.email.toLowerCase(),
         )
       ) {
-        setCreateError("Este email já está registado no sistema.");
+        setCreateError(
+          "Este email já está registado no sistema. Se o utilizador existe mas não consegue fazer login, contacte o administrador para reativar a conta.",
+        );
         return;
       }
     } catch (error) {
-      // Silent fail for duplicate check
+      console.warn("Erro ao verificar duplicados no mock auth:", error);
     }
 
     setCreateError("");
@@ -331,14 +333,27 @@ export const UserManagement: React.FC = () => {
         const updatedUsers = [...users, newUser];
         saveUsers(updatedUsers);
 
-        // Force sync with all auth systems
+        // Comprehensive sync with all auth systems
         try {
           const { mockAuthService } = await import(
             "../services/mockAuthService"
           );
+
+          // First, sync the user to mock auth service with the correct data
+          await mockAuthService.register(
+            formData.email.trim(),
+            formData.password,
+            formData.name.trim(),
+            authRole,
+          );
+
+          console.log("✅ User synchronized to mock auth service");
+
+          // Reload users to ensure consistency
           mockAuthService.reloadUsers();
         } catch (syncError) {
-          // Silent sync error
+          console.warn("⚠️ Sync error with mock auth service:", syncError);
+          // Don't fail creation if sync fails
         }
 
         // Refresh all user data to ensure sync
@@ -354,7 +369,9 @@ export const UserManagement: React.FC = () => {
         });
 
         setCreateError("");
-        setCreateSuccess("✅ Utilizador criado com sucesso e está ativo!");
+        setCreateSuccess(
+          "✅ Utilizador criado com sucesso e está ativo! Pode agora fazer login com as credenciais fornecidas.",
+        );
       } else {
         const errorMsg = `Erro ao criar utilizador: ${result.error || "Erro desconhecido"}`;
         setCreateError(errorMsg);
