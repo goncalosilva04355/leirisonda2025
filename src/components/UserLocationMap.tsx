@@ -36,17 +36,13 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
   const [selectedUser, setSelectedUser] = useState<UserLocation | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Load user locations from localStorage and simulate some data
+  // Load user locations from localStorage - only real data
   const loadUserLocations = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Get saved locations from localStorage
-      const savedLocations = localStorage.getItem("user-locations");
-      let locations: UserLocation[] = savedLocations
-        ? JSON.parse(savedLocations)
-        : [];
+      let locations: UserLocation[] = [];
 
       // Add current user's location if available
       if (currentUser) {
@@ -55,38 +51,58 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
         );
         if (currentUserLocation) {
           const location = JSON.parse(currentUserLocation);
-          const existingIndex = locations.findIndex(
-            (loc) => loc.email === currentUser.email,
-          );
-
           const userLoc: UserLocation = {
             id: currentUser.id,
             name: currentUser.name,
             email: currentUser.email,
             ...location,
           };
-
-          if (existingIndex >= 0) {
-            locations[existingIndex] = userLoc;
-          } else {
-            locations.push(userLoc);
-          }
+          locations.push(userLoc);
         }
       }
 
-      // Only keep real user locations, no demo data
+      // Load other users' real locations (exclude demo data)
+      const savedLocations = localStorage.getItem("user-locations");
+      if (savedLocations) {
+        const allLocations: UserLocation[] = JSON.parse(savedLocations);
+        // Filter out demo data and duplicates
+        const realLocations = allLocations.filter(
+          (loc) =>
+            !loc.email.includes("demo") &&
+            !loc.id.startsWith("demo-") &&
+            loc.email !== currentUser?.email &&
+            !loc.name.includes("Técnico -") &&
+            !loc.name.includes("Manager -") &&
+            loc.email !== "joao@leirisonda.pt" &&
+            loc.email !== "maria@leirisonda.pt",
+        );
+        locations.push(...realLocations);
+      }
+
+      // Remove duplicates by email
+      const uniqueLocations = locations.reduce((acc, current) => {
+        const existing = acc.find((item) => item.email === current.email);
+        if (!existing) {
+          acc.push(current);
+        } else if (current.timestamp > existing.timestamp) {
+          // Replace with newer location
+          const index = acc.findIndex((item) => item.email === current.email);
+          acc[index] = current;
+        }
+        return acc;
+      }, [] as UserLocation[]);
 
       // Sort locations to show current user first
-      locations.sort((a, b) => {
+      uniqueLocations.sort((a, b) => {
         if (a.email === currentUser?.email) return -1;
         if (b.email === currentUser?.email) return 1;
         return b.timestamp - a.timestamp; // Then by most recent
       });
 
-      setUserLocations(locations);
+      setUserLocations(uniqueLocations);
 
-      // Save updated locations
-      localStorage.setItem("user-locations", JSON.stringify(locations));
+      // Save cleaned locations
+      localStorage.setItem("user-locations", JSON.stringify(uniqueLocations));
     } catch (err) {
       setError("Erro ao carregar localiza��ões dos utilizadores");
       console.error("Error loading user locations:", err);
