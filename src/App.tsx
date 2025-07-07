@@ -1148,7 +1148,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n���� Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n���� Atribuída a: ${assignedTo}\n\n���� Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -7828,7 +7828,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               : undefined,
                             technician,
                             type,
-                            status,
+                            status: status as
+                              | "completed"
+                              | "pending"
+                              | "in_progress"
+                              | "cancelled"
+                              | "scheduled",
                             // estimatedDuration: estimatedDuration
                             //   ? parseFloat(estimatedDuration)
                             //   : undefined,
