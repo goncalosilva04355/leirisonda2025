@@ -313,16 +313,58 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // Firebase handles user restoration automatically
-    console.log("🔥 Firebase handles user session restoration automatically");
+    // Firebase Auth listener for automatic login restoration
+    console.log("🔥 Setting up Firebase Auth auto-login...");
 
-    // Clear session data only
-    sessionStorage.clear();
-    setIsAuthenticated(false);
-    setCurrentUser(null);
+    const initializeAuth = async () => {
+      try {
+        // Set up Firebase Auth state listener for automatic login
+        const unsubscribe = authService.onAuthStateChanged((user) => {
+          if (user) {
+            console.log(
+              "✅ Firebase Auth: User automatically restored",
+              user.email,
+            );
+            setCurrentUser(user);
+            setIsAuthenticated(true);
 
-    // Firebase auth disabled to prevent crashes
-    console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
+            // Navigate to dashboard after auto-login
+            setTimeout(() => {
+              const hash = window.location.hash.substring(1);
+              if (!hash || hash === "login") {
+                console.log("🧭 Auto-navigating to dashboard after auto-login");
+                navigateToSection("dashboard");
+              }
+            }, 100);
+          } else {
+            console.log("🔒 Firebase Auth: No user session found");
+            setCurrentUser(null);
+            setIsAuthenticated(false);
+          }
+        });
+
+        return unsubscribe;
+      } catch (error) {
+        console.error("❌ Firebase Auth setup error:", error);
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        return () => {}; // Return empty cleanup function
+      }
+    };
+
+    // Initialize auth
+    const authPromise = initializeAuth();
+
+    // Cleanup on unmount
+    return () => {
+      authPromise
+        .then((unsubscribe) => {
+          if (unsubscribe && typeof unsubscribe === "function") {
+            unsubscribe();
+          }
+        })
+        .catch(console.error);
+    };
     // Firebase auth code removed to fix syntax errors
 
     // DO NOT initialize default admin automatically - this was causing the security issue
@@ -7112,7 +7154,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar voltagem</option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trifásico)</option>
+                            <option value="400V">400V (trif��sico)</option>
                           </select>
                         </div>
                       </div>
