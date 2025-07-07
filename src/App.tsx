@@ -85,14 +85,6 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
-  // EMERGENCY: Execute emergency logout to solve immediate access issue
-  useEffect(() => {
-    console.log(
-      "🚨 EMERGENCY LOGOUT: Solving old user access issue immediately",
-    );
-    autoExecuteEmergencyLogout();
-  }, []); // Run only once on app start
-
   // Debug logging disabled for production
 
   // Monitoramento de integridade de dados
@@ -401,7 +393,7 @@ function App() {
         const unsubscribe = authService.onAuthStateChanged((user) => {
           if (user) {
             console.log(
-              "✅ Firebase Auth: User automatically restored",
+              "��� Firebase Auth: User automatically restored",
               user.email,
             );
             setCurrentUser(user);
@@ -4518,7 +4510,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
                           <option value="manutencao">Em Manutenção</option>
-                          <option value="construcao">Em Constru��ão</option>
+                          <option value="construcao">Em Construção</option>
                         </select>
                       </div>
                     </div>
@@ -7095,7 +7087,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descriç��o do trabalho realizado..."
+                            placeholder="Descrição do trabalho realizado..."
                           />
                         </div>
                         <div>
