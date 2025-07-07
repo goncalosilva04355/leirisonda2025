@@ -22,6 +22,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
   // Load saved credentials on component mount
   useEffect(() => {
+    console.log("🔄 Loading saved credentials...");
     const savedCredentials = localStorage.getItem("savedLoginCredentials");
     if (savedCredentials) {
       try {
@@ -30,21 +31,37 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           password,
           rememberMe: savedRememberMe,
         } = JSON.parse(savedCredentials);
-        if (savedRememberMe) {
+
+        console.log("📋 Found saved credentials:", {
+          email,
+          hasPassword: !!password,
+          rememberMe: savedRememberMe,
+        });
+
+        if (savedRememberMe && email && password) {
           setLoginForm({ email: email || "", password: password || "" });
           setRememberMe(true);
 
           // Auto-login if credentials are saved and rememberMe is true
-          if (email && password) {
-            setTimeout(() => {
-              onLogin(email, password);
-            }, 500);
-          }
+          console.log("🔄 Attempting auto-login...");
+          setTimeout(async () => {
+            try {
+              await onLogin(email, password);
+              console.log("✅ Auto-login successful");
+            } catch (error) {
+              console.error("❌ Auto-login failed:", error);
+              // Don't clear credentials on auto-login failure
+            }
+          }, 800);
+        } else {
+          console.log("⚠️ Incomplete saved credentials, skipping auto-login");
         }
       } catch (error) {
-        console.error("Error loading saved credentials:", error);
+        console.error("❌ Error loading saved credentials:", error);
         localStorage.removeItem("savedLoginCredentials");
       }
+    } else {
+      console.log("📭 No saved credentials found");
     }
   }, [onLogin]);
 
