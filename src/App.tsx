@@ -983,7 +983,7 @@ RESUMO EXECUTIVO:
 
 ESTATÍSTICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenções Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç��es Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
 PRÓXIMAS AÇÕES:
@@ -2544,7 +2544,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">📋</div>
+                                  <div className="text-gray-400 mb-2">����</div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -3795,7 +3795,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descriç��o do trabalho realizado..."
+                            placeholder="Descrição do trabalho realizado..."
                           />
                         </div>
                       </div>
@@ -7034,7 +7034,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        �� Detalhes do Furo de ��gua
+                        �� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -8325,12 +8325,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Use sync manager to determine if sync should be enabled
   const quotaStatus = syncManager.getSyncStatus();
-  const syncInterval = syncManager.getSafeInterval();
 
   return (
     <AutoSyncProvider
-      enabled={false}
-      syncInterval={syncInterval}
+      enabled={true}
+      syncInterval={0}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={true}
     >
