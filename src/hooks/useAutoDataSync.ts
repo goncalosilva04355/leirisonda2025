@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useRef } from "react";
 import { fullSyncService } from "../services/fullSyncService";
 import { realFirebaseService } from "../services/realFirebaseService";
+import { syncManager } from "../utils/syncManager";
 
 interface AutoSyncConfig {
   enabled: boolean;
