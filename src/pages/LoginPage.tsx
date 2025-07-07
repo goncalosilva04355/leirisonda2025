@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Settings, Bug } from "lucide-react";
+import { Settings, Bug, Sync } from "lucide-react";
 import { LoginDebugger } from "../components/LoginDebugger";
+import { SyncDiagnostic } from "../components/SyncDiagnostic";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -19,6 +20,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   });
   const [rememberMe, setRememberMe] = useState(false);
   const [showDebugger, setShowDebugger] = useState(false);
+  const [showSyncDiagnostic, setShowSyncDiagnostic] = useState(false);
 
   // Load saved credentials on component mount
   useEffect(() => {
@@ -234,10 +236,26 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         <Bug className="h-5 w-5" />
       </button>
 
+      {/* Sync Diagnostic Button (Bottom Left, second button) */}
+      <button
+        onClick={() => setShowSyncDiagnostic(true)}
+        className="fixed bottom-4 left-20 w-12 h-12 bg-purple-500 border border-purple-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-purple-600 hover:shadow-xl transition-all duration-200 hover:scale-105"
+        disabled={isLoading}
+        title="Diagnóstico de Sincronização"
+      >
+        <Sync className="h-5 w-5" />
+      </button>
+
       {/* Login Debugger */}
       <LoginDebugger
         isVisible={showDebugger}
         onClose={() => setShowDebugger(false)}
+      />
+
+      {/* Sync Diagnostic */}
+      <SyncDiagnostic
+        isVisible={showSyncDiagnostic}
+        onClose={() => setShowSyncDiagnostic(false)}
       />
     </div>
   );
