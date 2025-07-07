@@ -19,24 +19,12 @@ export const diagnoseUserLoginIssues = (): UserLoginIssue[] => {
   const appUsersData = localStorage.getItem("app-users");
   const appUsers = appUsersData ? JSON.parse(appUsersData) : [];
 
-  // Common problematic users
-  const problematicUsers = [
-    {
-      name: "Alexandre",
-      email: "alexandre@leirisonda.pt",
-      expectedPassword: "69alexandre",
-    },
-    {
-      name: "Yuri",
-      email: "yuri@leirisonda.pt",
-      expectedPassword: "yuripass123",
-    },
-    {
-      name: "Yuri",
-      email: "yuri@example.com",
-      expectedPassword: "password123",
-    },
-  ];
+  // No problematic users - only super admin exists
+  const problematicUsers: Array<{
+    name: string;
+    email: string;
+    expectedPassword: string;
+  }> = [];
 
   problematicUsers.forEach((user) => {
     const mockUser = mockUsers.find(
