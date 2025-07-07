@@ -34,7 +34,7 @@ import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
-import { SyncStatusIcon } from "./components/SyncStatusIndicator";
+// import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Removed as requested
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { SilentDataProtection } from "./components/SilentDataProtection";
 
@@ -7875,8 +7875,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-sm text-gray-500">Gestão de Serviços</p>
                   </div>
                 </div>
-                {/* Sync Status Indicator */}
-                <SyncStatusIcon className="ml-2" />
+                {/* Sync Status Indicator - Removed as requested */}
                 {/* Close button for mobile */}
                 <button
                   onClick={() => setSidebarOpen(false)}
