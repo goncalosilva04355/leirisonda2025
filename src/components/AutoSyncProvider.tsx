@@ -195,7 +195,7 @@ export const useDataMutationIntercept = () => {
         console.log(
           `📝 Dados modificados em ${key}, forçando sincronização...`,
         );
-        setTimeout(() => forceSyncNow(), 100);
+        setTimeout(() => forceSyncNow(), 10);
       }
 
       return result;
