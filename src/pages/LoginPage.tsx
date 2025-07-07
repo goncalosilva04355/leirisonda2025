@@ -40,17 +40,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           setLoginForm({ email: email || "", password: password || "" });
           setRememberMe(true);
 
-          // Auto-login if credentials are saved and rememberMe is true
-          console.log("🔄 Attempting auto-login...");
-          setTimeout(async () => {
-            try {
-              await onLogin(email, password);
-              console.log("�� Auto-login successful");
-            } catch (error) {
-              console.error("❌ Auto-login failed:", error);
-              // Don't clear credentials on auto-login failure
-            }
-          }, 800);
+          // Do NOT auto-login to prevent screen shaking/loops
+          // Just populate the form for user convenience
+          console.log("📋 Auto-filled login form from saved credentials");
         } else {
           console.log("⚠️ Incomplete saved credentials, skipping auto-login");
         }
