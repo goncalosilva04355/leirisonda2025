@@ -257,29 +257,65 @@ export const LocationPage: React.FC<LocationPageProps> = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          {onBack && (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <div>
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span className="text-sm">Voltar às Configurações</span>
+              </button>
+            )}
+            <h1 className="text-2xl font-bold text-gray-900">Localizações</h1>
+            <p className="text-gray-600 text-sm">
+              Visualize e gerencie localizações da equipa
+            </p>
+          </div>
+          {activeTab === "personal" && (
             <button
-              onClick={onBack}
-              className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-2"
+              onClick={() => setShowSettings(!showSettings)}
+              className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
             >
-              <ArrowLeft className="h-4 w-4" />
-              <span className="text-sm">Voltar às Configurações</span>
+              <Settings className="h-4 w-4" />
+              <span>Configurações</span>
             </button>
           )}
-          <h1 className="text-2xl font-bold text-gray-900">Localizações</h1>
-          <p className="text-gray-600 text-sm">
-            Visualize e gerencie a localização do dispositivo
-          </p>
         </div>
-        <button
-          onClick={() => setShowSettings(!showSettings)}
-          className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
-        >
-          <Settings className="h-4 w-4" />
-          <span>Configurações</span>
-        </button>
+
+        {/* Tabs */}
+        <div className="border-b border-gray-200">
+          <nav className="flex space-x-8">
+            <button
+              onClick={() => setActiveTab("personal")}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === "personal"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <Navigation className="h-4 w-4" />
+                <span>Minha Localização</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab("team")}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === "team"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <Map className="h-4 w-4" />
+                <span>Mapa da Equipa</span>
+              </div>
+            </button>
+          </nav>
+        </div>
       </div>
 
       {/* Settings Panel */}
@@ -473,7 +509,7 @@ export const LocationPage: React.FC<LocationPageProps> = ({
               </h3>
               <p className="text-gray-600 mb-4">
                 Para usar esta funcionalidade, é necessário conceder permissão
-                de acesso �� localização.
+                de acesso à localização.
               </p>
               <div className="space-y-2">
                 <button
