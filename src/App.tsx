@@ -445,10 +445,10 @@ function App() {
       } else if (permission === "denied") {
         console.warn("❌ Notifications denied by user");
       } else {
-        console.log("�� Notifications permission not yet requested");
+        console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("⚠️ Notifications not supported in this browser");
+      console.warn("⚠�� Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -3746,7 +3746,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
 
                         <div className="space-y-6">
-                          {/* Mediç��es do Furo */}
+                          {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
                               Medições do Furo
@@ -5514,7 +5514,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notificações foram bloqueadas. Por favor, ative-as nas configura��ões do navegador.",
+                                    "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                   );
                                 }
                               } else {
@@ -5714,7 +5714,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <p className="text-gray-600 mb-6">
                       Elimine todos os dados de obras, manutenções e piscinas
-                      para começar com uma aplicaç��o limpa. Os utilizadores são
+                      para começar com uma aplicação limpa. Os utilizadores são
                       mantidos.
                     </p>
 
@@ -5855,10 +5855,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>��� Trabalhos realizados</li>
+                        <li>📋 Trabalhos realizados</li>
                         <li>• Técnicos responsáveis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observaç���es</li>
+                        <li>• Estados e observações</li>
                       </ul>
                     </div>
                     <button
@@ -5948,7 +5948,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio Completo
+                          Relatório Completo
                         </h3>
                         <p className="text-sm text-gray-600">
                           Todas as informações
@@ -5962,7 +5962,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>��� Dados consolidados</li>
+                        <li>📊 Dados consolidados</li>
                         <li>• Análise de performance</li>
                       </ul>
                     </div>
@@ -5992,7 +5992,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Crie relat��rios com filtros específicos
+                        Crie relatórios com filtros específicos
                       </p>
                       <div className="space-y-2">
                         <label className="flex items-center">
@@ -6070,7 +6070,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           return waterBores.length;
                         })()}
                       </div>
-                      <div className="text-sm text-gray-600">Furos de Água</div>
+                      <div className="text-sm text-gray-600">
+                        Furos de ��gua
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -6271,8 +6273,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }
                                 >
                                   📍{" "}
-                                  {client?.address ||
-                                    "Endereço n��o disponível"}
+                                  {client?.address || "Endereço não disponível"}
                                 </button>
                               </div>
                               <div>
@@ -6917,7 +6918,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç��o</option>
+                            <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -7431,7 +7432,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
                       >
                         <Building2 className="h-4 w-4" />
-                        <span>Guardar Alteraç��es</span>
+                        <span>Guardar Alterações</span>
                       </button>
                     </div>
                   </form>
