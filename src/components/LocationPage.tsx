@@ -10,6 +10,7 @@ import {
   ExternalLink,
   Smartphone,
   Monitor,
+  ArrowLeft,
 } from "lucide-react";
 
 interface LocationData {
