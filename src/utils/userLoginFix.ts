@@ -19,12 +19,18 @@ export const diagnoseUserLoginIssues = (): UserLoginIssue[] => {
   const appUsersData = localStorage.getItem("app-users");
   const appUsers = appUsersData ? JSON.parse(appUsersData) : [];
 
-  // No problematic users - only super admin exists
+  // Include Alexandre as expected user
   const problematicUsers: Array<{
     name: string;
     email: string;
     expectedPassword: string;
-  }> = [];
+  }> = [
+    {
+      name: "Alexandre",
+      email: "alexandre@leirisonda.com",
+      expectedPassword: "123456",
+    },
+  ];
 
   problematicUsers.forEach((user) => {
     const mockUser = mockUsers.find(
@@ -95,14 +101,22 @@ export const createMissingUsers = (): { created: number; errors: string[] } => {
     const appUsersData = localStorage.getItem("app-users");
     const appUsers = appUsersData ? JSON.parse(appUsersData) : [];
 
-    // No default users to create - only super admin exists
+    // Default users that should exist in the system
     const defaultUsers: Array<{
       name: string;
       email: string;
       password: string;
       role: string;
       active: boolean;
-    }> = [];
+    }> = [
+      {
+        name: "Alexandre",
+        email: "alexandre@leirisonda.com",
+        password: "123456",
+        role: "technician",
+        active: true,
+      },
+    ];
 
     defaultUsers.forEach((defaultUser) => {
       // Check if user exists in mock
