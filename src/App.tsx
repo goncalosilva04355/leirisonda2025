@@ -5545,26 +5545,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <MapPin className="h-5 w-5 text-orange-600 mt-0.5" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-orange-900 mb-2">
-                            Localização
-                          </h4>
-                          <p className="text-orange-700 text-sm mb-3">
-                            Permita o acesso à localização para funcionalidades
-                            avançadas de mapeamento e navegação.
-                          </p>
-                          <button
-                            onClick={() => navigateToSection("localizacoes")}
-                            className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm"
-                          >
-                            Configurar Localização
-                          </button>
+                    {/* Configurações de Localização - Apenas para admin e super_admin */}
+                    {(currentUser?.role === "admin" ||
+                      currentUser?.role === "super_admin") && (
+                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                        <div className="flex items-start space-x-3">
+                          <MapPin className="h-5 w-5 text-orange-600 mt-0.5" />
+                          <div className="flex-1">
+                            <h4 className="font-medium text-orange-900 mb-2">
+                              Localização
+                            </h4>
+                            <p className="text-orange-700 text-sm mb-3">
+                              Permita o acesso à localização para
+                              funcionalidades avançadas de mapeamento e
+                              navegação.
+                            </p>
+                            <button
+                              onClick={() => navigateToSection("localizacoes")}
+                              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm"
+                            >
+                              Configurar Localização
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
 
                     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
