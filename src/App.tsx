@@ -3260,7 +3260,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <input
                               type="datetime-local"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Deixe vazio se ainda não terminou"
+                              placeholder="Deixe vazio se ainda n��o terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
                               Deixe vazio se ainda não terminou
@@ -4586,7 +4586,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Additional Information */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações e Características Especiais
+                        Observa��ões e Características Especiais
                       </label>
                       <textarea
                         rows={3}
@@ -7586,7 +7586,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             location,
                             status,
                             type: poolType,
-                            dimensions,
+                            // dimensions, // Property doesn't exist in Pool type
                             volume: volume ? parseInt(volume) : undefined,
                             filtrationSystem,
                             installationDate: installationDate
