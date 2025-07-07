@@ -1,110 +1,193 @@
 import React, { useState, useEffect } from "react";
-import { AlertTriangle, X, Settings } from "lucide-react";
+import { AlertTriangle, Shield, RefreshCw, X } from "lucide-react";
 import { syncManager } from "../utils/syncManager";
 
 export const FirebaseQuotaAlert: React.FC = () => {
-  const [dismissed, setDismissed] = useState(() => {
-    return localStorage.getItem("quota-alert-dismissed") === "true";
-  });
-  const [syncStatus, setSyncStatus] = useState(syncManager.getSyncStatus());
+  const [quotaStatus, setQuotaStatus] = useState(syncManager.getSyncStatus());
+  const [isVisible, setIsVisible] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+
+  useEffect(() => {
+    // Check quota status on mount
+    const status = syncManager.getSyncStatus();
+    setQuotaStatus(status);
+    setIsVisible(status.quotaExceeded || status.emergencyShutdown);
+
+    // Listen for quota exceeded events
+    const handleQuotaExceeded = (event: CustomEvent) => {
+      const status = syncManager.getSyncStatus();
+      setQuotaStatus(status);
+      setIsVisible(true);
+
+      if (event.detail.emergency) {
+        alert(
+          "🚨 EMERGÊNCIA: Firebase quota critical! Sistema em shutdown de proteção.",
+        );
+      }
+    };
+
+    window.addEventListener(
+      "firebase-quota-exceeded",
+      handleQuotaExceeded as EventListener,
+    );
+
+    // Periodic status check
+    const interval = setInterval(() => {
+      const status = syncManager.getSyncStatus();
+      setQuotaStatus(status);
+      setIsVisible(status.quotaExceeded || status.emergencyShutdown);
+    }, 30000); // Check every 30 seconds
+
+    return () => {
+      window.removeEventListener(
+        "firebase-quota-exceeded",
+        handleQuotaExceeded as EventListener,
+      );
+      clearInterval(interval);
+    };
+  }, []);
+
+  const handleManualRecovery = () => {
+    const success = syncManager.manualRecovery();
+    if (success) {
+      setQuotaStatus(syncManager.getSyncStatus());
+      setIsVisible(false);
+      window.location.reload(); // Reload to reactivate services
+    }
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white shadow-lg">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            {quotaStatus.emergencyShutdown ? (
+              <Shield className="h-6 w-6 text-white animate-pulse" />
+            ) : (
+              <AlertTriangle className="h-6 w-6 text-white" />
+            )}
+
+            <div>
+              <div className="font-bold">
+                {quotaStatus.emergencyShutdown
+                  ? "🚨 SISTEMA EM SHUTDOWN DE EMERGÊNCIA"
+                  : "⚠️ FIREBASE QUOTA EXCEDIDA"}
+              </div>
+              <div className="text-sm opacity-90">
+                {quotaStatus.emergencyShutdown
+                  ? "Todas as operações Firebase foram desabilitadas para prevenir bloqueio permanente"
+                  : `Sincronização pausada por ${quotaStatus.hoursUntilRetry || 24} horas para prevenir bloqueio`}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setShowDetails(!showDetails)}
+              className="px-3 py-1 bg-red-700 hover:bg-red-800 rounded text-sm"
+            >
+              {showDetails ? "Menos" : "Detalhes"}
+            </button>
+
+            <button
+              onClick={handleManualRecovery}
+              className="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 rounded text-sm font-medium"
+            >
+              Recuperação Manual
+            </button>
+
+            <button
+              onClick={() => setIsVisible(false)}
+              className="p-1 hover:bg-red-700 rounded"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        {showDetails && (
+          <div className="mt-3 pt-3 border-t border-red-500 text-sm space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <div className="font-medium">Status:</div>
+                <div className="opacity-90">
+                  {quotaStatus.emergencyShutdown
+                    ? "Shutdown Emergência"
+                    : "Quota Excedida"}
+                </div>
+              </div>
+
+              <div>
+                <div className="font-medium">Erros registrados:</div>
+                <div className="opacity-90">{quotaStatus.errorCount}/3</div>
+              </div>
+
+              <div>
+                <div className="font-medium">Retry em:</div>
+                <div className="opacity-90">
+                  {quotaStatus.hoursUntilRetry
+                    ? `${quotaStatus.hoursUntilRetry} horas`
+                    : "Manual apenas"}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-red-700 p-3 rounded mt-3">
+              <div className="font-medium mb-2">⚠️ O que isto significa:</div>
+              <ul className="text-sm space-y-1 opacity-90">
+                <li>
+                  • O Firebase tem limites de operações por dia (gratuito:
+                  50.000 leituras/dia)
+                </li>
+                <li>
+                  • O sistema detectou que atingimos o limite e pausou
+                  automaticamente
+                </li>
+                <li>• Os dados locais continuam a funcionar normalmente</li>
+                <li>
+                  • A sincronização será reativada automaticamente após o
+                  período de espera
+                </li>
+                {quotaStatus.emergencyShutdown && (
+                  <li>
+                    • <strong>EMERGÊNCIA:</strong> Múltiplos erros de quota -
+                    intervenção manual necessária
+                  </li>
+                )}
+              </ul>
+            </div>
+
+            <div className="bg-red-700 p-3 rounded">
+              <div className="font-medium mb-2">
+                ✅ O que continua a funcionar:
+              </div>
+              <ul className="text-sm space-y-1 opacity-90">
+                <li>• Visualização de todos os dados existentes</li>
+                <li>• Criação e edição de dados (guardados localmente)</li>
+                <li>• Todas as funcionalidades da aplicação</li>
+                <li>• Backup e restauro de dados</li>
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Hook para verificar status da quota
+export const useFirebaseQuotaStatus = () => {
+  const [status, setStatus] = useState(syncManager.getSyncStatus());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setSyncStatus(syncManager.getSyncStatus());
-    }, 60000); // Update every minute
+      setStatus(syncManager.getSyncStatus());
+    }, 10000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const handleDismiss = () => {
-    setDismissed(true);
-    localStorage.setItem("quota-alert-dismissed", "true");
-  };
-
-  const handleEnableSync = () => {
-    const confirmReload = confirm(
-      "Para tentar reativar a sincronização, é necessário recarregar a página. Continuar?",
-    );
-    if (confirmReload) {
-      syncManager.clearQuotaExceeded();
-      localStorage.setItem("firebase-sync-enabled", "true");
-      window.location.reload();
-    }
-  };
-
-  // Don't show if dismissed or if quota is not exceeded
-  if (dismissed || !syncStatus.quotaExceeded) {
-    return null;
-  }
-
-  return (
-    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
-      <div className="flex items-start">
-        <div className="flex-shrink-0">
-          <AlertTriangle className="h-5 w-5 text-orange-600" />
-        </div>
-        <div className="ml-3 flex-1">
-          <h3 className="text-sm font-medium text-orange-800">
-            Sincronização Firebase Temporariamente Desativada
-          </h3>
-          <div className="mt-2 text-sm text-orange-700">
-            <p>
-              A sincronização automática com Firebase foi desativada devido a
-              excesso de quota. O sistema está a funcionar em modo local.
-            </p>
-            <div className="mt-2">
-              <p className="font-medium">O que isto significa:</p>
-              <ul className="list-disc list-inside ml-2 space-y-1">
-                <li>Os dados ficam guardados localmente no seu dispositivo</li>
-                <li>Múltiplos dispositivos não sincronizam automaticamente</li>
-                <li>
-                  Todas as funcionalidades continuam a funcionar normalmente
-                </li>
-              </ul>
-            </div>
-            <div className="mt-3">
-              <p className="font-medium">Para reativar a sincronização:</p>
-              <ul className="list-disc list-inside ml-2 space-y-1">
-                {syncStatus.hoursUntilRetry &&
-                syncStatus.hoursUntilRetry > 0 ? (
-                  <li>
-                    Aguarde {syncStatus.hoursUntilRetry} hora(s) para o limite
-                    de quota reiniciar
-                  </li>
-                ) : (
-                  <li>
-                    O limite de quota já deveria ter reiniciado - tente reativar
-                  </li>
-                )}
-                <li>Ou configure um plano Firebase pago para quota superior</li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-4 flex space-x-2">
-            <button
-              onClick={handleEnableSync}
-              className="bg-orange-600 text-white px-3 py-1 rounded text-sm hover:bg-orange-700 flex items-center space-x-1"
-            >
-              <Settings className="h-4 w-4" />
-              <span>Tentar Reativar</span>
-            </button>
-            <button
-              onClick={handleDismiss}
-              className="bg-white text-orange-800 px-3 py-1 rounded text-sm border border-orange-300 hover:bg-orange-50"
-            >
-              Entendi
-            </button>
-          </div>
-        </div>
-        <div className="ml-3 flex-shrink-0">
-          <button
-            onClick={handleDismiss}
-            className="bg-orange-50 rounded-md p-1.5 text-orange-500 hover:bg-orange-100"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  return status;
 };

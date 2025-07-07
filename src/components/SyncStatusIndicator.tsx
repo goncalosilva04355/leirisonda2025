@@ -1,266 +1,243 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  RefreshCw,
   Wifi,
   WifiOff,
+  RefreshCw,
   CheckCircle,
   AlertCircle,
+  Cloud,
 } from "lucide-react";
-import { useAutoSync } from "./AutoSyncProvider";
-import { SyncErrorBoundary } from "./SyncErrorBoundary";
+import { useGlobalSync } from "./InstantSyncManager";
 
-interface SyncStatusIndicatorProps {
-  position?: "fixed" | "relative";
-  size?: "sm" | "md" | "lg";
-  showText?: boolean;
-  className?: string;
-}
+export const SyncStatusIndicator: React.FC = () => {
+  const { isFullySynced, loading, error, data, forceSync } = useGlobalSync();
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [showDetails, setShowDetails] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
 
-export const SyncStatusIndicator: React.FC<SyncStatusIndicatorProps> = ({
-  position = "fixed",
-  size = "sm",
-  showText = false,
-  className = "",
-}) => {
-  let syncData;
-  try {
-    syncData = useAutoSync();
-  } catch (error) {
-    console.warn("SyncStatusIndicator: useAutoSync error", error);
-    syncData = {
-      isActive: false,
-      syncing: false,
-      lastSync: null,
-      error: "Sync unavailable",
+  // Monitor network status
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
-  }
+  }, []);
 
-  const { isActive, syncing, lastSync, error: syncError } = syncData;
-
-  const getSizeClasses = () => {
-    switch (size) {
-      case "sm":
-        return "w-4 h-4";
-      case "md":
-        return "w-5 h-5";
-      case "lg":
-        return "w-6 h-6";
-      default:
-        return "w-4 h-4";
+  // Update last sync time when sync completes
+  useEffect(() => {
+    if (isFullySynced && !loading) {
+      setLastSyncTime(new Date());
     }
-  };
+  }, [isFullySynced, loading]);
 
-  const getTextSizeClasses = () => {
-    switch (size) {
-      case "sm":
-        return "text-xs";
-      case "md":
-        return "text-sm";
-      case "lg":
-        return "text-base";
-      default:
-        return "text-xs";
-    }
-  };
-
-  const getPositionClasses = () => {
-    if (position === "fixed") {
-      return "fixed top-4 right-4 z-50";
-    }
-    return "";
-  };
-
-  const getStatusInfo = () => {
-    if (!isActive) {
-      return {
-        icon: WifiOff,
-        color: "text-gray-400",
-        bgColor: "bg-gray-100",
-        text: "Sync desativado",
-        pulse: false,
-      };
-    }
-
-    if (syncError) {
-      const isQuotaError =
-        syncError.includes("quota") || syncError.includes("resource-exhausted");
-      return {
-        icon: AlertCircle,
-        color: isQuotaError ? "text-orange-500" : "text-red-500",
-        bgColor: isQuotaError ? "bg-orange-50" : "bg-red-50",
-        text: isQuotaError ? "Limite atingido" : "Erro na sincronização",
-        pulse: false,
-      };
-    }
-
-    if (syncing) {
+  // Get sync status
+  const getSyncStatus = () => {
+    if (!isOnline)
+      return { icon: WifiOff, color: "text-gray-500", text: "Offline" };
+    if (loading)
       return {
         icon: RefreshCw,
         color: "text-blue-500",
-        bgColor: "bg-blue-50",
         text: "Sincronizando...",
-        pulse: true,
       };
-    }
-
-    if (lastSync) {
-      const timeDiff = Date.now() - lastSync.getTime();
-      const isRecent = timeDiff < 10000; // 10 segundos
-
+    if (error)
       return {
-        icon: isRecent ? CheckCircle : Wifi,
-        color: isRecent ? "text-green-500" : "text-blue-500",
-        bgColor: isRecent ? "bg-green-50" : "bg-blue-50",
-        text: isRecent ? "Sincronizado" : "Conectado",
-        pulse: false,
+        icon: AlertCircle,
+        color: "text-red-500",
+        text: "Erro na sincronização",
       };
-    }
-
-    return {
-      icon: Wifi,
-      color: "text-blue-500",
-      bgColor: "bg-blue-50",
-      text: "Conectado",
-      pulse: false,
-    };
+    if (isFullySynced)
+      return {
+        icon: CheckCircle,
+        color: "text-green-500",
+        text: "Sincronizado",
+      };
+    return { icon: Cloud, color: "text-yellow-500", text: "Aguardando..." };
   };
 
-  const statusInfo = getStatusInfo();
-  const IconComponent = statusInfo.icon;
+  const status = getSyncStatus();
+  const StatusIcon = status.icon;
+
+  const handleManualSync = async () => {
+    try {
+      await forceSync("manual");
+    } catch (error) {
+      console.error("Erro ao forçar sincronização:", error);
+    }
+  };
+
+  const formatRelativeTime = (date: Date) => {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+
+    if (diffSeconds < 60) return "agora";
+    if (diffMinutes < 60) return `há ${diffMinutes}m`;
+    if (diffHours < 24) return `há ${diffHours}h`;
+    return date.toLocaleDateString();
+  };
 
   return (
-    <SyncErrorBoundary
-      fallback={
-        <div className={`${getPositionClasses()} ${className}`}>
-          <div className="flex items-center gap-2 px-2 py-1 rounded-lg shadow-sm border bg-orange-50 border-orange-200">
-            <AlertCircle className={`${getSizeClasses()} text-orange-500`} />
-            {showText && (
-              <span
-                className={`${getTextSizeClasses()} text-orange-500 font-medium`}
+    <div className="relative">
+      {/* Main Status Indicator */}
+      <button
+        onClick={() => setShowDetails(!showDetails)}
+        className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm transition-colors hover:bg-gray-100 ${status.color}`}
+        title={status.text}
+      >
+        <StatusIcon className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+        <span className="hidden sm:inline">{status.text}</span>
+      </button>
+
+      {/* Detailed Status Popup */}
+      {showDetails && (
+        <div className="absolute top-full right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border p-4 z-50">
+          <div className="space-y-3">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <h3 className="font-medium text-gray-900">
+                Status da Sincronização
+              </h3>
+              <button
+                onClick={handleManualSync}
+                disabled={loading}
+                className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-50"
+                title="Forçar sincronização"
               >
-                Limite atingido
+                <RefreshCw
+                  className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+                />
+              </button>
+            </div>
+
+            {/* Connection Status */}
+            <div className="flex items-center gap-2">
+              {isOnline ? (
+                <Wifi className="w-4 h-4 text-green-500" />
+              ) : (
+                <WifiOff className="w-4 h-4 text-red-500" />
+              )}
+              <span className="text-sm">
+                {isOnline ? "Conectado" : "Sem conexão"}
               </span>
+            </div>
+
+            {/* Last Sync Time */}
+            {lastSyncTime && (
+              <div className="text-xs text-gray-500">
+                Última sincronização: {formatRelativeTime(lastSyncTime)}
+              </div>
             )}
+
+            {/* Error Display */}
+            {error && (
+              <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
+                {error}
+              </div>
+            )}
+
+            {/* Data Count */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="bg-gray-50 p-2 rounded">
+                <div className="font-medium">Usuários</div>
+                <div className="text-gray-600">{data.users.length}</div>
+              </div>
+              <div className="bg-gray-50 p-2 rounded">
+                <div className="font-medium">Piscinas</div>
+                <div className="text-gray-600">{data.pools.length}</div>
+              </div>
+              <div className="bg-gray-50 p-2 rounded">
+                <div className="font-medium">Manutenções</div>
+                <div className="text-gray-600">{data.maintenance.length}</div>
+              </div>
+              <div className="bg-gray-50 p-2 rounded">
+                <div className="font-medium">Obras</div>
+                <div className="text-gray-600">{data.works.length}</div>
+              </div>
+            </div>
+
+            {/* Sync Features */}
+            <div className="border-t pt-2 space-y-1">
+              <div className="text-xs text-gray-600">
+                Funcionalidades ativas:
+              </div>
+              <div className="flex flex-wrap gap-1">
+                <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">
+                  Tempo real
+                </span>
+                <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+                  Entre dispositivos
+                </span>
+                <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">
+                  Auto-sync
+                </span>
+              </div>
+            </div>
           </div>
         </div>
-      }
-    >
-      <div className={`${getPositionClasses()} ${className}`}>
+      )}
+
+      {/* Click outside to close */}
+      {showDetails && (
         <div
-          className={`
-            flex items-center gap-2 px-2 py-1 rounded-lg shadow-sm border
-            ${statusInfo.bgColor} border-gray-200
-            ${showText ? "pr-3" : ""}
-          `}
-          title={syncError || statusInfo.text}
-        >
-          <IconComponent
-            className={`
-              ${getSizeClasses()} ${statusInfo.color}
-              ${statusInfo.pulse ? "animate-spin" : ""}
-            `}
-          />
-
-          {showText && (
-            <span
-              className={`${getTextSizeClasses()} ${statusInfo.color} font-medium`}
-            >
-              {statusInfo.text}
-            </span>
-          )}
-        </div>
-
-        {/* Detalhes no hover para versão sem texto */}
-        {!showText && lastSync && (
-          <div className="absolute top-full right-0 mt-1 bg-black text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">
-            Última sync: {lastSync.toLocaleTimeString()}
-          </div>
-        )}
-      </div>
-    </SyncErrorBoundary>
+          className="fixed inset-0 z-40"
+          onClick={() => setShowDetails(false)}
+        />
+      )}
+    </div>
   );
 };
 
-// Versão minimalista apenas com ícone
-export const SyncStatusIcon: React.FC<{ className?: string }> = ({
-  className = "",
-}) => {
-  return (
-    <SyncStatusIndicator
-      position="relative"
-      size="sm"
-      showText={false}
-      className={className}
-    />
-  );
-};
+// Compact version for mobile
+export const SyncStatusCompact: React.FC = () => {
+  const { isFullySynced, loading, error } = useGlobalSync();
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-// Versão com texto para usar em dashboards
-export const SyncStatusBadge: React.FC<{ className?: string }> = ({
-  className = "",
-}) => {
-  return (
-    <SyncStatusIndicator
-      position="relative"
-      size="md"
-      showText={true}
-      className={className}
-    />
-  );
-};
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
 
-// Hook para informações detalhadas de sincronização
-export const useSyncStatusInfo = () => {
-  let syncData;
-  try {
-    syncData = useAutoSync();
-  } catch (error) {
-    console.warn("useSyncStatusInfo: useAutoSync error", error);
-    syncData = {
-      isActive: false,
-      syncing: false,
-      lastSync: null,
-      error: "Sync unavailable",
-      config: { enabled: false, syncInterval: 30000, collections: [] },
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
-  }
+  }, []);
 
-  const { isActive, syncing, lastSync, error, config } = syncData;
-
-  const getStatusText = () => {
-    if (!isActive) return "Sincronização desativada";
-    if (error) return `Erro: ${error}`;
-    if (syncing) return "Sincronizando dados...";
-    if (lastSync) {
-      const timeDiff = Date.now() - lastSync.getTime();
-      if (timeDiff < 10000) return "Dados sincronizados";
-      if (timeDiff < 60000)
-        return `Sincronizado há ${Math.floor(timeDiff / 1000)}s`;
-      return `Sincronizado há ${Math.floor(timeDiff / 60000)}min`;
-    }
-    return "Aguardando sincronização";
+  const getStatusColor = () => {
+    if (!isOnline) return "bg-gray-400";
+    if (loading) return "bg-blue-400";
+    if (error) return "bg-red-400";
+    if (isFullySynced) return "bg-green-400";
+    return "bg-yellow-400";
   };
 
-  const getHealthStatus = (): "healthy" | "warning" | "error" | "inactive" => {
-    if (!isActive) return "inactive";
-    if (error) return "error";
-    if (syncing) return "healthy";
-    if (lastSync) {
-      const timeDiff = Date.now() - lastSync.getTime();
-      if (timeDiff < 30000) return "healthy"; // 30 segundos
-      if (timeDiff < 300000) return "warning"; // 5 minutos
-      return "error";
-    }
-    return "warning";
-  };
-
-  return {
-    isActive,
-    syncing,
-    lastSync,
-    error,
-    config,
-    statusText: getStatusText(),
-    healthStatus: getHealthStatus(),
-  };
+  return (
+    <div className="flex items-center gap-1">
+      <div
+        className={`w-2 h-2 rounded-full ${getStatusColor()} ${loading ? "animate-pulse" : ""}`}
+        title={
+          !isOnline
+            ? "Offline"
+            : loading
+              ? "Sincronizando..."
+              : error
+                ? "Erro na sincronização"
+                : isFullySynced
+                  ? "Sincronizado"
+                  : "Aguardando..."
+        }
+      />
+    </div>
+  );
 };

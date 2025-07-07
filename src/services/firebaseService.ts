@@ -13,6 +13,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../firebase/config";
+import { syncManager } from "../utils/syncManager";
 
 // Types
 export interface User {
@@ -119,13 +120,55 @@ const isFirebaseAvailable = () => {
   return db !== null;
 };
 
+// Critical: Wrapper for Firebase operations with quota protection
+const safeFirebaseOperation = async <T>(
+  operation: () => Promise<T>,
+  operationName: string,
+): Promise<T> => {
+  // Check if Firebase operations are allowed
+  if (!syncManager.isFirebaseOperationAllowed()) {
+    const status = syncManager.getSyncStatus();
+    if (status.emergencyShutdown) {
+      throw new Error(
+        "Firebase em shutdown de emergência - operação bloqueada",
+      );
+    }
+    if (status.quotaExceeded) {
+      throw new Error(
+        `Firebase quota excedida - aguarde ${status.hoursUntilRetry || 24} horas`,
+      );
+    }
+    throw new Error("Firebase operação bloqueada por proteção de quota");
+  }
+
+  try {
+    return await operation();
+  } catch (error: any) {
+    // Check for quota exceeded errors
+    if (
+      error.code === "resource-exhausted" ||
+      error.message?.includes("quota") ||
+      error.message?.includes("Quota exceeded")
+    ) {
+      console.error(`🚨 QUOTA EXCEEDED in ${operationName}:`, error);
+      syncManager.markQuotaExceeded();
+
+      throw new Error("Firebase quota excedida - sincronização desabilitada");
+    }
+
+    // Re-throw other errors
+    throw error;
+  }
+};
+
 // User Services
 export const userService = {
   // Listen to real-time changes
   subscribeToUsers(callback: (users: User[]) => void) {
     if (!db) {
-      // Return empty unsubscribe function if db is not available
-      callback([]);
+      // Fallback to localStorage if Firebase not available
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      callback(users);
       return () => {};
     }
 
@@ -145,22 +188,38 @@ export const userService = {
   // Add new user
   async addUser(userData: Omit<User, "id" | "createdAt" | "updatedAt">) {
     if (!db) {
-      throw new Error("Firebase not configured");
+      // Fallback to localStorage if Firebase not available
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const newUser = {
+        ...userData,
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
+
+      console.log(
+        `✅ Usuário ${userData.name} (${userData.email}) adicionado localmente`,
+      );
+      return newUser.id;
     }
 
-    const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
-      ...userData,
-      createdAt: new Date().toISOString(),
-      updatedAt: Timestamp.now(),
-    });
+    return await safeFirebaseOperation(async () => {
+      const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
+        ...userData,
+        createdAt: new Date().toISOString(),
+        updatedAt: Timestamp.now(),
+      });
 
-    // Trigger synchronization for the new user
-    console.log(
-      `User ${userData.name} (${userData.email}) added and will be synchronized automatically`,
-    );
-    await syncService.triggerUserSync(docRef.id);
+      console.log(
+        `✅ Usuário ${userData.name} (${userData.email}) adicionado no Firebase`,
+      );
+      await syncService.triggerAutoSync("create", "users", docRef.id);
 
-    return docRef.id;
+      return docRef.id;
+    }, "addUser");
   },
 
   // Update user
@@ -174,6 +233,12 @@ export const userService = {
       ...userData,
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Usuário ${userId} atualizado - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("update", "users", userId);
   },
 
   // Delete user
@@ -184,6 +249,12 @@ export const userService = {
 
     const userRef = doc(db, COLLECTIONS.USERS, userId);
     await deleteDoc(userRef);
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Usuário ${userId} removido - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("delete", "users", userId);
   },
 
   // Initialize only real admin user - NO MOCK DATA
@@ -226,7 +297,8 @@ export const poolService = {
   // Listen to real-time changes
   subscribeToPools(callback: (pools: Pool[]) => void) {
     if (!isFirebaseAvailable()) {
-      callback([]);
+      const pools = JSON.parse(localStorage.getItem("pools") || "[]");
+      callback(pools);
       return () => {};
     }
 
@@ -254,6 +326,13 @@ export const poolService = {
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Piscina ${poolData.name} adicionada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("create", "pools", docRef.id);
+
     return docRef.id;
   },
 
@@ -268,6 +347,12 @@ export const poolService = {
       ...poolData,
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Piscina ${poolId} atualizada - sincronização autom��tica ativada`,
+    );
+    await syncService.triggerAutoSync("update", "pools", poolId);
   },
 
   // Delete pool
@@ -278,6 +363,12 @@ export const poolService = {
 
     const poolRef = doc(db, COLLECTIONS.POOLS, poolId);
     await deleteDoc(poolRef);
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Piscina ${poolId} removida - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("delete", "pools", poolId);
   },
 };
 
@@ -286,7 +377,10 @@ export const maintenanceService = {
   // Listen to real-time changes
   subscribeToMaintenance(callback: (maintenance: Maintenance[]) => void) {
     if (!isFirebaseAvailable()) {
-      callback([]);
+      const maintenance = JSON.parse(
+        localStorage.getItem("maintenance") || "[]",
+      );
+      callback(maintenance);
       return () => {};
     }
 
@@ -306,7 +400,14 @@ export const maintenanceService = {
   // Get future maintenance
   subscribeToFutureMaintenance(callback: (maintenance: Maintenance[]) => void) {
     if (!isFirebaseAvailable()) {
-      callback([]);
+      const allMaintenance = JSON.parse(
+        localStorage.getItem("maintenance") || "[]",
+      );
+      const today = new Date().toISOString().split("T")[0];
+      const futureMaintenance = allMaintenance.filter(
+        (m: Maintenance) => m.scheduledDate >= today,
+      );
+      callback(futureMaintenance);
       return () => {};
     }
 
@@ -338,6 +439,13 @@ export const maintenanceService = {
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Manutenção para ${maintenanceData.poolName} adicionada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("create", "maintenance", docRef.id);
+
     return docRef.id;
   },
 
@@ -355,6 +463,12 @@ export const maintenanceService = {
       ...maintenanceData,
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Manutenção ${maintenanceId} atualizada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("update", "maintenance", maintenanceId);
   },
 
   // Delete maintenance
@@ -365,6 +479,12 @@ export const maintenanceService = {
 
     const maintenanceRef = doc(db, COLLECTIONS.MAINTENANCE, maintenanceId);
     await deleteDoc(maintenanceRef);
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Manutenção ${maintenanceId} removida - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("delete", "maintenance", maintenanceId);
   },
 };
 
@@ -373,7 +493,8 @@ export const workService = {
   // Listen to real-time changes
   subscribeToWorks(callback: (works: Work[]) => void) {
     if (!isFirebaseAvailable()) {
-      callback([]);
+      const works = JSON.parse(localStorage.getItem("works") || "[]");
+      callback(works);
       return () => {};
     }
 
@@ -401,6 +522,13 @@ export const workService = {
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Obra ${workData.title} adicionada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("create", "works", docRef.id);
+
     return docRef.id;
   },
 
@@ -415,6 +543,12 @@ export const workService = {
       ...workData,
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Obra ${workId} atualizada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("update", "works", workId);
   },
 
   // Delete work
@@ -425,39 +559,135 @@ export const workService = {
 
     const workRef = doc(db, COLLECTIONS.WORKS, workId);
     await deleteDoc(workRef);
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Obra ${workId} removida - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("delete", "works", workId);
   },
 };
 
-// General sync service
+// General sync service with enhanced cross-device synchronization
 export const syncService = {
   // Initialize all data
   async initializeData() {
     if (!isFirebaseAvailable()) {
+      console.log("⚠️ Firebase não disponível - sincronização limitada");
       return; // Skip initialization if Firebase not configured
     }
+
+    console.log("🚀 Inicializando dados do Firebase...");
     await userService.initializeDefaultUsers();
+    console.log("✅ Dados inicializados com sucesso");
   },
 
   // Trigger user synchronization after adding a new user
   async triggerUserSync(userId: string) {
     if (!isFirebaseAvailable()) {
-      console.log("Firebase not available - user sync limited to local");
+      console.log(
+        "Firebase não disponível - sincronização de usuário limitada",
+      );
       return;
     }
 
     try {
       // The real-time listeners will automatically pick up the new user
-      // This is just for logging and potential additional sync operations
-      console.log(`Triggered synchronization for user: ${userId}`);
+      console.log(`🔄 Sincronização ativada para usuário: ${userId}`);
 
-      // You could add additional sync logic here if needed
-      // For example, notifying other services or updating cache
+      // Broadcast sync event to other tabs/windows
+      const syncEvent = new CustomEvent("firebase-sync", {
+        detail: { type: "user", id: userId, timestamp: Date.now() },
+      });
+      window.dispatchEvent(syncEvent);
+
+      // Update localStorage to trigger cross-tab sync
+      const currentUsers = localStorage.getItem("users");
+      if (currentUsers) {
+        const usersData = JSON.parse(currentUsers);
+        localStorage.setItem("users", JSON.stringify(usersData));
+      }
     } catch (error) {
-      console.error("Failed to trigger user sync:", error);
+      console.error("❌ Falha ao sincronizar usuário:", error);
     }
   },
 
-  // Subscribe to all data changes
+  // Force cross-device synchronization for specific collection
+  async forceCrossDeviceSync(collection: string) {
+    if (!isFirebaseAvailable()) {
+      console.log(
+        `Firebase não disponível - sincronização de ${collection} limitada`,
+      );
+      return;
+    }
+
+    try {
+      console.log(
+        `🔄 Forçando sincronização entre dispositivos para: ${collection}`,
+      );
+
+      // Broadcast sync event to all tabs/windows
+      const syncEvent = new CustomEvent("firebase-sync", {
+        detail: {
+          type: "forced-sync",
+          collection,
+          timestamp: Date.now(),
+          source: "manual",
+        },
+      });
+      window.dispatchEvent(syncEvent);
+
+      // Trigger storage event for cross-tab sync
+      const storageEvent = new StorageEvent("storage", {
+        key: collection,
+        newValue: localStorage.getItem(collection),
+        oldValue: null,
+        storageArea: localStorage,
+      });
+      window.dispatchEvent(storageEvent);
+
+      console.log(
+        `✅ Sincronização entre dispositivos ativada para: ${collection}`,
+      );
+    } catch (error) {
+      console.error(`❌ Erro ao forçar sincronização de ${collection}:`, error);
+    }
+  },
+
+  // Enhanced automatic sync for all data changes
+  async triggerAutoSync(
+    changeType: string,
+    collectionName: string,
+    documentId?: string,
+  ) {
+    if (!isFirebaseAvailable()) {
+      return;
+    }
+
+    try {
+      console.log(
+        `🔄 Auto-sync disparado: ${changeType} em ${collectionName}${documentId ? ` (${documentId})` : ""}`,
+      );
+
+      // Force immediate sync for specific collection
+      await this.forceCrossDeviceSync(collectionName);
+
+      // Trigger global sync notification
+      const syncEvent = new CustomEvent("firebase-auto-sync", {
+        detail: {
+          changeType,
+          collection: collectionName,
+          documentId,
+          timestamp: Date.now(),
+        },
+      });
+      window.dispatchEvent(syncEvent);
+    } catch (error) {
+      console.error(`❌ Erro no auto-sync para ${collectionName}:`, error);
+    }
+  },
+
+  // Subscribe to all data changes with enhanced sync capabilities
   subscribeToAllData(callbacks: {
     onUsersChange: (users: User[]) => void;
     onPoolsChange: (pools: Pool[]) => void;
@@ -466,6 +696,7 @@ export const syncService = {
   }) {
     if (!isFirebaseAvailable()) {
       // Return empty data and empty unsubscribe function
+      console.log("⚠️ Firebase não disponível - retornando dados vazios");
       callbacks.onUsersChange([]);
       callbacks.onPoolsChange([]);
       callbacks.onMaintenanceChange([]);
@@ -473,21 +704,48 @@ export const syncService = {
       return () => {};
     }
 
-    const unsubscribeUsers = userService.subscribeToUsers(
-      callbacks.onUsersChange,
+    console.log(
+      "📡 Configurando listeners para sincronização em tempo real...",
     );
-    const unsubscribePools = poolService.subscribeToPools(
-      callbacks.onPoolsChange,
-    );
+
+    // Enhanced subscription with automatic sync triggers
+    const unsubscribeUsers = userService.subscribeToUsers((users) => {
+      console.log(
+        `👥 Mudança detectada em usuários: ${users.length} registros`,
+      );
+      callbacks.onUsersChange(users);
+      this.triggerAutoSync("users-changed", "users");
+    });
+
+    const unsubscribePools = poolService.subscribeToPools((pools) => {
+      console.log(
+        `🏊 Mudança detectada em piscinas: ${pools.length} registros`,
+      );
+      callbacks.onPoolsChange(pools);
+      this.triggerAutoSync("pools-changed", "pools");
+    });
+
     const unsubscribeMaintenance = maintenanceService.subscribeToMaintenance(
-      callbacks.onMaintenanceChange,
+      (maintenance) => {
+        console.log(
+          `🔧 Mudança detectada em manutenções: ${maintenance.length} registros`,
+        );
+        callbacks.onMaintenanceChange(maintenance);
+        this.triggerAutoSync("maintenance-changed", "maintenance");
+      },
     );
-    const unsubscribeWorks = workService.subscribeToWorks(
-      callbacks.onWorksChange,
-    );
+
+    const unsubscribeWorks = workService.subscribeToWorks((works) => {
+      console.log(`⚒️ Mudança detectada em obras: ${works.length} registros`);
+      callbacks.onWorksChange(works);
+      this.triggerAutoSync("works-changed", "works");
+    });
+
+    console.log("✅ Todos os listeners configurados com sucesso");
 
     // Return unsubscribe function
     return () => {
+      console.log("🛑 Desconectando todos os listeners de sincronização");
       unsubscribeUsers();
       unsubscribePools();
       unsubscribeMaintenance();

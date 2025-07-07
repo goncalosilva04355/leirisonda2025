@@ -29,6 +29,8 @@ import { UserManagement } from "../components/UserManagement";
 import { MobileSettings } from "../components/MobileSettings";
 import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
 import { LoginFixer } from "../components/LoginFixer";
+import { DataBackupManager } from "../components/DataBackupManager";
+import { FirebaseQuotaManager } from "../components/FirebaseQuotaManager";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -50,6 +52,8 @@ type AdminSection =
   | "phone-settings"
   | "mobile-settings"
   | "data-recovery"
+  | "data-backup"
+  | "firebase-quota"
   | "login-fix";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
@@ -164,6 +168,20 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       icon: AlertTriangle,
       color: "bg-red-500",
     },
+    {
+      id: "data-backup" as AdminSection,
+      title: "💾 Backup de Dados e App",
+      description: "Criar backups de segurança dos dados e da aplicação",
+      icon: Database,
+      color: "bg-indigo-600",
+    },
+    {
+      id: "firebase-quota" as AdminSection,
+      title: "🚨 Gestão de Quota Firebase",
+      description: "CRÍTICO: Monitorizar e gerir quota do Firebase",
+      icon: AlertTriangle,
+      color: "bg-red-600",
+    },
   ];
 
   const renderCurrentSection = () => {
@@ -198,6 +216,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <MobileSettings />;
       case "data-recovery":
         return <DataRecovery />;
+      case "data-backup":
+        return <DataBackupManager />;
+      case "firebase-quota":
+        return <FirebaseQuotaManager />;
       case "overview":
       default:
         return (

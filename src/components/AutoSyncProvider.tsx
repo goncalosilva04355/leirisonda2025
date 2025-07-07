@@ -31,12 +31,15 @@ interface AutoSyncProviderProps {
 export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
   children,
   enabled = true,
-  syncInterval = 300000, // 5 minutos (otimizado para quota Firebase)
+  syncInterval = 30000, // 30 segundos para sincronização mais responsiva
   collections = ["users", "pools", "maintenance", "works", "clients"],
-  showNotifications = false,
+  showNotifications = true, // Habilitado por padrão para feedback visual
 }) => {
   const [mounted, setMounted] = useState(false);
   const [quotaExceeded, setQuotaExceeded] = useState(false);
+  const [syncNotifications, setSyncNotifications] = useState<
+    Array<{ id: string; message: string; timestamp: number }>
+  >([]);
 
   // Hook principal de sincronização
   const autoSync = useAutoDataSync({

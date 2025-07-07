@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   syncService,
   userService,
@@ -32,61 +32,141 @@ export function useRealtimeSync() {
     error: null,
   });
 
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Monitor network connectivity
+  useEffect(() => {
+    const handleOnline = () => {
+      console.log("🌐 Conexão restaurada - reativando sincronização");
+      setIsOnline(true);
+    };
+
+    const handleOffline = () => {
+      console.log("🌐 Conexão perdida - pausando sincronização");
+      setIsOnline(false);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
   useEffect(() => {
     let unsubscribeAll: (() => void) | null = null;
     let unsubscribeFuture: (() => void) | null = null;
 
     const initializeAndSubscribe = async () => {
       try {
-        // Firebase realtime sync re-enabled for cross-device functionality
-        console.log("🔥 Realtime sync active - cross-device updates enabled");
+        // Firebase realtime sync enabled for cross-device functionality
+        console.log(
+          "🔥 Inicializando sincronização em tempo real - atualizações automáticas entre dispositivos",
+        );
 
         // Firebase is always configured with fixed settings
-        console.log("🔄 Firebase sync available with fixed configuration");
+        console.log("🔄 Firebase configurado - sincronização completa ativada");
 
         // Initialize default data if needed
         await syncService.initializeData();
 
-        // Subscribe to all data changes
+        // Subscribe to all data changes with enhanced error handling
         unsubscribeAll = syncService.subscribeToAllData({
           onUsersChange: (users) => {
-            setState((prev) => ({ ...prev, users, loading: false }));
+            console.log(
+              `👥 Dados de usuários atualizados: ${users.length} usuários`,
+            );
+            setState((prev) => ({
+              ...prev,
+              users,
+              loading: false,
+              error: null,
+            }));
+
+            // Trigger localStorage update for cross-device sync
+            localStorage.setItem("users", JSON.stringify(users));
           },
           onPoolsChange: (pools) => {
+            console.log(
+              `🏊 Dados de piscinas atualizados: ${pools.length} piscinas`,
+            );
             setState((prev) => ({ ...prev, pools }));
+
+            // Trigger localStorage update for cross-device sync
+            localStorage.setItem("pools", JSON.stringify(pools));
           },
           onMaintenanceChange: (maintenance) => {
+            console.log(
+              `🔧 Dados de manutenção atualizados: ${maintenance.length} manutenções`,
+            );
             setState((prev) => ({ ...prev, maintenance }));
+
+            // Trigger localStorage update for cross-device sync
+            localStorage.setItem("maintenance", JSON.stringify(maintenance));
           },
           onWorksChange: (works) => {
+            console.log(`⚒️ Dados de obras atualizados: ${works.length} obras`);
             setState((prev) => ({ ...prev, works }));
+
+            // Trigger localStorage update for cross-device sync
+            localStorage.setItem("works", JSON.stringify(works));
           },
         });
 
-        // Subscribe to future maintenance separately
+        // Subscribe to future maintenance separately with enhanced monitoring
         unsubscribeFuture = maintenanceService.subscribeToFutureMaintenance(
           (futureMaintenance) => {
+            console.log(
+              `📅 Manutenções futuras atualizadas: ${futureMaintenance.length} agendadas`,
+            );
             setState((prev) => ({ ...prev, futureMaintenance }));
           },
         );
+
+        console.log("✅ Sincronização em tempo real configurada com sucesso");
       } catch (error) {
-        console.error("Error initializing sync:", error);
+        console.error("❌ Erro ao inicializar sincronização:", error);
         setState((prev) => ({
           ...prev,
-          error: "Erro ao sincronizar dados. Verifique a conexão.",
+          error: "Erro ao sincronizar dados. Tentando reconectar...",
           loading: false,
         }));
+
+        // Auto-retry connection after error
+        if (reconnectTimeoutRef.current) {
+          clearTimeout(reconnectTimeoutRef.current);
+        }
+
+        reconnectTimeoutRef.current = setTimeout(() => {
+          console.log("🔄 Tentando reconectar sincronização...");
+          initializeAndSubscribe();
+        }, 5000); // Retry after 5 seconds
       }
     };
 
-    initializeAndSubscribe();
+    // Only initialize if online
+    if (isOnline) {
+      initializeAndSubscribe();
+    } else {
+      setState((prev) => ({
+        ...prev,
+        error: "Sem conexão - sincronização pausada",
+        loading: false,
+      }));
+    }
 
     // Cleanup subscriptions
     return () => {
       if (unsubscribeAll) unsubscribeAll();
       if (unsubscribeFuture) unsubscribeFuture();
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
     };
-  }, []);
+  }, [isOnline]);
 
   // Service functions for easy access
   const services = {
