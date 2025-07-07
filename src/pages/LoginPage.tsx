@@ -18,10 +18,45 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   });
   const [rememberMe, setRememberMe] = useState(false);
 
-  // Firebase handles auth persistence automatically - no need for localStorage
+  // Load saved credentials from sessionStorage for "remember me" functionality
   useEffect(() => {
-    console.log("🔥 Firebase handles auth persistence automatically");
-  }, []);
+    console.log("🔄 Loading saved credentials...");
+    const savedCredentials = sessionStorage.getItem("savedLoginCredentials");
+    if (savedCredentials) {
+      try {
+        const {
+          email,
+          password,
+          rememberMe: savedRememberMe,
+        } = JSON.parse(savedCredentials);
+
+        console.log("📋 Found saved credentials:", {
+          email,
+          hasPassword: !!password,
+          rememberMe: savedRememberMe,
+        });
+
+        if (savedRememberMe && email && password) {
+          setLoginForm({ email: email || "", password: password || "" });
+          setRememberMe(true);
+          console.log("📋 Auto-filled login form from saved credentials");
+
+          // Auto-login if user had "remember me" checked
+          setTimeout(() => {
+            console.log("🚀 Auto-login triggered...");
+            onLogin(email, password);
+          }, 500);
+        } else {
+          console.log("⚠️ Incomplete saved credentials, skipping auto-login");
+        }
+      } catch (error) {
+        console.error("❌ Error loading saved credentials:", error);
+        sessionStorage.removeItem("savedLoginCredentials");
+      }
+    } else {
+      console.log("📭 No saved credentials found");
+    }
+  }, [onLogin]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
