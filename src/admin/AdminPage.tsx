@@ -17,11 +17,11 @@ import {
 import { AuthSyncDiagnostic } from "../components/AuthSyncDiagnostic";
 import { FullSyncManager } from "../components/FullSyncManager";
 import { FirebaseStatus } from "../components/FirebaseStatus";
-import { UserDebugger } from "../components/UserDebugger";
+// UserDebugger removido - usando apenas Firebase
 import { DataCleanupManager } from "../components/DataCleanupManager";
 import { DataManagementPanel } from "../components/DataManagementPanel";
 import { FirebaseConfig } from "../components/FirebaseConfig";
-import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
+// CrossDeviceUserManager removido - usando apenas Firebase
 import { AutoSyncDemo } from "../components/AutoSyncDemo";
 import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
