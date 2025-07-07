@@ -39,6 +39,7 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
+import { InstantSyncManager } from "./components/InstantSyncManager";
 // import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Removed to eliminate sync indicator
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
@@ -332,7 +333,9 @@ function App() {
             setTimeout(() => {
               const hash = window.location.hash.substring(1);
               if (!hash || hash === "login") {
-                console.log("🧭 Auto-navigating to dashboard after auto-login");
+                console.log(
+                  "���� Auto-navigating to dashboard after auto-login",
+                );
                 navigateToSection("dashboard");
               }
             }, 100);
@@ -8331,684 +8334,696 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={true}
     >
-      <div className="min-h-screen bg-gray-50">
-        {/* Sidebar */}
-        <div
-          className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <div className="flex flex-col h-full">
-            {/* Logo Header */}
-            <div className="px-6 py-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
-                    <img
-                      src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
-                      alt="Leirisonda Logo"
-                      className="w-full h-full object-contain"
-                    />
+      <InstantSyncManager>
+        <div className="min-h-screen bg-gray-50">
+          {/* Sidebar */}
+          <div
+            className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
+              sidebarOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+          >
+            <div className="flex flex-col h-full">
+              {/* Logo Header */}
+              <div className="px-6 py-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
+                      <img
+                        src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                        alt="Leirisonda Logo"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-500">
+                        Gestão de Serviços
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-500">Gestão de Serviços</p>
-                  </div>
-                </div>
-                {/* Sync Status Indicator - Removed */}
-                {/* <SyncStatusIcon className="ml-2" /> */}
-                {/* Close button for mobile */}
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="lg:hidden p-1 rounded-md hover:bg-gray-100"
-                >
-                  <X className="h-5 w-5 text-gray-500" />
-                </button>
-              </div>
-            </div>
-
-            {/* Navigation */}
-            <nav className="flex-1 px-4 py-6 space-y-2">
-              <button
-                onClick={() => {
-                  navigateToSection("dashboard");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                  activeSection === "dashboard"
-                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Home className="h-5 w-5" />
-                <span>Dashboard</span>
-              </button>
-
-              {hasPermission("obras", "view") && (
-                <button
-                  onClick={() => {
-                    navigateToSection("obras");
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeSection === "obras"
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <Building2 className="h-5 w-5" />
-                  <span>Obras</span>
-                </button>
-              )}
-
-              {hasPermission("obras", "create") && (
-                <button
-                  onClick={() => {
-                    navigateToSection("nova-obra");
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeSection === "nova-obra"
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <Plus className="h-5 w-5" />
-                  <span>Nova Obra</span>
-                </button>
-              )}
-
-              {hasPermission("manutencoes", "view") && (
-                <button
-                  onClick={() => {
-                    navigateToSection("manutencoes");
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeSection === "manutencoes"
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <Wrench className="h-5 w-5" />
-                  <span>Manutenções</span>
-                </button>
-              )}
-
-              {hasPermission("manutencoes", "create") && (
-                <button
-                  onClick={() => {
-                    navigateToSection("nova-manutencao");
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeSection === "nova-manutencao"
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <Plus className="h-5 w-5" />
-                  <span>Nova Manutenção</span>
-                </button>
-              )}
-
-              {hasPermission("piscinas", "view") && (
-                <button
-                  onClick={() => {
-                    navigateToSection("piscinas");
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeSection === "piscinas"
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <Waves className="h-5 w-5" />
-                  <span>Piscinas</span>
-                </button>
-              )}
-
-              {/* Localizações - Apenas para admin e super_admin */}
-              {(currentUser?.role === "admin" ||
-                currentUser?.role === "super_admin") && (
-                <button
-                  onClick={() => {
-                    navigateToSection("localizacoes");
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeSection === "localizacoes"
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <MapPin className="h-5 w-5" />
-                  <span>Localizações</span>
-                </button>
-              )}
-            </nav>
-
-            {/* User Section */}
-            <div className="px-4 py-6 border-t border-gray-200">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                  <UserCheck className="h-5 w-5 text-red-600" />
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900">
-                    {currentUser?.name}
-                  </p>
-                  <p className="text-sm text-gray-500">{currentUser?.role}</p>
+                  {/* Sync Status Indicator - Removed */}
+                  {/* <SyncStatusIcon className="ml-2" /> */}
+                  {/* Close button for mobile */}
+                  <button
+                    onClick={() => setSidebarOpen(false)}
+                    className="lg:hidden p-1 rounded-md hover:bg-gray-100"
+                  >
+                    <X className="h-5 w-5 text-gray-500" />
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <LogOut className="h-5 w-5" />
-                <span>Terminar Sessão</span>
-              </button>
-              <div className="mt-4 text-center">
-                <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
+
+              {/* Navigation */}
+              <nav className="flex-1 px-4 py-6 space-y-2">
+                <button
+                  onClick={() => {
+                    navigateToSection("dashboard");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "dashboard"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Home className="h-5 w-5" />
+                  <span>Dashboard</span>
+                </button>
+
+                {hasPermission("obras", "view") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("obras");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "obras"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <Building2 className="h-5 w-5" />
+                    <span>Obras</span>
+                  </button>
+                )}
+
+                {hasPermission("obras", "create") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("nova-obra");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "nova-obra"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <Plus className="h-5 w-5" />
+                    <span>Nova Obra</span>
+                  </button>
+                )}
+
+                {hasPermission("manutencoes", "view") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("manutencoes");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "manutencoes"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <Wrench className="h-5 w-5" />
+                    <span>Manutenções</span>
+                  </button>
+                )}
+
+                {hasPermission("manutencoes", "create") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("nova-manutencao");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "nova-manutencao"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <Plus className="h-5 w-5" />
+                    <span>Nova Manutenção</span>
+                  </button>
+                )}
+
+                {hasPermission("piscinas", "view") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("piscinas");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "piscinas"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <Waves className="h-5 w-5" />
+                    <span>Piscinas</span>
+                  </button>
+                )}
+
+                {/* Localizações - Apenas para admin e super_admin */}
+                {(currentUser?.role === "admin" ||
+                  currentUser?.role === "super_admin") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("localizacoes");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "localizacoes"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <MapPin className="h-5 w-5" />
+                    <span>Localizações</span>
+                  </button>
+                )}
+              </nav>
+
+              {/* User Section */}
+              <div className="px-4 py-6 border-t border-gray-200">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                    <UserCheck className="h-5 w-5 text-red-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">
+                      {currentUser?.name}
+                    </p>
+                    <p className="text-sm text-gray-500">{currentUser?.role}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Terminar Sessão</span>
+                </button>
+                <div className="mt-4 text-center">
+                  <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Mobile Menu Button */}
-        <div className="lg:hidden fixed top-20 left-4 z-[70] flex flex-col space-y-2">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="bg-white p-2 rounded-md shadow-md"
-          >
-            <Menu className="h-6 w-6 text-gray-600" />
-          </button>
-          <button
-            onClick={handleGoBack}
-            className="bg-white p-2 rounded-md shadow-md"
-          >
-            <ArrowLeft className="h-6 w-6 text-gray-600" />
-          </button>
-        </div>
+          {/* Mobile Menu Button */}
+          <div className="lg:hidden fixed top-20 left-4 z-[70] flex flex-col space-y-2">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="bg-white p-2 rounded-md shadow-md"
+            >
+              <Menu className="h-6 w-6 text-gray-600" />
+            </button>
+            <button
+              onClick={handleGoBack}
+              className="bg-white p-2 rounded-md shadow-md"
+            >
+              <ArrowLeft className="h-6 w-6 text-gray-600" />
+            </button>
+          </div>
 
-        {/* Mobile Overlay */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
+          {/* Mobile Overlay */}
+          {sidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
 
-        {/* Enhanced Work View Modal */}
-        {viewingWork && selectedWork && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-              <div className="p-6">
-                {/* Enhanced Header */}
-                <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Building2 className="h-6 w-6 text-blue-600" />
+          {/* Enhanced Work View Modal */}
+          {viewingWork && selectedWork && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div className="p-6">
+                  {/* Enhanced Header */}
+                  <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Building2 className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">
+                          Detalhes Completos da Obra
+                        </h2>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-gray-900">
-                        Detalhes Completos da Obra
-                      </h2>
-                    </div>
+                    <button
+                      onClick={() => {
+                        setViewingWork(false);
+                        setSelectedWork(null);
+                      }}
+                      className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                      <X className="h-6 w-6" />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      setViewingWork(false);
-                      setSelectedWork(null);
-                    }}
-                    className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    <X className="h-6 w-6" />
-                  </button>
-                </div>
 
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Tipo de Obra
-                      </label>
-                      <p className="text-gray-900 capitalize">
-                        {selectedWork.type || "Não especificado"}
-                      </p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Título
-                      </label>
-                      <p className="text-gray-900">{selectedWork.title}</p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Cliente
-                      </label>
-                      <p className="text-gray-900">
-                        {selectedWork.client || "Não especificado"}
-                      </p>
-                      {selectedWork.contact && (
-                        <button
-                          onClick={() => handlePhoneClick(selectedWork.contact)}
-                          className={`text-sm mt-1 ${
-                            enablePhoneDialer
-                              ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                              : "text-gray-500"
-                          }`}
-                          disabled={!enablePhoneDialer}
-                        >
-                          📞 {selectedWork.contact}
-                        </button>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Local
-                      </label>
-                      <button
-                        onClick={() => {
-                          if (selectedWork?.location) {
-                            handleAddressClick(selectedWork.location);
-                          }
-                        }}
-                        className={`text-left ${
-                          enableMapsRedirect
-                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                            : "text-gray-900"
-                        }`}
-                        disabled={!enableMapsRedirect}
-                      >
-                        📍 {selectedWork.location}
-                      </button>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Contacto
-                      </label>
-                      <p className="text-gray-900">
-                        {selectedWork.contact || "Não especificado"}
-                      </p>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Hora de Entrada
-                      </label>
-                      <p className="text-gray-900">
-                        {selectedWork.startTime
-                          ? new Date(selectedWork.startTime).toLocaleString(
-                              "pt-PT",
-                            )
-                          : "Não especificado"}
-                      </p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Hora de Saída
-                      </label>
-                      <p className="text-gray-900">
-                        {selectedWork.endTime
-                          ? new Date(selectedWork.endTime).toLocaleString(
-                              "pt-PT",
-                            )
-                          : "Não especificado"}
-                      </p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Estado
-                      </label>
-                      <span
-                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                          selectedWork.status === "pending"
-                            ? "bg-red-100 text-red-700"
-                            : selectedWork.status === "in_progress"
-                              ? "bg-orange-100 text-orange-700"
-                              : selectedWork.status === "completed"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-gray-100 text-gray-700"
-                        }`}
-                      >
-                        {selectedWork.status === "pending"
-                          ? "Pendente"
-                          : selectedWork.status === "in_progress"
-                            ? "Em Progresso"
-                            : selectedWork.status === "completed"
-                              ? "Concluída"
-                              : selectedWork.status}
-                      </span>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Data de In��cio
-                      </label>
-                      <p className="text-gray-900">
-                        {new Date(selectedWork.startDate).toLocaleDateString(
-                          "pt-PT",
-                        )}
-                      </p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Horário
-                      </label>
-                      <p className="text-gray-900">
-                        {selectedWork.startTime && selectedWork.endTime
-                          ? `${selectedWork.startTime} - ${selectedWork.endTime}`
-                          : selectedWork.startTime
-                            ? `Das ${selectedWork.startTime}`
-                            : "Não definido"}
-                      </p>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Atribuída a
-                      </label>
-                      <p className="text-gray-900">
-                        {selectedWork.assignedUsers &&
-                        selectedWork.assignedUsers.length > 0
-                          ? selectedWork.assignedUsers
-                              .map((u) => u.name)
-                              .join(", ")
-                          : selectedWork.assignedTo || "Não atribuída"}
-                      </p>
-                    </div>
-                    {selectedWork.technicians &&
-                      selectedWork.technicians.length > 0 && (
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Técnicos
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedWork.technicians.join(", ")}
-                          </p>
-                        </div>
-                      )}
-                    {selectedWork.vehicles &&
-                      selectedWork.vehicles.length > 0 && (
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Veículos
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedWork.vehicles.join(", ")}
-                          </p>
-                        </div>
-                      )}
-                    {selectedWork.photos && selectedWork.photos.length > 0 && (
-                      <div className="md:col-span-2">
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Fotografias ({selectedWork.photos.length})
+                          Tipo de Obra
                         </label>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
-                          {selectedWork.photos.map((photo, index) => (
-                            <div key={photo.id || index} className="relative">
-                              <img
-                                src={photo.data || photo.url}
-                                alt={photo.name || `Foto ${index + 1}`}
-                                className="w-full h-20 object-cover rounded-lg border border-gray-200"
-                              />
-                            </div>
-                          ))}
-                        </div>
+                        <p className="text-gray-900 capitalize">
+                          {selectedWork.type || "Não especificado"}
+                        </p>
                       </div>
-                    )}
-                  </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Título
+                        </label>
+                        <p className="text-gray-900">{selectedWork.title}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Cliente
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.client || "Não especificado"}
+                        </p>
+                        {selectedWork.contact && (
+                          <button
+                            onClick={() =>
+                              handlePhoneClick(selectedWork.contact)
+                            }
+                            className={`text-sm mt-1 ${
+                              enablePhoneDialer
+                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                : "text-gray-500"
+                            }`}
+                            disabled={!enablePhoneDialer}
+                          >
+                            📞 {selectedWork.contact}
+                          </button>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Local
+                        </label>
+                        <button
+                          onClick={() => {
+                            if (selectedWork?.location) {
+                              handleAddressClick(selectedWork.location);
+                            }
+                          }}
+                          className={`text-left ${
+                            enableMapsRedirect
+                              ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                              : "text-gray-900"
+                          }`}
+                          disabled={!enableMapsRedirect}
+                        >
+                          📍 {selectedWork.location}
+                        </button>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Contacto
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.contact || "Não especificado"}
+                        </p>
+                      </div>
 
-                  {/* Detalhes Completos - Seções Expandidas */}
-                  <div className="mt-6 space-y-6">
-                    {/* Informações Adicionais */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informações Detalhadas
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Orçamento
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedWork.budget
-                              ? `€${selectedWork.budget}`
-                              : "Não especificado"}
-                          </p>
-                        </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Hora de Entrada
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.startTime
+                            ? new Date(selectedWork.startTime).toLocaleString(
+                                "pt-PT",
+                              )
+                            : "Não especificado"}
+                        </p>
                       </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Hora de Saída
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.endTime
+                            ? new Date(selectedWork.endTime).toLocaleString(
+                                "pt-PT",
+                              )
+                            : "Não especificado"}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Estado
+                        </label>
+                        <span
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                            selectedWork.status === "pending"
+                              ? "bg-red-100 text-red-700"
+                              : selectedWork.status === "in_progress"
+                                ? "bg-orange-100 text-orange-700"
+                                : selectedWork.status === "completed"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-gray-100 text-gray-700"
+                          }`}
+                        >
+                          {selectedWork.status === "pending"
+                            ? "Pendente"
+                            : selectedWork.status === "in_progress"
+                              ? "Em Progresso"
+                              : selectedWork.status === "completed"
+                                ? "Concluída"
+                                : selectedWork.status}
+                        </span>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Data de In��cio
+                        </label>
+                        <p className="text-gray-900">
+                          {new Date(selectedWork.startDate).toLocaleDateString(
+                            "pt-PT",
+                          )}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Horário
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.startTime && selectedWork.endTime
+                            ? `${selectedWork.startTime} - ${selectedWork.endTime}`
+                            : selectedWork.startTime
+                              ? `Das ${selectedWork.startTime}`
+                              : "Não definido"}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Atribuída a
+                        </label>
+                        <p className="text-gray-900">
+                          {selectedWork.assignedUsers &&
+                          selectedWork.assignedUsers.length > 0
+                            ? selectedWork.assignedUsers
+                                .map((u) => u.name)
+                                .join(", ")
+                            : selectedWork.assignedTo || "Não atribuída"}
+                        </p>
+                      </div>
+                      {selectedWork.technicians &&
+                        selectedWork.technicians.length > 0 && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Técnicos
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.technicians.join(", ")}
+                            </p>
+                          </div>
+                        )}
+                      {selectedWork.vehicles &&
+                        selectedWork.vehicles.length > 0 && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Veículos
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.vehicles.join(", ")}
+                            </p>
+                          </div>
+                        )}
+                      {selectedWork.photos &&
+                        selectedWork.photos.length > 0 && (
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700">
+                              Fotografias ({selectedWork.photos.length})
+                            </label>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+                              {selectedWork.photos.map((photo, index) => (
+                                <div
+                                  key={photo.id || index}
+                                  className="relative"
+                                >
+                                  <img
+                                    src={photo.data || photo.url}
+                                    alt={photo.name || `Foto ${index + 1}`}
+                                    className="w-full h-20 object-cover rounded-lg border border-gray-200"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                     </div>
 
-                    {/* Detalhes do Furo de Água - Se aplicável */}
-                    {selectedWork.type === "furo" && (
-                      <div className="border-l-4 border-cyan-500 pl-4">
-                        <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                          🚰 Detalhes do Furo de Água
+                    {/* Detalhes Completos - Seções Expandidas */}
+                    <div className="mt-6 space-y-6">
+                      {/* Informações Adicionais */}
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                          Informações Detalhadas
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
-                              Profundidade do Furo
-                            </label>
-                            <p className="text-gray-900 font-mono">
-                              {selectedWork.boreDepth
-                                ? `${selectedWork.boreDepth} m`
-                                : "Não especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Nível da Água
-                            </label>
-                            <p className="text-gray-900 font-mono">
-                              {selectedWork.waterLevel
-                                ? `${selectedWork.waterLevel} m`
-                                : "N��o especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Caudal do Furo
-                            </label>
-                            <p className="text-gray-900 font-mono">
-                              {selectedWork.flowRate
-                                ? `${selectedWork.flowRate} m³/h`
-                                : "Não especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Profundidade da Bomba
-                            </label>
-                            <p className="text-gray-900 font-mono">
-                              {selectedWork.pumpDepth
-                                ? `${selectedWork.pumpDepth} m`
-                                : "Não especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Tipo de Coluna
+                              Orçamento
                             </label>
                             <p className="text-gray-900">
-                              {selectedWork.columnType || "Não especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Diâmetro da Coluna
-                            </label>
-                            <p className="text-gray-900">
-                              {selectedWork.columnDiameter
-                                ? `${selectedWork.columnDiameter}"`
+                              {selectedWork.budget
+                                ? `€${selectedWork.budget}`
                                 : "Não especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Modelo da Bomba
-                            </label>
-                            <p className="text-gray-900">
-                              {selectedWork.pumpModel || "Não especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Potência do Motor
-                            </label>
-                            <p className="text-gray-900">
-                              {selectedWork.motorPower
-                                ? `${selectedWork.motorPower} HP`
-                                : "Não especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Voltagem da Bomba
-                            </label>
-                            <p className="text-gray-900">
-                              {selectedWork.pumpVoltage || "Não especificado"}
                             </p>
                           </div>
                         </div>
-                        {selectedWork.boreObservations && (
-                          <div className="mt-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observações Específicas do Furo
-                            </label>
-                            <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
+                      </div>
+
+                      {/* Detalhes do Furo de Água - Se aplicável */}
+                      {selectedWork.type === "furo" && (
+                        <div className="border-l-4 border-cyan-500 pl-4">
+                          <h3 className="text-lg font-semibold text-cyan-700 mb-4">
+                            🚰 Detalhes do Furo de Água
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Profundidade do Furo
+                              </label>
+                              <p className="text-gray-900 font-mono">
+                                {selectedWork.boreDepth
+                                  ? `${selectedWork.boreDepth} m`
+                                  : "Não especificado"}
+                              </p>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Nível da Água
+                              </label>
+                              <p className="text-gray-900 font-mono">
+                                {selectedWork.waterLevel
+                                  ? `${selectedWork.waterLevel} m`
+                                  : "N��o especificado"}
+                              </p>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Caudal do Furo
+                              </label>
+                              <p className="text-gray-900 font-mono">
+                                {selectedWork.flowRate
+                                  ? `${selectedWork.flowRate} m³/h`
+                                  : "Não especificado"}
+                              </p>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Profundidade da Bomba
+                              </label>
+                              <p className="text-gray-900 font-mono">
+                                {selectedWork.pumpDepth
+                                  ? `${selectedWork.pumpDepth} m`
+                                  : "Não especificado"}
+                              </p>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Tipo de Coluna
+                              </label>
                               <p className="text-gray-900">
-                                {selectedWork.boreObservations}
+                                {selectedWork.columnType || "Não especificado"}
+                              </p>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Diâmetro da Coluna
+                              </label>
+                              <p className="text-gray-900">
+                                {selectedWork.columnDiameter
+                                  ? `${selectedWork.columnDiameter}"`
+                                  : "Não especificado"}
+                              </p>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Modelo da Bomba
+                              </label>
+                              <p className="text-gray-900">
+                                {selectedWork.pumpModel || "Não especificado"}
+                              </p>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Potência do Motor
+                              </label>
+                              <p className="text-gray-900">
+                                {selectedWork.motorPower
+                                  ? `${selectedWork.motorPower} HP`
+                                  : "Não especificado"}
+                              </p>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Voltagem da Bomba
+                              </label>
+                              <p className="text-gray-900">
+                                {selectedWork.pumpVoltage || "Não especificado"}
                               </p>
                             </div>
                           </div>
-                        )}
+                          {selectedWork.boreObservations && (
+                            <div className="mt-4">
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Observações Específicas do Furo
+                              </label>
+                              <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
+                                <p className="text-gray-900">
+                                  {selectedWork.boreObservations}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {selectedWork.description && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Descrição
+                        </label>
+                        <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                          {selectedWork.description}
+                        </p>
                       </div>
                     )}
-                  </div>
 
-                  {selectedWork.description && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Descrição
-                      </label>
-                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                        {selectedWork.description}
-                      </p>
-                    </div>
-                  )}
+                    {selectedWork.budget && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Orçamento
+                        </label>
+                        <p className="text-gray-900">€{selectedWork.budget}</p>
+                      </div>
+                    )}
 
-                  {selectedWork.budget && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Orçamento
-                      </label>
-                      <p className="text-gray-900">€{selectedWork.budget}</p>
-                    </div>
-                  )}
+                    {selectedWork.workPerformed && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Trabalho Realizado
+                        </label>
+                        <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                          {selectedWork.workPerformed}
+                        </p>
+                      </div>
+                    )}
 
-                  {selectedWork.workPerformed && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Trabalho Realizado
-                      </label>
-                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                        {selectedWork.workPerformed}
-                      </p>
-                    </div>
-                  )}
+                    {selectedWork.observations && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Observações
+                        </label>
+                        <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                          {selectedWork.observations}
+                        </p>
+                      </div>
+                    )}
 
-                  {selectedWork.observations && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
-                      </label>
-                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                        {selectedWork.observations}
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Data de Criação
-                      </label>
-                      <p className="text-gray-900 text-sm">
-                        {new Date(
-                          selectedWork.createdAt || selectedWork.startDate,
-                        ).toLocaleString("pt-PT")}
-                      </p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Data de Criação
+                        </label>
+                        <p className="text-gray-900 text-sm">
+                          {new Date(
+                            selectedWork.createdAt || selectedWork.startDate,
+                          ).toLocaleString("pt-PT")}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-6 flex justify-end space-x-3">
-                  <button
-                    onClick={() => {
-                      setViewingWork(false);
-                      setSelectedWork(null);
-                    }}
-                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
-                  >
-                    Fechar
-                  </button>
-                  {hasPermission("obras", "edit") && (
+                  <div className="mt-6 flex justify-end space-x-3">
                     <button
                       onClick={() => {
-                        setEditingWork(selectedWork);
-                        // Initialize edit assigned users
-                        setEditAssignedUsers(selectedWork.assignedUsers || []);
                         setViewingWork(false);
                         setSelectedWork(null);
-                        setActiveSection("editar-obra");
                       }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
                     >
-                      Editar
+                      Fechar
                     </button>
-                  )}
+                    {hasPermission("obras", "edit") && (
+                      <button
+                        onClick={() => {
+                          setEditingWork(selectedWork);
+                          // Initialize edit assigned users
+                          setEditAssignedUsers(
+                            selectedWork.assignedUsers || [],
+                          );
+                          setViewingWork(false);
+                          setSelectedWork(null);
+                          setActiveSection("editar-obra");
+                        }}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      >
+                        Editar
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Main Content */}
-        <main className="lg:ml-80 min-h-screen">
-          <div className="p-4 lg:p-6">{renderContent()}</div>
-        </main>
+          {/* Main Content */}
+          <main className="lg:ml-80 min-h-screen">
+            <div className="p-4 lg:p-6">{renderContent()}</div>
+          </main>
 
-        {/* Install Prompt for Mobile */}
-        <InstallPrompt />
+          {/* Install Prompt for Mobile */}
+          <InstallPrompt />
 
-        {/* Admin Login Modal */}
-        {showAdminLogin && !isAdminAuthenticated && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg max-w-md w-full mx-4">
-              <AdminLogin
-                onLogin={() => {
-                  setIsAdminAuthenticated(true);
+          {/* Admin Login Modal */}
+          {showAdminLogin && !isAdminAuthenticated && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg max-w-md w-full mx-4">
+                <AdminLogin
+                  onLogin={() => {
+                    setIsAdminAuthenticated(true);
+                    setShowAdminLogin(false);
+                  }}
+                  onBack={() => setShowAdminLogin(false)}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Admin Page */}
+          {isAdminAuthenticated && (
+            <div className="fixed inset-0 bg-white z-50">
+              <AdminPage
+                onLogout={() => {
+                  setIsAdminAuthenticated(false);
                   setShowAdminLogin(false);
                 }}
-                onBack={() => setShowAdminLogin(false)}
               />
             </div>
-          </div>
-        )}
-
-        {/* Admin Page */}
-        {isAdminAuthenticated && (
-          <div className="fixed inset-0 bg-white z-50">
-            <AdminPage
-              onLogout={() => {
-                setIsAdminAuthenticated(false);
-                setShowAdminLogin(false);
-              }}
-            />
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </InstantSyncManager>
     </AutoSyncProvider>
   );
 }
