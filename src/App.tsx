@@ -365,7 +365,7 @@ function App() {
       try {
         const user = JSON.parse(storedUser);
         console.log(
-          "🔄 App init: Restoring user from localStorage:",
+          "�� App init: Restoring user from localStorage:",
           user.email,
         );
         setCurrentUser(user);
@@ -1687,7 +1687,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "admin",
       icon: Shield,
-      label: "Administração",
+      label: "Administra��ão",
       path: "/admin",
       requiresAuth: true,
     },
@@ -2975,7 +2975,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���� {maint.clientContact}
+                                        ����� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -6846,7 +6846,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             type="text"
                             defaultValue={editingWork?.client}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: João Silva"
+                            placeholder="Ex: Jo��o Silva"
                             required
                           />
                         </div>
@@ -8125,7 +8125,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observações e próxima manutenção</span>
+                  <span>Observações e próxima manutenç��o</span>
                 </div>
               </div>
             </div>
@@ -8388,7 +8388,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   return (
     <AutoSyncProvider
-      enabled={true}
+      enabled={false}
       syncInterval={300000}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={true}
