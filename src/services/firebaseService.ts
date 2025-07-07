@@ -350,7 +350,7 @@ export const poolService = {
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Piscina ${poolId} atualizada - sincronização automática ativada`,
+      `✅ Piscina ${poolId} atualizada - sincronização autom��tica ativada`,
     );
     await syncService.triggerAutoSync("update", "pools", poolId);
   },
@@ -376,24 +376,54 @@ export const poolService = {
 export const maintenanceService = {
   // Listen to real-time changes
   subscribeToMaintenance(callback: (maintenance: Maintenance[]) => void) {
-    // Use localStorage to prevent Firebase quota
-    const maintenance = JSON.parse(localStorage.getItem("maintenance") || "[]");
-    callback(maintenance);
-    return () => {};
+    if (!isFirebaseAvailable()) {
+      const maintenance = JSON.parse(
+        localStorage.getItem("maintenance") || "[]",
+      );
+      callback(maintenance);
+      return () => {};
+    }
+
+    const q = query(
+      collection(db, COLLECTIONS.MAINTENANCE),
+      orderBy("scheduledDate", "desc"),
+    );
+    return onSnapshot(q, (snapshot) => {
+      const maintenance = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Maintenance[];
+      callback(maintenance);
+    });
   },
 
   // Get future maintenance
   subscribeToFutureMaintenance(callback: (maintenance: Maintenance[]) => void) {
-    // Use localStorage to prevent Firebase quota
-    const allMaintenance = JSON.parse(
-      localStorage.getItem("maintenance") || "[]",
-    );
+    if (!isFirebaseAvailable()) {
+      const allMaintenance = JSON.parse(
+        localStorage.getItem("maintenance") || "[]",
+      );
+      const today = new Date().toISOString().split("T")[0];
+      const futureMaintenance = allMaintenance.filter(
+        (m: Maintenance) => m.scheduledDate >= today,
+      );
+      callback(futureMaintenance);
+      return () => {};
+    }
+
     const today = new Date().toISOString().split("T")[0];
-    const futureMaintenance = allMaintenance.filter(
-      (m: Maintenance) => m.scheduledDate >= today,
+    const q = query(
+      collection(db, COLLECTIONS.MAINTENANCE),
+      where("scheduledDate", ">=", today),
+      orderBy("scheduledDate", "asc"),
     );
-    callback(futureMaintenance);
-    return () => {};
+    return onSnapshot(q, (snapshot) => {
+      const maintenance = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Maintenance[];
+      callback(maintenance);
+    });
   },
 
   // Add new maintenance
