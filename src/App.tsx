@@ -2417,7 +2417,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} • {pool.location}
+                                            {pool.client} �� {pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -9111,6 +9111,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
+
+        {/* User Restore Notification */}
+        <UserRestoreNotification />
       </InstantSyncManager>
     </AutoSyncProvider>
   );
