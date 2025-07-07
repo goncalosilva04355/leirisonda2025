@@ -161,7 +161,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações automáticas desabilitadas para resolver instabilidade
+    // Verificações autom��ticas desabilitadas para resolver instabilidade
     // Sistema funcionará normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
@@ -240,6 +240,26 @@ function App() {
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
+
+  // Listen for user updates from WorkAssignmentFix component
+  useEffect(() => {
+    const handleUsersUpdated = () => {
+      console.log("🔄 Reloading users from localStorage...");
+      try {
+        const savedUsers = localStorage.getItem("app-users");
+        if (savedUsers) {
+          const parsedUsers = JSON.parse(savedUsers);
+          setUsers(parsedUsers);
+          console.log("✅ Users reloaded successfully:", parsedUsers.length);
+        }
+      } catch (error) {
+        console.error("❌ Error reloading users:", error);
+      }
+    };
+
+    window.addEventListener("usersUpdated", handleUsersUpdated);
+    return () => window.removeEventListener("usersUpdated", handleUsersUpdated);
+  }, []);
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
