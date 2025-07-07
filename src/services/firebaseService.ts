@@ -269,22 +269,10 @@ export const userService = {
 export const poolService = {
   // Listen to real-time changes
   subscribeToPools(callback: (pools: Pool[]) => void) {
-    if (!isFirebaseAvailable()) {
-      callback([]);
-      return () => {};
-    }
-
-    const q = query(
-      collection(db, COLLECTIONS.POOLS),
-      orderBy("createdAt", "desc"),
-    );
-    return onSnapshot(q, (snapshot) => {
-      const pools = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Pool[];
-      callback(pools);
-    });
+    // Use localStorage to prevent Firebase quota
+    const pools = JSON.parse(localStorage.getItem("pools") || "[]");
+    callback(pools);
+    return () => {};
   },
 
   // Add new pool
@@ -348,44 +336,24 @@ export const poolService = {
 export const maintenanceService = {
   // Listen to real-time changes
   subscribeToMaintenance(callback: (maintenance: Maintenance[]) => void) {
-    if (!isFirebaseAvailable()) {
-      callback([]);
-      return () => {};
-    }
-
-    const q = query(
-      collection(db, COLLECTIONS.MAINTENANCE),
-      orderBy("scheduledDate", "desc"),
-    );
-    return onSnapshot(q, (snapshot) => {
-      const maintenance = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Maintenance[];
-      callback(maintenance);
-    });
+    // Use localStorage to prevent Firebase quota
+    const maintenance = JSON.parse(localStorage.getItem("maintenance") || "[]");
+    callback(maintenance);
+    return () => {};
   },
 
   // Get future maintenance
   subscribeToFutureMaintenance(callback: (maintenance: Maintenance[]) => void) {
-    if (!isFirebaseAvailable()) {
-      callback([]);
-      return () => {};
-    }
-
-    const today = new Date().toISOString().split("T")[0];
-    const q = query(
-      collection(db, COLLECTIONS.MAINTENANCE),
-      where("scheduledDate", ">=", today),
-      orderBy("scheduledDate", "asc"),
+    // Use localStorage to prevent Firebase quota
+    const allMaintenance = JSON.parse(
+      localStorage.getItem("maintenance") || "[]",
     );
-    return onSnapshot(q, (snapshot) => {
-      const maintenance = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Maintenance[];
-      callback(maintenance);
-    });
+    const today = new Date().toISOString().split("T")[0];
+    const futureMaintenance = allMaintenance.filter(
+      (m: Maintenance) => m.scheduledDate >= today,
+    );
+    callback(futureMaintenance);
+    return () => {};
   },
 
   // Add new maintenance
@@ -454,22 +422,10 @@ export const maintenanceService = {
 export const workService = {
   // Listen to real-time changes
   subscribeToWorks(callback: (works: Work[]) => void) {
-    if (!isFirebaseAvailable()) {
-      callback([]);
-      return () => {};
-    }
-
-    const q = query(
-      collection(db, COLLECTIONS.WORKS),
-      orderBy("createdAt", "desc"),
-    );
-    return onSnapshot(q, (snapshot) => {
-      const works = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Work[];
-      callback(works);
-    });
+    // Use localStorage to prevent Firebase quota
+    const works = JSON.parse(localStorage.getItem("works") || "[]");
+    callback(works);
+    return () => {};
   },
 
   // Add new work
