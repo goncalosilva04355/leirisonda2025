@@ -69,6 +69,7 @@ interface UserFormData {
 export const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isCreating, setIsCreating] = useState(false);
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showPasswords, setShowPasswords] = useState<{
     [key: string]: boolean;
