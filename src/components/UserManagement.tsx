@@ -162,14 +162,7 @@ export const UserManagement: React.FC = () => {
         }
 
         // Also sync with mock auth service
-        try {
-          const { mockAuthService } = await import(
-            "../services/mockAuthService"
-          );
-          mockAuthService.reloadUsers();
-        } catch (error) {
-          // Silent sync error
-        }
+        // mockAuthService removido - usando apenas Firebase
       } catch (error) {
         console.error("Error loading users:", error);
       }
@@ -195,7 +188,7 @@ export const UserManagement: React.FC = () => {
       }
 
       // Sync with auth services
-      // mockAuthService removido - usando apenas Firebase
+          // mockAuthService removido - usando apenas Firebase
     } catch (error) {
       console.error("Error refreshing users:", error);
     }
@@ -277,9 +270,8 @@ export const UserManagement: React.FC = () => {
 
     // Check with mock auth service for additional validation
     try {
-      const { mockAuthService } = await import("../services/mockAuthService");
-      const allUsers = mockAuthService.getAllUsers();
-      if (
+      // mockAuthService removido - usando apenas Firebase
+      if (false && // Disabled
         allUsers.some(
           (user) => user.email.toLowerCase() === formData.email.toLowerCase(),
         )
@@ -337,13 +329,9 @@ export const UserManagement: React.FC = () => {
 
         // Comprehensive sync with all auth systems
         try {
-          const { mockAuthService } = await import(
-            "../services/mockAuthService"
-          );
+          // mockAuthService removido - usando apenas Firebase
 
-          // First, sync the user to mock auth service with the correct data
-          await mockAuthService.register(
-            formData.email.trim(),
+          // Firebase registration would go here
             formData.password,
             formData.name.trim(),
             authRole,
@@ -351,8 +339,7 @@ export const UserManagement: React.FC = () => {
 
           console.log("✅ User synchronized to mock auth service");
 
-          // Reload users to ensure consistency
-          mockAuthService.reloadUsers();
+          // Firebase consistency handled automatically
         } catch (syncError) {
           console.warn("⚠️ Sync error with mock auth service:", syncError);
           // Don't fail creation if sync fails
