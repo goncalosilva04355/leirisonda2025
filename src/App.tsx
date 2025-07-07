@@ -39,7 +39,7 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
-import { SyncStatusIcon } from "./components/SyncStatusIndicator";
+// import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Removed to eliminate sync indicator
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { FirebaseQuotaAlert } from "./components/FirebaseQuotaAlert";
 import { syncManager } from "./utils/syncManager";
