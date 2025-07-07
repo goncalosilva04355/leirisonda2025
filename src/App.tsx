@@ -37,6 +37,7 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+import { SilentDataProtection } from "./components/SilentDataProtection";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -254,7 +255,7 @@ function App() {
       if (savedUsers) {
         const parsedUsers = JSON.parse(savedUsers);
         console.log(
-          "✅ Users loaded successfully:",
+          "��� Users loaded successfully:",
           parsedUsers.length,
           parsedUsers,
         );
@@ -1877,7 +1878,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               // Simple debug logging for assigned works
                               if (assignedWorks.length > 0) {
                                 console.log(
-                                  `📊 ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
+                                  `�� ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser?.name}`,
                                 );
                               }
 
@@ -5079,7 +5080,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza do fundo",
                           "Limpeza das paredes",
                           "Limpeza skimmers",
-                          "Verifica��ão equipamentos",
+                          "Verificação equipamentos",
                         ].map((task, index) => (
                           <label key={index} className="flex items-center">
                             <input
