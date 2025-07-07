@@ -190,22 +190,21 @@ export const userService = {
       throw new Error("Firebase not configured");
     }
 
-    const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
-      ...userData,
-      createdAt: new Date().toISOString(),
-      updatedAt: Timestamp.now(),
-    });
+    return await safeFirebaseOperation(async () => {
+      const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
+        ...userData,
+        createdAt: new Date().toISOString(),
+        updatedAt: Timestamp.now(),
+      });
 
-    // Trigger automatic synchronization for the new user
-    console.log(
-      `✅ Usuário ${userData.name} (${userData.email}) adicionado - sincronização automática ativada`,
-    );
-    await syncService.triggerUserSync(docRef.id);
+      console.log(`✅ Usuário ${userData.name} (${userData.email}) adicionado`);
 
-    // Force immediate cross-device sync
-    await syncService.forceCrossDeviceSync("users");
+      // Skip automatic sync to prevent quota issues
+      // await syncService.triggerUserSync(docRef.id);
+      // await syncService.forceCrossDeviceSync("users");
 
-    return docRef.id;
+      return docRef.id;
+    }, "addUser");
   },
 
   // Update user
