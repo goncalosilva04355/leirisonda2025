@@ -415,6 +415,146 @@ class RealFirebaseService {
     return unsubscribe;
   }
 
+  // Load methods for data fetching
+  async loadPools(): Promise<any[]> {
+    if (!this.isReady()) return [];
+
+    try {
+      const poolsSnapshot = await get(ref(this.database!, "pools"));
+      return poolsSnapshot.val() ? Object.values(poolsSnapshot.val()) : [];
+    } catch (error) {
+      console.error("Failed to load pools:", error);
+      return [];
+    }
+  }
+
+  async loadWorks(): Promise<any[]> {
+    if (!this.isReady()) return [];
+
+    try {
+      const worksSnapshot = await get(ref(this.database!, "works"));
+      return worksSnapshot.val() ? Object.values(worksSnapshot.val()) : [];
+    } catch (error) {
+      console.error("Failed to load works:", error);
+      return [];
+    }
+  }
+
+  async loadMaintenance(): Promise<any[]> {
+    if (!this.isReady()) return [];
+
+    try {
+      const maintenanceSnapshot = await get(ref(this.database!, "maintenance"));
+      return maintenanceSnapshot.val()
+        ? Object.values(maintenanceSnapshot.val())
+        : [];
+    } catch (error) {
+      console.error("Failed to load maintenance:", error);
+      return [];
+    }
+  }
+
+  async loadClients(): Promise<any[]> {
+    if (!this.isReady()) return [];
+
+    try {
+      const clientsSnapshot = await get(ref(this.database!, "clients"));
+      return clientsSnapshot.val() ? Object.values(clientsSnapshot.val()) : [];
+    } catch (error) {
+      console.error("Failed to load clients:", error);
+      return [];
+    }
+  }
+
+  // Save methods for data persistence
+  async savePools(pools: any[]): Promise<boolean> {
+    if (!this.isReady()) return false;
+
+    try {
+      const poolsRef = ref(this.database!, "pools");
+      const poolsData: any = {};
+
+      pools.forEach((pool) => {
+        const sanitizedPool = this.sanitizeForFirebase(pool);
+        if (sanitizedPool.id) {
+          poolsData[sanitizedPool.id] = sanitizedPool;
+        }
+      });
+
+      await set(poolsRef, poolsData);
+      return true;
+    } catch (error) {
+      console.error("Failed to save pools:", error);
+      return false;
+    }
+  }
+
+  async saveWorks(works: any[]): Promise<boolean> {
+    if (!this.isReady()) return false;
+
+    try {
+      const worksRef = ref(this.database!, "works");
+      const worksData: any = {};
+
+      works.forEach((work) => {
+        const sanitizedWork = this.sanitizeForFirebase(work);
+        if (sanitizedWork.id) {
+          worksData[sanitizedWork.id] = sanitizedWork;
+        }
+      });
+
+      await set(worksRef, worksData);
+      return true;
+    } catch (error) {
+      console.error("Failed to save works:", error);
+      return false;
+    }
+  }
+
+  async saveMaintenance(maintenance: any[]): Promise<boolean> {
+    if (!this.isReady()) return false;
+
+    try {
+      const maintenanceRef = ref(this.database!, "maintenance");
+      const maintenanceData: any = {};
+
+      maintenance.forEach((item) => {
+        const sanitizedItem = this.sanitizeForFirebase(item);
+        if (sanitizedItem.id) {
+          maintenanceData[sanitizedItem.id] = sanitizedItem;
+        }
+      });
+
+      await set(maintenanceRef, maintenanceData);
+      return true;
+    } catch (error) {
+      console.error("Failed to save maintenance:", error);
+      return false;
+    }
+  }
+
+  async saveClients(clients: any[]): Promise<boolean> {
+    if (!this.isReady()) return false;
+
+    try {
+      const clientsRef = ref(this.database!, "clients");
+      const clientsData: any = {};
+
+      clients.forEach((client) => {
+        const sanitizedClient = this.sanitizeForFirebase(client);
+        if (sanitizedClient.id) {
+          clientsData[sanitizedClient.id] = sanitizedClient;
+        }
+      });
+
+      await set(clientsRef, clientsData);
+      return true;
+    } catch (error) {
+      console.error("Failed to save clients:", error);
+      return false;
+    }
+  }
+
   // Bulk sync operations
   async syncAllData(): Promise<{
     pools: any[];
