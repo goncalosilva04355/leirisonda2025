@@ -39,7 +39,6 @@ export const useAutoSync = () => {
           setSyncStatus("completed");
           const now = new Date();
           setLastSync(now);
-          localStorage.setItem("last-full-sync", now.toISOString());
           sessionStorage.setItem("auto-sync-completed", "true");
           console.log("✅ Auto-sync completed successfully");
         } else {
