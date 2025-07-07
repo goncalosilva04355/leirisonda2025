@@ -40,17 +40,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           setLoginForm({ email: email || "", password: password || "" });
           setRememberMe(true);
 
-          // Auto-login if credentials are saved and rememberMe is true
-          console.log("🔄 Attempting auto-login...");
-          setTimeout(async () => {
-            try {
-              await onLogin(email, password);
-              console.log("�� Auto-login successful");
-            } catch (error) {
-              console.error("❌ Auto-login failed:", error);
-              // Don't clear credentials on auto-login failure
-            }
-          }, 800);
+          // Do NOT auto-login to prevent screen shaking/loops
+          // Just populate the form for user convenience
+          console.log("📋 Auto-filled login form from saved credentials");
         } else {
           console.log("⚠️ Incomplete saved credentials, skipping auto-login");
         }
@@ -188,26 +180,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             >
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
-
-            {/* Quick Test Login - Only show in development */}
-            {window.location.hostname === "localhost" && (
-              <button
-                type="button"
-                onClick={() => {
-                  setLoginForm({
-                    email: "gongonsilva@gmail.com",
-                    password: "19867gsf",
-                  });
-                  setTimeout(() => {
-                    onLogin("gongonsilva@gmail.com", "19867gsf");
-                  }, 100);
-                }}
-                disabled={isLoading}
-                className="w-full bg-green-600 text-white py-1 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
-              >
-                🧪 Login Teste (Admin)
-              </button>
-            )}
           </div>
         </form>
       </div>

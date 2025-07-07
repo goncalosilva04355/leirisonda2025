@@ -28,6 +28,7 @@ import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
 import { MobileSettings } from "../components/MobileSettings";
 import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
+import { LoginFixer } from "../components/LoginFixer";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -48,7 +49,8 @@ type AdminSection =
   | "auto-sync-demo"
   | "phone-settings"
   | "mobile-settings"
-  | "data-recovery";
+  | "data-recovery"
+  | "login-fix";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
@@ -68,6 +70,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       description: "Corrigir problemas na atribuição de utilizadores às obras",
       icon: Users,
       color: "bg-orange-600",
+    },
+    {
+      id: "login-fix" as AdminSection,
+      title: "🔑 Correção de Login",
+      description:
+        "Resolver problemas de login (Alexandre, Yuri, tremor do ecrã)",
+      icon: Shield,
+      color: "bg-red-600",
     },
     {
       id: "auth-diagnostic" as AdminSection,
@@ -162,6 +172,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <UserManagement />;
       case "work-assignment-fix":
         return <WorkAssignmentFix />;
+      case "login-fix":
+        return <LoginFixer />;
       case "auth-diagnostic":
         return <AuthSyncDiagnostic />;
       case "sync-manager":
