@@ -174,25 +174,22 @@ export const userService = {
 
   // Add new user
   async addUser(userData: Omit<User, "id" | "createdAt" | "updatedAt">) {
-    if (!db) {
-      throw new Error("Firebase not configured");
-    }
+    // Use only localStorage to prevent Firebase quota
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const newUser = {
+      ...userData,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    return await safeFirebaseOperation(async () => {
-      const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
-        ...userData,
-        createdAt: new Date().toISOString(),
-        updatedAt: Timestamp.now(),
-      });
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
 
-      console.log(`✅ Usuário ${userData.name} (${userData.email}) adicionado`);
-
-      // Skip automatic sync to prevent quota issues
-      // await syncService.triggerUserSync(docRef.id);
-      // await syncService.forceCrossDeviceSync("users");
-
-      return docRef.id;
-    }, "addUser");
+    console.log(
+      `✅ Usuário ${userData.name} (${userData.email}) adicionado localmente`,
+    );
+    return newUser.id;
   },
 
   // Update user
