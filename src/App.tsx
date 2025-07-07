@@ -2511,7 +2511,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest���o de piscinas no sistema
+                          Gest����o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -3944,7 +3944,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           alert(
                             `Obra "${workTitle}" criada com sucesso! ` +
                               (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} respons����vel(eis).`
+                                ? `Notificações enviadas a ${assignedUsers.length} respons������vel(eis).`
                                 : "") +
                               (selectedWorkType === "furo"
                                 ? " Dados do furo registados."
@@ -5106,7 +5106,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Notifications Section */}
+                {/* Notifications Section - COMPLETELY DISABLED
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <div className="flex items-center mb-4">
                     <Bell className="h-6 w-6 text-blue-600 mr-3" />
