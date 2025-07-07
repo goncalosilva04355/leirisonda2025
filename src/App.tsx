@@ -44,6 +44,8 @@ import "./utils/clearModalStates";
 // Security: Startup cleanup to prevent blocked users from accessing
 import "./utils/startupCleanup";
 
+// Configurações da aplicação
+import { APP_SETTINGS } from "./config/appSettings";
 // Proteção aprimorada contra perda de dados
 import { enhancedDataProtection } from "./utils/dataProtectionEnhanced";
 import { syncManager } from "./utils/syncManager";
@@ -955,7 +957,7 @@ ${index + 1}. ${maint.poolName}
    Tipo: ${maint.type}
    Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
-   T��cnico: ${maint.technician}
+   Técnico: ${maint.technician}
    Descrição: ${maint.description}
    ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
 `,
@@ -2431,7 +2433,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenções
+                                  Manutenç��es
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -5651,7 +5653,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 • Todas as obras ({works.length} registos)
                               </li>
                               <li>
-                                • Todas as manutenções ({maintenance.length}{" "}
+                                �� Todas as manutenções ({maintenance.length}{" "}
                                 registos)
                               </li>
                               <li>
