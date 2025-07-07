@@ -501,20 +501,16 @@ class AuthService {
         await signOut(auth);
       }
 
-      // Clear any remaining local storage auth data
-      localStorage.removeItem("mock-current-user");
-      localStorage.removeItem("mock-users");
-
-      // Clear session storage
+      // Clear session storage only
       sessionStorage.clear();
 
-      console.log("Complete logout performed - all auth data cleared");
+      console.log(
+        "Complete logout performed - Firebase will handle auth persistence automatically",
+      );
     } catch (error) {
       console.error("Error during logout:", error);
 
-      // Force clear everything even if logout fails
-      localStorage.removeItem("mock-current-user");
-      localStorage.removeItem("mock-users");
+      // Force clear session storage even if logout fails
       sessionStorage.clear();
     }
   }

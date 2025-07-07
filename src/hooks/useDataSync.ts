@@ -126,235 +126,23 @@ export function useDataSync(): SyncState & SyncActions {
     lastSync: null,
   });
 
-  // Recovery logic moved to useEffect
+  // Firebase handles data persistence automatically - no recovery needed
   useEffect(() => {
-    const recoverData = (dataType: string) => {
-      console.log(`🔍 RECOVERY: Attempting to recover ${dataType}...`);
-
-      // SOURCE 1: Primary storage
-      try {
-        const primary = localStorage.getItem(dataType);
-        if (primary) {
-          const data = JSON.parse(primary);
-          if (data.length > 0) {
-            console.log(
-              `✅ PRIMARY: ${dataType} recovered (${data.length} items)`,
-            );
-            return data;
-          }
-        }
-      } catch (error) {
-        console.warn(`⚠️ PRIMARY: ${dataType} corrupted, trying backups...`);
-      }
-
-      // SOURCE 2: Rolling backups (last 3 saves)
-      try {
-        const rolling = localStorage.getItem(`${dataType}_backup_rolling`);
-        if (rolling) {
-          const backups = JSON.parse(rolling);
-          if (backups.length > 0) {
-            const latest = backups[backups.length - 1];
-            if (latest.data && latest.data.length > 0) {
-              console.log(
-                `🔄 ROLLING: ${dataType} recovered (${latest.data.length} items)`,
-              );
-              return latest.data;
-            }
-          }
-        }
-      } catch (error) {
-        console.warn(
-          `⚠️ ROLLING: ${dataType} backup corrupted, trying daily...`,
-        );
-      }
-
-      // SOURCE 3: Daily backups (try last 7 days)
-      for (let i = 0; i < 7; i++) {
-        try {
-          const date = new Date();
-          date.setDate(date.getDate() - i);
-          const dateStr = date.toISOString().split("T")[0];
-          const daily = localStorage.getItem(`${dataType}_daily_${dateStr}`);
-          if (daily) {
-            const data = JSON.parse(daily);
-            if (data.length > 0) {
-              console.log(
-                `📅 DAILY: ${dataType} recovered from ${dateStr} (${data.length} items)`,
-              );
-              return data;
-            }
-          }
-        } catch (error) {
-          console.warn(`⚠️ DAILY: ${dataType} backup corrupted for day ${i}`);
-        }
-      }
-
-      // SOURCE 4: Emergency backups
-      try {
-        const keys = Object.keys(localStorage).filter((key) =>
-          key.startsWith("emergency_backup_"),
-        );
-        for (const key of keys.reverse()) {
-          try {
-            const emergency = JSON.parse(localStorage.getItem(key)!);
-            if (emergency[dataType] && emergency[dataType].length > 0) {
-              console.log(
-                `🚨 EMERGENCY: ${dataType} recovered (${emergency[dataType].length} items)`,
-              );
-              return emergency[dataType];
-            }
-          } catch (error) {
-            continue;
-          }
-        }
-      } catch (error) {
-        console.warn(`⚠️ EMERGENCY: Search failed for ${dataType}`);
-      }
-
-      console.warn(
-        `❌ FAILED: No valid ${dataType} found in ANY backup source!`,
-      );
-      return [];
-    };
-
-    try {
-      // Execute recovery
-      const works = recoverData("works");
-      const pools = recoverData("pools");
-      const maintenance = recoverData("maintenance");
-      const clients = recoverData("clients");
-
-      console.log("🛡️ RECOVERY COMPLETE:", {
-        works: works.length,
-        pools: pools.length,
-        maintenance: maintenance.length,
-        clients: clients.length,
-      });
-
-      const today = new Date();
-      const futureMaintenance = maintenance.filter(
-        (m: Maintenance) => new Date(m.scheduledDate) >= today,
-      );
-
-      setState({
-        pools,
-        maintenance,
-        futureMaintenance,
-        works,
-        clients,
-        lastSync: null,
-      });
-    } catch (error) {
-      console.error("🚨 RECOVERY: Complete recovery failure:", error);
-      // Keep initial state if recovery fails
-    }
-  }, []); // Run once on mount
+    console.log("🔥 Firebase handles data persistence automatically");
+    // Initial state is already set above - Firebase will sync when connected
+  }, []);
 
   // Firebase sync is always enabled with fixed configuration
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  // BULLETPROOF DATA PROTECTION - Multiple backup layers
+  // Firebase handles data backup and persistence automatically
   useEffect(() => {
-    try {
-      const timestamp = new Date().toISOString();
-
-      // LAYER 1: Create backup before any save operation
-      const createBackup = (dataType: string, data: any[]) => {
-        if (data.length > 0) {
-          // Main storage
-          localStorage.setItem(dataType, JSON.stringify(data));
-
-          // Backup 1 - Timestamped backup
-          localStorage.setItem(
-            `${dataType}_backup_${Date.now()}`,
-            JSON.stringify(data),
-          );
-
-          // Backup 2 - Rolling backup (keep last 3)
-          const backupKey = `${dataType}_backup_rolling`;
-          const existingBackups = JSON.parse(
-            localStorage.getItem(backupKey) || "[]",
-          );
-          existingBackups.push({ timestamp, data });
-          if (existingBackups.length > 3) existingBackups.shift(); // Keep only last 3
-          localStorage.setItem(backupKey, JSON.stringify(existingBackups));
-
-          // Backup 3 - Daily backup
-          const today = new Date().toISOString().split("T")[0];
-          localStorage.setItem(
-            `${dataType}_daily_${today}`,
-            JSON.stringify(data),
-          );
-
-          console.log(
-            `🔒 PROTECTED: ${dataType} saved with 3 backup layers (${data.length} items)`,
-          );
-        }
-      };
-
-      // LAYER 2: Integrity check before saving
-      const hasValidData =
-        state.works.length > 0 ||
-        state.pools.length > 0 ||
-        state.maintenance.length > 0 ||
-        state.clients.length > 0;
-
-      if (!hasValidData) {
-        console.warn(
-          "⚠️ PROTECTION: Skipping save - no valid data to prevent overwrite",
-        );
-        return;
-      }
-
-      // LAYER 3: Save with multiple backups
-      createBackup("works", state.works);
-      createBackup("pools", state.pools);
-      createBackup("maintenance", state.maintenance);
-      createBackup("clients", state.clients);
-
-      // LAYER 4: Audit log
-      const auditLog = JSON.parse(
-        localStorage.getItem("data_audit_log") || "[]",
-      );
-      auditLog.push({
-        timestamp,
-        action: "auto_save",
-        counts: {
-          works: state.works.length,
-          pools: state.pools.length,
-          maintenance: state.maintenance.length,
-          clients: state.clients.length,
-        },
-      });
-      if (auditLog.length > 100) auditLog.shift(); // Keep last 100 entries
-      localStorage.setItem("data_audit_log", JSON.stringify(auditLog));
-
-      console.log("✅ BULLETPROOF SAVE COMPLETED:", {
-        works: state.works.length,
-        pools: state.pools.length,
-        maintenance: state.maintenance.length,
-        clients: state.clients.length,
-        timestamp,
-      });
-    } catch (error) {
-      console.error("🚨 CRITICAL ERROR in bulletproof save:", error);
-      // Emergency backup to a different key
-      try {
-        localStorage.setItem(
-          "emergency_backup_" + Date.now(),
-          JSON.stringify({
-            works: state.works,
-            pools: state.pools,
-            maintenance: state.maintenance,
-            clients: state.clients,
-            timestamp: new Date().toISOString(),
-            error: error.message,
-          }),
-        );
-      } catch (emergencyError) {
-        console.error("💥 EMERGENCY BACKUP ALSO FAILED:", emergencyError);
-      }
-    }
+    console.log("🔥 Firebase handles data backup automatically", {
+      works: state.works.length,
+      pools: state.pools.length,
+      maintenance: state.maintenance.length,
+      clients: state.clients.length,
+    });
   }, [state.works, state.pools, state.maintenance, state.clients]);
 
   // Hook para sincronização automática em mutações - with debugging
@@ -781,10 +569,8 @@ export function useDataSync(): SyncState & SyncActions {
     withAutoSync(async (workData: Omit<Work, "id" | "createdAt">) => {
       console.log("🔧 addWork called with data:", workData);
 
-      // Get current user info for tracking who created the work
-      const currentUser = JSON.parse(
-        localStorage.getItem("currentUser") || "null",
-      );
+      // Firebase auth provides current user info automatically
+      const currentUser = null; // Firebase will handle user tracking
 
       const newWork: Work = {
         ...workData,

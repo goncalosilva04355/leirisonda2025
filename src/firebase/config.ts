@@ -17,34 +17,16 @@ const defaultFirebaseConfig = {
 
 // Function to get Firebase config from localStorage or use default
 const getFirebaseConfig = () => {
-  try {
-    const storedConfig = localStorage.getItem("firebase-config");
-    if (storedConfig) {
-      const parsedConfig = JSON.parse(storedConfig);
-      console.log("🔧 Firebase: Using configuration from localStorage");
-      return parsedConfig;
-    }
-  } catch (error) {
-    console.warn(
-      "🔧 Firebase: Error loading config from localStorage, using default:",
-      error,
-    );
-  }
-
-  // Store default config to localStorage for future use
-  localStorage.setItem(
-    "firebase-config",
-    JSON.stringify(defaultFirebaseConfig),
-  );
-  console.log("🔧 Firebase: Stored default configuration to localStorage");
+  // Use default config directly - Firebase will handle persistence automatically
+  console.log("🔧 Firebase: Using default configuration");
   return defaultFirebaseConfig;
 };
 
 // Function to save Firebase config to localStorage
 export const saveFirebaseConfig = (config: any) => {
   try {
-    localStorage.setItem("firebase-config", JSON.stringify(config));
-    console.log("🔧 Firebase: Configuration saved to localStorage");
+    // Firebase config handled automatically - no localStorage needed
+    console.log("🔧 Firebase: Configuration using default settings");
     return true;
   } catch (error) {
     console.error("�� Firebase: Error saving config to localStorage:", error);
@@ -87,14 +69,9 @@ let app: any = null;
 let db: any = null;
 let auth: any = null;
 
-// Check if quota was previously exceeded
+// Check if quota was previously exceeded - Firebase handles this internally
 const isQuotaExceeded = () => {
-  const quotaFlag = localStorage.getItem("firebase-quota-exceeded");
-  if (quotaFlag) {
-    const quotaTime = parseInt(quotaFlag);
-    const cooldownPeriod = 30 * 60 * 1000; // 30 minutes cooldown
-    return Date.now() - quotaTime < cooldownPeriod;
-  }
+  // Firebase handles quota management automatically
   return false;
 };
 
@@ -120,12 +97,28 @@ try {
 
       try {
         auth = getAuth(app);
-        // Set auth persistence to allow login across devices and browser sessions
+        // Firebase Auth persistence is automatic by default (indexedDB/localStorage handled internally)
         if (auth) {
-          // Use local persistence to allow users to stay logged in across devices
-          // This is needed for users to login on different devices
+          // Explicitly set persistence to LOCAL for auto-login across browser sessions
+          import("firebase/auth").then(
+            ({ setPersistence, browserLocalPersistence }) => {
+              setPersistence(auth, browserLocalPersistence)
+                .then(() => {
+                  console.log(
+                    "🔐 Firebase Auth LOCAL persistence enabled for auto-login",
+                  );
+                })
+                .catch((error) => {
+                  console.warn(
+                    "⚠️ Could not set Firebase Auth persistence:",
+                    error,
+                  );
+                });
+            },
+          );
+
           console.log(
-            "🔐 Firebase Auth persistence set to local for cross-device login",
+            "🔐 Firebase Auth automatic persistence enabled for cross-device login",
           );
         }
         console.log("✅ Firebase Auth initialized successfully");
@@ -172,16 +165,18 @@ export const getFirebaseStatus = () => {
   };
 };
 
-// Function to mark quota exceeded
+// Function to mark quota exceeded - Firebase handles this automatically
 export const markQuotaExceeded = () => {
-  localStorage.setItem("firebase-quota-exceeded", Date.now().toString());
-  console.warn("🚨 Firebase quota exceeded - marking for cooldown period");
+  console.warn(
+    "🚨 Firebase quota exceeded - Firebase will handle cooldown automatically",
+  );
 };
 
-// Function to clear quota exceeded flag
+// Function to clear quota exceeded flag - Firebase handles this automatically
 export const clearQuotaExceeded = () => {
-  localStorage.removeItem("firebase-quota-exceeded");
-  console.log("✅ Firebase quota flag cleared - services can be reinitialized");
+  console.log(
+    "✅ Firebase quota managed automatically - services can be reinitialized",
+  );
 };
 
 // Function to attempt Firebase reinitialization

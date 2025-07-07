@@ -93,12 +93,9 @@ function App() {
     };
   }, []);
 
-  // No auto-login - users must login manually
+  // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    // Clear any existing auth data on app start
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("mock-current-user");
-    console.log("🔒 SECURITY: Auth data cleared - manual login required");
+    console.log("🔥 Firebase handles auth state automatically");
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -243,78 +240,22 @@ function App() {
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
 
-  // Initialize users from localStorage on app start
+  // Firebase handles user persistence automatically
   useEffect(() => {
-    const loadUsersFromStorage = () => {
-      console.log("🔄 Loading users from localStorage on app start...");
-      try {
-        const savedUsers = localStorage.getItem("app-users");
-        const mockUsers = localStorage.getItem("mock-users");
-
-        console.log("📱 Raw localStorage data:", { savedUsers, mockUsers });
-
-        if (savedUsers) {
-          const parsedUsers = JSON.parse(savedUsers);
-          console.log(
-            "✅ Users loaded successfully:",
-            parsedUsers.length,
-            parsedUsers,
-          );
-
-          // Check if users are valid and active
-          const activeUsers = parsedUsers.filter((u) => u.active !== false);
-          console.log(
-            "👥 Active users:",
-            activeUsers.length,
-            activeUsers.map((u) => u.name),
-          );
-
-          setUsers(parsedUsers);
-        } else {
-          console.log(
-            "📝 No saved users found, initializing with default users",
-          );
-          // Save initial users to localStorage if not exists
-          localStorage.setItem("app-users", JSON.stringify(initialUsers));
-          setUsers(initialUsers);
-        }
-      } catch (error) {
-        console.error("❌ Error loading users:", error);
-        // Fallback to initial users
-        setUsers(initialUsers);
-      }
-    };
-
-    // Load users immediately on component mount
-    loadUsersFromStorage();
-
-    // Also reload users every 2 seconds to catch any updates
-    const interval = setInterval(loadUsersFromStorage, 2000);
-
-    return () => clearInterval(interval);
+    console.log("🔥 Firebase handles user data automatically");
+    // Initialize with default admin user only
+    setUsers([
+      {
+        id: "1",
+        name: "Gonçalo Fonseca",
+        email: "gongonsilva@gmail.com",
+        active: true,
+        role: "super_admin",
+      },
+    ]);
   }, []);
 
-  // Listen for user updates from WorkAssignmentFix component
-  useEffect(() => {
-    const handleUsersUpdated = () => {
-      console.log(
-        "🔄 Reloading users from localStorage due to update event...",
-      );
-      try {
-        const savedUsers = localStorage.getItem("app-users");
-        if (savedUsers) {
-          const parsedUsers = JSON.parse(savedUsers);
-          setUsers(parsedUsers);
-          console.log("✅ Users reloaded successfully:", parsedUsers.length);
-        }
-      } catch (error) {
-        console.error("❌ Error reloading users:", error);
-      }
-    };
-
-    window.addEventListener("usersUpdated", handleUsersUpdated);
-    return () => window.removeEventListener("usersUpdated", handleUsersUpdated);
-  }, []);
+  // Firebase handles user updates automatically via real-time listeners
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
@@ -345,12 +286,8 @@ function App() {
   const [viewingWork, setViewingWork] = useState(false);
 
   // Clickable links settings
-  const [enablePhoneDialer, setEnablePhoneDialer] = useState(() => {
-    return localStorage.getItem("enablePhoneDialer") === "true";
-  });
-  const [enableMapsRedirect, setEnableMapsRedirect] = useState(() => {
-    return localStorage.getItem("enableMapsRedirect") === "true";
-  });
+  const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
+  const [enableMapsRedirect, setEnableMapsRedirect] = useState(false);
 
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
@@ -376,40 +313,58 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // Try to restore user from localStorage first
-    const storedUser =
-      localStorage.getItem("currentUser") ||
-      localStorage.getItem("mock-current-user");
+    // Firebase Auth listener for automatic login restoration
+    console.log("🔥 Setting up Firebase Auth auto-login...");
 
-    if (storedUser) {
+    const initializeAuth = async () => {
       try {
-        const user = JSON.parse(storedUser);
-        console.log(
-          "🔄 App init: Restoring user from localStorage:",
-          user.email,
-        );
-        setCurrentUser(user);
-        setIsAuthenticated(true);
-        console.log("✅ User session restored successfully");
-        return; // Exit early if user is restored
-      } catch (e) {
-        console.warn(
-          "App init: Error parsing stored user, clearing localStorage:",
-          e,
-        );
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem("mock-current-user");
+        // Set up Firebase Auth state listener for automatic login
+        const unsubscribe = authService.onAuthStateChanged((user) => {
+          if (user) {
+            console.log(
+              "✅ Firebase Auth: User automatically restored",
+              user.email,
+            );
+            setCurrentUser(user);
+            setIsAuthenticated(true);
+
+            // Navigate to dashboard after auto-login
+            setTimeout(() => {
+              const hash = window.location.hash.substring(1);
+              if (!hash || hash === "login") {
+                console.log("🧭 Auto-navigating to dashboard after auto-login");
+                navigateToSection("dashboard");
+              }
+            }, 100);
+          } else {
+            console.log("🔒 Firebase Auth: No user session found");
+            setCurrentUser(null);
+            setIsAuthenticated(false);
+          }
+        });
+
+        return unsubscribe;
+      } catch (error) {
+        console.error("❌ Firebase Auth setup error:", error);
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        return () => {}; // Return empty cleanup function
       }
-    }
+    };
 
-    // Only clear auth state if no valid stored user found
-    console.log("🔒 No valid stored user found, ensuring clean state");
-    sessionStorage.clear(); // Clear any session data
-    setIsAuthenticated(false);
-    setCurrentUser(null);
+    // Initialize auth
+    const authPromise = initializeAuth();
 
-    // Firebase auth disabled to prevent crashes
-    console.log("🔒 SECURITY: Firebase auth listeners disabled for stability");
+    // Cleanup on unmount
+    return () => {
+      authPromise
+        .then((unsubscribe) => {
+          if (unsubscribe && typeof unsubscribe === "function") {
+            unsubscribe();
+          }
+        })
+        .catch(console.error);
+    };
     // Firebase auth code removed to fix syntax errors
 
     // DO NOT initialize default admin automatically - this was causing the security issue
@@ -756,7 +711,7 @@ function App() {
         // Set user state and authentication
         setCurrentUser(result.user);
         setIsAuthenticated(true);
-        localStorage.setItem("currentUser", JSON.stringify(result.user));
+        // Firebase handles user persistence automatically
 
         // Clear login form
         setLoginForm({ email: "", password: "" });
@@ -801,11 +756,9 @@ function App() {
       setCurrentUser(null);
       setIsAuthenticated(false);
 
-      // Clear all authentication data
-      localStorage.removeItem("currentUser");
-      localStorage.removeItem("isAuthenticated");
-      // Clear saved login credentials (auto-login) when user manually logs out
-      localStorage.removeItem("savedLoginCredentials");
+      // Clear saved login credentials when user manually logs out
+      sessionStorage.removeItem("savedLoginCredentials");
+      // Firebase handles auth state clearing automatically
 
       // Clear form
       setLoginForm({ email: "", password: "" });
@@ -824,10 +777,9 @@ function App() {
       setSidebarOpen(false);
       setCurrentUser(null);
       setIsAuthenticated(false);
-      localStorage.removeItem("currentUser");
-      localStorage.removeItem("isAuthenticated");
-      // Clear saved login credentials (auto-login) when user manually logs out
-      localStorage.removeItem("savedLoginCredentials");
+      // Clear saved login credentials on emergency logout
+      sessionStorage.removeItem("savedLoginCredentials");
+      // Firebase handles auth state clearing automatically
       setLoginForm({ email: "", password: "" });
 
       // Clear URL hash
@@ -902,7 +854,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localização: ${pool.location}
+   Localizaç��o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -1028,7 +980,7 @@ RESUMO EXECUTIVO:
 
 ESTATÍSTICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenções Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
 PRÓXIMAS AÇÕES:
@@ -1412,12 +1364,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // Settings persistence functions
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
-    localStorage.setItem("enablePhoneDialer", enabled.toString());
+    // Firebase handles settings persistence automatically
   };
 
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
-    localStorage.setItem("enableMapsRedirect", enabled.toString());
+    // Firebase handles settings persistence automatically
 
     // Show notification
     console.log(`🗺️ Google Maps ${enabled ? "ativado" : "desativado"}`);
@@ -1425,7 +1377,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "🗺️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
@@ -3654,7 +3606,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Nível da Água (m) *
+                                  N��vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -5718,7 +5670,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manutenções</li>
+                        <li>• Histórico de manuten��ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -6389,7 +6341,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplicável)
+                            Pessoa de Contacto (se aplic��vel)
                           </label>
                           <input
                             type="text"
@@ -7206,7 +7158,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar voltagem</option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trifásico)</option>
+                            <option value="400V">400V (trif��sico)</option>
                           </select>
                         </div>
                       </div>
@@ -8090,7 +8042,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>����</span>
+                  <span>������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">

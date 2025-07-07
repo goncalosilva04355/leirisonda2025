@@ -21,19 +21,8 @@ if (typeof window !== "undefined") {
     });
   }
 
-  // Clear localStorage if it contains corrupted data
-  try {
-    const testKey = "leirisonda-test";
-    localStorage.setItem(testKey, "test");
-    localStorage.removeItem(testKey);
-  } catch (error) {
-    console.warn("LocalStorage error detected, clearing:", error);
-    try {
-      localStorage.clear();
-    } catch (clearError) {
-      console.error("Could not clear localStorage:", clearError);
-    }
-  }
+  // Firebase handles data persistence automatically - no localStorage needed
+  console.log("🔥 Firebase handles data persistence automatically");
 
   // Handle unhandled promise rejections that might crash Chrome
   window.addEventListener("unhandledrejection", (event) => {

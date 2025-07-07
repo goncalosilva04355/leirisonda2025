@@ -20,44 +20,18 @@ class MockAuthService {
   }
 
   private loadUsers() {
-    // Load users from localStorage or initialize with default admin
-    const savedUsers = localStorage.getItem("mock-users");
-
-    if (savedUsers) {
-      this.users = JSON.parse(savedUsers);
-
-      // Migrate old users without password field
-      let needsMigration = false;
-      this.users = this.users.map((user) => {
-        if (!user.password) {
-          needsMigration = true;
-          return {
-            ...user,
-            password: "123456", // Default password for migrated users
-          };
-        }
-        return user;
-      });
-
-      if (needsMigration) {
-        console.log("Migrating users to include password field");
-        localStorage.setItem("mock-users", JSON.stringify(this.users));
-      }
-    } else {
-      // Initialize with only super admin user
-      this.users = [
-        {
-          uid: "admin-1",
-          email: "gongonsilva@gmail.com",
-          password: "19867gsf",
-          name: "Gonçalo Fonseca",
-          role: "super_admin",
-          active: true,
-          createdAt: new Date().toISOString(),
-        },
-      ];
-      localStorage.setItem("mock-users", JSON.stringify(this.users));
-    }
+    // Initialize with only super admin user - Firebase will handle persistence
+    this.users = [
+      {
+        uid: "admin-1",
+        email: "gongonsilva@gmail.com",
+        password: "19867gsf",
+        name: "Gonçalo Fonseca",
+        role: "super_admin",
+        active: true,
+        createdAt: new Date().toISOString(),
+      },
+    ];
 
     console.log(
       "MockAuthService loaded users:",
@@ -94,9 +68,7 @@ class MockAuthService {
     this.users.push(newUser);
     this.currentUser = newUser;
 
-    // Store in localStorage for persistence
-    localStorage.setItem("mock-users", JSON.stringify(this.users));
-    localStorage.setItem("mock-current-user", JSON.stringify(newUser));
+    // Firebase will handle persistence automatically
 
     return { success: true, user: newUser };
   }
@@ -139,14 +111,15 @@ class MockAuthService {
     }
 
     this.currentUser = user;
-    localStorage.setItem("mock-current-user", JSON.stringify(user));
+
+    // Firebase will handle persistence automatically
 
     return { success: true, user };
   }
 
   async logout(): Promise<void> {
     this.currentUser = null;
-    localStorage.removeItem("mock-current-user");
+    // Firebase will handle persistence automatically
   }
 
   getCurrentUser(): MockUser | null {

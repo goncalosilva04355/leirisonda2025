@@ -18,10 +18,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   });
   const [rememberMe, setRememberMe] = useState(false);
 
-  // Load saved credentials on component mount
+  // Load saved credentials from sessionStorage for "remember me" functionality
   useEffect(() => {
     console.log("🔄 Loading saved credentials...");
-    const savedCredentials = localStorage.getItem("savedLoginCredentials");
+    const savedCredentials = sessionStorage.getItem("savedLoginCredentials");
     if (savedCredentials) {
       try {
         const {
@@ -39,16 +39,19 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         if (savedRememberMe && email && password) {
           setLoginForm({ email: email || "", password: password || "" });
           setRememberMe(true);
-
-          // Do NOT auto-login to prevent screen shaking/loops
-          // Just populate the form for user convenience
           console.log("📋 Auto-filled login form from saved credentials");
+
+          // Auto-login if user had "remember me" checked
+          setTimeout(() => {
+            console.log("🚀 Auto-login triggered...");
+            onLogin(email, password);
+          }, 500);
         } else {
           console.log("⚠️ Incomplete saved credentials, skipping auto-login");
         }
       } catch (error) {
         console.error("❌ Error loading saved credentials:", error);
-        localStorage.removeItem("savedLoginCredentials");
+        sessionStorage.removeItem("savedLoginCredentials");
       }
     } else {
       console.log("📭 No saved credentials found");
@@ -68,10 +71,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       return; // Let HTML5 validation handle this
     }
 
-    // Save credentials if remember me is checked
+    // Save credentials if remember me is checked (using sessionStorage + Firebase persistence)
     if (rememberMe) {
-      console.log("💾 Saving credentials to localStorage");
-      localStorage.setItem(
+      console.log("💾 Saving credentials for auto-login");
+      sessionStorage.setItem(
         "savedLoginCredentials",
         JSON.stringify({
           email: loginForm.email.trim(),
@@ -80,7 +83,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         }),
       );
     } else {
-      localStorage.removeItem("savedLoginCredentials");
+      sessionStorage.removeItem("savedLoginCredentials");
     }
 
     try {
