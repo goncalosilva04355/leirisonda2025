@@ -336,7 +336,7 @@ export const useFirebaseRealtimeSync = () => {
 
     // Throttle sync calls to prevent quota exceeded
     let lastSyncTime = 0;
-    const MIN_SYNC_INTERVAL = 5000; // 5 seconds minimum between syncs
+    const MIN_SYNC_INTERVAL = 100; // 100ms minimum between syncs para sincronização instantânea
 
     const throttledSync = () => {
       const now = Date.now();
