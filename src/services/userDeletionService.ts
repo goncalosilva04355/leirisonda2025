@@ -185,44 +185,129 @@ class UserDeletionService {
   private async deleteFromLocalStorage(
     result: UserDeletionResult,
   ): Promise<void> {
-    console.log("💾 Starting localStorage users deletion...");
+    console.log("💾 Starting COMPLETE localStorage users deletion...");
 
-    // Handle app-users
-    const appUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
-    console.log(`Found ${appUsers.length} users in app-users localStorage`);
+    // ALL possible localStorage keys that might contain user data
+    const userDataKeys = [
+      "app-users",
+      "mock-users",
+      "users",
+      "saved-users",
+      "currentUser",
+      "mock-current-user",
+      "savedLoginCredentials",
+    ];
 
-    const preservedAppUsers = appUsers.filter((user: any) => {
-      const userEmail = user.email?.toLowerCase();
-      if (userEmail === this.SUPER_ADMIN_EMAIL.toLowerCase()) {
-        console.log(`🛡️ Preserving super admin in app-users: ${userEmail}`);
-        result.details.superAdminPreserved = true;
-        return true;
+    let totalDeleted = 0;
+
+    // Check each possible storage location
+    for (const key of userDataKeys) {
+      try {
+        const data = localStorage.getItem(key);
+        if (!data) continue;
+
+        console.log(`🔍 Found data in ${key}:`, data.substring(0, 100));
+
+        if (key === "currentUser" || key === "mock-current-user") {
+          // Handle single user objects
+          try {
+            const userData = JSON.parse(data);
+            const userEmail = userData.email?.toLowerCase();
+
+            if (
+              userEmail &&
+              userEmail !== this.SUPER_ADMIN_EMAIL.toLowerCase()
+            ) {
+              localStorage.removeItem(key);
+              totalDeleted++;
+              console.log(`🗑️ Deleted current user session: ${userEmail}`);
+            } else if (userEmail === this.SUPER_ADMIN_EMAIL.toLowerCase()) {
+              console.log(`🛡️ Preserving super admin session in ${key}`);
+              result.details.superAdminPreserved = true;
+            }
+          } catch (e) {
+            // If not JSON, just remove it to be safe
+            localStorage.removeItem(key);
+            console.log(`🗑️ Removed non-JSON data from ${key}`);
+          }
+          continue;
+        }
+
+        if (key === "savedLoginCredentials") {
+          // Handle login credentials
+          try {
+            const credentials = JSON.parse(data);
+            if (
+              credentials.email?.toLowerCase() !==
+              this.SUPER_ADMIN_EMAIL.toLowerCase()
+            ) {
+              localStorage.removeItem(key);
+              totalDeleted++;
+              console.log(
+                `🗑️ Deleted saved credentials for: ${credentials.email}`,
+              );
+            } else {
+              console.log(`🛡️ Preserving super admin credentials`);
+            }
+          } catch (e) {
+            localStorage.removeItem(key);
+            console.log(`🗑️ Removed invalid credentials data`);
+          }
+          continue;
+        }
+
+        // Handle user arrays
+        try {
+          const users = JSON.parse(data);
+          if (!Array.isArray(users)) {
+            console.log(`⚠️ ${key} is not an array, skipping`);
+            continue;
+          }
+
+          console.log(`📊 Found ${users.length} users in ${key}`);
+
+          const preservedUsers = users.filter((user: any) => {
+            const userEmail = user.email?.toLowerCase();
+            if (userEmail === this.SUPER_ADMIN_EMAIL.toLowerCase()) {
+              console.log(`🛡️ Preserving super admin in ${key}: ${userEmail}`);
+              result.details.superAdminPreserved = true;
+              return true;
+            }
+            totalDeleted++;
+            console.log(
+              `🗑️ Deleted ${key} user: ${userEmail || user.id || user.uid}`,
+            );
+            return false;
+          });
+
+          localStorage.setItem(key, JSON.stringify(preservedUsers));
+          console.log(
+            `✅ Updated ${key} with ${preservedUsers.length} preserved users`,
+          );
+        } catch (e) {
+          console.error(`❌ Error processing ${key}:`, e);
+          // If we can't parse it, remove it to be safe
+          localStorage.removeItem(key);
+          console.log(`🗑️ Removed unparseable data from ${key}`);
+        }
+      } catch (error: any) {
+        console.error(`❌ Error handling ${key}:`, error);
+        result.details.errors.push(`localStorage ${key}: ${error.message}`);
       }
-      result.details.localStorageUsersDeleted++;
-      console.log(`🗑️ Deleted app-users user: ${userEmail || user.id}`);
-      return false;
-    });
+    }
 
-    localStorage.setItem("app-users", JSON.stringify(preservedAppUsers));
+    result.details.localStorageUsersDeleted = totalDeleted;
 
-    // Handle mock-users
-    const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "[]");
-    console.log(`Found ${mockUsers.length} users in mock-users localStorage`);
-
-    const preservedMockUsers = mockUsers.filter((user: any) => {
-      const userEmail = user.email?.toLowerCase();
-      if (userEmail === this.SUPER_ADMIN_EMAIL.toLowerCase()) {
-        console.log(`🛡️ Preserving super admin in mock-users: ${userEmail}`);
-        return true;
-      }
-      console.log(`🗑️ Deleted mock-users user: ${userEmail || user.uid}`);
-      return false;
-    });
-
-    localStorage.setItem("mock-users", JSON.stringify(preservedMockUsers));
+    // Also clear any session storage that might have user data
+    try {
+      sessionStorage.clear();
+      console.log("🧹 Cleared all session storage");
+    } catch (e) {
+      console.error("❌ Error clearing session storage:", e);
+    }
 
     console.log(
-      `✅ localStorage deletion complete: ${result.details.localStorageUsersDeleted} users deleted`,
+      `✅ COMPLETE localStorage deletion finished: ${result.details.localStorageUsersDeleted} users deleted`,
     );
   }
 
