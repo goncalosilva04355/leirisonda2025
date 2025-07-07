@@ -55,6 +55,7 @@ import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import { ForceInitialization } from "./utils/forceInitialization";
+import "./utils/simpleEmergencyLogout"; // This will execute immediately
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
@@ -606,7 +607,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "N����o tem permissão para criar manutenções. Contacte o administrador.",
+        "N��o tem permissão para criar manutenções. Contacte o administrador.",
       );
       return;
     }
@@ -6622,7 +6623,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
                                   <span className="font-semibold text-gray-700 block mb-1">
-                                    ��� Cliente:
+                                    �� Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
                                     {work.client}
@@ -8257,7 +8258,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Shield className="h-8 w-8 text-red-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                Área Protegida
+                ��rea Protegida
               </h1>
               <p className="text-gray-600">
                 Insira a palavra-passe para aceder às configurações avançadas
