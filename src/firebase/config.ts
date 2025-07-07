@@ -82,10 +82,14 @@ const getFirebaseApp = () => {
 };
 
 // Initialize Firebase services with error handling
+// EMERGENCY: Firebase initialization disabled to prevent quota exceeded
+console.log("⏸️ Firebase initialization disabled - quota protection mode");
 let app: any = null;
 let db: any = null;
 let auth: any = null;
 
+/*
+DISABLED TO PREVENT QUOTA EXCEEDED:
 try {
   app = getFirebaseApp();
   if (app) {
