@@ -86,6 +86,14 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
+  // EMERGENCY: Execute emergency logout to solve immediate access issue
+  useEffect(() => {
+    console.log(
+      "🚨 EMERGENCY LOGOUT: Solving old user access issue immediately",
+    );
+    autoExecuteEmergencyLogout();
+  }, []); // Run only once on app start
+
   // Debug logging disabled for production
 
   // Monitoramento de integridade de dados
@@ -3666,7 +3674,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medições do Furo
+                              Medi��ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4592,7 +4600,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resistência Elétrica
+                            Resist��ncia Elétrica
                           </option>
                           <option value="gas">Aquecimento a Gás</option>
                         </select>
