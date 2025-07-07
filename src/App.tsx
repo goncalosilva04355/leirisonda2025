@@ -252,8 +252,17 @@ function App() {
         id: 1,
         name: "Gonçalo Fonseca",
         email: "gongonsilva@gmail.com",
+        password: "19867gsf",
         active: true,
         role: "super_admin",
+        permissions: {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
+        },
       },
     ]);
   }, []);
@@ -2894,7 +2903,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������ {maint.clientContact}
+                                        ���� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3681,7 +3690,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <option value="">Selecionar diâmetro</option>
                                   <option value="1">1 polegada</option>
                                   <option value="1.25">1¼ polegadas</option>
-                                  <option value="1.5">1½ polegadas</option>
+                                  <option value="1.5">1�� polegadas</option>
                                   <option value="2">2 polegadas</option>
                                   <option value="2.5">2½ polegadas</option>
                                   <option value="3">3 polegadas</option>
@@ -5536,7 +5545,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As definições são guardadas localmente no
+                              • As defini��ões são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
