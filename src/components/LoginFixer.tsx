@@ -91,9 +91,9 @@ export const LoginFixer: React.FC = () => {
           Problemas Reportados:
         </h4>
         <ul className="text-sm text-orange-700 space-y-1">
-          <li>• Alexandre não consegue fazer login</li>
-          <li>��� Yuri não consegue fazer login</li>
-          <li>• Ecrã de login a "tremer" (loops de erro)</li>
+          <li>• Utilizadores removidos do sistema</li>
+          <li>• Apenas super admin disponível</li>
+          <li>• Sistema limpo de utilizadores conflituosos</li>
         </ul>
       </div>
 
