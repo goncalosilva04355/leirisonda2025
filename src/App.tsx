@@ -729,7 +729,7 @@ function App() {
         // Clear login form
         setLoginForm({ email: "", password: "" });
 
-        console.log("✅ Login state updated", {
+        console.log("�� Login state updated", {
           user: result.user.email,
           role: result.user.role,
           isAuthenticated: true,
@@ -3439,9 +3439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Usuários Atribuídos ({users.length} utilizadores
                             disponíveis)
                           </label>
-                          {console.log(
-                            "📊 TOTAL UTILIZADORES CARREGADOS:",
-                            users.length,
+                          {/* Debug: {users.length} utilizadores carregados */}
                             users,
                           )}
                           <p className="text-sm text-gray-600 mb-2">
@@ -6340,7 +6338,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Additional Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informações Adicionais
+                        Informa��ões Adicionais
                       </h3>
                       <div className="space-y-4">
                         <div>
@@ -8745,7 +8743,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       selectedWork.vehicles.length > 0 && (
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Veículos
+                            Ve��culos
                           </label>
                           <p className="text-gray-900">
                             {selectedWork.vehicles.join(", ")}
