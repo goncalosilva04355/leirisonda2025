@@ -42,7 +42,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import "./utils/clearModalStates";
 
 // Security: Startup cleanup to prevent blocked users from accessing
-import "./utils/startupCleanup";
+// import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
@@ -2229,7 +2229,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">📊</span>
+                      <span className="text-blue-600">��</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -6204,7 +6204,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     !enableMapsRedirect || !client?.address
                                   }
                                 >
-                                  📍{" "}
+                                  ��{" "}
                                   {client?.address || "Endereço não disponível"}
                                 </button>
                               </div>
