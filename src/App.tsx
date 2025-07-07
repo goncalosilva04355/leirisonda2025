@@ -263,6 +263,7 @@ function App() {
           relatorios: { view: true, create: true, edit: true, delete: true },
           clientes: { view: true, create: true, edit: true, delete: true },
         },
+        createdAt: "2024-01-01",
       },
     ]);
   }, []);
@@ -3690,7 +3691,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <option value="">Selecionar diâmetro</option>
                                   <option value="1">1 polegada</option>
                                   <option value="1.25">1¼ polegadas</option>
-                                  <option value="1.5">1�� polegadas</option>
+                                  <option value="1.5">1½ polegadas</option>
                                   <option value="2">2 polegadas</option>
                                   <option value="2.5">2½ polegadas</option>
                                   <option value="3">3 polegadas</option>
@@ -5545,7 +5546,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As defini��ões são guardadas localmente no
+                              • As definições são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
