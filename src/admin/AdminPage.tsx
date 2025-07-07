@@ -27,6 +27,7 @@ import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
 import { MobileSettings } from "../components/MobileSettings";
+import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
 
 interface AdminPageProps {
   onLogout: () => void;
