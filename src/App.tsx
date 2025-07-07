@@ -3511,6 +3511,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra
                           </p>
+                          {users.length === 0 && (
+                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
+                              <p className="text-sm text-yellow-800">
+                                ⚠️ Nenhum utilizador encontrado. Vá à Área de
+                                Administração → "🔧 Correção de Atribuição de
+                                Obras" para corrigir este problema.
+                              </p>
+                            </div>
+                          )}
                           <div className="flex space-x-2">
                             <select
                               value={currentAssignedUser}
