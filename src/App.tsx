@@ -6046,7 +6046,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <option>Todos os tipos</option>
                       <option>Particular</option>
                       <option>Empresa</option>
-                      <option>Condom��nio</option>
+                      <option>Condomínio</option>
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
                       <option>Todos os estados</option>
@@ -9097,8 +9097,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* Firebase Reactivated Notification */}
         <FirebaseReactivatedNotification />
 
-        {/* Realtime Notifications - REATIVADAS */}
-        <RealtimeNotifications />
+        {/* Realtime Notifications - REMOVIDAS */}
+        {/* <RealtimeNotifications /> */}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
