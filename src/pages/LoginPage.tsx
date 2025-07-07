@@ -17,8 +17,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     password: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
-  const [showDebugger, setShowDebugger] = useState(false);
-  const [showSyncDiagnostic, setShowSyncDiagnostic] = useState(false);
 
   // Load saved credentials on component mount
   useEffect(() => {
@@ -47,7 +45,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           setTimeout(async () => {
             try {
               await onLogin(email, password);
-              console.log("✅ Auto-login successful");
+              console.log("�� Auto-login successful");
             } catch (error) {
               console.error("❌ Auto-login failed:", error);
               // Don't clear credentials on auto-login failure
