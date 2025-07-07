@@ -154,10 +154,11 @@ export const markQuotaExceeded = () => {
   );
 };
 
-// Function to clear quota exceeded flag
+// Function to clear quota exceeded flag - Firebase handles this automatically
 export const clearQuotaExceeded = () => {
-  localStorage.removeItem("firebase-quota-exceeded");
-  console.log("✅ Firebase quota flag cleared - services can be reinitialized");
+  console.log(
+    "✅ Firebase quota managed automatically - services can be reinitialized",
+  );
 };
 
 // Function to attempt Firebase reinitialization
