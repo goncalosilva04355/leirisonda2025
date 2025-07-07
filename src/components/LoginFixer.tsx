@@ -190,13 +190,7 @@ export const LoginFixer: React.FC = () => {
         </h4>
         <div className="text-sm text-gray-700 space-y-1 font-mono">
           <div>
-            • <strong>Alexandre:</strong> alexandre@leirisonda.pt / 69alexandre
-          </div>
-          <div>
-            • <strong>Yuri:</strong> yuri@leirisonda.pt / yuripass123
-          </div>
-          <div>
-            • <strong>Admin:</strong> gongonsilva@gmail.com / 19867gsf
+            • <strong>Super Admin:</strong> gongonsilva@gmail.com / 19867gsf
           </div>
         </div>
       </div>
