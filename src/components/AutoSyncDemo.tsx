@@ -9,7 +9,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useAutoSync, AutoSyncContext } from "./AutoSyncProvider";
-import { SyncStatusBadge, useSyncStatusInfo } from "./SyncStatusIndicator";
+import { SyncStatusCompact } from "./SyncStatusIndicator";
 
 export const AutoSyncDemo: React.FC = () => {
   // Verificar se estamos dentro do contexto
@@ -29,13 +29,16 @@ export const AutoSyncDemo: React.FC = () => {
   const { isActive, syncing, lastSync, error, forceSyncNow, config } =
     isInProvider ? useAutoSync() : defaultValues;
 
-  const syncInfo = isInProvider
-    ? useSyncStatusInfo()
-    : {
-        status: "disabled" as const,
-        statusText: "Sincronização não disponível",
-        color: "gray" as const,
-      };
+  const syncInfo = {
+    statusText: isActive ? "Ativo" : "Inativo",
+    healthStatus: error
+      ? "error"
+      : syncing
+        ? "warning"
+        : isActive
+          ? "healthy"
+          : "disabled",
+  };
   const [localTestData, setLocalTestData] = useState<string>("");
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -136,7 +139,7 @@ export const AutoSyncDemo: React.FC = () => {
             Sistema de sincronização em tempo real localStorage ↔ Firebase
           </p>
         </div>
-        <SyncStatusBadge />
+        <SyncStatusCompact />
       </div>
 
       {/* Status Cards */}
