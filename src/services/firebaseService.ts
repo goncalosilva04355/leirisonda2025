@@ -117,7 +117,8 @@ const COLLECTIONS = {
 
 // Helper function to check if Firebase is available
 const isFirebaseAvailable = () => {
-  return db !== null;
+  // Always return false to prevent quota errors
+  return false;
 };
 
 // Critical: Wrapper for Firebase operations with quota protection
