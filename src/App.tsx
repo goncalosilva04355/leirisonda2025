@@ -64,6 +64,8 @@ import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
+import { userRestoreService } from "./services/userRestoreService";
+import UserRestoreNotification from "./components/UserRestoreNotification";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -93,8 +95,11 @@ function App() {
 
   // Debug logging disabled for production
 
-  // Monitoramento de integridade de dados
+  // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
+    // Restaurar utilizadores automaticamente se necessário
+    userRestoreService.autoRestore();
+
     // Cleanup ao desmontar componente
     return () => {
       // Cleanup functions if needed
@@ -664,7 +669,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç��o Regular",
+      type: "Manutenç���o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -2412,7 +2417,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} • {pool.location}
+                                            {pool.client} �� {pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -9106,6 +9111,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
+
+        {/* User Restore Notification */}
+        <UserRestoreNotification />
       </InstantSyncManager>
     </AutoSyncProvider>
   );

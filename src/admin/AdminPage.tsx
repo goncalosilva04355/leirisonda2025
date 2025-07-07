@@ -11,6 +11,7 @@ import {
   Wifi,
   RefreshCw,
   Smartphone,
+  Zap,
 } from "lucide-react";
 
 // Import dos componentes de teste e configuração
@@ -35,6 +36,7 @@ import { FirebaseQuotaManager } from "../components/FirebaseQuotaManager";
 import { DangerousUserDeletion } from "../components/DangerousUserDeletion";
 import { NotificationDemo } from "../components/NotificationDemo";
 import NuclearUserCleanup from "../components/NuclearUserCleanup";
+import CompleteDeviceActivation from "../components/CompleteDeviceActivation";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -42,6 +44,7 @@ interface AdminPageProps {
 
 type AdminSection =
   | "overview"
+  | "complete-activation"
   | "user-management"
   | "work-assignment-fix"
   | "works-data-diagnostic"
@@ -69,6 +72,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     useState<AdminSection>("overview");
 
   const adminSections = [
+    {
+      id: "complete-activation" as AdminSection,
+      title: "🚀 ATIVAÇÃO COMPLETA DO DISPOSITIVO",
+      description:
+        "ATIVA TUDO: Notificações, localização, sincronização, utilizadores, PWA - tudo num só botão!",
+      icon: Zap,
+      color: "bg-gradient-to-r from-green-600 to-blue-600",
+    },
     {
       id: "user-management" as AdminSection,
       title: "Gestão de Utilizadores",
@@ -223,6 +234,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
 
   const renderCurrentSection = () => {
     switch (currentSection) {
+      case "complete-activation":
+        return <CompleteDeviceActivation />;
       case "user-management":
         return <UserManagement />;
       case "work-assignment-fix":
@@ -288,6 +301,40 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
               {adminSections.map((section) => {
                 const IconComponent = section.icon;
                 const isDangerous = section.id === "user-deletion";
+                const isCompleteActivation =
+                  section.id === "complete-activation";
+
+                if (isCompleteActivation) {
+                  return (
+                    <div
+                      key={section.id}
+                      className="md:col-span-2 lg:col-span-3"
+                    >
+                      <button
+                        onClick={() => setCurrentSection(section.id)}
+                        className="w-full p-8 rounded-xl shadow-lg border-2 border-transparent bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white transition-all transform hover:scale-105"
+                      >
+                        <div className="flex items-center justify-center mb-4">
+                          <div className="bg-white bg-opacity-20 p-3 rounded-full mr-4">
+                            <IconComponent className="h-8 w-8 text-white" />
+                          </div>
+                          <h3 className="text-2xl font-bold">
+                            {section.title}
+                          </h3>
+                        </div>
+                        <p className="text-lg text-center text-green-100">
+                          {section.description}
+                        </p>
+                        <div className="mt-4 text-center">
+                          <span className="bg-white bg-opacity-20 px-4 py-2 rounded-full text-sm font-medium">
+                            ⚡ Clique para ativar tudo instantaneamente
+                          </span>
+                        </div>
+                      </button>
+                    </div>
+                  );
+                }
+
                 return (
                   <button
                     key={section.id}
