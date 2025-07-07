@@ -3460,7 +3460,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </option>
                               {users
                                 .filter((user) => {
-                                  const roleCheck = user.role !== "viewer";
+                                  // Remover restrição de role - todos os usuários ativos podem ser atribuídos
                                   const activeCheck = user.active !== false;
                                   const alreadyAssigned = assignedUsers.some(
                                     (assigned) =>
@@ -3474,21 +3474,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     user.role,
                                     "| Ativo:",
                                     user.active,
-                                    "| Role OK:",
-                                    roleCheck,
                                     "| Ativo OK:",
                                     activeCheck,
                                     "| Já atribuído:",
                                     alreadyAssigned,
                                     "| PASSA FILTRO:",
-                                    roleCheck &&
-                                      activeCheck &&
-                                      !alreadyAssigned,
+                                    activeCheck && !alreadyAssigned,
                                   );
 
-                                  return (
-                                    roleCheck && activeCheck && !alreadyAssigned
-                                  );
+                                  return activeCheck && !alreadyAssigned;
                                 })
                                 .map((user) => (
                                   <option key={user.id} value={user.id}>
