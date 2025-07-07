@@ -40,24 +40,6 @@ export const FullSyncManager: React.FC = () => {
     }
   };
 
-  const fixAlexandrePassword = async () => {
-    setFixingAlexandre(true);
-
-    try {
-      const success = await fullSyncService.fixAlexandrePassword();
-
-      if (success) {
-        alert("✅ Password do Alexandre corrigida para: 69alexandre");
-      } else {
-        alert("❌ Alexandre não encontrado no sistema");
-      }
-    } catch (error) {
-      alert("❌ Erro ao corrigir password do Alexandre");
-    } finally {
-      setFixingAlexandre(false);
-    }
-  };
-
   const getStatsSummary = () => {
     if (!result) return null;
 
