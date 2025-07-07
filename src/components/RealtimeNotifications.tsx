@@ -131,6 +131,11 @@ export const RealtimeNotifications: React.FC = () => {
       "firebase-auto-sync",
       handleFirebaseSync as EventListener,
     );
+    window.addEventListener(
+      "workAssignment",
+      handleWorkAssignment as EventListener,
+    );
+    window.addEventListener("usersUpdated", handleUserEvents as EventListener);
 
     return () => {
       window.removeEventListener(
@@ -140,6 +145,14 @@ export const RealtimeNotifications: React.FC = () => {
       window.removeEventListener(
         "firebase-auto-sync",
         handleFirebaseSync as EventListener,
+      );
+      window.removeEventListener(
+        "workAssignment",
+        handleWorkAssignment as EventListener,
+      );
+      window.removeEventListener(
+        "usersUpdated",
+        handleUserEvents as EventListener,
       );
     };
   }, []);
