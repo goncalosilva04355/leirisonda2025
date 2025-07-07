@@ -16,6 +16,10 @@ import {
   userDeletionService,
   UserDeletionResult,
 } from "../services/userDeletionService";
+import {
+  completeUserCleanupService,
+  CompleteCleanupResult,
+} from "../services/completeUserCleanup";
 
 interface UserStats {
   firestore: number;
