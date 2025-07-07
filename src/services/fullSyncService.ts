@@ -24,20 +24,26 @@ export interface SyncResult {
 
 class FullSyncService {
   async syncAllData(): Promise<SyncResult> {
-    // EMERGENCY: Firebase sync disabled to prevent quota exceeded
-    console.log("⏸️ Firebase sync disabled - quota protection mode");
-    return {
-      success: true,
-      message: "Sync disabled - quota protection mode",
-      details: ["Firebase sync disabled to prevent quota exceeded"],
-      stats: {
-        usersSync: { local: 0, firebase: 0, merged: 0 },
-        poolsSync: { local: 0, firebase: 0, merged: 0 },
-        worksSync: { local: 0, firebase: 0, merged: 0 },
-        maintenanceSync: { local: 0, firebase: 0, merged: 0 },
-        clientsSync: { local: 0, firebase: 0, merged: 0 },
-      },
-    };
+    // Check if Firebase is available and not in quota cooldown
+    const { isFirebaseReady, getFirebaseStatus, markQuotaExceeded } =
+      await import("../firebase/config");
+    const status = getFirebaseStatus();
+
+    if (status.quotaExceeded) {
+      console.log("⏸️ Firebase sync paused - quota cooldown period");
+      return {
+        success: true,
+        message: "Sync paused - quota cooldown period",
+        details: ["Firebase temporarily paused due to quota limit"],
+        stats: {
+          usersSync: { local: 0, firebase: 0, merged: 0 },
+          poolsSync: { local: 0, firebase: 0, merged: 0 },
+          worksSync: { local: 0, firebase: 0, merged: 0 },
+          maintenanceSync: { local: 0, firebase: 0, merged: 0 },
+          clientsSync: { local: 0, firebase: 0, merged: 0 },
+        },
+      };
+    }
 
     const details: string[] = [];
     const stats = {
