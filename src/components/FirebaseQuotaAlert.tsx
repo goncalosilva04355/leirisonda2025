@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AlertTriangle, X, Settings } from "lucide-react";
+import { syncManager } from "../utils/syncManager";
 
 export const FirebaseQuotaAlert: React.FC = () => {
   const [dismissed, setDismissed] = useState(() => {
     return localStorage.getItem("quota-alert-dismissed") === "true";
   });
+  const [syncStatus, setSyncStatus] = useState(syncManager.getSyncStatus());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSyncStatus(syncManager.getSyncStatus());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleDismiss = () => {
     setDismissed(true);
@@ -12,17 +22,18 @@ export const FirebaseQuotaAlert: React.FC = () => {
   };
 
   const handleEnableSync = () => {
-    // This would require a page reload to take effect
     const confirmReload = confirm(
-      "Para reativar a sincronização, é necessário recarregar a página. Continuar?",
+      "Para tentar reativar a sincronização, é necessário recarregar a página. Continuar?",
     );
     if (confirmReload) {
+      syncManager.clearQuotaExceeded();
       localStorage.setItem("firebase-sync-enabled", "true");
       window.location.reload();
     }
   };
 
-  if (dismissed) {
+  // Don't show if dismissed or if quota is not exceeded
+  if (dismissed || !syncStatus.quotaExceeded) {
     return null;
   }
 
