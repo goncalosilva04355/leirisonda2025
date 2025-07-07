@@ -564,8 +564,16 @@ export const LocationPage: React.FC<LocationPageProps> = ({ onBack }) => {
                     quando solicitado
                   </p>
                   <p>
-                    <strong>Mobile:</strong> Verifique as configurações de
-                    localização do navegador
+                    <strong>iPhone/Safari:</strong> Configurações → Safari →
+                    Localização
+                  </p>
+                  <p>
+                    <strong>Android/Chrome:</strong> Configurações → Sites →
+                    Localização
+                  </p>
+                  <p>
+                    💡 <strong>Dica:</strong> Use o botão "Verificar Permissões"
+                    para atualizar o estado
                   </p>
                 </div>
               </div>
