@@ -188,6 +188,26 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             >
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
+
+            {/* Quick Test Login - Only show in development */}
+            {window.location.hostname === "localhost" && (
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginForm({
+                    email: "gongonsilva@gmail.com",
+                    password: "19867gsf",
+                  });
+                  setTimeout(() => {
+                    onLogin("gongonsilva@gmail.com", "19867gsf");
+                  }, 100);
+                }}
+                disabled={isLoading}
+                className="w-full bg-green-600 text-white py-1 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+              >
+                🧪 Login Teste (Admin)
+              </button>
+            )}
           </div>
         </form>
       </div>
