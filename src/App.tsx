@@ -36,7 +36,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 // import { SyncStatusIcon } from "./components/SyncStatusIndicator"; // Removed as requested
 import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
-import { SilentDataProtection } from "./components/SilentDataProtection";
+// import { SilentDataProtection } from "./components/SilentDataProtection";
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -2615,7 +2615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                               disabled={!enableMapsRedirect}
                             >
-                              �� {pool.location}
+                              📍 {pool.location}
                             </button>
                             <div className="flex items-center space-x-4 mt-2">
                               <span className="text-sm text-gray-500">
@@ -4338,7 +4338,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenção
+                          Próxima Manutenç��o
                         </label>
                         <input
                           type="date"
@@ -8271,7 +8271,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {selectedWork.observations && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observaç��es
+                        Observações
                       </label>
                       <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
                         {selectedWork.observations}
