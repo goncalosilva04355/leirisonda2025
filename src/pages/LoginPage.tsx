@@ -51,13 +51,19 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log("🚀 LoginPage: Form submitted");
+    console.log("📧 Email:", loginForm.email);
+    console.log("🔐 Password length:", loginForm.password?.length || 0);
+
     // Basic validation
     if (!loginForm.email.trim() || !loginForm.password.trim()) {
+      console.warn("❌ LoginPage: Empty fields detected");
       return; // Let HTML5 validation handle this
     }
 
     // Save credentials if remember me is checked
     if (rememberMe) {
+      console.log("💾 Saving credentials to localStorage");
       localStorage.setItem(
         "savedLoginCredentials",
         JSON.stringify({
@@ -71,9 +77,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     }
 
     try {
+      console.log("📤 LoginPage: Calling onLogin function...");
       await onLogin(loginForm.email.trim(), loginForm.password);
+      console.log("✅ LoginPage: onLogin completed");
     } catch (error) {
-      console.error("Login form error:", error);
+      console.error("❌ LoginPage: Login form error:", error);
     }
   };
 
