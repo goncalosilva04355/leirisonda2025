@@ -37,12 +37,17 @@ export const NotificationDemo: React.FC = () => {
   };
 
   const handleUpdateWork = () => {
-    notifyWorkUpdated(
-      "work-123",
-      "Manutenção de Equipamentos",
-      ["Pedro Costa"],
-      "Admin",
-      ["Data alterada", "Local atualizado"],
+    window.dispatchEvent(
+      new CustomEvent("worksUpdated", {
+        detail: {
+          type: "assignment",
+          workId: "work-123",
+          workTitle: "Manutenção de Equipamentos Atualizada",
+          client: "Hotel Paradise",
+          location: "Estoril",
+          startDate: "2024-01-20",
+        },
+      }),
     );
   };
 
