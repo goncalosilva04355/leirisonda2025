@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { eliminateOldUsersNow } from "../utils/eliminateOldUsers";
+import { eliminateSpecificUsers } from "../utils/eliminateSpecificUsers";
 
 const EliminateOldUsers: React.FC = () => {
   const [isExecuting, setIsExecuting] = useState(false);
@@ -9,12 +9,13 @@ const EliminateOldUsers: React.FC = () => {
     if (isExecuting) return;
 
     setIsExecuting(true);
+    console.log("🎯 Gonçalo solicitou eliminação dos usuários específicos...");
     console.log(
-      "🚨 Gonçalo solicitou eliminação imediata de usuários antigos...",
+      "📧 Alvos: yrzamr01@gmail.com, alexkamaryta@gmail.com, davidcarreiraa92@gmail.com",
     );
 
     try {
-      const cleanupResult = await eliminateOldUsersNow();
+      const cleanupResult = await eliminateSpecificUsers();
       setResult(cleanupResult);
     } catch (error) {
       console.error("Erro na execução:", error);
