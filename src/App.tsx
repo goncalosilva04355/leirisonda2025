@@ -165,47 +165,13 @@ function App() {
 
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
-    console.log("🛡️ Data protection initialized (checks disabled for performance)");
+    console.log(
+      "🛡️ Data protection initialized (checks disabled for performance)",
+    );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionará normalmente sem verificações constantes
-    return;
-
-      // STEP 3: Primeira tentativa - Sistema normal de backup
-      console.log("🔄 Attempting normal backup restoration...");
-      const normalRecovery = DataProtectionService.restoreFromLatestBackup();
-
-      if (!normalRecovery) {
-        console.error(
-          "❌ Normal backup restoration failed. Initiating EMERGENCY RECOVERY...",
-        );
-
-        // STEP 4: EMERGÊNCIA - Recuperação crítica
-        const emergencyResult = EmergencyDataRecovery.performCompleteRecovery();
-
-        if (emergencyResult.success) {
-          console.log("✅ EMERGENCY RECOVERY SUCCESSFUL!");
-          alert(
-            "🚨 Dados recuperados com sucesso!\n\n" + emergencyResult.message,
-          );
-          setTimeout(() => window.location.reload(), 2000);
-        } else {
-          console.error(
-            "❌ EMERGENCY RECOVERY FAILED! Using FORCE INITIALIZATION...",
-          );
-
-          // STEP 5: ÚLTIMO RECURSO - Inicialização forçada
-          const forceResult = ForceInitialization.executeForceInitialization();
-          alert("���� ÚLTIMO RECURSO ATIVADO!\n\n" + forceResult.message);
-
-          if (forceResult.success) {
-            setTimeout(() => window.location.reload(), 2000);
-          }
-        }
-      }
-    } else {
-      console.log("✅ Data integrity check passed");
-    }
+    // Sistema funcionará normalmente sem verificações automáticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -4800,7 +4766,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenção criada para nova piscina:",
+                                "Futura manutenç��o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -7522,7 +7488,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenção">Em Manutenção</option>
+                          <option value="Em Manutenção">Em Manutenç��o</option>
                         </select>
                       </div>
                       <div>
