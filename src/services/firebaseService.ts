@@ -177,6 +177,12 @@ export const userService = {
       ...userData,
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Usuário ${userId} atualizado - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("update", "users", userId);
   },
 
   // Delete user
@@ -187,6 +193,12 @@ export const userService = {
 
     const userRef = doc(db, COLLECTIONS.USERS, userId);
     await deleteDoc(userRef);
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Usuário ${userId} removido - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("delete", "users", userId);
   },
 
   // Initialize only real admin user - NO MOCK DATA
@@ -257,6 +269,13 @@ export const poolService = {
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Piscina ${poolData.name} adicionada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("create", "pools", docRef.id);
+
     return docRef.id;
   },
 
@@ -271,6 +290,12 @@ export const poolService = {
       ...poolData,
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Piscina ${poolId} atualizada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("update", "pools", poolId);
   },
 
   // Delete pool
@@ -281,6 +306,12 @@ export const poolService = {
 
     const poolRef = doc(db, COLLECTIONS.POOLS, poolId);
     await deleteDoc(poolRef);
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Piscina ${poolId} removida - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("delete", "pools", poolId);
   },
 };
 
@@ -341,6 +372,13 @@ export const maintenanceService = {
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Manutenção para ${maintenanceData.poolName} adicionada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("create", "maintenance", docRef.id);
+
     return docRef.id;
   },
 
@@ -358,6 +396,12 @@ export const maintenanceService = {
       ...maintenanceData,
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Manutenção ${maintenanceId} atualizada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("update", "maintenance", maintenanceId);
   },
 
   // Delete maintenance
@@ -368,6 +412,12 @@ export const maintenanceService = {
 
     const maintenanceRef = doc(db, COLLECTIONS.MAINTENANCE, maintenanceId);
     await deleteDoc(maintenanceRef);
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Manutenção ${maintenanceId} removida - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("delete", "maintenance", maintenanceId);
   },
 };
 
@@ -404,6 +454,13 @@ export const workService = {
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Obra ${workData.title} adicionada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("create", "works", docRef.id);
+
     return docRef.id;
   },
 
@@ -418,6 +475,12 @@ export const workService = {
       ...workData,
       updatedAt: Timestamp.now(),
     });
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Obra ${workId} atualizada - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("update", "works", workId);
   },
 
   // Delete work
@@ -428,6 +491,12 @@ export const workService = {
 
     const workRef = doc(db, COLLECTIONS.WORKS, workId);
     await deleteDoc(workRef);
+
+    // Trigger automatic synchronization
+    console.log(
+      `✅ Obra ${workId} removida - sincronização automática ativada`,
+    );
+    await syncService.triggerAutoSync("delete", "works", workId);
   },
 };
 
