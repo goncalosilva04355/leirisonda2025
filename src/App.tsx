@@ -9103,6 +9103,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
+
+        {/* Eliminação de Usuários Específicos - Só para Super Admin */}
+        {currentUser?.role === "super_admin" && showEliminateOldUsers && (
+          <EliminateOldUsers />
+        )}
       </InstantSyncManager>
     </AutoSyncProvider>
   );
