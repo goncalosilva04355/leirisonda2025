@@ -1641,11 +1641,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const renderContent = () => {
     // Add loading state check with timeout
     if (!currentUser || !isAuthenticated) {
-      console.log("🔄 renderContent: Waiting for auth state", {
-        currentUser: !!currentUser,
-        isAuthenticated,
-        activeSection,
-      });
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
@@ -8648,7 +8643,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        Data de Início
+                        Data de In��cio
                       </label>
                       <p className="text-gray-900">
                         {new Date(selectedWork.startDate).toLocaleDateString(
