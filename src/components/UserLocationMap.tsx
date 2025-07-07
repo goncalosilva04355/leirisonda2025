@@ -330,9 +330,9 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
         </div>
 
         <div className="relative">
-          {/* Google Maps Embed */}
+          {/* Google Maps Embed with markers */}
           <iframe
-            src={`https://maps.google.com/maps?q=${mapCenter.lat},${mapCenter.lng}&z=12&output=embed`}
+            src={`https://maps.google.com/maps?q=${mapCenter.lat},${mapCenter.lng}&z=13&output=embed&markers=${userLocations.map((loc) => `${loc.latitude},${loc.longitude}`).join("|")}`}
             width="100%"
             height="400"
             style={{ border: 0 }}
@@ -350,6 +350,30 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
                 {userLocations.length} localizações
               </span>
             </div>
+            {userLocations.length > 0 && (
+              <div className="mt-2 space-y-1">
+                {userLocations.slice(0, 3).map((loc) => (
+                  <div key={loc.id} className="flex items-center space-x-2">
+                    <div
+                      className={`w-4 h-4 ${loc.email === currentUser?.email ? "bg-orange-500" : "bg-blue-500"} rounded-full flex items-center justify-center`}
+                    >
+                      <span className="text-white text-xs font-bold">
+                        {loc.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="text-xs text-gray-700">
+                      {loc.name.split(" ")[0]}
+                      {loc.email === currentUser?.email && " (Você)"}
+                    </span>
+                  </div>
+                ))}
+                {userLocations.length > 3 && (
+                  <div className="text-xs text-gray-500">
+                    +{userLocations.length - 3} mais
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
