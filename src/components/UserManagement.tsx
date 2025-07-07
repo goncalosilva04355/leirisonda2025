@@ -69,6 +69,9 @@ interface UserFormData {
 export const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isCreating, setIsCreating] = useState(false);
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [createError, setCreateError] = useState<string>("");
+  const [createSuccess, setCreateSuccess] = useState<string>("");
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showPasswords, setShowPasswords] = useState<{
     [key: string]: boolean;
@@ -81,52 +84,109 @@ export const UserManagement: React.FC = () => {
     active: true,
   });
 
-  // Load users from localStorage
+  // Load users from localStorage and sync with auth services
   useEffect(() => {
-    const savedUsers = localStorage.getItem("app-users");
-    if (savedUsers) {
+    const loadUsers = async () => {
       try {
-        const parsedUsers = JSON.parse(savedUsers);
-        setUsers(parsedUsers);
-      } catch (error) {
-        console.error("Erro ao carregar utilizadores:", error);
-        setUsers([]);
-      }
-    } else {
-      // Initialize with default admin user
-      const defaultUsers: User[] = [
-        {
-          id: "1",
-          name: "Gonçalo Fonseca",
-          email: "gongonsilva@gmail.com",
-          password: "19867gsf",
-          role: "super_admin",
-          permissions: {
-            obras: { view: true, create: true, edit: true, delete: true },
-            manutencoes: { view: true, create: true, edit: true, delete: true },
-            piscinas: { view: true, create: true, edit: true, delete: true },
-            utilizadores: {
-              view: true,
-              create: true,
-              edit: true,
-              delete: true,
+        // Load from localStorage first
+        const savedUsers = localStorage.getItem("app-users");
+        if (savedUsers) {
+          try {
+            const parsedUsers = JSON.parse(savedUsers);
+            setUsers(parsedUsers);
+          } catch (error) {
+            console.error("Erro ao carregar utilizadores:", error);
+            setUsers([]);
+          }
+        } else {
+          // Initialize with default admin user
+          const defaultUsers: User[] = [
+            {
+              id: "1",
+              name: "Gonçalo Fonseca",
+              email: "gongonsilva@gmail.com",
+              password: "19867gsf",
+              role: "super_admin",
+              permissions: {
+                obras: { view: true, create: true, edit: true, delete: true },
+                manutencoes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                piscinas: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                utilizadores: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                relatorios: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                clientes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+              },
+              active: true,
+              createdAt: "2024-01-01",
             },
-            relatorios: { view: true, create: true, edit: true, delete: true },
-            clientes: { view: true, create: true, edit: true, delete: true },
-          },
-          active: true,
-          createdAt: "2024-01-01",
-        },
-      ];
-      setUsers(defaultUsers);
-      localStorage.setItem("app-users", JSON.stringify(defaultUsers));
-    }
+          ];
+          setUsers(defaultUsers);
+          localStorage.setItem("app-users", JSON.stringify(defaultUsers));
+        }
+
+        // Also sync with mock auth service
+        try {
+          const { mockAuthService } = await import(
+            "../services/mockAuthService"
+          );
+          mockAuthService.reloadUsers();
+        } catch (error) {
+          // Silent sync error
+        }
+      } catch (error) {
+        console.error("Error loading users:", error);
+      }
+    };
+
+    loadUsers();
   }, []);
 
   // Save users to localStorage
   const saveUsers = (updatedUsers: User[]) => {
     setUsers(updatedUsers);
     localStorage.setItem("app-users", JSON.stringify(updatedUsers));
+  };
+
+  // Refresh users from all sources
+  const refreshUsers = async () => {
+    try {
+      // Reload from localStorage
+      const savedUsers = localStorage.getItem("app-users");
+      if (savedUsers) {
+        const parsedUsers = JSON.parse(savedUsers);
+        setUsers(parsedUsers);
+      }
+
+      // Sync with auth services
+      const { mockAuthService } = await import("../services/mockAuthService");
+      mockAuthService.reloadUsers();
+    } catch (error) {
+      console.error("Error refreshing users:", error);
+    }
   };
 
   // Generate default permissions based on role
@@ -173,39 +233,128 @@ export const UserManagement: React.FC = () => {
   };
 
   // Create new user
-  const handleCreateUser = () => {
+  const handleCreateUser = async () => {
+    if (isCreatingUser) return; // Prevent multiple submissions
+
     if (!formData.name || !formData.email || !formData.password) {
-      alert("Por favor, preencha todos os campos obrigatórios.");
+      setCreateError("Por favor, preencha todos os campos obrigatórios.");
       return;
     }
 
-    // Check if email already exists
-    if (users.some((user) => user.email === formData.email)) {
-      alert("Já existe um utilizador com este email.");
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setCreateError("Por favor, insira um email válido.");
       return;
     }
 
-    const newUser: User = {
-      id: Date.now().toString(),
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      role: formData.role,
-      permissions: getDefaultPermissions(formData.role),
-      active: formData.active,
-      createdAt: new Date().toISOString().split("T")[0],
-    };
+    if (formData.password.length < 6) {
+      setCreateError("Password deve ter pelo menos 6 caracteres.");
+      return;
+    }
 
-    const updatedUsers = [...users, newUser];
-    saveUsers(updatedUsers);
-    setIsCreating(false);
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-      role: "user",
-      active: true,
-    });
+    // Check if email already exists in local users
+    if (
+      users.some(
+        (user) => user.email.toLowerCase() === formData.email.toLowerCase(),
+      )
+    ) {
+      setCreateError("Já existe um utilizador com este email.");
+      return;
+    }
+
+    // Also check with mock auth service for additional validation
+    try {
+      const { mockAuthService } = await import("../services/mockAuthService");
+      const allUsers = mockAuthService.getAllUsers();
+      if (
+        allUsers.some(
+          (user) => user.email.toLowerCase() === formData.email.toLowerCase(),
+        )
+      ) {
+        setCreateError("Este email já está registado no sistema.");
+        return;
+      }
+    } catch (error) {
+      // Silent fail for duplicate check
+    }
+
+    setCreateError("");
+    setCreateSuccess("");
+    setIsCreatingUser(true);
+
+    try {
+      // Import authService dynamically to ensure proper initialization
+      const { authService } = await import("../services/authService");
+
+      // Map role from UserManagement to authService format
+      let authRole: "super_admin" | "manager" | "technician" = "technician";
+      if (formData.role === "super_admin") {
+        authRole = "super_admin";
+      } else if (formData.role === "admin") {
+        authRole = "manager";
+      } else {
+        authRole = "technician";
+      }
+
+      // Create user through authService for proper sync
+      const result = await authService.register(
+        formData.email.trim(),
+        formData.password,
+        formData.name.trim(),
+        authRole,
+      );
+
+      if (result.success) {
+        // Create local user record for UI management
+        const newUser: User = {
+          id: result.user?.uid || Date.now().toString(),
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+          permissions: getDefaultPermissions(formData.role),
+          active: formData.active,
+          createdAt: new Date().toISOString().split("T")[0],
+        };
+
+        const updatedUsers = [...users, newUser];
+        saveUsers(updatedUsers);
+
+        // Force sync with all auth systems
+        try {
+          const { mockAuthService } = await import(
+            "../services/mockAuthService"
+          );
+          mockAuthService.reloadUsers();
+        } catch (syncError) {
+          // Silent sync error
+        }
+
+        // Refresh all user data to ensure sync
+        await refreshUsers();
+
+        setIsCreating(false);
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          role: "user",
+          active: true,
+        });
+
+        setCreateError("");
+        setCreateSuccess("✅ Utilizador criado com sucesso e está ativo!");
+      } else {
+        const errorMsg = `Erro ao criar utilizador: ${result.error || "Erro desconhecido"}`;
+        setCreateError(errorMsg);
+      }
+    } catch (error: any) {
+      const errorMsg = "Erro inesperado ao criar utilizador. Tente novamente.";
+      setCreateError(errorMsg);
+    } finally {
+      setIsCreatingUser(false);
+    }
   };
 
   // Update user
@@ -362,9 +511,11 @@ export const UserManagement: React.FC = () => {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, name: e.target.value });
+                  setCreateError("");
+                  setCreateSuccess("");
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Nome completo"
               />
@@ -377,9 +528,10 @@ export const UserManagement: React.FC = () => {
               <input
                 type="email"
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, email: e.target.value });
+                  setCreateError("");
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="email@exemplo.com"
               />
@@ -392,9 +544,10 @@ export const UserManagement: React.FC = () => {
               <input
                 type="password"
                 value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, password: e.target.value });
+                  setCreateError("");
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Password segura"
               />
@@ -433,18 +586,36 @@ export const UserManagement: React.FC = () => {
             </label>
           </div>
 
+          {createError && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-3 mt-4">
+              <div className="text-red-700 text-sm">{createError}</div>
+            </div>
+          )}
+
           <div className="flex justify-end space-x-3 mt-6">
             <button
-              onClick={() => setIsCreating(false)}
+              onClick={() => {
+                setIsCreating(false);
+                setCreateError("");
+              }}
               className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
             >
               Cancelar
             </button>
             <button
-              onClick={handleCreateUser}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleCreateUser();
+              }}
+              disabled={isCreatingUser}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2"
             >
-              Criar Utilizador
+              {isCreatingUser && (
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              )}
+              <span>{isCreatingUser ? "A criar..." : "Criar Utilizador"}</span>
             </button>
           </div>
         </div>
