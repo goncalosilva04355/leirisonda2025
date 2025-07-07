@@ -37,6 +37,7 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+import EliminateOldUsers from "./components/EliminateOldUsers";
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
@@ -2975,7 +2976,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���� {maint.clientContact}
+                                        ������ {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -4116,7 +4117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condições do terreno"]',
+                                    'textarea[placeholder*="Condi��ões do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
