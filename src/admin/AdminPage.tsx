@@ -130,6 +130,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       color: "bg-blue-500",
     },
     {
+      id: "mobile-settings" as AdminSection,
+      title: "📱 Configurações Mobile",
+      description:
+        "Notificações, localização e configurações para dispositivos móveis",
+      icon: Smartphone,
+      color: "bg-indigo-600",
+    },
+    {
       id: "data-recovery" as AdminSection,
       title: "🚨 Recuperação de Dados",
       description: "EMERGÊNCIA: Restaurar obras e dados perdidos",
