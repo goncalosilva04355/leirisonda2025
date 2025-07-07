@@ -58,9 +58,9 @@ export const WorkAssignmentNotifications: React.FC<
   WorkAssignmentNotificationsProps
 > = ({ currentUser }) => {
   const [notifications, setNotifications] = useState<WorkNotification[]>([]);
-  const [previousWorks, setPreviousWorks] = useState<Work[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const previousWorksRef = useRef<Work[]>([]);
 
   // Carregar notificações salvas do usuário
   useEffect(() => {
