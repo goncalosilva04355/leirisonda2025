@@ -5615,7 +5615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               • A marcação automática funciona melhor em
                               dispositivos móveis
                             </li>
-                            <li>• O Google Maps abre numa nova janela/tab</li>
+                            <li>��� O Google Maps abre numa nova janela/tab</li>
                             <li>
                               • Pode ativar ou desativar cada funcionalidade
                               independentemente
@@ -9099,6 +9099,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
+
+        {/* Temporary Cleanup Executor */}
+        <CleanupExecutor />
       </InstantSyncManager>
     </AutoSyncProvider>
   );
