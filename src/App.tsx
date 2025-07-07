@@ -663,7 +663,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenção Regular",
+      type: "Manuten��ão Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -3158,7 +3158,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                👨‍🔧 {maint.technician}
+                                ���‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -9096,8 +9096,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* Firebase Reactivated Notification */}
         <FirebaseReactivatedNotification />
 
-        {/* Realtime Notifications - Disabled per user request */}
-        {/* <RealtimeNotifications /> */}
+        {/* Realtime Notifications - REATIVADAS */}
+        <RealtimeNotifications />
+
+        {/* Work Assignment Notifications */}
+        <WorkAssignmentNotifications currentUser={currentUser} />
       </InstantSyncManager>
     </AutoSyncProvider>
   );
