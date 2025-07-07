@@ -7554,14 +7554,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             "input, select, textarea",
                           );
 
-                          const name = inputs[0].value; // Nome da Piscina
-                          const client = inputs[1].value; // Cliente
-                          const location = inputs[2].value; // Local
-                          const status = inputs[3].value; // Estado
-                          const poolType = inputs[4].value; // Tipo de Piscina
-                          const dimensions = inputs[5].value; // Dimensões
-                          const volume = inputs[6].value; // Volume
-                          const filtrationSystem = inputs[7].value; // Sistema de Filtração
+                          const name = (inputs[0] as HTMLInputElement).value; // Nome da Piscina
+                          const client = (inputs[1] as HTMLInputElement).value; // Cliente
+                          const location = (inputs[2] as HTMLInputElement)
+                            .value; // Local
+                          const status = (inputs[3] as HTMLInputElement).value; // Estado
+                          const poolType = (inputs[4] as HTMLInputElement)
+                            .value; // Tipo de Piscina
+                          const dimensions = (inputs[5] as HTMLInputElement)
+                            .value; // Dimensões
+                          const volume = (inputs[6] as HTMLInputElement).value; // Volume
+                          const filtrationSystem = (
+                            inputs[7] as HTMLInputElement
+                          ).value; // Sistema de Filtração
                           const installationDate = inputs[8].value; // Data de Instalação
                           const clientPhone = inputs[9].value; // Telefone do Cliente
                           const clientEmail = inputs[10].value; // Email do Cliente
