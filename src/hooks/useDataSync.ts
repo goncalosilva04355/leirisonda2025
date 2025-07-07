@@ -51,6 +51,9 @@ export interface Work {
   assignedUserIds?: string[];
   folhaGerada?: boolean;
   createdAt: string;
+  createdBy?: string; // Name of user who created this work
+  createdByUser?: string; // UID of user who created this work
+  updatedAt?: string; // Last update timestamp
 }
 
 export interface Client {
