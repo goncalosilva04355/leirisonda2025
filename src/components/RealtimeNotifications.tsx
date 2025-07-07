@@ -169,6 +169,10 @@ export const RealtimeNotifications: React.FC = () => {
         "usersUpdated",
         handleUserEvents as EventListener,
       );
+      window.removeEventListener(
+        "customNotification",
+        handleCustomNotification as EventListener,
+      );
     };
   }, []);
 
