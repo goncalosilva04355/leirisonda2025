@@ -313,35 +313,11 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // Try to restore user from localStorage first
-    const storedUser =
-      localStorage.getItem("currentUser") ||
-      localStorage.getItem("mock-current-user");
+    // Firebase handles user restoration automatically
+    console.log("🔥 Firebase handles user session restoration automatically");
 
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser);
-        console.log(
-          "🔄 App init: Restoring user from localStorage:",
-          user.email,
-        );
-        setCurrentUser(user);
-        setIsAuthenticated(true);
-        console.log("✅ User session restored successfully");
-        return; // Exit early if user is restored
-      } catch (e) {
-        console.warn(
-          "App init: Error parsing stored user, clearing localStorage:",
-          e,
-        );
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem("mock-current-user");
-      }
-    }
-
-    // Only clear auth state if no valid stored user found
-    console.log("🔒 No valid stored user found, ensuring clean state");
-    sessionStorage.clear(); // Clear any session data
+    // Clear session data only
+    sessionStorage.clear();
     setIsAuthenticated(false);
     setCurrentUser(null);
 
@@ -839,7 +815,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localização: ${pool.location}
+   Localizaç��o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -3591,7 +3567,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Nível da Água (m) *
+                                  N��vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
