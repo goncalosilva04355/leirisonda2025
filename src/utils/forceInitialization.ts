@@ -249,8 +249,7 @@ export class ForceInitialization {
   }
 }
 
-// Exportar para console
-(window as any).ForceInitialization = ForceInitialization;
+// Debug export disabled for production
 
 // Auto-execução desabilitada - dados criados manualmente pelo utilizador
 // Sistema vazio é comportamento normal para aplicação limpa
