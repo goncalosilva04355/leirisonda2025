@@ -203,7 +203,7 @@ export class EmergencyDataRecovery {
         JSON.stringify(emergencyBackup),
       );
 
-      console.log("✅ EMERGENCY RECOVERY COMPLETED");
+      console.log("��� EMERGENCY RECOVERY COMPLETED");
       console.log("📊 Final counts:", {
         works: finalData.works.length,
         pools: finalData.pools.length,
@@ -292,7 +292,7 @@ export class EmergencyDataRecovery {
       return {
         success: validation.success,
         message: validation.success
-          ? `✅ RECOVERY SUCCESSFUL!\n\n${validation.report}\n\n🔄 Please refresh the page.`
+          ? `✅ RECOVERY SUCCESSFUL!\n\n${validation.report}\n\n��� Please refresh the page.`
           : `⚠️ PARTIAL RECOVERY:\n\n${validation.report}\n\n🔄 Please refresh the page and check data.`,
       };
     } catch (error) {
@@ -305,5 +305,4 @@ export class EmergencyDataRecovery {
   }
 }
 
-// Export for console debugging
-(window as any).EmergencyDataRecovery = EmergencyDataRecovery;
+// Debug export disabled for production
