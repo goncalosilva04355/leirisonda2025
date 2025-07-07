@@ -344,10 +344,15 @@ export const CompleteDeviceActivation: React.FC = () => {
   const setupCrossDeviceSync = async (): Promise<boolean> => {
     try {
       // Configurar sincronização automática
-      const { syncManager } = await import("../utils/syncManager");
+      try {
+        const { syncManager } = await import("../utils/syncManager");
 
-      // Testar sincronização
-      await syncManager.performFullSync();
+        // Testar sincronização
+        await syncManager.performFullSync();
+      } catch (syncError) {
+        console.warn("Sync manager not available:", syncError);
+        // Continuar sem falhar
+      }
 
       // Configurar intervalos de sync
       const syncConfig = {
