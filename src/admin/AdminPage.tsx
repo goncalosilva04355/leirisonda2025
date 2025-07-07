@@ -67,6 +67,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       color: "bg-indigo-600",
     },
     {
+      id: "user-duplicate-cleanup" as AdminSection,
+      title: "🧹 Limpeza de Utilizadores Duplicados",
+      description:
+        "Remover utilizadores duplicados - manter apenas Gonçalo superadmin",
+      icon: Users,
+      color: "bg-red-600",
+    },
+    {
       id: "work-assignment-fix" as AdminSection,
       title: "🔧 Correção de Atribuição de Obras",
       description: "Corrigir problemas na atribuição de utilizadores às obras",
