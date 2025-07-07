@@ -95,23 +95,14 @@ export const createMissingUsers = (): { created: number; errors: string[] } => {
     const appUsersData = localStorage.getItem("app-users");
     const appUsers = appUsersData ? JSON.parse(appUsersData) : [];
 
-    // Default users to ensure exist
-    const defaultUsers = [
-      {
-        name: "Alexandre",
-        email: "alexandre@leirisonda.pt",
-        password: "69alexandre",
-        role: "technician",
-        active: true,
-      },
-      {
-        name: "Yuri",
-        email: "yuri@leirisonda.pt",
-        password: "yuripass123",
-        role: "technician",
-        active: true,
-      },
-    ];
+    // No default users to create - only super admin exists
+    const defaultUsers: Array<{
+      name: string;
+      email: string;
+      password: string;
+      role: string;
+      active: boolean;
+    }> = [];
 
     defaultUsers.forEach((defaultUser) => {
       // Check if user exists in mock
