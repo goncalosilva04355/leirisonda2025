@@ -31,7 +31,7 @@ interface AutoSyncProviderProps {
 export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
   children,
   enabled = true,
-  syncInterval = 300000, // 5 minutos (otimizado para quota Firebase)
+  syncInterval = 0, // Sincronização instantânea
   collections = ["users", "pools", "maintenance", "works", "clients"],
   showNotifications = false,
 }) => {
