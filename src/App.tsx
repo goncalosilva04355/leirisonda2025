@@ -5351,7 +5351,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notificações foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
                                   );
                                 }
                               } else {
@@ -5403,7 +5403,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As notificações funcionam apenas com HTTPS
+                              • As notifica��ões funcionam apenas com HTTPS
                             </li>
                             <li>
                               • Certifique-se de que permite notificações no seu
@@ -8323,8 +8323,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   return (
     <AutoSyncProvider
-      enabled={true}
-      syncInterval={30000}
+      enabled={false}
+      syncInterval={0}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={true}
     >
