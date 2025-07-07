@@ -81,16 +81,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
-  // Debug logging for authentication state changes
-  useEffect(() => {
-    console.log("🔍 Auth State Debug:", {
-      isAuthenticated,
-      currentUser: currentUser
-        ? `${currentUser?.name} (${currentUser?.email})`
-        : null,
-      timestamp: new Date().toISOString(),
-    });
-  }, [isAuthenticated, currentUser]);
+  // Debug logging disabled for production
 
   // Monitoramento de integridade de dados
   useEffect(() => {
@@ -6624,7 +6615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <span className="font-medium">
-                                  Atribuída a:
+                                  Atribu��da a:
                                 </span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
