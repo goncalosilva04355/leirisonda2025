@@ -13,7 +13,6 @@ import { fullSyncService, SyncResult } from "../services/fullSyncService";
 export const FullSyncManager: React.FC = () => {
   const [syncing, setSyncing] = useState(false);
   const [result, setResult] = useState<SyncResult | null>(null);
-  const [fixingAlexandre, setFixingAlexandre] = useState(false);
 
   const performFullSync = async () => {
     setSyncing(true);
