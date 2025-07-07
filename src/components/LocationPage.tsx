@@ -433,7 +433,10 @@ export const LocationPage: React.FC<LocationPageProps> = ({
         </div>
       )}
 
-      {/* Status Cards */}
+      {/* Tab Content */}
+      {activeTab === "personal" ? (
+        <>
+          {/* Status Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Permission Status */}
         <div className="bg-white p-4 rounded-lg border border-gray-200">
