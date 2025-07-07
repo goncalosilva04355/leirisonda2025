@@ -185,7 +185,6 @@ export const UserManagement: React.FC = () => {
       // Sync with auth services
       const { mockAuthService } = await import("../services/mockAuthService");
       mockAuthService.reloadUsers();
-      console.log("Users refreshed from all sources");
     } catch (error) {
       console.error("Error refreshing users:", error);
     }
