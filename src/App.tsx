@@ -37,6 +37,10 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+import EliminateOldUsers from "./components/EliminateOldUsers";
+
+// Limpar estados que causam modais indesejados
+import "./utils/clearModalStates";
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
@@ -139,6 +143,7 @@ function App() {
   // Admin area states
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [showEliminateOldUsers, setShowEliminateOldUsers] = useState(false);
 
   // Data sync hook - manages all data with optional Firebase sync
   const dataSync = useDataSync();
@@ -393,7 +398,7 @@ function App() {
         const unsubscribe = authService.onAuthStateChanged((user) => {
           if (user) {
             console.log(
-              "��� Firebase Auth: User automatically restored",
+              "���� Firebase Auth: User automatically restored",
               user.email,
             );
             setCurrentUser(user);
@@ -509,7 +514,7 @@ function App() {
           .register("/sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "✅ Service Worker registered successfully:",
+              "�� Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -664,7 +669,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenção Regular",
+      type: "Manutenç��o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -2975,7 +2980,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���� {maint.clientContact}
+                                        ������ {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -4116,7 +4121,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condições do terreno"]',
+                                    'textarea[placeholder*="Condi��ões do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -6804,7 +6809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Edit Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informações Básicas */}
+                    {/* Informa��ões Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -8760,7 +8765,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In��cio
+                          Data de In����cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
