@@ -604,9 +604,18 @@ export const UserManagement: React.FC = () => {
             </label>
           </div>
 
+          {createError && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-3 mt-4">
+              <div className="text-red-700 text-sm">{createError}</div>
+            </div>
+          )}
+
           <div className="flex justify-end space-x-3 mt-6">
             <button
-              onClick={() => setIsCreating(false)}
+              onClick={() => {
+                setIsCreating(false);
+                setCreateError("");
+              }}
               className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
             >
               Cancelar
