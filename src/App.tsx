@@ -31,7 +31,6 @@ import {
   Database,
 } from "lucide-react";
 import jsPDF from "jspdf";
-import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { InstallPrompt } from "./components/InstallPrompt";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
@@ -5738,7 +5737,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </li>
                             <li>��� O Google Maps abre numa nova janela/tab</li>
                             <li>
-                              • Pode ativar ou desativar cada funcionalidade
+                              ��� Pode ativar ou desativar cada funcionalidade
                               independentemente
                             </li>
                           </ul>
