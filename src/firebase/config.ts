@@ -18,9 +18,9 @@ const defaultFirebaseConfig = {
 
 // Function to get Firebase config from localStorage or use default
 const getFirebaseConfig = () => {
-  // SEGURANÇA: Dados isolados por utilizador - sem partilha global
-  console.log("🔐 Firebase: Isolamento de dados por utilizador ativo");
-  console.log("❌ Partilha global: Desabilitada por segurança");
+  // MIGRAÇÃO GRADUAL: Preservando acesso aos dados existentes
+  console.log("🔄 Firebase: Migração gradual para isolamento de dados");
+  console.log("✅ Dados existentes: Acessíveis durante transição");
   return defaultFirebaseConfig;
 };
 
