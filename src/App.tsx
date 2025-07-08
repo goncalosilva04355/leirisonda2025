@@ -71,6 +71,7 @@ import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 import { UniversalSyncMonitor } from "./components/UniversalSyncMonitor";
 import { UniversalSyncActivator } from "./components/UniversalSyncActivator";
+import { UniversalSyncNotification } from "./components/UniversalSyncNotification";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -5693,7 +5694,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
-                            {enableMapsRedirect ? "��� Ativo" : "⭕ Inativo"}
+                            {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
