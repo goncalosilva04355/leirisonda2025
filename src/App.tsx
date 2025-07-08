@@ -1104,7 +1104,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
-- Manutenções Realizadas: ${maintenance.length}
+- Manutenç��es Realizadas: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
@@ -1488,7 +1488,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         window.open(mapsUrl, "_blank");
         console.log("✅ Google Maps opened successfully");
       } catch (error) {
-        console.error("❌ Error opening Google Maps:", error);
+        console.error("�� Error opening Google Maps:", error);
       }
     } else {
       if (!enableMapsRedirect) {
@@ -8726,35 +8726,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   >
                     <MapPin className="h-5 w-5" />
                     <span>Localizações</span>
-                  </button>
-                )}
-
-                {/* Separador */}
-                <div className="my-2 border-t border-gray-200"></div>
-
-                {/* Sincronização Universal - Apenas para super_admin */}
-                {currentUser?.role === "super_admin" && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("sincronizacao-universal");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "sincronizacao-universal"
-                        ? "bg-blue-50 text-blue-700 border-l-4 border-blue-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <div className="relative">
-                      <Database className="h-5 w-5" />
-                      {syncStatus === "connected" && (
-                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></div>
-                      )}
-                      {syncStatus === "error" && (
-                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
-                      )}
-                    </div>
-                    <span>Sincronização Universal</span>
                   </button>
                 )}
               </nav>
