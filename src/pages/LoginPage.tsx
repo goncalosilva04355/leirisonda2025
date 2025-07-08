@@ -164,6 +164,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             </label>
           </div>
 
+          {/* Quick Test Login */}
+          <div className="space-y-2">
+            <p className="text-sm text-gray-600 text-center">
+              Acesso rápido de teste:
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setLoginForm({ email: "teste", password: "teste" });
+              }}
+              className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors text-sm"
+              disabled={isLoading}
+            >
+              Preencher credenciais de teste
+            </button>
+          </div>
+
           {/* Error Message */}
           {loginError && (
             <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded border border-red-200">
