@@ -601,8 +601,9 @@ export function useDataSync(): SyncState & SyncActions {
       },
     );
 
-    // Cleanup function
+    // Cleanup function - includes both global and realtime listeners
     return () => {
+      globalCleanup();
       unsubscribePools();
       unsubscribeWorks();
       unsubscribeMaintenance();
