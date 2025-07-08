@@ -140,7 +140,7 @@ export const RealTimeNotifications: React.FC<RealTimeNotificationsProps> = ({
         )}
       </div>
     </>
-  );
+  ); */
 };
 
 // Hook personalizado para usar nas páginas/componentes
