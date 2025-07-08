@@ -749,6 +749,14 @@ class UniversalDataSyncService {
    * Verificar se o serviço está pronto
    */
   isReady(): boolean {
+    // Service is ready if initialized, even without Firebase (local mode)
+    return this.isInitialized;
+  }
+
+  /**
+   * Verificar se Firebase está disponível
+   */
+  isFirebaseReady(): boolean {
     return this.isInitialized && isFirebaseReady();
   }
 
