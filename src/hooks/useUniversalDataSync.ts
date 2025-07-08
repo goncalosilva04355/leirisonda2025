@@ -124,88 +124,113 @@ export function useUniversalDataSync(): UniversalSyncState &
 
   // Configurar listeners universais em tempo real
   useEffect(() => {
-    // Try to setup listeners even if not fully ready - better error handling
     let cleanup: (() => void) | null = null;
+    let mounted = true;
 
     const setupListeners = async () => {
       try {
         // Wait a bit and retry if not ready
         if (!universalDataSync.isReady()) {
           console.log("🔄 Aguardando Firebase para configurar listeners...");
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          await new Promise((resolve) => setTimeout(resolve, 2000));
 
           // Try again after wait
           if (!universalDataSync.isReady()) {
-            console.log("⚠️ Firebase ainda não pronto, configurando dados locais...");
-            // Load local data as fallback
-            setState(prev => ({
-              ...prev,
-              isLoading: false,
-              syncStatus: "disconnected",
-              error: null
-            }));
+            console.log("⚠️ Firebase ainda não pronto, usando modo offline...");
+            // Set offline mode but still try to load any existing data
+            if (mounted) {
+              setState((prev) => ({
+                ...prev,
+                isLoading: false,
+                syncStatus: "disconnected",
+                error: null,
+              }));
+            }
             return;
           }
         }
 
         // Configurar listeners silenciosos
         cleanup = universalDataSync.setupUniversalListeners({
-      onObrasChange: (obras) => {
-        setState((prev) => ({
-          ...prev,
-          obras,
-          totalItems:
-            obras.length +
-            prev.manutencoes.length +
-            prev.piscinas.length +
-            prev.clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-      onManutencoesChange: (manutencoes) => {
-        setState((prev) => ({
-          ...prev,
-          manutencoes,
-          totalItems:
-            prev.obras.length +
-            manutencoes.length +
-            prev.piscinas.length +
-            prev.clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-      onPiscinasChange: (piscinas) => {
-        setState((prev) => ({
-          ...prev,
-          piscinas,
-          totalItems:
-            prev.obras.length +
-            prev.manutencoes.length +
-            piscinas.length +
-            prev.clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-      onClientesChange: (clientes) => {
-        setState((prev) => ({
-          ...prev,
-          clientes,
-          totalItems:
-            prev.obras.length +
-            prev.manutencoes.length +
-            prev.piscinas.length +
-            clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-    });
+          onObrasChange: (obras) => {
+            if (!mounted) return;
+            setState((prev) => ({
+              ...prev,
+              obras,
+              totalItems:
+                obras.length +
+                prev.manutencoes.length +
+                prev.piscinas.length +
+                prev.clientes.length,
+              lastSync: new Date().toISOString(),
+              syncStatus: "connected",
+            }));
+          },
+          onManutencoesChange: (manutencoes) => {
+            if (!mounted) return;
+            setState((prev) => ({
+              ...prev,
+              manutencoes,
+              totalItems:
+                prev.obras.length +
+                manutencoes.length +
+                prev.piscinas.length +
+                prev.clientes.length,
+              lastSync: new Date().toISOString(),
+              syncStatus: "connected",
+            }));
+          },
+          onPiscinasChange: (piscinas) => {
+            if (!mounted) return;
+            setState((prev) => ({
+              ...prev,
+              piscinas,
+              totalItems:
+                prev.obras.length +
+                prev.manutencoes.length +
+                piscinas.length +
+                prev.clientes.length,
+              lastSync: new Date().toISOString(),
+              syncStatus: "connected",
+            }));
+          },
+          onClientesChange: (clientes) => {
+            if (!mounted) return;
+            setState((prev) => ({
+              ...prev,
+              clientes,
+              totalItems:
+                prev.obras.length +
+                prev.manutencoes.length +
+                prev.piscinas.length +
+                clientes.length,
+              lastSync: new Date().toISOString(),
+              syncStatus: "connected",
+            }));
+          },
+        });
+      } catch (error) {
+        console.error("❌ Erro ao configurar listeners:", error);
+        if (mounted) {
+          setState((prev) => ({
+            ...prev,
+            syncStatus: "error",
+            error: error instanceof Error ? error.message : "Erro de conexão",
+          }));
+        }
+      }
+    };
 
-    return cleanup;
-  }, [universalDataSync.isReady()]);
+    // Call the async function
+    setupListeners();
+
+    return () => {
+      mounted = false;
+      if (cleanup) {
+        cleanup();
+      }
+    };
+  }, []);
 
   // Ações para obras
   const addObra = useCallback(async (obraData: any): Promise<string> => {
