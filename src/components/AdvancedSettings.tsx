@@ -473,7 +473,11 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 </p>
               </div>
 
-              <DeviceSyncManager />
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+                <p className="text-gray-600">
+                  Funcionalidade de sincronização temporariamente desativada.
+                </p>
+              </div>
             </div>
           )}
 
