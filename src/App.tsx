@@ -5565,7 +5565,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠️ ATENÇÃO: Esta operação é irrevers��vel!
+                              ⚠️ ATENÇ��O: Esta operação é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -8816,7 +8816,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Nível da Água
+                                Nível da ��gua
                               </label>
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.waterLevel
@@ -9047,4 +9047,3 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     </AutoSyncProvider>
   );
 }
-
