@@ -33,20 +33,19 @@ class CrossUserDataSyncService {
   private listeners: Unsubscribe[] = [];
 
   /**
-   * Force migration of all data from user-specific storage to global shared collections
+   * MIGRAÇÃO GLOBAL: Garantir que TODOS os dados sejam sempre partilhados
+   * NUNCA usar localStorage - apenas dados globais partilhados
    */
   async migrateToSharedData(currentUser?: {
     uid: string;
     email: string;
     name: string;
   }): Promise<CrossUserSyncResult> {
-    console.log(
-      "🔄 Iniciando migração para dados compartilhados globalmente...",
-    );
+    console.log("🌐 FORÇANDO PARTILHA GLOBAL - NUNCA LOCALSTORAGE");
 
     const result: CrossUserSyncResult = {
       success: true,
-      message: "Migração concluída",
+      message: "Partilha global sempre ativa",
       details: [],
       dataShared: { pools: 0, works: 0, maintenance: 0, clients: 0 },
     };
@@ -54,18 +53,66 @@ class CrossUserDataSyncService {
     if (!isFirebaseReady() || !db) {
       result.success = false;
       result.message = "Firebase não disponível";
-      result.details.push("❌ Firebase não está configurado corretamente");
+      result.details.push(
+        "❌ Firebase não está configurado para partilha global",
+      );
       return result;
     }
 
     try {
-      // Get all local data
-      const localData = {
-        pools: JSON.parse(localStorage.getItem("pools") || "[]"),
-        works: JSON.parse(localStorage.getItem("works") || "[]"),
-        maintenance: JSON.parse(localStorage.getItem("maintenance") || "[]"),
-        clients: JSON.parse(localStorage.getItem("clients") || "[]"),
+      // NUNCA usar localStorage - verificar apenas se há dados globais
+      console.log(
+        "✅ SISTEMA CONFIGURADO: Dados SEMPRE partilhados globalmente",
+      );
+      console.log("✅ LOCALSTORAGE: Nunca será usado");
+
+      // Verificar dados existentes nas coleções globais
+      const [poolsSnap, worksSnap, maintenanceSnap, clientsSnap] =
+        await Promise.all([
+          getDocs(query(collection(db, "shared_pools"))),
+          getDocs(query(collection(db, "shared_works"))),
+          getDocs(query(collection(db, "shared_maintenance"))),
+          getDocs(query(collection(db, "shared_clients"))),
+        ]);
+
+      result.dataShared = {
+        pools: poolsSnap.size,
+        works: worksSnap.size,
+        maintenance: maintenanceSnap.size,
+        clients: clientsSnap.size,
       };
+
+      // Se não há dados globais, criar estrutura vazia mas funcional
+      if (
+        poolsSnap.empty &&
+        worksSnap.empty &&
+        maintenanceSnap.empty &&
+        clientsSnap.empty
+      ) {
+        console.log("📝 Criando estrutura de dados global vazia");
+
+        // Criar documento de configuração global
+        await setDoc(doc(db, "global_config", "data_sharing"), {
+          alwaysShared: true,
+          useLocalStorage: false,
+          sharedCollections: [
+            "shared_pools",
+            "shared_works",
+            "shared_maintenance",
+            "shared_clients",
+          ],
+          createdAt: new Date().toISOString(),
+          message: "Todos os dados são sempre partilhados entre utilizadores",
+        });
+
+        result.details.push(
+          "✅ Estrutura global criada - prontos para partilha",
+        );
+      } else {
+        result.details.push(
+          `✅ Dados globais existentes: ${result.dataShared.pools} piscinas, ${result.dataShared.works} obras, ${result.dataShared.maintenance} manutenções, ${result.dataShared.clients} clientes`,
+        );
+      }
 
       result.details.push(
         `📱 Dados locais encontrados: ${localData.pools.length} piscinas, ${localData.works.length} obras, ${localData.maintenance.length} manutenções, ${localData.clients.length} clientes`,

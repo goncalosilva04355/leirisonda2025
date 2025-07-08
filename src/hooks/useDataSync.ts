@@ -197,23 +197,27 @@ export function useDataSync(): SyncState & SyncActions {
     lastSync: null,
   });
 
-  // Firebase handles data persistence automatically - no recovery needed
+  // PARTILHA GLOBAL SEMPRE ATIVA - NUNCA localStorage
   useEffect(() => {
-    console.log("🔥 Firebase handles data persistence automatically");
-    // Initial state is already set above - Firebase will sync when connected
+    console.log("🌐 PARTILHA DE DADOS SEMPRE ATIVA ENTRE UTILIZADORES");
+    console.log("❌ LOCALSTORAGE: Nunca será usado");
+    console.log("✅ FIREBASE: Todos os dados sempre partilhados globalmente");
   }, []);
 
-  // Firebase sync is always enabled with fixed configuration
+  // PARTILHA GLOBAL SEMPRE ATIVA - nunca desabilitar
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  // Firebase handles data backup and persistence automatically
+  // PARTILHA GLOBAL automática - nunca usar localStorage
   useEffect(() => {
-    console.log("🔥 Firebase handles data backup automatically", {
-      works: state.works.length,
-      pools: state.pools.length,
-      maintenance: state.maintenance.length,
-      clients: state.clients.length,
-    });
+    console.log(
+      "🌐 DADOS PARTILHADOS GLOBALMENTE - Visíveis para todos os utilizadores:",
+      {
+        works: state.works.length,
+        pools: state.pools.length,
+        maintenance: state.maintenance.length,
+        clients: state.clients.length,
+      },
+    );
   }, [state.works, state.pools, state.maintenance, state.clients]);
 
   // Hook para sincronização automática em mutações - with debugging

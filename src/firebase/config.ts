@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp, deleteApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 
 // Default Firebase config
 const defaultFirebaseConfig = {
@@ -17,8 +18,9 @@ const defaultFirebaseConfig = {
 
 // Function to get Firebase config from localStorage or use default
 const getFirebaseConfig = () => {
-  // Use default config directly - Firebase will handle persistence automatically
-  console.log("🔧 Firebase: Using default configuration");
+  // PARTILHA GLOBAL: Configuração fixa para todos os utilizadores
+  console.log("🌐 Firebase: Partilha de dados global sempre ativa");
+  console.log("❌ localStorage: Nunca será usado");
   return defaultFirebaseConfig;
 };
 
@@ -37,28 +39,36 @@ export const saveFirebaseConfig = (config: any) => {
 // Get current Firebase config (from localStorage or default)
 const firebaseConfig = getFirebaseConfig();
 
-// Function to get or create Firebase app
+// Função segura para obter/criar Firebase app
 const getFirebaseApp = () => {
   try {
-    // Check if app already exists
+    // Verificar apps existentes primeiro
     const existingApps = getApps();
     if (existingApps.length > 0) {
-      console.log("Using existing Firebase app");
+      console.log(
+        "🔄 Usando Firebase app existente (evitando conflitos de stream)",
+      );
       return existingApps[0];
     }
 
-    // Initialize new app only if none exists
+    // Aguardar antes de inicializar para evitar conflitos
+    console.log("🚀 Inicializando novo Firebase app...");
     const app = initializeApp(firebaseConfig);
-    console.log("Fresh Firebase app initialized");
+    console.log("✅ Firebase app inicializado com sucesso");
     return app;
-  } catch (error) {
-    console.error("Firebase app initialization failed:", error);
-    // Try to get existing app if initialization fails
-    const existingApps = getApps();
-    if (existingApps.length > 0) {
-      console.log("Using existing Firebase app after error");
-      return existingApps[0];
+  } catch (error: any) {
+    console.error("❌ Erro na inicialização do Firebase:", error);
+
+    // Se for erro de app já existir, tentar obter
+    if (error.code === "app/duplicate-app") {
+      const existingApps = getApps();
+      if (existingApps.length > 0) {
+        console.log("🔄 Usando app existente após erro de duplicação");
+        return existingApps[0];
+      }
     }
+
+    console.error("❌ Firebase app não disponível");
     return null;
   }
 };
@@ -87,12 +97,17 @@ try {
   } else {
     app = getFirebaseApp();
     if (app) {
-      try {
-        db = getFirestore(app);
-        console.log("✅ Firestore initialized successfully");
-      } catch (error) {
-        console.warn("⚠️ Firestore initialization failed:", error);
-        db = null;
+      // Inicialização protegida do Firestore
+      db = await FirebaseErrorFix.safeFirebaseOperation(async () => {
+        console.log("🔄 Inicializando Firestore com proteção...");
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        return getFirestore(app);
+      }, "inicialização do Firestore");
+
+      if (db) {
+        console.log("✅ Firestore inicializado com proteção completa");
+      } else {
+        console.warn("⚠️ Firestore não pôde ser inicializado");
       }
 
       try {
