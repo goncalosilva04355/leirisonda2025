@@ -336,93 +336,98 @@ export function useDataSync(): SyncState & SyncActions {
                   // Merge Firebase data with local data
                   try {
                     setState((prev) => {
-                    const mergedWorks = [...prev.works];
-                    const mergedPools = [...prev.pools];
-                    const mergedMaintenance = [...prev.maintenance];
-                    const mergedClients = [...prev.clients];
+                      const mergedWorks = [...prev.works];
+                      const mergedPools = [...prev.pools];
+                      const mergedMaintenance = [...prev.maintenance];
+                      const mergedClients = [...prev.clients];
 
-                    // Add Firebase data that's not already in local storage (with null checks)
-                    if (
-                      firebaseData.works &&
-                      Array.isArray(firebaseData.works)
-                    ) {
-                      firebaseData.works.forEach((work: Work) => {
-                        if (
-                          work &&
-                          work.id &&
-                          !mergedWorks.find((w) => w.id === work.id)
-                        ) {
-                          mergedWorks.push(work);
-                        }
+                      // Add Firebase data that's not already in local storage (with null checks)
+                      if (
+                        firebaseData.works &&
+                        Array.isArray(firebaseData.works)
+                      ) {
+                        firebaseData.works.forEach((work: Work) => {
+                          if (
+                            work &&
+                            work.id &&
+                            !mergedWorks.find((w) => w.id === work.id)
+                          ) {
+                            mergedWorks.push(work);
+                          }
+                        });
+                      }
+
+                      if (
+                        firebaseData.pools &&
+                        Array.isArray(firebaseData.pools)
+                      ) {
+                        firebaseData.pools.forEach((pool: Pool) => {
+                          if (
+                            pool &&
+                            pool.id &&
+                            !mergedPools.find((p) => p.id === pool.id)
+                          ) {
+                            mergedPools.push(pool);
+                          }
+                        });
+                      }
+
+                      if (
+                        firebaseData.maintenance &&
+                        Array.isArray(firebaseData.maintenance)
+                      ) {
+                        firebaseData.maintenance.forEach(
+                          (maint: Maintenance) => {
+                            if (
+                              maint &&
+                              maint.id &&
+                              !mergedMaintenance.find((m) => m.id === maint.id)
+                            ) {
+                              mergedMaintenance.push(maint);
+                            }
+                          },
+                        );
+                      }
+
+                      if (
+                        firebaseData.clients &&
+                        Array.isArray(firebaseData.clients)
+                      ) {
+                        firebaseData.clients.forEach((client: Client) => {
+                          if (
+                            client &&
+                            client.id &&
+                            !mergedClients.find((c) => c.id === client.id)
+                          ) {
+                            mergedClients.push(client);
+                          }
+                        });
+                      }
+
+                      const today = new Date();
+                      const futureMaintenance = mergedMaintenance.filter(
+                        (m) => new Date(m.scheduledDate) >= today,
+                      );
+
+                      console.log("🔄 Merged data counts:", {
+                        works: mergedWorks.length,
+                        pools: mergedPools.length,
+                        maintenance: mergedMaintenance.length,
+                        clients: mergedClients.length,
                       });
-                    }
 
-                    if (
-                      firebaseData.pools &&
-                      Array.isArray(firebaseData.pools)
-                    ) {
-                      firebaseData.pools.forEach((pool: Pool) => {
-                        if (
-                          pool &&
-                          pool.id &&
-                          !mergedPools.find((p) => p.id === pool.id)
-                        ) {
-                          mergedPools.push(pool);
-                        }
-                      });
-                    }
-
-                    if (
-                      firebaseData.maintenance &&
-                      Array.isArray(firebaseData.maintenance)
-                    ) {
-                      firebaseData.maintenance.forEach((maint: Maintenance) => {
-                        if (
-                          maint &&
-                          maint.id &&
-                          !mergedMaintenance.find((m) => m.id === maint.id)
-                        ) {
-                          mergedMaintenance.push(maint);
-                        }
-                      });
-                    }
-
-                    if (
-                      firebaseData.clients &&
-                      Array.isArray(firebaseData.clients)
-                    ) {
-                      firebaseData.clients.forEach((client: Client) => {
-                        if (
-                          client &&
-                          client.id &&
-                          !mergedClients.find((c) => c.id === client.id)
-                        ) {
-                          mergedClients.push(client);
-                        }
-                      });
-                    }
-
-                    const today = new Date();
-                    const futureMaintenance = mergedMaintenance.filter(
-                      (m) => new Date(m.scheduledDate) >= today,
-                    );
-
-                    console.log("🔄 Merged data counts:", {
-                      works: mergedWorks.length,
-                      pools: mergedPools.length,
-                      maintenance: mergedMaintenance.length,
-                      clients: mergedClients.length,
+                      return {
+                        ...prev,
+                        works: mergedWorks,
+                        pools: mergedPools,
+                        maintenance: mergedMaintenance,
+                        futureMaintenance,
+                        clients: mergedClients,
+                      };
                     });
-
-                    return {
-                      ...prev,
-                      works: mergedWorks,
-                      pools: mergedPools,
-                      maintenance: mergedMaintenance,
-                      futureMaintenance,
-                      clients: mergedClients,
-                    };
-                  });
+                  } catch (mergeError) {
+                    console.warn("Error merging Firebase data:", mergeError);
+                  }
                 }
               } catch (syncError) {
                 console.warn("⚠️ Initial data sync failed:", syncError);
