@@ -394,18 +394,22 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const clientRef = ref(this.database!, `shared/clients/${clientId}`); // Global shared location
+      const userId = this.getCurrentUserId();
+      const clientRef = ref(
+        this.database!,
+        `users/${userId}/clients/${clientId}`,
+      ); // User-specific location
 
       // Sanitize data before sending to Firebase
       const sanitizedData = this.sanitizeForFirebase({
         ...clientData,
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true,
+        userId: this.getCurrentUserId(),
       });
 
       await update(clientRef, sanitizedData);
       console.log(
-        `✅ Client ${clientId} updated in shared database - visible to all users`,
+        `✅ Client ${clientId} updated in user's isolated data - only visible to current user`,
       );
       return true;
     } catch (error) {
