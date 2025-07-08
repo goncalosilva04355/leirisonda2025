@@ -124,10 +124,32 @@ export function useUniversalDataSync(): UniversalSyncState &
 
   // Configurar listeners universais em tempo real
   useEffect(() => {
-    if (!universalDataSync.isReady()) return;
+    // Try to setup listeners even if not fully ready - better error handling
+    let cleanup: (() => void) | null = null;
 
-    // Configurar listeners silenciosos
-    const cleanup = universalDataSync.setupUniversalListeners({
+    const setupListeners = async () => {
+      try {
+        // Wait a bit and retry if not ready
+        if (!universalDataSync.isReady()) {
+          console.log("🔄 Aguardando Firebase para configurar listeners...");
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          // Try again after wait
+          if (!universalDataSync.isReady()) {
+            console.log("⚠️ Firebase ainda não pronto, configurando dados locais...");
+            // Load local data as fallback
+            setState(prev => ({
+              ...prev,
+              isLoading: false,
+              syncStatus: "disconnected",
+              error: null
+            }));
+            return;
+          }
+        }
+
+        // Configurar listeners silenciosos
+        cleanup = universalDataSync.setupUniversalListeners({
       onObrasChange: (obras) => {
         setState((prev) => ({
           ...prev,
