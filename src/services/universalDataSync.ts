@@ -12,6 +12,10 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { db, isFirebaseReady, waitForFirebaseInit } from "../firebase/config";
+import {
+  handleFirebaseUnavailable,
+  getDetailedFirebaseStatus,
+} from "../utils/firebaseStatusHelper";
 
 export interface UniversalDataState {
   obras: any[];
