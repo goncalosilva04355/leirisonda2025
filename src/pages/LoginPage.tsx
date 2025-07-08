@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Settings, TestTube } from "lucide-react";
-import { runQuotaTest } from "../utils/testFirebaseQuota";
+import { Settings } from "lucide-react";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
