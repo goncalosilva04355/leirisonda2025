@@ -5678,6 +5678,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
+                {/* Data Sharing Fix Button - Only for Super Admin */}
+                {currentUser?.role === "super_admin" && (
+                  <DataSharingFixButton currentUser={currentUser} />
+                )}
+
                 {/* User Data Sharing Diagnostics - Only for Super Admin */}
                 {currentUser?.role === "super_admin" && (
                   <UserDataSharingFix currentUser={currentUser} />
@@ -6507,7 +6512,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={(e) => {
                           e.preventDefault();
                           alert(
-                            "Cliente criado com sucesso! (Função em desenvolvimento)",
+                            "Cliente criado com sucesso! (Funç��o em desenvolvimento)",
                           );
                           setActiveSection("clientes");
                         }}
