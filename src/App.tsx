@@ -4138,7 +4138,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Create complete work data object
                           const workData = {
-                            id: Date.now(),
+                            id: Date.now().toString(),
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
                               : `LS-${Date.now()}`,
