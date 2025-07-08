@@ -60,8 +60,6 @@ class UniversalDataSyncService {
       await this.migrateToUniversalSharing();
 
       this.isInitialized = true;
-      console.log("✅ SINCRONIZAÇÃO UNIVERSAL ATIVA");
-
       return true;
     } catch (error) {
       console.error("❌ Erro na inicialização universal:", error);
@@ -442,7 +440,7 @@ class UniversalDataSyncService {
    */
   async addManutencao(manutencaoData: any): Promise<string> {
     if (!isFirebaseReady() || !db) {
-      throw new Error("Firebase não disponível");
+      throw new Error("Firebase n��o disponível");
     }
 
     const id = manutencaoData.id || `manutencao-${Date.now()}-${Math.random()}`;
