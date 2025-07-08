@@ -324,6 +324,12 @@ function App() {
     // Initialize auth
     const authPromise = initializeAuth();
 
+    // DO NOT initialize default admin automatically - this was causing the security issue
+    // Users must always login manually for security
+    console.log(
+      "🔒 SECURITY: No automatic admin initialization - manual login required",
+    );
+
     // Cleanup on unmount
     return () => {
       authPromise
@@ -334,16 +340,6 @@ function App() {
         })
         .catch(console.error);
     };
-    // Firebase auth code removed to fix syntax errors
-
-    // DO NOT initialize default admin automatically - this was causing the security issue
-    // Users must always login manually for security
-    console.log(
-      "🔒 SECURITY: No automatic admin initialization - manual login required",
-    );
-
-    // Return empty cleanup function since unsubscribe is handled inside the promise
-    return () => {};
   }, []);
 
   // Auth state check disabled to prevent errors
