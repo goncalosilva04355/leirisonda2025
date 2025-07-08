@@ -53,10 +53,12 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
   const [isFixing, setIsFixing] = useState(false);
 
   const checkDataSharingStatus = async () => {
+    console.log("🔍 Iniciando diagnóstico de partilha de dados...");
     setStatus((prev) => ({ ...prev, checking: true }));
 
     try {
       // Check localStorage data
+      console.log("📱 Verificando dados locais...");
       const localData = {
         works: JSON.parse(localStorage.getItem("works") || "[]").length,
         pools: JSON.parse(localStorage.getItem("pools") || "[]").length,
@@ -64,11 +66,25 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
           .length,
         clients: JSON.parse(localStorage.getItem("clients") || "[]").length,
       };
+      console.log("📱 Dados locais encontrados:", localData);
 
       // Check Realtime Database (realFirebaseService)
+      console.log("🔗 Verificando conexão Firebase Realtime Database...");
       let realtimeDbStatus = { connected: false, dataCount: 0 };
+
+      // Add timeout to prevent hanging
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Timeout")), 10000),
+      );
+
       try {
-        const realtimeData = await realFirebaseService.syncAllData();
+        const realtimeData = await Promise.race([
+          realFirebaseService.syncAllData(),
+          timeout,
+        ]);
+
+        console.log("🔗 Dados do Firebase recebidos:", realtimeData);
+
         if (realtimeData) {
           realtimeDbStatus = {
             connected: true,
@@ -80,7 +96,8 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
           };
         }
       } catch (error) {
-        console.warn("Realtime Database check failed:", error);
+        console.warn("❌ Realtime Database check failed:", error);
+        realtimeDbStatus = { connected: false, dataCount: 0 };
       }
 
       // Check Firestore (crossUserDataSync) - simplified check
