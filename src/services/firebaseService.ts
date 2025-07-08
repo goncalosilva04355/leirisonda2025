@@ -116,8 +116,14 @@ const COLLECTIONS = {
 };
 
 // Helper function to check if Firebase is available
-const isFirebaseAvailable = () => {
-  return db !== null;
+const isFirebaseAvailable = async () => {
+  try {
+    const db = await getDB();
+    return db !== null && isFirebaseReady();
+  } catch (error) {
+    console.warn("Error checking Firebase availability:", error);
+    return false;
+  }
 };
 
 // Critical: Wrapper for Firebase operations with quota protection
