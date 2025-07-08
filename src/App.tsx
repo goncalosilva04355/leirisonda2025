@@ -1827,11 +1827,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                       ></div>
                       <span>
-                        {syncStatus === "completed"
-                          ? "Sincronizado"
-                          : syncStatus === "error"
-                            ? "Erro Sync"
-                            : "Conectando"}
+                        {syncStatus === "error" ? "Erro Sync" : "Sincronizado"}
                       </span>
                     </div>
                   </div>
