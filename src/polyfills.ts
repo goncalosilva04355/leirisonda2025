@@ -3,6 +3,11 @@
  * This file should be imported as early as possible
  */
 
+import { installReadableStreamPolyfill } from "./utils/readableStreamPolyfill";
+
+// Install ReadableStream polyfill immediately
+installReadableStreamPolyfill();
+
 // ReadableStream polyfill for older browsers and Firebase compatibility
 if (typeof globalThis !== "undefined") {
   // Check if ReadableStream is missing or incomplete
@@ -13,16 +18,16 @@ if (typeof globalThis !== "undefined") {
 
   if (needsPolyfill) {
     console.log(
-      "🔧 Loading ReadableStream polyfill for Firebase compatibility",
+      "🔧 Loading enhanced ReadableStream polyfill for Firebase compatibility",
     );
 
-    // Try to load the full polyfill
+    // Try to load the full polyfill first
     import("web-streams-polyfill/dist/ponyfill")
       .then((polyfill: any) => {
         const { ReadableStream, WritableStream, TransformStream } = polyfill;
         if (!globalThis.ReadableStream || needsPolyfill) {
           globalThis.ReadableStream = ReadableStream;
-          console.log("✅ ReadableStream polyfill loaded");
+          console.log("✅ External ReadableStream polyfill loaded");
         }
         if (!globalThis.WritableStream) {
           globalThis.WritableStream = WritableStream;
@@ -33,53 +38,10 @@ if (typeof globalThis !== "undefined") {
       })
       .catch((error) => {
         console.warn(
-          "Failed to load web-streams-polyfill, using fallback:",
+          "External polyfill failed, using built-in fallback:",
           error,
         );
-
-        // Fallback implementation for ReadableStream
-        if (!globalThis.ReadableStream) {
-          globalThis.ReadableStream = class ReadableStream {
-            private _source: any;
-            private _reader: any;
-            private _locked: boolean;
-
-            constructor(source?: any) {
-              this._source = source;
-              this._reader = null;
-              this._locked = false;
-            }
-
-            getReader() {
-              if (this._locked) {
-                throw new TypeError("ReadableStream is locked");
-              }
-              this._locked = true;
-              this._reader = {
-                read: () => Promise.resolve({ done: true, value: undefined }),
-                cancel: () => Promise.resolve(),
-                releaseLock: () => {
-                  this._locked = false;
-                  this._reader = null;
-                },
-              };
-              return this._reader;
-            }
-
-            cancel() {
-              if (this._reader) {
-                this._reader.releaseLock();
-              }
-              return Promise.resolve();
-            }
-
-            get locked() {
-              return this._locked;
-            }
-          } as any;
-
-          console.log("✅ Fallback ReadableStream implementation loaded");
-        }
+        // The fallback is already installed by installReadableStreamPolyfill()
       });
   }
 }
