@@ -40,6 +40,7 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import { SharedDataManager } from "./components/SharedDataManager";
 import { DataSharingFixManager } from "./components/DataSharingFixManager";
+import { UserDataSharingFix } from "./components/UserDataSharingFix";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
