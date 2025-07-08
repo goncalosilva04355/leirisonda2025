@@ -7,7 +7,12 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db, isFirebaseReady } from "../firebase/config";
+import {
+  auth,
+  db,
+  isFirebaseReady,
+  waitForFirebaseInit,
+} from "../firebase/config";
 import { mockAuthService } from "./mockAuthService";
 import { QuotaManager } from "../utils/quotaManager";
 
