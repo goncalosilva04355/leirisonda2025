@@ -28,6 +28,7 @@ import {
   FileText,
   MapPin,
   Share,
+  Database,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
@@ -58,6 +59,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
+import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -152,7 +154,10 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // Data sync hook - manages all data with optional Firebase sync
+  // SINCRONIZAÇÃO UNIVERSAL - Garante que todos os utilizadores vejam todos os dados
+  const universalSync = useUniversalDataSync();
+
+  // Data sync hook - fallback para compatibilidade
   const dataSync = useDataSync();
 
   // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
@@ -167,6 +172,24 @@ function App() {
 
     return () => clearInterval(backupInterval);
   }, []);
+
+  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
+  useEffect(() => {
+    console.log("🌐 SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+      obras: universalSync.obras.length,
+      manutencoes: universalSync.manutencoes.length,
+      piscinas: universalSync.piscinas.length,
+      clientes: universalSync.clientes.length,
+      total: universalSync.totalItems,
+      status: universalSync.syncStatus,
+    });
+  }, [
+    universalSync.obras,
+    universalSync.manutencoes,
+    universalSync.piscinas,
+    universalSync.clientes,
+    universalSync.syncStatus,
+  ]);
 
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
@@ -219,22 +242,52 @@ function App() {
       );
     };
   }, []);
+  // DADOS UNIVERSAIS - Partilhados entre todos os utilizadores
   const {
-    pools,
-    maintenance,
-    futureMaintenance,
-    works,
-    clients,
+    obras,
+    manutencoes,
+    piscinas,
+    clientes,
     isLoading: syncLoading,
     lastSync,
     error: syncError,
-    syncWithFirebase,
-    enableSync,
-    addPool,
-    addWork,
-    addMaintenance,
-    addClient,
-  } = dataSync;
+    addObra,
+    addManutencao,
+    addPiscina,
+    addCliente,
+    updateObra,
+    updateManutencao,
+    updatePiscina,
+    updateCliente,
+    deleteObra,
+    deleteManutencao,
+    deletePiscina,
+    deleteCliente,
+    forceSyncAll,
+    syncStatus,
+  } = universalSync;
+
+  // Mapear dados universais para compatibilidade com código existente
+  const pools = piscinas;
+  const maintenance = manutencoes;
+  const works = obras;
+  const clients = clientes;
+
+  // Calcular manutenções futuras
+  const today = new Date();
+  const futureMaintenance = manutencoes.filter(
+    (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
+  );
+
+  // Funções de compatibilidade
+  const addPool = (data: any) => addPiscina(data);
+  const addWork = (data: any) => addObra(data);
+  const addMaintenance = (data: any) => addManutencao(data);
+  const addClient = (data: any) => addCliente(data);
+  const syncWithFirebase = () => forceSyncAll();
+  const enableSync = (enabled: boolean) => {
+    console.log("Sync is always enabled in Universal Sync mode:", enabled);
+  };
 
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
@@ -248,7 +301,7 @@ function App() {
 
   // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
   const autoSyncData = useAutoSync();
-  const { syncStatus, isAutoSyncing } = autoSyncData;
+  const { syncStatus: autoSyncStatus, isAutoSyncing } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
   // Keep local users state for user management
@@ -895,7 +948,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta aç���o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -998,7 +1051,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -1051,7 +1104,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
-- Manutenções Realizadas: ${maintenance.length}
+- Manutenç��es Realizadas: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
@@ -1120,7 +1173,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           setNotificationsEnabled(true);
           showNotification(
             "Notificaç��es Ativadas",
-            "Agora vai receber notificações de obras atribuídas",
+            "Agora vai receber notificações de obras atribu��das",
             "success",
           );
           console.log("�� Notifications enabled successfully");
@@ -1435,7 +1488,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         window.open(mapsUrl, "_blank");
         console.log("✅ Google Maps opened successfully");
       } catch (error) {
-        console.error("❌ Error opening Google Maps:", error);
+        console.error("�� Error opening Google Maps:", error);
       }
     } else {
       if (!enableMapsRedirect) {
@@ -1463,7 +1516,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "�����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
@@ -2638,7 +2691,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">��</div>
+                                  <div className="text-gray-400 mb-2">����</div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -2860,7 +2913,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Histórico de manutenções realizadas
+                          Histórico de manutenç��es realizadas
                         </p>
                       </div>
                     </div>
@@ -3010,7 +3063,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    ��� {maint.location}
+                                    ����� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -3539,7 +3592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠️ Nenhum utilizador encontrado. Vá à Área de
+                                ��️ Nenhum utilizador encontrado. Vá à Área de
                                 Administração → "🔧 Corre��ão de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
@@ -6684,7 +6737,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���� {work.contact}
+                                        ����� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -6730,7 +6783,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  €{work.budget}
+                                  ���{work.budget}
                                 </div>
                               )}
                             </div>
@@ -7703,7 +7756,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manutenç��o
+                        Editar Manuten����o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
