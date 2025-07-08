@@ -106,6 +106,24 @@ const initializeFirebaseServices = async (): Promise<void> => {
       // Wait a bit to ensure app is fully ready
       await new Promise((resolve) => setTimeout(resolve, 100));
 
+      // Additional app readiness verification
+      try {
+        if (!app.options) {
+          console.warn("⚠️ Firebase app options not available, retrying...");
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          app = getFirebaseApp();
+          if (!app?.options) {
+            throw new Error(
+              "Firebase app not properly initialized after retry",
+            );
+          }
+        }
+      } catch (error) {
+        console.error("❌ Firebase app readiness check failed:", error);
+        app = null;
+        return;
+      }
+
       // Inicialização protegida do Firestore com retry logic
       db = await FirebaseErrorFix.safeFirebaseOperation(async () => {
         console.log("🔄 Inicializando Firestore com proteção...");
@@ -254,7 +272,7 @@ export const getFirebaseStatus = () => {
 // Function to mark quota exceeded - Firebase handles this automatically
 export const markQuotaExceeded = () => {
   console.warn(
-    "���� Firebase quota exceeded - Firebase will handle cooldown automatically",
+    "🚨 Firebase quota exceeded - Firebase will handle cooldown automatically",
   );
 };
 
