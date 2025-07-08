@@ -60,12 +60,7 @@ import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
-import { DataProtectionService } from "./utils/dataProtection";
-import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
-import { ForceInitialization } from "./utils/forceInitialization";
-
-import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSync } from "./hooks/useAutoSync";
+// Serviços complexos removidos - sistema simplificado
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
@@ -1492,7 +1487,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         console.warn("⚠️ Maps redirect is disabled");
       }
       if (!address) {
-        console.warn("⚠️ No address provided");
+        console.warn("⚠�� No address provided");
       }
     }
   };
@@ -5287,7 +5282,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado da Manutenção
+                          Estado da Manutenç��o
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
