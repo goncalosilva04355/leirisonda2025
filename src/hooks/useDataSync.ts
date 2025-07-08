@@ -475,7 +475,7 @@ export function useDataSync(): SyncState & SyncActions {
         setState((prev) => {
           if (clients.length === 0 && prev.clients.length > 0) {
             console.warn(
-              "🛡️ BLOCKED: Tried to overwrite clients with empty array",
+              "���️ BLOCKED: Tried to overwrite clients with empty array",
             );
             return prev;
           }
@@ -552,7 +552,7 @@ export function useDataSync(): SyncState & SyncActions {
           // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
           if (maintenance.length === 0 && prev.maintenance.length > 0) {
             console.warn(
-              "🛡️ BLOCKED: Firebase tried to overwrite maintenance with empty array",
+              "���️ BLOCKED: Firebase tried to overwrite maintenance with empty array",
             );
             return prev; // Keep existing data
           }
@@ -605,9 +605,9 @@ export function useDataSync(): SyncState & SyncActions {
       },
     );
 
-    // Cleanup function - unsubscribe from user-isolated listeners
+    // Cleanup function - includes both global and realtime listeners
     return () => {
-      console.log("🧹 Limpando listeners de dados isolados por utilizador");
+      globalCleanup();
       unsubscribePools();
       unsubscribeWorks();
       unsubscribeMaintenance();
