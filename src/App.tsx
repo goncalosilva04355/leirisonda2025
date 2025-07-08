@@ -565,7 +565,7 @@ function App() {
           type: "Manutenção Programada",
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
-          status: "scheduled" as const,
+          status: "pending" as const,
           description: "Manutenção programada automaticamente",
           notes: "Agendada automaticamente após manutenção anterior",
           clientName: selectedPool ? selectedPool.client : "",
@@ -4432,7 +4432,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 type: "Manutenção Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
-                                status: "scheduled" as const,
+                                status: "pending" as const,
                                 description:
                                   "Manutenção programada durante criação da piscina",
                                 notes:
