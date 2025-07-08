@@ -334,7 +334,8 @@ export function useDataSync(): SyncState & SyncActions {
                   }
 
                   // Merge Firebase data with local data
-                  setState((prev) => {
+                  try {
+                    setState((prev) => {
                     const mergedWorks = [...prev.works];
                     const mergedPools = [...prev.pools];
                     const mergedMaintenance = [...prev.maintenance];
