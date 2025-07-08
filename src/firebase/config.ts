@@ -17,8 +17,9 @@ const defaultFirebaseConfig = {
 
 // Function to get Firebase config from localStorage or use default
 const getFirebaseConfig = () => {
-  // Use default config directly - Firebase will handle persistence automatically
-  console.log("🔧 Firebase: Using default configuration");
+  // PARTILHA GLOBAL: Configuração fixa para todos os utilizadores
+  console.log("🌐 Firebase: Partilha de dados global sempre ativa");
+  console.log("❌ localStorage: Nunca será usado");
   return defaultFirebaseConfig;
 };
 
