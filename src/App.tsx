@@ -2138,7 +2138,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenção agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenções aparecerão aqui
+                          As futuras manutenç��es aparecerão aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -5675,6 +5675,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
                 </div>
+
+                {/* User Data Sharing Diagnostics - Only for Super Admin */}
+                {currentUser?.role === "super_admin" && (
+                  <UserDataSharingFix currentUser={currentUser} />
+                )}
 
                 {/* Data Management Section - Only for Super Admin */}
                 {currentUser?.role === "super_admin" && (
