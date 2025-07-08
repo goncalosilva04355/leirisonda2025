@@ -40,11 +40,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 
-// Limpar estados que causam modais indesejados
-import "./utils/clearModalStates";
-
-// Security: Startup cleanup to prevent blocked users from accessing
-// import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
+// Imports problemáticos removidos para simplificação
 
 // Componentes complexos removidos - sistema simplificado
 
@@ -5914,7 +5910,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>�� Piscinas associadas</li>
+                        <li>���� Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
