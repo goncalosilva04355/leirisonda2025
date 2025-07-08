@@ -773,7 +773,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manuten��ão agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -8727,6 +8727,35 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   >
                     <MapPin className="h-5 w-5" />
                     <span>Localizações</span>
+                  </button>
+                )}
+
+                {/* Separador */}
+                <div className="my-2 border-t border-gray-200"></div>
+
+                {/* Sincronização Universal - Apenas para super_admin */}
+                {currentUser?.role === "super_admin" && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("sincronizacao-universal");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "sincronizacao-universal"
+                        ? "bg-blue-50 text-blue-700 border-l-4 border-blue-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <div className="relative">
+                      <Database className="h-5 w-5" />
+                      {syncStatus === "connected" && (
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></div>
+                      )}
+                      {syncStatus === "error" && (
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+                      )}
+                    </div>
+                    <span>Sincronização Universal</span>
                   </button>
                 )}
               </nav>
