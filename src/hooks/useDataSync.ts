@@ -224,6 +224,17 @@ export function useDataSync(): SyncState & SyncActions {
         console.log("🔄 Executing data operation with args:", args);
         const result = await fn(...args);
         console.log("✅ Data operation completed successfully");
+
+        // SINCRONIZAÇÃO IMEDIATA após qualquer mudança
+        setTimeout(async () => {
+          try {
+            await syncWithFirebase();
+            console.log("🚀 Sincronização imediata completada");
+          } catch (error) {
+            console.warn("⚠️ Erro na sincronização imediata:", error);
+          }
+        }, 100); // 100ms delay para garantir que o estado local foi atualizado
+
         return result;
       } catch (error) {
         console.error("❌ Error in data operation:", error);
