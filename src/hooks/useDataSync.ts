@@ -197,11 +197,11 @@ export function useDataSync(): SyncState & SyncActions {
     lastSync: null,
   });
 
-  // ISOLAMENTO DE DADOS POR UTILIZADOR SEMPRE ATIVO
+  // MIGRAÇÃO GRADUAL PARA ISOLAMENTO DE DADOS
   useEffect(() => {
-    console.log("🔐 ISOLAMENTO DE DADOS POR UTILIZADOR ATIVO");
-    console.log("❌ Partilha global: Desabilitada por segurança");
-    console.log("✅ Cada utilizador vê apenas os seus próprios dados");
+    console.log("🔄 MIGRAÇÃO GRADUAL PARA ISOLAMENTO DE DADOS");
+    console.log("✅ Dados existentes: Preservados e acessíveis");
+    console.log("🔒 Novos dados: Terão propriedade específica por utilizador");
   }, []);
 
   // PARTILHA GLOBAL SEMPRE ATIVA - nunca desabilitar
