@@ -155,12 +155,12 @@ class RealFirebaseService {
         id: newPoolRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true, // Mark as global data
+        userId: this.getCurrentUserId(), // Mark as user-specific data
       });
 
       await set(newPoolRef, sanitizedData);
       console.log(
-        `✅ Pool "${poolData.name}" added to shared database - visible to all users`,
+        `✅ Pool "${poolData.name}" added to user's isolated data - only visible to current user`,
       );
       return newPoolRef.key;
     } catch (error) {
