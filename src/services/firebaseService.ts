@@ -12,7 +12,11 @@ import {
   getDocs,
   where,
 } from "firebase/firestore";
-import { getDB, isFirebaseReady } from "../firebase/config";
+import {
+  getDB,
+  isFirebaseReady,
+  waitForFirebaseInit,
+} from "../firebase/config";
 import { syncManager } from "../utils/syncManager";
 
 // Types
