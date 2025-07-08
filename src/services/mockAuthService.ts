@@ -75,6 +75,15 @@ class MockAuthService {
         active: true,
         createdAt: new Date().toISOString(),
       },
+      {
+        uid: "test-1",
+        email: "teste",
+        password: "teste",
+        name: "Usuário Teste",
+        role: "manager",
+        active: true,
+        createdAt: new Date().toISOString(),
+      },
     ];
 
     // Save to localStorage to persist the users
