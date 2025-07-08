@@ -1,81 +1,52 @@
-// Load polyfills first
-import "./polyfills";
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 import "./index.css";
 
-// Restauração imediata de utilizadores
-import "./utils/immediateUserRestore";
-
-// ReadableStream polyfill is handled by ./polyfills.ts
-console.log("🔧 ReadableStream polyfill loaded via polyfills.ts");
-
-// Chrome-specific fixes for PWA compatibility
-if (typeof window !== "undefined") {
-  // Clear any cached data that might be causing issues in Chrome
-  if ("caches" in window) {
-    caches.keys().then((names) => {
-      names.forEach((name) => {
-        if (
-          name.includes("leirisonda-v1") ||
-          name.includes("leirisonda-v2") ||
-          name.includes("leirisonda-v3")
-        ) {
-          caches.delete(name);
-        }
-      });
-    });
+// Simple error boundary for production
+class SimpleErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
   }
 
-  // Firebase handles data persistence automatically - no localStorage needed
-  console.log("🔥 Firebase handles data persistence automatically");
+  static getDerivedStateFromError(_: Error) {
+    return { hasError: true };
+  }
 
-  // Enhanced promise rejection handler for Firebase errors
-  window.addEventListener("unhandledrejection", (event) => {
-    console.warn("Unhandled promise rejection:", event.reason);
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("Error caught by boundary:", error, errorInfo);
+  }
 
-    // Check if it's a Firebase ReadableStream error
-    if (
-      event.reason?.message?.includes("ReadableStream") ||
-      event.reason?.message?.includes(
-        "initializeReadableStreamDefaultReader",
-      ) ||
-      event.reason?.stack?.includes("firebase_firestore.js")
-    ) {
-      console.log("🔧 Handling Firebase ReadableStream error");
-      event.preventDefault(); // Prevent the error from crashing the app
-
-      // Try to recover by reinitializing Firebase after a delay
-      setTimeout(async () => {
-        try {
-          const { FirebaseErrorFix } = await import("./utils/firebaseErrorFix");
-          await FirebaseErrorFix.safeFirebaseReinitialization();
-        } catch (error) {
-          console.error("Failed to reinitialize Firebase:", error);
-        }
-      }, 1000);
-    } else {
-      event.preventDefault();
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full text-center">
+            <h1 className="text-xl font-bold text-red-600 mb-4">
+              Erro na aplicação
+            </h1>
+            <p className="text-gray-600 mb-4">Ocorreu um erro inesperado.</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Recarregar página
+            </button>
+          </div>
+        </div>
+      );
     }
-  });
 
-  // Add error event listener for better error handling
-  window.addEventListener("error", (event) => {
-    if (
-      event.error?.message?.includes("ReadableStream") ||
-      event.error?.stack?.includes("firebase_firestore.js")
-    ) {
-      console.log("🔧 Handling Firebase ReadableStream error via error event");
-      event.preventDefault();
-    }
-  });
+    return this.props.children;
+  }
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ImprovedErrorBoundary>
+  <SimpleErrorBoundary>
     <App />
-  </ImprovedErrorBoundary>,
+  </SimpleErrorBoundary>,
 );
