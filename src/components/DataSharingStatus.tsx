@@ -145,6 +145,7 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
         };
       }
 
+      console.log("✅ Diagnóstico concluído");
       setStatus({
         checking: false,
         firebase: {
@@ -155,8 +156,25 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
         sharing: sharingStatus,
       });
     } catch (error) {
-      console.error("Error checking data sharing status:", error);
-      setStatus((prev) => ({ ...prev, checking: false }));
+      console.error("❌ Erro durante diagnóstico:", error);
+      // Set a fallback state even on error
+      setStatus({
+        checking: false,
+        firebase: {
+          realtimeDb: { connected: false, dataCount: 0 },
+          firestore: { connected: false, dataCount: 0 },
+        },
+        localStorage: {
+          works: 0,
+          pools: 0,
+          maintenance: 0,
+          clients: 0,
+        },
+        sharing: {
+          isWorking: false,
+          recommendedAction: "ERROR",
+        },
+      });
     }
   };
 
