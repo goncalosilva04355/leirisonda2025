@@ -259,8 +259,30 @@ class UniversalDataSyncService {
     onClientesChange: (clientes: any[]) => void;
   }): () => void {
     if (!isFirebaseReady() || !db) {
-      console.error("❌ Firebase não disponível para listeners universais");
-      return () => {};
+      console.warn(
+        "⚠️ Firebase não disponível - carregando dados locais para listeners",
+      );
+
+      // Load local data and call callbacks immediately for offline mode
+      setTimeout(() => {
+        const localObras = this.getLocalDataSafe("works") || [];
+        const localManutencoes = this.getLocalDataSafe("maintenance") || [];
+        const localPiscinas = this.getLocalDataSafe("pools") || [];
+        const localClientes = this.getLocalDataSafe("clients") || [];
+
+        console.log(
+          `📱 Modo offline: ${localObras.length} obras, ${localManutencoes.length} manutenções, ${localPiscinas.length} piscinas, ${localClientes.length} clientes`,
+        );
+
+        callbacks.onObrasChange(localObras);
+        callbacks.onManutencoesChange(localManutencoes);
+        callbacks.onPiscinasChange(localPiscinas);
+        callbacks.onClientesChange(localClientes);
+      }, 100);
+
+      return () => {
+        console.log("🔄 Limpando listeners do modo offline");
+      };
     }
 
     console.log("📡 CONFIGURANDO LISTENERS UNIVERSAIS");
