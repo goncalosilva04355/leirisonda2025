@@ -725,7 +725,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manuten�����o Regular",
+      type: "Manutenç���o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -1112,7 +1112,7 @@ RESUMO EXECUTIVO:
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
 
-ESTAT���STICAS:
+ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
 - Manutenç��es Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
@@ -2142,9 +2142,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          dataSync.updateWork(work.id, {
-                                            status: "in_progress",
-                                          });
+                                          simpleData.workService.updateWork(
+                                            work.id,
+                                            {
+                                              status: "in_progress",
+                                            },
+                                          );
                                           showNotification(
                                             "Obra Iniciada",
                                             `A obra "${work.client}" foi iniciada`,
@@ -2881,7 +2884,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a piscina "${pool.name}"?`,
-                                    () => dataSync.deletePool(pool.id),
+                                    () =>
+                                      simpleData.poolService.deletePool(
+                                        pool.id,
+                                      ),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -2912,7 +2918,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Manutenções
+                          Manuten��ões
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Histórico de manutenç��es realizadas
@@ -3739,7 +3745,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi��������ões do Furo
+                              Medi������ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4294,7 +4300,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             };
 
                             // Update the work with bore data
-                            dataSync.updateWork(workData.id, boreDataUpdate);
+                            simpleData.workService.updateWork(
+                              workData.id,
+                              boreDataUpdate,
+                            );
 
                             const waterBoreData = {
                               id: Date.now(),
@@ -4701,7 +4710,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenç��o
+                          Frequência de Manutenç���o
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -5688,7 +5697,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </button>
                           </div>
                           <p className="text-green-700 text-sm mb-3">
-                            Quando ativado, clicar numa morada abrir�� o Google
+                            Quando ativado, clicar numa morada abrirá o Google
                             Maps para navegação.
                           </p>
                           <p className="text-green-600 text-xs">
@@ -6517,7 +6526,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic��vel)
+                            Pessoa de Contacto (se aplic���vel)
                           </label>
                           <input
                             type="text"
@@ -7945,7 +7954,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             inputs[4] as HTMLInputElement
                           ).value; // Duração Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
-                            .value; // Dura��ão Real
+                            .value; // Duração Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
                           const priority = (inputs[7] as HTMLInputElement)
                             .value; // Prioridade
