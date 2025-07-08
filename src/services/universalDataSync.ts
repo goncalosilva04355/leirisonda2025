@@ -258,6 +258,12 @@ class UniversalDataSyncService {
     onPiscinasChange: (piscinas: any[]) => void;
     onClientesChange: (clientes: any[]) => void;
   }): () => void {
+    console.log("🔍 Verificando Firebase para listeners:", {
+      isFirebaseReady: isFirebaseReady(),
+      dbExists: !!db,
+      isInitialized: this.isInitialized,
+    });
+
     if (!isFirebaseReady() || !db) {
       console.warn(
         "⚠️ Firebase não disponível - carregando dados locais para listeners",
@@ -533,7 +539,7 @@ class UniversalDataSyncService {
 
     await setDoc(doc(db!, "universal_clientes", id), cliente);
     console.log(
-      `✅ CLIENTE ADICIONADO UNIVERSALMENTE: ${id} - visível para todos`,
+      `��� CLIENTE ADICIONADO UNIVERSALMENTE: ${id} - visível para todos`,
     );
     return id;
   }
