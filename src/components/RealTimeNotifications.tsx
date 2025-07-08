@@ -68,11 +68,10 @@ export const RealTimeNotifications: React.FC<RealTimeNotificationsProps> = ({
     }
   };
 
-  if (notifications.length === 0) {
-    return null;
-  }
+  // Visual notifications disabled per user request
+  return null;
 
-  return (
+  /*return (
     <>
       {/* Floating notification indicator */}
       {hasNewUpdates && (
