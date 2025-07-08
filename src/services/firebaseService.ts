@@ -1,19 +1,5 @@
-import {
-  collection,
-  doc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  onSnapshot,
-  query,
-  orderBy,
-  Timestamp,
-  setDoc,
-  getDocs,
-  where,
-} from "firebase/firestore";
-import { db, isFirebaseReady } from "../firebase/config";
-import { syncManager } from "../utils/syncManager";
+// Local storage service - Firebase removed completely
+// All data now stored in localStorage only
 
 // Types
 export interface User {
@@ -764,7 +750,7 @@ export const syncService = {
     );
 
     const unsubscribeWorks = workService.subscribeToWorks((works) => {
-      console.log(`��️ Mudança detectada em obras: ${works.length} registros`);
+      console.log(`⚒️ Mudança detectada em obras: ${works.length} registros`);
       callbacks.onWorksChange(works);
       this.triggerAutoSync("works-changed", "works");
     });
