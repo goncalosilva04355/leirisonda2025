@@ -7683,7 +7683,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             status,
                             poolType,
                             dimensions,
-                            volume: volume ? parseInt(volume) : undefined,
+                            volume: volume || undefined,
                             filtrationSystem,
                             installationDate: installationDate
                               ? new Date(installationDate).toISOString()
