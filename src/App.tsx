@@ -38,6 +38,7 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+import { DataSharingStatus } from "./components/DataSharingStatus";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -1059,7 +1060,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenções Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç��es Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
 PRÓXIMAS AÇÕES:
@@ -3000,7 +3001,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��������� {maint.clientContact}
+                                        ���������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
