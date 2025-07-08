@@ -83,12 +83,16 @@ export class UserDataIsolationService {
       documentData.createdByUser || documentData.userId || documentData.ownerId;
 
     if (!ownerField) {
-      // Documentos sem dono são considerados públicos (dados legados)
+      // MIGRAÇÃO SUAVE: Dados existentes sem dono são acessíveis
+      // Isso preserva os dados já existentes no sistema
+      console.log(
+        "📄 Dados legados detectados - acesso permitido para migração",
+      );
       return {
         canRead: true,
         canWrite: true,
         canDelete: true,
-        reason: "Documento legado sem dono definido",
+        reason: "Dados legados - acesso preservado durante migração",
       };
     }
 
@@ -102,6 +106,8 @@ export class UserDataIsolationService {
         reason: "Utilizador é o proprietário dos dados",
       };
     } else {
+      // Para dados novos com dono, aplicar isolamento
+      console.log("🔒 Dados com proprietário específico - acesso restrito");
       return {
         canRead: false,
         canWrite: false,
