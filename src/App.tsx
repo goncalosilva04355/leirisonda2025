@@ -810,7 +810,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("🧭 Navigating to dashboard");
+            console.log("�� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -1429,7 +1429,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("🗺️ Opening Google Maps:", mapsUrl);
+      console.log("��️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -1782,6 +1782,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </span>
                     </div>
                   </div>
+                </div>
+
+                {/* Diagnóstico de Partilha de Dados - TEMPORÁRIO */}
+                <div className="mb-4">
+                  <DataSharingStatus
+                    onFixApplied={() => {
+                      console.log(
+                        "✅ Partilha de dados corrigida - sincronizando...",
+                      );
+                      syncWithFirebase();
+                    }}
+                  />
                 </div>
 
                 {/* Status Cards */}
