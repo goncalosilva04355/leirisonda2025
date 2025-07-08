@@ -384,7 +384,7 @@ export const poolService = {
 
   // Delete pool
   async deletePool(poolId: string) {
-    if (!isFirebaseAvailable()) {
+    if (!(await isFirebaseAvailable())) {
       throw new Error("Firebase not configured");
     }
 
