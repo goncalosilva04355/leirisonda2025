@@ -345,13 +345,14 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
+      const userId = this.getCurrentUserId();
       const maintenanceRef = ref(
         this.database!,
-        `shared/maintenance/${maintenanceId}`, // Global shared location
+        `users/${userId}/maintenance/${maintenanceId}`, // User-specific location
       );
       await remove(maintenanceRef);
       console.log(
-        `✅ Maintenance ${maintenanceId} deleted from shared database - removed for all users`,
+        `✅ Maintenance ${maintenanceId} deleted from user's isolated data - removed only for current user`,
       );
       return true;
     } catch (error) {
