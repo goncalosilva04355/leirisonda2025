@@ -54,7 +54,8 @@ class GlobalDataShareService {
    * Remove qualquer dependência de localStorage
    */
   async migrateAllDataToGlobalSharing(): Promise<void> {
-    if (!isFirebaseReady() || !db) {
+    const firebaseReady = await waitForFirebaseInit();
+    if (!firebaseReady || !isFirebaseReady() || !db) {
       throw new Error("Firebase não disponível");
     }
 
