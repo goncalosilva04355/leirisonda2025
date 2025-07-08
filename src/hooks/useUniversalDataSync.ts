@@ -227,9 +227,6 @@ export function useUniversalDataSync(): UniversalSyncState &
       setState((prev) => ({ ...prev, syncStatus: "syncing" }));
       await universalDataSync.deleteObra(id);
       setState((prev) => ({ ...prev, syncStatus: "connected" }));
-      console.log(
-        `✅ OBRA ELIMINADA: ${id} - alteração visível para todos os utilizadores`,
-      );
     } catch (error: any) {
       console.error("❌ Erro ao eliminar obra:", error);
       setState((prev) => ({
