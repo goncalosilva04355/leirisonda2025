@@ -513,9 +513,9 @@ export function useDataSync(): SyncState & SyncActions {
       },
     );
 
-    // Cleanup function - includes both global and realtime listeners
+    // Cleanup function - unsubscribe from user-isolated listeners
     return () => {
-      globalCleanup();
+      console.log("🧹 Limpando listeners de dados isolados por utilizador");
       unsubscribePools();
       unsubscribeWorks();
       unsubscribeMaintenance();
@@ -658,7 +658,7 @@ export function useDataSync(): SyncState & SyncActions {
   // Works
   const addWork = useCallback(
     withAutoSync(async (workData: Omit<Work, "id" | "createdAt">) => {
-      console.log("🔧 addWork called with data:", workData);
+      console.log("�� addWork called with data:", workData);
 
       // Firebase auth provides current user info automatically
       const currentUser = null; // Firebase will handle user tracking
