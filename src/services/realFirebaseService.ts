@@ -104,6 +104,20 @@ class RealFirebaseService {
     return this.isInitialized && this.database !== null && this.app !== null;
   }
 
+  // Get current user ID for isolated data
+  private getCurrentUserId(): string {
+    try {
+      const userData = localStorage.getItem("currentUser");
+      if (userData) {
+        const user = JSON.parse(userData);
+        return user.uid || user.id || "default_user";
+      }
+      return "default_user";
+    } catch {
+      return "default_user";
+    }
+  }
+
   // Test connection
   async testConnection(): Promise<boolean> {
     if (!this.isReady()) {
@@ -182,10 +196,11 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const poolRef = ref(this.database!, `shared/pools/${poolId}`); // Global shared location
+      const userId = this.getCurrentUserId();
+      const poolRef = ref(this.database!, `users/${userId}/pools/${poolId}`); // User-specific location
       await remove(poolRef);
       console.log(
-        `✅ Pool ${poolId} deleted from shared database - removed for all users`,
+        `✅ Pool ${poolId} deleted from user's isolated data - removed only for current user`,
       );
       return true;
     } catch (error) {
@@ -194,12 +209,13 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Works - GLOBAL SHARED DATA
+  // CRUD operations for Works - ISOLATED USER DATA
   async addWork(workData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const worksRef = ref(this.database!, "shared/works"); // Global shared location
+      const userId = this.getCurrentUserId();
+      const worksRef = ref(this.database!, `users/${userId}/works`); // User-specific location
       const newWorkRef = push(worksRef);
 
       // Sanitize data before sending to Firebase
@@ -208,13 +224,12 @@ class RealFirebaseService {
         id: newWorkRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true, // Mark as global data
-        visibleToAllUsers: true,
+        userId: this.getCurrentUserId(), // Mark as user-specific data
       });
 
       await set(newWorkRef, sanitizedData);
       console.log(
-        `✅ Work "${workData.title}" added to shared database - visible to all users`,
+        `✅ Work "${workData.title}" added to user's isolated data - only visible to current user`,
       );
       return newWorkRef.key;
     } catch (error) {
@@ -227,19 +242,19 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const workRef = ref(this.database!, `shared/works/${workId}`); // Global shared location
+      const userId = this.getCurrentUserId();
+      const workRef = ref(this.database!, `users/${userId}/works/${workId}`); // User-specific location
 
       // Sanitize data before sending to Firebase
       const sanitizedData = this.sanitizeForFirebase({
         ...workData,
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true,
-        visibleToAllUsers: true,
+        userId: this.getCurrentUserId(),
       });
 
       await update(workRef, sanitizedData);
       console.log(
-        `✅ Work ${workId} updated in shared database - visible to all users`,
+        `✅ Work ${workId} updated in user's isolated data - only visible to current user`,
       );
       return true;
     } catch (error) {
@@ -252,10 +267,11 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const workRef = ref(this.database!, `shared/works/${workId}`); // Global shared location
+      const userId = this.getCurrentUserId();
+      const workRef = ref(this.database!, `users/${userId}/works/${workId}`); // User-specific location
       await remove(workRef);
       console.log(
-        `✅ Work ${workId} deleted from shared database - removed for all users`,
+        `✅ Work ${workId} deleted from user's isolated data - removed only for current user`,
       );
       return true;
     } catch (error) {
@@ -264,12 +280,13 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Maintenance - GLOBAL SHARED DATA
+  // CRUD operations for Maintenance - ISOLATED USER DATA
   async addMaintenance(maintenanceData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const maintenanceRef = ref(this.database!, "shared/maintenance"); // Global shared location
+      const userId = this.getCurrentUserId();
+      const maintenanceRef = ref(this.database!, `users/${userId}/maintenance`); // User-specific location
       const newMaintenanceRef = push(maintenanceRef);
 
       // Sanitize data before sending to Firebase
@@ -278,12 +295,12 @@ class RealFirebaseService {
         id: newMaintenanceRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true, // Mark as global data
+        userId: this.getCurrentUserId(), // Mark as user-specific data
       });
 
       await set(newMaintenanceRef, sanitizedData);
       console.log(
-        `✅ Maintenance for "${maintenanceData.poolName}" added to shared database - visible to all users`,
+        `✅ Maintenance for "${maintenanceData.poolName}" added to user's isolated data - only visible to current user`,
       );
       return newMaintenanceRef.key;
     } catch (error) {
@@ -299,20 +316,21 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
+      const userId = this.getCurrentUserId();
       const maintenanceRef = ref(
         this.database!,
-        `shared/maintenance/${maintenanceId}`, // Global shared location
+        `users/${userId}/maintenance/${maintenanceId}`, // User-specific location
       );
       // Sanitize data before sending to Firebase
       const sanitizedData = this.sanitizeForFirebase({
         ...maintenanceData,
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true,
+        userId: this.getCurrentUserId(),
       });
 
       await update(maintenanceRef, sanitizedData);
       console.log(
-        `✅ Maintenance ${maintenanceId} updated in shared database - visible to all users`,
+        `✅ Maintenance ${maintenanceId} updated in user's isolated data - only visible to current user`,
       );
       return true;
     } catch (error) {
@@ -325,13 +343,14 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
+      const userId = this.getCurrentUserId();
       const maintenanceRef = ref(
         this.database!,
-        `shared/maintenance/${maintenanceId}`, // Global shared location
+        `users/${userId}/maintenance/${maintenanceId}`, // User-specific location
       );
       await remove(maintenanceRef);
       console.log(
-        `✅ Maintenance ${maintenanceId} deleted from shared database - removed for all users`,
+        `✅ Maintenance ${maintenanceId} deleted from user's isolated data - removed only for current user`,
       );
       return true;
     } catch (error) {
@@ -340,12 +359,13 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Clients - GLOBAL SHARED DATA
+  // CRUD operations for Clients - ISOLATED USER DATA
   async addClient(clientData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const clientsRef = ref(this.database!, "shared/clients"); // Global shared location
+      const userId = this.getCurrentUserId();
+      const clientsRef = ref(this.database!, `users/${userId}/clients`); // User-specific location
       const newClientRef = push(clientsRef);
 
       // Sanitize data before sending to Firebase
@@ -354,12 +374,12 @@ class RealFirebaseService {
         id: newClientRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true, // Mark as global data
+        userId: this.getCurrentUserId(), // Mark as user-specific data
       });
 
       await set(newClientRef, sanitizedData);
       console.log(
-        `✅ Client "${clientData.name}" added to shared database - visible to all users`,
+        `✅ Client "${clientData.name}" added to user's isolated data - only visible to current user`,
       );
       return newClientRef.key;
     } catch (error) {
@@ -372,18 +392,22 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const clientRef = ref(this.database!, `shared/clients/${clientId}`); // Global shared location
+      const userId = this.getCurrentUserId();
+      const clientRef = ref(
+        this.database!,
+        `users/${userId}/clients/${clientId}`,
+      ); // User-specific location
 
       // Sanitize data before sending to Firebase
       const sanitizedData = this.sanitizeForFirebase({
         ...clientData,
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true,
+        userId: this.getCurrentUserId(),
       });
 
       await update(clientRef, sanitizedData);
       console.log(
-        `✅ Client ${clientId} updated in shared database - visible to all users`,
+        `✅ Client ${clientId} updated in user's isolated data - only visible to current user`,
       );
       return true;
     } catch (error) {
@@ -396,10 +420,14 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const clientRef = ref(this.database!, `shared/clients/${clientId}`); // Global shared location
+      const userId = this.getCurrentUserId();
+      const clientRef = ref(
+        this.database!,
+        `users/${userId}/clients/${clientId}`,
+      ); // User-specific location
       await remove(clientRef);
       console.log(
-        `✅ Client ${clientId} deleted from shared database - removed for all users`,
+        `✅ Client ${clientId} deleted from user's isolated data - removed only for current user`,
       );
       return true;
     } catch (error) {
@@ -426,11 +454,14 @@ class RealFirebaseService {
   onWorksChange(callback: (works: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const worksRef = ref(this.database!, "shared/works"); // Global shared data
+    const userId = this.getCurrentUserId();
+    const worksRef = ref(this.database!, `users/${userId}/works`); // User-specific data
     const unsubscribe = onValue(worksRef, (snapshot) => {
       const data = snapshot.val();
       const works = data ? Object.values(data) : [];
-      console.log(`🔄 SYNC: ${works.length} works synced across all users`);
+      console.log(
+        `🔄 SYNC: ${works.length} works synced for current user only`,
+      );
       callback(works);
     });
 
@@ -440,12 +471,13 @@ class RealFirebaseService {
   onMaintenanceChange(callback: (maintenance: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const maintenanceRef = ref(this.database!, "shared/maintenance"); // Global shared data
+    const userId = this.getCurrentUserId();
+    const maintenanceRef = ref(this.database!, `users/${userId}/maintenance`); // User-specific data
     const unsubscribe = onValue(maintenanceRef, (snapshot) => {
       const data = snapshot.val();
       const maintenance = data ? Object.values(data) : [];
       console.log(
-        `🔄 SYNC: ${maintenance.length} maintenance records synced across all users`,
+        `🔄 SYNC: ${maintenance.length} maintenance records synced for current user only`,
       );
       callback(maintenance);
     });
@@ -456,11 +488,14 @@ class RealFirebaseService {
   onClientsChange(callback: (clients: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const clientsRef = ref(this.database!, "shared/clients"); // Global shared data
+    const userId = this.getCurrentUserId();
+    const clientsRef = ref(this.database!, `users/${userId}/clients`); // User-specific data
     const unsubscribe = onValue(clientsRef, (snapshot) => {
       const data = snapshot.val();
       const clients = data ? Object.values(data) : [];
-      console.log(`🔄 SYNC: ${clients.length} clients synced across all users`);
+      console.log(
+        `🔄 SYNC: ${clients.length} clients synced for current user only`,
+      );
       callback(clients);
     });
 

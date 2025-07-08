@@ -24,6 +24,7 @@ import { DataManagementPanel } from "../components/DataManagementPanel";
 import { FirebaseConfig } from "../components/FirebaseConfig";
 import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
 import { AutoSyncDemo } from "../components/AutoSyncDemo";
+import { DataSharingStatus } from "../components/DataSharingStatus";
 import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
@@ -65,7 +66,8 @@ type AdminSection =
   | "login-fix"
   | "user-deletion"
   | "notification-demo"
-  | "nuclear-cleanup";
+  | "nuclear-cleanup"
+  | "data-sharing-status";
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
   const [currentSection, setCurrentSection] =
@@ -181,6 +183,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       color: "bg-emerald-500",
     },
     {
+      id: "data-sharing-status" as AdminSection,
+      title: "Diagnóstico de Partilha",
+      description: "Verificar se todos os utilizadores veem os mesmos dados",
+      icon: Users,
+      color: "bg-blue-600",
+    },
+    {
       id: "phone-settings" as AdminSection,
       title: "Telefone & Navegação",
       description: "Marcação automática e redirecionamento para Maps",
@@ -262,6 +271,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <CrossDeviceUserManager />;
       case "auto-sync-demo":
         return <AutoSyncDemo />;
+      case "data-sharing-status":
+        return (
+          <DataSharingStatus
+            onFixApplied={() => {
+              console.log("✅ Partilha de dados corrigida no painel admin");
+            }}
+          />
+        );
       case "phone-settings":
         return <PhoneSettings />;
       case "mobile-settings":

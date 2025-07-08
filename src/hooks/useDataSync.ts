@@ -197,20 +197,20 @@ export function useDataSync(): SyncState & SyncActions {
     lastSync: null,
   });
 
-  // MIGRAÇÃO GRADUAL PARA ISOLAMENTO DE DADOS
+  // PARTILHA GLOBAL PARA TODOS OS UTILIZADORES
   useEffect(() => {
-    console.log("🔄 MIGRAÇÃO GRADUAL PARA ISOLAMENTO DE DADOS");
-    console.log("✅ Dados existentes: Preservados e acessíveis");
-    console.log("🔒 Novos dados: Terão propriedade específica por utilizador");
+    console.log("🌐 PARTILHA GLOBAL ATIVADA");
+    console.log("✅ Todos os utilizadores veem todas as obras");
+    console.log("✅ Dados partilhados entre utilizadores");
   }, []);
 
-  // PARTILHA GLOBAL SEMPRE ATIVA - nunca desabilitar
+  // PARTILHA GLOBAL SEMPRE ATIVA - todos os utilizadores veem todas as obras
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  // MIGRAÇÃO GRADUAL - preservando dados existentes
+  // DADOS PARTILHADOS - todos os utilizadores veem os mesmos dados
   useEffect(() => {
     console.log(
-      "🔄 DADOS EM MIGRAÇÃO - Preservando acesso aos dados existentes:",
+      "🌐 DADOS PARTILHADOS ENTRE UTILIZADORES - Contagem dos dados globais:",
       {
         works: state.works.length,
         pools: state.pools.length,
@@ -220,7 +220,7 @@ export function useDataSync(): SyncState & SyncActions {
     );
   }, [state.works, state.pools, state.maintenance, state.clients]);
 
-  // Hook para sincronização automática em mutações - with debugging
+  // Hook para sincroniza��ão automática em mutações - with debugging
   const withAutoSync = <T extends any[], R>(
     fn: (...args: T) => R | Promise<R>,
   ) => {
@@ -408,7 +408,7 @@ export function useDataSync(): SyncState & SyncActions {
     }
   }, [syncEnabled]);
 
-  // Real-time listeners with cross-user sync
+  // Real-time listeners with cross-user sync for global data sharing
   useEffect(() => {
     if (!syncEnabled) {
       return;
@@ -475,7 +475,7 @@ export function useDataSync(): SyncState & SyncActions {
         setState((prev) => {
           if (clients.length === 0 && prev.clients.length > 0) {
             console.warn(
-              "🛡️ BLOCKED: Tried to overwrite clients with empty array",
+              "���️ BLOCKED: Tried to overwrite clients with empty array",
             );
             return prev;
           }
@@ -552,7 +552,7 @@ export function useDataSync(): SyncState & SyncActions {
           // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
           if (maintenance.length === 0 && prev.maintenance.length > 0) {
             console.warn(
-              "🛡️ BLOCKED: Firebase tried to overwrite maintenance with empty array",
+              "���️ BLOCKED: Firebase tried to overwrite maintenance with empty array",
             );
             return prev; // Keep existing data
           }

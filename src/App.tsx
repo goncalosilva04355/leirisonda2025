@@ -38,12 +38,6 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
-import { SharedDataManager } from "./components/SharedDataManager";
-import { DataSharingFixManager } from "./components/DataSharingFixManager";
-import { UserDataSharingFix } from "./components/UserDataSharingFix";
-import { DataSharingFixButton } from "./components/DataSharingFixButton";
-import { GlobalDataShareDiagnostic } from "./components/GlobalDataShareDiagnostic";
-import { DataVisibilityFix } from "./components/DataVisibilityFix";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -149,7 +143,6 @@ function App() {
   const [settingsPassword, setSettingsPassword] = useState("");
   const [settingsPasswordError, setSettingsPasswordError] = useState("");
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
-  const [showDataSharingFix, setShowDataSharingFix] = useState(false);
   const [advancedPassword, setAdvancedPassword] = useState("");
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
@@ -817,7 +810,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("🧭 Navigating to dashboard");
+            console.log("�� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -1066,7 +1059,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenções Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç��es Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
 PRÓXIMAS AÇÕES:
@@ -1436,7 +1429,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("🗺️ Opening Google Maps:", mapsUrl);
+      console.log("��️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -2995,7 +2988,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��������� {maint.clientContact}
+                                        ���������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -4653,7 +4646,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenção
+                          Frequência de Manutenç��o
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -5680,16 +5673,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Data Sharing Fix Button - Only for Super Admin */}
-                {currentUser?.role === "super_admin" && (
-                  <DataSharingFixButton currentUser={currentUser} />
-                )}
-
-                {/* User Data Sharing Diagnostics - Only for Super Admin */}
-                {currentUser?.role === "super_admin" && (
-                  <UserDataSharingFix currentUser={currentUser} />
-                )}
-
                 {/* Data Management Section - Only for Super Admin */}
                 {currentUser?.role === "super_admin" && (
                   <div className="bg-white rounded-lg p-6 shadow-sm">
@@ -5732,7 +5715,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠️ ATENÇÃO: Esta operação é irreversível!
+                              ⚠️ ATENÇÃO: Esta operação é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -7755,7 +7738,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingMaintenance?.technician}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Nome do técnico"
+                          placeholder="Nome do t��cnico"
                           required
                         />
                       </div>
@@ -8130,7 +8113,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                Partilhar Relatório
+                Partilhar Relat��rio
               </h2>
               <button
                 onClick={() => {
@@ -8514,18 +8497,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManager>
         <div className="min-h-screen bg-gray-50">
-          {/* Correção de Visibilidade de Dados - crítico para partilha entre utilizadores */}
-          {isAuthenticated && currentUser && (
-            <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
-              <DataVisibilityFix
-                onFixCompleted={() => {
-                  console.log(
-                    "✅ Correção de visibilidade aplicada - dados agora partilhados",
-                  );
-                }}
-              />
-            </div>
-          )}
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
@@ -9185,29 +9156,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <InstallPrompt />
 
           {/* Data Sharing Fix Manager */}
-          {showDataSharingFix && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-                <div className="flex items-center justify-between p-6 border-b">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    🚨 Resolver Problema: Dados Não Partilhados Entre
-                    Utilizadores
-                  </h2>
-                  <button
-                    onClick={() => setShowDataSharingFix(false)}
-                    className="p-2 hover:bg-gray-100 rounded-lg"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-                <div className="p-6">
-                  <DataSharingFixManager
-                    onClose={() => setShowDataSharingFix(false)}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Admin Login Modal */}
           {showAdminLogin && !isAdminAuthenticated && (
