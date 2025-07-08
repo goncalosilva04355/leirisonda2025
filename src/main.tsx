@@ -10,59 +10,8 @@ import "./index.css";
 // Restauração imediata de utilizadores
 import "./utils/immediateUserRestore";
 
-// ReadableStream polyfill for Firebase compatibility
-if (
-  typeof window !== "undefined" &&
-  (!window.ReadableStream || !window.ReadableStream.prototype.getReader)
-) {
-  console.log("🔧 Adding ReadableStream polyfill for Firebase compatibility");
-  import("web-streams-polyfill/dist/ponyfill")
-    .then((polyfill: any) => {
-      const { ReadableStream, WritableStream, TransformStream } = polyfill;
-      if (!window.ReadableStream) {
-        window.ReadableStream = ReadableStream;
-      }
-      if (!window.WritableStream) {
-        window.WritableStream = WritableStream;
-      }
-      if (!window.TransformStream) {
-        window.TransformStream = TransformStream;
-      }
-      console.log("✅ Web streams polyfill loaded");
-    })
-    .catch((error) => {
-      console.warn("Failed to load web streams polyfill:", error);
-      // Fallback to basic implementation
-      if (!window.ReadableStream) {
-        window.ReadableStream = class ReadableStream {
-          constructor(source) {
-            this._source = source;
-            this._reader = null;
-            this._locked = false;
-          }
-
-          getReader() {
-            if (this._locked) {
-              throw new TypeError("ReadableStream is locked");
-            }
-            this._locked = true;
-            this._reader = {
-              read: () => Promise.resolve({ done: true, value: undefined }),
-              cancel: () => Promise.resolve(),
-              releaseLock: () => {
-                this._locked = false;
-              },
-            };
-            return this._reader;
-          }
-
-          cancel() {
-            return Promise.resolve();
-          }
-        };
-      }
-    });
-}
+// ReadableStream polyfill is handled by ./polyfills.ts
+console.log("🔧 ReadableStream polyfill loaded via polyfills.ts");
 
 // Chrome-specific fixes for PWA compatibility
 if (typeof window !== "undefined") {
