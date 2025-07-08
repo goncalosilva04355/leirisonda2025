@@ -46,13 +46,7 @@ import "./utils/clearModalStates";
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
-import { AutoSyncProvider } from "./components/AutoSyncProvider";
-import { InstantSyncManager } from "./components/InstantSyncManager";
-import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
-import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
-import { syncManager } from "./utils/syncManager";
-import { clearQuotaProtection } from "./utils/clearQuotaProtection";
+// Componentes complexos removidos - sistema simplificado
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
