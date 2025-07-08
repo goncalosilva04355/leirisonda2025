@@ -436,7 +436,6 @@ export function useUniversalDataSync(): UniversalSyncState &
   // Reset da sincronização
   const resetSync = useCallback(async (): Promise<void> => {
     try {
-      console.log("🔄 REINICIANDO SINCRONIZAÇÃO UNIVERSAL...");
       setState((prev) => ({
         ...prev,
         isLoading: true,
@@ -452,7 +451,6 @@ export function useUniversalDataSync(): UniversalSyncState &
 
       if (initialized) {
         await forceSyncAll();
-        console.log("✅ SINCRONIZAÇÃO REINICIADA COM SUCESSO");
       } else {
         setState((prev) => ({
           ...prev,
@@ -462,7 +460,6 @@ export function useUniversalDataSync(): UniversalSyncState &
         }));
       }
     } catch (error: any) {
-      console.error("❌ Erro ao reiniciar sincronização:", error);
       setState((prev) => ({
         ...prev,
         error: error.message,
