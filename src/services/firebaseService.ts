@@ -300,8 +300,7 @@ export const userService = {
 export const poolService = {
   // Listen to real-time changes
   async subscribeToPools(callback: (pools: Pool[]) => void) {
-    const firebaseAvailable = await isFirebaseAvailable();
-    if (!firebaseAvailable) {
+    if (!isFirebaseAvailable()) {
       const pools = JSON.parse(localStorage.getItem("pools") || "[]");
       callback(pools);
       return () => {};
