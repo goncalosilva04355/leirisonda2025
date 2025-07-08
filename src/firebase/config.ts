@@ -45,16 +45,34 @@ const getFirebaseApp = () => {
     // Verificar apps existentes primeiro
     const existingApps = getApps();
     if (existingApps.length > 0) {
-      console.log(
-        "🔄 Usando Firebase app existente (evitando conflitos de stream)",
-      );
-      return existingApps[0];
+      const existingApp = existingApps[0];
+
+      // Validar se o app existente está em bom estado
+      if (existingApp && existingApp.options && existingApp.name) {
+        console.log(
+          "🔄 Usando Firebase app existente validado (evitando conflitos de stream)",
+        );
+        return existingApp;
+      } else {
+        console.warn("⚠️ App existente em estado inválido, removendo...");
+        try {
+          deleteApp(existingApp);
+        } catch (deleteError) {
+          console.warn("Failed to delete invalid app:", deleteError);
+        }
+      }
     }
 
     // Aguardar antes de inicializar para evitar conflitos
     console.log("🚀 Inicializando novo Firebase app...");
     const app = initializeApp(firebaseConfig);
-    console.log("✅ Firebase app inicializado com sucesso");
+
+    // Validar o app recém-criado
+    if (!app || !app.options || !app.name) {
+      throw new Error("Firebase app created but is in invalid state");
+    }
+
+    console.log("✅ Firebase app inicializado e validado com sucesso");
     return app;
   } catch (error: any) {
     console.error("❌ Erro na inicialização do Firebase:", error);
@@ -63,8 +81,11 @@ const getFirebaseApp = () => {
     if (error.code === "app/duplicate-app") {
       const existingApps = getApps();
       if (existingApps.length > 0) {
-        console.log("🔄 Usando app existente após erro de duplicação");
-        return existingApps[0];
+        const existingApp = existingApps[0];
+        if (existingApp && existingApp.options && existingApp.name) {
+          console.log("🔄 Usando app existente após erro de duplicação");
+          return existingApp;
+        }
       }
     }
 
