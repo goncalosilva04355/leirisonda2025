@@ -437,18 +437,15 @@ class RealFirebaseService {
     }
   }
 
-  // Real-time listeners for isolated user data
+  // Real-time listeners with enhanced cross-user sync
   onPoolsChange(callback: (pools: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const userId = this.getCurrentUserId();
-    const poolsRef = ref(this.database!, `users/${userId}/pools`); // User-specific data
+    const poolsRef = ref(this.database!, "shared/pools"); // Global shared data
     const unsubscribe = onValue(poolsRef, (snapshot) => {
       const data = snapshot.val();
       const pools = data ? Object.values(data) : [];
-      console.log(
-        `🔄 SYNC: ${pools.length} pools synced for current user only`,
-      );
+      console.log(`🔄 SYNC: ${pools.length} pools synced across all users`);
       callback(pools);
     });
 
