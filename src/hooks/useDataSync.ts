@@ -387,87 +387,14 @@ export function useDataSync(): SyncState & SyncActions {
     }
   }, [syncEnabled]);
 
-  // Real-time listeners with cross-user sync
+  // Real-time listeners - isolated per user (no cross-user sharing)
   useEffect(() => {
     if (!syncEnabled) {
+      console.log(
+        "🔒 SINCRONIZAÇÃO DESATIVADA - Dados isolados por utilizador",
+      );
       return;
     }
-
-    // Setup global data listeners for cross-user data sharing
-    const globalCleanup = crossUserDataSync.setupGlobalDataListeners({
-      onPoolsChange: (pools) => {
-        setState((prev) => {
-          if (pools.length === 0 && prev.pools.length > 0) {
-            console.warn(
-              "🛡️ BLOCKED: Tried to overwrite pools with empty array",
-            );
-            return prev;
-          }
-          if (pools.length >= prev.pools.length) {
-            console.log(
-              `🔄 GLOBAL SYNC: Pools updated (${pools.length} items) - visible to all users`,
-            );
-            return { ...prev, pools };
-          }
-          return prev;
-        });
-      },
-      onWorksChange: (works) => {
-        setState((prev) => {
-          if (works.length === 0 && prev.works.length > 0) {
-            console.warn(
-              "🛡️ BLOCKED: Tried to overwrite works with empty array",
-            );
-            return prev;
-          }
-          if (works.length >= prev.works.length) {
-            console.log(
-              `🔄 GLOBAL SYNC: Works updated (${works.length} items) - visible to all users`,
-            );
-            return { ...prev, works };
-          }
-          return prev;
-        });
-      },
-      onMaintenanceChange: (maintenance) => {
-        setState((prev) => {
-          if (maintenance.length === 0 && prev.maintenance.length > 0) {
-            console.warn(
-              "🛡️ BLOCKED: Tried to overwrite maintenance with empty array",
-            );
-            return prev;
-          }
-          const today = new Date();
-          const futureMaintenance = maintenance.filter(
-            (m) => new Date(m.scheduledDate) >= today,
-          );
-          if (maintenance.length >= prev.maintenance.length) {
-            console.log(
-              `🔄 GLOBAL SYNC: Maintenance updated (${maintenance.length} items) - visible to all users`,
-            );
-            return { ...prev, maintenance, futureMaintenance };
-          }
-          return prev;
-        });
-      },
-      onClientsChange: (clients) => {
-        setState((prev) => {
-          if (clients.length === 0 && prev.clients.length > 0) {
-            console.warn(
-              "🛡️ BLOCKED: Tried to overwrite clients with empty array",
-            );
-            return prev;
-          }
-          if (clients.length >= prev.clients.length) {
-            console.log(
-              `🔄 GLOBAL SYNC: Clients updated (${clients.length} items) - visible to all users`,
-            );
-            return { ...prev, clients };
-          }
-          return prev;
-        });
-      },
-    });
 
     // Fallback to original listeners if global sync not available
     if (!realFirebaseService.isReady()) {
