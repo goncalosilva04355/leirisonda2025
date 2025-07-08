@@ -182,6 +182,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       color: "bg-emerald-500",
     },
     {
+      id: "data-sharing-status" as AdminSection,
+      title: "Diagnóstico de Partilha",
+      description: "Verificar se todos os utilizadores veem os mesmos dados",
+      icon: Users,
+      color: "bg-blue-600",
+    },
+    {
       id: "phone-settings" as AdminSection,
       title: "Telefone & Navegação",
       description: "Marcação automática e redirecionamento para Maps",
