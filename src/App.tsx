@@ -69,9 +69,6 @@ import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
-import { UniversalSyncMonitor } from "./components/UniversalSyncMonitor";
-import { UniversalSyncActivator } from "./components/UniversalSyncActivator";
-import { UniversalSyncNotification } from "./components/UniversalSyncNotification";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -1519,7 +1516,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "�����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
@@ -3066,7 +3063,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    ��� {maint.location}
+                                    ����� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -3595,7 +3592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠️ Nenhum utilizador encontrado. Vá à Área de
+                                ��️ Nenhum utilizador encontrado. Vá à Área de
                                 Administração → "🔧 Corre��ão de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
