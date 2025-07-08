@@ -652,7 +652,18 @@ class UniversalDataSyncService {
    */
   async getAllUniversalData(): Promise<UniversalDataState> {
     if (!isFirebaseReady() || !db) {
-      throw new Error("Firebase não disponível");
+      handleFirebaseUnavailable("getAllUniversalData");
+
+      // Return empty state instead of throwing error
+      return {
+        obras: [],
+        manutencoes: [],
+        piscinas: [],
+        clientes: [],
+        totalItems: 0,
+        lastSync: new Date().toISOString(),
+        isGloballyShared: true,
+      };
     }
 
     try {
