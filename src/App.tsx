@@ -244,14 +244,15 @@ function App() {
       );
     };
   }, []);
-  // DADOS UNIVERSAIS - Partilhados entre todos os utilizadores
+  // DADOS SIMPLES - Todos os utilizadores acedem aos mesmos dados
   const {
-    obras,
-    manutencoes,
-    piscinas,
-    clientes,
-    isLoading: syncLoading,
-    lastSync,
+    users,
+    pools,
+    maintenance,
+    futureMaintenance,
+    works,
+    clients,
+    isLoading: isDataLoading,
     error: syncError,
     addObra,
     addManutencao,
