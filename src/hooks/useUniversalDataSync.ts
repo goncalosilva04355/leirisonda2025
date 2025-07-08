@@ -108,14 +108,7 @@ export function useUniversalDataSync(): UniversalSyncState &
             "⚠️ Inicialização timeout ou falhou - carregando dados locais",
           );
           // Load local data as fallback
-          const localData = {
-            obras: JSON.parse(localStorage.getItem("works") || "[]"),
-            manutencoes: JSON.parse(
-              localStorage.getItem("maintenance") || "[]",
-            ),
-            piscinas: JSON.parse(localStorage.getItem("pools") || "[]"),
-            clientes: JSON.parse(localStorage.getItem("clients") || "[]"),
-          };
+          const localData = loadLocalData();
 
           const totalItems = Object.values(localData).reduce(
             (total, items) => total + items.length,
@@ -429,7 +422,7 @@ export function useUniversalDataSync(): UniversalSyncState &
       );
       return id;
     } catch (error: any) {
-      console.error("�� Erro ao adicionar piscina:", error);
+      console.error("❌ Erro ao adicionar piscina:", error);
       setState((prev) => ({
         ...prev,
         error: error.message,
