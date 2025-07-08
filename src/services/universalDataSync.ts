@@ -72,7 +72,7 @@ class UniversalDataSyncService {
    */
   private async migrateToUniversalSharing(): Promise<void> {
     if (this.syncInProgress) {
-      console.log("⏳ Migração já em progresso...");
+      console.log("�� Migração já em progresso...");
       return;
     }
 
@@ -643,7 +643,31 @@ class UniversalDataSyncService {
    */
   async getAllUniversalData(): Promise<UniversalDataState> {
     if (!isFirebaseReady() || !db) {
-      throw new Error("Firebase não disponível");
+      console.warn(
+        "❌ Firebase não disponível, carregando dados locais como fallback",
+      );
+
+      // Load local data as fallback
+      const localData = {
+        obras: this.getLocalDataSafe("works") || [],
+        manutencoes: this.getLocalDataSafe("maintenance") || [],
+        piscinas: this.getLocalDataSafe("pools") || [],
+        clientes: this.getLocalDataSafe("clients") || [],
+      };
+
+      const totalItems = Object.values(localData).reduce(
+        (total, items) => total + items.length,
+        0,
+      );
+
+      console.log(`📱 Dados locais carregados: ${totalItems} registos total`);
+
+      return {
+        ...localData,
+        totalItems,
+        lastSync: new Date().toISOString(),
+        isGloballyShared: true,
+      };
     }
 
     try {
