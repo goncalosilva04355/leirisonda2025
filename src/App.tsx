@@ -169,22 +169,23 @@ function App() {
     return () => clearInterval(backupInterval);
   }, []);
 
-  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
+  // DADOS GLOBAIS SIMPLES - Log dos dados partilhados
   useEffect(() => {
-    console.log("🌐 SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
-      obras: universalSync.obras.length,
-      manutencoes: universalSync.manutencoes.length,
-      piscinas: universalSync.piscinas.length,
-      clientes: universalSync.clientes.length,
-      total: universalSync.totalItems,
-      status: universalSync.syncStatus,
+    console.log("🌐 DADOS GLOBAIS SIMPLES:", {
+      obras: dataSync.works.length,
+      manutencoes: dataSync.maintenance.length,
+      piscinas: dataSync.pools.length,
+      clientes: dataSync.clients.length,
+      utilizadores: dataSync.users.length,
+      total: dataSync.totalItems,
     });
   }, [
-    universalSync.obras,
-    universalSync.manutencoes,
-    universalSync.piscinas,
-    universalSync.clientes,
-    universalSync.syncStatus,
+    dataSync.works,
+    dataSync.maintenance,
+    dataSync.pools,
+    dataSync.clients,
+    dataSync.users,
+    dataSync.totalItems,
   ]);
 
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
@@ -460,7 +461,7 @@ function App() {
             setCurrentUser(user);
             setIsAuthenticated(true);
 
-            // Auto-navegaç��o removida para evitar loop de login
+            // Auto-navegação removida para evitar loop de login
             console.log(
               "✅ User authenticated - avoiding auto-navigation loop",
             );
@@ -5841,7 +5842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
                         <li>• Histórico de manuten����ões</li>
-                        <li>• Próximas interven��ões</li>
+                        <li>• Próximas interven����ões</li>
                       </ul>
                     </div>
                     <button
