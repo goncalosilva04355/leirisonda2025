@@ -396,8 +396,8 @@ export const poolService = {
 // Maintenance Services
 export const maintenanceService = {
   // Listen to real-time changes
-  async subscribeToMaintenance(callback: (maintenance: Maintenance[]) => void) {
-    if (!(await isFirebaseAvailable())) {
+  subscribeToMaintenance(callback: (maintenance: Maintenance[]) => void) {
+    if (!isFirebaseAvailable()) {
       const maintenance = JSON.parse(
         localStorage.getItem("maintenance") || "[]",
       );
