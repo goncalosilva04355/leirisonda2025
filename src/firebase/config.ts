@@ -414,12 +414,14 @@ console.log("🚀 Starting immediate Firebase initialization...");
 try {
   // Initialize Firebase app immediately
   const existingApps = getApps();
+  console.log("📊 Existing Firebase apps:", existingApps.length);
+
   if (existingApps.length === 0) {
     app = initializeApp(firebaseConfig);
-    console.log("✅ Firebase app initialized synchronously");
+    console.log("✅ Firebase app initialized synchronously", app?.name);
   } else {
     app = existingApps[0];
-    console.log("✅ Using existing Firebase app");
+    console.log("✅ Using existing Firebase app", app?.name);
   }
 
   // Initialize services immediately
@@ -427,9 +429,14 @@ try {
     db = getFirestore(app);
     auth = getAuth(app);
     console.log("✅ Firebase services initialized synchronously");
+    console.log("🔥 DB available:", !!db);
+    console.log("🔐 Auth available:", !!auth);
+    console.log("📱 Firebase ready check:", !!(app && auth && db));
+  } else {
+    console.error("❌ Firebase app is null after initialization");
   }
 } catch (error) {
-  console.warn("⚠️ Firebase synchronous initialization failed:", error);
+  console.error("❌ Firebase synchronous initialization failed:", error);
   app = null;
   db = null;
   auth = null;
