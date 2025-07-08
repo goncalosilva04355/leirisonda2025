@@ -126,8 +126,7 @@ export function useUniversalDataSync(): UniversalSyncState &
   useEffect(() => {
     if (!universalDataSync.isReady()) return;
 
-    console.log("📡 CONFIGURANDO LISTENERS UNIVERSAIS EM TEMPO REAL");
-
+    // Configurar listeners silenciosos
     const cleanup = universalDataSync.setupUniversalListeners({
       onObrasChange: (obras) => {
         setState((prev) => ({
@@ -141,9 +140,6 @@ export function useUniversalDataSync(): UniversalSyncState &
           lastSync: new Date().toISOString(),
           syncStatus: "connected",
         }));
-        console.log(
-          `⚒️ OBRAS SINCRONIZADAS: ${obras.length} visíveis para todos os utilizadores`,
-        );
       },
       onManutencoesChange: (manutencoes) => {
         setState((prev) => ({
@@ -157,9 +153,6 @@ export function useUniversalDataSync(): UniversalSyncState &
           lastSync: new Date().toISOString(),
           syncStatus: "connected",
         }));
-        console.log(
-          `🔧 MANUTENÇÕES SINCRONIZADAS: ${manutencoes.length} visíveis para todos os utilizadores`,
-        );
       },
       onPiscinasChange: (piscinas) => {
         setState((prev) => ({
@@ -173,9 +166,6 @@ export function useUniversalDataSync(): UniversalSyncState &
           lastSync: new Date().toISOString(),
           syncStatus: "connected",
         }));
-        console.log(
-          `🏊 PISCINAS SINCRONIZADAS: ${piscinas.length} visíveis para todos os utilizadores`,
-        );
       },
       onClientesChange: (clientes) => {
         setState((prev) => ({
@@ -189,15 +179,8 @@ export function useUniversalDataSync(): UniversalSyncState &
           lastSync: new Date().toISOString(),
           syncStatus: "connected",
         }));
-        console.log(
-          `👥 CLIENTES SINCRONIZADOS: ${clientes.length} visíveis para todos os utilizadores`,
-        );
       },
     });
-
-    console.log(
-      "✅ LISTENERS UNIVERSAIS ATIVOS - Sincronização em tempo real para todos",
-    );
 
     return cleanup;
   }, [universalDataSync.isReady()]);
