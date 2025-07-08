@@ -323,13 +323,39 @@ const initializeFirebaseServices = async (): Promise<void> => {
   }
 };
 
-// COMMENTED OUT: Eager initialization causing getImmediate errors
-// firebaseInitPromise = initializeFirebaseServices();
+// Simplified direct initialization
+console.log("🔥 Inicializando Firebase diretamente...");
 
-// NEW APPROACH: Lazy loading Firebase services
-console.log(
-  "🔥 Switching to lazy loading approach to avoid getImmediate errors",
-);
+// Initialize Firebase immediately
+(async () => {
+  try {
+    app = getFirebaseApp();
+    if (app) {
+      // Give it a moment to settle
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Initialize Firestore
+      try {
+        db = getFirestore(app);
+        console.log("✅ Firestore inicializado diretamente");
+      } catch (error) {
+        console.warn("⚠️ Erro ao inicializar Firestore:", error);
+        db = null;
+      }
+
+      // Initialize Auth
+      try {
+        auth = getAuth(app);
+        console.log("✅ Firebase Auth inicializado diretamente");
+      } catch (error) {
+        console.warn("⚠️ Erro ao inicializar Auth:", error);
+        auth = null;
+      }
+    }
+  } catch (error) {
+    console.error("❌ Erro na inicialização direta do Firebase:", error);
+  }
+})();
 
 // Lazy Firebase App initialization
 const ensureFirebaseApp = async (): Promise<any> => {
