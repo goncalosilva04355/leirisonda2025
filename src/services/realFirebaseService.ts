@@ -231,7 +231,7 @@ class RealFirebaseService {
 
       await set(newWorkRef, sanitizedData);
       console.log(
-        `✅ Work "${workData.title}" added to shared database - visible to all users`,
+        `✅ Work "${workData.title}" added to user's isolated data - only visible to current user`,
       );
       return newWorkRef.key;
     } catch (error) {
