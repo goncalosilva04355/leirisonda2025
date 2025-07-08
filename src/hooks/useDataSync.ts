@@ -14,29 +14,8 @@ realFirebaseService.initialize();
  * Check if data is in shared structure and automatically prefer shared data
  */
 const detectAndUseSharedData = async () => {
-  try {
-    const sharedData = await realFirebaseService.syncAllData();
-    if (sharedData) {
-      const totalSharedItems = Object.values(sharedData).reduce(
-        (total: number, items: any[]) => total + items.length,
-        0,
-      );
-
-      if (totalSharedItems > 0) {
-        console.log(
-          `🌐 SHARED DATA DETECTED: ${totalSharedItems} items found in global shared structure`,
-        );
-        console.log(
-          "✅ Using shared data structure - all users will see the same data",
-        );
-        return sharedData;
-      }
-    }
-    return null;
-  } catch (error) {
-    console.warn("Error detecting shared data:", error);
-    return null;
-  }
+  console.log("🔒 DADOS ISOLADOS POR UTILIZADOR - Partilha desativada");
+  return null; // Sempre retorna null para evitar dados partilhados
 };
 
 // Simulate data types
