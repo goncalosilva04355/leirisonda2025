@@ -99,6 +99,27 @@ function App() {
 
   // Debug logging disabled for production
 
+  // Firebase initialization check
+  useEffect(() => {
+    const initializeFirebase = async () => {
+      try {
+        const { waitForFirebaseInit } = await import("./firebase/config");
+        const initialized = await waitForFirebaseInit();
+        setFirebaseInitialized(true);
+        if (initialized) {
+          console.log("✅ Firebase initialized successfully");
+        } else {
+          console.log("⚠️ Firebase initialization failed - using local mode");
+        }
+      } catch (error) {
+        console.warn("Firebase initialization error:", error);
+        setFirebaseInitialized(true); // Allow app to continue in local mode
+      }
+    };
+
+    initializeFirebase();
+  }, []);
+
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
     // Restaurar utilizadores automaticamente se necessário
@@ -324,9 +345,7 @@ function App() {
         );
         setUsers(parsedUsers);
       } else {
-        console.log(
-          "���� No saved users found, initializing with default users",
-        );
+        console.log("📝 No saved users found, initializing with default users");
         // Initialize with default admin user and save to localStorage
         const defaultUsers = [
           {
@@ -6363,7 +6382,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente ������ base de dados
+                        Adicionar cliente ���� base de dados
                       </p>
                     </div>
                   </div>
