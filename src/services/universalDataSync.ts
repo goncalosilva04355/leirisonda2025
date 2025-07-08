@@ -448,10 +448,6 @@ class UniversalDataSyncService {
    * Adicionar nova obra universal
    */
   async addObra(obraData: any): Promise<string> {
-    if (!isFirebaseReady() || !db) {
-      throw new Error("Firebase não disponível");
-    }
-
     const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
     const obra = {
       ...obraData,
@@ -462,11 +458,46 @@ class UniversalDataSyncService {
       lastSync: new Date().toISOString(),
     };
 
-    await setDoc(doc(db!, "universal_obras", id), obra);
-    console.log(
-      `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
-    );
-    return id;
+    if (!isFirebaseReady() || !db) {
+      console.warn("⚠️ Firebase não disponível - salvando obra localmente");
+      // Save to localStorage as fallback
+      const localWorks = this.getLocalDataSafe("works");
+      localWorks.push(obra);
+      localStorage.setItem("works", JSON.stringify(localWorks));
+      console.log(
+        `📱 OBRA SALVA LOCALMENTE: ${id} - será sincronizada quando Firebase estiver disponível`,
+      );
+      return id;
+    }
+
+    try {
+      await setDoc(doc(db!, "universal_obras", id), obra);
+      console.log(
+        `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
+      );
+
+      // Also save locally for immediate access
+      const localWorks = this.getLocalDataSafe("works");
+      const existingIndex = localWorks.findIndex((w) => w.id === id);
+      if (existingIndex >= 0) {
+        localWorks[existingIndex] = obra;
+      } else {
+        localWorks.push(obra);
+      }
+      localStorage.setItem("works", JSON.stringify(localWorks));
+
+      return id;
+    } catch (error) {
+      console.error(
+        "❌ Erro ao salvar obra no Firebase, salvando localmente:",
+        error,
+      );
+      // Fallback to local storage
+      const localWorks = this.getLocalDataSafe("works");
+      localWorks.push(obra);
+      localStorage.setItem("works", JSON.stringify(localWorks));
+      return id;
+    }
   }
 
   /**
