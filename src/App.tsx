@@ -35,6 +35,7 @@ import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { InstallPrompt } from "./components/InstallPrompt";
 import { FirebaseConnectionStatus } from "./components/FirebaseConnectionStatus";
+import { FirebaseConnectionRecovery } from "./components/FirebaseConnectionRecovery";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
@@ -384,7 +385,7 @@ function App() {
           setUsers(parsedUsers);
         }
       } catch (error) {
-        console.error("❌ Error reloading users:", error);
+        console.error("��� Error reloading users:", error);
       }
     };
 
@@ -4318,7 +4319,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           alert(
                             `Obra "${workTitle}" criada com sucesso! ` +
                               (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} respons��vel(eis).`
+                                ? `Notificações enviadas a ${assignedUsers.length} responsável(eis).`
                                 : "") +
                               (selectedWorkType === "furo"
                                 ? " Dados do furo registados."
@@ -7172,7 +7173,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observações
+                          Observa��ões
                         </h3>
                       </div>
 
@@ -8256,7 +8257,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>✓</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -8553,6 +8554,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         <div className="min-h-screen bg-gray-50">
           {/* Firebase Connection Status - Global */}
           <FirebaseConnectionStatus className="fixed top-0 left-0 right-0 z-40" />
+
+          {/* Firebase Connection Recovery Notification */}
+          <FirebaseConnectionRecovery />
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
