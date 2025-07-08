@@ -328,7 +328,7 @@ export const poolService = {
 
   // Add new pool - SEMPRE visível para todos os utilizadores
   async addPool(poolData: Omit<Pool, "id" | "createdAt" | "updatedAt">) {
-    if (!(await isFirebaseAvailable())) {
+    if (!isFirebaseAvailable()) {
       throw new Error("Firebase not configured");
     }
 
