@@ -168,6 +168,12 @@ const initializeFirebaseServices = async (): Promise<void> => {
               throw new Error("Firebase app is not properly initialized");
             }
 
+            // Additional safety check - verify app is still in getApps()
+            const currentApps = getApps();
+            if (!currentApps.includes(app)) {
+              throw new Error("Firebase app is no longer in active apps list");
+            }
+
             console.log(
               `🔄 Tentativa ${attempts + 1}: Chamando getFirestore...`,
             );
