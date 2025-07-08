@@ -43,7 +43,6 @@ import { DataSharingFixManager } from "./components/DataSharingFixManager";
 import { UserDataSharingFix } from "./components/UserDataSharingFix";
 import { DataSharingFixButton } from "./components/DataSharingFixButton";
 import { GlobalDataShareDiagnostic } from "./components/GlobalDataShareDiagnostic";
-import ReadableStreamTest from "./components/ReadableStreamTest";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -1721,11 +1720,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         case "dashboard":
           return (
             <div className="min-h-screen bg-gray-50">
-              {/* ReadableStream Test - Remove after verification */}
-              <div className="px-4 py-4">
-                <ReadableStreamTest />
-              </div>
-
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
                 {/* Simple Welcome Header */}
@@ -5737,7 +5731,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠️ ATENÇÃO: Esta opera��ão é irreversível!
+                              ⚠️ ATENÇÃO: Esta operação é irreversível!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -5952,7 +5946,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Resumo executivo</li>
+                        <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
                         <li>• Análise de performance</li>
