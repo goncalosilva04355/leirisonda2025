@@ -41,6 +41,13 @@ export interface UniversalDataState {
 class UniversalDataSyncService {
   private listeners: Unsubscribe[] = [];
   private isInitialized = false;
+
+  /**
+   * Verifica se o serviço está pronto para ser usado
+   */
+  isReady(): boolean {
+    return this.isInitialized && isFirebaseReady();
+  }
   private syncInProgress = false;
 
   /**
