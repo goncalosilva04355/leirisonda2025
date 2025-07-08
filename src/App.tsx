@@ -158,11 +158,8 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Garante que todos os utilizadores vejam todos os dados
-  const universalSync = useUniversalDataSync();
-
-  // Data sync hook - fallback para compatibilidade
-  const dataSync = useDataSync();
+  // SISTEMA SIMPLES - Todos os utilizadores acedem aos mesmos dados
+  const simpleData = useSimpleData();
 
   // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
   useEffect(() => {
@@ -3335,7 +3332,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç����o</option>
+                            <option value="instalacao">Instalaç������o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -5920,7 +5917,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>• Estados de progresso</li>
+                        <li>�� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -7809,7 +7806,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç���o">Manutenção</option>
+                          <option value="Manutenç��o">Manutenção</option>
                           <option value="Reparaç��o">Reparação</option>
                         </select>
                       </div>
@@ -8271,7 +8268,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��</span>
+                  <span>✓</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -8912,7 +8909,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In������cio
+                          Data de In����cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
