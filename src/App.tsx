@@ -8681,16 +8681,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-sm text-gray-500">{currentUser?.role}</p>
                   </div>
                 </div>
-                {/* Data Sharing Fix Button - Only for super admin */}
-                {currentUser?.role === "super_admin" && (
-                  <button
-                    onClick={() => setShowDataSharingFix(true)}
-                    className="w-full flex items-center space-x-3 px-4 py-2 mb-2 text-red-700 hover:bg-red-50 rounded-lg transition-colors border border-red-200"
-                  >
-                    <Share className="h-5 w-5" />
-                    <span>🚨 Resolver Partilha de Dados</span>
-                  </button>
-                )}
 
                 <button
                   onClick={handleLogout}
