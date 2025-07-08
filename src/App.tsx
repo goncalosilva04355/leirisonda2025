@@ -1675,7 +1675,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "configuracoes",
       icon: Settings,
-      label: "Configurações",
+      label: "Configuraç��es",
       path: "/configuracoes",
     },
     {
@@ -2864,7 +2864,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenção</span>
+                      <span>Nova Manutenç��o</span>
                     </button>
                   </div>
                 </div>
@@ -3679,7 +3679,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medições do Furo
+                              Medi��ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4229,7 +4229,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             };
 
                             // Update the work with bore data
-                            dataSync.updateWork(newWork.id, boreDataUpdate);
+                            dataSync.updateWork(workData.id, boreDataUpdate);
 
                             const waterBoreData = {
                               id: Date.now(),
