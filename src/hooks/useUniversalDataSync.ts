@@ -209,9 +209,6 @@ export function useUniversalDataSync(): UniversalSyncState &
         setState((prev) => ({ ...prev, syncStatus: "syncing" }));
         await universalDataSync.updateObra(id, obraData);
         setState((prev) => ({ ...prev, syncStatus: "connected" }));
-        console.log(
-          `✅ OBRA ATUALIZADA: ${id} - visível para todos os utilizadores`,
-        );
       } catch (error: any) {
         console.error("❌ Erro ao atualizar obra:", error);
         setState((prev) => ({
