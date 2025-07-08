@@ -276,6 +276,14 @@ function App() {
 
   // Users come from simpleData now - no local state needed
 
+  // Compatibility functions for simplified system
+  const addPool = (data: any) => simpleData.poolService.addPool(data);
+  const addWork = (data: any) => simpleData.workService.addWork(data);
+  const addMaintenance = (data: any) => simpleData.maintenanceService.addMaintenance(data);
+  const addClient = (data: any) => simpleData.clientService.addClient(data);
+  const syncWithFirebase = () => console.log("Sync is automatic in simple system");
+  const enableSync = (enabled: boolean) => console.log("Sync is always enabled:", enabled);
+
     console.log("🔒 SECURITY: App initialization started");
 
     // Firebase Auth listener for automatic login restoration
@@ -552,7 +560,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç���o Regular",
+      type: "Manutenç�����o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -6575,7 +6583,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����� {work.contact}
+                                        ������ {work.contact}
                                       </button>
                                     </div>
                                   )}
