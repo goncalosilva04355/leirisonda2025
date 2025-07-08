@@ -96,25 +96,9 @@ function App() {
 
   // Debug logging disabled for production
 
-  // Firebase initialization check
+  // Firebase removed - using localStorage only
   useEffect(() => {
-    const initializeFirebase = async () => {
-      try {
-        const { waitForFirebaseInit } = await import("./firebase/config");
-        const initialized = await waitForFirebaseInit();
-        setFirebaseInitialized(true);
-        if (initialized) {
-          console.log("✅ Firebase initialized successfully");
-        } else {
-          console.log("⚠️ Firebase initialization failed - using local mode");
-        }
-      } catch (error) {
-        console.warn("Firebase initialization error:", error);
-        setFirebaseInitialized(true); // Allow app to continue in local mode
-      }
-    };
-
-    initializeFirebase();
+    setFirebaseInitialized(true);
   }, []);
 
   // Monitoramento de integridade de dados e restauração de utilizadores
@@ -5899,7 +5883,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📋 Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
-                        <li>• Datas e durações</li>
+                        <li>• Datas e dura��ões</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
