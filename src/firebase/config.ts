@@ -440,12 +440,11 @@ firebaseInitPromise = ensureFirebaseApp();
 
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
-  try {
-    return !!(app && auth && db);
-  } catch (error) {
-    console.warn("Firebase health check failed:", error);
-    return false;
+  const ready = !!(app && db);
+  if (!ready) {
+    console.log("🔍 Firebase não pronto:", { app: !!app, db: !!db });
   }
+  return ready;
 };
 
 // Lazy loading getters for Firebase services
