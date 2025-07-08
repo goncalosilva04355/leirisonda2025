@@ -328,53 +328,6 @@ function App() {
     return () => {
       authPromise
         .then((unsubscribe) => {
-          if (unsubscribe && typeof unsubscribe === "function") {
-            unsubscribe();
-          }
-        })
-        .catch(console.error);
-    };
-    // Firebase auth code removed to fix syntax errors
-
-    // DO NOT initialize default admin automatically - this was causing the security issue
-    // Users must always login manually for security
-    console.log(
-      "🔒 SECURITY: No automatic admin initialization - manual login required",
-    );
-
-  }, []);
-
-  // Auth state check disabled to prevent errors
-  // useEffect(() => {
-  //   if (isAuthenticated && !currentUser) {
-  //     console.warn("SECURITY: Inconsistent auth state detected");
-  //     setIsAuthenticated(false);
-  //     setCurrentUser(null);
-  //     localStorage.removeItem("currentUser");
-  //   }
-  // }, [isAuthenticated, currentUser]);
-
-  // SECURITY: Periodic auth check to prevent tampering
-  // Periodic auth check disabled to prevent errors
-  // useEffect(() => {
-  //   const authCheckInterval = setInterval(() => {
-  //     if (isAuthenticated && !currentUser) {
-  //       console.warn("SECURITY: Auth state compromised, forcing logout");
-  //       setIsAuthenticated(false);
-  //       setCurrentUser(null);
-  //       localStorage.removeItem("currentUser");
-  //     }
-  //   }, 5000);
-  //   return () => clearInterval(authCheckInterval);
-  // }, [isAuthenticated, currentUser]);
-
-  // Initialize notification permission state and register service worker
-  useEffect(() => {
-    console.log("��� Initializing notifications...");
-    if ("Notification" in window) {
-      const permission = Notification.permission;
-      console.log("🔔 Current notification permission:", permission);
-      setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
       if (permission === "granted") {
