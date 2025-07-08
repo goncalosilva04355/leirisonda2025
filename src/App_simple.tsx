@@ -1,128 +1,109 @@
-import React, { useState, useEffect } from "react";
-import { AutoSyncProvider } from "./components/AutoSyncProvider";
-import { useDataSync } from "./hooks/useDataSync";
+import React, { useState } from "react";
+import { LoginPage } from "./pages/LoginPage";
+import { authService, UserProfile } from "./services/authService";
 
-interface UserProfile {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  permissions: any;
-}
-
-function App() {
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+function AppSimple() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [loginError, setLoginError] = useState("");
 
-  // Auto-login para teste
-  useEffect(() => {
-    const testUser = {
-      id: 1,
-      name: "Gonçalo Fonseca",
-      email: "gongonsilva@gmail.com",
-      role: "super_admin",
-      permissions: {
-        obras: { view: true, create: true, edit: true, delete: true },
-        manutencoes: { view: true, create: true, edit: true, delete: true },
-        piscinas: { view: true, create: true, edit: true, delete: true },
-        relatorios: { view: true, create: true, edit: true, delete: true },
-        utilizadores: { view: true, create: true, edit: true, delete: true },
-        admin: { view: true, create: true, edit: true, delete: true },
-        dashboard: { view: true },
-      },
-    };
-    setCurrentUser(testUser);
-    setIsAuthenticated(true);
-  }, []);
+  const handleLogin = async (email: string, password: string) => {
+    console.log("🔐 Tentativa de login:", email);
+    setLoginError("");
 
-  const dataSync = useDataSync();
-  const { works, addWork } = dataSync;
+    try {
+      const result = await authService.login(email, password);
 
-  const createTestWork = () => {
-    const testWork = {
-      title: "Obra de Teste " + Date.now(),
-      type: "piscina",
-      client: "Cliente Teste",
-      contact: "912345678",
-      location: "Local Teste",
-      startTime: "09:00",
-      endTime: "17:00",
-      status: "pending",
-      description: "Descrição de teste",
-      budget: 1000,
-      assignedTo: currentUser?.name || "",
-      assignedUsers: currentUser
-        ? [{ id: currentUser.id.toString(), name: currentUser.name }]
-        : [],
-      assignedUserIds: currentUser ? [currentUser.id.toString()] : [],
-      vehicles: [],
-      technicians: [],
-      photos: [],
-      photoCount: 0,
-      observations: "",
-      workPerformed: "",
-      workSheetCompleted: false,
-    };
-    addWork(testWork);
+      if (result.success && result.user) {
+        console.log("✅ Login bem-sucedido:", result.user.name);
+        setCurrentUser(result.user);
+        setIsAuthenticated(true);
+      } else {
+        console.log("❌ Login falhado:", result.error);
+        setLoginError(result.error || "Credenciais inválidas");
+      }
+    } catch (error) {
+      console.error("❌ Erro no login:", error);
+      setLoginError("Erro de sistema");
+    }
   };
 
-  if (!currentUser) {
-    return <div className="p-8">Carregando...</div>;
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    authService.logout();
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <LoginPage
+        onLogin={handleLogin}
+        loginError={loginError}
+        isLoading={false}
+      />
+    );
   }
 
   return (
-    <AutoSyncProvider>
-      <div className="min-h-screen bg-gray-100">
-        <div className="container mx-auto p-8">
-          <h1 className="text-3xl font-bold mb-8">
-            Leirisonda - Sistema de Gestão
-          </h1>
-
-          <div className="bg-white rounded-lg shadow p-6 mb-8">
-            <h2 className="text-xl font-semibold mb-4">
-              Bem-vindo, {currentUser.name}
-            </h2>
-            <p className="text-gray-600 mb-4">
-              Sistema funcionando correctamente!
-            </p>
-
-            <button
-              onClick={createTestWork}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              Criar Obra de Teste
-            </button>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold mb-4">
-              Obras no Sistema ({works.length})
-            </h3>
-
-            {works.length === 0 ? (
-              <p className="text-gray-500">
-                Nenhuma obra encontrada. Clique no botão acima para criar uma.
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {works.map((work) => (
-                  <div key={work.id} className="border rounded p-4">
-                    <h4 className="font-medium">{work.title}</h4>
-                    <p className="text-sm text-gray-600">
-                      Cliente: {work.client}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Status: {work.status}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold text-gray-900">Leirisonda</h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-700">
+                Olá, {currentUser?.name} ({currentUser?.role})
+              </span>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Sair
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </AutoSyncProvider>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">
+            Dashboard - Sistema Simplificado
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-blue-900">Obras</h3>
+              <p className="text-blue-700">Gestão de obras</p>
+            </div>
+            <div className="bg-green-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-green-900">Piscinas</h3>
+              <p className="text-green-700">Gestão de piscinas</p>
+            </div>
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-yellow-900">Manutenções</h3>
+              <p className="text-yellow-700">Gestão de manutenções</p>
+            </div>
+            <div className="bg-purple-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-purple-900">Clientes</h3>
+              <p className="text-purple-700">Gestão de clientes</p>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Sistema Funcionando ✅
+            </h3>
+            <p className="text-gray-600">
+              Login bem-sucedido! Todos os utilizadores podem ver todos os
+              dados. Sistema simplificado e operacional.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
-export default App;
+export default AppSimple;
