@@ -63,8 +63,16 @@ const getFirebaseApp = () => {
       }
     }
 
+    // Verificar se temos uma configuração válida
+    if (!firebaseConfig.projectId || !firebaseConfig.apiKey) {
+      console.error("❌ Firebase configuration missing required fields");
+      return null;
+    }
+
     // Aguardar antes de inicializar para evitar conflitos
     console.log("🚀 Inicializando novo Firebase app...");
+    console.log("🔧 Projeto Firebase:", firebaseConfig.projectId);
+
     const app = initializeApp(firebaseConfig);
 
     // Validar o app recém-criado
@@ -73,23 +81,39 @@ const getFirebaseApp = () => {
     }
 
     console.log("✅ Firebase app inicializado e validado com sucesso");
+    console.log("📊 Firebase Status: App Ready, awaiting services...");
     return app;
   } catch (error: any) {
     console.error("❌ Erro na inicialização do Firebase:", error);
 
     // Se for erro de app já existir, tentar obter
     if (error.code === "app/duplicate-app") {
+      console.log("🔄 App já existe, tentando usar existente...");
       const existingApps = getApps();
       if (existingApps.length > 0) {
         const existingApp = existingApps[0];
         if (existingApp && existingApp.options && existingApp.name) {
-          console.log("🔄 Usando app existente após erro de duplicação");
+          console.log("✅ Usando app existente após erro de duplicação");
           return existingApp;
         }
       }
     }
 
-    console.error("❌ Firebase app não disponível");
+    // Outros tipos de erro - log mais detalhado
+    if (error.code === "network-request-failed") {
+      console.error("🌐 Erro de rede - verifique a conexão com a internet");
+    } else if (error.code === "invalid-api-key") {
+      console.error("🔑 Chave API Firebase inválida");
+    } else {
+      console.error(
+        "❓ Erro desconhecido na inicialização do Firebase:",
+        error.code,
+      );
+    }
+
+    console.warn(
+      "⚠️ Firebase app não disponível - aplicação funcionará em modo local",
+    );
     return null;
   }
 };
