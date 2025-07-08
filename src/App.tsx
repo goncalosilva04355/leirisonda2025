@@ -43,6 +43,7 @@ import { DataSharingFixManager } from "./components/DataSharingFixManager";
 import { UserDataSharingFix } from "./components/UserDataSharingFix";
 import { DataSharingFixButton } from "./components/DataSharingFixButton";
 import { GlobalDataShareDiagnostic } from "./components/GlobalDataShareDiagnostic";
+import FirebaseInitStatus from "./components/FirebaseInitStatus";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -1720,6 +1721,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         case "dashboard":
           return (
             <div className="min-h-screen bg-gray-50">
+              {/* Firebase Status Test - Remove after verification */}
+              <div className="px-4 py-4">
+                <FirebaseInitStatus />
+              </div>
+
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
                 {/* Simple Welcome Header */}
@@ -7667,7 +7673,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instalação
+                          ).value; // Data de Instala��ão
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
