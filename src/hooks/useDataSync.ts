@@ -100,6 +100,9 @@ export interface Client {
   address: string;
   pools: string[];
   createdAt: string;
+  status?: string;
+  type?: string;
+  notes?: string;
 }
 
 // Mock data removed - no auto-populated test data
