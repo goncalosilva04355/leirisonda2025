@@ -95,10 +95,15 @@ const getFirebaseApp = () => {
 };
 
 // Initialize Firebase services with error handling and quota control
-console.log("🔥 Firebase initialization enabled - controlled sync mode");
+console.log("🔥 Firebase initialization enabled - lazy loading mode");
 let app: any = null;
 let db: any = null;
 let auth: any = null;
+
+// Lazy loading state tracking
+let firebaseInitAttempted = false;
+let dbInitAttempted = false;
+let authInitAttempted = false;
 
 // Check if quota was previously exceeded - Firebase handles this internally
 const isQuotaExceeded = () => {
