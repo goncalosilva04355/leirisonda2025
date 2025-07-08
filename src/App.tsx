@@ -5999,7 +5999,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estatísticas Rápidas
+                    Estat��sticas Rápidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
@@ -7980,11 +7980,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
 
         case "localizacoes":
-          // SECURITY: Only admin and super_admin can access location features
-          if (
-            currentUser?.role !== "admin" &&
-            currentUser?.role !== "super_admin"
-          ) {
+          // SECURITY: Only super_admin can access location features
+          if (currentUser?.role !== "super_admin") {
             return (
               <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
