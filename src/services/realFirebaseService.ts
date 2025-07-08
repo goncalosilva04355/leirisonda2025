@@ -140,12 +140,13 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Pools - GLOBAL SHARED DATA
+  // CRUD operations for Pools - ISOLATED USER DATA
   async addPool(poolData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const poolsRef = ref(this.database!, "shared/pools"); // Global shared location
+      const userId = this.getCurrentUserId();
+      const poolsRef = ref(this.database!, `users/${userId}/pools`); // User-specific location
       const newPoolRef = push(poolsRef);
 
       // Sanitize data before sending to Firebase
