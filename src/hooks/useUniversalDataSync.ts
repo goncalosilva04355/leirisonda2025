@@ -72,7 +72,7 @@ export function useUniversalDataSync(): UniversalSyncState &
 
     const initializeUniversalSync = async () => {
       try {
-        console.log("🌐 INICIALIZANDO SINCRONIZAÇÃO UNIVERSAL");
+        // Inicializar sincronização silenciosa
         setState((prev) => ({ ...prev, syncStatus: "connecting" }));
 
         const initialized = await universalDataSync.initialize();
@@ -81,9 +81,9 @@ export function useUniversalDataSync(): UniversalSyncState &
           if (mounted) {
             setState((prev) => ({
               ...prev,
-              error: "Firebase não disponível - modo local apenas",
+              error: null, // Não mostrar erro, funcionar silenciosamente
               isLoading: false,
-              syncStatus: "error",
+              syncStatus: "disconnected",
             }));
           }
           return;
@@ -101,14 +101,6 @@ export function useUniversalDataSync(): UniversalSyncState &
             error: null,
             syncStatus: "connected",
           }));
-
-          console.log("✅ SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
-            obras: universalData.obras.length,
-            manutencoes: universalData.manutencoes.length,
-            piscinas: universalData.piscinas.length,
-            clientes: universalData.clientes.length,
-            total: universalData.totalItems,
-          });
         }
       } catch (error: any) {
         console.error("❌ Erro na inicialização universal:", error);
