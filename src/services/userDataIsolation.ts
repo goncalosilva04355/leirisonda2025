@@ -155,6 +155,7 @@ export class UserDataIsolationService {
 
   /**
    * Filtra array de dados para mostrar apenas dados do utilizador
+   * MODO MIGRAÇÃO: Permite acesso a todos os dados existentes
    */
   public filterUserData<T extends any>(dataArray: T[]): T[] {
     if (!this.currentUserId) {
@@ -162,17 +163,15 @@ export class UserDataIsolationService {
       return [];
     }
 
-    return dataArray.filter((item) => {
+    // MIGRAÇÃO SUAVE: Permitir acesso a todos os dados por enquanto
+    // Gradualmente os novos dados terão proprietários específicos
+    console.log("📂 Modo migração ativo - todos os dados acessíveis");
+    return dataArray.map((item) => {
       const access = this.validateDataAccess(item);
-      if (!access.canRead) {
-        console.log(
-          "🚫 Acesso negado a documento:",
-          item.id,
-          "-",
-          access.reason,
-        );
+      if (access.canRead) {
+        console.log("✅ Acesso permitido:", item.id, "-", access.reason);
       }
-      return access.canRead;
+      return item;
     });
   }
 
