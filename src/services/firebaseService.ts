@@ -306,13 +306,6 @@ export const poolService = {
       return () => {};
     }
 
-    const db = await getDB();
-    if (!db) {
-      const pools = JSON.parse(localStorage.getItem("pools") || "[]");
-      callback(pools);
-      return () => {};
-    }
-
     const q = query(
       collection(db, COLLECTIONS.POOLS),
       orderBy("createdAt", "desc"),
