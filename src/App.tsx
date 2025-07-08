@@ -2453,7 +2453,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenções
+                                  Manutenç��es
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -4640,7 +4640,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a Gás</option>
+                          <option value="gas">Aquecimento a G��s</option>
                         </select>
                       </div>
                     </div>
@@ -5686,7 +5686,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manuten��ões e piscinas
+                      Elimine todos os dados de obras, manuten���ões e piscinas
                       para começar com uma aplicação limpa. Os utilizadores são
                       mantidos.
                     </p>
@@ -6708,7 +6708,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  📍 {work.location}
+                                  ��� {work.location}
                                 </button>
                               </div>
                               <div>
@@ -6888,7 +6888,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manutenção</option>
+                            <option value="manutencao">Manuten��ão</option>
                             <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -7348,7 +7348,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Observações
 
                           // Prepare update data
-                          let updateData = {
+                          let updateData: any = {
                             workSheetNumber,
                             title: workSheetNumber,
                             type: workType,
@@ -7755,7 +7755,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenção">Manutenção</option>
+                          <option value="Manutenç��o">Manutenção</option>
                           <option value="Reparaç��o">Reparação</option>
                         </select>
                       </div>
@@ -7787,7 +7787,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duração Real (horas)
+                          Duraç��o Real (horas)
                         </label>
                         <input
                           type="number"
