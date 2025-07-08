@@ -245,12 +245,8 @@ export function useUniversalDataSync(): UniversalSyncState &
         setState((prev) => ({ ...prev, syncStatus: "syncing" }));
         const id = await universalDataSync.addManutencao(manutencaoData);
         setState((prev) => ({ ...prev, syncStatus: "connected" }));
-        console.log(
-          `✅ MANUTENÇÃO ADICIONADA: ${id} - visível para todos os utilizadores`,
-        );
         return id;
       } catch (error: any) {
-        console.error("❌ Erro ao adicionar manutenção:", error);
         setState((prev) => ({
           ...prev,
           error: error.message,
@@ -268,11 +264,7 @@ export function useUniversalDataSync(): UniversalSyncState &
         setState((prev) => ({ ...prev, syncStatus: "syncing" }));
         await universalDataSync.updateManutencao(id, manutencaoData);
         setState((prev) => ({ ...prev, syncStatus: "connected" }));
-        console.log(
-          `✅ MANUTENÇÃO ATUALIZADA: ${id} - visível para todos os utilizadores`,
-        );
       } catch (error: any) {
-        console.error("❌ Erro ao atualizar manutenção:", error);
         setState((prev) => ({
           ...prev,
           error: error.message,
@@ -289,11 +281,7 @@ export function useUniversalDataSync(): UniversalSyncState &
       setState((prev) => ({ ...prev, syncStatus: "syncing" }));
       await universalDataSync.deleteManutencao(id);
       setState((prev) => ({ ...prev, syncStatus: "connected" }));
-      console.log(
-        `✅ MANUTENÇÃO ELIMINADA: ${id} - alteração visível para todos os utilizadores`,
-      );
     } catch (error: any) {
-      console.error("❌ Erro ao eliminar manutenção:", error);
       setState((prev) => ({
         ...prev,
         error: error.message,
