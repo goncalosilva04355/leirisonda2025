@@ -493,11 +493,14 @@ class RealFirebaseService {
   onClientsChange(callback: (clients: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const clientsRef = ref(this.database!, "shared/clients"); // Global shared data
+    const userId = this.getCurrentUserId();
+    const clientsRef = ref(this.database!, `users/${userId}/clients`); // User-specific data
     const unsubscribe = onValue(clientsRef, (snapshot) => {
       const data = snapshot.val();
       const clients = data ? Object.values(data) : [];
-      console.log(`🔄 SYNC: ${clients.length} clients synced across all users`);
+      console.log(
+        `🔄 SYNC: ${clients.length} clients synced for current user only`,
+      );
       callback(clients);
     });
 
