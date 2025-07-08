@@ -331,8 +331,14 @@ export const poolService = {
 
   // Add new pool - SEMPRE visível para todos os utilizadores
   async addPool(poolData: Omit<Pool, "id" | "createdAt" | "updatedAt">) {
-    if (!isFirebaseAvailable()) {
+    const firebaseAvailable = await isFirebaseAvailable();
+    if (!firebaseAvailable) {
       throw new Error("Firebase not configured");
+    }
+
+    const db = await getDB();
+    if (!db) {
+      throw new Error("Firebase database not available");
     }
 
     const docRef = await addDoc(collection(db, COLLECTIONS.POOLS), {
