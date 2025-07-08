@@ -43,7 +43,6 @@ import { DataSharingFixManager } from "./components/DataSharingFixManager";
 import { UserDataSharingFix } from "./components/UserDataSharingFix";
 import { DataSharingFixButton } from "./components/DataSharingFixButton";
 import { GlobalDataShareDiagnostic } from "./components/GlobalDataShareDiagnostic";
-import { DataVisibilityFix } from "./components/DataVisibilityFix";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -181,7 +180,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações autom����ticas desabilitadas para resolver instabilidade
+    // Verificações autom��ticas desabilitadas para resolver instabilidade
     // Sistema funcionará normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
@@ -5806,7 +5805,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>���� Estado e localização</li>
+                        <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
                         <li>• Histórico de manuten����ões</li>
                         <li>• Próximas interven��ões</li>
@@ -7031,8 +7030,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠����� Nenhum utilizador encontrado. Vá à Área
-                                de Administração → "🔧 Correção de Atribuição de
+                                ⚠��� Nenhum utilizador encontrado. Vá à Área de
+                                Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -7801,7 +7800,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duraç���o Real (horas)
+                          Duraç��o Real (horas)
                         </label>
                         <input
                           type="number"
