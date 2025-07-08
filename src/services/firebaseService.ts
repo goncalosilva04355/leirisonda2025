@@ -101,6 +101,7 @@ export interface Work {
   assignedTo: string;
   assignedUsers?: Array<{ id: string; name: string }>;
   assignedUserIds?: string[];
+  folhaGerada?: boolean;
   createdAt: Timestamp;
   updatedAt?: Timestamp;
 }
@@ -495,7 +496,7 @@ export const clientService = {
 export const syncService = {
   async initializeData() {
     if (!isFirebaseAvailable()) {
-      console.log("⚠️ Firebase não disponível - usando dados locais");
+      console.log("��️ Firebase não disponível - usando dados locais");
       return;
     }
 
