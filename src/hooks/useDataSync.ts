@@ -206,10 +206,10 @@ export function useDataSync(): SyncState & SyncActions {
   // PARTILHA GLOBAL SEMPRE ATIVA - todos os utilizadores veem todas as obras
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  // DADOS ISOLADOS - cada utilizador vê apenas os seus dados
+  // DADOS PARTILHADOS - todos os utilizadores veem os mesmos dados
   useEffect(() => {
     console.log(
-      "🔒 DADOS ISOLADOS POR UTILIZADOR - Contagem dos dados próprios:",
+      "🌐 DADOS PARTILHADOS ENTRE UTILIZADORES - Contagem dos dados globais:",
       {
         works: state.works.length,
         pools: state.pools.length,
