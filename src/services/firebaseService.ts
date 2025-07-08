@@ -260,6 +260,9 @@ export const userService = {
   // Initialize only real admin user - NO MOCK DATA
   async initializeDefaultUsers() {
     if (!db) {
+      console.log(
+        "📱 Firebase not available - skipping server initialization, using local mode",
+      );
       return; // Skip initialization if Firebase not configured
     }
 
@@ -601,7 +604,10 @@ export const syncService = {
   // Initialize all data
   async initializeData() {
     if (!isFirebaseAvailable()) {
-      console.log("⚠️ Firebase não disponível - sincronização limitada");
+      console.log("📱 Operating in offline mode - data will be stored locally");
+      console.log(
+        "🔄 Firebase connection will be retried automatically when available",
+      );
       return; // Skip initialization if Firebase not configured
     }
 

@@ -51,9 +51,16 @@ class UniversalDataSyncService {
 
     try {
       const firebaseReady = await waitForFirebaseInit();
-      if (!firebaseReady || !isFirebaseReady() || !db) {
-        console.error("❌ Firebase não disponível - modo local apenas");
-        return false;
+      if (!firebaseReady || !isFirebaseReady()) {
+        console.warn(
+          "⚠️ Firebase services not fully available - operating in limited mode",
+        );
+        console.log(
+          "📱 Application will work with reduced functionality until Firebase is ready",
+        );
+        // Don't return false - allow the app to continue in local mode
+        this.isInitialized = true;
+        return true;
       }
 
       // Migrar dados existentes para estrutura universal
