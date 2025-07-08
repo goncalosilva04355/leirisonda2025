@@ -82,6 +82,10 @@ export interface Maintenance {
   completedDate?: string;
   technician: string;
   notes?: string;
+  clientName?: string;
+  clientContact?: string;
+  location?: string;
+  observations?: string;
   createdAt: Timestamp;
   updatedAt?: Timestamp;
 }
@@ -102,6 +106,8 @@ export interface Work {
   assignedUsers?: Array<{ id: string; name: string }>;
   assignedUserIds?: string[];
   folhaGerada?: boolean;
+  contact?: string;
+  expectedEndDate?: string;
   createdAt: Timestamp;
   updatedAt?: Timestamp;
 }
