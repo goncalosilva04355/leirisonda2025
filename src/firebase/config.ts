@@ -97,11 +97,44 @@ try {
   } else {
     app = getFirebaseApp();
     if (app) {
-      // Inicialização protegida do Firestore
+      // Inicialização protegida do Firestore com retry logic
       db = await FirebaseErrorFix.safeFirebaseOperation(async () => {
         console.log("🔄 Inicializando Firestore com proteção...");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        return getFirestore(app);
+
+        // Wait for any pending operations to clear
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
+        // Try to get Firestore instance with retries
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        while (attempts < maxAttempts) {
+          try {
+            const firestoreInstance = getFirestore(app);
+            console.log(
+              `✅ Firestore inicializado na tentativa ${attempts + 1}`,
+            );
+            return firestoreInstance;
+          } catch (error: any) {
+            attempts++;
+            console.warn(`⚠️ Tentativa ${attempts} falhou:`, error.message);
+
+            if (error.message?.includes("ReadableStream")) {
+              console.log("🔧 Aplicando correção de ReadableStream...");
+              await FirebaseErrorFix.fixReadableStreamError(error);
+            }
+
+            if (attempts < maxAttempts) {
+              await new Promise((resolve) =>
+                setTimeout(resolve, 1000 * attempts),
+              );
+            } else {
+              throw error;
+            }
+          }
+        }
+
+        return null;
       }, "inicialização do Firestore");
 
       if (db) {
