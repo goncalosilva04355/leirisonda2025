@@ -69,8 +69,8 @@ export interface Maintenance {
   completedDate?: string;
   technician: string;
   notes?: string;
-  createdAt: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 export interface Work {
@@ -640,7 +640,7 @@ export const syncService = {
 
     try {
       console.log(
-        `🔄 Auto-sync disparado: ${changeType} em ${collectionName}${documentId ? ` (${documentId})` : ""}`,
+        `��� Auto-sync disparado: ${changeType} em ${collectionName}${documentId ? ` (${documentId})` : ""}`,
       );
 
       // Force immediate sync for specific collection
