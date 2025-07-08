@@ -16,9 +16,14 @@ try {
 const detectAndUseSharedData = async () => {
   try {
     const sharedData = await realFirebaseService.syncAllData();
-    if (sharedData) {
+    if (sharedData && typeof sharedData === "object") {
       const totalSharedItems = Object.values(sharedData).reduce(
-        (total: number, items: any[]) => total + items.length,
+        (total: number, items: any) => {
+          if (Array.isArray(items)) {
+            return total + items.length;
+          }
+          return total;
+        },
         0,
       );
 
