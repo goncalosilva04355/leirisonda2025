@@ -191,9 +191,6 @@ export function useUniversalDataSync(): UniversalSyncState &
       setState((prev) => ({ ...prev, syncStatus: "syncing" }));
       const id = await universalDataSync.addObra(obraData);
       setState((prev) => ({ ...prev, syncStatus: "connected" }));
-      console.log(
-        `✅ OBRA ADICIONADA: ${id} - visível para todos os utilizadores`,
-      );
       return id;
     } catch (error: any) {
       console.error("❌ Erro ao adicionar obra:", error);
