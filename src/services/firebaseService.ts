@@ -54,8 +54,8 @@ export interface Pool {
   status: string;
   lastMaintenance?: string;
   nextMaintenance?: string;
-  createdAt: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 export interface Maintenance {
