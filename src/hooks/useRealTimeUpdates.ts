@@ -44,14 +44,7 @@ export const useRealTimeUpdates = (): RealTimeUpdatesHook => {
       }, 5000);
     }
 
-    // Show browser notification if supported
-    if ("Notification" in window && Notification.permission === "granted") {
-      new Notification("Leirisonda - Atualização", {
-        body: `${notification.title}`,
-        icon: "/icon.svg",
-        tag: "leirisonda-update",
-      });
-    }
+    // Browser notifications disabled per user request
   };
 
   const removeNotification = (id: string) => {
