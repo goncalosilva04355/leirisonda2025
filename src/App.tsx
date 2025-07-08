@@ -464,7 +464,7 @@ function App() {
             setCurrentUser(user);
             setIsAuthenticated(true);
 
-            // Auto-navegaç��o removida para evitar loop de login
+            // Auto-navegação removida para evitar loop de login
             console.log(
               "✅ User authenticated - avoiding auto-navigation loop",
             );
@@ -642,7 +642,37 @@ function App() {
     if (isAuthenticated) {
       const hash = window.location.hash.substring(1);
       if (hash) {
-        setActiveSection(hash);
+        // Validate hash before setting
+        const validSections = [
+          "dashboard",
+          "obras",
+          "piscinas",
+          "manutencoes",
+          "futuras-manutencoes",
+          "clientes",
+          "usuarios",
+          "relatorios",
+          "configuracoes",
+          "nova-obra",
+          "nova-piscina",
+          "nova-manutencao",
+          "novo-cliente",
+          "editar-obra",
+          "editar-piscina",
+          "editar-manutencao",
+        ];
+
+        if (validSections.includes(hash)) {
+          setActiveSection(hash);
+        } else {
+          console.warn(
+            "🔍 Hash inválido:",
+            hash,
+            "- redirecionando para dashboard",
+          );
+          setActiveSection("dashboard");
+          window.history.replaceState(null, "", "#dashboard");
+        }
       }
     }
   }, [isAuthenticated]);
@@ -3928,7 +3958,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <textarea
                               rows={3}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Condiç��es do terreno, qualidade da água, dificuldades encontradas, etc..."
+                              placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
                             />
                           </div>
                         </div>
@@ -5557,7 +5587,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador não suporta notificações.",
+                                  "Este navegador n��o suporta notificações.",
                                 );
                               }
                             }}
@@ -6384,7 +6414,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente ����� base de dados
+                        Adicionar cliente ���� base de dados
                       </p>
                     </div>
                   </div>
@@ -7901,7 +7931,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Conclusão
+                          Data de Conclus��o
                         </label>
                         <input
                           type="date"
