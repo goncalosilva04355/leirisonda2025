@@ -167,7 +167,7 @@ const initializeFirebaseServices = async (): Promise<void> => {
                 })
                 .catch((error) => {
                   console.warn(
-                    "��️ Could not set Firebase Auth persistence:",
+                    "⚠️ Could not set Firebase Auth persistence:",
                     error,
                   );
                 });
@@ -263,25 +263,17 @@ export const reinitializeFirebase = async (): Promise<boolean> => {
     // Clear previous quota flag
     clearQuotaExceeded();
 
-    // Attempt to reinitialize
-    const newApp = getFirebaseApp();
-    if (newApp) {
-      const { getFirestore, getAuth } = await import("firebase/firestore");
+    // Reset the current instances
+    app = null;
+    db = null;
+    auth = null;
 
-      try {
-        db = getFirestore(newApp);
-        auth = getAuth(newApp);
-        app = newApp;
+    // Start a new initialization
+    firebaseInitPromise = initializeFirebaseServices();
+    await firebaseInitPromise;
 
-        console.log("✅ Firebase successfully reinitialized");
-        return true;
-      } catch (error) {
-        console.warn("⚠️ Firebase reinitialization failed:", error);
-        return false;
-      }
-    }
-
-    return false;
+    console.log("✅ Firebase successfully reinitialized");
+    return isFirebaseReady();
   } catch (error) {
     console.warn("⚠️ Firebase reinitialization error:", error);
     return false;
