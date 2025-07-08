@@ -85,16 +85,7 @@ function App() {
 
   // Debug logging disabled for production
 
-  // Monitoramento de integridade de dados e restauração de utilizadores
-  useEffect(() => {
-    // Restaurar utilizadores automaticamente se necessário
-    userRestoreService.autoRestore();
-
-    // Cleanup ao desmontar componente
-    return () => {
-      // Cleanup functions if needed
-    };
-  }, []);
+  // Sistema simplificado - sem restauração automática complexa
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
@@ -3729,7 +3720,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N��vel da Água (m) *
+                                  N��vel da ��gua (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -7305,7 +7296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar voltagem</option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif��sico)</option>
+                            <option value="400V">400V (trif����sico)</option>
                           </select>
                         </div>
                       </div>
@@ -7779,7 +7770,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç��o">Manutenção</option>
+                          <option value="Manutenç���o">Manutenção</option>
                           <option value="Reparaç��o">Reparação</option>
                         </select>
                       </div>
@@ -8322,7 +8313,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              console.log(`🔄 Navegando para seção: ${section}`);
+              console.log(`��� Navegando para seção: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               if (
