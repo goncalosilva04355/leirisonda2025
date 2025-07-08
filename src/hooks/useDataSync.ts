@@ -395,9 +395,12 @@ export function useDataSync(): SyncState & SyncActions {
       return;
     }
 
-    // Fallback to original listeners if global sync not available
+    // Check if Firebase service is ready for user-isolated data
     if (!realFirebaseService.isReady()) {
-      return globalCleanup;
+      console.log(
+        "🔒 Firebase não disponível - dados ficam isolados localmente",
+      );
+      return;
     }
 
     // Set up real-time listeners
