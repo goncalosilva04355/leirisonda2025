@@ -190,14 +190,7 @@ export function useUniversalDataSync(): UniversalSyncState &
             console.log("⚠️ Firebase ainda não pronto, usando modo offline...");
             // Load local data and set as connected (offline mode)
             if (mounted) {
-              const localData = {
-                obras: JSON.parse(localStorage.getItem("works") || "[]"),
-                manutencoes: JSON.parse(
-                  localStorage.getItem("maintenance") || "[]",
-                ),
-                piscinas: JSON.parse(localStorage.getItem("pools") || "[]"),
-                clientes: JSON.parse(localStorage.getItem("clients") || "[]"),
-              };
+              const localData = loadLocalData();
 
               const totalItems = Object.values(localData).reduce(
                 (total, items) => total + items.length,
