@@ -547,7 +547,7 @@ class RealFirebaseService {
         works: syncedData.works.length,
         maintenance: syncedData.maintenance.length,
         clients: syncedData.clients.length,
-        message: "All data is shared between all users",
+        message: "Data is isolated per user - no sharing between users",
       });
 
       return syncedData;
