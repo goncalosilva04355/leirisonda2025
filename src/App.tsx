@@ -34,6 +34,7 @@ import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { InstallPrompt } from "./components/InstallPrompt";
+import { FirebaseConnectionStatus } from "./components/FirebaseConnectionStatus";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
@@ -1281,7 +1282,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     // Console log for debugging purposes (admin view)
     console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
-    console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
+    console.log(`📋 Total de obras atribu��das: ${assignedWorks.length + 1}`);
   };
 
   const testPushNotification = () => {
