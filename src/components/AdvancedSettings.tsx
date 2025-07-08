@@ -17,7 +17,6 @@ import {
   Smartphone,
 } from "lucide-react";
 import { FirebaseConfig } from "./FirebaseConfig";
-import { DeviceSyncManager } from "./DeviceSyncManager";
 
 interface AdvancedSettingsProps {
   onBack: () => void;
