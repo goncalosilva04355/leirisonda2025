@@ -3745,7 +3745,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi������ões do Furo
+                              Medi��������ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -3904,7 +3904,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa��ões Específicas do Furo */}
+                          {/* Observa����es Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -8382,9 +8382,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               setIsAdvancedUnlocked(false);
             }}
             dataSync={simpleData}
-              syncWithFirebase,
-              enableSync,
-            }}
             notifications={{
               pushPermission,
               notificationsEnabled,
