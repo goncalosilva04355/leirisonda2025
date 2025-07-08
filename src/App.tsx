@@ -95,6 +95,7 @@ function App() {
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [firebaseInitialized, setFirebaseInitialized] = useState(false);
 
   // Debug logging disabled for production
 
@@ -323,7 +324,9 @@ function App() {
         );
         setUsers(parsedUsers);
       } else {
-        console.log("📝 No saved users found, initializing with default users");
+        console.log(
+          "���� No saved users found, initializing with default users",
+        );
         // Initialize with default admin user and save to localStorage
         const defaultUsers = [
           {
@@ -6360,7 +6363,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente ���� base de dados
+                        Adicionar cliente ������ base de dados
                       </p>
                     </div>
                   </div>
