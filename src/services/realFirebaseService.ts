@@ -528,7 +528,7 @@ class RealFirebaseService {
         get(ref(this.database!, `users/${userId}/pools`)), // User-specific location
         get(ref(this.database!, `users/${userId}/works`)), // User-specific location
         get(ref(this.database!, `users/${userId}/maintenance`)), // User-specific location
-        get(ref(this.database!, "shared/clients")), // Global shared location
+        get(ref(this.database!, `users/${userId}/clients`)), // User-specific location
       ]);
 
       const syncedData = {
@@ -542,7 +542,7 @@ class RealFirebaseService {
           : [],
       };
 
-      console.log("✅ Global data sync completed:", {
+      console.log("✅ User's isolated data sync completed:", {
         pools: syncedData.pools.length,
         works: syncedData.works.length,
         maintenance: syncedData.maintenance.length,
