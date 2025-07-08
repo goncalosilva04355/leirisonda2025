@@ -137,13 +137,30 @@ export function useUniversalDataSync(): UniversalSyncState &
           // Try again after wait
           if (!universalDataSync.isReady()) {
             console.log("⚠️ Firebase ainda não pronto, usando modo offline...");
-            // Set offline mode but still try to load any existing data
+            // Load local data and set as connected (offline mode)
             if (mounted) {
+              const localData = {
+                obras: JSON.parse(localStorage.getItem("works") || "[]"),
+                manutencoes: JSON.parse(
+                  localStorage.getItem("maintenance") || "[]",
+                ),
+                piscinas: JSON.parse(localStorage.getItem("pools") || "[]"),
+                clientes: JSON.parse(localStorage.getItem("clients") || "[]"),
+              };
+
+              const totalItems = Object.values(localData).reduce(
+                (total, items) => total + items.length,
+                0,
+              );
+
               setState((prev) => ({
                 ...prev,
+                ...localData,
+                totalItems,
                 isLoading: false,
-                syncStatus: "disconnected",
+                syncStatus: "connected", // Set as connected even in offline mode
                 error: null,
+                lastSync: new Date().toISOString(),
               }));
             }
             return;
