@@ -507,7 +507,7 @@ class RealFirebaseService {
     return unsubscribe;
   }
 
-  // Bulk sync operations - GLOBAL SHARED DATA
+  // Bulk sync operations - ISOLATED USER DATA
   async syncAllData(): Promise<{
     pools: any[];
     works: any[];
@@ -517,16 +517,17 @@ class RealFirebaseService {
     if (!this.isReady()) return null;
 
     try {
-      console.log("🔄 Syncing ALL shared data visible to all users...");
+      const userId = this.getCurrentUserId();
+      console.log("🔄 Syncing user's isolated data...");
       const [
         poolsSnapshot,
         worksSnapshot,
         maintenanceSnapshot,
         clientsSnapshot,
       ] = await Promise.all([
-        get(ref(this.database!, "shared/pools")), // Global shared location
-        get(ref(this.database!, "shared/works")), // Global shared location
-        get(ref(this.database!, "shared/maintenance")), // Global shared location
+        get(ref(this.database!, `users/${userId}/pools`)), // User-specific location
+        get(ref(this.database!, `users/${userId}/works`)), // User-specific location
+        get(ref(this.database!, `users/${userId}/maintenance`)), // User-specific location
         get(ref(this.database!, "shared/clients")), // Global shared location
       ]);
 
