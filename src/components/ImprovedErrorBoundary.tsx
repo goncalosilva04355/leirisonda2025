@@ -45,6 +45,27 @@ export class ImprovedErrorBoundary extends Component<Props, State> {
       errorInfo,
     });
 
+    // Check if it's a ReadableStream error and try to fix it
+    if (
+      error.message?.includes("ReadableStream") ||
+      error.message?.includes("initializeReadableStreamDefaultReader") ||
+      error.stack?.includes("firebase_firestore.js")
+    ) {
+      console.log("🔧 ReadableStream error detected, attempting automatic fix");
+
+      // Try to fix the error automatically
+      import("../utils/firebaseErrorFix").then(({ FirebaseErrorFix }) => {
+        FirebaseErrorFix.fixReadableStreamError(error).then((fixed) => {
+          if (fixed) {
+            console.log("✅ ReadableStream error fixed, retrying in 2 seconds");
+            setTimeout(() => {
+              this.handleRetry();
+            }, 2000);
+          }
+        });
+      });
+    }
+
     // Log error details for debugging
     const errorDetails = {
       message: error.message,
