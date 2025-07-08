@@ -37,9 +37,14 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+import { SharedDataManager } from "./components/SharedDataManager";
+import { DataSharingFixManager } from "./components/DataSharingFixManager";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
+
+// Security: Startup cleanup to prevent blocked users from accessing
+// import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
 import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
@@ -61,6 +66,8 @@ import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSync } from "./hooks/useAutoSync";
+import { userRestoreService } from "./services/userRestoreService";
+import UserRestoreNotification from "./components/UserRestoreNotification";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -90,8 +97,11 @@ function App() {
 
   // Debug logging disabled for production
 
-  // Monitoramento de integridade de dados
+  // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
+    // Restaurar utilizadores automaticamente se necessário
+    userRestoreService.autoRestore();
+
     // Cleanup ao desmontar componente
     return () => {
       // Cleanup functions if needed
@@ -134,6 +144,7 @@ function App() {
   const [settingsPassword, setSettingsPassword] = useState("");
   const [settingsPasswordError, setSettingsPasswordError] = useState("");
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
+  const [showDataSharingFix, setShowDataSharingFix] = useState(false);
   const [advancedPassword, setAdvancedPassword] = useState("");
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
@@ -402,16 +413,10 @@ function App() {
             setCurrentUser(user);
             setIsAuthenticated(true);
 
-            // Navigate to dashboard after auto-login
-            setTimeout(() => {
-              const hash = window.location.hash.substring(1);
-              if (!hash || hash === "login") {
-                console.log(
-                  "���� Auto-navigating to dashboard after auto-login",
-                );
-                navigateToSection("dashboard");
-              }
-            }, 100);
+            // Auto-navegação removida para evitar loop de login
+            console.log(
+              "✅ User authenticated - avoiding auto-navigation loop",
+            );
           } else {
             console.log("🔒 Firebase Auth: No user session found");
             setCurrentUser(null);
@@ -667,7 +672,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç��o Regular",
+      type: "Manutenç���o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -862,7 +867,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "🔧 Forced logout state clear completed - redirected to login",
+        "�� Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -930,7 +935,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç���o: ${pool.location}
+   Localizaç����o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -2054,7 +2059,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       : work.status === "in_progress"
                                         ? "Em Progresso"
                                         : work.status === "completed"
-                                          ? "Concluída"
+                                          ? "Conclu��da"
                                           : work.status}
                                   </span>
 
@@ -2227,7 +2232,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">📊</span>
+                      <span className="text-blue-600">��</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -2415,7 +2420,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} • {pool.location}
+                                            {pool.client} �� {pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -2978,7 +2983,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������ {maint.clientContact}
+                                        ������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3000,7 +3005,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    📍 {maint.location}
+                                    ��� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -3268,7 +3273,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalação</option>
+                            <option value="instalacao">Instalaç��o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -3344,11 +3349,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Estado da Obra *
                           </label>
-                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="pendente">Pendente</option>
-                            <option value="em-progresso">Em Progresso</option>
-                            <option value="concluida">Concluída</option>
-                            <option value="cancelada">Cancelada</option>
+                          <select
+                            name="status"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="pending">Pendente</option>
+                            <option value="in_progress">Em Progresso</option>
+                            <option value="completed">Concluída</option>
+                            <option value="cancelled">Cancelada</option>
                           </select>
                         </div>
 
@@ -5434,7 +5442,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                   );
                                 }
                               } else {
@@ -5485,7 +5493,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As notificações funcionam apenas com HTTPS
+                              • As notificaç��es funcionam apenas com HTTPS
                             </li>
                             <li>
                               • Certifique-se de que permite notifica��ões no
@@ -5620,7 +5628,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               • A marcação automática funciona melhor em
                               dispositivos móveis
                             </li>
-                            <li>• O Google Maps abre numa nova janela/tab</li>
+                            <li>��� O Google Maps abre numa nova janela/tab</li>
                             <li>
                               • Pode ativar ou desativar cada funcionalidade
                               independentemente
@@ -5750,7 +5758,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten��ões</li>
+                        <li>• Histórico de manuten����ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -5780,7 +5788,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenções
+                        <strong>{maintenance.length}</strong> manutenç��es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -5855,7 +5863,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>• Piscinas associadas</li>
+                        <li>�� Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
@@ -6199,7 +6207,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     !enableMapsRedirect || !client?.address
                                   }
                                 >
-                                  📍{" "}
+                                  ��{" "}
                                   {client?.address || "Endereço não disponível"}
                                 </button>
                               </div>
@@ -6643,7 +6651,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {work.contact}
+                                        ���� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -6924,13 +6932,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Estado da Obra *
                           </label>
                           <select
+                            name="status"
                             defaultValue={editingWork?.status}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
-                            <option value="pendente">Pendente</option>
-                            <option value="em-progresso">Em Progresso</option>
-                            <option value="concluida">Concluída</option>
-                            <option value="cancelada">Cancelada</option>
+                            <option value="pending">Pendente</option>
+                            <option value="in_progress">Em Progresso</option>
+                            <option value="completed">Concluída</option>
+                            <option value="cancelled">Cancelada</option>
                           </select>
                         </div>
 
@@ -6972,7 +6981,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠️ Nenhum utilizador encontrado. Vá à Área de
+                                ⚠��� Nenhum utilizador encontrado. Vá à Área de
                                 Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
@@ -7312,7 +7321,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             location,
                             startTime,
                             endTime,
-                            status,
+                            // Only update status if it's actually different from current status
+                            ...(status !== editingWork?.status && { status }),
                             workSheetCompleted,
                             workPerformed,
                             observations,
@@ -8579,6 +8589,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-sm text-gray-500">{currentUser?.role}</p>
                   </div>
                 </div>
+                {/* Data Sharing Fix Button - Only for super admin */}
+                {currentUser?.role === "super_admin" && (
+                  <button
+                    onClick={() => setShowDataSharingFix(true)}
+                    className="w-full flex items-center space-x-3 px-4 py-2 mb-2 text-red-700 hover:bg-red-50 rounded-lg transition-colors border border-red-200"
+                  >
+                    <Share className="h-5 w-5" />
+                    <span>🚨 Resolver Partilha de Dados</span>
+                  </button>
+                )}
+
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
@@ -9068,6 +9089,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           {/* Install Prompt for Mobile */}
           <InstallPrompt />
 
+          {/* Data Sharing Fix Manager */}
+          {showDataSharingFix && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                <div className="flex items-center justify-between p-6 border-b">
+                  <h2 className="text-xl font-bold text-gray-900">
+                    🚨 Resolver Problema: Dados Não Partilhados Entre
+                    Utilizadores
+                  </h2>
+                  <button
+                    onClick={() => setShowDataSharingFix(false)}
+                    className="p-2 hover:bg-gray-100 rounded-lg"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                <div className="p-6">
+                  <DataSharingFixManager
+                    onClose={() => setShowDataSharingFix(false)}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Admin Login Modal */}
           {showAdminLogin && !isAdminAuthenticated && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -9104,6 +9150,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
+
+        {/* User Restore Notification */}
+        <UserRestoreNotification />
       </InstantSyncManager>
     </AutoSyncProvider>
   );

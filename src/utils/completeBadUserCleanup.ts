@@ -8,6 +8,7 @@ const PROBLEMATIC_EMAILS = [
   "yrzamr01@gmail.com",
   "alexkamaryta@gmail.com",
   "davidcarreiraa92@gmail.com",
+  // Add any additional emails that need to be blocked
 ];
 
 const SUPER_ADMIN_EMAIL = "gongonsilva@gmail.com";
@@ -130,6 +131,14 @@ async function cleanLocalStorage(result: CleanupResult): Promise<void> {
     "currentUser",
     "mock-current-user",
     "savedLoginCredentials",
+    "userPreferences",
+    "authState",
+    "loginState",
+    "github-users",
+    "git-users",
+    "repository-users",
+    "collaborators",
+    "team-members",
   ];
 
   for (const key of userKeys) {
@@ -327,3 +336,56 @@ export const executeCleanupNow = () => {
   console.log("🚀 Executando limpeza de utilizadores problemáticos agora...");
   return executeCompleteCleanup();
 };
+
+// Security: Execute cleanup automatically when module is loaded to ensure blocked users cannot access
+// TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
+/*
+setTimeout(() => {
+  const currentUser = localStorage.getItem("currentUser");
+  const mockCurrentUser = localStorage.getItem("mock-current-user");
+
+  let shouldCleanup = false;
+
+  // Check if any problematic user is currently logged in
+  if (currentUser) {
+    try {
+      const parsed = JSON.parse(currentUser);
+      if (
+        parsed?.email &&
+        PROBLEMATIC_EMAILS.some(
+          (email) => email.toLowerCase() === parsed.email.toLowerCase(),
+        )
+      ) {
+        shouldCleanup = true;
+      }
+    } catch (e) {
+      // Invalid JSON, clean it up
+      shouldCleanup = true;
+    }
+  }
+
+  if (mockCurrentUser) {
+    try {
+      const parsed = JSON.parse(mockCurrentUser);
+      if (
+        parsed?.email &&
+        PROBLEMATIC_EMAILS.some(
+          (email) => email.toLowerCase() === parsed.email.toLowerCase(),
+        )
+      ) {
+        shouldCleanup = true;
+      }
+    } catch (e) {
+      // Invalid JSON, clean it up
+      shouldCleanup = true;
+    }
+  }
+
+  if (shouldCleanup) {
+    console.log(
+      "🚨 Problematic user detected on app load, executing cleanup...",
+    );
+    executeCompleteCleanup();
+  }
+}, 100);
+*/

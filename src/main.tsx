@@ -4,10 +4,8 @@ import App from "./App";
 import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 import "./index.css";
 
-// Executar limpeza imediata de utilizadores problemáticos
-import "./utils/immediateCleanup";
-// Testar se a limpeza foi bem-sucedida
-import "./utils/testCleanup";
+// Restauração imediata de utilizadores
+import "./utils/immediateUserRestore";
 
 // Chrome-specific fixes for PWA compatibility
 if (typeof window !== "undefined") {

@@ -1,9 +1,42 @@
 import { useState, useEffect, useCallback } from "react";
 import { realFirebaseService } from "../services/realFirebaseService";
 import { useDataMutationSync } from "./useAutoDataSync";
+import { clearQuotaProtection } from "../utils/clearQuotaProtection";
 
-// Firebase initialization disabled to prevent quota exceeded
-// realFirebaseService.initialize();
+// Clear any quota protection flags and enable Firebase sync
+clearQuotaProtection();
+
+// Firebase initialization enabled for cross-device synchronization
+realFirebaseService.initialize();
+
+/**
+ * Check if data is in shared structure and automatically prefer shared data
+ */
+const detectAndUseSharedData = async () => {
+  try {
+    const sharedData = await realFirebaseService.syncAllData();
+    if (sharedData) {
+      const totalSharedItems = Object.values(sharedData).reduce(
+        (total: number, items: any[]) => total + items.length,
+        0,
+      );
+
+      if (totalSharedItems > 0) {
+        console.log(
+          `🌐 SHARED DATA DETECTED: ${totalSharedItems} items found in global shared structure`,
+        );
+        console.log(
+          "✅ Using shared data structure - all users will see the same data",
+        );
+        return sharedData;
+      }
+    }
+    return null;
+  } catch (error) {
+    console.warn("Error detecting shared data:", error);
+    return null;
+  }
+};
 
 // Simulate data types
 export interface Pool {
@@ -194,14 +227,29 @@ export function useDataSync(): SyncState & SyncActions {
 
               // Perform initial data sync to pull any existing data
               try {
-                const firebaseData = await realFirebaseService.syncAllData();
+                // First check for shared data structure
+                const sharedData = await detectAndUseSharedData();
+                const firebaseData =
+                  sharedData || (await realFirebaseService.syncAllData());
+
                 if (firebaseData) {
-                  console.log("📥 Syncing existing Firebase data:", {
-                    works: firebaseData.works.length,
-                    pools: firebaseData.pools.length,
-                    maintenance: firebaseData.maintenance.length,
-                    clients: firebaseData.clients.length,
-                  });
+                  console.log(
+                    "📥 Syncing Firebase data from",
+                    sharedData ? "SHARED structure" : "legacy structure",
+                    ":",
+                    {
+                      works: firebaseData.works.length,
+                      pools: firebaseData.pools.length,
+                      maintenance: firebaseData.maintenance.length,
+                      clients: firebaseData.clients.length,
+                    },
+                  );
+
+                  if (sharedData) {
+                    console.log(
+                      "🌐 USING SHARED DATA - All users will see the same information",
+                    );
+                  }
 
                   // Merge Firebase data with local data
                   setState((prev) => {
