@@ -12,6 +12,8 @@ import {
   db,
   isFirebaseReady,
   waitForFirebaseInit,
+  getDB,
+  getAuthService,
 } from "../firebase/config";
 import { mockAuthService } from "./mockAuthService";
 import { QuotaManager } from "../utils/quotaManager";
