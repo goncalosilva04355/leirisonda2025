@@ -38,11 +38,6 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
-import { SharedDataManager } from "./components/SharedDataManager";
-import { DataSharingFixManager } from "./components/DataSharingFixManager";
-import { UserDataSharingFix } from "./components/UserDataSharingFix";
-import { DataSharingFixButton } from "./components/DataSharingFixButton";
-import { GlobalDataShareDiagnostic } from "./components/GlobalDataShareDiagnostic";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
