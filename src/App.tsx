@@ -301,7 +301,7 @@ function App() {
 
   // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
   const autoSyncData = useAutoSync();
-  const { syncStatus, isAutoSyncing } = autoSyncData;
+  const { syncStatus: autoSyncStatus, isAutoSyncing } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
   // Keep local users state for user management
@@ -948,7 +948,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta aç��o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta aç���o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -1173,7 +1173,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           setNotificationsEnabled(true);
           showNotification(
             "Notificaç��es Ativadas",
-            "Agora vai receber notificações de obras atribuídas",
+            "Agora vai receber notificações de obras atribu��das",
             "success",
           );
           console.log("�� Notifications enabled successfully");
@@ -6737,7 +6737,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���� {work.contact}
+                                        ����� {work.contact}
                                       </button>
                                     </div>
                                   )}
