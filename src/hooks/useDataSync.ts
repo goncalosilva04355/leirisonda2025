@@ -49,6 +49,14 @@ export interface Pool {
   lastMaintenance?: string;
   nextMaintenance?: string;
   createdAt: string;
+  poolType?: string;
+  dimensions?: string;
+  volume?: string;
+  filtrationSystem?: string;
+  installationDate?: string;
+  clientPhone?: string;
+  clientEmail?: string;
+  observations?: string;
 }
 
 export interface Maintenance {
@@ -67,6 +75,11 @@ export interface Maintenance {
   clientContact?: string;
   location?: string;
   createdAt: string;
+  estimatedDuration?: string;
+  actualDuration?: string;
+  cost?: string;
+  priority?: string;
+  materialsUsed?: string;
 }
 
 export interface Work {
@@ -90,6 +103,27 @@ export interface Work {
   createdBy?: string; // Name of user who created this work
   createdByUser?: string; // UID of user who created this work
   updatedAt?: string; // Last update timestamp
+  workPerformed?: string;
+  workSheetCompleted?: boolean;
+  observations?: string;
+  vehicles?: string[];
+  technicians?: string[];
+  photos?: any[];
+  photoCount?: number;
+  startTime?: string;
+  endTime?: string;
+  workSheetNumber?: string;
+  // Bore-specific properties
+  boreDepth?: any;
+  waterLevel?: any;
+  staticLevel?: any;
+  dynamicLevel?: any;
+  flowRate?: any;
+  columnDiameter?: any;
+  pumpModel?: any;
+  motorPower?: any;
+  pumpVoltage?: any;
+  boreObservations?: any;
 }
 
 export interface Client {
@@ -100,6 +134,9 @@ export interface Client {
   address: string;
   pools: string[];
   createdAt: string;
+  status?: string;
+  type?: string;
+  notes?: string;
 }
 
 // Mock data removed - no auto-populated test data
@@ -187,6 +224,17 @@ export function useDataSync(): SyncState & SyncActions {
         console.log("🔄 Executing data operation with args:", args);
         const result = await fn(...args);
         console.log("✅ Data operation completed successfully");
+
+        // SINCRONIZAÇÃO IMEDIATA após qualquer mudança
+        setTimeout(async () => {
+          try {
+            await syncWithFirebase();
+            console.log("🚀 Sincronização imediata completada");
+          } catch (error) {
+            console.warn("⚠️ Erro na sincronização imediata:", error);
+          }
+        }, 100); // 100ms delay para garantir que o estado local foi atualizado
+
         return result;
       } catch (error) {
         console.error("❌ Error in data operation:", error);

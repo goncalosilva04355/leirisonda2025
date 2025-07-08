@@ -27,6 +27,7 @@ import {
   Bell,
   FileText,
   MapPin,
+  Share,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
@@ -426,7 +427,7 @@ function App() {
 
         return unsubscribe;
       } catch (error) {
-        console.error("❌ Firebase Auth setup error:", error);
+        console.error("��� Firebase Auth setup error:", error);
         setIsAuthenticated(false);
         setCurrentUser(null);
         return () => {}; // Return empty cleanup function
@@ -1018,7 +1019,7 @@ ${index + 1}. ${work.title}
 
   const generateClientsPDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE CLIENTES
+LEIRISONDA - RELAT��RIO DE CLIENTES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1305,8 +1306,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
-    const fakeEvent = { target: { files } };
-    handlePhotoUpload(fakeEvent);
+    files.forEach((file) => {
+      const newPhoto = {
+        id: Date.now() + Math.random(),
+        name: file.name,
+        url: URL.createObjectURL(file),
+        file: file,
+      };
+      setUploadedPhotos([...uploadedPhotos, newPhoto]);
+    });
   };
 
   const downloadPDF = (content: string, filename: string) => {
@@ -1675,7 +1683,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "configuracoes",
       icon: Settings,
-      label: "Configurações",
+      label: "Configuraç��es",
       path: "/configuracoes",
     },
     {
@@ -1996,7 +2004,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </button>
                                   ) : (
                                     <span className="text-sm text-gray-500">
-                                      Não especificada
+                                      N��o especificada
                                     </span>
                                   )}
                                 </div>
@@ -2445,7 +2453,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenções
+                                  Manutenç��es
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -2633,7 +2641,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">📋</div>
+                                  <div className="text-gray-400 mb-2">��</div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -2864,7 +2872,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenção</span>
+                      <span>Nova Manutenç��o</span>
                     </button>
                   </div>
                 </div>
@@ -2983,7 +2991,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������� {maint.clientContact}
+                                        ��������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3167,7 +3175,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                👨‍🔧 {maint.technician}
+                                ���‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -3519,11 +3527,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Usuários Atribuídos ({users.length} utilizadores
                             disponíveis)
                           </label>
-                          {console.log(
-                            "📊 TOTAL UTILIZADORES CARREGADOS:",
-                            users.length,
-                            users,
-                          )}
+                          {(() => {
+                            console.log(
+                              "📊 TOTAL UTILIZADORES CARREGADOS:",
+                              users.length,
+                              users,
+                            );
+                            return null;
+                          })()}
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra.
                             Utilizadores inativos são marcados como "(Inativo)".
@@ -3676,7 +3687,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medições do Furo
+                              Medi������ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -3835,7 +3846,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observações Específicas do Furo */}
+                          {/* Observa��ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -4135,7 +4146,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Create complete work data object
                           const workData = {
-                            id: Date.now(),
+                            id: Date.now().toString(),
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
                               : `LS-${Date.now()}`,
@@ -4146,7 +4157,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             location: location || "",
                             startTime: startTime || "",
                             endTime: endTime || "",
-                            status: status || "pending",
+                            status:
+                              (status as
+                                | "pending"
+                                | "in_progress"
+                                | "completed"
+                                | "cancelled") || "pending",
                             description: description || "",
                             ...boreData, // Spread bore-specific data if applicable
                             budget: budget ? parseFloat(budget) : null,
@@ -4172,7 +4188,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           };
 
                           // Use sync system to add work (will handle Firebase and localStorage)
-                          addWork(workData);
+                          const newWork = addWork(workData);
 
                           // Send notifications to all assigned users
                           assignedUsers.forEach((assignedUser) => {
@@ -4193,20 +4209,40 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                             // Update the existing work with bore data
                             const boreDataUpdate = {
-                              boreDepth: boreInputs[0]?.value || "",
-                              waterLevel: boreInputs[1]?.value || "",
-                              staticLevel: boreInputs[2]?.value || "",
-                              dynamicLevel: boreInputs[3]?.value || "",
-                              flowRate: boreInputs[4]?.value || "",
-                              columnDiameter: boreInputs[5]?.value || "",
-                              pumpModel: boreInputs[6]?.value || "",
-                              motorPower: boreInputs[7]?.value || "",
-                              pumpVoltage: boreInputs[8]?.value || "",
-                              boreObservations: boreInputs[9]?.value || "",
+                              boreDepth:
+                                (boreInputs[0] as HTMLInputElement)?.value ||
+                                "",
+                              waterLevel:
+                                (boreInputs[1] as HTMLInputElement)?.value ||
+                                "",
+                              staticLevel:
+                                (boreInputs[2] as HTMLInputElement)?.value ||
+                                "",
+                              dynamicLevel:
+                                (boreInputs[3] as HTMLInputElement)?.value ||
+                                "",
+                              flowRate:
+                                (boreInputs[4] as HTMLInputElement)?.value ||
+                                "",
+                              columnDiameter:
+                                (boreInputs[5] as HTMLInputElement)?.value ||
+                                "",
+                              pumpModel:
+                                (boreInputs[6] as HTMLInputElement)?.value ||
+                                "",
+                              motorPower:
+                                (boreInputs[7] as HTMLInputElement)?.value ||
+                                "",
+                              pumpVoltage:
+                                (boreInputs[8] as HTMLInputElement)?.value ||
+                                "",
+                              boreObservations:
+                                (boreInputs[9] as HTMLInputElement)?.value ||
+                                "",
                             };
 
                             // Update the work with bore data
-                            dataSync.updateWork(newWork.id, boreDataUpdate);
+                            dataSync.updateWork(workData.id, boreDataUpdate);
 
                             const waterBoreData = {
                               id: Date.now(),
@@ -4604,7 +4640,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a Gás</option>
+                          <option value="gas">Aquecimento a G��s</option>
                         </select>
                       </div>
                     </div>
@@ -4674,7 +4710,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Collect all form data
                           const poolData = {
-                            id: Date.now(),
+                            id: Date.now().toString(),
                             name:
                               (
                                 form.querySelector(
@@ -4789,7 +4825,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenção
+                        Registar intervenção de manuten��ão
                       </p>
                     </div>
                   </div>
@@ -5172,7 +5208,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç��es, recomendações, próxima manutenção..."
+                          placeholder="Observaç���es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5650,7 +5686,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manuten��ões e piscinas
+                      Elimine todos os dados de obras, manuten���ões e piscinas
                       para começar com uma aplicação limpa. Os utilizadores são
                       mantidos.
                     </p>
@@ -5971,7 +6007,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estatísticas Rápidas
+                    Estat��sticas Rápidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
@@ -6672,7 +6708,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  📍 {work.location}
+                                  ��� {work.location}
                                 </button>
                               </div>
                               <div>
@@ -6763,7 +6799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
-                          ? "Não há obras registadas no sistema."
+                          ? "N��o há obras registadas no sistema."
                           : `Não há obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
@@ -6852,7 +6888,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manutenção</option>
+                            <option value="manutencao">Manuten��ão</option>
                             <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -7312,7 +7348,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Observações
 
                           // Prepare update data
-                          let updateData = {
+                          let updateData: any = {
                             workSheetNumber,
                             title: workSheetNumber,
                             type: workType,
@@ -7322,7 +7358,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             startTime,
                             endTime,
                             // Only update status if it's actually different from current status
-                            ...(status !== editingWork?.status && { status }),
+                            ...(status !== editingWork?.status && {
+                              status: status as
+                                | "pending"
+                                | "in_progress"
+                                | "completed"
+                                | "cancelled",
+                            }),
                             workSheetCompleted,
                             workPerformed,
                             observations,
@@ -7349,16 +7391,36 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                             updateData = {
                               ...updateData,
-                              boreDepth: boreInputs[0]?.value || "",
-                              waterLevel: boreInputs[1]?.value || "",
-                              flowRate: boreInputs[2]?.value || "",
-                              pumpDepth: boreInputs[3]?.value || "",
-                              columnType: boreInputs[4]?.value || "",
-                              columnDiameter: boreInputs[5]?.value || "",
-                              pumpModel: boreInputs[6]?.value || "",
-                              motorPower: boreInputs[7]?.value || "",
-                              pumpVoltage: boreInputs[8]?.value || "",
-                              boreObservations: boreInputs[9]?.value || "",
+                              boreDepth:
+                                (boreInputs[0] as HTMLInputElement)?.value ||
+                                "",
+                              waterLevel:
+                                (boreInputs[1] as HTMLInputElement)?.value ||
+                                "",
+                              flowRate:
+                                (boreInputs[2] as HTMLInputElement)?.value ||
+                                "",
+                              pumpDepth:
+                                (boreInputs[3] as HTMLInputElement)?.value ||
+                                "",
+                              columnType:
+                                (boreInputs[4] as HTMLInputElement)?.value ||
+                                "",
+                              columnDiameter:
+                                (boreInputs[5] as HTMLInputElement)?.value ||
+                                "",
+                              pumpModel:
+                                (boreInputs[6] as HTMLInputElement)?.value ||
+                                "",
+                              motorPower:
+                                (boreInputs[7] as HTMLInputElement)?.value ||
+                                "",
+                              pumpVoltage:
+                                (boreInputs[8] as HTMLInputElement)?.value ||
+                                "",
+                              boreObservations:
+                                (boreInputs[9] as HTMLInputElement)?.value ||
+                                "",
                             };
                             console.log(
                               "🔍 DEBUG updateData with bore:",
@@ -7577,18 +7639,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             "input, select, textarea",
                           );
 
-                          const name = inputs[0].value; // Nome da Piscina
-                          const client = inputs[1].value; // Cliente
-                          const location = inputs[2].value; // Local
-                          const status = inputs[3].value; // Estado
-                          const poolType = inputs[4].value; // Tipo de Piscina
-                          const dimensions = inputs[5].value; // Dimensões
-                          const volume = inputs[6].value; // Volume
-                          const filtrationSystem = inputs[7].value; // Sistema de Filtração
-                          const installationDate = inputs[8].value; // Data de Instalação
-                          const clientPhone = inputs[9].value; // Telefone do Cliente
-                          const clientEmail = inputs[10].value; // Email do Cliente
-                          const observations = inputs[11].value; // Observações
+                          const name = (inputs[0] as HTMLInputElement).value; // Nome da Piscina
+                          const client = (inputs[1] as HTMLInputElement).value; // Cliente
+                          const location = (inputs[2] as HTMLInputElement)
+                            .value; // Local
+                          const status = (inputs[3] as HTMLInputElement).value; // Estado
+                          const poolType = (inputs[4] as HTMLInputElement)
+                            .value; // Tipo de Piscina
+                          const dimensions = (inputs[5] as HTMLInputElement)
+                            .value; // Dimensões
+                          const volume = (inputs[6] as HTMLInputElement).value; // Volume
+                          const filtrationSystem = (
+                            inputs[7] as HTMLInputElement
+                          ).value; // Sistema de Filtração
+                          const installationDate = (
+                            inputs[8] as HTMLInputElement
+                          ).value; // Data de Instalação
+                          const clientPhone = (inputs[9] as HTMLInputElement)
+                            .value; // Telefone do Cliente
+                          const clientEmail = (inputs[10] as HTMLInputElement)
+                            .value; // Email do Cliente
+                          const observations = (inputs[11] as HTMLInputElement)
+                            .value; // Observações
 
                           dataSync.updatePool(editingPool.id, {
                             name,
@@ -7683,7 +7755,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenção">Manutenção</option>
+                          <option value="Manutenç��o">Manutenção</option>
                           <option value="Reparaç��o">Reparação</option>
                         </select>
                       </div>
@@ -7715,7 +7787,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duração Real (horas)
+                          Duraç��o Real (horas)
                         </label>
                         <input
                           type="number"
@@ -7811,17 +7883,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             "input, select, textarea",
                           );
 
-                          const scheduledDate = inputs[0].value; // Data
-                          const technician = inputs[1].value; // Técnico
-                          const type = inputs[2].value; // Tipo de Manutenção
-                          const status = inputs[3].value; // Estado
-                          const estimatedDuration = inputs[4].value; // Duração Estimada
-                          const actualDuration = inputs[5].value; // Duração Real
-                          const cost = inputs[6].value; // Custo
-                          const priority = inputs[7].value; // Prioridade
-                          const completedDate = inputs[8].value; // Data de Conclusão
-                          const materialsUsed = inputs[9].value; // Materiais Utilizados
-                          const observations = inputs[10].value; // Observações
+                          const scheduledDate = (inputs[0] as HTMLInputElement)
+                            .value; // Data
+                          const technician = (inputs[1] as HTMLInputElement)
+                            .value; // Técnico
+                          const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
+                          const status = (inputs[3] as HTMLInputElement).value; // Estado
+                          const estimatedDuration = (
+                            inputs[4] as HTMLInputElement
+                          ).value; // Duração Estimada
+                          const actualDuration = (inputs[5] as HTMLInputElement)
+                            .value; // Duração Real
+                          const cost = (inputs[6] as HTMLInputElement).value; // Custo
+                          const priority = (inputs[7] as HTMLInputElement)
+                            .value; // Prioridade
+                          const completedDate = (inputs[8] as HTMLInputElement)
+                            .value; // Data de Conclusão
+                          const materialsUsed = (inputs[9] as HTMLInputElement)
+                            .value; // Materiais Utilizados
+                          const observations = (inputs[10] as HTMLInputElement)
+                            .value; // Observações
 
                           dataSync.updateMaintenance(editingMaintenance.id, {
                             scheduledDate: scheduledDate
@@ -7829,14 +7910,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               : undefined,
                             technician,
                             type,
-                            status,
-                            estimatedDuration: estimatedDuration
-                              ? parseFloat(estimatedDuration)
-                              : undefined,
-                            actualDuration: actualDuration
-                              ? parseFloat(actualDuration)
-                              : undefined,
-                            cost: cost ? parseFloat(cost) : undefined,
+                            status: status as
+                              | "pending"
+                              | "in_progress"
+                              | "completed"
+                              | "cancelled"
+                              | "scheduled",
+                            estimatedDuration: estimatedDuration || undefined,
+                            actualDuration: actualDuration || undefined,
+                            cost: cost || undefined,
                             priority,
                             completedDate: completedDate
                               ? new Date(completedDate).toISOString()
@@ -7907,11 +7989,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
 
         case "localizacoes":
-          // SECURITY: Only admin and super_admin can access location features
-          if (
-            currentUser?.role !== "admin" &&
-            currentUser?.role !== "super_admin"
-          ) {
+          // SECURITY: Only super_admin can access location features
+          if (currentUser?.role !== "super_admin") {
             return (
               <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
@@ -7959,7 +8038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Página não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A seção solicitada não foi encontrada.
+                  A seç��o solicitada não foi encontrada.
                 </p>
               </div>
             </div>
@@ -8868,7 +8947,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informações Detalhadas
+                          Informaç��es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
