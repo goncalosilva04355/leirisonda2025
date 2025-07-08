@@ -204,8 +204,8 @@ export function useDataSync(): SyncState & SyncActions {
     console.log("🔒 Novos dados: Terão propriedade específica por utilizador");
   }, []);
 
-  // PARTILHA GLOBAL SEMPRE ATIVA - nunca desabilitar
-  const [syncEnabled, setSyncEnabled] = useState(true);
+  // PARTILHA GLOBAL DESATIVADA - dados isolados por utilizador
+  const [syncEnabled, setSyncEnabled] = useState(false);
 
   // MIGRAÇÃO GRADUAL - preservando dados existentes
   useEffect(() => {
