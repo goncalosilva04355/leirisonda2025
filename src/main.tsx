@@ -16,8 +16,9 @@ if (
   (!window.ReadableStream || !window.ReadableStream.prototype.getReader)
 ) {
   console.log("🔧 Adding ReadableStream polyfill for Firebase compatibility");
-  import("web-streams-polyfill/ponyfill")
-    .then(({ ReadableStream, WritableStream, TransformStream }) => {
+  import("web-streams-polyfill")
+    .then((polyfill) => {
+      const { ReadableStream, WritableStream, TransformStream } = polyfill;
       if (!window.ReadableStream) {
         window.ReadableStream = ReadableStream;
       }
