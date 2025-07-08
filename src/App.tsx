@@ -276,26 +276,7 @@ function App() {
 
   // Users come from simpleData now - no local state needed
 
-  // Load users from localStorage on app start
-  useEffect(() => {
-    console.log("🔄 Loading users from localStorage on app start...");
-
-    try {
-      // Load users from localStorage (app-users)
-      const savedUsers = localStorage.getItem("app-users");
-      if (savedUsers) {
-        const parsedUsers = JSON.parse(savedUsers);
-        console.log(
-          "✅ Users loaded successfully:",
-          parsedUsers.length,
-          parsedUsers,
-        );
-        setUsers(parsedUsers);
-      } else {
-        console.log("📝 No saved users found, initializing with default users");
-        // Initialize with default admin user and save to localStorage
-        const defaultUsers = [
-          {
+  // Users are now handled by simpleData - this initialization is no longer needed
             id: 1,
             name: "Gonçalo Fonseca",
             email: "gongonsilva@gmail.com",
@@ -2218,7 +2199,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>🕒</span>
+                                      <span>��</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -3886,7 +3867,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Observa��ões e Trabalho */}
+                    {/* Observações e Trabalho */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -6271,7 +6252,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     !enableMapsRedirect || !client?.address
                                   }
                                 >
-                                  ��{" "}
+                                  ����{" "}
                                   {client?.address || "Endereço não disponível"}
                                 </button>
                               </div>
@@ -7797,7 +7778,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="scheduled">Agendado</option>
                           <option value="in_progress">Em Progresso</option>
-                          <option value="completed">Conclu��do</option>
+                          <option value="completed">Concluído</option>
                           <option value="cancelled">Cancelado</option>
                         </select>
                       </div>
