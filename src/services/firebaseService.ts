@@ -334,7 +334,7 @@ export const poolService = {
 
   // Add new pool - SEMPRE visível para todos os utilizadores
   async addPool(poolData: Omit<Pool, "id" | "createdAt" | "updatedAt">) {
-    if (!isFirebaseAvailable()) {
+    if (!(await isFirebaseAvailable())) {
       throw new Error("Firebase not configured");
     }
 
@@ -514,7 +514,7 @@ export const maintenanceService = {
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Manuten��ão ${maintenanceId} removida - sincronização automática ativada`,
+      `✅ Manutenção ${maintenanceId} removida - sincronização automática ativada`,
     );
     await syncService.triggerAutoSync("delete", "maintenance", maintenanceId);
   },
