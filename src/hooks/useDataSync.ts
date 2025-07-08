@@ -175,11 +175,11 @@ export function useDataSync(): SyncState & SyncActions {
     lastSync: null,
   });
 
-  // MIGRAÇÃO GRADUAL PARA ISOLAMENTO DE DADOS
+  // DADOS ISOLADOS POR UTILIZADOR
   useEffect(() => {
-    console.log("🔄 MIGRAÇÃO GRADUAL PARA ISOLAMENTO DE DADOS");
-    console.log("✅ Dados existentes: Preservados e acessíveis");
-    console.log("🔒 Novos dados: Terão propriedade específica por utilizador");
+    console.log("🔒 DADOS ISOLADOS POR UTILIZADOR ATIVADO");
+    console.log("✅ Cada utilizador só vê os seus próprios dados");
+    console.log("❌ Partilha entre utilizadores DESATIVADA");
   }, []);
 
   // PARTILHA GLOBAL DESATIVADA - dados isolados por utilizador
