@@ -24,6 +24,7 @@ import { DataManagementPanel } from "../components/DataManagementPanel";
 import { FirebaseConfig } from "../components/FirebaseConfig";
 import { CrossDeviceUserManager } from "../components/CrossDeviceUserManager";
 import { AutoSyncDemo } from "../components/AutoSyncDemo";
+import { DataSharingStatus } from "../components/DataSharingStatus";
 import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
