@@ -558,9 +558,8 @@ class AuthService {
 
   // Listen to auth state changes
   onAuthStateChanged(callback: (user: UserProfile | null) => void): () => void {
-    // Wait for Firebase initialization and try Firebase first if available
-    waitForFirebaseInit().then((firebaseReady) => {
-      if (firebaseReady && auth && db) {
+    // Check Firebase availability synchronously first, then wait for init if needed
+    if (isFirebaseReady() && auth && db) {
       console.log("Setting up Firebase auth state listener");
       return onAuthStateChanged(
         auth,
@@ -589,6 +588,17 @@ class AuthService {
         },
       );
     } else {
+      // Wait for Firebase initialization in background, but set up mock listener immediately
+      waitForFirebaseInit().then((firebaseReady) => {
+        if (firebaseReady && auth && db) {
+          console.log(
+            "Firebase became ready, setting up Firebase auth listener",
+          );
+          // Re-setup with Firebase when it becomes ready
+          this.onAuthStateChanged(callback);
+        }
+      });
+
       // Fallback to mock authentication
       console.log("Setting up mock auth state listener");
       return mockAuthService.onAuthStateChanged((mockUser) => {
