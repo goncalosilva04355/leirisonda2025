@@ -120,14 +120,8 @@ const COLLECTIONS = {
 };
 
 // Helper function to check if Firebase is available
-const isFirebaseAvailable = async () => {
-  try {
-    await waitForFirebaseInit();
-    return isFirebaseReady();
-  } catch (error) {
-    console.warn("Error waiting for Firebase initialization:", error);
-    return false;
-  }
+const isFirebaseAvailable = () => {
+  return isFirebaseReady();
 };
 
 // Critical: Wrapper for Firebase operations with quota protection
