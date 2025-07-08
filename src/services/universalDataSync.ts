@@ -262,8 +262,30 @@ class UniversalDataSyncService {
     onClientesChange: (clientes: any[]) => void;
   }): () => void {
     if (!isFirebaseReady() || !db) {
-      console.error("❌ Firebase não disponível para listeners universais");
-      return () => {};
+      handleFirebaseUnavailable("Listeners universais");
+
+      // Return empty data immediately
+      callbacks.onObrasChange([]);
+      callbacks.onManutencoesChange([]);
+      callbacks.onPiscinasChange([]);
+      callbacks.onClientesChange([]);
+
+      // Set up retry mechanism
+      const retryInterval = setInterval(() => {
+        if (isFirebaseReady() && db) {
+          console.log(
+            "🔄 Firebase available, setting up universal listeners...",
+          );
+          clearInterval(retryInterval);
+          try {
+            this.setupUniversalListeners(callbacks);
+          } catch (error) {
+            console.warn("Failed to set up universal listeners:", error);
+          }
+        }
+      }, 5000);
+
+      return () => clearInterval(retryInterval);
     }
 
     console.log("📡 CONFIGURANDO LISTENERS UNIVERSAIS");
