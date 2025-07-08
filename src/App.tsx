@@ -28,6 +28,7 @@ import {
   FileText,
   MapPin,
   Share,
+  Database,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
@@ -773,7 +774,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manuten��ão agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -5692,7 +5693,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
-                            {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
+                            {enableMapsRedirect ? "��� Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
