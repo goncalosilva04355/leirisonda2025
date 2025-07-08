@@ -1,14 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { realFirebaseService } from "../services/realFirebaseService";
-import { useDataMutationSync } from "./useAutoDataSync";
-import { clearQuotaProtection } from "../utils/clearQuotaProtection";
-import { crossUserDataSync } from "../services/crossUserDataSync";
 
-// Clear any quota protection flags and enable Firebase sync
-clearQuotaProtection();
-
-// Firebase initialization enabled for cross-device synchronization
-realFirebaseService.initialize();
+// Safe Firebase initialization
+try {
+  realFirebaseService.initialize().catch((error) => {
+    console.warn("Firebase initialization failed:", error);
+  });
+} catch (error) {
+  console.warn("Firebase service error:", error);
+}
 
 /**
  * Check if data is in shared structure and automatically prefer shared data
