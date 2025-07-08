@@ -458,20 +458,12 @@ export const getAuthService = async () => {
 
 // Function to ensure Firebase is initialized before use
 export const waitForFirebaseInit = async (): Promise<boolean> => {
-  try {
-    if (firebaseInitPromise) {
-      await firebaseInitPromise;
-    }
+  // Wait a bit for the direct initialization to complete
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // In lazy loading mode, try to initialize the services
-    await ensureAuth();
-    await ensureFirestore();
-
-    return isFirebaseReady();
-  } catch (error) {
-    console.warn("Failed to wait for Firebase initialization:", error);
-    return false;
-  }
+  const ready = isFirebaseReady();
+  console.log("🔍 waitForFirebaseInit resultado:", ready);
+  return ready;
 };
 
 // Function to get Firebase connection status
