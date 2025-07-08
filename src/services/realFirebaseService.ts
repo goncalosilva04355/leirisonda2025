@@ -126,12 +126,12 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Pools
+  // CRUD operations for Pools - GLOBAL SHARED DATA
   async addPool(poolData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const poolsRef = ref(this.database!, "pools");
+      const poolsRef = ref(this.database!, "shared/pools"); // Global shared location
       const newPoolRef = push(poolsRef);
 
       // Sanitize data before sending to Firebase
@@ -140,9 +140,13 @@ class RealFirebaseService {
         id: newPoolRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        sharedGlobally: true, // Mark as global data
       });
 
       await set(newPoolRef, sanitizedData);
+      console.log(
+        `✅ Pool "${poolData.name}" added to shared database - visible to all users`,
+      );
       return newPoolRef.key;
     } catch (error) {
       console.error("Failed to add pool:", error);
@@ -154,15 +158,19 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const poolRef = ref(this.database!, `pools/${poolId}`);
+      const poolRef = ref(this.database!, `shared/pools/${poolId}`); // Global shared location
 
       // Sanitize data before sending to Firebase
       const sanitizedData = this.sanitizeForFirebase({
         ...poolData,
         updatedAt: new Date().toISOString(),
+        sharedGlobally: true,
       });
 
       await update(poolRef, sanitizedData);
+      console.log(
+        `✅ Pool ${poolId} updated in shared database - visible to all users`,
+      );
       return true;
     } catch (error) {
       console.error("Failed to update pool:", error);
@@ -174,8 +182,11 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const poolRef = ref(this.database!, `pools/${poolId}`);
+      const poolRef = ref(this.database!, `shared/pools/${poolId}`); // Global shared location
       await remove(poolRef);
+      console.log(
+        `✅ Pool ${poolId} deleted from shared database - removed for all users`,
+      );
       return true;
     } catch (error) {
       console.error("Failed to delete pool:", error);
@@ -183,12 +194,12 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Works
+  // CRUD operations for Works - GLOBAL SHARED DATA
   async addWork(workData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const worksRef = ref(this.database!, "works");
+      const worksRef = ref(this.database!, "shared/works"); // Global shared location
       const newWorkRef = push(worksRef);
 
       // Sanitize data before sending to Firebase
@@ -197,9 +208,14 @@ class RealFirebaseService {
         id: newWorkRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        sharedGlobally: true, // Mark as global data
+        visibleToAllUsers: true,
       });
 
       await set(newWorkRef, sanitizedData);
+      console.log(
+        `✅ Work "${workData.title}" added to shared database - visible to all users`,
+      );
       return newWorkRef.key;
     } catch (error) {
       console.error("Failed to add work:", error);
@@ -211,15 +227,20 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const workRef = ref(this.database!, `works/${workId}`);
+      const workRef = ref(this.database!, `shared/works/${workId}`); // Global shared location
 
       // Sanitize data before sending to Firebase
       const sanitizedData = this.sanitizeForFirebase({
         ...workData,
         updatedAt: new Date().toISOString(),
+        sharedGlobally: true,
+        visibleToAllUsers: true,
       });
 
       await update(workRef, sanitizedData);
+      console.log(
+        `✅ Work ${workId} updated in shared database - visible to all users`,
+      );
       return true;
     } catch (error) {
       console.error("Failed to update work:", error);
@@ -231,8 +252,11 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const workRef = ref(this.database!, `works/${workId}`);
+      const workRef = ref(this.database!, `shared/works/${workId}`); // Global shared location
       await remove(workRef);
+      console.log(
+        `✅ Work ${workId} deleted from shared database - removed for all users`,
+      );
       return true;
     } catch (error) {
       console.error("Failed to delete work:", error);
@@ -240,12 +264,12 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Maintenance
+  // CRUD operations for Maintenance - GLOBAL SHARED DATA
   async addMaintenance(maintenanceData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const maintenanceRef = ref(this.database!, "maintenance");
+      const maintenanceRef = ref(this.database!, "shared/maintenance"); // Global shared location
       const newMaintenanceRef = push(maintenanceRef);
 
       // Sanitize data before sending to Firebase
@@ -254,9 +278,13 @@ class RealFirebaseService {
         id: newMaintenanceRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        sharedGlobally: true, // Mark as global data
       });
 
       await set(newMaintenanceRef, sanitizedData);
+      console.log(
+        `✅ Maintenance for "${maintenanceData.poolName}" added to shared database - visible to all users`,
+      );
       return newMaintenanceRef.key;
     } catch (error) {
       console.error("Failed to add maintenance:", error);
@@ -273,15 +301,19 @@ class RealFirebaseService {
     try {
       const maintenanceRef = ref(
         this.database!,
-        `maintenance/${maintenanceId}`,
+        `shared/maintenance/${maintenanceId}`, // Global shared location
       );
       // Sanitize data before sending to Firebase
       const sanitizedData = this.sanitizeForFirebase({
         ...maintenanceData,
         updatedAt: new Date().toISOString(),
+        sharedGlobally: true,
       });
 
       await update(maintenanceRef, sanitizedData);
+      console.log(
+        `✅ Maintenance ${maintenanceId} updated in shared database - visible to all users`,
+      );
       return true;
     } catch (error) {
       console.error("Failed to update maintenance:", error);
@@ -295,9 +327,12 @@ class RealFirebaseService {
     try {
       const maintenanceRef = ref(
         this.database!,
-        `maintenance/${maintenanceId}`,
+        `shared/maintenance/${maintenanceId}`, // Global shared location
       );
       await remove(maintenanceRef);
+      console.log(
+        `✅ Maintenance ${maintenanceId} deleted from shared database - removed for all users`,
+      );
       return true;
     } catch (error) {
       console.error("Failed to delete maintenance:", error);
@@ -305,12 +340,12 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Clients
+  // CRUD operations for Clients - GLOBAL SHARED DATA
   async addClient(clientData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const clientsRef = ref(this.database!, "clients");
+      const clientsRef = ref(this.database!, "shared/clients"); // Global shared location
       const newClientRef = push(clientsRef);
 
       // Sanitize data before sending to Firebase
@@ -319,9 +354,13 @@ class RealFirebaseService {
         id: newClientRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        sharedGlobally: true, // Mark as global data
       });
 
       await set(newClientRef, sanitizedData);
+      console.log(
+        `✅ Client "${clientData.name}" added to shared database - visible to all users`,
+      );
       return newClientRef.key;
     } catch (error) {
       console.error("Failed to add client:", error);
@@ -333,15 +372,19 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const clientRef = ref(this.database!, `clients/${clientId}`);
+      const clientRef = ref(this.database!, `shared/clients/${clientId}`); // Global shared location
 
       // Sanitize data before sending to Firebase
       const sanitizedData = this.sanitizeForFirebase({
         ...clientData,
         updatedAt: new Date().toISOString(),
+        sharedGlobally: true,
       });
 
       await update(clientRef, sanitizedData);
+      console.log(
+        `✅ Client ${clientId} updated in shared database - visible to all users`,
+      );
       return true;
     } catch (error) {
       console.error("Failed to update client:", error);
@@ -353,8 +396,11 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const clientRef = ref(this.database!, `clients/${clientId}`);
+      const clientRef = ref(this.database!, `shared/clients/${clientId}`); // Global shared location
       await remove(clientRef);
+      console.log(
+        `✅ Client ${clientId} deleted from shared database - removed for all users`,
+      );
       return true;
     } catch (error) {
       console.error("Failed to delete client:", error);
@@ -362,14 +408,15 @@ class RealFirebaseService {
     }
   }
 
-  // Real-time listeners
+  // Real-time listeners with enhanced cross-user sync
   onPoolsChange(callback: (pools: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const poolsRef = ref(this.database!, "pools");
+    const poolsRef = ref(this.database!, "shared/pools"); // Global shared data
     const unsubscribe = onValue(poolsRef, (snapshot) => {
       const data = snapshot.val();
       const pools = data ? Object.values(data) : [];
+      console.log(`🔄 SYNC: ${pools.length} pools synced across all users`);
       callback(pools);
     });
 
@@ -379,10 +426,11 @@ class RealFirebaseService {
   onWorksChange(callback: (works: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const worksRef = ref(this.database!, "works");
+    const worksRef = ref(this.database!, "shared/works"); // Global shared data
     const unsubscribe = onValue(worksRef, (snapshot) => {
       const data = snapshot.val();
       const works = data ? Object.values(data) : [];
+      console.log(`🔄 SYNC: ${works.length} works synced across all users`);
       callback(works);
     });
 
@@ -392,10 +440,13 @@ class RealFirebaseService {
   onMaintenanceChange(callback: (maintenance: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const maintenanceRef = ref(this.database!, "maintenance");
+    const maintenanceRef = ref(this.database!, "shared/maintenance"); // Global shared data
     const unsubscribe = onValue(maintenanceRef, (snapshot) => {
       const data = snapshot.val();
       const maintenance = data ? Object.values(data) : [];
+      console.log(
+        `🔄 SYNC: ${maintenance.length} maintenance records synced across all users`,
+      );
       callback(maintenance);
     });
 
@@ -405,17 +456,18 @@ class RealFirebaseService {
   onClientsChange(callback: (clients: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const clientsRef = ref(this.database!, "clients");
+    const clientsRef = ref(this.database!, "shared/clients"); // Global shared data
     const unsubscribe = onValue(clientsRef, (snapshot) => {
       const data = snapshot.val();
       const clients = data ? Object.values(data) : [];
+      console.log(`🔄 SYNC: ${clients.length} clients synced across all users`);
       callback(clients);
     });
 
     return unsubscribe;
   }
 
-  // Bulk sync operations
+  // Bulk sync operations - GLOBAL SHARED DATA
   async syncAllData(): Promise<{
     pools: any[];
     works: any[];
@@ -425,19 +477,20 @@ class RealFirebaseService {
     if (!this.isReady()) return null;
 
     try {
+      console.log("🔄 Syncing ALL shared data visible to all users...");
       const [
         poolsSnapshot,
         worksSnapshot,
         maintenanceSnapshot,
         clientsSnapshot,
       ] = await Promise.all([
-        get(ref(this.database!, "pools")),
-        get(ref(this.database!, "works")),
-        get(ref(this.database!, "maintenance")),
-        get(ref(this.database!, "clients")),
+        get(ref(this.database!, "shared/pools")), // Global shared location
+        get(ref(this.database!, "shared/works")), // Global shared location
+        get(ref(this.database!, "shared/maintenance")), // Global shared location
+        get(ref(this.database!, "shared/clients")), // Global shared location
       ]);
 
-      return {
+      const syncedData = {
         pools: poolsSnapshot.val() ? Object.values(poolsSnapshot.val()) : [],
         works: worksSnapshot.val() ? Object.values(worksSnapshot.val()) : [],
         maintenance: maintenanceSnapshot.val()
@@ -447,6 +500,16 @@ class RealFirebaseService {
           ? Object.values(clientsSnapshot.val())
           : [],
       };
+
+      console.log("✅ Global data sync completed:", {
+        pools: syncedData.pools.length,
+        works: syncedData.works.length,
+        maintenance: syncedData.maintenance.length,
+        clients: syncedData.clients.length,
+        message: "All data is shared between all users",
+      });
+
+      return syncedData;
     } catch (error) {
       console.error("Failed to sync all data:", error);
       return null;

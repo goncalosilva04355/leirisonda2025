@@ -338,6 +338,8 @@ export const executeCleanupNow = () => {
 };
 
 // Security: Execute cleanup automatically when module is loaded to ensure blocked users cannot access
+// TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
+/*
 setTimeout(() => {
   const currentUser = localStorage.getItem("currentUser");
   const mockCurrentUser = localStorage.getItem("mock-current-user");
@@ -386,3 +388,4 @@ setTimeout(() => {
     executeCompleteCleanup();
   }
 }, 100);
+*/

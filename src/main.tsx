@@ -4,6 +4,9 @@ import App from "./App";
 import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 import "./index.css";
 
+// Restauração imediata de utilizadores
+import "./utils/immediateUserRestore";
+
 // Chrome-specific fixes for PWA compatibility
 if (typeof window !== "undefined") {
   // Clear any cached data that might be causing issues in Chrome
