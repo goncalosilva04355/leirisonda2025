@@ -31,7 +31,7 @@ interface AutoSyncProviderProps {
 export const AutoSyncProvider: React.FC<AutoSyncProviderProps> = ({
   children,
   enabled = true,
-  syncInterval = 30000, // 30 segundos para sincronização mais responsiva
+  syncInterval = 3000, // 3 segundos para sincronização muito mais responsiva
   collections = ["users", "pools", "maintenance", "works", "clients"],
   showNotifications = true, // Habilitado por padrão para feedback visual
 }) => {
