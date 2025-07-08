@@ -351,7 +351,7 @@ class RealFirebaseService {
       );
       await remove(maintenanceRef);
       console.log(
-        `✅ Maintenance ${maintenanceId} deleted from user's isolated data - removed only for current user`,
+        `�� Maintenance ${maintenanceId} deleted from user's isolated data - removed only for current user`,
       );
       return true;
     } catch (error) {
@@ -506,7 +506,7 @@ class RealFirebaseService {
     return unsubscribe;
   }
 
-  // Bulk sync operations - ISOLATED USER DATA
+  // Bulk sync operations - GLOBAL SHARED DATA
   async syncAllData(): Promise<{
     pools: any[];
     works: any[];
@@ -516,18 +516,17 @@ class RealFirebaseService {
     if (!this.isReady()) return null;
 
     try {
-      const userId = this.getCurrentUserId();
-      console.log("🔄 Syncing user's isolated data...");
+      console.log("🔄 Syncing ALL shared data visible to all users...");
       const [
         poolsSnapshot,
         worksSnapshot,
         maintenanceSnapshot,
         clientsSnapshot,
       ] = await Promise.all([
-        get(ref(this.database!, `users/${userId}/pools`)), // User-specific location
-        get(ref(this.database!, `users/${userId}/works`)), // User-specific location
-        get(ref(this.database!, `users/${userId}/maintenance`)), // User-specific location
-        get(ref(this.database!, `users/${userId}/clients`)), // User-specific location
+        get(ref(this.database!, "shared/pools")), // Global shared location
+        get(ref(this.database!, "shared/works")), // Global shared location
+        get(ref(this.database!, "shared/maintenance")), // Global shared location
+        get(ref(this.database!, "shared/clients")), // Global shared location
       ]);
 
       const syncedData = {
