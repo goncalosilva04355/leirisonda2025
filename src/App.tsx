@@ -72,6 +72,9 @@ import { useAutoSync } from "./hooks/useAutoSync";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
+// Initialize Firebase auto-retry service
+import { firebaseAutoRetry } from "./services/firebaseAutoRetry";
+
 // Production users - only real admin account
 const initialUsers = [
   {
@@ -385,7 +388,7 @@ function App() {
           setUsers(parsedUsers);
         }
       } catch (error) {
-        console.error("��� Error reloading users:", error);
+        console.error("❌ Error reloading users:", error);
       }
     };
 
@@ -5541,7 +5544,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                           >
-                            Ativar Notificaç����es
+                            Ativar Notificaç������es
                           </button>
                         </div>
                       </div>
@@ -7173,7 +7176,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa��ões
+                          Observações
                         </h3>
                       </div>
 
