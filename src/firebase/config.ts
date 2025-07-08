@@ -85,18 +85,27 @@ const isQuotaExceeded = () => {
   return false;
 };
 
-// Initialize Firebase services with quota protection
-try {
-  if (isQuotaExceeded()) {
-    console.log(
-      "⏸️ Firebase temporarily disabled due to quota exceeded - will retry automatically",
-    );
-    app = null;
-    db = null;
-    auth = null;
-  } else {
+// Promise to track Firebase initialization
+let firebaseInitPromise: Promise<void> | null = null;
+
+// Async function to initialize Firebase services
+const initializeFirebaseServices = async (): Promise<void> => {
+  try {
+    if (isQuotaExceeded()) {
+      console.log(
+        "⏸️ Firebase temporarily disabled due to quota exceeded - will retry automatically",
+      );
+      app = null;
+      db = null;
+      auth = null;
+      return;
+    }
+
     app = getFirebaseApp();
     if (app) {
+      // Wait a bit to ensure app is fully ready
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       // Inicialização protegida do Firestore com retry logic
       db = await FirebaseErrorFix.safeFirebaseOperation(async () => {
         console.log("🔄 Inicializando Firestore com proteção...");
