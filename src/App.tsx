@@ -143,6 +143,11 @@ function App() {
     addClient,
   } = dataSync;
 
+  // Derived data
+  const futureMaintenance = maintenance.filter(
+    (m) => new Date(m.scheduledDate) > new Date() && m.status === "pending",
+  );
+
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
   //   cleanAllData,
@@ -852,7 +857,7 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localizaç������o: ${work.location}
+   Localizaç�������o: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
