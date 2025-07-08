@@ -42,6 +42,7 @@ import { SharedDataManager } from "./components/SharedDataManager";
 import { DataSharingFixManager } from "./components/DataSharingFixManager";
 import { UserDataSharingFix } from "./components/UserDataSharingFix";
 import { DataSharingFixButton } from "./components/DataSharingFixButton";
+import { GlobalDataShareDiagnostic } from "./components/GlobalDataShareDiagnostic";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -495,7 +496,7 @@ function App() {
       setNotificationsEnabled(permission === "granted");
 
       if (permission === "granted") {
-        console.log("✅ Notifications already granted");
+        console.log("�� Notifications already granted");
       } else if (permission === "denied") {
         console.warn("❌ Notifications denied by user");
       } else {
