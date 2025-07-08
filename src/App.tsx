@@ -1819,11 +1819,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
                       <div
                         className={`w-1.5 h-1.5 rounded-full ${
-                          syncStatus === "completed"
-                            ? "bg-green-500"
-                            : syncStatus === "error"
-                              ? "bg-red-500"
-                              : "bg-blue-500"
+                          syncStatus === "error" ? "bg-red-500" : "bg-green-500"
                         }`}
                       ></div>
                       <span>
@@ -8255,7 +8251,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>������</span>
+                  <span>�������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
