@@ -143,7 +143,6 @@ function App() {
   const [settingsPassword, setSettingsPassword] = useState("");
   const [settingsPasswordError, setSettingsPasswordError] = useState("");
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
-  const [showDataSharingFix, setShowDataSharingFix] = useState(false);
   const [advancedPassword, setAdvancedPassword] = useState("");
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
@@ -1464,7 +1463,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "������️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
