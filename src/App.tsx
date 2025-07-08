@@ -151,18 +151,7 @@ function App() {
   // DADOS GLOBAIS SIMPLES - Todos os utilizadores veem todos os dados
   const dataSync = useDataSync();
 
-  // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
-  useEffect(() => {
-    // Backup inicial
-    DataProtectionService.createEmergencyBackup();
-
-    // Backup automático contínuo (reduzido para 10 minutos)
-    const backupInterval = setInterval(() => {
-      DataProtectionService.createEmergencyBackup();
-    }, 600000); // A cada 10 minutos
-
-    return () => clearInterval(backupInterval);
-  }, []);
+  // Sistema simplificado - sem backup automático complexo
 
   // DADOS GLOBAIS SIMPLES - Log dos dados partilhados
   useEffect(() => {
@@ -1487,7 +1476,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         console.warn("⚠️ Maps redirect is disabled");
       }
       if (!address) {
-        console.warn("⚠�� No address provided");
+        console.warn("⚠️ No address provided");
       }
     }
   };
@@ -5282,7 +5271,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado da Manutenç��o
+                          Estado da Manutenção
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
