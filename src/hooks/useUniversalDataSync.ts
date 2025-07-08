@@ -76,6 +76,16 @@ export function useUniversalDataSync(): UniversalSyncState &
         setState((prev) => ({ ...prev, syncStatus: "connecting" }));
 
         const initialized = await universalDataSync.initialize();
+        if (!initialized) {
+          console.log("📱 Universal sync não inicializado - modo local ativo");
+          setState((prev) => ({
+            ...prev,
+            isLoading: false,
+            syncStatus: "local",
+            error: null,
+          }));
+          return;
+        }
 
         if (!initialized) {
           if (mounted) {
