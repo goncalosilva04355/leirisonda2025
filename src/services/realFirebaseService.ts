@@ -302,7 +302,7 @@ class RealFirebaseService {
 
       await set(newMaintenanceRef, sanitizedData);
       console.log(
-        `✅ Maintenance for "${maintenanceData.poolName}" added to shared database - visible to all users`,
+        `✅ Maintenance for "${maintenanceData.poolName}" added to user's isolated data - only visible to current user`,
       );
       return newMaintenanceRef.key;
     } catch (error) {
