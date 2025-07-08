@@ -315,7 +315,7 @@ export const poolService = {
     });
   },
 
-  // Add new pool
+  // Add new pool - SEMPRE visível para todos os utilizadores
   async addPool(poolData: Omit<Pool, "id" | "createdAt" | "updatedAt">) {
     if (!isFirebaseAvailable()) {
       throw new Error("Firebase not configured");
@@ -325,11 +325,16 @@ export const poolService = {
       ...poolData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
+      // CORREÇÃO: Garantir que todas as piscinas são sempre visíveis para todos
+      sharedGlobally: true,
+      visibleToAllUsers: true,
+      isGlobalData: true,
+      dataSharing: "all_users",
     });
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Piscina ${poolData.name} adicionada - sincronização automática ativada`,
+      `✅ Piscina ${poolData.name} adicionada com partilha global - todos os utilizadores podem ver`,
     );
     await syncService.triggerAutoSync("create", "pools", docRef.id);
 
@@ -426,7 +431,7 @@ export const maintenanceService = {
     });
   },
 
-  // Add new maintenance
+  // Add new maintenance - SEMPRE visível para todos os utilizadores
   async addMaintenance(
     maintenanceData: Omit<Maintenance, "id" | "createdAt" | "updatedAt">,
   ) {
@@ -438,11 +443,16 @@ export const maintenanceService = {
       ...maintenanceData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
+      // CORREÇÃO: Garantir que todas as manutenções são sempre visíveis para todos
+      sharedGlobally: true,
+      visibleToAllUsers: true,
+      isGlobalData: true,
+      dataSharing: "all_users",
     });
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Manutenção para ${maintenanceData.poolName} adicionada - sincronização automática ativada`,
+      `✅ Manutenção para ${maintenanceData.poolName} adicionada com partilha global - todos os utilizadores podem ver`,
     );
     await syncService.triggerAutoSync("create", "maintenance", docRef.id);
 
@@ -490,7 +500,7 @@ export const maintenanceService = {
 
 // Work Services
 export const workService = {
-  // Listen to real-time changes
+  // Listen to real-time changes - SEMPRE dados globais partilhados
   subscribeToWorks(callback: (works: Work[]) => void) {
     if (!isFirebaseAvailable()) {
       const works = JSON.parse(localStorage.getItem("works") || "[]");
@@ -498,6 +508,7 @@ export const workService = {
       return () => {};
     }
 
+    // CORREÇÃO: Usar coleção global para garantir que todos os utilizadores vejam as obras
     const q = query(
       collection(db, COLLECTIONS.WORKS),
       orderBy("createdAt", "desc"),
@@ -506,12 +517,19 @@ export const workService = {
       const works = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
+        // Garantir que todas as obras são marcadas como globalmente visíveis
+        sharedGlobally: true,
+        visibleToAllUsers: true,
       })) as Work[];
+
+      console.log(
+        `🔍 OBRAS SINCRONIZADAS: ${works.length} obras agora visíveis para todos os utilizadores`,
+      );
       callback(works);
     });
   },
 
-  // Add new work
+  // Add new work - SEMPRE visível para todos os utilizadores
   async addWork(workData: Omit<Work, "id" | "createdAt" | "updatedAt">) {
     if (!isFirebaseAvailable()) {
       throw new Error("Firebase not configured");
@@ -521,18 +539,23 @@ export const workService = {
       ...workData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
+      // CORREÇÃO CRÍTICA: Garantir que todas as obras são sempre visíveis para todos
+      sharedGlobally: true,
+      visibleToAllUsers: true,
+      isGlobalData: true,
+      dataSharing: "all_users",
     });
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Obra ${workData.title} adicionada - sincronização automática ativada`,
+      `✅ Obra ${workData.title} adicionada com partilha global - todos os utilizadores podem ver`,
     );
     await syncService.triggerAutoSync("create", "works", docRef.id);
 
     return docRef.id;
   },
 
-  // Update work
+  // Update work - Manter visibilidade global
   async updateWork(workId: string, workData: Partial<Work>) {
     if (!isFirebaseAvailable()) {
       throw new Error("Firebase not configured");
@@ -542,11 +565,16 @@ export const workService = {
     await updateDoc(workRef, {
       ...workData,
       updatedAt: Timestamp.now(),
+      // MANTER flags de partilha global em todas as atualizações
+      sharedGlobally: true,
+      visibleToAllUsers: true,
+      isGlobalData: true,
+      dataSharing: "all_users",
     });
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Obra ${workId} atualizada - sincronização automática ativada`,
+      `✅ Obra ${workId} atualizada mantendo partilha global - todos os utilizadores podem ver`,
     );
     await syncService.triggerAutoSync("update", "works", workId);
   },

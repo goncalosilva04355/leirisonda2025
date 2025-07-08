@@ -43,6 +43,7 @@ import { DataSharingFixManager } from "./components/DataSharingFixManager";
 import { UserDataSharingFix } from "./components/UserDataSharingFix";
 import { DataSharingFixButton } from "./components/DataSharingFixButton";
 import { GlobalDataShareDiagnostic } from "./components/GlobalDataShareDiagnostic";
+import { DataVisibilityFix } from "./components/DataVisibilityFix";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -488,7 +489,7 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
-    console.log("🔔 Initializing notifications...");
+    console.log("��� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
       console.log("🔔 Current notification permission:", permission);
@@ -1063,7 +1064,7 @@ RESUMO EXECUTIVO:
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
 
-ESTATÍSTICAS:
+ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
 - Manutenções Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
@@ -1129,7 +1130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             "Agora vai receber notificações de obras atribuídas",
             "success",
           );
-          console.log("✅ Notifications enabled successfully");
+          console.log("�� Notifications enabled successfully");
         } else {
           console.warn("❌ Notification permission denied or dismissed");
         }
@@ -7682,7 +7683,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             status,
                             poolType,
                             dimensions,
-                            volume: volume ? parseInt(volume) : undefined,
+                            volume: volume || undefined,
                             filtrationSystem,
                             installationDate: installationDate
                               ? new Date(installationDate).toISOString()
@@ -8470,7 +8471,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - também funciona na página de login */}
+        {/* Admin Login Modal - tamb��m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
@@ -8513,6 +8514,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManager>
         <div className="min-h-screen bg-gray-50">
+          {/* Correção de Visibilidade de Dados - crítico para partilha entre utilizadores */}
+          {isAuthenticated && currentUser && (
+            <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
+              <DataVisibilityFix
+                onFixCompleted={() => {
+                  console.log(
+                    "✅ Correção de visibilidade aplicada - dados agora partilhados",
+                  );
+                }}
+              />
+            </div>
+          )}
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
