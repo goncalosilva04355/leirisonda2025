@@ -351,7 +351,7 @@ class RealFirebaseService {
       );
       await remove(maintenanceRef);
       console.log(
-        `�� Maintenance ${maintenanceId} deleted from user's isolated data - removed only for current user`,
+        `✅ Maintenance ${maintenanceId} deleted from user's isolated data - removed only for current user`,
       );
       return true;
     } catch (error) {
@@ -540,7 +540,7 @@ class RealFirebaseService {
           : [],
       };
 
-      console.log("✅ User's isolated data sync completed:", {
+      console.log("✅ Global data sync completed:", {
         pools: syncedData.pools.length,
         works: syncedData.works.length,
         maintenance: syncedData.maintenance.length,
