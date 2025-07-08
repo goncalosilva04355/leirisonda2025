@@ -151,34 +151,55 @@ class GlobalDataShareService {
       return () => {};
     }
 
-    console.log("📡 CONFIGURANDO LISTENERS GLOBAIS");
+    console.log("📡 CONFIGURANDO LISTENERS GLOBAIS COM PROTEÇÃO");
     console.log("🌐 TODOS OS UTILIZADORES VERÃO OS MESMOS DADOS");
 
-    // Listener para pools partilhados
-    const poolsListener = onSnapshot(
-      query(collection(db, "shared_pools"), orderBy("lastSync", "desc")),
-      (snapshot) => {
-        const pools = snapshot.docs.map((doc) => doc.data());
-        console.log(`🏊 POOLS GLOBAIS: ${pools.length} disponíveis para todos`);
-        callbacks.onPoolsChange(pools);
-      },
-      (error) => {
-        console.error("❌ Erro no listener de pools globais:", error);
-      },
-    );
+    const listeners: (() => void)[] = [];
 
-    // Listener para works partilhados
-    const worksListener = onSnapshot(
-      query(collection(db, "shared_works"), orderBy("lastSync", "desc")),
-      (snapshot) => {
-        const works = snapshot.docs.map((doc) => doc.data());
-        console.log(`⚒️ WORKS GLOBAIS: ${works.length} disponíveis para todos`);
-        callbacks.onWorksChange(works);
-      },
-      (error) => {
-        console.error("❌ Erro no listener de works globais:", error);
-      },
-    );
+    try {
+      // Listener para pools partilhados com proteção
+      const poolsListener = onSnapshot(
+        query(collection(db, "shared_pools"), orderBy("lastSync", "desc")),
+        {
+          next: (snapshot) => {
+            try {
+              const pools = snapshot.docs.map((doc) => doc.data());
+              console.log(`🏊 POOLS GLOBAIS: ${pools.length} disponíveis para todos`);
+              callbacks.onPoolsChange(pools);
+            } catch (error) {
+              console.error("❌ Erro ao processar pools:", error);
+              callbacks.onPoolsChange([]); // Fallback seguro
+            }
+          },
+          error: (error) => {
+            console.error("❌ Erro no listener de pools globais:", error);
+            callbacks.onPoolsChange([]); // Fallback seguro
+          }
+        }
+      );
+      listeners.push(poolsListener);
+
+      // Listener para works partilhados com proteção
+      const worksListener = onSnapshot(
+        query(collection(db, "shared_works"), orderBy("lastSync", "desc")),
+        {
+          next: (snapshot) => {
+            try {
+              const works = snapshot.docs.map((doc) => doc.data());
+              console.log(`⚒️ WORKS GLOBAIS: ${works.length} disponíveis para todos`);
+              callbacks.onWorksChange(works);
+            } catch (error) {
+              console.error("❌ Erro ao processar works:", error);
+              callbacks.onWorksChange([]); // Fallback seguro
+            }
+          },
+          error: (error) => {
+            console.error("❌ Erro no listener de works globais:", error);
+            callbacks.onWorksChange([]); // Fallback seguro
+          }
+        }
+      );
+      listeners.push(worksListener);
 
     // Listener para maintenance partilhado
     const maintenanceListener = onSnapshot(
