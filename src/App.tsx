@@ -181,7 +181,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações autom��ticas desabilitadas para resolver instabilidade
+    // Verificações autom����ticas desabilitadas para resolver instabilidade
     // Sistema funcionará normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
@@ -5806,7 +5806,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>🔍 Estado e localização</li>
+                        <li>���� Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
                         <li>• Histórico de manuten����ões</li>
                         <li>• Próximas interven��ões</li>
@@ -7031,8 +7031,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠��� Nenhum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuição de
+                                ⚠����� Nenhum utilizador encontrado. Vá à Área
+                                de Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -7801,7 +7801,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duraç��o Real (horas)
+                          Duraç���o Real (horas)
                         </label>
                         <input
                           type="number"
@@ -8514,18 +8514,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManager>
         <div className="min-h-screen bg-gray-50">
-          {/* Correção de Visibilidade de Dados - crítico para partilha entre utilizadores */}
-          {isAuthenticated && currentUser && (
-            <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
-              <DataVisibilityFix
-                onFixCompleted={() => {
-                  console.log(
-                    "✅ Correção de visibilidade aplicada - dados agora partilhados",
-                  );
-                }}
-              />
-            </div>
-          )}
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
