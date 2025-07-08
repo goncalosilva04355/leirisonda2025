@@ -61,12 +61,7 @@ export const useRealTimeUpdates = (): RealTimeUpdatesHook => {
     setHasNewUpdates(false);
   };
 
-  // Request notification permission on mount
-  useEffect(() => {
-    if ("Notification" in window && Notification.permission === "default") {
-      Notification.requestPermission();
-    }
-  }, []);
+  // Notification permissions disabled per user request
 
   return {
     notifications,
