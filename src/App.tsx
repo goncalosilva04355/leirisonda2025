@@ -40,6 +40,8 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import { SharedDataManager } from "./components/SharedDataManager";
 import { DataSharingFixManager } from "./components/DataSharingFixManager";
+import { UserDataSharingFix } from "./components/UserDataSharingFix";
+import { DataSharingFixButton } from "./components/DataSharingFixButton";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -2138,7 +2140,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenção agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenções aparecerão aqui
+                          As futuras manutenç��es aparecerão aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -5676,6 +5678,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
+                {/* Data Sharing Fix Button - Only for Super Admin */}
+                {currentUser?.role === "super_admin" && (
+                  <DataSharingFixButton currentUser={currentUser} />
+                )}
+
+                {/* User Data Sharing Diagnostics - Only for Super Admin */}
+                {currentUser?.role === "super_admin" && (
+                  <UserDataSharingFix currentUser={currentUser} />
+                )}
+
                 {/* Data Management Section - Only for Super Admin */}
                 {currentUser?.role === "super_admin" && (
                   <div className="bg-white rounded-lg p-6 shadow-sm">
@@ -6500,7 +6512,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={(e) => {
                           e.preventDefault();
                           alert(
-                            "Cliente criado com sucesso! (Função em desenvolvimento)",
+                            "Cliente criado com sucesso! (Funç��o em desenvolvimento)",
                           );
                           setActiveSection("clientes");
                         }}
