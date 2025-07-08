@@ -318,20 +318,21 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
+      const userId = this.getCurrentUserId();
       const maintenanceRef = ref(
         this.database!,
-        `shared/maintenance/${maintenanceId}`, // Global shared location
+        `users/${userId}/maintenance/${maintenanceId}`, // User-specific location
       );
       // Sanitize data before sending to Firebase
       const sanitizedData = this.sanitizeForFirebase({
         ...maintenanceData,
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true,
+        userId: this.getCurrentUserId(),
       });
 
       await update(maintenanceRef, sanitizedData);
       console.log(
-        `✅ Maintenance ${maintenanceId} updated in shared database - visible to all users`,
+        `✅ Maintenance ${maintenanceId} updated in user's isolated data - only visible to current user`,
       );
       return true;
     } catch (error) {
