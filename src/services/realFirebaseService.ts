@@ -422,10 +422,14 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const clientRef = ref(this.database!, `shared/clients/${clientId}`); // Global shared location
+      const userId = this.getCurrentUserId();
+      const clientRef = ref(
+        this.database!,
+        `users/${userId}/clients/${clientId}`,
+      ); // User-specific location
       await remove(clientRef);
       console.log(
-        `✅ Client ${clientId} deleted from shared database - removed for all users`,
+        `✅ Client ${clientId} deleted from user's isolated data - removed only for current user`,
       );
       return true;
     } catch (error) {
