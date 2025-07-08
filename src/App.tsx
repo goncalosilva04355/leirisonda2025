@@ -4149,7 +4149,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             location: location || "",
                             startTime: startTime || "",
                             endTime: endTime || "",
-                            status: status || "pending",
+                            status:
+                              (status as
+                                | "pending"
+                                | "in_progress"
+                                | "completed"
+                                | "cancelled") || "pending",
                             description: description || "",
                             ...boreData, // Spread bore-specific data if applicable
                             budget: budget ? parseFloat(budget) : null,
