@@ -176,20 +176,21 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
   useEffect(() => {
-    console.log("🌐 SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
-      obras: universalSync.obras.length,
-      manutencoes: universalSync.manutencoes.length,
-      piscinas: universalSync.piscinas.length,
-      clientes: universalSync.clientes.length,
-      total: universalSync.totalItems,
-      status: universalSync.syncStatus,
+    console.log("🌐 SISTEMA SIMPLES ATIVO:", {
+      obras: simpleData.works.length,
+      manutencoes: simpleData.maintenance.length,
+      piscinas: simpleData.pools.length,
+      clientes: simpleData.clients.length,
+      utilizadores: simpleData.users.length,
+      loading: simpleData.isLoading,
     });
   }, [
-    universalSync.obras,
-    universalSync.manutencoes,
-    universalSync.piscinas,
-    universalSync.clientes,
-    universalSync.syncStatus,
+    simpleData.works,
+    simpleData.maintenance,
+    simpleData.pools,
+    simpleData.clients,
+    simpleData.users,
+    simpleData.isLoading,
   ]);
 
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
@@ -724,7 +725,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç���o Regular",
+      type: "Manuten�����o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -1111,7 +1112,7 @@ RESUMO EXECUTIVO:
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
 
-ESTAT��STICAS:
+ESTAT���STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
 - Manutenç��es Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
@@ -3332,7 +3333,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç������o</option>
+                            <option value="instalacao">Instalaç����o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -3738,7 +3739,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi������ões do Furo
+                              Medi��������ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -5687,7 +5688,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </button>
                           </div>
                           <p className="text-green-700 text-sm mb-3">
-                            Quando ativado, clicar numa morada abrirá o Google
+                            Quando ativado, clicar numa morada abrir�� o Google
                             Maps para navegação.
                           </p>
                           <p className="text-green-600 text-xs">
@@ -5917,7 +5918,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>�� Estados de progresso</li>
+                        <li>• Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -7944,7 +7945,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             inputs[4] as HTMLInputElement
                           ).value; // Duração Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
-                            .value; // Duração Real
+                            .value; // Dura��ão Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
                           const priority = (inputs[7] as HTMLInputElement)
                             .value; // Prioridade
