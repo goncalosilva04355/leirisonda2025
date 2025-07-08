@@ -51,6 +51,26 @@ export interface UniversalSyncActions {
  * - Migração automática de dados locais
  * - Interface unificada para todos os tipos de dados
  */
+// Helper function to safely load local data
+const loadLocalData = () => {
+  try {
+    return {
+      obras: JSON.parse(localStorage.getItem("works") || "[]"),
+      manutencoes: JSON.parse(localStorage.getItem("maintenance") || "[]"),
+      piscinas: JSON.parse(localStorage.getItem("pools") || "[]"),
+      clientes: JSON.parse(localStorage.getItem("clients") || "[]"),
+    };
+  } catch (error) {
+    console.warn("⚠️ Erro ao carregar dados locais:", error);
+    return {
+      obras: [],
+      manutencoes: [],
+      piscinas: [],
+      clientes: [],
+    };
+  }
+};
+
 export function useUniversalDataSync(): UniversalSyncState &
   UniversalSyncActions {
   const [state, setState] = useState<UniversalSyncState>({
@@ -409,7 +429,7 @@ export function useUniversalDataSync(): UniversalSyncState &
       );
       return id;
     } catch (error: any) {
-      console.error("❌ Erro ao adicionar piscina:", error);
+      console.error("�� Erro ao adicionar piscina:", error);
       setState((prev) => ({
         ...prev,
         error: error.message,
