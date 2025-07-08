@@ -418,7 +418,6 @@ export function useUniversalDataSync(): UniversalSyncState &
   // Forçar sincronização completa
   const forceSyncAll = useCallback(async (): Promise<void> => {
     try {
-      console.log("🔄 FORÇANDO SINCRONIZAÇÃO COMPLETA...");
       setState((prev) => ({ ...prev, isLoading: true, syncStatus: "syncing" }));
 
       const universalData = await universalDataSync.getAllUniversalData();
@@ -430,16 +429,7 @@ export function useUniversalDataSync(): UniversalSyncState &
         error: null,
         syncStatus: "connected",
       }));
-
-      console.log("✅ SINCRONIZAÇÃO COMPLETA CONCLUÍDA:", {
-        obras: universalData.obras.length,
-        manutencoes: universalData.manutencoes.length,
-        piscinas: universalData.piscinas.length,
-        clientes: universalData.clientes.length,
-        total: universalData.totalItems,
-      });
     } catch (error: any) {
-      console.error("❌ Erro na sincronização forçada:", error);
       setState((prev) => ({
         ...prev,
         error: error.message,
