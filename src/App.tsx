@@ -3679,7 +3679,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi��ões do Furo
+                              Medi����ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -3838,7 +3838,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observações Específicas do Furo */}
+                          {/* Observa��ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -7350,7 +7350,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             startTime,
                             endTime,
                             // Only update status if it's actually different from current status
-                            ...(status !== editingWork?.status && { status }),
+                            ...(status !== editingWork?.status && {
+                              status: status as
+                                | "pending"
+                                | "in_progress"
+                                | "completed"
+                                | "cancelled",
+                            }),
                             workSheetCompleted,
                             workPerformed,
                             observations,
