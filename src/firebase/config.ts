@@ -186,6 +186,25 @@ const initializeFirebaseServices = async (): Promise<void> => {
             attempts++;
             console.warn(`⚠️ Tentativa ${attempts} falhou:`, error.message);
 
+            // Handle specific getImmediate errors
+            if (
+              error.message?.includes("getImmediate") ||
+              error.stack?.includes("getImmediate")
+            ) {
+              console.log(
+                "🔧 Erro getImmediate detectado, aguardando mais tempo...",
+              );
+              // Reset the app and try to get a fresh instance
+              app = null;
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+              app = getFirebaseApp();
+              if (!app) {
+                throw new Error(
+                  "Failed to reinitialize Firebase app after getImmediate error",
+                );
+              }
+            }
+
             if (error.message?.includes("ReadableStream")) {
               console.log("🔧 Aplicando correção de ReadableStream...");
               await FirebaseErrorFix.fixReadableStreamError(error);
