@@ -1464,7 +1464,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "������️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
@@ -9157,29 +9157,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <InstallPrompt />
 
           {/* Data Sharing Fix Manager */}
-          {showDataSharingFix && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-                <div className="flex items-center justify-between p-6 border-b">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    🚨 Resolver Problema: Dados Não Partilhados Entre
-                    Utilizadores
-                  </h2>
-                  <button
-                    onClick={() => setShowDataSharingFix(false)}
-                    className="p-2 hover:bg-gray-100 rounded-lg"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-                <div className="p-6">
-                  <DataSharingFixManager
-                    onClose={() => setShowDataSharingFix(false)}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Admin Login Modal */}
           {showAdminLogin && !isAdminAuthenticated && (
