@@ -1430,7 +1430,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠��� Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
             syncError,
           );
         }
@@ -7231,7 +7231,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             .value; // Morada
                           const startTime = (inputs[5] as HTMLInputElement)
                             .value; // Hora de Entrada
-                          const endTime = (inputs[6] as HTMLInputElement).value; // Hora de Saída
+                          const endTime = (inputs[6] as HTMLInputElement).value; // Hora de Sa��da
                           const status = (inputs[7] as HTMLSelectElement).value; // Estado
                           const workSheetCompleted = (
                             inputs[8] as HTMLInputElement
