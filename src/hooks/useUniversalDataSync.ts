@@ -96,8 +96,8 @@ export function useUniversalDataSync(): UniversalSyncState &
 
     const initializeUniversalSync = async () => {
       try {
-        // Inicializar sincronização silenciosa
-        setState((prev) => ({ ...prev, syncStatus: "connecting" }));
+        // Inicializar sincronização silenciosa em background
+        // Keep current status - don't change to connecting
 
         // Add timeout to prevent stuck connecting status
         const initPromise = universalDataSync.initialize();
