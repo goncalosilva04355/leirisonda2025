@@ -101,6 +101,7 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
       }
 
       // Check Firestore (crossUserDataSync) - simplified check
+      console.log("📊 Analisando estado da partilha...");
       let firestoreStatus = { connected: false, dataCount: 0 };
       // Note: crossUserDataSync usa Firestore, mas vamos simplificar a verificação
 
@@ -112,22 +113,32 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
       const hasLocalData = totalLocalData > 0;
       const hasRealtimeData = realtimeDbStatus.dataCount > 0;
 
+      console.log("📊 Análise:", {
+        totalLocalData,
+        hasLocalData,
+        hasRealtimeData,
+        realtimeDbConnected: realtimeDbStatus.connected,
+      });
+
       let sharingStatus = {
         isWorking: false,
         recommendedAction: "",
       };
 
       if (hasLocalData && !hasRealtimeData) {
+        console.log("📋 Situação: Dados locais sem partilha");
         sharingStatus = {
           isWorking: false,
           recommendedAction: "MIGRATE_TO_REALTIME",
         };
       } else if (hasRealtimeData) {
+        console.log("✅ Situação: Partilha ativa");
         sharingStatus = {
           isWorking: true,
           recommendedAction: "WORKING",
         };
       } else if (!hasLocalData && !hasRealtimeData) {
+        console.log("📝 Situação: Sem dados");
         sharingStatus = {
           isWorking: true,
           recommendedAction: "NO_DATA",
