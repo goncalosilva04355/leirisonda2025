@@ -306,7 +306,7 @@ export const userService = {
 export const poolService = {
   // Listen to real-time changes
   async subscribeToPools(callback: (pools: Pool[]) => void) {
-    if (!isFirebaseAvailable()) {
+    if (!(await isFirebaseAvailable())) {
       const pools = JSON.parse(localStorage.getItem("pools") || "[]");
       callback(pools);
       return () => {};
@@ -514,7 +514,7 @@ export const maintenanceService = {
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Manutenção ${maintenanceId} removida - sincronização automática ativada`,
+      `✅ Manuten��ão ${maintenanceId} removida - sincronização automática ativada`,
     );
     await syncService.triggerAutoSync("delete", "maintenance", maintenanceId);
   },
