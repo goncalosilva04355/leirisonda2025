@@ -157,10 +157,10 @@ function App() {
   const cleanupLoading = false;
   const cleanupError = null;
 
-  // Auto-sync hook for automatic Firebase �� localStorage synchronization
-  const autoSyncData = useAutoSync();
-  const { syncStatus, isAutoSyncing } = autoSyncData;
-  const autoSyncLastSync = autoSyncData.lastSync;
+  // Auto-sync hook removed - using simplified approach
+  const syncStatus = "idle";
+  const isAutoSyncing = false;
+  const autoSyncLastSync = null;
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -812,7 +812,7 @@ ${index + 1}. ${pool.name}
 
   const generateMaintenancePDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO DE MANUTENÇÕES
+LEIRISONDA - RELAT����RIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -861,7 +861,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or����amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -1375,7 +1375,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `����� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
+            `������ Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -2791,7 +2791,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </div>
                               <div>
-                                <span className="font-medium">Técnico:</span>{" "}
+                                <span className="font-medium">T��cnico:</span>{" "}
                                 {maint.technician}
                               </div>
                               {maint.clientName && (
@@ -7834,13 +7834,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   }
 
   return (
-    <AutoSyncProvider
-      enabled={false}
-      syncInterval={15000}
-      collections={["users", "pools", "maintenance", "works", "clients"]}
-      showNotifications={false}
-    >
-      <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
         {/* Sidebar */}
         <div
           className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
@@ -8122,7 +8116,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                         disabled={!enableMapsRedirect}
                       >
-                        📍 {selectedWork.location}
+                        ���� {selectedWork.location}
                       </button>
                     </div>
                     <div>
