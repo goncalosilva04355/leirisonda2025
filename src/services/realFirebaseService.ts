@@ -459,11 +459,14 @@ class RealFirebaseService {
   onWorksChange(callback: (works: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const worksRef = ref(this.database!, "shared/works"); // Global shared data
+    const userId = this.getCurrentUserId();
+    const worksRef = ref(this.database!, `users/${userId}/works`); // User-specific data
     const unsubscribe = onValue(worksRef, (snapshot) => {
       const data = snapshot.val();
       const works = data ? Object.values(data) : [];
-      console.log(`🔄 SYNC: ${works.length} works synced across all users`);
+      console.log(
+        `🔄 SYNC: ${works.length} works synced for current user only`,
+      );
       callback(works);
     });
 
