@@ -155,7 +155,10 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // Data sync hook - manages all data with optional Firebase sync
+  // SINCRONIZAÇÃO UNIVERSAL - Garante que todos os utilizadores vejam todos os dados
+  const universalSync = useUniversalDataSync();
+
+  // Data sync hook - fallback para compatibilidade
   const dataSync = useDataSync();
 
   // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
@@ -170,6 +173,24 @@ function App() {
 
     return () => clearInterval(backupInterval);
   }, []);
+
+  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
+  useEffect(() => {
+    console.log("🌐 SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+      obras: universalSync.obras.length,
+      manutencoes: universalSync.manutencoes.length,
+      piscinas: universalSync.piscinas.length,
+      clientes: universalSync.clientes.length,
+      total: universalSync.totalItems,
+      status: universalSync.syncStatus,
+    });
+  }, [
+    universalSync.obras,
+    universalSync.manutencoes,
+    universalSync.piscinas,
+    universalSync.clientes,
+    universalSync.syncStatus,
+  ]);
 
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
@@ -5567,7 +5588,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                          🏊
+                          ��
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
