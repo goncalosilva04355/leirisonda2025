@@ -59,7 +59,6 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
-import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -154,10 +153,7 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Garante que todos os utilizadores vejam todos os dados
-  const universalSync = useUniversalDataSync();
-
-  // Data sync hook - fallback para compatibilidade
+  // DADOS GLOBAIS SIMPLES - Todos os utilizadores veem todos os dados
   const dataSync = useDataSync();
 
   // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
@@ -464,7 +460,7 @@ function App() {
             setCurrentUser(user);
             setIsAuthenticated(true);
 
-            // Auto-navegação removida para evitar loop de login
+            // Auto-navegaç��o removida para evitar loop de login
             console.log(
               "✅ User authenticated - avoiding auto-navigation loop",
             );
