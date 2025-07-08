@@ -182,8 +182,8 @@ export function useDataSync(): SyncState & SyncActions {
     console.log("❌ Partilha entre utilizadores DESATIVADA");
   }, []);
 
-  // PARTILHA GLOBAL DESATIVADA - dados isolados por utilizador
-  const [syncEnabled, setSyncEnabled] = useState(false);
+  // PARTILHA GLOBAL SEMPRE ATIVA - todos os utilizadores veem todas as obras
+  const [syncEnabled, setSyncEnabled] = useState(true);
 
   // DADOS ISOLADOS - cada utilizador vê apenas os seus dados
   useEffect(() => {
@@ -658,7 +658,7 @@ export function useDataSync(): SyncState & SyncActions {
   // Works
   const addWork = useCallback(
     withAutoSync(async (workData: Omit<Work, "id" | "createdAt">) => {
-      console.log("�� addWork called with data:", workData);
+      console.log("🔧 addWork called with data:", workData);
 
       // Firebase auth provides current user info automatically
       const currentUser = null; // Firebase will handle user tracking
