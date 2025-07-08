@@ -39,7 +39,7 @@ export default defineConfig({
       "firebase/app",
       "firebase/firestore",
       "firebase/auth",
-      "web-streams-polyfill/ponyfill",
+      "web-streams-polyfill",
     ],
     exclude: ["@firebase/firestore"],
   },
