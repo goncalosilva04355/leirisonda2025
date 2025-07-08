@@ -253,41 +253,8 @@ function App() {
     works,
     clients,
     isLoading: isDataLoading,
-    error: syncError,
-    addObra,
-    addManutencao,
-    addPiscina,
-    addCliente,
-    updateObra,
-    updateManutencao,
-    updatePiscina,
-    updateCliente,
-    deleteObra,
-    deleteManutencao,
-    deletePiscina,
-    deleteCliente,
-    forceSyncAll,
-    syncStatus,
+    error: dataError,
   } = simpleData;
-
-  // Mapear dados universais para compatibilidade com código existente
-  const pools = piscinas;
-  const maintenance = manutencoes;
-  const works = obras;
-  const clients = clientes;
-
-  // Calcular manutenções futuras
-  const today = new Date();
-  const futureMaintenance = manutencoes.filter(
-    (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
-  );
-
-  // Funções de compatibilidade
-  const addPool = (data: any) => addPiscina(data);
-  const addWork = (data: any) => addObra(data);
-  const addMaintenance = (data: any) => addManutencao(data);
-  const addClient = (data: any) => addCliente(data);
-  const syncWithFirebase = () => forceSyncAll();
   const enableSync = (enabled: boolean) => {
     console.log("Sync is always enabled in Universal Sync mode:", enabled);
   };
@@ -1092,7 +1059,7 @@ ${index + 1}. ${client.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -3443,7 +3410,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Viaturas e Técnicos */}
+                    {/* Viaturas e T��cnicos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
