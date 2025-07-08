@@ -17,8 +17,9 @@ if (typeof globalThis !== "undefined") {
     );
 
     // Try to load the full polyfill
-    import("web-streams-polyfill")
-      .then(({ ReadableStream, WritableStream, TransformStream }) => {
+    import("web-streams-polyfill/dist/ponyfill")
+      .then((polyfill: any) => {
+        const { ReadableStream, WritableStream, TransformStream } = polyfill;
         if (!globalThis.ReadableStream || needsPolyfill) {
           globalThis.ReadableStream = ReadableStream;
           console.log("✅ ReadableStream polyfill loaded");
