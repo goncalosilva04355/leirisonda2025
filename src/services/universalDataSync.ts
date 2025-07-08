@@ -839,6 +839,50 @@ class UniversalDataSyncService {
   }
 
   /**
+   * Forçar sincronização de dados locais para Firebase
+   */
+  async forceSyncLocalToFirebase(): Promise<void> {
+    if (!this.isFirebaseReady() || !db) {
+      console.warn("❌ Firebase não disponível para sincronização forçada");
+      return;
+    }
+
+    console.log("🔄 Forçando sincronização de dados locais para Firebase...");
+
+    try {
+      const localData = {
+        obras: this.getLocalDataSafe("works") || [],
+        manutencoes: this.getLocalDataSafe("maintenance") || [],
+        piscinas: this.getLocalDataSafe("pools") || [],
+        clientes: this.getLocalDataSafe("clients") || [],
+      };
+
+      let syncCount = 0;
+
+      // Sync obras
+      for (const obra of localData.obras) {
+        try {
+          await setDoc(doc(db!, "universal_obras", obra.id), {
+            ...obra,
+            universallyShared: true,
+            visibleToAllUsers: true,
+            lastSync: new Date().toISOString(),
+          });
+          syncCount++;
+        } catch (error) {
+          console.warn(`⚠️ Erro ao sincronizar obra ${obra.id}:`, error);
+        }
+      }
+
+      console.log(
+        `✅ Sincronização forçada concluída: ${syncCount} itens sincronizados`,
+      );
+    } catch (error) {
+      console.error("❌ Erro na sincronização forçada:", error);
+    }
+  }
+
+  /**
    * Cleanup dos listeners
    */
   cleanup(): void {
