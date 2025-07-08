@@ -315,7 +315,7 @@ export const poolService = {
     });
   },
 
-  // Add new pool
+  // Add new pool - SEMPRE visível para todos os utilizadores
   async addPool(poolData: Omit<Pool, "id" | "createdAt" | "updatedAt">) {
     if (!isFirebaseAvailable()) {
       throw new Error("Firebase not configured");
@@ -325,11 +325,16 @@ export const poolService = {
       ...poolData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
+      // CORREÇÃO: Garantir que todas as piscinas são sempre visíveis para todos
+      sharedGlobally: true,
+      visibleToAllUsers: true,
+      isGlobalData: true,
+      dataSharing: "all_users",
     });
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Piscina ${poolData.name} adicionada - sincronização automática ativada`,
+      `✅ Piscina ${poolData.name} adicionada com partilha global - todos os utilizadores podem ver`,
     );
     await syncService.triggerAutoSync("create", "pools", docRef.id);
 
@@ -426,7 +431,7 @@ export const maintenanceService = {
     });
   },
 
-  // Add new maintenance
+  // Add new maintenance - SEMPRE visível para todos os utilizadores
   async addMaintenance(
     maintenanceData: Omit<Maintenance, "id" | "createdAt" | "updatedAt">,
   ) {
@@ -438,11 +443,16 @@ export const maintenanceService = {
       ...maintenanceData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
+      // CORREÇÃO: Garantir que todas as manutenções são sempre visíveis para todos
+      sharedGlobally: true,
+      visibleToAllUsers: true,
+      isGlobalData: true,
+      dataSharing: "all_users",
     });
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Manutenção para ${maintenanceData.poolName} adicionada - sincronização automática ativada`,
+      `✅ Manutenção para ${maintenanceData.poolName} adicionada com partilha global - todos os utilizadores podem ver`,
     );
     await syncService.triggerAutoSync("create", "maintenance", docRef.id);
 
