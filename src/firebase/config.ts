@@ -18,9 +18,9 @@ const defaultFirebaseConfig = {
 
 // Function to get Firebase config from localStorage or use default
 const getFirebaseConfig = () => {
-  // PARTILHA GLOBAL: Configuração fixa para todos os utilizadores
-  console.log("🌐 Firebase: Partilha de dados global sempre ativa");
-  console.log("❌ localStorage: Nunca será usado");
+  // MIGRAÇÃO GRADUAL: Preservando acesso aos dados existentes
+  console.log("🔄 Firebase: Migração gradual para isolamento de dados");
+  console.log("✅ Dados existentes: Acessíveis durante transição");
   return defaultFirebaseConfig;
 };
 

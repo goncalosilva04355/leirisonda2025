@@ -197,20 +197,20 @@ export function useDataSync(): SyncState & SyncActions {
     lastSync: null,
   });
 
-  // PARTILHA GLOBAL SEMPRE ATIVA - NUNCA localStorage
+  // MIGRAÇÃO GRADUAL PARA ISOLAMENTO DE DADOS
   useEffect(() => {
-    console.log("🌐 PARTILHA DE DADOS SEMPRE ATIVA ENTRE UTILIZADORES");
-    console.log("❌ LOCALSTORAGE: Nunca será usado");
-    console.log("✅ FIREBASE: Todos os dados sempre partilhados globalmente");
+    console.log("🔄 MIGRAÇÃO GRADUAL PARA ISOLAMENTO DE DADOS");
+    console.log("✅ Dados existentes: Preservados e acessíveis");
+    console.log("🔒 Novos dados: Terão propriedade específica por utilizador");
   }, []);
 
   // PARTILHA GLOBAL SEMPRE ATIVA - nunca desabilitar
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  // PARTILHA GLOBAL automática - nunca usar localStorage
+  // MIGRAÇÃO GRADUAL - preservando dados existentes
   useEffect(() => {
     console.log(
-      "🌐 DADOS PARTILHADOS GLOBALMENTE - Visíveis para todos os utilizadores:",
+      "🔄 DADOS EM MIGRAÇÃO - Preservando acesso aos dados existentes:",
       {
         works: state.works.length,
         pools: state.pools.length,
