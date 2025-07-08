@@ -119,6 +119,19 @@ const initializeFirebaseServices = async (): Promise<void> => {
 
         while (attempts < maxAttempts) {
           try {
+            // Ensure app is still valid and ready
+            if (!app) {
+              throw new Error("Firebase app is null");
+            }
+
+            // Check if app has the required properties
+            if (!app.options || !app.name) {
+              throw new Error("Firebase app is not properly initialized");
+            }
+
+            console.log(
+              `🔄 Tentativa ${attempts + 1}: Chamando getFirestore...`,
+            );
             const firestoreInstance = getFirestore(app);
             console.log(
               `✅ Firestore inicializado na tentativa ${attempts + 1}`,
@@ -241,7 +254,7 @@ export const getFirebaseStatus = () => {
 // Function to mark quota exceeded - Firebase handles this automatically
 export const markQuotaExceeded = () => {
   console.warn(
-    "🚨 Firebase quota exceeded - Firebase will handle cooldown automatically",
+    "���� Firebase quota exceeded - Firebase will handle cooldown automatically",
   );
 };
 
