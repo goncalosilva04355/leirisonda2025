@@ -42,7 +42,7 @@ export interface User {
   };
   active: boolean;
   createdAt: string;
-  updatedAt?: Timestamp;
+  updatedAt?: string;
 }
 
 export interface Pool {
@@ -422,7 +422,7 @@ export const maintenanceService = {
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Manutenç��o ${maintenanceId} atualizada - sincronização automática ativada`,
+      `✅ Manutenção ${maintenanceId} atualizada - sincronização automática ativada`,
     );
     await syncService.triggerAutoSync("update", "maintenance", maintenanceId);
   },
