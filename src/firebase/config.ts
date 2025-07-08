@@ -309,7 +309,7 @@ const initializeFirebaseServices = async (): Promise<void> => {
       console.log("✅ Firebase services initialized successfully");
     } else {
       console.warn(
-        "⚠�� Firebase app not available, services will use fallback mode",
+        "⚠️ Firebase app not available, services will use fallback mode",
       );
     }
   } catch (error) {
@@ -409,7 +409,20 @@ const ensureAuth = async (): Promise<any> => {
   return auth;
 };
 
-// Basic initialization - prepare the app and services
+// Force immediate initialization to avoid lazy loading issues
+(async () => {
+  try {
+    console.log("🚀 Starting immediate Firebase initialization...");
+    await ensureFirebaseApp();
+    await ensureAuth();
+    await ensureFirestore();
+    console.log("✅ Firebase initialization completed");
+  } catch (error) {
+    console.warn("⚠️ Firebase immediate initialization failed:", error);
+  }
+})();
+
+// Basic initialization promise
 firebaseInitPromise = (async () => {
   await ensureFirebaseApp();
   await ensureAuth();
