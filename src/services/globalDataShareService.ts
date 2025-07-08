@@ -164,7 +164,9 @@ class GlobalDataShareService {
           next: (snapshot) => {
             try {
               const pools = snapshot.docs.map((doc) => doc.data());
-              console.log(`🏊 POOLS GLOBAIS: ${pools.length} disponíveis para todos`);
+              console.log(
+                `🏊 POOLS GLOBAIS: ${pools.length} disponíveis para todos`,
+              );
               callbacks.onPoolsChange(pools);
             } catch (error) {
               console.error("❌ Erro ao processar pools:", error);
@@ -174,8 +176,8 @@ class GlobalDataShareService {
           error: (error) => {
             console.error("❌ Erro no listener de pools globais:", error);
             callbacks.onPoolsChange([]); // Fallback seguro
-          }
-        }
+          },
+        },
       );
       listeners.push(poolsListener);
 
@@ -186,7 +188,9 @@ class GlobalDataShareService {
           next: (snapshot) => {
             try {
               const works = snapshot.docs.map((doc) => doc.data());
-              console.log(`⚒️ WORKS GLOBAIS: ${works.length} disponíveis para todos`);
+              console.log(
+                `⚒️ WORKS GLOBAIS: ${works.length} disponíveis para todos`,
+              );
               callbacks.onWorksChange(works);
             } catch (error) {
               console.error("❌ Erro ao processar works:", error);
@@ -196,53 +200,86 @@ class GlobalDataShareService {
           error: (error) => {
             console.error("❌ Erro no listener de works globais:", error);
             callbacks.onWorksChange([]); // Fallback seguro
-          }
-        }
+          },
+        },
       );
       listeners.push(worksListener);
 
-    // Listener para maintenance partilhado
-    const maintenanceListener = onSnapshot(
-      query(collection(db, "shared_maintenance"), orderBy("lastSync", "desc")),
-      (snapshot) => {
-        const maintenance = snapshot.docs.map((doc) => doc.data());
-        console.log(
-          `🔧 MAINTENANCE GLOBAL: ${maintenance.length} disponível para todos`,
-        );
-        callbacks.onMaintenanceChange(maintenance);
-      },
-      (error) => {
-        console.error("❌ Erro no listener de maintenance global:", error);
-      },
-    );
+      // Listener para maintenance partilhado com proteção
+      const maintenanceListener = onSnapshot(
+        query(
+          collection(db, "shared_maintenance"),
+          orderBy("lastSync", "desc"),
+        ),
+        {
+          next: (snapshot) => {
+            try {
+              const maintenance = snapshot.docs.map((doc) => doc.data());
+              console.log(
+                `🔧 MAINTENANCE GLOBAL: ${maintenance.length} disponível para todos`,
+              );
+              callbacks.onMaintenanceChange(maintenance);
+            } catch (error) {
+              console.error("❌ Erro ao processar maintenance:", error);
+              callbacks.onMaintenanceChange([]); // Fallback seguro
+            }
+          },
+          error: (error) => {
+            console.error("❌ Erro no listener de maintenance global:", error);
+            callbacks.onMaintenanceChange([]); // Fallback seguro
+          },
+        },
+      );
+      listeners.push(maintenanceListener);
 
-    // Listener para clients partilhados
-    const clientsListener = onSnapshot(
-      query(collection(db, "shared_clients"), orderBy("lastSync", "desc")),
-      (snapshot) => {
-        const clients = snapshot.docs.map((doc) => doc.data());
-        console.log(
-          `👥 CLIENTS GLOBAIS: ${clients.length} disponíveis para todos`,
-        );
-        callbacks.onClientsChange(clients);
-      },
-      (error) => {
-        console.error("❌ Erro no listener de clients globais:", error);
-      },
-    );
+      // Listener para clients partilhados com proteção
+      const clientsListener = onSnapshot(
+        query(collection(db, "shared_clients"), orderBy("lastSync", "desc")),
+        {
+          next: (snapshot) => {
+            try {
+              const clients = snapshot.docs.map((doc) => doc.data());
+              console.log(
+                `👥 CLIENTS GLOBAIS: ${clients.length} disponíveis para todos`,
+              );
+              callbacks.onClientsChange(clients);
+            } catch (error) {
+              console.error("❌ Erro ao processar clients:", error);
+              callbacks.onClientsChange([]); // Fallback seguro
+            }
+          },
+          error: (error) => {
+            console.error("❌ Erro no listener de clients globais:", error);
+            callbacks.onClientsChange([]); // Fallback seguro
+          },
+        },
+      );
+      listeners.push(clientsListener);
 
-    this.listeners = [
-      poolsListener,
-      worksListener,
-      maintenanceListener,
-      clientsListener,
-    ];
-
-    console.log("✅ LISTENERS GLOBAIS ATIVOS - Partilha em tempo real ativa");
+      this.listeners = listeners;
+      console.log(
+        "✅ LISTENERS GLOBAIS ATIVOS COM PROTEÇÃO - Partilha em tempo real ativa",
+      );
+    } catch (initError) {
+      console.error("❌ Erro ao inicializar listeners:", initError);
+      // Limpar listeners parciais em caso de erro
+      listeners.forEach((unsubscribe) => {
+        try {
+          unsubscribe();
+        } catch {}
+      });
+      return () => {};
+    }
 
     return () => {
       console.log("🛑 Desconectando listeners globais");
-      this.listeners.forEach((unsubscribe) => unsubscribe());
+      this.listeners.forEach((unsubscribe) => {
+        try {
+          unsubscribe();
+        } catch (error) {
+          console.warn("⚠️ Erro ao desconectar listener:", error);
+        }
+      });
       this.listeners = [];
     };
   }
