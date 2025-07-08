@@ -127,5 +127,70 @@ export const useDataSync = () => {
     };
   }, []);
 
-  return state;
+  return {
+    ...state,
+    // CRUD Operations - todos chamam o Firebase diretamente
+    addWork: async (workData: Omit<Work, "id" | "createdAt" | "updatedAt">) => {
+      const { workService } = await import("../services/firebaseService");
+      return workService.addWork(workData);
+    },
+    updateWork: async (workId: string, workData: Partial<Work>) => {
+      const { workService } = await import("../services/firebaseService");
+      return workService.updateWork(workId, workData);
+    },
+    deleteWork: async (workId: string) => {
+      const { workService } = await import("../services/firebaseService");
+      return workService.deleteWork(workId);
+    },
+    addPool: async (poolData: Omit<Pool, "id" | "createdAt" | "updatedAt">) => {
+      const { poolService } = await import("../services/firebaseService");
+      return poolService.addPool(poolData);
+    },
+    updatePool: async (poolId: string, poolData: Partial<Pool>) => {
+      const { poolService } = await import("../services/firebaseService");
+      return poolService.updatePool(poolId, poolData);
+    },
+    deletePool: async (poolId: string) => {
+      const { poolService } = await import("../services/firebaseService");
+      return poolService.deletePool(poolId);
+    },
+    addMaintenance: async (
+      maintenanceData: Omit<Maintenance, "id" | "createdAt" | "updatedAt">,
+    ) => {
+      const { maintenanceService } = await import(
+        "../services/firebaseService"
+      );
+      return maintenanceService.addMaintenance(maintenanceData);
+    },
+    updateMaintenance: async (
+      maintenanceId: string,
+      maintenanceData: Partial<Maintenance>,
+    ) => {
+      const { maintenanceService } = await import(
+        "../services/firebaseService"
+      );
+      return maintenanceService.updateMaintenance(
+        maintenanceId,
+        maintenanceData,
+      );
+    },
+    deleteMaintenance: async (maintenanceId: string) => {
+      const { maintenanceService } = await import(
+        "../services/firebaseService"
+      );
+      return maintenanceService.deleteMaintenance(maintenanceId);
+    },
+    addClient: async (clientData: any) => {
+      const { clientService } = await import("../services/firebaseService");
+      return clientService.addClient(clientData);
+    },
+    updateClient: async (clientId: string, clientData: any) => {
+      const { clientService } = await import("../services/firebaseService");
+      return clientService.updateClient(clientId, clientData);
+    },
+    deleteClient: async (clientId: string) => {
+      const { clientService } = await import("../services/firebaseService");
+      return clientService.deleteClient(clientId);
+    },
+  };
 };
