@@ -73,17 +73,21 @@ const loadLocalData = () => {
 
 export function useUniversalDataSync(): UniversalSyncState &
   UniversalSyncActions {
+  // Load local data immediately on initialization
+  const initialLocalData = loadLocalData();
+  const initialTotalItems = Object.values(initialLocalData).reduce(
+    (total, items) => total + items.length,
+    0,
+  );
+
   const [state, setState] = useState<UniversalSyncState>({
-    obras: [],
-    manutencoes: [],
-    piscinas: [],
-    clientes: [],
-    totalItems: 0,
-    lastSync: "",
+    ...initialLocalData,
+    totalItems: initialTotalItems,
+    lastSync: new Date().toISOString(),
     isGloballyShared: true,
-    isLoading: true,
+    isLoading: false,
     error: null,
-    syncStatus: "disconnected",
+    syncStatus: "connected", // Start as connected with local data
   });
 
   // Inicializar sincronização universal
