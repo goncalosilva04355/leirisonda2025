@@ -198,10 +198,11 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const poolRef = ref(this.database!, `shared/pools/${poolId}`); // Global shared location
+      const userId = this.getCurrentUserId();
+      const poolRef = ref(this.database!, `users/${userId}/pools/${poolId}`); // User-specific location
       await remove(poolRef);
       console.log(
-        `✅ Pool ${poolId} deleted from shared database - removed for all users`,
+        `✅ Pool ${poolId} deleted from user's isolated data - removed only for current user`,
       );
       return true;
     } catch (error) {
