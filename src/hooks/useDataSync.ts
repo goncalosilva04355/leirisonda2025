@@ -207,10 +207,10 @@ export function useDataSync(): SyncState & SyncActions {
   // PARTILHA GLOBAL SEMPRE ATIVA - nunca desabilitar
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  // ISOLAMENTO AUTOMÁTICO - dados privados por utilizador
+  // MIGRAÇÃO GRADUAL - preservando dados existentes
   useEffect(() => {
     console.log(
-      "🔐 DADOS ISOLADOS POR UTILIZADOR - Visíveis apenas para o proprietário:",
+      "🔄 DADOS EM MIGRAÇÃO - Preservando acesso aos dados existentes:",
       {
         works: state.works.length,
         pools: state.pools.length,
