@@ -4175,7 +4175,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           };
 
                           // Use sync system to add work (will handle Firebase and localStorage)
-                          addWork(workData);
+                          const newWork = addWork(workData);
 
                           // Send notifications to all assigned users
                           assignedUsers.forEach((assignedUser) => {
