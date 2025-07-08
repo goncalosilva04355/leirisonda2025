@@ -490,8 +490,13 @@ export const reinitializeFirebase = async (): Promise<boolean> => {
     db = null;
     auth = null;
 
-    // Start a new initialization
-    firebaseInitPromise = initializeFirebaseServices();
+    // Reset lazy loading state
+    firebaseInitAttempted = false;
+    dbInitAttempted = false;
+    authInitAttempted = false;
+
+    // Start a new initialization with lazy loading
+    firebaseInitPromise = ensureFirebaseApp();
     await firebaseInitPromise;
 
     console.log("✅ Firebase successfully reinitialized");
