@@ -95,7 +95,7 @@ const getFirebaseApp = () => {
 };
 
 // Initialize Firebase services with error handling and quota control
-console.log("🔥 Firebase initialization enabled - lazy loading mode");
+console.log("��� Firebase initialization enabled - lazy loading mode");
 let app: any = null;
 let db: any = null;
 let auth: any = null;
@@ -437,6 +437,11 @@ export const waitForFirebaseInit = async (): Promise<boolean> => {
     if (firebaseInitPromise) {
       await firebaseInitPromise;
     }
+
+    // In lazy loading mode, try to initialize the services
+    await ensureAuth();
+    await ensureFirestore();
+
     return isFirebaseReady();
   } catch (error) {
     console.warn("Failed to wait for Firebase initialization:", error);
