@@ -3687,7 +3687,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi����ões do Furo
+                              Medi������ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4710,7 +4710,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Collect all form data
                           const poolData = {
-                            id: Date.now(),
+                            id: Date.now().toString(),
                             name:
                               (
                                 form.querySelector(
