@@ -82,8 +82,9 @@ class AuthService {
       return { success: false, error: "Nome é obrigatório" };
     }
 
-    // Try Firebase first for cross-device access, but only if properly initialized
-    if (isFirebaseReady()) {
+    // Wait for Firebase initialization and try Firebase first for cross-device access
+    const firebaseReady = await waitForFirebaseInit();
+    if (firebaseReady && isFirebaseReady()) {
       console.log(
         "🔥 Attempting Firebase registration for cross-device access...",
       );
