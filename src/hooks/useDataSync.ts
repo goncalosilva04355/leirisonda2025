@@ -196,11 +196,11 @@ export function useDataSync(): SyncState & SyncActions {
     lastSync: null,
   });
 
-  // DADOS ISOLADOS POR UTILIZADOR
+  // PARTILHA GLOBAL PARA TODOS OS UTILIZADORES
   useEffect(() => {
-    console.log("🔒 DADOS ISOLADOS POR UTILIZADOR ATIVADO");
-    console.log("✅ Cada utilizador só vê os seus próprios dados");
-    console.log("❌ Partilha entre utilizadores DESATIVADA");
+    console.log("🌐 PARTILHA GLOBAL ATIVADA");
+    console.log("✅ Todos os utilizadores veem todas as obras");
+    console.log("✅ Dados partilhados entre utilizadores");
   }, []);
 
   // PARTILHA GLOBAL SEMPRE ATIVA - todos os utilizadores veem todas as obras
