@@ -327,23 +327,50 @@ export function useDataSync(): SyncState & SyncActions {
                       });
                     }
 
-                    firebaseData.pools.forEach((pool: Pool) => {
-                      if (!mergedPools.find((p) => p.id === pool.id)) {
-                        mergedPools.push(pool);
-                      }
-                    });
+                    if (
+                      firebaseData.pools &&
+                      Array.isArray(firebaseData.pools)
+                    ) {
+                      firebaseData.pools.forEach((pool: Pool) => {
+                        if (
+                          pool &&
+                          pool.id &&
+                          !mergedPools.find((p) => p.id === pool.id)
+                        ) {
+                          mergedPools.push(pool);
+                        }
+                      });
+                    }
 
-                    firebaseData.maintenance.forEach((maint: Maintenance) => {
-                      if (!mergedMaintenance.find((m) => m.id === maint.id)) {
-                        mergedMaintenance.push(maint);
-                      }
-                    });
+                    if (
+                      firebaseData.maintenance &&
+                      Array.isArray(firebaseData.maintenance)
+                    ) {
+                      firebaseData.maintenance.forEach((maint: Maintenance) => {
+                        if (
+                          maint &&
+                          maint.id &&
+                          !mergedMaintenance.find((m) => m.id === maint.id)
+                        ) {
+                          mergedMaintenance.push(maint);
+                        }
+                      });
+                    }
 
-                    firebaseData.clients.forEach((client: Client) => {
-                      if (!mergedClients.find((c) => c.id === client.id)) {
-                        mergedClients.push(client);
-                      }
-                    });
+                    if (
+                      firebaseData.clients &&
+                      Array.isArray(firebaseData.clients)
+                    ) {
+                      firebaseData.clients.forEach((client: Client) => {
+                        if (
+                          client &&
+                          client.id &&
+                          !mergedClients.find((c) => c.id === client.id)
+                        ) {
+                          mergedClients.push(client);
+                        }
+                      });
+                    }
 
                     const today = new Date();
                     const futureMaintenance = mergedMaintenance.filter(
