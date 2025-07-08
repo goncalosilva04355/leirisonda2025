@@ -422,6 +422,15 @@ export const isFirebaseReady = () => {
   }
 };
 
+// Lazy loading getters for Firebase services
+export const getDB = async () => {
+  return await ensureFirestore();
+};
+
+export const getAuthService = async () => {
+  return await ensureAuth();
+};
+
 // Function to ensure Firebase is initialized before use
 export const waitForFirebaseInit = async (): Promise<boolean> => {
   try {
