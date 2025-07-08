@@ -55,8 +55,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
 import { authService, UserProfile } from "./services/authService";
 // Serviços complexos removidos - sistema simplificado
-import { userRestoreService } from "./services/userRestoreService";
-import UserRestoreNotification from "./components/UserRestoreNotification";
+// Serviços de restauração removidos - sistema simplificado
 
 // Production users - only real admin account
 const initialUsers = [
@@ -1568,7 +1567,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `��️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
             syncError,
           );
         }
@@ -7318,7 +7317,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
