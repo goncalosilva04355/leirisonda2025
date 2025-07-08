@@ -274,8 +274,7 @@ function App() {
   const { syncStatus: autoSyncStatus, isAutoSyncing } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
-  // Keep local users state for user management
-  const [users, setUsers] = useState(initialUsers);
+  // Users come from simpleData now - no local state needed
 
   // Load users from localStorage on app start
   useEffect(() => {
@@ -3887,7 +3886,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Observações e Trabalho */}
+                    {/* Observa��ões e Trabalho */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -7798,7 +7797,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="scheduled">Agendado</option>
                           <option value="in_progress">Em Progresso</option>
-                          <option value="completed">Concluído</option>
+                          <option value="completed">Conclu��do</option>
                           <option value="cancelled">Cancelado</option>
                         </select>
                       </div>
