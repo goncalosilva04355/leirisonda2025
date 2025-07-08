@@ -476,12 +476,13 @@ class RealFirebaseService {
   onMaintenanceChange(callback: (maintenance: any[]) => void): () => void {
     if (!this.isReady()) return () => {};
 
-    const maintenanceRef = ref(this.database!, "shared/maintenance"); // Global shared data
+    const userId = this.getCurrentUserId();
+    const maintenanceRef = ref(this.database!, `users/${userId}/maintenance`); // User-specific data
     const unsubscribe = onValue(maintenanceRef, (snapshot) => {
       const data = snapshot.val();
       const maintenance = data ? Object.values(data) : [];
       console.log(
-        `🔄 SYNC: ${maintenance.length} maintenance records synced across all users`,
+        `🔄 SYNC: ${maintenance.length} maintenance records synced for current user only`,
       );
       callback(maintenance);
     });
