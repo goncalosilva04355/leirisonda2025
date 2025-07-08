@@ -284,7 +284,7 @@ const initializeFirebaseServices = async (): Promise<void> => {
               setPersistence(auth, browserSessionPersistence)
                 .then(() => {
                   console.log(
-                    "🔐 Firebase Auth SESSION persistence enabled (no auto-login between sessions)",
+                    "��� Firebase Auth SESSION persistence enabled (no auto-login between sessions)",
                   );
                 })
                 .catch((error) => {
@@ -447,11 +447,19 @@ export const isFirebaseReady = () => {
 
 // Lazy loading getters for Firebase services
 export const getDB = async () => {
-  return await ensureFirestore();
+  const dbInstance = await ensureFirestore();
+  if (!dbInstance) {
+    console.warn("⚠️ Firestore not available, using local fallback");
+  }
+  return dbInstance;
 };
 
 export const getAuthService = async () => {
-  return await ensureAuth();
+  const authInstance = await ensureAuth();
+  if (!authInstance) {
+    console.warn("⚠️ Firebase Auth not available, using local fallback");
+  }
+  return authInstance;
 };
 
 // Function to ensure Firebase is initialized before use
@@ -474,13 +482,16 @@ export const waitForFirebaseInit = async (): Promise<boolean> => {
 
 // Function to get Firebase connection status
 export const getFirebaseStatus = () => {
-  return {
+  const status = {
     app: !!app,
     auth: !!auth,
     db: !!db,
     ready: isFirebaseReady(),
     quotaExceeded: isQuotaExceeded(),
   };
+
+  console.log("📊 Firebase Status Check:", status);
+  return status;
 };
 
 // Function to mark quota exceeded - Firebase handles this automatically
