@@ -15,7 +15,7 @@ import {
   onSnapshot,
   Unsubscribe,
 } from "firebase/firestore";
-import { db, getAuthService } from "../firebase/config";
+import { db, auth } from "../firebase/config";
 
 export interface UserDataAccess {
   canRead: boolean;
