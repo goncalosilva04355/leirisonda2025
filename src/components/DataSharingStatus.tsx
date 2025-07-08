@@ -132,7 +132,7 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
           recommendedAction: "MIGRATE_TO_REALTIME",
         };
       } else if (hasRealtimeData) {
-        console.log("✅ Situação: Partilha ativa");
+        console.log("✅ Situa��ão: Partilha ativa");
         sharingStatus = {
           isWorking: true,
           recommendedAction: "WORKING",
@@ -324,6 +324,18 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
                     Sem dados encontrados. Quando criar obras, piscinas ou
                     outros dados, eles serão automaticamente partilhados entre
                     todos os utilizadores.
+                  </p>
+                </div>
+              )}
+
+              {status.sharing.recommendedAction === "ERROR" && (
+                <div className="bg-red-50 p-3 rounded text-sm">
+                  <p className="font-medium text-red-800 mb-1">
+                    Erro durante verificação:
+                  </p>
+                  <p className="text-red-700">
+                    Ocorreu um erro ao verificar o estado da partilha. Verifique
+                    a conexão e tente novamente.
                   </p>
                 </div>
               )}
