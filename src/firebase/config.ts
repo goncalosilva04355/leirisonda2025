@@ -409,13 +409,36 @@ const ensureAuth = async (): Promise<any> => {
   return auth;
 };
 
-// Basic initialization - just prepare the app
-firebaseInitPromise = ensureFirebaseApp();
+// Initialize Firebase immediately to avoid lazy loading issues
+const initializeImmediately = async () => {
+  try {
+    console.log("🚀 Starting immediate Firebase initialization...");
+
+    // Initialize app first
+    await ensureFirebaseApp();
+
+    // Then initialize services
+    await ensureAuth();
+    await ensureFirestore();
+
+    console.log("✅ Firebase initialization completed successfully");
+  } catch (error) {
+    console.warn("⚠️ Firebase immediate initialization failed:", error);
+  }
+};
+
+// Start initialization immediately
+firebaseInitPromise = initializeImmediately();
 
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
   try {
-    return !!(app && auth && db);
+    // Check if we have valid Firebase instances
+    const hasValidApp = app && typeof app === "object" && app.options;
+    const hasValidAuth = auth && typeof auth === "object";
+    const hasValidDb = db && typeof db === "object";
+
+    return !!(hasValidApp && hasValidAuth && hasValidDb);
   } catch (error) {
     console.warn("Firebase health check failed:", error);
     return false;
