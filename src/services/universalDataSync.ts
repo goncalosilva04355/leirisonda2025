@@ -47,23 +47,29 @@ class UniversalDataSyncService {
       return true;
     }
 
-    // Inicializar sincronização universal silenciosa
+    console.log("🔄 Inicializando serviço universal...");
 
     try {
+      // Try to wait for Firebase, but don't fail if it's not available
       const firebaseReady = await waitForFirebaseInit();
       if (!firebaseReady || !isFirebaseReady() || !db) {
-        console.error("❌ Firebase não disponível - modo local apenas");
-        return false;
+        console.warn("⚠️ Firebase não disponível - continuando em modo local");
+        // Still mark as initialized so app can function with local data
+        this.isInitialized = true;
+        return true;
       }
 
       // Migrar dados existentes para estrutura universal
       await this.migrateToUniversalSharing();
 
       this.isInitialized = true;
+      console.log("✅ Serviço universal inicializado com Firebase");
       return true;
     } catch (error) {
       console.error("❌ Erro na inicialização universal:", error);
-      return false;
+      // Still allow the service to work in local mode
+      this.isInitialized = true;
+      return true;
     }
   }
 
