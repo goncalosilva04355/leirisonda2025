@@ -243,22 +243,52 @@ function App() {
       );
     };
   }, []);
+  // DADOS UNIVERSAIS - Partilhados entre todos os utilizadores
   const {
-    pools,
-    maintenance,
-    futureMaintenance,
-    works,
-    clients,
+    obras,
+    manutencoes,
+    piscinas,
+    clientes,
     isLoading: syncLoading,
     lastSync,
     error: syncError,
-    syncWithFirebase,
-    enableSync,
-    addPool,
-    addWork,
-    addMaintenance,
-    addClient,
-  } = dataSync;
+    addObra,
+    addManutencao,
+    addPiscina,
+    addCliente,
+    updateObra,
+    updateManutencao,
+    updatePiscina,
+    updateCliente,
+    deleteObra,
+    deleteManutencao,
+    deletePiscina,
+    deleteCliente,
+    forceSyncAll,
+    syncStatus,
+  } = universalSync;
+
+  // Mapear dados universais para compatibilidade com código existente
+  const pools = piscinas;
+  const maintenance = manutencoes;
+  const works = obras;
+  const clients = clientes;
+
+  // Calcular manutenções futuras
+  const today = new Date();
+  const futureMaintenance = manutencoes.filter(
+    (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
+  );
+
+  // Funções de compatibilidade
+  const addPool = (data: any) => addPiscina(data);
+  const addWork = (data: any) => addObra(data);
+  const addMaintenance = (data: any) => addManutencao(data);
+  const addClient = (data: any) => addCliente(data);
+  const syncWithFirebase = () => forceSyncAll();
+  const enableSync = (enabled: boolean) => {
+    console.log("Sync is always enabled in Universal Sync mode:", enabled);
+  };
 
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
@@ -5588,7 +5618,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                          ��
+                          🏊
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
