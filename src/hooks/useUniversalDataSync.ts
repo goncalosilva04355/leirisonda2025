@@ -163,8 +163,10 @@ export function useUniversalDataSync(): UniversalSyncState &
   useEffect(() => {
     if (!universalDataSync.isReady()) return;
 
-    // Configurar listeners silenciosos
-    const cleanup = universalDataSync.setupUniversalListeners({
+    // Configurar listeners silenciosos com tratamento de erro
+    let cleanup;
+    try {
+      cleanup = universalDataSync.setupUniversalListeners({
       onObrasChange: (obras) => {
         setState((prev) => ({
           ...prev,
