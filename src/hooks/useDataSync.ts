@@ -90,6 +90,27 @@ export interface Work {
   createdBy?: string; // Name of user who created this work
   createdByUser?: string; // UID of user who created this work
   updatedAt?: string; // Last update timestamp
+  workPerformed?: string;
+  workSheetCompleted?: boolean;
+  observations?: string;
+  vehicles?: string[];
+  technicians?: string[];
+  photos?: any[];
+  photoCount?: number;
+  startTime?: string;
+  endTime?: string;
+  workSheetNumber?: string;
+  // Bore-specific properties
+  boreDepth?: any;
+  waterLevel?: any;
+  staticLevel?: any;
+  dynamicLevel?: any;
+  flowRate?: any;
+  columnDiameter?: any;
+  pumpModel?: any;
+  motorPower?: any;
+  pumpVoltage?: any;
+  boreObservations?: any;
 }
 
 export interface Client {
