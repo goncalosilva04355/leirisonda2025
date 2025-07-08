@@ -167,7 +167,7 @@ const initializeFirebaseServices = async (): Promise<void> => {
                 })
                 .catch((error) => {
                   console.warn(
-                    "⚠️ Could not set Firebase Auth persistence:",
+                    "��️ Could not set Firebase Auth persistence:",
                     error,
                   );
                 });
@@ -210,6 +210,19 @@ export const isFirebaseReady = () => {
     return !!(app && auth && db);
   } catch (error) {
     console.warn("Firebase health check failed:", error);
+    return false;
+  }
+};
+
+// Function to ensure Firebase is initialized before use
+export const waitForFirebaseInit = async (): Promise<boolean> => {
+  try {
+    if (firebaseInitPromise) {
+      await firebaseInitPromise;
+    }
+    return isFirebaseReady();
+  } catch (error) {
+    console.warn("Failed to wait for Firebase initialization:", error);
     return false;
   }
 };
