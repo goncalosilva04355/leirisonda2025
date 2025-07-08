@@ -9048,4 +9048,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   );
 }
 
-export default App;
+export default App;return () => {
+      authPromise
+        .then((unsubscribe) => {
+          if (unsubscribe && typeof unsubscribe === "function") {
+            unsubscribe();
+          }
+        })
+        .catch(console.error);
+    };
+  }, []);
