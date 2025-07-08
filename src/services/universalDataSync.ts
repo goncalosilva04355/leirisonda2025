@@ -106,8 +106,24 @@ class UniversalDataSyncService {
         console.log(`📱 Encontrados ${totalLocal} registos locais para migrar`);
 
         // Verificar dados existentes no Firebase
-        const existingData = await this.getAllUniversalData();
-        const totalExisting = existingData.totalItems;
+        let existingData;
+        let totalExisting = 0;
+        try {
+          existingData = await this.getAllUniversalData();
+          totalExisting = existingData.totalItems;
+        } catch (error) {
+          console.warn("⚠️ Erro ao verificar dados existentes:", error);
+          existingData = {
+            obras: [],
+            manutencoes: [],
+            piscinas: [],
+            clientes: [],
+            totalItems: 0,
+            lastSync: new Date().toISOString(),
+            isGloballyShared: true,
+          };
+          totalExisting = 0;
+        }
 
         if (totalExisting === 0) {
           console.log(
