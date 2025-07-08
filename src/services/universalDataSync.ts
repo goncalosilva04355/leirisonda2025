@@ -81,8 +81,13 @@ class UniversalDataSyncService {
       // Migrar dados existentes para estrutura universal
       await this.migrateToUniversalSharing();
 
+      // Force sync any local data that wasn't migrated
+      await this.forceSyncLocalToFirebase();
+
       this.isInitialized = true;
-      console.log("✅ Serviço universal inicializado com Firebase");
+      console.log(
+        "✅ Serviço universal inicializado com Firebase e dados sincronizados",
+      );
       return true;
     } catch (error) {
       console.error("❌ Erro na inicialização universal:", error);
