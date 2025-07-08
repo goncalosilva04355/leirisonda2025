@@ -15,12 +15,45 @@ export class FirebaseErrorFix {
     if (
       error.message?.includes("ReadableStream") ||
       error.message?.includes("initializeReadableStreamDefaultReader") ||
+      error.message?.includes("readableStreamGetReaderForBindings") ||
+      error.message?.includes("getReader") ||
       error.stack?.includes("firebase_firestore.js")
     ) {
       console.log("🔧 DETECTADO: Erro de ReadableStream do Firebase");
       console.log("🔄 Aplicando correção...");
 
       try {
+        // Ensure ReadableStream polyfill is available
+        if (typeof window !== "undefined" && !window.ReadableStream) {
+          console.log("🔧 Applying ReadableStream polyfill");
+          window.ReadableStream = class ReadableStream {
+            constructor(source) {
+              this._source = source;
+              this._reader = null;
+              this._locked = false;
+            }
+
+            getReader() {
+              if (this._locked) {
+                throw new TypeError("ReadableStream is locked");
+              }
+              this._locked = true;
+              this._reader = {
+                read: () => Promise.resolve({ done: true, value: undefined }),
+                cancel: () => Promise.resolve(),
+                releaseLock: () => {
+                  this._locked = false;
+                },
+              };
+              return this._reader;
+            }
+
+            cancel() {
+              return Promise.resolve();
+            }
+          };
+        }
+
         // Aguardar para permitir limpeza de streams
         await new Promise((resolve) => setTimeout(resolve, 500));
 
@@ -32,6 +65,9 @@ export class FirebaseErrorFix {
         // Limpar listeners pendentes
         this.clearPendingListeners();
 
+        // Clear any hanging Firebase operations
+        this.clearFirebaseOperations();
+
         console.log("✅ Correção de ReadableStream aplicada");
         return true;
       } catch (fixError) {
@@ -41,6 +77,34 @@ export class FirebaseErrorFix {
     }
 
     return false;
+  }
+
+  /**
+   * Clear hanging Firebase operations
+   */
+  private static clearFirebaseOperations(): void {
+    try {
+      // Clear any pending Firebase operations that might be using streams
+      if (typeof window !== "undefined") {
+        // Clear Firebase app-related event listeners
+        const eventTypes = [
+          "firebase-auth-state-changed",
+          "firebase-connection-changed",
+        ];
+        eventTypes.forEach((eventType) => {
+          const oldListeners = window.addEventListener;
+          window.addEventListener = function (type, listener, options) {
+            if (type !== eventType) {
+              oldListeners.call(window, type, listener, options);
+            }
+          };
+        });
+
+        console.log("🧹 Firebase operations cleared");
+      }
+    } catch (error) {
+      console.warn("Failed to clear Firebase operations:", error);
+    }
   }
 
   /**

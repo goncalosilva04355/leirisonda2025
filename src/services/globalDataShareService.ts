@@ -10,7 +10,7 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db, isFirebaseReady } from "../firebase/config";
+import { db, isFirebaseReady, waitForFirebaseInit } from "../firebase/config";
 import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 
 export interface SharedDataState {
@@ -35,8 +35,9 @@ class GlobalDataShareService {
    * Garante que TODOS os dados são sempre partilhados entre utilizadores
    */
   async initialize(): Promise<boolean> {
-    if (!isFirebaseReady() || !db) {
-      console.error("��� Firebase não disponível - partilha global impossível");
+    const firebaseReady = await waitForFirebaseInit();
+    if (!firebaseReady || !isFirebaseReady() || !db) {
+      console.error("❌ Firebase não disponível - partilha global impossível");
       return false;
     }
 
@@ -53,7 +54,8 @@ class GlobalDataShareService {
    * Remove qualquer dependência de localStorage
    */
   async migrateAllDataToGlobalSharing(): Promise<void> {
-    if (!isFirebaseReady() || !db) {
+    const firebaseReady = await waitForFirebaseInit();
+    if (!firebaseReady || !isFirebaseReady() || !db) {
       throw new Error("Firebase não disponível");
     }
 

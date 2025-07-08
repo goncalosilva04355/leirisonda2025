@@ -625,7 +625,7 @@ function App() {
 
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigatórios (Piscina e Técnico).");
+      alert("Por favor, preencha os campos obrigat��rios (Piscina e Técnico).");
       return;
     }
 
@@ -3284,7 +3284,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç��o</option>
+                            <option value="instalacao">Instalaç����o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -3546,7 +3546,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠️ Nenhum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Corre��ão de Atribuição de
+                                Administração → "🔧 Corre��ão de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -6359,7 +6359,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade Pública</option>
+                            <option value="publico">Entidade P��blica</option>
                           </select>
                         </div>
                       </div>
@@ -8681,16 +8681,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-sm text-gray-500">{currentUser?.role}</p>
                   </div>
                 </div>
-                {/* Data Sharing Fix Button - Only for super admin */}
-                {currentUser?.role === "super_admin" && (
-                  <button
-                    onClick={() => setShowDataSharingFix(true)}
-                    className="w-full flex items-center space-x-3 px-4 py-2 mb-2 text-red-700 hover:bg-red-50 rounded-lg transition-colors border border-red-200"
-                  >
-                    <Share className="h-5 w-5" />
-                    <span>🚨 Resolver Partilha de Dados</span>
-                  </button>
-                )}
 
                 <button
                   onClick={handleLogout}

@@ -5,6 +5,10 @@ export default defineConfig({
   plugins: [react()],
   root: ".",
   publicDir: "public",
+  define: {
+    // Add global ReadableStream check
+    global: "globalThis",
+  },
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 1000,
@@ -29,5 +33,9 @@ export default defineConfig({
   },
   css: {
     postcss: "./postcss.config.cjs",
+  },
+  optimizeDeps: {
+    include: ["firebase/app", "firebase/firestore", "firebase/auth"],
+    exclude: ["@firebase/firestore"],
   },
 });

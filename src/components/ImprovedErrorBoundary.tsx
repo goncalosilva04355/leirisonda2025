@@ -45,6 +45,27 @@ export class ImprovedErrorBoundary extends Component<Props, State> {
       errorInfo,
     });
 
+    // Check if it's a ReadableStream error and try to fix it
+    if (
+      error.message?.includes("ReadableStream") ||
+      error.message?.includes("initializeReadableStreamDefaultReader") ||
+      error.stack?.includes("firebase_firestore.js")
+    ) {
+      console.log("🔧 ReadableStream error detected, attempting automatic fix");
+
+      // Try to fix the error automatically
+      import("../utils/firebaseErrorFix").then(({ FirebaseErrorFix }) => {
+        FirebaseErrorFix.fixReadableStreamError(error).then((fixed) => {
+          if (fixed) {
+            console.log("✅ ReadableStream error fixed, retrying in 2 seconds");
+            setTimeout(() => {
+              this.handleRetry();
+            }, 2000);
+          }
+        });
+      });
+    }
+
     // Log error details for debugging
     const errorDetails = {
       message: error.message,
@@ -117,6 +138,14 @@ export class ImprovedErrorBoundary extends Component<Props, State> {
 
   getErrorType = (error: Error): string => {
     if (
+      error.message?.includes("ReadableStream") ||
+      error.message?.includes("initializeReadableStreamDefaultReader") ||
+      error.message?.includes("readableStreamGetReaderForBindings") ||
+      error.stack?.includes("firebase_firestore.js")
+    ) {
+      return "readablestream";
+    }
+    if (
       error.message?.includes("quota") ||
       error.message?.includes("resource-exhausted")
     ) {
@@ -150,6 +179,13 @@ export class ImprovedErrorBoundary extends Component<Props, State> {
     errorType: string,
   ): { title: string; description: string; actions: string[] } => {
     switch (errorType) {
+      case "readablestream":
+        return {
+          title: "Erro de compatibilidade",
+          description:
+            "Problema de compatibilidade com o navegador detectado. A aplicação está a aplicar correções automáticas.",
+          actions: ["retry"],
+        };
       case "quota":
         return {
           title: "Limite de dados atingido",
