@@ -88,8 +88,8 @@ export interface Work {
   assignedTo: string;
   assignedUsers?: Array<{ id: string; name: string }>;
   assignedUserIds?: string[];
-  createdAt: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 // Collections
@@ -640,7 +640,7 @@ export const syncService = {
 
     try {
       console.log(
-        `��� Auto-sync disparado: ${changeType} em ${collectionName}${documentId ? ` (${documentId})` : ""}`,
+        `🔄 Auto-sync disparado: ${changeType} em ${collectionName}${documentId ? ` (${documentId})` : ""}`,
       );
 
       // Force immediate sync for specific collection
