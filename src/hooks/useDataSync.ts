@@ -49,6 +49,14 @@ export interface Pool {
   lastMaintenance?: string;
   nextMaintenance?: string;
   createdAt: string;
+  poolType?: string;
+  dimensions?: string;
+  volume?: string;
+  filtrationSystem?: string;
+  installationDate?: string;
+  clientPhone?: string;
+  clientEmail?: string;
+  observations?: string;
 }
 
 export interface Maintenance {
