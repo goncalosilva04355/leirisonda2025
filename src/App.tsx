@@ -653,7 +653,7 @@ function App() {
       console.log("🔐 Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("�� Login successful for:", result.user.email);
+        console.log("��� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -3206,7 +3206,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Users className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Viaturas e T��cnicos
+                          Viaturas e T����cnicos
                         </h3>
                       </div>
 
@@ -7857,8 +7857,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <p className="text-sm text-gray-500">Gestão de Serviços</p>
                 </div>
               </div>
-              {/* Sync Status Indicator */}
-              <SyncStatusIcon className="ml-2" />
               {/* Close button for mobile */}
               <button
                 onClick={() => setSidebarOpen(false)}
