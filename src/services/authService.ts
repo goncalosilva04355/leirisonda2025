@@ -260,8 +260,9 @@ class AuthService {
 
     // Try Firebase first for cross-device access with quota protection
     const quotaStatus = QuotaManager.getQuotaStatus();
+    const firebaseReady = await waitForFirebaseInit();
 
-    if (isFirebaseReady() && quotaStatus.canSync) {
+    if (firebaseReady && isFirebaseReady() && quotaStatus.canSync) {
       console.log("🔥 Attempting Firebase login for cross-device access...");
 
       const firebaseLoginResult = await QuotaManager.executeWithQuotaProtection(
