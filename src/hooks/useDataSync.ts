@@ -185,10 +185,10 @@ export function useDataSync(): SyncState & SyncActions {
   // PARTILHA GLOBAL DESATIVADA - dados isolados por utilizador
   const [syncEnabled, setSyncEnabled] = useState(false);
 
-  // MIGRAÇÃO GRADUAL - preservando dados existentes
+  // DADOS ISOLADOS - cada utilizador vê apenas os seus dados
   useEffect(() => {
     console.log(
-      "🔄 DADOS EM MIGRAÇÃO - Preservando acesso aos dados existentes:",
+      "🔒 DADOS ISOLADOS POR UTILIZADOR - Contagem dos dados próprios:",
       {
         works: state.works.length,
         pools: state.pools.length,
