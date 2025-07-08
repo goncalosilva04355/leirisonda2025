@@ -365,7 +365,7 @@ export const poolService = {
 
   // Update pool
   async updatePool(poolId: string, poolData: Partial<Pool>) {
-    if (!isFirebaseAvailable()) {
+    if (!(await isFirebaseAvailable())) {
       throw new Error("Firebase not configured");
     }
 
