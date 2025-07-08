@@ -411,12 +411,15 @@ const ensureAuth = async (): Promise<any> => {
 
 // Force immediate synchronous initialization
 console.log("🚀 Starting immediate Firebase initialization...");
+console.log("📋 Firebase config:", firebaseConfig);
+
 try {
   // Initialize Firebase app immediately
   const existingApps = getApps();
   console.log("📊 Existing Firebase apps:", existingApps.length);
 
   if (existingApps.length === 0) {
+    console.log("🔥 Initializing new Firebase app...");
     app = initializeApp(firebaseConfig);
     console.log("✅ Firebase app initialized synchronously", app?.name);
   } else {
@@ -424,19 +427,28 @@ try {
     console.log("✅ Using existing Firebase app", app?.name);
   }
 
+  // Validate app before initializing services
+  if (!app) {
+    throw new Error("Firebase app is null");
+  }
+
   // Initialize services immediately
-  if (app) {
-    db = getFirestore(app);
-    auth = getAuth(app);
-    console.log("✅ Firebase services initialized synchronously");
-    console.log("🔥 DB available:", !!db);
-    console.log("🔐 Auth available:", !!auth);
-    console.log("📱 Firebase ready check:", !!(app && auth && db));
-  } else {
-    console.error("❌ Firebase app is null after initialization");
+  console.log("🔥 Initializing Firestore...");
+  db = getFirestore(app);
+  console.log("🔐 Initializing Auth...");
+  auth = getAuth(app);
+
+  console.log("✅ Firebase services initialized synchronously");
+  console.log("🔥 DB available:", !!db);
+  console.log("🔐 Auth available:", !!auth);
+  console.log("📱 Firebase ready check:", !!(app && auth && db));
+
+  if (!db || !auth) {
+    throw new Error("Firebase services failed to initialize");
   }
 } catch (error) {
   console.error("❌ Firebase synchronous initialization failed:", error);
+  console.error("❌ Error details:", error.message, error.stack);
   app = null;
   db = null;
   auth = null;
