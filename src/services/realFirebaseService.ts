@@ -282,12 +282,13 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Maintenance - GLOBAL SHARED DATA
+  // CRUD operations for Maintenance - ISOLATED USER DATA
   async addMaintenance(maintenanceData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const maintenanceRef = ref(this.database!, "shared/maintenance"); // Global shared location
+      const userId = this.getCurrentUserId();
+      const maintenanceRef = ref(this.database!, `users/${userId}/maintenance`); // User-specific location
       const newMaintenanceRef = push(maintenanceRef);
 
       // Sanitize data before sending to Firebase
@@ -296,7 +297,7 @@ class RealFirebaseService {
         id: newMaintenanceRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true, // Mark as global data
+        userId: this.getCurrentUserId(), // Mark as user-specific data
       });
 
       await set(newMaintenanceRef, sanitizedData);
