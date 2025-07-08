@@ -342,8 +342,6 @@ function App() {
       "🔒 SECURITY: No automatic admin initialization - manual login required",
     );
 
-    // Return empty cleanup function since unsubscribe is handled inside the promise
-    return () => {};
   }, []);
 
   // Auth state check disabled to prevent errors
