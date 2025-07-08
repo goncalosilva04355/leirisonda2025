@@ -107,129 +107,104 @@ const getStorageKey = (collection: string) => `leirisonda_${collection}`;
 // Helper function to generate IDs
 const generateId = () => Date.now().toString();
 
+// Helper functions for localStorage operations
+const getFromStorage = <T>(collection: string): T[] => {
+  try {
+    const data = localStorage.getItem(getStorageKey(collection));
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error(`Error reading ${collection} from localStorage:`, error);
+    return [];
+  }
+};
+
+const saveToStorage = <T>(collection: string, data: T[]): void => {
+  try {
+    localStorage.setItem(getStorageKey(collection), JSON.stringify(data));
+  } catch (error) {
+    console.error(`Error saving ${collection} to localStorage:`, error);
+  }
+};
+
 // User Services
 export const userService = {
-  // Listen to real-time changes
+  // Listen to real-time changes (simulate with storage events)
   subscribeToUsers(callback: (users: User[]) => void) {
-    if (!db) {
-      // Fallback to localStorage if Firebase not available
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      callback(users);
-      return () => {};
-    }
+    const users = getFromStorage<User>(COLLECTIONS.USERS);
+    callback(users);
 
-    const q = query(
-      collection(db, COLLECTIONS.USERS),
-      orderBy("createdAt", "desc"),
-    );
-    return onSnapshot(q, (snapshot) => {
-      const users = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as User[];
-      callback(users);
-    });
+    // Listen for storage changes
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === getStorageKey(COLLECTIONS.USERS)) {
+        const updatedUsers = getFromStorage<User>(COLLECTIONS.USERS);
+        callback(updatedUsers);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   },
 
   // Add new user
   async addUser(userData: Omit<User, "id" | "createdAt" | "updatedAt">) {
-    if (!db) {
-      // Fallback to localStorage if Firebase not available
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const newUser = {
-        ...userData,
-        id: Date.now().toString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+    const users = getFromStorage<User>(COLLECTIONS.USERS);
+    const newUser: User = {
+      ...userData,
+      id: generateId(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-      users.push(newUser);
-      localStorage.setItem("users", JSON.stringify(users));
+    users.push(newUser);
+    saveToStorage(COLLECTIONS.USERS, users);
 
-      console.log(
-        `✅ Usuário ${userData.name} (${userData.email}) adicionado localmente`,
-      );
-      return newUser.id;
-    }
-
-    return await safeFirebaseOperation(async () => {
-      const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
-        ...userData,
-        createdAt: new Date().toISOString(),
-        updatedAt: Timestamp.now(),
-      });
-
-      console.log(
-        `✅ Usuário ${userData.name} (${userData.email}) adicionado no Firebase`,
-      );
-      await syncService.triggerAutoSync("create", "users", docRef.id);
-
-      return docRef.id;
-    }, "addUser");
+    console.log(
+      `✅ Usuário ${userData.name} (${userData.email}) adicionado localmente`,
+    );
+    return newUser.id;
   },
 
   // Update user
   async updateUser(userId: string, userData: Partial<User>) {
-    if (!db) {
-      throw new Error("Firebase not configured");
+    const users = getFromStorage<User>(COLLECTIONS.USERS);
+    const userIndex = users.findIndex((u) => u.id === userId);
+
+    if (userIndex !== -1) {
+      users[userIndex] = {
+        ...users[userIndex],
+        ...userData,
+        updatedAt: new Date().toISOString(),
+      };
+      saveToStorage(COLLECTIONS.USERS, users);
+      console.log(`✅ Usuário ${userId} atualizado localmente`);
     }
-
-    const userRef = doc(db, COLLECTIONS.USERS, userId);
-    await updateDoc(userRef, {
-      ...userData,
-      updatedAt: Timestamp.now(),
-    });
-
-    // Trigger automatic synchronization
-    console.log(
-      `✅ Usuário ${userId} atualizado - sincronização automática ativada`,
-    );
-    await syncService.triggerAutoSync("update", "users", userId);
   },
 
   // Delete user
   async deleteUser(userId: string) {
-    if (!db) {
-      throw new Error("Firebase not configured");
-    }
-
-    const userRef = doc(db, COLLECTIONS.USERS, userId);
-    await deleteDoc(userRef);
-
-    // Trigger automatic synchronization
-    console.log(
-      `✅ Usuário ${userId} removido - sincronização automática ativada`,
-    );
-    await syncService.triggerAutoSync("delete", "users", userId);
+    const users = getFromStorage<User>(COLLECTIONS.USERS);
+    const filteredUsers = users.filter((u) => u.id !== userId);
+    saveToStorage(COLLECTIONS.USERS, filteredUsers);
+    console.log(`✅ Usuário ${userId} removido localmente`);
   },
 
-  // Initialize only real admin user - NO MOCK DATA
+  // Initialize default users
   async initializeDefaultUsers() {
-    if (!db) {
-      return; // Skip initialization if Firebase not configured
-    }
-
-    const usersSnapshot = await getDocs(collection(db, COLLECTIONS.USERS));
-    if (usersSnapshot.empty) {
-      const realAdmin = {
+    const users = getFromStorage<User>(COLLECTIONS.USERS);
+    if (users.length === 0) {
+      const realAdmin: Omit<User, "id" | "createdAt" | "updatedAt"> = {
         name: "Gonçalo Fonseca",
         email: "gongonsilva@gmail.com",
-        role: "super_admin" as const,
+        role: "super_admin",
         permissions: {
           obras: { view: true, create: true, edit: true, delete: true },
           manutencoes: { view: true, create: true, edit: true, delete: true },
           piscinas: { view: true, create: true, edit: true, delete: true },
-          utilizadores: {
-            view: true,
-            create: true,
-            edit: true,
-            delete: true,
-          },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
           relatorios: { view: true, create: true, edit: true, delete: true },
           clientes: { view: true, create: true, edit: true, delete: true },
         },
         active: true,
-        createdAt: "2024-01-01",
       };
 
       await this.addUser(realAdmin);
@@ -242,84 +217,58 @@ export const userService = {
 export const poolService = {
   // Listen to real-time changes
   subscribeToPools(callback: (pools: Pool[]) => void) {
-    if (!isFirebaseAvailable()) {
-      const pools = JSON.parse(localStorage.getItem("pools") || "[]");
-      callback(pools);
-      return () => {};
-    }
+    const pools = getFromStorage<Pool>(COLLECTIONS.POOLS);
+    callback(pools);
 
-    const q = query(
-      collection(db, COLLECTIONS.POOLS),
-      orderBy("createdAt", "desc"),
-    );
-    return onSnapshot(q, (snapshot) => {
-      const pools = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Pool[];
-      callback(pools);
-    });
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === getStorageKey(COLLECTIONS.POOLS)) {
+        const updatedPools = getFromStorage<Pool>(COLLECTIONS.POOLS);
+        callback(updatedPools);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   },
 
-  // Add new pool - SEMPRE visível para todos os utilizadores
+  // Add new pool
   async addPool(poolData: Omit<Pool, "id" | "createdAt" | "updatedAt">) {
-    if (!isFirebaseAvailable()) {
-      throw new Error("Firebase not configured");
-    }
-
-    const docRef = await addDoc(collection(db, COLLECTIONS.POOLS), {
+    const pools = getFromStorage<Pool>(COLLECTIONS.POOLS);
+    const newPool: Pool = {
       ...poolData,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-      // CORREÇÃO: Garantir que todas as piscinas são sempre visíveis para todos
-      sharedGlobally: true,
-      visibleToAllUsers: true,
-      isGlobalData: true,
-      dataSharing: "all_users",
-    });
+      id: generateId(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    // Trigger automatic synchronization
-    console.log(
-      `✅ Piscina ${poolData.name} adicionada com partilha global - todos os utilizadores podem ver`,
-    );
-    await syncService.triggerAutoSync("create", "pools", docRef.id);
-
-    return docRef.id;
+    pools.push(newPool);
+    saveToStorage(COLLECTIONS.POOLS, pools);
+    console.log(`✅ Piscina ${poolData.name} adicionada localmente`);
+    return newPool.id;
   },
 
   // Update pool
   async updatePool(poolId: string, poolData: Partial<Pool>) {
-    if (!isFirebaseAvailable()) {
-      throw new Error("Firebase not configured");
+    const pools = getFromStorage<Pool>(COLLECTIONS.POOLS);
+    const poolIndex = pools.findIndex((p) => p.id === poolId);
+
+    if (poolIndex !== -1) {
+      pools[poolIndex] = {
+        ...pools[poolIndex],
+        ...poolData,
+        updatedAt: new Date().toISOString(),
+      };
+      saveToStorage(COLLECTIONS.POOLS, pools);
+      console.log(`✅ Piscina ${poolId} atualizada localmente`);
     }
-
-    const poolRef = doc(db, COLLECTIONS.POOLS, poolId);
-    await updateDoc(poolRef, {
-      ...poolData,
-      updatedAt: Timestamp.now(),
-    });
-
-    // Trigger automatic synchronization
-    console.log(
-      `✅ Piscina ${poolId} atualizada - sincronização autom��tica ativada`,
-    );
-    await syncService.triggerAutoSync("update", "pools", poolId);
   },
 
   // Delete pool
   async deletePool(poolId: string) {
-    if (!isFirebaseAvailable()) {
-      throw new Error("Firebase not configured");
-    }
-
-    const poolRef = doc(db, COLLECTIONS.POOLS, poolId);
-    await deleteDoc(poolRef);
-
-    // Trigger automatic synchronization
-    console.log(
-      `✅ Piscina ${poolId} removida - sincronização automática ativada`,
-    );
-    await syncService.triggerAutoSync("delete", "pools", poolId);
+    const pools = getFromStorage<Pool>(COLLECTIONS.POOLS);
+    const filteredPools = pools.filter((p) => p.id !== poolId);
+    saveToStorage(COLLECTIONS.POOLS, filteredPools);
+    console.log(`✅ Piscina ${poolId} removida localmente`);
   },
 };
 
@@ -327,82 +276,65 @@ export const poolService = {
 export const maintenanceService = {
   // Listen to real-time changes
   subscribeToMaintenance(callback: (maintenance: Maintenance[]) => void) {
-    if (!isFirebaseAvailable()) {
-      const maintenance = JSON.parse(
-        localStorage.getItem("maintenance") || "[]",
-      );
-      callback(maintenance);
-      return () => {};
-    }
+    const maintenance = getFromStorage<Maintenance>(COLLECTIONS.MAINTENANCE);
+    callback(maintenance);
 
-    const q = query(
-      collection(db, COLLECTIONS.MAINTENANCE),
-      orderBy("scheduledDate", "desc"),
-    );
-    return onSnapshot(q, (snapshot) => {
-      const maintenance = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Maintenance[];
-      callback(maintenance);
-    });
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === getStorageKey(COLLECTIONS.MAINTENANCE)) {
+        const updatedMaintenance = getFromStorage<Maintenance>(
+          COLLECTIONS.MAINTENANCE,
+        );
+        callback(updatedMaintenance);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   },
 
   // Get future maintenance
   subscribeToFutureMaintenance(callback: (maintenance: Maintenance[]) => void) {
-    if (!isFirebaseAvailable()) {
-      const allMaintenance = JSON.parse(
-        localStorage.getItem("maintenance") || "[]",
-      );
-      const today = new Date().toISOString().split("T")[0];
-      const futureMaintenance = allMaintenance.filter(
-        (m: Maintenance) => m.scheduledDate >= today,
-      );
-      callback(futureMaintenance);
-      return () => {};
-    }
-
+    const allMaintenance = getFromStorage<Maintenance>(COLLECTIONS.MAINTENANCE);
     const today = new Date().toISOString().split("T")[0];
-    const q = query(
-      collection(db, COLLECTIONS.MAINTENANCE),
-      where("scheduledDate", ">=", today),
-      orderBy("scheduledDate", "asc"),
+    const futureMaintenance = allMaintenance.filter(
+      (m: Maintenance) => m.scheduledDate >= today,
     );
-    return onSnapshot(q, (snapshot) => {
-      const maintenance = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Maintenance[];
-      callback(maintenance);
-    });
+    callback(futureMaintenance);
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === getStorageKey(COLLECTIONS.MAINTENANCE)) {
+        const updatedMaintenance = getFromStorage<Maintenance>(
+          COLLECTIONS.MAINTENANCE,
+        );
+        const updatedFuture = updatedMaintenance.filter(
+          (m: Maintenance) => m.scheduledDate >= today,
+        );
+        callback(updatedFuture);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   },
 
-  // Add new maintenance - SEMPRE visível para todos os utilizadores
+  // Add new maintenance
   async addMaintenance(
     maintenanceData: Omit<Maintenance, "id" | "createdAt" | "updatedAt">,
   ) {
-    if (!isFirebaseAvailable()) {
-      throw new Error("Firebase not configured");
-    }
-
-    const docRef = await addDoc(collection(db, COLLECTIONS.MAINTENANCE), {
+    const maintenance = getFromStorage<Maintenance>(COLLECTIONS.MAINTENANCE);
+    const newMaintenance: Maintenance = {
       ...maintenanceData,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-      // CORREÇÃO: Garantir que todas as manutenções são sempre visíveis para todos
-      sharedGlobally: true,
-      visibleToAllUsers: true,
-      isGlobalData: true,
-      dataSharing: "all_users",
-    });
+      id: generateId(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    // Trigger automatic synchronization
+    maintenance.push(newMaintenance);
+    saveToStorage(COLLECTIONS.MAINTENANCE, maintenance);
     console.log(
-      `✅ Manutenção para ${maintenanceData.poolName} adicionada com partilha global - todos os utilizadores podem ver`,
+      `✅ Manutenção para ${maintenanceData.poolName} adicionada localmente`,
     );
-    await syncService.triggerAutoSync("create", "maintenance", docRef.id);
-
-    return docRef.id;
+    return newMaintenance.id;
   },
 
   // Update maintenance
@@ -410,316 +342,128 @@ export const maintenanceService = {
     maintenanceId: string,
     maintenanceData: Partial<Maintenance>,
   ) {
-    if (!isFirebaseAvailable()) {
-      throw new Error("Firebase not configured");
-    }
-
-    const maintenanceRef = doc(db, COLLECTIONS.MAINTENANCE, maintenanceId);
-    await updateDoc(maintenanceRef, {
-      ...maintenanceData,
-      updatedAt: Timestamp.now(),
-    });
-
-    // Trigger automatic synchronization
-    console.log(
-      `✅ Manutenção ${maintenanceId} atualizada - sincronização automática ativada`,
+    const maintenance = getFromStorage<Maintenance>(COLLECTIONS.MAINTENANCE);
+    const maintenanceIndex = maintenance.findIndex(
+      (m) => m.id === maintenanceId,
     );
-    await syncService.triggerAutoSync("update", "maintenance", maintenanceId);
+
+    if (maintenanceIndex !== -1) {
+      maintenance[maintenanceIndex] = {
+        ...maintenance[maintenanceIndex],
+        ...maintenanceData,
+        updatedAt: new Date().toISOString(),
+      };
+      saveToStorage(COLLECTIONS.MAINTENANCE, maintenance);
+      console.log(`✅ Manutenção ${maintenanceId} atualizada localmente`);
+    }
   },
 
   // Delete maintenance
   async deleteMaintenance(maintenanceId: string) {
-    if (!isFirebaseAvailable()) {
-      throw new Error("Firebase not configured");
-    }
-
-    const maintenanceRef = doc(db, COLLECTIONS.MAINTENANCE, maintenanceId);
-    await deleteDoc(maintenanceRef);
-
-    // Trigger automatic synchronization
-    console.log(
-      `✅ Manutenção ${maintenanceId} removida - sincronização automática ativada`,
+    const maintenance = getFromStorage<Maintenance>(COLLECTIONS.MAINTENANCE);
+    const filteredMaintenance = maintenance.filter(
+      (m) => m.id !== maintenanceId,
     );
-    await syncService.triggerAutoSync("delete", "maintenance", maintenanceId);
+    saveToStorage(COLLECTIONS.MAINTENANCE, filteredMaintenance);
+    console.log(`✅ Manutenção ${maintenanceId} removida localmente`);
   },
 };
 
 // Work Services
 export const workService = {
-  // Listen to real-time changes - SEMPRE dados globais partilhados
+  // Listen to real-time changes
   subscribeToWorks(callback: (works: Work[]) => void) {
-    if (!isFirebaseAvailable()) {
-      const works = JSON.parse(localStorage.getItem("works") || "[]");
-      callback(works);
-      return () => {};
-    }
+    const works = getFromStorage<Work>(COLLECTIONS.WORKS);
+    callback(works);
 
-    // CORREÇÃO: Usar coleção global para garantir que todos os utilizadores vejam as obras
-    const q = query(
-      collection(db, COLLECTIONS.WORKS),
-      orderBy("createdAt", "desc"),
-    );
-    return onSnapshot(q, (snapshot) => {
-      const works = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        // Garantir que todas as obras são marcadas como globalmente visíveis
-        sharedGlobally: true,
-        visibleToAllUsers: true,
-      })) as Work[];
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === getStorageKey(COLLECTIONS.WORKS)) {
+        const updatedWorks = getFromStorage<Work>(COLLECTIONS.WORKS);
+        callback(updatedWorks);
+      }
+    };
 
-      console.log(
-        `🔍 OBRAS SINCRONIZADAS: ${works.length} obras agora visíveis para todos os utilizadores`,
-      );
-      callback(works);
-    });
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   },
 
-  // Add new work - SEMPRE visível para todos os utilizadores
+  // Add new work
   async addWork(workData: Omit<Work, "id" | "createdAt" | "updatedAt">) {
-    if (!isFirebaseAvailable()) {
-      throw new Error("Firebase not configured");
-    }
-
-    const docRef = await addDoc(collection(db, COLLECTIONS.WORKS), {
+    const works = getFromStorage<Work>(COLLECTIONS.WORKS);
+    const newWork: Work = {
       ...workData,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-      // CORREÇÃO CRÍTICA: Garantir que todas as obras são sempre visíveis para todos
-      sharedGlobally: true,
-      visibleToAllUsers: true,
-      isGlobalData: true,
-      dataSharing: "all_users",
-    });
+      id: generateId(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    // Trigger automatic synchronization
-    console.log(
-      `✅ Obra ${workData.title} adicionada com partilha global - todos os utilizadores podem ver`,
-    );
-    await syncService.triggerAutoSync("create", "works", docRef.id);
-
-    return docRef.id;
+    works.push(newWork);
+    saveToStorage(COLLECTIONS.WORKS, works);
+    console.log(`✅ Obra ${workData.title} adicionada localmente`);
+    return newWork.id;
   },
 
-  // Update work - Manter visibilidade global
+  // Update work
   async updateWork(workId: string, workData: Partial<Work>) {
-    if (!isFirebaseAvailable()) {
-      throw new Error("Firebase not configured");
+    const works = getFromStorage<Work>(COLLECTIONS.WORKS);
+    const workIndex = works.findIndex((w) => w.id === workId);
+
+    if (workIndex !== -1) {
+      works[workIndex] = {
+        ...works[workIndex],
+        ...workData,
+        updatedAt: new Date().toISOString(),
+      };
+      saveToStorage(COLLECTIONS.WORKS, works);
+      console.log(`✅ Obra ${workId} atualizada localmente`);
     }
-
-    const workRef = doc(db, COLLECTIONS.WORKS, workId);
-    await updateDoc(workRef, {
-      ...workData,
-      updatedAt: Timestamp.now(),
-      // MANTER flags de partilha global em todas as atualizações
-      sharedGlobally: true,
-      visibleToAllUsers: true,
-      isGlobalData: true,
-      dataSharing: "all_users",
-    });
-
-    // Trigger automatic synchronization
-    console.log(
-      `✅ Obra ${workId} atualizada mantendo partilha global - todos os utilizadores podem ver`,
-    );
-    await syncService.triggerAutoSync("update", "works", workId);
   },
 
   // Delete work
   async deleteWork(workId: string) {
-    if (!isFirebaseAvailable()) {
-      throw new Error("Firebase not configured");
-    }
-
-    const workRef = doc(db, COLLECTIONS.WORKS, workId);
-    await deleteDoc(workRef);
-
-    // Trigger automatic synchronization
-    console.log(
-      `✅ Obra ${workId} removida - sincronização automática ativada`,
-    );
-    await syncService.triggerAutoSync("delete", "works", workId);
+    const works = getFromStorage<Work>(COLLECTIONS.WORKS);
+    const filteredWorks = works.filter((w) => w.id !== workId);
+    saveToStorage(COLLECTIONS.WORKS, filteredWorks);
+    console.log(`✅ Obra ${workId} removida localmente`);
   },
 };
 
-// General sync service with enhanced cross-device synchronization
+// General sync service (simplified for localStorage)
 export const syncService = {
   // Initialize all data
   async initializeData() {
-    if (!isFirebaseAvailable()) {
-      console.log("⚠️ Firebase não disponível - sincronização limitada");
-      return; // Skip initialization if Firebase not configured
-    }
-
-    console.log("🚀 Inicializando dados do Firebase...");
+    console.log("🚀 Inicializando dados locais...");
     await userService.initializeDefaultUsers();
     console.log("✅ Dados inicializados com sucesso");
   },
 
-  // Trigger user synchronization after adding a new user
-  async triggerUserSync(userId: string) {
-    if (!isFirebaseAvailable()) {
-      console.log(
-        "Firebase não disponível - sincronização de usuário limitada",
-      );
-      return;
-    }
-
-    try {
-      // The real-time listeners will automatically pick up the new user
-      console.log(`🔄 Sincronização ativada para usuário: ${userId}`);
-
-      // Broadcast sync event to other tabs/windows
-      const syncEvent = new CustomEvent("firebase-sync", {
-        detail: { type: "user", id: userId, timestamp: Date.now() },
-      });
-      window.dispatchEvent(syncEvent);
-
-      // Update localStorage to trigger cross-tab sync
-      const currentUsers = localStorage.getItem("users");
-      if (currentUsers) {
-        const usersData = JSON.parse(currentUsers);
-        localStorage.setItem("users", JSON.stringify(usersData));
-      }
-    } catch (error) {
-      console.error("❌ Falha ao sincronizar usuário:", error);
-    }
-  },
-
-  // Force cross-device synchronization for specific collection
-  async forceCrossDeviceSync(collection: string) {
-    if (!isFirebaseAvailable()) {
-      console.log(
-        `Firebase não disponível - sincronização de ${collection} limitada`,
-      );
-      return;
-    }
-
-    try {
-      console.log(
-        `🔄 Forçando sincronização entre dispositivos para: ${collection}`,
-      );
-
-      // Broadcast sync event to all tabs/windows
-      const syncEvent = new CustomEvent("firebase-sync", {
-        detail: {
-          type: "forced-sync",
-          collection,
-          timestamp: Date.now(),
-          source: "manual",
-        },
-      });
-      window.dispatchEvent(syncEvent);
-
-      // Trigger storage event for cross-tab sync
-      const storageEvent = new StorageEvent("storage", {
-        key: collection,
-        newValue: localStorage.getItem(collection),
-        oldValue: null,
-        storageArea: localStorage,
-      });
-      window.dispatchEvent(storageEvent);
-
-      console.log(
-        `✅ Sincronização entre dispositivos ativada para: ${collection}`,
-      );
-    } catch (error) {
-      console.error(`❌ Erro ao forçar sincronização de ${collection}:`, error);
-    }
-  },
-
-  // Enhanced automatic sync for all data changes
-  async triggerAutoSync(
-    changeType: string,
-    collectionName: string,
-    documentId?: string,
-  ) {
-    if (!isFirebaseAvailable()) {
-      return;
-    }
-
-    try {
-      console.log(
-        `🔄 Auto-sync disparado: ${changeType} em ${collectionName}${documentId ? ` (${documentId})` : ""}`,
-      );
-
-      // Force immediate sync for specific collection
-      await this.forceCrossDeviceSync(collectionName);
-
-      // Trigger global sync notification
-      const syncEvent = new CustomEvent("firebase-auto-sync", {
-        detail: {
-          changeType,
-          collection: collectionName,
-          documentId,
-          timestamp: Date.now(),
-        },
-      });
-      window.dispatchEvent(syncEvent);
-    } catch (error) {
-      console.error(`❌ Erro no auto-sync para ${collectionName}:`, error);
-    }
-  },
-
-  // Subscribe to all data changes with enhanced sync capabilities
+  // Subscribe to all data changes
   subscribeToAllData(callbacks: {
     onUsersChange: (users: User[]) => void;
     onPoolsChange: (pools: Pool[]) => void;
     onMaintenanceChange: (maintenance: Maintenance[]) => void;
     onWorksChange: (works: Work[]) => void;
   }) {
-    if (!isFirebaseAvailable()) {
-      // Return empty data and empty unsubscribe function
-      console.log("⚠️ Firebase não disponível - retornando dados vazios");
-      callbacks.onUsersChange([]);
-      callbacks.onPoolsChange([]);
-      callbacks.onMaintenanceChange([]);
-      callbacks.onWorksChange([]);
-      return () => {};
-    }
+    console.log("📡 Configurando listeners para dados locais...");
 
-    console.log(
-      "📡 Configurando listeners para sincronização em tempo real...",
+    const unsubscribeUsers = userService.subscribeToUsers(
+      callbacks.onUsersChange,
     );
-
-    // Enhanced subscription with automatic sync triggers
-    const unsubscribeUsers = userService.subscribeToUsers((users) => {
-      console.log(
-        `👥 Mudança detectada em usuários: ${users.length} registros`,
-      );
-      callbacks.onUsersChange(users);
-      this.triggerAutoSync("users-changed", "users");
-    });
-
-    const unsubscribePools = poolService.subscribeToPools((pools) => {
-      console.log(
-        `🏊 Mudança detectada em piscinas: ${pools.length} registros`,
-      );
-      callbacks.onPoolsChange(pools);
-      this.triggerAutoSync("pools-changed", "pools");
-    });
-
+    const unsubscribePools = poolService.subscribeToPools(
+      callbacks.onPoolsChange,
+    );
     const unsubscribeMaintenance = maintenanceService.subscribeToMaintenance(
-      (maintenance) => {
-        console.log(
-          `🔧 Mudança detectada em manutenções: ${maintenance.length} registros`,
-        );
-        callbacks.onMaintenanceChange(maintenance);
-        this.triggerAutoSync("maintenance-changed", "maintenance");
-      },
+      callbacks.onMaintenanceChange,
     );
-
-    const unsubscribeWorks = workService.subscribeToWorks((works) => {
-      console.log(`⚒️ Mudança detectada em obras: ${works.length} registros`);
-      callbacks.onWorksChange(works);
-      this.triggerAutoSync("works-changed", "works");
-    });
+    const unsubscribeWorks = workService.subscribeToWorks(
+      callbacks.onWorksChange,
+    );
 
     console.log("✅ Todos os listeners configurados com sucesso");
 
     // Return unsubscribe function
     return () => {
-      console.log("🛑 Desconectando todos os listeners de sincronização");
+      console.log("🛑 Desconectando todos os listeners");
       unsubscribeUsers();
       unsubscribePools();
       unsubscribeMaintenance();
