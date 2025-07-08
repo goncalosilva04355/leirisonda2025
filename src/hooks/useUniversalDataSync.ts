@@ -134,7 +134,6 @@ export function useUniversalDataSync(): UniversalSyncState &
         }
 
         // Carregar dados universais iniciais
-        setState((prev) => ({ ...prev, syncStatus: "syncing" }));
         const universalData = await universalDataSync.getAllUniversalData();
 
         if (mounted) {
