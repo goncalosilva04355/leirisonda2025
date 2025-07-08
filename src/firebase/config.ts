@@ -409,18 +409,31 @@ const ensureAuth = async (): Promise<any> => {
   return auth;
 };
 
-// Force immediate initialization to avoid lazy loading issues
-(async () => {
-  try {
-    console.log("🚀 Starting immediate Firebase initialization...");
-    await ensureFirebaseApp();
-    await ensureAuth();
-    await ensureFirestore();
-    console.log("✅ Firebase initialization completed");
-  } catch (error) {
-    console.warn("⚠️ Firebase immediate initialization failed:", error);
+// Force immediate synchronous initialization
+console.log("🚀 Starting immediate Firebase initialization...");
+try {
+  // Initialize Firebase app immediately
+  const existingApps = getApps();
+  if (existingApps.length === 0) {
+    app = initializeApp(firebaseConfig);
+    console.log("✅ Firebase app initialized synchronously");
+  } else {
+    app = existingApps[0];
+    console.log("✅ Using existing Firebase app");
   }
-})();
+
+  // Initialize services immediately
+  if (app) {
+    db = getFirestore(app);
+    auth = getAuth(app);
+    console.log("✅ Firebase services initialized synchronously");
+  }
+} catch (error) {
+  console.warn("⚠️ Firebase synchronous initialization failed:", error);
+  app = null;
+  db = null;
+  auth = null;
+}
 
 // Basic initialization promise
 firebaseInitPromise = (async () => {
