@@ -75,6 +75,11 @@ export interface Maintenance {
   clientContact?: string;
   location?: string;
   createdAt: string;
+  estimatedDuration?: string;
+  actualDuration?: string;
+  cost?: string;
+  priority?: string;
+  materialsUsed?: string;
 }
 
 export interface Work {
