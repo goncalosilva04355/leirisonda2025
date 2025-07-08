@@ -558,8 +558,9 @@ class AuthService {
 
   // Listen to auth state changes
   onAuthStateChanged(callback: (user: UserProfile | null) => void): () => void {
-    // Try Firebase first if available
-    if (auth && db) {
+    // Wait for Firebase initialization and try Firebase first if available
+    waitForFirebaseInit().then((firebaseReady) => {
+      if (firebaseReady && auth && db) {
       console.log("Setting up Firebase auth state listener");
       return onAuthStateChanged(
         auth,
