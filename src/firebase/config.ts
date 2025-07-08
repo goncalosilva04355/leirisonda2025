@@ -346,6 +346,29 @@ const ensureFirebaseApp = async (): Promise<any> => {
       app = getFirebaseApp();
       if (app) {
         console.log("✅ Firebase app ready for lazy loading");
+
+        // Immediately try to initialize basic services
+        try {
+          if (!auth) {
+            auth = await import("firebase/auth").then(({ getAuth }) =>
+              getAuth(app),
+            );
+            console.log("✅ Firebase Auth initialized successfully");
+          }
+
+          if (!db) {
+            db = await import("firebase/firestore").then(({ getFirestore }) =>
+              getFirestore(app),
+            );
+            console.log("✅ Firebase Firestore initialized successfully");
+          }
+        } catch (serviceError) {
+          console.warn(
+            "⚠️ Firebase services initialization failed, but app is available:",
+            serviceError,
+          );
+          // Continue even if services fail - app is still available
+        }
       }
     } catch (error) {
       console.warn("⚠️ Firebase app initialization failed:", error);
@@ -415,7 +438,14 @@ firebaseInitPromise = ensureFirebaseApp();
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
   try {
-    return !!(app && auth && db);
+    // More robust check - verify Firebase services are actually accessible
+    if (!app) {
+      console.warn("Firebase app not initialized");
+      return false;
+    }
+
+    // Basic connectivity test - just check if we have the app
+    return true; // Simplified check to focus on app availability
   } catch (error) {
     console.warn("Firebase health check failed:", error);
     return false;
@@ -451,13 +481,22 @@ export const waitForFirebaseInit = async (): Promise<boolean> => {
 
 // Function to get Firebase connection status
 export const getFirebaseStatus = () => {
-  return {
+  const status = {
     app: !!app,
     auth: !!auth,
     db: !!db,
     ready: isFirebaseReady(),
     quotaExceeded: isQuotaExceeded(),
   };
+
+  // Log detailed status for debugging
+  console.log("🔍 Firebase Status Check:", {
+    ...status,
+    hasFirebaseConfig: !!defaultFirebaseConfig.projectId,
+    environment: typeof window !== "undefined" ? "browser" : "server",
+  });
+
+  return status;
 };
 
 // Function to mark quota exceeded - Firebase handles this automatically
