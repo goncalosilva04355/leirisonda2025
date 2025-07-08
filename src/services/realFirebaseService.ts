@@ -172,19 +172,18 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const userId = this.getCurrentUserId();
-      const poolRef = ref(this.database!, `users/${userId}/pools/${poolId}`); // User-specific location
+      const poolRef = ref(this.database!, `shared/pools/${poolId}`); // Global shared location
 
       // Sanitize data before sending to Firebase
       const sanitizedData = this.sanitizeForFirebase({
         ...poolData,
         updatedAt: new Date().toISOString(),
-        userId: this.getCurrentUserId(),
+        sharedGlobally: true,
       });
 
       await update(poolRef, sanitizedData);
       console.log(
-        `✅ Pool ${poolId} updated in user's isolated data - only visible to current user`,
+        `✅ Pool ${poolId} updated in shared database - visible to all users`,
       );
       return true;
     } catch (error) {
