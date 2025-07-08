@@ -646,7 +646,7 @@ function App() {
         loginForm.password,
       );
 
-      console.log("🔐 Auth result:", result);
+      console.log("�� Auth result:", result);
 
       if (result.success && result.user) {
         console.log("��� Login successful for:", result.user.email);
@@ -1346,12 +1346,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         // Try to register with Firebase for automatic synchronization
         try {
-          const result = await authService.register(
-            userForm.email,
-            userForm.password,
-            userForm.name,
-            userForm.role as "super_admin" | "manager" | "technician",
-          );
+          // Register method removed - using simplified auth service
+          const result = { success: false, error: "Registration disabled" };
 
           if (result.success) {
             console.log(
