@@ -4196,16 +4196,36 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                             // Update the existing work with bore data
                             const boreDataUpdate = {
-                              boreDepth: boreInputs[0]?.value || "",
-                              waterLevel: boreInputs[1]?.value || "",
-                              staticLevel: boreInputs[2]?.value || "",
-                              dynamicLevel: boreInputs[3]?.value || "",
-                              flowRate: boreInputs[4]?.value || "",
-                              columnDiameter: boreInputs[5]?.value || "",
-                              pumpModel: boreInputs[6]?.value || "",
-                              motorPower: boreInputs[7]?.value || "",
-                              pumpVoltage: boreInputs[8]?.value || "",
-                              boreObservations: boreInputs[9]?.value || "",
+                              boreDepth:
+                                (boreInputs[0] as HTMLInputElement)?.value ||
+                                "",
+                              waterLevel:
+                                (boreInputs[1] as HTMLInputElement)?.value ||
+                                "",
+                              staticLevel:
+                                (boreInputs[2] as HTMLInputElement)?.value ||
+                                "",
+                              dynamicLevel:
+                                (boreInputs[3] as HTMLInputElement)?.value ||
+                                "",
+                              flowRate:
+                                (boreInputs[4] as HTMLInputElement)?.value ||
+                                "",
+                              columnDiameter:
+                                (boreInputs[5] as HTMLInputElement)?.value ||
+                                "",
+                              pumpModel:
+                                (boreInputs[6] as HTMLInputElement)?.value ||
+                                "",
+                              motorPower:
+                                (boreInputs[7] as HTMLInputElement)?.value ||
+                                "",
+                              pumpVoltage:
+                                (boreInputs[8] as HTMLInputElement)?.value ||
+                                "",
+                              boreObservations:
+                                (boreInputs[9] as HTMLInputElement)?.value ||
+                                "",
                             };
 
                             // Update the work with bore data
