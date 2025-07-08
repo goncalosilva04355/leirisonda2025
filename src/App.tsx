@@ -133,14 +133,10 @@ function App() {
   const {
     pools,
     maintenance,
-    futureMaintenance,
     works,
     clients,
     isLoading: syncLoading,
-    lastSync,
     error: syncError,
-    syncWithFirebase,
-    enableSync,
     addPool,
     addWork,
     addMaintenance,
@@ -681,7 +677,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("��� Navigating to dashboard");
+            console.log("����� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -2530,7 +2526,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manutenções
+                      Manuten��ões
                     </button>
                     <button
                       onClick={() => setActiveSection("futuras-manutencoes")}
@@ -3479,7 +3475,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medições do Furo
+                              Medi��ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
