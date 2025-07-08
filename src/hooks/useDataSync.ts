@@ -311,12 +311,21 @@ export function useDataSync(): SyncState & SyncActions {
                     const mergedMaintenance = [...prev.maintenance];
                     const mergedClients = [...prev.clients];
 
-                    // Add Firebase data that's not already in local storage
-                    firebaseData.works.forEach((work: Work) => {
-                      if (!mergedWorks.find((w) => w.id === work.id)) {
-                        mergedWorks.push(work);
-                      }
-                    });
+                    // Add Firebase data that's not already in local storage (with null checks)
+                    if (
+                      firebaseData.works &&
+                      Array.isArray(firebaseData.works)
+                    ) {
+                      firebaseData.works.forEach((work: Work) => {
+                        if (
+                          work &&
+                          work.id &&
+                          !mergedWorks.find((w) => w.id === work.id)
+                        ) {
+                          mergedWorks.push(work);
+                        }
+                      });
+                    }
 
                     firebaseData.pools.forEach((pool: Pool) => {
                       if (!mergedPools.find((p) => p.id === pool.id)) {
