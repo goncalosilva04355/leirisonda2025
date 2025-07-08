@@ -71,8 +71,13 @@ class UniversalDataSyncService {
       this.isInitialized = true;
       return true;
     } catch (error) {
-      console.error("❌ Erro na inicialização universal:", error);
-      return false;
+      console.warn(
+        "⚠️ Erro na inicialização universal (continuando em modo local):",
+        error,
+      );
+      // Don't return false - allow local mode operation
+      this.isInitialized = true;
+      return true;
     }
   }
 
