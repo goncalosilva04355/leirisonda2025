@@ -1306,8 +1306,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
-    const fakeEvent = { target: { files } };
-    handlePhotoUpload(fakeEvent);
+    files.forEach((file) => {
+      const newPhoto = {
+        id: Date.now() + Math.random(),
+        name: file.name,
+        url: URL.createObjectURL(file),
+        file: file,
+      };
+      setUploadedPhotos([...uploadedPhotos, newPhoto]);
+    });
   };
 
   const downloadPDF = (content: string, filename: string) => {
@@ -2634,7 +2641,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">📋</div>
+                                  <div className="text-gray-400 mb-2">��</div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -4818,7 +4825,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenção
+                        Registar intervenção de manuten��ão
                       </p>
                     </div>
                   </div>
@@ -8030,7 +8037,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Página não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A seção solicitada não foi encontrada.
+                  A seç��o solicitada não foi encontrada.
                 </p>
               </div>
             </div>
