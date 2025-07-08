@@ -267,7 +267,7 @@ function App() {
     deleteCliente,
     forceSyncAll,
     syncStatus,
-  } = universalSync;
+  } = simpleData;
 
   // Mapear dados universais para compatibilidade com código existente
   const pools = piscinas;
@@ -3102,7 +3102,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
-                                    () => simpleData.maintenanceService.deleteMaintenance(maint.id),
+                                    () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -3254,7 +3254,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
-                                    () => simpleData.maintenanceService.deleteMaintenance(maint.id),
+                                    () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -4541,7 +4541,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   address: newClientForm.address,
                                   pools: [],
                                 };
-                                simpleData.clientService.addClient(newClient);
+                                dataSync.addClient(newClient);
 
                                 // Reset form and close
                                 setNewClientForm({
@@ -5539,7 +5539,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                   );
                                 }
                               } else {
@@ -5775,7 +5775,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 • Todas as piscinas ({pools.length} registos)
                               </li>
                               <li>
-                                🔥 Dados do Firebase e armazenamento local
+                                �� Dados do Firebase e armazenamento local
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
@@ -6338,7 +6338,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar o cliente "${client.name}"?`,
-                                    () => simpleData.clientService.deleteClient(client.id),
+                                    () => dataSync.deleteClient(client.id),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -6405,7 +6405,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="particular">Particular</option>
                             <option value="empresa">Empresa</option>
-                            <option value="condominio">Condomínio</option>
+                            <option value="condominio">Condom��nio</option>
                             <option value="hotel">Hotel / Turismo</option>
                             <option value="publico">Entidade P��blica</option>
                           </select>
@@ -6794,7 +6794,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ���{work.budget}
+                                  ����{work.budget}
                                 </div>
                               )}
                             </div>
@@ -6833,7 +6833,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a obra "${work.title}"?`,
-                                    () => simpleData.workService.deleteWork(work.id),
+                                    () => dataSync.deleteWork(work.id),
                                   )
                                 }
                                 className="p-3 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg border border-red-200 transition-colors"
@@ -7489,7 +7489,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                           }
 
-                          simpleData.workService.updateWork(editingWork.id, updateData);
+                          dataSync.updateWork(editingWork.id, updateData);
 
                           alert("Obra atualizada com sucesso!");
                           setEditingWork(null);
@@ -7723,7 +7723,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations = (inputs[11] as HTMLInputElement)
                             .value; // Observações
 
-                          simpleData.poolService.updatePool(editingPool.id, {
+                          dataSync.updatePool(editingPool.id, {
                             name,
                             client,
                             location,
@@ -7965,7 +7965,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations = (inputs[10] as HTMLInputElement)
                             .value; // Observações
 
-                          simpleData.maintenanceService.updateMaintenance(editingMaintenance.id, {
+                          dataSync.updateMaintenance(editingMaintenance.id, {
                             scheduledDate: scheduledDate
                               ? new Date(scheduledDate).toISOString()
                               : undefined,
@@ -8381,7 +8381,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               setShowAdvancedSettings(false);
               setIsAdvancedUnlocked(false);
             }}
-            dataSync={{
+            dataSync={simpleData}
               pools,
               maintenance,
               works,
