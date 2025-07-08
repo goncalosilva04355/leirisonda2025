@@ -269,10 +269,11 @@ class RealFirebaseService {
     if (!this.isReady()) return false;
 
     try {
-      const workRef = ref(this.database!, `shared/works/${workId}`); // Global shared location
+      const userId = this.getCurrentUserId();
+      const workRef = ref(this.database!, `users/${userId}/works/${workId}`); // User-specific location
       await remove(workRef);
       console.log(
-        `✅ Work ${workId} deleted from shared database - removed for all users`,
+        `✅ Work ${workId} deleted from user's isolated data - removed only for current user`,
       );
       return true;
     } catch (error) {
