@@ -6799,7 +6799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
-                          ? "Não há obras registadas no sistema."
+                          ? "N��o há obras registadas no sistema."
                           : `Não há obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
@@ -7910,14 +7910,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               : undefined,
                             technician,
                             type,
-                            status,
-                            estimatedDuration: estimatedDuration
-                              ? parseFloat(estimatedDuration)
-                              : undefined,
-                            actualDuration: actualDuration
-                              ? parseFloat(actualDuration)
-                              : undefined,
-                            cost: cost ? parseFloat(cost) : undefined,
+                            status: status as
+                              | "pending"
+                              | "in_progress"
+                              | "completed"
+                              | "cancelled"
+                              | "scheduled",
+                            estimatedDuration: estimatedDuration || undefined,
+                            actualDuration: actualDuration || undefined,
+                            cost: cost || undefined,
                             priority,
                             completedDate: completedDate
                               ? new Date(completedDate).toISOString()
@@ -8946,7 +8947,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informações Detalhadas
+                          Informaç��es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
