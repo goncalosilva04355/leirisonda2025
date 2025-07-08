@@ -1762,6 +1762,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Add error boundary
+    console.log("🔍 Renderizing activeSection:", activeSection);
+
     try {
       switch (activeSection) {
         case "dashboard":
@@ -7187,7 +7189,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.observations}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observações sobre a obra..."
+                            placeholder="Observa��ões sobre a obra..."
                           />
                         </div>
                       </div>
