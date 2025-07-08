@@ -52,12 +52,10 @@ class UniversalDataSyncService {
     try {
       const firebaseReady = await waitForFirebaseInit();
       if (!firebaseReady || !isFirebaseReady()) {
-        console.warn(
-          "⚠️ Firebase services not fully available - operating in limited mode",
-        );
-        console.log(
-          "📱 Application will work with reduced functionality until Firebase is ready",
-        );
+        handleFirebaseUnavailable("Sincronização universal");
+        const status = getDetailedFirebaseStatus();
+        console.log(`📊 Status: ${status.userFriendlyMessage}`);
+
         // Don't return false - allow the app to continue in local mode
         this.isInitialized = true;
         return true;
