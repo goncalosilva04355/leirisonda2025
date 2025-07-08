@@ -49,9 +49,7 @@ import { AutoSyncProvider } from "./components/AutoSyncProvider";
 import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
-import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
-import { syncManager } from "./utils/syncManager";
-import { clearQuotaProtection } from "./utils/clearQuotaProtection";
+// Firebase removed - using localStorage only
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -5737,7 +5735,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </li>
                             <li>��� O Google Maps abre numa nova janela/tab</li>
                             <li>
-                              ��� Pode ativar ou desativar cada funcionalidade
+                              • Pode ativar ou desativar cada funcionalidade
                               independentemente
                             </li>
                           </ul>
