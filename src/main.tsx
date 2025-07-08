@@ -8,35 +8,56 @@ import "./index.css";
 import "./utils/immediateUserRestore";
 
 // ReadableStream polyfill for Firebase compatibility
-if (typeof window !== "undefined" && !window.ReadableStream) {
+if (
+  typeof window !== "undefined" &&
+  (!window.ReadableStream || !window.ReadableStream.prototype.getReader)
+) {
   console.log("🔧 Adding ReadableStream polyfill for Firebase compatibility");
-  // Basic ReadableStream polyfill
-  window.ReadableStream = class ReadableStream {
-    constructor(source) {
-      this._source = source;
-      this._reader = null;
-      this._locked = false;
-    }
-
-    getReader() {
-      if (this._locked) {
-        throw new TypeError("ReadableStream is locked");
+  import("web-streams-polyfill/ponyfill")
+    .then(({ ReadableStream, WritableStream, TransformStream }) => {
+      if (!window.ReadableStream) {
+        window.ReadableStream = ReadableStream;
       }
-      this._locked = true;
-      this._reader = {
-        read: () => Promise.resolve({ done: true, value: undefined }),
-        cancel: () => Promise.resolve(),
-        releaseLock: () => {
-          this._locked = false;
-        },
-      };
-      return this._reader;
-    }
+      if (!window.WritableStream) {
+        window.WritableStream = WritableStream;
+      }
+      if (!window.TransformStream) {
+        window.TransformStream = TransformStream;
+      }
+      console.log("✅ Web streams polyfill loaded");
+    })
+    .catch((error) => {
+      console.warn("Failed to load web streams polyfill:", error);
+      // Fallback to basic implementation
+      if (!window.ReadableStream) {
+        window.ReadableStream = class ReadableStream {
+          constructor(source) {
+            this._source = source;
+            this._reader = null;
+            this._locked = false;
+          }
 
-    cancel() {
-      return Promise.resolve();
-    }
-  };
+          getReader() {
+            if (this._locked) {
+              throw new TypeError("ReadableStream is locked");
+            }
+            this._locked = true;
+            this._reader = {
+              read: () => Promise.resolve({ done: true, value: undefined }),
+              cancel: () => Promise.resolve(),
+              releaseLock: () => {
+                this._locked = false;
+              },
+            };
+            return this._reader;
+          }
+
+          cancel() {
+            return Promise.resolve();
+          }
+        };
+      }
+    });
 }
 
 // Chrome-specific fixes for PWA compatibility
