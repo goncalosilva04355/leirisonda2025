@@ -1018,7 +1018,7 @@ ${index + 1}. ${work.title}
 
   const generateClientsPDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE CLIENTES
+LEIRISONDA - RELAT��RIO DE CLIENTES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -3519,11 +3519,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Usuários Atribuídos ({users.length} utilizadores
                             disponíveis)
                           </label>
-                          {console.log(
-                            "📊 TOTAL UTILIZADORES CARREGADOS:",
-                            users.length,
-                            users,
-                          )}
+                          {(() => {
+                            console.log(
+                              "📊 TOTAL UTILIZADORES CARREGADOS:",
+                              users.length,
+                              users,
+                            );
+                            return null;
+                          })()}
                           <p className="text-sm text-gray-600 mb-2">
                             Selecione os usuários responsáveis por esta obra.
                             Utilizadores inativos são marcados como "(Inativo)".
