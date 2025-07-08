@@ -215,7 +215,47 @@ const initializeFirebaseServices = async (): Promise<void> => {
                 setTimeout(resolve, 1000 * attempts),
               );
             } else {
-              throw error;
+              console.error(
+                "❌ Firestore initialization failed after all attempts",
+              );
+              console.log("🔄 Tentando última estratégia de recuperação...");
+
+              // Ultimate fallback - try to completely reset Firebase
+              try {
+                const apps = getApps();
+                for (const existingApp of apps) {
+                  try {
+                    deleteApp(existingApp);
+                  } catch (deleteError) {
+                    console.warn(
+                      "Failed to delete app in fallback:",
+                      deleteError,
+                    );
+                  }
+                }
+
+                // Wait and try one final time
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                app = getFirebaseApp();
+
+                if (app) {
+                  const finalFirestore = getFirestore(app);
+                  console.log(
+                    "✅ Firestore inicializado com estratégia de recuperação final",
+                  );
+                  return finalFirestore;
+                }
+              } catch (finalError) {
+                console.error(
+                  "❌ Estratégia de recuperação final falhou:",
+                  finalError,
+                );
+              }
+
+              console.error(
+                "❌ Todas as tentativas de inicialização do Firestore falharam",
+              );
+              return null;
             }
           }
         }
