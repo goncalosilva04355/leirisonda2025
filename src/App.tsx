@@ -60,8 +60,7 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
-import { useDataSync } from "./hooks/useDataSync";
-import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
+import { useSimpleData } from "./hooks/useSimpleData";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -7810,7 +7809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç��o">Manutenção</option>
+                          <option value="Manutenç���o">Manutenção</option>
                           <option value="Reparaç��o">Reparação</option>
                         </select>
                       </div>
@@ -8272,7 +8271,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>��</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -8913,7 +8912,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In����cio
+                          Data de In������cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
