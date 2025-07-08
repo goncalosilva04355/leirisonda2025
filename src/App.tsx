@@ -3102,7 +3102,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
-                                    () => dataSync.deleteMaintenance(maint.id),
+                                    () => simpleData.maintenanceService.deleteMaintenance(maint.id),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -3254,7 +3254,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
-                                    () => dataSync.deleteMaintenance(maint.id),
+                                    () => simpleData.maintenanceService.deleteMaintenance(maint.id),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -4541,7 +4541,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   address: newClientForm.address,
                                   pools: [],
                                 };
-                                dataSync.addClient(newClient);
+                                simpleData.clientService.addClient(newClient);
 
                                 // Reset form and close
                                 setNewClientForm({
@@ -6338,7 +6338,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar o cliente "${client.name}"?`,
-                                    () => dataSync.deleteClient(client.id),
+                                    () => simpleData.clientService.deleteClient(client.id),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -6833,7 +6833,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a obra "${work.title}"?`,
-                                    () => dataSync.deleteWork(work.id),
+                                    () => simpleData.workService.deleteWork(work.id),
                                   )
                                 }
                                 className="p-3 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg border border-red-200 transition-colors"
@@ -7489,7 +7489,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                           }
 
-                          dataSync.updateWork(editingWork.id, updateData);
+                          simpleData.workService.updateWork(editingWork.id, updateData);
 
                           alert("Obra atualizada com sucesso!");
                           setEditingWork(null);
@@ -7723,7 +7723,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations = (inputs[11] as HTMLInputElement)
                             .value; // Observações
 
-                          dataSync.updatePool(editingPool.id, {
+                          simpleData.poolService.updatePool(editingPool.id, {
                             name,
                             client,
                             location,
@@ -7965,7 +7965,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations = (inputs[10] as HTMLInputElement)
                             .value; // Observações
 
-                          dataSync.updateMaintenance(editingMaintenance.id, {
+                          simpleData.maintenanceService.updateMaintenance(editingMaintenance.id, {
                             scheduledDate: scheduledDate
                               ? new Date(scheduledDate).toISOString()
                               : undefined,
