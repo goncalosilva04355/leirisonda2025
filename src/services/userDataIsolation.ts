@@ -42,7 +42,6 @@ export class UserDataIsolationService {
 
   private async initializeUserTracking() {
     try {
-      const auth = await getAuthService();
       if (auth) {
         // Escutar mudanças de autenticação
         auth.onAuthStateChanged((user) => {
