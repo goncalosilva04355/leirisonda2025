@@ -8512,19 +8512,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   }
 
-  // Use sync manager to determine if sync should be enabled
-  const quotaStatus = syncManager.getSyncStatus();
-  const syncInterval = syncManager.getSafeInterval();
-
   return (
-    <AutoSyncProvider
-      enabled={true}
-      syncInterval={60000}
-      collections={["users", "pools", "maintenance", "works", "clients"]}
-      showNotifications={false}
-    >
-      <InstantSyncManager>
-        <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
