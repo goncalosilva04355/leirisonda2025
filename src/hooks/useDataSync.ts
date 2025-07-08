@@ -197,11 +197,11 @@ export function useDataSync(): SyncState & SyncActions {
     lastSync: null,
   });
 
-  // PARTILHA GLOBAL SEMPRE ATIVA - NUNCA localStorage
+  // ISOLAMENTO DE DADOS POR UTILIZADOR SEMPRE ATIVO
   useEffect(() => {
-    console.log("🌐 PARTILHA DE DADOS SEMPRE ATIVA ENTRE UTILIZADORES");
-    console.log("❌ LOCALSTORAGE: Nunca será usado");
-    console.log("✅ FIREBASE: Todos os dados sempre partilhados globalmente");
+    console.log("🔐 ISOLAMENTO DE DADOS POR UTILIZADOR ATIVO");
+    console.log("❌ Partilha global: Desabilitada por segurança");
+    console.log("✅ Cada utilizador vê apenas os seus próprios dados");
   }, []);
 
   // PARTILHA GLOBAL SEMPRE ATIVA - nunca desabilitar
