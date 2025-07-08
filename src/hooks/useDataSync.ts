@@ -265,23 +265,57 @@ export function useDataSync(): SyncState & SyncActions {
             setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
             try {
-              console.log("🔄 Testing Firebase connection...");
-              const connectionOk = await realFirebaseService.testConnection();
-              if (!connectionOk) {
-                console.warn(
-                  "⚠️ Firebase connection test failed, using local mode only",
-                );
+              // Firebase operations disabled to prevent crashes
+              console.log("📱 Using local mode only - Firebase disabled");
+
+              // Load local data
+              try {
+                const localData = {
+                  works: JSON.parse(
+                    localStorage.getItem("leirisonda_works") || "[]",
+                  ),
+                  pools: JSON.parse(
+                    localStorage.getItem("leirisonda_pools") || "[]",
+                  ),
+                  maintenance: JSON.parse(
+                    localStorage.getItem("leirisonda_maintenance") || "[]",
+                  ),
+                  clients: JSON.parse(
+                    localStorage.getItem("leirisonda_clients") || "[]",
+                  ),
+                };
+
+                setState((prev) => {
+                  const today = new Date();
+                  const futureMaintenance = localData.maintenance.filter(
+                    (m: any) => new Date(m.scheduledDate) >= today,
+                  );
+
+                  return {
+                    ...prev,
+                    works: localData.works,
+                    pools: localData.pools,
+                    maintenance: localData.maintenance,
+                    futureMaintenance,
+                    clients: localData.clients,
+                    isLoading: false,
+                    lastSync: new Date(),
+                    error: null,
+                  };
+                });
+
+                return; // Exit early - no Firebase operations
+              } catch (localError) {
+                console.warn("Error loading local data:", localError);
                 setState((prev) => ({
                   ...prev,
                   isLoading: false,
-                  error: "Modo Local - Sem sincronização entre dispositivos",
+                  error: "Erro ao carregar dados locais",
                 }));
                 return;
               }
 
-              console.log(
-                "✅ Firebase connected successfully - cross-device sync enabled",
-              );
+              // This code below will not execute due to early returns above
 
               // Perform initial data sync to pull any existing data
               try {
