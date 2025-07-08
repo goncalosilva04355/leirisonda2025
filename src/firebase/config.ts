@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp, deleteApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 
 // Default Firebase config
 const defaultFirebaseConfig = {
@@ -88,7 +89,7 @@ const isQuotaExceeded = () => {
 try {
   if (isQuotaExceeded()) {
     console.log(
-      "���️ Firebase temporarily disabled due to quota exceeded - will retry automatically",
+      "⏸️ Firebase temporarily disabled due to quota exceeded - will retry automatically",
     );
     app = null;
     db = null;
@@ -96,31 +97,17 @@ try {
   } else {
     app = getFirebaseApp();
     if (app) {
-      try {
-        // Inicialização segura do Firestore com delay para evitar conflitos de stream
+      // Inicialização protegida do Firestore
+      db = await FirebaseErrorFix.safeFirebaseOperation(async () => {
+        console.log("🔄 Inicializando Firestore com proteção...");
         await new Promise((resolve) => setTimeout(resolve, 100));
-        db = getFirestore(app);
-        console.log("✅ Firestore inicializado com segurança");
-      } catch (error: any) {
-        console.warn("⚠️ Falha na inicialização do Firestore:", error);
-        if (error.message?.includes("ReadableStream")) {
-          console.log(
-            "🔄 Tentando reinicializar Firestore após erro de stream...",
-          );
-          try {
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            db = getFirestore(app);
-            console.log("✅ Firestore reinicializado com sucesso");
-          } catch (retryError) {
-            console.error(
-              "❌ Falha na reinicialização do Firestore:",
-              retryError,
-            );
-            db = null;
-          }
-        } else {
-          db = null;
-        }
+        return getFirestore(app);
+      }, "inicialização do Firestore");
+
+      if (db) {
+        console.log("✅ Firestore inicializado com proteção completa");
+      } else {
+        console.warn("⚠️ Firestore não pôde ser inicializado");
       }
 
       try {

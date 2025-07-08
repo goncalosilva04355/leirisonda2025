@@ -11,6 +11,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db, isFirebaseReady } from "../firebase/config";
+import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 
 export interface SharedDataState {
   pools: any[];
