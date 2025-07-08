@@ -47,10 +47,7 @@ class UniversalDataSyncService {
       return true;
     }
 
-    console.log("🌐 INICIANDO SINCRONIZAÇÃO UNIVERSAL DE DADOS");
-    console.log(
-      "✅ Obras, Manutenções, Piscinas e Clientes serão partilhados globalmente",
-    );
+    // Inicializar sincronização universal silenciosa
 
     try {
       const firebaseReady = await waitForFirebaseInit();
@@ -263,9 +260,7 @@ class UniversalDataSyncService {
     }
 
     console.log("📡 CONFIGURANDO LISTENERS UNIVERSAIS");
-    console.log(
-      "���� TODOS OS UTILIZADORES VERÃO OS MESMOS DADOS EM TEMPO REAL",
-    );
+    console.log("🌐 TODOS OS UTILIZADORES VERÃO OS MESMOS DADOS EM TEMPO REAL");
 
     const listeners: Unsubscribe[] = [];
 
