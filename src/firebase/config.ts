@@ -309,7 +309,7 @@ const initializeFirebaseServices = async (): Promise<void> => {
       console.log("✅ Firebase services initialized successfully");
     } else {
       console.warn(
-        "⚠️ Firebase app not available, services will use fallback mode",
+        "⚠�� Firebase app not available, services will use fallback mode",
       );
     }
   } catch (error) {
@@ -409,8 +409,12 @@ const ensureAuth = async (): Promise<any> => {
   return auth;
 };
 
-// Basic initialization - just prepare the app
-firebaseInitPromise = ensureFirebaseApp();
+// Basic initialization - prepare the app and services
+firebaseInitPromise = (async () => {
+  await ensureFirebaseApp();
+  await ensureAuth();
+  await ensureFirestore();
+})();
 
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
