@@ -104,6 +104,20 @@ class RealFirebaseService {
     return this.isInitialized && this.database !== null && this.app !== null;
   }
 
+  // Get current user ID for isolated data
+  private getCurrentUserId(): string {
+    try {
+      const userData = localStorage.getItem("currentUser");
+      if (userData) {
+        const user = JSON.parse(userData);
+        return user.uid || user.id || "default_user";
+      }
+      return "default_user";
+    } catch {
+      return "default_user";
+    }
+  }
+
   // Test connection
   async testConnection(): Promise<boolean> {
     if (!this.isReady()) {
