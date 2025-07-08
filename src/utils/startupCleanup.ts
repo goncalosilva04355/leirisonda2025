@@ -201,6 +201,6 @@ const ensureSuperAdminExists = () => {
 };
 
 // Execute cleanup immediately when module loads
-performStartupCleanup();
+// performStartupCleanup(); // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
 export default performStartupCleanup;

@@ -20,7 +20,24 @@ class MockAuthService {
   }
 
   private loadUsers() {
-    // Initialize with only super admin user - Firebase will handle persistence
+    // First, try to load existing users from localStorage
+    try {
+      const storedUsers = localStorage.getItem("mock-users");
+      if (storedUsers) {
+        const parsed = JSON.parse(storedUsers);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          this.users = parsed;
+          console.log(
+            "MockAuthService loaded existing users from localStorage",
+          );
+          return;
+        }
+      }
+    } catch (error) {
+      console.warn("Failed to load users from localStorage:", error);
+    }
+
+    // Initialize with default users including super admin and example users
     this.users = [
       {
         uid: "admin-1",
@@ -31,10 +48,40 @@ class MockAuthService {
         active: true,
         createdAt: new Date().toISOString(),
       },
+      {
+        uid: "manager-1",
+        email: "manager@leirisonda.com",
+        password: "manager123",
+        name: "João Silva",
+        role: "manager",
+        active: true,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        uid: "tech-1",
+        email: "tecnico@leirisonda.com",
+        password: "tecnico123",
+        name: "Maria Santos",
+        role: "technician",
+        active: true,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        uid: "tech-2",
+        email: "ana@leirisonda.com",
+        password: "ana123",
+        name: "Ana Costa",
+        role: "technician",
+        active: true,
+        createdAt: new Date().toISOString(),
+      },
     ];
 
+    // Save to localStorage to persist the users
+    localStorage.setItem("mock-users", JSON.stringify(this.users));
+
     console.log(
-      "MockAuthService loaded users:",
+      "MockAuthService initialized default users:",
       this.users.map((u) => `${u.name} (${u.email})`),
     );
   }
@@ -68,7 +115,8 @@ class MockAuthService {
     this.users.push(newUser);
     this.currentUser = newUser;
 
-    // Firebase will handle persistence automatically
+    // Save updated users list to localStorage
+    localStorage.setItem("mock-users", JSON.stringify(this.users));
 
     return { success: true, user: newUser };
   }
