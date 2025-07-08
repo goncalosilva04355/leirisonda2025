@@ -50,15 +50,34 @@ class UniversalDataSyncService {
     console.log("🔄 Inicializando serviço universal...");
 
     try {
-      // Try to wait for Firebase, but don't fail if it's not available
-      const firebaseReady = await waitForFirebaseInit();
+      console.log("🔄 Tentando conectar ao Firebase...");
+
+      // Try multiple times to connect to Firebase
+      let firebaseReady = false;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        console.log(`🔄 Tentativa ${attempt} de conexão Firebase...`);
+        firebaseReady = await waitForFirebaseInit();
+
+        if (firebaseReady && isFirebaseReady() && db) {
+          console.log(`✅ Firebase conectado na tentativa ${attempt}`);
+          break;
+        }
+
+        if (attempt < 3) {
+          console.log(`⏳ Tentativa ${attempt} falhou, aguardando 2s...`);
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+      }
+
       if (!firebaseReady || !isFirebaseReady() || !db) {
-        console.warn("⚠️ Firebase não disponível - continuando em modo local");
-        // Still mark as initialized so app can function with local data
+        console.warn(
+          "⚠️ Firebase não disponível após 3 tentativas - continuando em modo local",
+        );
         this.isInitialized = true;
         return true;
       }
 
+      console.log("🚀 Firebase conectado - iniciando migração de dados...");
       // Migrar dados existentes para estrutura universal
       await this.migrateToUniversalSharing();
 
