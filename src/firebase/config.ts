@@ -348,7 +348,7 @@ console.log("🔥 Inicializando Firebase diretamente...");
         auth = getAuth(app);
         console.log("✅ Firebase Auth inicializado diretamente");
       } catch (error) {
-        console.warn("⚠️ Erro ao inicializar Auth:", error);
+        console.warn("���️ Erro ao inicializar Auth:", error);
         auth = null;
       }
     }
@@ -368,14 +368,7 @@ export const isFirebaseReady = () => {
   return ready;
 };
 
-// Lazy loading getters for Firebase services
-export const getDB = async () => {
-  return await ensureFirestore();
-};
-
-export const getAuthService = async () => {
-  return await ensureAuth();
-};
+// Firebase services are now initialized directly
 
 // Function to ensure Firebase is initialized before use
 export const waitForFirebaseInit = async (): Promise<boolean> => {
