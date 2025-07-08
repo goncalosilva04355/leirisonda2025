@@ -101,7 +101,34 @@ export function useUniversalDataSync(): UniversalSyncState &
 
         // Carregar dados universais iniciais
         setState((prev) => ({ ...prev, syncStatus: "syncing" }));
-        const universalData = await universalDataSync.getAllUniversalData();
+
+        let universalData;
+        try {
+          universalData = await universalDataSync.getAllUniversalData();
+        } catch (error) {
+          console.warn("⚠️ Erro ao carregar dados universais:", error);
+          // Use empty data as fallback
+          universalData = {
+            obras: [],
+            manutencoes: [],
+            piscinas: [],
+            clientes: [],
+            totalItems: 0,
+            lastSync: new Date().toISOString(),
+            isGloballyShared: true,
+          };
+
+          if (mounted) {
+            setState((prev) => ({
+              ...prev,
+              ...universalData,
+              isLoading: false,
+              error: null,
+              syncStatus: "local",
+            }));
+          }
+          return;
+        }
 
         if (mounted) {
           setState((prev) => ({
