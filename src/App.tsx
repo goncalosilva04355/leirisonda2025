@@ -687,7 +687,7 @@ function App() {
           }
         }, 100);
       } else {
-        console.warn("�� Login failed:", result.error);
+        console.warn("���� Login failed:", result.error);
         setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
@@ -1172,7 +1172,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
-    const fakeEvent = { target: { files } };
+    const fakeEvent = { target: { files } } as any;
     handlePhotoUpload(fakeEvent);
   };
 
@@ -5311,7 +5311,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As defini��ões são guardadas localmente no
+                              • As defini���ões são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
