@@ -361,12 +361,13 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Clients - GLOBAL SHARED DATA
+  // CRUD operations for Clients - ISOLATED USER DATA
   async addClient(clientData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const clientsRef = ref(this.database!, "shared/clients"); // Global shared location
+      const userId = this.getCurrentUserId();
+      const clientsRef = ref(this.database!, `users/${userId}/clients`); // User-specific location
       const newClientRef = push(clientsRef);
 
       // Sanitize data before sending to Firebase
@@ -375,12 +376,12 @@ class RealFirebaseService {
         id: newClientRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true, // Mark as global data
+        userId: this.getCurrentUserId(), // Mark as user-specific data
       });
 
       await set(newClientRef, sanitizedData);
       console.log(
-        `✅ Client "${clientData.name}" added to shared database - visible to all users`,
+        `✅ Client "${clientData.name}" added to user's isolated data - only visible to current user`,
       );
       return newClientRef.key;
     } catch (error) {
