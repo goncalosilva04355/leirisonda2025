@@ -270,6 +270,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
         return <CrossDeviceUserManager />;
       case "auto-sync-demo":
         return <AutoSyncDemo />;
+      case "data-sharing-status":
+        return (
+          <DataSharingStatus
+            onFixApplied={() => {
+              console.log("✅ Partilha de dados corrigida no painel admin");
+            }}
+          />
+        );
       case "phone-settings":
         return <PhoneSettings />;
       case "mobile-settings":
