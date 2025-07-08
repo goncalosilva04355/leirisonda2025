@@ -425,8 +425,10 @@ export const maintenanceService = {
   },
 
   // Get future maintenance
-  subscribeToFutureMaintenance(callback: (maintenance: Maintenance[]) => void) {
-    if (!isFirebaseAvailable()) {
+  async subscribeToFutureMaintenance(
+    callback: (maintenance: Maintenance[]) => void,
+  ) {
+    if (!(await isFirebaseAvailable())) {
       const allMaintenance = JSON.parse(
         localStorage.getItem("maintenance") || "[]",
       );
