@@ -21,28 +21,8 @@ if (typeof globalThis !== "undefined") {
       "🔧 Loading enhanced ReadableStream polyfill for Firebase compatibility",
     );
 
-    // Try to load the full polyfill first
-    import("web-streams-polyfill/dist/ponyfill")
-      .then((polyfill: any) => {
-        const { ReadableStream, WritableStream, TransformStream } = polyfill;
-        if (!globalThis.ReadableStream || needsPolyfill) {
-          globalThis.ReadableStream = ReadableStream;
-          console.log("✅ External ReadableStream polyfill loaded");
-        }
-        if (!globalThis.WritableStream) {
-          globalThis.WritableStream = WritableStream;
-        }
-        if (!globalThis.TransformStream) {
-          globalThis.TransformStream = TransformStream;
-        }
-      })
-      .catch((error) => {
-        console.warn(
-          "External polyfill failed, using built-in fallback:",
-          error,
-        );
-        // The fallback is already installed by installReadableStreamPolyfill()
-      });
+    // The polyfill has already been installed by installReadableStreamPolyfill()
+    console.log("✅ ReadableStream polyfill ready for Firebase compatibility");
   }
 }
 
