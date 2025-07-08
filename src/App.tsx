@@ -43,7 +43,6 @@ import { DataSharingFixManager } from "./components/DataSharingFixManager";
 import { UserDataSharingFix } from "./components/UserDataSharingFix";
 import { DataSharingFixButton } from "./components/DataSharingFixButton";
 import { GlobalDataShareDiagnostic } from "./components/GlobalDataShareDiagnostic";
-import FirebaseInitStatus from "./components/FirebaseInitStatus";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -626,7 +625,7 @@ function App() {
 
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigatórios (Piscina e Técnico).");
+      alert("Por favor, preencha os campos obrigat��rios (Piscina e Técnico).");
       return;
     }
 
@@ -1721,11 +1720,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         case "dashboard":
           return (
             <div className="min-h-screen bg-gray-50">
-              {/* Firebase Status Test - Remove after verification */}
-              <div className="px-4 py-4">
-                <FirebaseInitStatus />
-              </div>
-
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
                 {/* Simple Welcome Header */}
@@ -3290,7 +3284,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç��o</option>
+                            <option value="instalacao">Instalaç����o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -3552,7 +3546,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠️ Nenhum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Corre��ão de Atribuição de
+                                Administração → "🔧 Corre��ão de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -6365,7 +6359,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade Pública</option>
+                            <option value="publico">Entidade P��blica</option>
                           </select>
                         </div>
                       </div>
@@ -7673,7 +7667,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instala��ão
+                          ).value; // Data de Instalação
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
