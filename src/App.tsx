@@ -1534,7 +1534,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������ Address clicked:", address);
+    console.log("������� Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -1824,8 +1824,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Add error boundary
     console.log("🔍 Renderizing activeSection:", activeSection);
 
+    // Safety check for empty or invalid activeSection
+    const currentSection = activeSection || "dashboard";
+    if (currentSection !== activeSection) {
+      console.warn("🔍 ActiveSection vazio/inválido, usando dashboard");
+      setActiveSection("dashboard");
+    }
+
     try {
-      switch (activeSection) {
+      switch (currentSection) {
         case "dashboard":
           return (
             <div className="min-h-screen bg-gray-50">
@@ -5587,7 +5594,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador n��o suporta notificações.",
+                                  "Este navegador não suporta notificações.",
                                 );
                               }
                             }}
@@ -7931,7 +7938,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Conclus��o
+                          Data de Conclusão
                         </label>
                         <input
                           type="date"
