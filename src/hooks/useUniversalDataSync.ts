@@ -398,9 +398,6 @@ export function useUniversalDataSync(): UniversalSyncState &
       setState((prev) => ({ ...prev, syncStatus: "syncing" }));
       await universalDataSync.deleteCliente(id);
       setState((prev) => ({ ...prev, syncStatus: "connected" }));
-      console.log(
-        `✅ CLIENTE ELIMINADO: ${id} - alteração visível para todos os utilizadores`,
-      );
     } catch (error: any) {
       console.error("❌ Erro ao eliminar cliente:", error);
       setState((prev) => ({
