@@ -1785,18 +1785,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Diagnóstico de Partilha de Dados - TEMPORÁRIO */}
-                <div className="mb-4">
-                  <DataSharingStatus
-                    onFixApplied={() => {
-                      console.log(
-                        "✅ Partilha de dados corrigida - sincronizando...",
-                      );
-                      syncWithFirebase();
-                    }}
-                  />
-                </div>
-
                 {/* Status Cards */}
                 <div className="space-y-3">
                   {/* Pendentes */}
@@ -5946,7 +5934,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
-                        <li>• Análise de performance</li>
+                        <li>• An��lise de performance</li>
                       </ul>
                     </div>
                     <button
