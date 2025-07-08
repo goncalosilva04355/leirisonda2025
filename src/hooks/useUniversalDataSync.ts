@@ -380,9 +380,6 @@ export function useUniversalDataSync(): UniversalSyncState &
         setState((prev) => ({ ...prev, syncStatus: "syncing" }));
         await universalDataSync.updateCliente(id, clienteData);
         setState((prev) => ({ ...prev, syncStatus: "connected" }));
-        console.log(
-          `✅ CLIENTE ATUALIZADO: ${id} - visível para todos os utilizadores`,
-        );
       } catch (error: any) {
         console.error("❌ Erro ao atualizar cliente:", error);
         setState((prev) => ({
