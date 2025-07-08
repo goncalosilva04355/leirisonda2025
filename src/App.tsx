@@ -489,7 +489,7 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
-    console.log("🔔 Initializing notifications...");
+    console.log("��� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
       console.log("🔔 Current notification permission:", permission);
@@ -1064,7 +1064,7 @@ RESUMO EXECUTIVO:
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
 
-ESTATÍSTICAS:
+ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
 - Manutenções Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
@@ -8514,6 +8514,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManager>
         <div className="min-h-screen bg-gray-50">
+          {/* Correção de Visibilidade de Dados - crítico para partilha entre utilizadores */}
+          {isAuthenticated && currentUser && (
+            <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
+              <DataVisibilityFix
+                onFixCompleted={() => {
+                  console.log(
+                    "✅ Correção de visibilidade aplicada - dados agora partilhados",
+                  );
+                }}
+              />
+            </div>
+          )}
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
