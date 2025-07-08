@@ -949,7 +949,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta aç��o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -6784,7 +6784,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  €{work.budget}
+                                  ���{work.budget}
                                 </div>
                               )}
                             </div>
@@ -8077,6 +8077,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       : undefined
                   }
                 />
+              </div>
+            </div>
+          );
+
+        case "sincronizacao-universal":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-6 space-y-6">
+                <div className="max-w-4xl mx-auto">
+                  <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+                    <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                      Sincronização Universal de Dados
+                    </h1>
+                    <p className="text-gray-600">
+                      Garante que todas as obras, manutenções, piscinas e
+                      clientes sejam partilhados entre todos os utilizadores em
+                      qualquer dispositivo.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-6">
+                    <UniversalSyncActivator />
+                    <UniversalSyncMonitor />
+                  </div>
+                </div>
               </div>
             </div>
           );
