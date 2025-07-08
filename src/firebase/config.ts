@@ -252,7 +252,7 @@ const initializeFirebaseServices = async (): Promise<void> => {
                 }
               } catch (finalError) {
                 console.error(
-                  "��� Estratégia de recuperação final falhou:",
+                  "❌ Estratégia de recuperação final falhou:",
                   finalError,
                 );
               }
@@ -325,6 +325,13 @@ const initializeFirebaseServices = async (): Promise<void> => {
 
 // Simplified direct initialization
 console.log("🔥 Inicializando Firebase diretamente...");
+
+// Clear any stuck quota flags
+localStorage.removeItem("firebase-quota-exceeded");
+localStorage.removeItem("firebase-emergency-shutdown");
+localStorage.removeItem("firebase-emergency-time");
+localStorage.removeItem("firebase-quota-check-time");
+console.log("✅ Flags de quota limpas na inicialização");
 
 // Initialize Firebase immediately
 (async () => {
