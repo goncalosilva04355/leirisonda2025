@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { realFirebaseService } from "../services/realFirebaseService";
 import { useDataMutationSync } from "./useAutoDataSync";
 import { clearQuotaProtection } from "../utils/clearQuotaProtection";
+import { crossUserDataSync } from "../services/crossUserDataSync";
 
 // Clear any quota protection flags and enable Firebase sync
 clearQuotaProtection();
@@ -219,7 +220,7 @@ export function useDataSync(): SyncState & SyncActions {
     );
   }, [state.works, state.pools, state.maintenance, state.clients]);
 
-  // Hook para sincronização automática em mutações - with debugging
+  // Hook para sincroniza��ão automática em mutações - with debugging
   const withAutoSync = <T extends any[], R>(
     fn: (...args: T) => R | Promise<R>,
   ) => {
