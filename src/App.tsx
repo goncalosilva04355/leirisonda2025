@@ -1568,7 +1568,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `��️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
             syncError,
           );
         }
@@ -7318,7 +7318,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -9202,19 +9202,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           )}
         </div>
 
-        {/* Firebase Reactivated Notification */}
-        <FirebaseReactivatedNotification />
-
-        {/* Realtime Notifications - REMOVIDAS */}
-        {/* <RealtimeNotifications /> */}
-
-        {/* Work Assignment Notifications */}
-        <WorkAssignmentNotifications currentUser={currentUser} />
-
-        {/* User Restore Notification */}
-        <UserRestoreNotification />
-      </InstantSyncManager>
-    </AutoSyncProvider>
+    </div>
   );
 }
 
