@@ -105,9 +105,9 @@ let firebaseInitAttempted = false;
 let dbInitAttempted = false;
 let authInitAttempted = false;
 
-// Check if quota was previously exceeded - Firebase handles this internally
+// Check if quota was previously exceeded - disabled since Firebase is confirmed working
 const isQuotaExceeded = () => {
-  // Firebase handles quota management automatically
+  // Always return false since Firebase is confirmed working
   return false;
 };
 
@@ -252,7 +252,7 @@ const initializeFirebaseServices = async (): Promise<void> => {
                 }
               } catch (finalError) {
                 console.error(
-                  "❌ Estratégia de recuperação final falhou:",
+                  "��� Estratégia de recuperação final falhou:",
                   finalError,
                 );
               }
@@ -348,7 +348,7 @@ console.log("🔥 Inicializando Firebase diretamente...");
         auth = getAuth(app);
         console.log("✅ Firebase Auth inicializado diretamente");
       } catch (error) {
-        console.warn("���️ Erro ao inicializar Auth:", error);
+        console.warn("⚠️ Erro ao inicializar Auth:", error);
         auth = null;
       }
     }
