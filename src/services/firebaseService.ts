@@ -321,11 +321,6 @@ export const poolService = {
       throw new Error("Firebase not configured");
     }
 
-    const db = await getDB();
-    if (!db) {
-      throw new Error("Firebase database not available");
-    }
-
     const docRef = await addDoc(collection(db, COLLECTIONS.POOLS), {
       ...poolData,
       createdAt: Timestamp.now(),
@@ -769,7 +764,7 @@ export const syncService = {
     );
 
     const unsubscribeWorks = workService.subscribeToWorks((works) => {
-      console.log(`⚒️ Mudança detectada em obras: ${works.length} registros`);
+      console.log(`��️ Mudança detectada em obras: ${works.length} registros`);
       callbacks.onWorksChange(works);
       this.triggerAutoSync("works-changed", "works");
     });
