@@ -211,12 +211,13 @@ class RealFirebaseService {
     }
   }
 
-  // CRUD operations for Works - GLOBAL SHARED DATA
+  // CRUD operations for Works - ISOLATED USER DATA
   async addWork(workData: any): Promise<string | null> {
     if (!this.isReady()) return null;
 
     try {
-      const worksRef = ref(this.database!, "shared/works"); // Global shared location
+      const userId = this.getCurrentUserId();
+      const worksRef = ref(this.database!, `users/${userId}/works`); // User-specific location
       const newWorkRef = push(worksRef);
 
       // Sanitize data before sending to Firebase
@@ -225,8 +226,7 @@ class RealFirebaseService {
         id: newWorkRef.key,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        sharedGlobally: true, // Mark as global data
-        visibleToAllUsers: true,
+        userId: this.getCurrentUserId(), // Mark as user-specific data
       });
 
       await set(newWorkRef, sanitizedData);
