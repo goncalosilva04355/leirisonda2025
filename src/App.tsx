@@ -38,7 +38,6 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
-import { DataSharingStatus } from "./components/DataSharingStatus";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -5934,7 +5933,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
-                        <li>• An��lise de performance</li>
+                        <li>• Análise de performance</li>
                       </ul>
                     </div>
                     <button
