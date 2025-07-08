@@ -167,59 +167,63 @@ export function useUniversalDataSync(): UniversalSyncState &
     let cleanup;
     try {
       cleanup = universalDataSync.setupUniversalListeners({
-      onObrasChange: (obras) => {
-        setState((prev) => ({
-          ...prev,
-          obras,
-          totalItems:
-            obras.length +
-            prev.manutencoes.length +
-            prev.piscinas.length +
-            prev.clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-      onManutencoesChange: (manutencoes) => {
-        setState((prev) => ({
-          ...prev,
-          manutencoes,
-          totalItems:
-            prev.obras.length +
-            manutencoes.length +
-            prev.piscinas.length +
-            prev.clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-      onPiscinasChange: (piscinas) => {
-        setState((prev) => ({
-          ...prev,
-          piscinas,
-          totalItems:
-            prev.obras.length +
-            prev.manutencoes.length +
-            piscinas.length +
-            prev.clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-      onClientesChange: (clientes) => {
-        setState((prev) => ({
-          ...prev,
-          clientes,
-          totalItems:
-            prev.obras.length +
-            prev.manutencoes.length +
-            prev.piscinas.length +
-            clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-    });
+        onObrasChange: (obras) => {
+          setState((prev) => ({
+            ...prev,
+            obras,
+            totalItems:
+              obras.length +
+              prev.manutencoes.length +
+              prev.piscinas.length +
+              prev.clientes.length,
+            lastSync: new Date().toISOString(),
+            syncStatus: "connected",
+          }));
+        },
+        onManutencoesChange: (manutencoes) => {
+          setState((prev) => ({
+            ...prev,
+            manutencoes,
+            totalItems:
+              prev.obras.length +
+              manutencoes.length +
+              prev.piscinas.length +
+              prev.clientes.length,
+            lastSync: new Date().toISOString(),
+            syncStatus: "connected",
+          }));
+        },
+        onPiscinasChange: (piscinas) => {
+          setState((prev) => ({
+            ...prev,
+            piscinas,
+            totalItems:
+              prev.obras.length +
+              prev.manutencoes.length +
+              piscinas.length +
+              prev.clientes.length,
+            lastSync: new Date().toISOString(),
+            syncStatus: "connected",
+          }));
+        },
+        onClientesChange: (clientes) => {
+          setState((prev) => ({
+            ...prev,
+            clientes,
+            totalItems:
+              prev.obras.length +
+              prev.manutencoes.length +
+              prev.piscinas.length +
+              clientes.length,
+            lastSync: new Date().toISOString(),
+            syncStatus: "connected",
+          }));
+        },
+      });
+    } catch (error) {
+      console.warn("⚠️ Erro ao configurar listeners universais:", error);
+      cleanup = () => {}; // Return empty cleanup function
+    }
 
     return cleanup;
   }, [universalDataSync.isReady()]);
