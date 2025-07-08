@@ -290,32 +290,42 @@ export function useDataSync(): SyncState & SyncActions {
                 const firebaseData =
                   sharedData || (await realFirebaseService.syncAllData());
 
-                if (firebaseData) {
-                  console.log(
-                    "📥 Syncing Firebase data from",
-                    sharedData ? "SHARED structure" : "legacy structure",
-                    ":",
-                    {
-                      works:
-                        firebaseData.works && Array.isArray(firebaseData.works)
-                          ? firebaseData.works.length
-                          : 0,
-                      pools:
-                        firebaseData.pools && Array.isArray(firebaseData.pools)
-                          ? firebaseData.pools.length
-                          : 0,
-                      maintenance:
-                        firebaseData.maintenance &&
-                        Array.isArray(firebaseData.maintenance)
-                          ? firebaseData.maintenance.length
-                          : 0,
-                      clients:
-                        firebaseData.clients &&
-                        Array.isArray(firebaseData.clients)
-                          ? firebaseData.clients.length
-                          : 0,
-                    },
-                  );
+                if (
+                  firebaseData &&
+                  typeof firebaseData === "object" &&
+                  firebaseData !== null
+                ) {
+                  try {
+                    console.log(
+                      "📥 Syncing Firebase data from",
+                      sharedData ? "SHARED structure" : "legacy structure",
+                      ":",
+                      {
+                        works:
+                          firebaseData.works &&
+                          Array.isArray(firebaseData.works)
+                            ? firebaseData.works.length
+                            : 0,
+                        pools:
+                          firebaseData.pools &&
+                          Array.isArray(firebaseData.pools)
+                            ? firebaseData.pools.length
+                            : 0,
+                        maintenance:
+                          firebaseData.maintenance &&
+                          Array.isArray(firebaseData.maintenance)
+                            ? firebaseData.maintenance.length
+                            : 0,
+                        clients:
+                          firebaseData.clients &&
+                          Array.isArray(firebaseData.clients)
+                            ? firebaseData.clients.length
+                            : 0,
+                      },
+                    );
+                  } catch (logError) {
+                    console.warn("Error logging Firebase data:", logError);
+                  }
 
                   if (sharedData) {
                     console.log(
