@@ -426,7 +426,7 @@ function App() {
 
         return unsubscribe;
       } catch (error) {
-        console.error("❌ Firebase Auth setup error:", error);
+        console.error("��� Firebase Auth setup error:", error);
         setIsAuthenticated(false);
         setCurrentUser(null);
         return () => {}; // Return empty cleanup function
@@ -1996,7 +1996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </button>
                                   ) : (
                                     <span className="text-sm text-gray-500">
-                                      Não especificada
+                                      N��o especificada
                                     </span>
                                   )}
                                 </div>
@@ -3167,7 +3167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                👨‍🔧 {maint.technician}
+                                ���‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -5200,7 +5200,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç��es, recomendações, próxima manutenção..."
+                          placeholder="Observaç���es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7625,18 +7625,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             "input, select, textarea",
                           );
 
-                          const name = inputs[0].value; // Nome da Piscina
-                          const client = inputs[1].value; // Cliente
-                          const location = inputs[2].value; // Local
-                          const status = inputs[3].value; // Estado
-                          const poolType = inputs[4].value; // Tipo de Piscina
-                          const dimensions = inputs[5].value; // Dimensões
-                          const volume = inputs[6].value; // Volume
-                          const filtrationSystem = inputs[7].value; // Sistema de Filtração
-                          const installationDate = inputs[8].value; // Data de Instalação
-                          const clientPhone = inputs[9].value; // Telefone do Cliente
-                          const clientEmail = inputs[10].value; // Email do Cliente
-                          const observations = inputs[11].value; // Observações
+                          const name = (inputs[0] as HTMLInputElement).value; // Nome da Piscina
+                          const client = (inputs[1] as HTMLInputElement).value; // Cliente
+                          const location = (inputs[2] as HTMLInputElement)
+                            .value; // Local
+                          const status = (inputs[3] as HTMLInputElement).value; // Estado
+                          const poolType = (inputs[4] as HTMLInputElement)
+                            .value; // Tipo de Piscina
+                          const dimensions = (inputs[5] as HTMLInputElement)
+                            .value; // Dimensões
+                          const volume = (inputs[6] as HTMLInputElement).value; // Volume
+                          const filtrationSystem = (
+                            inputs[7] as HTMLInputElement
+                          ).value; // Sistema de Filtração
+                          const installationDate = (
+                            inputs[8] as HTMLInputElement
+                          ).value; // Data de Instalação
+                          const clientPhone = (inputs[9] as HTMLInputElement)
+                            .value; // Telefone do Cliente
+                          const clientEmail = (inputs[10] as HTMLInputElement)
+                            .value; // Email do Cliente
+                          const observations = (inputs[11] as HTMLInputElement)
+                            .value; // Observações
 
                           dataSync.updatePool(editingPool.id, {
                             name,
