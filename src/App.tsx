@@ -41,6 +41,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import { SharedDataManager } from "./components/SharedDataManager";
 import { DataSharingFixManager } from "./components/DataSharingFixManager";
 import { UserDataSharingFix } from "./components/UserDataSharingFix";
+import { DataSharingFixButton } from "./components/DataSharingFixButton";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
