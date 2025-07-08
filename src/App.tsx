@@ -3617,7 +3617,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <option value="">
                                 {users.length > 0
                                   ? "Selecionar usuário..."
-                                  : "Nenhum utilizador disponível"}
+                                  : "Nenhum utilizador dispon��vel"}
                               </option>
                               {users
                                 .filter((user) => {
@@ -8382,11 +8382,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               setIsAdvancedUnlocked(false);
             }}
             dataSync={simpleData}
-              pools,
-              maintenance,
-              works,
-              clients,
-              lastSync,
               syncWithFirebase,
               enableSync,
             }}
