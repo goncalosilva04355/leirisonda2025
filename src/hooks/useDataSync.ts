@@ -291,10 +291,24 @@ export function useDataSync(): SyncState & SyncActions {
                     sharedData ? "SHARED structure" : "legacy structure",
                     ":",
                     {
-                      works: firebaseData.works.length,
-                      pools: firebaseData.pools.length,
-                      maintenance: firebaseData.maintenance.length,
-                      clients: firebaseData.clients.length,
+                      works:
+                        firebaseData.works && Array.isArray(firebaseData.works)
+                          ? firebaseData.works.length
+                          : 0,
+                      pools:
+                        firebaseData.pools && Array.isArray(firebaseData.pools)
+                          ? firebaseData.pools.length
+                          : 0,
+                      maintenance:
+                        firebaseData.maintenance &&
+                        Array.isArray(firebaseData.maintenance)
+                          ? firebaseData.maintenance.length
+                          : 0,
+                      clients:
+                        firebaseData.clients &&
+                        Array.isArray(firebaseData.clients)
+                          ? firebaseData.clients.length
+                          : 0,
                     },
                   );
 
