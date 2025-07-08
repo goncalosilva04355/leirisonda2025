@@ -17,7 +17,6 @@ import {
   Smartphone,
 } from "lucide-react";
 import { FirebaseConfig } from "./FirebaseConfig";
-import { DeviceSyncManager } from "./DeviceSyncManager";
 
 interface AdvancedSettingsProps {
   onBack: () => void;
@@ -473,7 +472,11 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 </p>
               </div>
 
-              <DeviceSyncManager />
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+                <p className="text-gray-600">
+                  Funcionalidade de sincronização temporariamente desativada.
+                </p>
+              </div>
             </div>
           )}
 

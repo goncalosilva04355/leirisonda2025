@@ -7,7 +7,14 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db, isFirebaseReady } from "../firebase/config";
+import {
+  auth,
+  db,
+  isFirebaseReady,
+  waitForFirebaseInit,
+  getDB,
+  getAuthService,
+} from "../firebase/config";
 import { mockAuthService } from "./mockAuthService";
 import { QuotaManager } from "../utils/quotaManager";
 
@@ -77,8 +84,11 @@ class AuthService {
       return { success: false, error: "Nome é obrigatório" };
     }
 
-    // Try Firebase first for cross-device access, but only if properly initialized
-    if (isFirebaseReady()) {
+    // Try lazy loading Firebase services
+    const firebaseAuth = await getAuthService();
+    const firebaseDB = await getDB();
+
+    if (firebaseAuth && firebaseDB) {
       console.log(
         "🔥 Attempting Firebase registration for cross-device access...",
       );
@@ -254,8 +264,9 @@ class AuthService {
 
     // Try Firebase first for cross-device access with quota protection
     const quotaStatus = QuotaManager.getQuotaStatus();
+    const firebaseReady = await waitForFirebaseInit();
 
-    if (isFirebaseReady() && quotaStatus.canSync) {
+    if (firebaseReady && isFirebaseReady() && quotaStatus.canSync) {
       console.log("🔥 Attempting Firebase login for cross-device access...");
 
       const firebaseLoginResult = await QuotaManager.executeWithQuotaProtection(
@@ -551,8 +562,8 @@ class AuthService {
 
   // Listen to auth state changes
   onAuthStateChanged(callback: (user: UserProfile | null) => void): () => void {
-    // Try Firebase first if available
-    if (auth && db) {
+    // Check Firebase availability synchronously first, then wait for init if needed
+    if (isFirebaseReady() && auth && db) {
       console.log("Setting up Firebase auth state listener");
       return onAuthStateChanged(
         auth,
@@ -581,6 +592,17 @@ class AuthService {
         },
       );
     } else {
+      // Wait for Firebase initialization in background, but set up mock listener immediately
+      waitForFirebaseInit().then((firebaseReady) => {
+        if (firebaseReady && auth && db) {
+          console.log(
+            "Firebase became ready, setting up Firebase auth listener",
+          );
+          // Re-setup with Firebase when it becomes ready
+          this.onAuthStateChanged(callback);
+        }
+      });
+
       // Fallback to mock authentication
       console.log("Setting up mock auth state listener");
       return mockAuthService.onAuthStateChanged((mockUser) => {

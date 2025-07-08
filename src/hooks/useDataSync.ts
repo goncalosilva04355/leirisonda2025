@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { realFirebaseService } from "../services/realFirebaseService";
 import { useDataMutationSync } from "./useAutoDataSync";
 import { clearQuotaProtection } from "../utils/clearQuotaProtection";
+import { crossUserDataSync } from "../services/crossUserDataSync";
 
 // Clear any quota protection flags and enable Firebase sync
 clearQuotaProtection();
@@ -49,6 +50,14 @@ export interface Pool {
   lastMaintenance?: string;
   nextMaintenance?: string;
   createdAt: string;
+  poolType?: string;
+  dimensions?: string;
+  volume?: string;
+  filtrationSystem?: string;
+  installationDate?: string;
+  clientPhone?: string;
+  clientEmail?: string;
+  observations?: string;
 }
 
 export interface Maintenance {
@@ -67,6 +76,11 @@ export interface Maintenance {
   clientContact?: string;
   location?: string;
   createdAt: string;
+  estimatedDuration?: string;
+  actualDuration?: string;
+  cost?: string;
+  priority?: string;
+  materialsUsed?: string;
 }
 
 export interface Work {
@@ -90,6 +104,27 @@ export interface Work {
   createdBy?: string; // Name of user who created this work
   createdByUser?: string; // UID of user who created this work
   updatedAt?: string; // Last update timestamp
+  workPerformed?: string;
+  workSheetCompleted?: boolean;
+  observations?: string;
+  vehicles?: string[];
+  technicians?: string[];
+  photos?: any[];
+  photoCount?: number;
+  startTime?: string;
+  endTime?: string;
+  workSheetNumber?: string;
+  // Bore-specific properties
+  boreDepth?: any;
+  waterLevel?: any;
+  staticLevel?: any;
+  dynamicLevel?: any;
+  flowRate?: any;
+  columnDiameter?: any;
+  pumpModel?: any;
+  motorPower?: any;
+  pumpVoltage?: any;
+  boreObservations?: any;
 }
 
 export interface Client {
@@ -100,6 +135,9 @@ export interface Client {
   address: string;
   pools: string[];
   createdAt: string;
+  status?: string;
+  type?: string;
+  notes?: string;
 }
 
 // Mock data removed - no auto-populated test data
@@ -159,26 +197,30 @@ export function useDataSync(): SyncState & SyncActions {
     lastSync: null,
   });
 
-  // Firebase handles data persistence automatically - no recovery needed
+  // PARTILHA GLOBAL PARA TODOS OS UTILIZADORES
   useEffect(() => {
-    console.log("🔥 Firebase handles data persistence automatically");
-    // Initial state is already set above - Firebase will sync when connected
+    console.log("🌐 PARTILHA GLOBAL ATIVADA");
+    console.log("✅ Todos os utilizadores veem todas as obras");
+    console.log("✅ Dados partilhados entre utilizadores");
   }, []);
 
-  // Firebase sync is always enabled with fixed configuration
+  // PARTILHA GLOBAL SEMPRE ATIVA - todos os utilizadores veem todas as obras
   const [syncEnabled, setSyncEnabled] = useState(true);
 
-  // Firebase handles data backup and persistence automatically
+  // DADOS PARTILHADOS - todos os utilizadores veem os mesmos dados
   useEffect(() => {
-    console.log("🔥 Firebase handles data backup automatically", {
-      works: state.works.length,
-      pools: state.pools.length,
-      maintenance: state.maintenance.length,
-      clients: state.clients.length,
-    });
+    console.log(
+      "🌐 DADOS PARTILHADOS ENTRE UTILIZADORES - Contagem dos dados globais:",
+      {
+        works: state.works.length,
+        pools: state.pools.length,
+        maintenance: state.maintenance.length,
+        clients: state.clients.length,
+      },
+    );
   }, [state.works, state.pools, state.maintenance, state.clients]);
 
-  // Hook para sincronização automática em mutações - with debugging
+  // Hook para sincroniza��ão automática em mutações - with debugging
   const withAutoSync = <T extends any[], R>(
     fn: (...args: T) => R | Promise<R>,
   ) => {
@@ -187,6 +229,17 @@ export function useDataSync(): SyncState & SyncActions {
         console.log("🔄 Executing data operation with args:", args);
         const result = await fn(...args);
         console.log("✅ Data operation completed successfully");
+
+        // SINCRONIZAÇÃO IMEDIATA após qualquer mudança
+        setTimeout(async () => {
+          try {
+            await syncWithFirebase();
+            console.log("🚀 Sincronização imediata completada");
+          } catch (error) {
+            console.warn("⚠️ Erro na sincronização imediata:", error);
+          }
+        }, 100); // 100ms delay para garantir que o estado local foi atualizado
+
         return result;
       } catch (error) {
         console.error("❌ Error in data operation:", error);
@@ -355,10 +408,91 @@ export function useDataSync(): SyncState & SyncActions {
     }
   }, [syncEnabled]);
 
-  // Real-time listeners
+  // Real-time listeners with cross-user sync for global data sharing
   useEffect(() => {
-    if (!syncEnabled || !realFirebaseService.isReady()) {
+    if (!syncEnabled) {
       return;
+    }
+
+    // Setup global data listeners for cross-user data sharing
+    const globalCleanup = crossUserDataSync.setupGlobalDataListeners({
+      onPoolsChange: (pools) => {
+        setState((prev) => {
+          if (pools.length === 0 && prev.pools.length > 0) {
+            console.warn(
+              "🛡️ BLOCKED: Tried to overwrite pools with empty array",
+            );
+            return prev;
+          }
+          if (pools.length >= prev.pools.length) {
+            console.log(
+              `🔄 GLOBAL SYNC: Pools updated (${pools.length} items) - visible to all users`,
+            );
+            return { ...prev, pools };
+          }
+          return prev;
+        });
+      },
+      onWorksChange: (works) => {
+        setState((prev) => {
+          if (works.length === 0 && prev.works.length > 0) {
+            console.warn(
+              "🛡️ BLOCKED: Tried to overwrite works with empty array",
+            );
+            return prev;
+          }
+          if (works.length >= prev.works.length) {
+            console.log(
+              `🔄 GLOBAL SYNC: Works updated (${works.length} items) - visible to all users`,
+            );
+            return { ...prev, works };
+          }
+          return prev;
+        });
+      },
+      onMaintenanceChange: (maintenance) => {
+        setState((prev) => {
+          if (maintenance.length === 0 && prev.maintenance.length > 0) {
+            console.warn(
+              "🛡️ BLOCKED: Tried to overwrite maintenance with empty array",
+            );
+            return prev;
+          }
+          const today = new Date();
+          const futureMaintenance = maintenance.filter(
+            (m) => new Date(m.scheduledDate) >= today,
+          );
+          if (maintenance.length >= prev.maintenance.length) {
+            console.log(
+              `🔄 GLOBAL SYNC: Maintenance updated (${maintenance.length} items) - visible to all users`,
+            );
+            return { ...prev, maintenance, futureMaintenance };
+          }
+          return prev;
+        });
+      },
+      onClientsChange: (clients) => {
+        setState((prev) => {
+          if (clients.length === 0 && prev.clients.length > 0) {
+            console.warn(
+              "���️ BLOCKED: Tried to overwrite clients with empty array",
+            );
+            return prev;
+          }
+          if (clients.length >= prev.clients.length) {
+            console.log(
+              `🔄 GLOBAL SYNC: Clients updated (${clients.length} items) - visible to all users`,
+            );
+            return { ...prev, clients };
+          }
+          return prev;
+        });
+      },
+    });
+
+    // Fallback to original listeners if global sync not available
+    if (!realFirebaseService.isReady()) {
+      return globalCleanup;
     }
 
     // Set up real-time listeners
@@ -418,7 +552,7 @@ export function useDataSync(): SyncState & SyncActions {
           // ABSOLUTE PROTECTION: Never overwrite local data with empty arrays
           if (maintenance.length === 0 && prev.maintenance.length > 0) {
             console.warn(
-              "🛡️ BLOCKED: Firebase tried to overwrite maintenance with empty array",
+              "���️ BLOCKED: Firebase tried to overwrite maintenance with empty array",
             );
             return prev; // Keep existing data
           }
@@ -471,8 +605,9 @@ export function useDataSync(): SyncState & SyncActions {
       },
     );
 
-    // Cleanup function
+    // Cleanup function - includes both global and realtime listeners
     return () => {
+      globalCleanup();
       unsubscribePools();
       unsubscribeWorks();
       unsubscribeMaintenance();

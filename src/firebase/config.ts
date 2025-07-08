@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp, deleteApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 
 // Default Firebase config
 const defaultFirebaseConfig = {
@@ -17,8 +18,9 @@ const defaultFirebaseConfig = {
 
 // Function to get Firebase config from localStorage or use default
 const getFirebaseConfig = () => {
-  // Use default config directly - Firebase will handle persistence automatically
-  console.log("🔧 Firebase: Using default configuration");
+  // MIGRAÇÃO GRADUAL: Preservando acesso aos dados existentes
+  console.log("🔄 Firebase: Migração gradual para isolamento de dados");
+  console.log("✅ Dados existentes: Acessíveis durante transição");
   return defaultFirebaseConfig;
 };
 
@@ -37,37 +39,71 @@ export const saveFirebaseConfig = (config: any) => {
 // Get current Firebase config (from localStorage or default)
 const firebaseConfig = getFirebaseConfig();
 
-// Function to get or create Firebase app
+// Função segura para obter/criar Firebase app
 const getFirebaseApp = () => {
   try {
-    // Check if app already exists
+    // Verificar apps existentes primeiro
     const existingApps = getApps();
     if (existingApps.length > 0) {
-      console.log("Using existing Firebase app");
-      return existingApps[0];
+      const existingApp = existingApps[0];
+
+      // Validar se o app existente está em bom estado
+      if (existingApp && existingApp.options && existingApp.name) {
+        console.log(
+          "🔄 Usando Firebase app existente validado (evitando conflitos de stream)",
+        );
+        return existingApp;
+      } else {
+        console.warn("⚠️ App existente em estado inválido, removendo...");
+        try {
+          deleteApp(existingApp);
+        } catch (deleteError) {
+          console.warn("Failed to delete invalid app:", deleteError);
+        }
+      }
     }
 
-    // Initialize new app only if none exists
+    // Aguardar antes de inicializar para evitar conflitos
+    console.log("🚀 Inicializando novo Firebase app...");
     const app = initializeApp(firebaseConfig);
-    console.log("Fresh Firebase app initialized");
-    return app;
-  } catch (error) {
-    console.error("Firebase app initialization failed:", error);
-    // Try to get existing app if initialization fails
-    const existingApps = getApps();
-    if (existingApps.length > 0) {
-      console.log("Using existing Firebase app after error");
-      return existingApps[0];
+
+    // Validar o app recém-criado
+    if (!app || !app.options || !app.name) {
+      throw new Error("Firebase app created but is in invalid state");
     }
+
+    console.log("✅ Firebase app inicializado e validado com sucesso");
+    return app;
+  } catch (error: any) {
+    console.error("❌ Erro na inicialização do Firebase:", error);
+
+    // Se for erro de app já existir, tentar obter
+    if (error.code === "app/duplicate-app") {
+      const existingApps = getApps();
+      if (existingApps.length > 0) {
+        const existingApp = existingApps[0];
+        if (existingApp && existingApp.options && existingApp.name) {
+          console.log("🔄 Usando app existente após erro de duplicação");
+          return existingApp;
+        }
+      }
+    }
+
+    console.error("❌ Firebase app não disponível");
     return null;
   }
 };
 
 // Initialize Firebase services with error handling and quota control
-console.log("🔥 Firebase initialization enabled - controlled sync mode");
+console.log("��� Firebase initialization enabled - lazy loading mode");
 let app: any = null;
 let db: any = null;
 let auth: any = null;
+
+// Lazy loading state tracking
+let firebaseInitAttempted = false;
+let dbInitAttempted = false;
+let authInitAttempted = false;
 
 // Check if quota was previously exceeded - Firebase handles this internally
 const isQuotaExceeded = () => {
@@ -75,24 +111,167 @@ const isQuotaExceeded = () => {
   return false;
 };
 
-// Initialize Firebase services with quota protection
-try {
-  if (isQuotaExceeded()) {
-    console.log(
-      "⏸️ Firebase temporarily disabled due to quota exceeded - will retry automatically",
-    );
-    app = null;
-    db = null;
-    auth = null;
-  } else {
+// Promise to track Firebase initialization
+let firebaseInitPromise: Promise<void> | null = null;
+
+// Async function to initialize Firebase services
+const initializeFirebaseServices = async (): Promise<void> => {
+  try {
+    if (isQuotaExceeded()) {
+      console.log(
+        "⏸️ Firebase temporarily disabled due to quota exceeded - will retry automatically",
+      );
+      app = null;
+      db = null;
+      auth = null;
+      return;
+    }
+
     app = getFirebaseApp();
     if (app) {
+      // Wait a bit to ensure app is fully ready
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Additional app readiness verification
       try {
-        db = getFirestore(app);
-        console.log("✅ Firestore initialized successfully");
+        if (!app.options) {
+          console.warn("⚠️ Firebase app options not available, retrying...");
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          app = getFirebaseApp();
+          if (!app?.options) {
+            throw new Error(
+              "Firebase app not properly initialized after retry",
+            );
+          }
+        }
       } catch (error) {
-        console.warn("⚠️ Firestore initialization failed:", error);
-        db = null;
+        console.error("❌ Firebase app readiness check failed:", error);
+        app = null;
+        return;
+      }
+
+      // Inicialização protegida do Firestore com retry logic
+      db = await FirebaseErrorFix.safeFirebaseOperation(async () => {
+        console.log("🔄 Inicializando Firestore com proteção...");
+
+        // Wait for any pending operations to clear
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
+        // Try to get Firestore instance with retries
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        while (attempts < maxAttempts) {
+          try {
+            // Ensure app is still valid and ready
+            if (!app) {
+              throw new Error("Firebase app is null");
+            }
+
+            // Check if app has the required properties
+            if (!app.options || !app.name) {
+              throw new Error("Firebase app is not properly initialized");
+            }
+
+            // Additional safety check - verify app is still in getApps()
+            const currentApps = getApps();
+            if (!currentApps.includes(app)) {
+              throw new Error("Firebase app is no longer in active apps list");
+            }
+
+            console.log(
+              `🔄 Tentativa ${attempts + 1}: Chamando getFirestore...`,
+            );
+            const firestoreInstance = getFirestore(app);
+            console.log(
+              `✅ Firestore inicializado na tentativa ${attempts + 1}`,
+            );
+            return firestoreInstance;
+          } catch (error: any) {
+            attempts++;
+            console.warn(`⚠️ Tentativa ${attempts} falhou:`, error.message);
+
+            // Handle specific getImmediate errors
+            if (
+              error.message?.includes("getImmediate") ||
+              error.stack?.includes("getImmediate")
+            ) {
+              console.log(
+                "🔧 Erro getImmediate detectado, aguardando mais tempo...",
+              );
+              // Reset the app and try to get a fresh instance
+              app = null;
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+              app = getFirebaseApp();
+              if (!app) {
+                throw new Error(
+                  "Failed to reinitialize Firebase app after getImmediate error",
+                );
+              }
+            }
+
+            if (error.message?.includes("ReadableStream")) {
+              console.log("🔧 Aplicando correção de ReadableStream...");
+              await FirebaseErrorFix.fixReadableStreamError(error);
+            }
+
+            if (attempts < maxAttempts) {
+              await new Promise((resolve) =>
+                setTimeout(resolve, 1000 * attempts),
+              );
+            } else {
+              console.error(
+                "❌ Firestore initialization failed after all attempts",
+              );
+              console.log("🔄 Tentando última estratégia de recuperação...");
+
+              // Ultimate fallback - try to completely reset Firebase
+              try {
+                const apps = getApps();
+                for (const existingApp of apps) {
+                  try {
+                    deleteApp(existingApp);
+                  } catch (deleteError) {
+                    console.warn(
+                      "Failed to delete app in fallback:",
+                      deleteError,
+                    );
+                  }
+                }
+
+                // Wait and try one final time
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                app = getFirebaseApp();
+
+                if (app) {
+                  const finalFirestore = getFirestore(app);
+                  console.log(
+                    "✅ Firestore inicializado com estratégia de recuperação final",
+                  );
+                  return finalFirestore;
+                }
+              } catch (finalError) {
+                console.error(
+                  "❌ Estratégia de recuperação final falhou:",
+                  finalError,
+                );
+              }
+
+              console.error(
+                "❌ Todas as tentativas de inicialização do Firestore falharam",
+              );
+              return null;
+            }
+          }
+        }
+
+        return null;
+      }, "inicialização do Firestore");
+
+      if (db) {
+        console.log("✅ Firestore inicializado com proteção completa");
+      } else {
+        console.warn("⚠️ Firestore não pôde ser inicializado");
       }
 
       try {
@@ -133,16 +312,105 @@ try {
         "⚠️ Firebase app not available, services will use fallback mode",
       );
     }
+  } catch (error) {
+    console.warn(
+      "⚠️ Firebase services initialization failed, using fallback mode:",
+      error,
+    );
+    app = null;
+    db = null;
+    auth = null;
   }
-} catch (error) {
-  console.warn(
-    "⚠️ Firebase services initialization failed, using fallback mode:",
-    error,
-  );
-  app = null;
-  db = null;
-  auth = null;
-}
+};
+
+// COMMENTED OUT: Eager initialization causing getImmediate errors
+// firebaseInitPromise = initializeFirebaseServices();
+
+// NEW APPROACH: Lazy loading Firebase services
+console.log(
+  "🔥 Switching to lazy loading approach to avoid getImmediate errors",
+);
+
+// Lazy Firebase App initialization
+const ensureFirebaseApp = async (): Promise<any> => {
+  if (!app && !firebaseInitAttempted) {
+    firebaseInitAttempted = true;
+    console.log("🔥 Lazy loading Firebase app...");
+
+    try {
+      if (isQuotaExceeded()) {
+        console.log("⏸️ Firebase temporarily disabled due to quota exceeded");
+        return null;
+      }
+
+      app = getFirebaseApp();
+      if (app) {
+        console.log("✅ Firebase app ready for lazy loading");
+      }
+    } catch (error) {
+      console.warn("⚠️ Firebase app initialization failed:", error);
+      app = null;
+    }
+  }
+
+  return app;
+};
+
+// Lazy Firestore initialization - only when needed
+const ensureFirestore = async (): Promise<any> => {
+  if (!db && !dbInitAttempted) {
+    dbInitAttempted = true;
+    console.log("🔄 Lazy loading Firestore...");
+
+    const firebaseApp = await ensureFirebaseApp();
+    if (!firebaseApp) {
+      console.warn("⚠️ Firebase app not available for Firestore");
+      return null;
+    }
+
+    try {
+      // Give more time before attempting Firestore
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      db = getFirestore(firebaseApp);
+      console.log("✅ Firestore lazy loaded successfully");
+    } catch (error: any) {
+      console.warn(
+        "⚠️ Firestore lazy loading failed, app will use fallback:",
+        error.message,
+      );
+      db = null;
+    }
+  }
+
+  return db;
+};
+
+// Lazy Auth initialization - only when needed
+const ensureAuth = async (): Promise<any> => {
+  if (!auth && !authInitAttempted) {
+    authInitAttempted = true;
+    console.log("🔐 Lazy loading Firebase Auth...");
+
+    const firebaseApp = await ensureFirebaseApp();
+    if (!firebaseApp) {
+      console.warn("⚠️ Firebase app not available for Auth");
+      return null;
+    }
+
+    try {
+      auth = getAuth(firebaseApp);
+      console.log("✅ Firebase Auth lazy loaded successfully");
+    } catch (error) {
+      console.warn("⚠️ Firebase Auth lazy loading failed:", error);
+      auth = null;
+    }
+  }
+
+  return auth;
+};
+
+// Basic initialization - just prepare the app
+firebaseInitPromise = ensureFirebaseApp();
 
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
@@ -150,6 +418,33 @@ export const isFirebaseReady = () => {
     return !!(app && auth && db);
   } catch (error) {
     console.warn("Firebase health check failed:", error);
+    return false;
+  }
+};
+
+// Lazy loading getters for Firebase services
+export const getDB = async () => {
+  return await ensureFirestore();
+};
+
+export const getAuthService = async () => {
+  return await ensureAuth();
+};
+
+// Function to ensure Firebase is initialized before use
+export const waitForFirebaseInit = async (): Promise<boolean> => {
+  try {
+    if (firebaseInitPromise) {
+      await firebaseInitPromise;
+    }
+
+    // In lazy loading mode, try to initialize the services
+    await ensureAuth();
+    await ensureFirestore();
+
+    return isFirebaseReady();
+  } catch (error) {
+    console.warn("Failed to wait for Firebase initialization:", error);
     return false;
   }
 };
@@ -190,25 +485,22 @@ export const reinitializeFirebase = async (): Promise<boolean> => {
     // Clear previous quota flag
     clearQuotaExceeded();
 
-    // Attempt to reinitialize
-    const newApp = getFirebaseApp();
-    if (newApp) {
-      const { getFirestore, getAuth } = await import("firebase/firestore");
+    // Reset the current instances
+    app = null;
+    db = null;
+    auth = null;
 
-      try {
-        db = getFirestore(newApp);
-        auth = getAuth(newApp);
-        app = newApp;
+    // Reset lazy loading state
+    firebaseInitAttempted = false;
+    dbInitAttempted = false;
+    authInitAttempted = false;
 
-        console.log("✅ Firebase successfully reinitialized");
-        return true;
-      } catch (error) {
-        console.warn("⚠️ Firebase reinitialization failed:", error);
-        return false;
-      }
-    }
+    // Start a new initialization with lazy loading
+    firebaseInitPromise = ensureFirebaseApp();
+    await firebaseInitPromise;
 
-    return false;
+    console.log("✅ Firebase successfully reinitialized");
+    return isFirebaseReady();
   } catch (error) {
     console.warn("⚠️ Firebase reinitialization error:", error);
     return false;
