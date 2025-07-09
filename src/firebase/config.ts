@@ -459,20 +459,7 @@ firebaseInitPromise = (async () => {
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
   try {
-    // USAR FORCE INIT COMO PRIORIDADE
-    const forceStatus = FirebaseForceInit.getStatus();
-    if (forceStatus.ready) {
-      console.log("🔥 Firebase verificado via Force Init - PRONTO");
-      return true;
-    }
-
-    // Fallback para inicialização original
-    if (!app || !auth || !db) {
-      console.log("🔥 Firebase not ready, triggering force init...");
-      FirebaseForceInit.forceInitializeNow();
-      return false;
-    }
-    return !!(app && auth && db);
+    return isSimpleReady();
   } catch (error) {
     console.warn("Firebase health check failed:", error);
     return false;
