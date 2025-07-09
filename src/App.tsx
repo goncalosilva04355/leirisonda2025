@@ -6784,9 +6784,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <span className="font-medium">Início:</span>{" "}
-                                {new Date(work.startDate).toLocaleDateString(
-                                  "pt-PT",
-                                )}
+                                {new Date(
+                                  work.entryTime ||
+                                    work.startDate ||
+                                    work.createdAt,
+                                ).toLocaleDateString("pt-PT")}
                               </div>
                               <div>
                                 <span className="font-medium">
@@ -9058,7 +9060,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </label>
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.flowRate
-                                  ? `${selectedWork.flowRate} m��/h`
+                                  ? `${selectedWork.flowRate} m³/h`
                                   : "Não especificado"}
                               </p>
                             </div>
