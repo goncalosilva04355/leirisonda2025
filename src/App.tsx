@@ -280,7 +280,7 @@ function App() {
 
       // Use Firebase through universal sync but with better error handling
       const result = await addObra(data);
-      console.log("✅ Obra criada via Firebase:", result);
+      // Log removed for performance
 
       // Delay removed for faster performance
 
@@ -1520,7 +1520,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("⚠️ Maps redirect is disabled");
+        console.warn("���️ Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠️ No address provided");
@@ -3391,7 +3391,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç������o</option>
+                            <option value="instalacao">Instalaç����o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -5275,7 +5275,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�������es, recomendações, próxima manuten��ão..."
+                          placeholder="Observaç�������es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -6547,7 +6547,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={(e) => {
                           e.preventDefault();
                           alert(
-                            "Cliente criado com sucesso! (Fun�����o em desenvolvimento)",
+                            "Cliente criado com sucesso! (Fun����o em desenvolvimento)",
                           );
                           setActiveSection("clientes");
                         }}
