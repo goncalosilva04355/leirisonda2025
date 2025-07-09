@@ -107,22 +107,50 @@ export class MigrateUsersToFirestore {
         console.warn(`⚠️ getDB failed for ${user.email}:`, error);
       }
 
-      // Method 2: Force Firebase fix if getDB failed
+      // Method 2: Check if Firestore service is available
       if (!db) {
         try {
-          console.log(`🔧 Attempting Firebase fix for ${user.email}...`);
-          const { IOSFirebaseFix } = await import("../firebase/iosFirebaseFix");
-          await IOSFirebaseFix.forceFirebaseClear();
+          console.log(`🔧 Checking Firestore service for ${user.email}...`);
+          const { FirestoreServiceFix } = await import(
+            "../firebase/firestoreServiceFix"
+          );
+          const serviceCheck =
+            await FirestoreServiceFix.checkAndEnableFirestore();
 
-          const { getDB } = await import("../firebase/config");
-          db = await getDB();
-        } catch (error) {
-          console.warn(`⚠️ Firebase fix failed for ${user.email}:`, error);
+          if (serviceCheck.available) {
+            const { getDB } = await import("../firebase/config");
+            db = await getDB();
+          } else {
+            console.error(
+              `❌ Firestore service not available: ${serviceCheck.error}`,
+            );
+            console.error(`💡 Solution: ${serviceCheck.solution}`);
+
+            // Try alternative initialization
+            try {
+              console.log(`🔄 Trying alternative Firestore init...`);
+              db = await FirestoreServiceFix.tryAlternativeInit();
+              console.log(`✅ Alternative init successful for ${user.email}`);
+            } catch (altError: any) {
+              console.error(`❌ Alternative init failed:`, altError.message);
+            }
+          }
+        } catch (error: any) {
+          console.warn(
+            `⚠️ Firestore service check failed for ${user.email}:`,
+            error,
+          );
         }
       }
 
       if (!db) {
-        throw new Error("Firestore not available after all attempts");
+        // Check if this is the specific "service not available" error
+        const { FirestoreServiceFix } = await import(
+          "../firebase/firestoreServiceFix"
+        );
+        throw new Error(
+          `Firestore service not available. This usually means Firestore is not enabled in the Firebase project. Please enable Firestore in Firebase Console.`,
+        );
       }
 
       const { doc, setDoc } = await import("firebase/firestore");
