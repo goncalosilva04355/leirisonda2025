@@ -2983,7 +2983,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenç��o</span>
+                      <span>Nova Manutenç����o</span>
                     </button>
                   </div>
                 </div>
@@ -8527,6 +8527,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
+              // Auto-check Firebase before login attempt
+              await firebaseAutoFix.checkOnUserAction();
+
               const result = await authService.login(email.trim(), password);
 
               console.log("🔐 Auth result:", result);
