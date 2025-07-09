@@ -8,8 +8,13 @@ import { getFirebaseStatus } from "../firebase/simpleConfig";
 export function FirebaseStatusIndicator() {
   const [status, setStatus] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Detectar se é dispositivo móvel
+    const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    setIsMobile(mobile);
+
     const checkStatus = async () => {
       try {
         const firebaseStatus = getFirebaseStatus();
@@ -24,10 +29,31 @@ export function FirebaseStatusIndicator() {
 
     checkStatus();
 
-    // Verificar status a cada 5 segundos
-    const interval = setInterval(checkStatus, 5000);
+    // Verificar status a cada 10 segundos (menos frequente no mobile)
+    const interval = setInterval(checkStatus, mobile ? 10000 : 5000);
 
-    return () => clearInterval(interval);
+    // Escutar eventos específicos do mobile
+    const handleMobileReady = () => {
+      setStatus((prev) => ({ ...prev, ready: true, mobile: true }));
+      setLoading(false);
+    };
+
+    const handleMobileNotReady = (event: any) => {
+      setStatus({ ready: false, mobile: true, details: event.detail });
+      setLoading(false);
+    };
+
+    window.addEventListener("firebaseMobileReady", handleMobileReady);
+    window.addEventListener("firebaseMobileNotReady", handleMobileNotReady);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("firebaseMobileReady", handleMobileReady);
+      window.removeEventListener(
+        "firebaseMobileNotReady",
+        handleMobileNotReady,
+      );
+    };
   }, []);
 
   if (loading) {
