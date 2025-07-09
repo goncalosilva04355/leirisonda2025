@@ -70,22 +70,34 @@ export class FirebaseOnlyAuth {
   private static db: any = null;
   private static currentUser: UserProfile | null = null;
 
-  // Inicializar serviços Firebase
+  // Inicializar serviços Firebase usando sistema unificado
   static async initialize(): Promise<boolean> {
     try {
-      this.auth = await getFirebaseAuth();
-      this.db = await getFirebaseDB();
+      console.log("🔄 FirebaseOnlyAuth usando UnifiedSafeFirebase...");
+      const success = await UnifiedSafeFirebase.initialize();
 
-      if (this.auth && this.db) {
-        console.log("✅ FirebaseOnlyAuth inicializado");
-        this.setupAuthListener();
-        return true;
-      } else {
-        console.error("❌ Firebase Auth/DB não disponível");
-        return false;
+      if (success) {
+        this.auth = await UnifiedSafeFirebase.getAuth();
+        this.db = await UnifiedSafeFirebase.getDB();
+
+        if (this.auth || this.db) {
+          console.log("✅ FirebaseOnlyAuth inicializado com UnifiedSafe");
+          console.log(`📊 Auth: ${!!this.auth}, DB: ${!!this.db}`);
+
+          if (this.auth) {
+            this.setupAuthListener();
+          }
+          return true;
+        }
       }
+
+      console.error("❌ Firebase Auth/DB não disponível via UnifiedSafe");
+      return false;
     } catch (error) {
-      console.error("❌ Erro ao inicializar FirebaseOnlyAuth:", error);
+      console.error(
+        "❌ Erro ao inicializar FirebaseOnlyAuth via UnifiedSafe:",
+        error,
+      );
       return false;
     }
   }
