@@ -63,9 +63,9 @@ export const useAutoUserMigration = () => {
       // Perform migration
       const result = await MigrateUsersToFirestore.migrateAllUsers();
 
-      if (result.success) {
+      if (result.success && result.migrated > 0) {
         console.log(
-          `✅ AUTO-MIGRATION: Success! Migrated ${result.migrated} users`,
+          `✅ AUTO-MIGRATION: Firestore success! Migrated ${result.migrated} users`,
         );
         console.log("🎉 Users now available across all devices and browsers!");
 
@@ -85,14 +85,68 @@ export const useAutoUserMigration = () => {
           }),
         );
       } else {
-        console.warn("⚠️ AUTO-MIGRATION: Failed", result.details);
-        setStatus((prev) => ({
-          ...prev,
-          isRunning: false,
-          failed: result.failed,
-          error: result.details.join(", "),
-          lastAttempt: Date.now(),
-        }));
+        console.warn(
+          "⚠️ AUTO-MIGRATION: Firestore migration failed, trying local fallback...",
+        );
+
+        // Try local migration as fallback
+        try {
+          const { LocalUserMigration } = await import(
+            "../utils/localUserMigration"
+          );
+          const localResult = await LocalUserMigration.migrateLocalUsers();
+
+          if (localResult.success) {
+            console.log(
+              `✅ AUTO-MIGRATION: Local fallback success! Migrated ${localResult.migrated} users locally`,
+            );
+            console.log(
+              "⚠️ Users work on this device only (Firestore not available)",
+            );
+
+            setStatus({
+              isRunning: false,
+              completed: true,
+              migrated: localResult.migrated,
+              skipped: localResult.synchronized,
+              failed: 0,
+              lastAttempt: Date.now(),
+              error: "Firestore not available - using local-only migration",
+            });
+
+            // Notify that local migration completed
+            window.dispatchEvent(
+              new CustomEvent("usersLocallyMigrated", {
+                detail: localResult,
+              }),
+            );
+          } else {
+            console.error(
+              "❌ AUTO-MIGRATION: Both Firestore and local migration failed",
+            );
+            setStatus((prev) => ({
+              ...prev,
+              isRunning: false,
+              failed: result.failed,
+              error: `Firestore: ${result.details.join(", ")}. Local: ${localResult.details.join(", ")}`,
+              lastAttempt: Date.now(),
+            }));
+          }
+        } catch (localError: any) {
+          console.error(
+            "❌ AUTO-MIGRATION: Local fallback failed:",
+            localError,
+          );
+          setStatus((prev) => ({
+            ...prev,
+            isRunning: false,
+            failed: result.failed,
+            error:
+              result.details.join(", ") +
+              `. Local fallback error: ${localError.message}`,
+            lastAttempt: Date.now(),
+          }));
+        }
       }
     } catch (error: any) {
       console.error("❌ AUTO-MIGRATION: Error during migration", error);
