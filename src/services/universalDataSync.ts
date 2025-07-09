@@ -47,6 +47,9 @@ class UniversalDataSyncService {
       return true;
     }
 
+    // Clean up any duplicate data first
+    this.cleanupDuplicateWorks();
+
     // Inicializar sincronização universal silenciosa
 
     try {
