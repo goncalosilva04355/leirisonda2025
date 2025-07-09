@@ -4294,83 +4294,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             return;
                           }
 
-                          // Notifications removed to prevent instability
-
-                          // Always capture bore data from the cyan section
-                          const furosSection =
-                            document.querySelector("#furo-details");
-                          if (furosSection) {
-                            // Get bore data from form
-                            const boreInputs = furosSection.querySelectorAll(
-                              "input, select, textarea",
-                            );
-
-                            // Update the existing work with bore data
-                            const boreDataUpdate = {
-                              boreDepth:
-                                (boreInputs[0] as HTMLInputElement)?.value ||
-                                "",
-                              waterLevel:
-                                (boreInputs[1] as HTMLInputElement)?.value ||
-                                "",
-                              staticLevel:
-                                (boreInputs[2] as HTMLInputElement)?.value ||
-                                "",
-                              dynamicLevel:
-                                (boreInputs[3] as HTMLInputElement)?.value ||
-                                "",
-                              flowRate:
-                                (boreInputs[4] as HTMLInputElement)?.value ||
-                                "",
-                              columnDiameter:
-                                (boreInputs[5] as HTMLInputElement)?.value ||
-                                "",
-                              pumpModel:
-                                (boreInputs[6] as HTMLInputElement)?.value ||
-                                "",
-                              motorPower:
-                                (boreInputs[7] as HTMLInputElement)?.value ||
-                                "",
-                              pumpVoltage:
-                                (boreInputs[8] as HTMLInputElement)?.value ||
-                                "",
-                              boreObservations:
-                                (boreInputs[9] as HTMLInputElement)?.value ||
-                                "",
-                            };
-
-                            // Update the work with bore data
-                            dataSync.updateWork(workData.id, boreDataUpdate);
-
-                            const waterBoreData = {
-                              id: Date.now(),
-                              workTitle: workTitle,
-                              date: new Date().toISOString(),
-                              photos: uploadedPhotos,
-                              photoCount: uploadedPhotos.length,
-                              workType: "furo",
-                              ...boreDataUpdate,
-                            };
-
-                            const savedWaterBores = JSON.parse(
-                              localStorage.getItem("waterBores") || "[]",
-                            );
-                            savedWaterBores.push(waterBoreData);
-                            localStorage.setItem(
-                              "waterBores",
-                              JSON.stringify(savedWaterBores),
-                            );
-                          }
-
-                          alert(
-                            `Obra "${workTitle}" criada com sucesso! ` +
-                              (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} responsável(eis).`
-                                : "") +
-                              (selectedWorkType === "furo"
-                                ? " Dados do furo registados."
-                                : ""),
-                          );
+                          // Complex processing removed to prevent instability
 
                           // Clear form data
                           setSelectedWorkType("");
@@ -5593,7 +5517,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Configurações de Localiza��ão Individual - Apenas para super_admin */}
+                    {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
                     {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
@@ -6326,7 +6250,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </button>
                               </div>
                               <div>
-                                <p className="font-medium">Informações:</p>
+                                <p className="font-medium">Informa��ões:</p>
                                 <p>Tipo: {client.type}</p>
                                 <p>
                                   Cliente desde:{" "}
