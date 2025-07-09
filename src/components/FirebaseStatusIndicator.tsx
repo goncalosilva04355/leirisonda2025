@@ -76,11 +76,19 @@ export function FirebaseStatusIndicator() {
   }
 
   if (status.ready) {
+    const isMigrated =
+      localStorage.getItem("migratedToFirebaseOnly") === "true";
+
     return (
       <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded text-sm max-w-xs">
         ✅ Firebase Ativo {isMobile ? "(iPhone)" : ""}
         {status.db && " | DB ✓"}
         {status.auth && " | Auth ✓"}
+        {isMigrated && (
+          <div className="text-xs mt-1 text-blue-600">
+            🔥 Modo Firebase-Only
+          </div>
+        )}
         {status.mobile && (
           <div className="text-xs mt-1">📱 Otimizado para mobile</div>
         )}
