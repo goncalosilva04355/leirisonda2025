@@ -1291,7 +1291,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ��� ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -7071,9 +7071,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuários responsáveis por esta obra (
-                            {users.length} utilizadores disponíveis).
-                            Utilizadores inativos são marcados como "(Inativo)".
+                            Selecione os usuarios responsaveis por esta obra (
+                            {users.length} utilizadores disponiveis).
+                            Utilizadores inativos sao marcados como "(Inativo)".
                           </p>
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
