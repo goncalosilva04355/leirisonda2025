@@ -197,18 +197,7 @@ export async function getFirebaseApp(): Promise<FirebaseApp | null> {
 
 // Removed duplicate isFirebaseInitialized declaration - using safe fallback version below
 
-/**
- * Get Firebase status
- */
-export function getFirebaseStatus() {
-  return {
-    app: !!app,
-    auth: !!auth,
-    db: !!db,
-    ready: isFirebaseInitialized(),
-    initializing: isInitializing,
-  };
-}
+// Removed duplicate getFirebaseStatus declaration - using safe fallback version below
 
 // TEMPORARY RESTORE: Basic functionality to prevent white screen
 console.log("🔄 simpleConfig restored with safe fallbacks");
