@@ -131,7 +131,7 @@ export function ManualFirebaseControl() {
               <button
                 onClick={async () => {
                   console.log("🔄 Reset completo do Firebase...");
-                  await UnifiedSafeFirebase.reset();
+                  UltimateSimpleFirebase.reset();
                   updateStatus();
                   setTestResults(null);
                 }}
