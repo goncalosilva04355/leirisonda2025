@@ -91,6 +91,7 @@ import { MigrationProgress } from "./components/MigrationProgress";
 import { FirebaseOnlyTest } from "./components/FirebaseOnlyTest";
 import { FirebaseStorageStatus } from "./components/FirebaseStorageStatus";
 import { FirestoreSetupGuide } from "./components/FirestoreSetupGuide";
+import { FirebaseErrorMonitor } from "./components/FirebaseErrorMonitor";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
@@ -5287,7 +5288,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç������es, recomendações, próxima manutenção..."
+                          placeholder="Observaç�����es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -6146,7 +6147,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o da base de dados de clientes
+                          Gest���o da base de dados de clientes
                         </p>
                       </div>
                     </div>
@@ -8897,7 +8898,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Contacto
                         </label>
                         <p className="text-gray-900">
-                          {selectedWork.contact || "Não especificado"}
+                          {selectedWork.contact || "N��o especificado"}
                         </p>
                       </div>
 
@@ -8951,7 +8952,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In����cio
+                          Data de In�����cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
