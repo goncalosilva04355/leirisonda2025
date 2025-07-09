@@ -35,7 +35,8 @@ export class LocalUserMigration {
     details: string[];
   }> {
     try {
-      console.log("🔄 Starting local user migration (Firestore fallback)...");
+      console.log("🔄 LOCAL MIGRATION: Starting user synchronization...");
+      console.log("📱 Mode: Local-only (Firestore not available)");
 
       const { localUsers, mockUsers } = this.getAllLocalUsers();
       const details: string[] = [];
@@ -43,8 +44,19 @@ export class LocalUserMigration {
       let synchronized = 0;
 
       console.log(
-        `📊 Found ${localUsers.length} local users and ${mockUsers.length} mock users`,
+        `📊 LOCAL MIGRATION: Found ${localUsers.length} local users and ${mockUsers.length} mock users`,
       );
+
+      // If no users found, return success (nothing to migrate)
+      if (localUsers.length === 0 && mockUsers.length === 0) {
+        console.log("ℹ️ LOCAL MIGRATION: No users found to migrate");
+        return {
+          success: true,
+          migrated: 0,
+          synchronized: 0,
+          details: ["No users found to migrate locally"],
+        };
+      }
 
       // Ensure all local users are in mock auth
       for (const localUser of localUsers) {
