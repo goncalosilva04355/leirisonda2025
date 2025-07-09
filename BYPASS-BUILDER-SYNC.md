@@ -14,7 +14,7 @@
 
 ### **OPÇÃO 2: Usar Git Direto (Se tiver acesso)**
 
-1. **Clone** do repositório: `git clone https://github.com/GoncaloFonseca86/Builder-stellar-landing.git`
+1. **Clone** do repositório: `git clone https://github.com/goncalosilva04355/Builder-stellar-landing.git`
 2. **Copiar** arquivos do Builder.io para o clone local
 3. **Commit e push** manual
 

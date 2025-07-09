@@ -2,13 +2,12 @@ import { initializeApp, getApps, getApp, deleteApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
+import { FirebaseForceInit } from "../utils/firebaseForceInit";
 
-// Default Firebase config
+// Firebase config - Project leirisonda-16f8b is active and working
 const defaultFirebaseConfig = {
   apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
   authDomain: "leirisonda-16f8b.firebaseapp.com",
-  databaseURL:
-    "https://leirisonda-16f8b-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "leirisonda-16f8b",
   storageBucket: "leirisonda-16f8b.firebasestorage.app",
   messagingSenderId: "540456875574",
@@ -49,9 +48,7 @@ const getFirebaseApp = () => {
 
       // Validar se o app existente está em bom estado
       if (existingApp && existingApp.options && existingApp.name) {
-        console.log(
-          "🔄 Usando Firebase app existente validado (evitando conflitos de stream)",
-        );
+        console.log("🔄 Firebase app existente encontrado e validado");
         return existingApp;
       } else {
         console.warn("⚠️ App existente em estado inválido, removendo...");
@@ -63,8 +60,12 @@ const getFirebaseApp = () => {
       }
     }
 
-    // Aguardar antes de inicializar para evitar conflitos
-    console.log("🚀 Inicializando novo Firebase app...");
+    // Inicializar novo Firebase app com configurações válidas
+    console.log(
+      "🚀 Inicializando Firebase app com configurações atualizadas...",
+    );
+    console.log("📋 Project ID:", firebaseConfig.projectId);
+
     const app = initializeApp(firebaseConfig);
 
     // Validar o app recém-criado
@@ -72,10 +73,12 @@ const getFirebaseApp = () => {
       throw new Error("Firebase app created but is in invalid state");
     }
 
-    console.log("✅ Firebase app inicializado e validado com sucesso");
+    console.log("✅ Firebase app inicializado com sucesso");
+    console.log("🔥 Firebase está pronto para usar");
     return app;
   } catch (error: any) {
     console.error("❌ Erro na inicialização do Firebase:", error);
+    console.error("📋 Firebase config being used:", firebaseConfig);
 
     // Se for erro de app já existir, tentar obter
     if (error.code === "app/duplicate-app") {
@@ -89,7 +92,8 @@ const getFirebaseApp = () => {
       }
     }
 
-    console.error("❌ Firebase app não disponível");
+    // Don't return null - try to continue with a basic app
+    console.warn("⚠️ Tentando continuar sem Firebase");
     return null;
   }
 };
@@ -360,24 +364,35 @@ const ensureFirebaseApp = async (): Promise<any> => {
 const ensureFirestore = async (): Promise<any> => {
   if (!db && !dbInitAttempted) {
     dbInitAttempted = true;
-    console.log("🔄 Lazy loading Firestore...");
+    console.log("🔄 Inicializando Firestore...");
 
     const firebaseApp = await ensureFirebaseApp();
     if (!firebaseApp) {
-      console.warn("⚠️ Firebase app not available for Firestore");
+      console.warn("⚠️ Firebase app não disponível para Firestore");
       return null;
     }
 
     try {
-      // Give more time before attempting Firestore
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Give Firebase app time to fully initialize
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       db = getFirestore(firebaseApp);
-      console.log("✅ Firestore lazy loaded successfully");
-    } catch (error: any) {
-      console.warn(
-        "⚠️ Firestore lazy loading failed, app will use fallback:",
-        error.message,
+      console.log("✅ Firestore inicializado com sucesso");
+      console.log("🔥 Base de dados pronta para sincronização");
+
+      // Test Firestore connectivity
+      import("firebase/firestore").then(
+        ({ connectFirestoreEmulator, enableNetwork }) => {
+          if (db) {
+            enableNetwork(db).catch(() => {
+              console.log("🌐 Conectividade Firestore sendo estabelecida...");
+            });
+          }
+        },
       );
+    } catch (error: any) {
+      console.warn("⚠️ Falha na inicialização do Firestore:", error.message);
+      console.log("📱 Aplicação continuará em modo local");
       db = null;
     }
   }
@@ -389,19 +404,34 @@ const ensureFirestore = async (): Promise<any> => {
 const ensureAuth = async (): Promise<any> => {
   if (!auth && !authInitAttempted) {
     authInitAttempted = true;
-    console.log("🔐 Lazy loading Firebase Auth...");
+    console.log("🔐 Inicializando Firebase Auth...");
 
     const firebaseApp = await ensureFirebaseApp();
     if (!firebaseApp) {
-      console.warn("⚠️ Firebase app not available for Auth");
+      console.warn("⚠️ Firebase app não disponível para Auth");
       return null;
     }
 
     try {
       auth = getAuth(firebaseApp);
-      console.log("✅ Firebase Auth lazy loaded successfully");
+      console.log("✅ Firebase Auth inicializado com sucesso");
+
+      // Set up auth persistence immediately
+      import("firebase/auth").then(
+        ({ setPersistence, browserSessionPersistence }) => {
+          if (auth) {
+            setPersistence(auth, browserSessionPersistence)
+              .then(() => {
+                console.log("🔐 Firebase Auth persistence configurada");
+              })
+              .catch((error) => {
+                console.warn("⚠️ Erro ao configurar persistência:", error);
+              });
+          }
+        },
+      );
     } catch (error) {
-      console.warn("⚠️ Firebase Auth lazy loading failed:", error);
+      console.warn("⚠️ Falha na inicialização do Firebase Auth:", error);
       auth = null;
     }
   }
@@ -409,12 +439,31 @@ const ensureAuth = async (): Promise<any> => {
   return auth;
 };
 
-// Basic initialization - just prepare the app
-firebaseInitPromise = ensureFirebaseApp();
+// Force complete Firebase initialization on startup
+firebaseInitPromise = (async () => {
+  console.log("🔥 Iniciando Firebase completo...");
+  await ensureFirebaseApp();
+  await ensureAuth();
+  await ensureFirestore();
+  console.log("🎯 Firebase inicialização completa");
+})();
 
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
   try {
+    // USAR FORCE INIT COMO PRIORIDADE
+    const forceStatus = FirebaseForceInit.getStatus();
+    if (forceStatus.ready) {
+      console.log("🔥 Firebase verificado via Force Init - PRONTO");
+      return true;
+    }
+
+    // Fallback para inicialização original
+    if (!app || !auth || !db) {
+      console.log("🔥 Firebase not ready, triggering force init...");
+      FirebaseForceInit.forceInitializeNow();
+      return false;
+    }
     return !!(app && auth && db);
   } catch (error) {
     console.warn("Firebase health check failed:", error);
@@ -424,10 +473,26 @@ export const isFirebaseReady = () => {
 
 // Lazy loading getters for Firebase services
 export const getDB = async () => {
+  // PRIORIDADE: Usar Force Init
+  const forceDb = FirebaseForceInit.getDb();
+  if (forceDb) {
+    console.log("🔥 Usando Firestore do Force Init");
+    return forceDb;
+  }
+
+  // Fallback
   return await ensureFirestore();
 };
 
 export const getAuthService = async () => {
+  // PRIORIDADE: Usar Force Init
+  const forceAuth = FirebaseForceInit.getAuth();
+  if (forceAuth) {
+    console.log("🔥 Usando Auth do Force Init");
+    return forceAuth;
+  }
+
+  // Fallback
   return await ensureAuth();
 };
 

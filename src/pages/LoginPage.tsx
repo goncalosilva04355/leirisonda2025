@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Settings, TestTube } from "lucide-react";
-import { runQuotaTest } from "../utils/testFirebaseQuota";
+import { Settings } from "lucide-react";
+import { FirebaseStatusMonitor } from "../components/FirebaseStatusMonitor";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -50,7 +50,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           console.log("⚠️ Incomplete saved credentials, skipping auto-login");
         }
       } catch (error) {
-        console.error("❌ Error loading saved credentials:", error);
+        console.error("��� Error loading saved credentials:", error);
         sessionStorage.removeItem("savedLoginCredentials");
       }
     } else {
@@ -97,12 +97,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
   return (
     <div className="min-h-screen bg-blue-600 flex items-center justify-center">
+      {/* Firebase Status Monitor */}
+      <FirebaseStatusMonitor />
+
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-32 h-20 bg-white rounded-lg shadow-md p-2 mx-auto">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+              src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
               alt="Leirisonda Logo"
               className="w-full h-full object-contain"
             />
@@ -189,15 +192,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
       {/* Floating Action Buttons (Bottom Right) */}
       <div className="fixed bottom-4 right-4 flex flex-col space-y-2">
-        <button
-          onClick={runQuotaTest}
-          className="w-12 h-12 bg-blue-500 border border-blue-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-blue-600 hover:shadow-xl transition-all duration-200 hover:scale-105"
-          disabled={isLoading}
-          title="Testar Quota Firebase"
-        >
-          <TestTube className="h-5 w-5" />
-        </button>
-
         <button
           onClick={() => (window.location.hash = "administracao")}
           className="w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 hover:shadow-xl transition-all duration-200 hover:scale-105"

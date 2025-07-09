@@ -20,7 +20,7 @@ export interface UniversalDataState {
   clientes: any[];
   totalItems: number;
   lastSync: string;
-  isGloballyShared: true;
+  isGloballyShared: boolean;
 }
 
 /**
@@ -455,7 +455,7 @@ class UniversalDataSyncService {
 
     await setDoc(doc(db!, "universal_manutencoes", id), manutencao);
     console.log(
-      `✅ MANUTENÇÃO ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
+      `��� MANUTENÇÃO ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
     );
     return id;
   }

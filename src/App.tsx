@@ -46,8 +46,8 @@ import "./utils/clearModalStates";
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
-import { AutoSyncProvider } from "./components/AutoSyncProvider";
-import { InstantSyncManager } from "./components/InstantSyncManager";
+import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
+import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
 import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
@@ -58,15 +58,16 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
-import { useDataSync } from "./hooks/useDataSync";
-import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
+import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
+import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
+import { FirebaseDiagnostic } from "./utils/firebaseDiagnostic";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSync } from "./hooks/useAutoSync";
+import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
@@ -154,16 +155,26 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Garante que todos os utilizadores vejam todos os dados
-  const universalSync = useUniversalDataSync();
+  // SINCRONIZAÇÃO UNIVERSAL - Versão segura temporária para evitar erros
+  const universalSync = useUniversalDataSyncSafe();
 
-  // Data sync hook - fallback para compatibilidade
-  const dataSync = useDataSync();
+  // Data sync hook - versão segura para evitar erros
+  const dataSync = useDataSyncSafe();
 
   // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
   useEffect(() => {
     // Backup inicial
     DataProtectionService.createEmergencyBackup();
+
+    // FIREBASE DIAGNOSTIC E FORÇA INICIALIZAÇÃO
+    console.log("🔧 Iniciando diagnóstico Firebase...");
+    FirebaseDiagnostic.forceInitialization().then((success) => {
+      if (success) {
+        console.log("🔥 Firebase inicializado com sucesso!");
+      } else {
+        console.log("📱 Aplicação funcionará em modo local");
+      }
+    });
 
     // Backup automático contínuo (reduzido para 10 minutos)
     const backupInterval = setInterval(() => {
@@ -300,8 +311,8 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
-  const autoSyncData = useAutoSync();
-  const { syncStatus: autoSyncStatus, isAutoSyncing } = autoSyncData;
+  const autoSyncData = useAutoSyncSafe();
+  const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
   // Keep local users state for user management
@@ -538,7 +549,7 @@ function App() {
     console.log("��� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
-      console.log("🔔 Current notification permission:", permission);
+      console.log("�� Current notification permission:", permission);
       setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
@@ -1773,7 +1784,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
                   style={{
-                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2Fe6dd131c94c1407994895f6f7cf7f1c7?format=webp&width=800')`,
+                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fe6dd131c94c1407994895f6f7cf7f1c7?format=webp&width=800')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
@@ -1788,7 +1799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between mb-3">
                       <div className="w-20 h-12 bg-white rounded shadow-sm p-2">
                         <img
-                          src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                           alt="Leirisonda Logo"
                           className="w-full h-full object-contain"
                         />
@@ -2090,7 +2101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 )}
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    🔧 Trabalho:
+                                    ���� Trabalho:
                                   </span>
                                   <span className="text-sm text-gray-900">
                                     {work.workPerformed ||
@@ -3574,7 +3585,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usuários Atribuídos ({users.length} utilizadores
+                            Usu��rios Atribuídos ({users.length} utilizadores
                             disponíveis)
                           </label>
                           {(() => {
@@ -5258,7 +5269,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç���es, recomendações, próxima manutenção..."
+                          placeholder="Observaç�����es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5868,7 +5879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Histórico de intervenções
+                          Histórico de intervenç��es
                         </p>
                       </div>
                     </div>
@@ -8542,13 +8553,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const syncInterval = syncManager.getSafeInterval();
 
   return (
-    <AutoSyncProvider
+    <AutoSyncProviderSafe
       enabled={true}
       syncInterval={60000}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={false}
     >
-      <InstantSyncManager>
+      <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
           {/* Sidebar */}
           <div
@@ -8563,7 +8574,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center space-x-3">
                     <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
                       <img
-                        src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                        src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                         alt="Leirisonda Logo"
                         className="w-full h-full object-contain"
                       />
@@ -9249,8 +9260,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* User Restore Notification */}
         <UserRestoreNotification />
-      </InstantSyncManager>
-    </AutoSyncProvider>
+      </InstantSyncManagerSafe>
+    </AutoSyncProviderSafe>
   );
 }
 

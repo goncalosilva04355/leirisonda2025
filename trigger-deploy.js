@@ -33,12 +33,12 @@ const deployManifest = {
   build_info: buildInfo,
   icons: [
     {
-      src: "https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=192",
+      src: "https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9862202d056a426996e6178b9981c1c7?format=webp&width=192",
       sizes: "192x192",
       type: "image/webp",
     },
     {
-      src: "https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F9862202d056a426996e6178b9981c1c7?format=webp&width=512",
+      src: "https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9862202d056a426996e6178b9981c1c7?format=webp&width=512",
       sizes: "512x512",
       type: "image/webp",
     },

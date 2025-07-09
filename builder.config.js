@@ -1,11 +1,11 @@
 // Builder.io configuration
 module.exports = {
   // Project configuration
-  apiKey: "24b5ff5dbb9f4bb493659e90291d92bc",
+  apiKey: "cc309d103d0b4ade88d90ee94cb2f741",
 
   // GitHub integration
   github: {
-    owner: "GoncaloFonseca86",
+    owner: "goncalosilva04355",
     repo: "Builder-stellar-landing",
     branch: "main",
     baseBranch: "main",

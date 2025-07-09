@@ -40,7 +40,7 @@ No Builder.io:
 
 1. **Settings** → **Integrations** → **GitHub**
 2. **Connect** → Autoriza acesso ao repositório
-3. **Repository:** `GoncaloFonseca86/Builder-stellar-landing`
+3. **Repository:** `goncalosilva04355/Builder-stellar-landing`
 4. **Branch:** `main`
 5. **Auto-deploy:** ✅ Ativado
 
@@ -48,7 +48,7 @@ No Builder.io:
 
 1. **Builder.io** → **Settings** → **Webhooks**
 2. **Add webhook:**
-   - URL: `https://api.github.com/repos/GoncaloFonseca86/Builder-stellar-landing/dispatches`
+   - URL: `https://api.github.com/repos/goncalosilva04355/Builder-stellar-landing/dispatches`
    - Events: `content.publish`, `content.update`
    - Headers: (usar config do `builder-webhook.json`)
 
@@ -76,6 +76,6 @@ No Builder.io:
 
 ## 🔗 Links Úteis:
 
-- GitHub Actions: `https://github.com/GoncaloFonseca86/Builder-stellar-landing/actions`
+- GitHub Actions: `https://github.com/goncalosilva04355/Builder-stellar-landing/actions`
 - Netlify Deploys: `https://app.netlify.com/sites/leirisonda/deploys`
 - Builder.io Integrations: `https://builder.io/account/integrations`

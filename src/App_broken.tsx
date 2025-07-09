@@ -1577,7 +1577,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
                       <div className="w-8 h-8 bg-white rounded-lg shadow-md p-1">
                         <img
-                          src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                           alt="Leirisonda Logo"
                           className="w-full h-full object-contain"
                         />
@@ -7777,7 +7777,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="text-center mb-8">
             <div className="w-32 h-20 bg-white rounded-lg shadow-md p-2 mx-auto">
               <img
-                src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                 alt="Leirisonda Logo"
                 className="w-full h-full object-contain"
               />
@@ -7864,7 +7864,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="flex items-center space-x-3">
                   <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
                     <img
-                      src="https://cdn.builder.io/api/v1/image/assets%2F24b5ff5dbb9f4bb493659e90291d92bc%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                      src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                       alt="Leirisonda Logo"
                       className="w-full h-full object-contain"
                     />

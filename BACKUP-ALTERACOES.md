@@ -72,7 +72,7 @@ REMOVIDOS:
 
 **Branch Local:** ai_main_9fcae005c620
 **Último Commit:** Sistema de eliminação melhorado
-**GitHub Repo:** GoncaloFonseca86/Builder-stellar-landing
+**GitHub Repo:** goncalosilva04355/Builder-stellar-landing
 
 ## 🛡️ GARANTIAS DE SEGURANÇA
 

@@ -53,7 +53,7 @@ export interface UniversalSyncActions {
  */
 export function useUniversalDataSync(): UniversalSyncState &
   UniversalSyncActions {
-  const [state, setState] = useState<UniversalSyncState>({
+  const [state, setState] = useState<UniversalSyncState>(() => ({
     obras: [],
     manutencoes: [],
     piscinas: [],
@@ -64,7 +64,7 @@ export function useUniversalDataSync(): UniversalSyncState &
     isLoading: true,
     error: null,
     syncStatus: "disconnected",
-  });
+  }));
 
   // Inicializar sincronização universal
   useEffect(() => {
