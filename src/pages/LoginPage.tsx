@@ -229,6 +229,41 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             🚀 Login Rápido: Yuri
           </button>
 
+          {/* Direct Test Button */}
+          <button
+            type="button"
+            onClick={() => {
+              const mockUsers = JSON.parse(
+                localStorage.getItem("mock-users") || "[]",
+              );
+              const appUsers = JSON.parse(
+                localStorage.getItem("app-users") || "[]",
+              );
+
+              const mockYuri = mockUsers.find(
+                (u: any) => u.email === "yuri@leirisonda.pt",
+              );
+              const appYuri = appUsers.find(
+                (u: any) => u.email === "yuri@leirisonda.pt",
+              );
+
+              const testResult = `Mock: ${mockYuri ? "EXISTS" : "NOT FOUND"} | App: ${appYuri ? "EXISTS" : "NOT FOUND"}`;
+
+              if (mockYuri && appYuri) {
+                const passMatch =
+                  mockYuri.password === "123" && appYuri.password === "123";
+                alert(
+                  `✅ Utilizador encontrado!\n\nMock Password: "${mockYuri.password}"\nApp Password: "${appYuri.password}"\nPassword Match: ${passMatch ? "YES" : "NO"}`,
+                );
+              } else {
+                alert(`❌ Problema: ${testResult}`);
+              }
+            }}
+            className="w-full bg-yellow-600 text-white py-2 px-4 rounded-md hover:bg-yellow-700 mb-2 text-sm"
+          >
+            🔍 Teste Directo
+          </button>
+
           {/* Login Button */}
           <div className="space-y-2 pt-2">
             <button
