@@ -979,6 +979,10 @@ class UniversalDataSyncService {
   }
 }
 
-// Exportar inst��ncia singleton
+// Exportar instância singleton
 export const universalDataSync = new UniversalDataSyncService();
+
+// Expor função de reset de emergência globalmente
+(window as any).emergencyReset = UniversalDataSyncService.emergencyReset;
+
 export default universalDataSync;
