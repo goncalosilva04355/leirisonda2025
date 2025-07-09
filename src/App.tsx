@@ -294,7 +294,7 @@ function App() {
   const addWork = async (data: any) => {
     try {
       // Simple localStorage save to prevent crashes
-      const works = JSON.parse(localStorage.getItem("works") || "[]");
+      const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
       const newWork = {
         ...data,
         id: data.id || Date.now().toString(),
@@ -302,11 +302,17 @@ function App() {
       };
 
       // Check for duplicates
-      const exists = works.some((w: any) => w.id === newWork.id);
+      const exists = existingWorks.some((w: any) => w.id === newWork.id);
       if (!exists) {
-        works.push(newWork);
-        localStorage.setItem("works", JSON.stringify(works));
+        existingWorks.push(newWork);
+        localStorage.setItem("works", JSON.stringify(existingWorks));
         console.log("✅ Work saved to localStorage:", newWork.id);
+
+        // Force page refresh to show new work
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+
         return newWork.id;
       } else {
         console.log("⚠️ Work already exists:", newWork.id);
@@ -2015,7 +2021,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 </div>
 
-                {/* Lista de Obras Atribuídas */}
+                {/* Lista de Obras Atribu��das */}
                 {currentUser &&
                   works.filter((work) => {
                     if (!work) return false;
@@ -5257,7 +5263,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�����es, recomendações, próxima manutenção..."
+                          placeholder="Observaç�������es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
