@@ -29,7 +29,7 @@ export const saveFirebaseConfig = (config: any) => {
     console.log("🔧 Firebase: Configuration using default settings");
     return true;
   } catch (error) {
-    console.error("�� Firebase: Error saving config to localStorage:", error);
+    console.error("��� Firebase: Error saving config to localStorage:", error);
     return false;
   }
 };
@@ -47,9 +47,7 @@ const getFirebaseApp = () => {
 
       // Validar se o app existente está em bom estado
       if (existingApp && existingApp.options && existingApp.name) {
-        console.log(
-          "🔄 Usando Firebase app existente validado (evitando conflitos de stream)",
-        );
+        console.log("🔄 Firebase app existente encontrado e validado");
         return existingApp;
       } else {
         console.warn("⚠️ App existente em estado inválido, removendo...");
@@ -61,8 +59,12 @@ const getFirebaseApp = () => {
       }
     }
 
-    // Aguardar antes de inicializar para evitar conflitos
-    console.log("🚀 Inicializando novo Firebase app...");
+    // Inicializar novo Firebase app com configurações válidas
+    console.log(
+      "🚀 Inicializando Firebase app com configurações atualizadas...",
+    );
+    console.log("📋 Project ID:", firebaseConfig.projectId);
+
     const app = initializeApp(firebaseConfig);
 
     // Validar o app recém-criado
@@ -70,10 +72,12 @@ const getFirebaseApp = () => {
       throw new Error("Firebase app created but is in invalid state");
     }
 
-    console.log("✅ Firebase app inicializado e validado com sucesso");
+    console.log("✅ Firebase app inicializado com sucesso");
+    console.log("🔥 Firebase está pronto para usar");
     return app;
   } catch (error: any) {
     console.error("❌ Erro na inicialização do Firebase:", error);
+    console.error("📋 Firebase config being used:", firebaseConfig);
 
     // Se for erro de app já existir, tentar obter
     if (error.code === "app/duplicate-app") {
@@ -87,7 +91,8 @@ const getFirebaseApp = () => {
       }
     }
 
-    console.error("❌ Firebase app não disponível");
+    // Don't return null - try to continue with a basic app
+    console.warn("⚠️ Tentando continuar sem Firebase");
     return null;
   }
 };
@@ -413,6 +418,15 @@ firebaseInitPromise = ensureFirebaseApp();
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
   try {
+    // Force Firebase initialization if not ready
+    if (!app || !auth || !db) {
+      console.log("🔥 Firebase not ready, forcing initialization...");
+      // Trigger initialization
+      ensureFirebaseApp();
+      ensureAuth();
+      ensureFirestore();
+      return false; // Return false for now, but initialization is triggered
+    }
     return !!(app && auth && db);
   } catch (error) {
     console.warn("Firebase health check failed:", error);
