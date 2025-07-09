@@ -1485,7 +1485,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������ Address clicked:", address);
+    console.log("�������� Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -8561,6 +8561,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
+          {/* Firebase Status Indicator */}
+          <FirebaseStatusIndicator />
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
