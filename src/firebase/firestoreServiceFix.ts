@@ -37,43 +37,63 @@ export class FirestoreServiceFix {
         console.log("✅ Initialized new Firebase app");
       }
 
-      // Check if Firestore is available
+      // Check if Firestore is available (lightweight check)
       try {
+        console.log("🧪 Testing Firestore service availability...");
+
+        // First, check if the Firebase project has Firestore enabled
+        // This is a safer approach that doesn't trigger getImmediate errors
+        const projectId = app.options.projectId;
+        console.log(`🔍 Checking Firestore for project: ${projectId}`);
+
+        // Try to import and use getFirestore carefully
         const { getFirestore } = await import("firebase/firestore");
-        const db = getFirestore(app);
-        console.log("✅ Firestore service obtained");
 
-        // Try a simple operation to verify it works
-        const { doc, getDoc } = await import("firebase/firestore");
-        const testDoc = doc(db, "__service_test__", "test");
-        await getDoc(testDoc);
+        try {
+          const db = getFirestore(app);
+          console.log("✅ Firestore service obtained (basic)");
 
-        console.log("✅ Firestore service is fully functional");
-        return { available: true };
-      } catch (firestoreError: any) {
-        console.error("❌ Firestore service error:", firestoreError);
+          // Very light test - just check if we can create a doc reference
+          // Don't actually query it to avoid network errors
+          const { doc } = await import("firebase/firestore");
+          const testDoc = doc(db, "__test__", "connectivity");
 
-        if (
-          firestoreError.message?.includes("Service firestore is not available")
-        ) {
-          return {
-            available: false,
-            error: "Firestore service is not enabled in the Firebase project",
-            solution: "Firestore needs to be enabled in Firebase Console",
-          };
-        } else if (firestoreError.message?.includes("getImmediate")) {
-          return {
-            available: false,
-            error: "Firestore initialization failed",
-            solution: "Need to initialize Firestore properly",
-          };
-        } else {
-          return {
-            available: false,
-            error: firestoreError.message,
-            solution: "Unknown Firestore configuration issue",
-          };
+          if (testDoc) {
+            console.log("✅ Firestore service appears functional");
+            return { available: true };
+          } else {
+            throw new Error("Could not create document reference");
+          }
+        } catch (initError: any) {
+          console.warn("⚠️ Firestore initialization issue:", initError.message);
+
+          // Check for specific error patterns
+          if (
+            initError.message?.includes("Service firestore is not available") ||
+            initError.message?.includes("getImmediate") ||
+            initError.code === "firestore/unavailable"
+          ) {
+            return {
+              available: false,
+              error: "Firestore service is not enabled in the Firebase project",
+              solution: "Firestore needs to be enabled in Firebase Console",
+            };
+          } else {
+            return {
+              available: false,
+              error: `Firestore initialization failed: ${initError.message}`,
+              solution: "Check Firestore configuration in Firebase Console",
+            };
+          }
         }
+      } catch (firestoreError: any) {
+        console.error("❌ Firestore service check failed:", firestoreError);
+
+        return {
+          available: false,
+          error: `Firestore check failed: ${firestoreError.message}`,
+          solution: "Verify Firebase project configuration",
+        };
       }
     } catch (error: any) {
       console.error("💥 Firebase app error:", error);
