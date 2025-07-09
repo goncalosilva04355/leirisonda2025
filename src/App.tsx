@@ -300,7 +300,7 @@ function App() {
       if (!exists) {
         existingWorks.push(newWork);
         localStorage.setItem("works", JSON.stringify(existingWorks));
-        console.log("✅ Obra salva em fallback localStorage:", newWork.id);
+        // Log removed for performance
       }
 
       return newWork.id;
@@ -1003,7 +1003,7 @@ function App() {
   // PDF Generation Functions
   const generatePoolsPDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE PISCINAS
+LEIRISONDA - RELAT��RIO DE PISCINAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1520,7 +1520,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("���️ Maps redirect is disabled");
+        console.warn("⚠️ Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠️ No address provided");
@@ -1616,7 +1616,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
+              `⚠��� Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -5550,7 +5550,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador não suporta notificações.",
+                                  "Este navegador não suporta notificaç��es.",
                                 );
                               }
                             }}
