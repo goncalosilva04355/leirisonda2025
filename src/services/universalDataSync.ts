@@ -517,6 +517,11 @@ class UniversalDataSyncService {
       localStorage.setItem("works", JSON.stringify(existingWorks));
       localStorage.setItem("lastLocalSync", new Date().toISOString());
 
+      // Trigger storage event for other tabs/windows
+      window.dispatchEvent(
+        new CustomEvent("localDataChanged", { detail: { type: "works" } }),
+      );
+
       console.log(`✅ OBRA SALVA LOCALMENTE (fallback): ${id}`);
       return id;
     }
