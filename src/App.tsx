@@ -278,7 +278,20 @@ function App() {
   const addPool = (data: any) => addPiscina(data);
   const addWork = async (data: any) => {
     try {
-      // Simple localStorage save to prevent crashes
+      console.log("🔧 addWork iniciado com Firebase ativo");
+
+      // Use Firebase through universal sync but with better error handling
+      const result = await addObra(data);
+      console.log("✅ Obra criada via Firebase:", result);
+
+      // Small delay to allow Firebase sync to complete
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      return result;
+    } catch (error) {
+      console.error("❌ Erro no Firebase, tentando fallback:", error);
+
+      // Fallback to localStorage if Firebase fails
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
       const newWork = {
         ...data,
@@ -286,26 +299,14 @@ function App() {
         createdAt: data.createdAt || new Date().toISOString(),
       };
 
-      // Check for duplicates
       const exists = existingWorks.some((w: any) => w.id === newWork.id);
       if (!exists) {
         existingWorks.push(newWork);
         localStorage.setItem("works", JSON.stringify(existingWorks));
-        console.log("✅ Work saved to localStorage:", newWork.id);
-
-        // Force page refresh to show new work
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
-
-        return newWork.id;
-      } else {
-        console.log("⚠️ Work already exists:", newWork.id);
-        return newWork.id;
+        console.log("✅ Obra salva em fallback localStorage:", newWork.id);
       }
-    } catch (error) {
-      console.error("❌ Error in addWork:", error);
-      throw error;
+
+      return newWork.id;
     }
   };
   const addMaintenance = (data: any) => addManutencao(data);
@@ -753,7 +754,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç���o Regular",
+      type: "Manutenç����o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -5513,7 +5514,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Notification.permission === "granted"
                                 ) {
                                   new Notification("Leirisonda", {
-                                    body: "Notificações já est��o ativadas!",
+                                    body: "Notificações já estão ativadas!",
                                     icon: "/icon.svg",
                                   });
                                 } else {
