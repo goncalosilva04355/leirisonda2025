@@ -1144,7 +1144,7 @@ RESUMO EXECUTIVO:
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
 - Manutenç��es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
-- Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
+- Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
 ${futureMaintenance
@@ -1608,7 +1608,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           if (result.success) {
             console.log(
-              `��� Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
+              `���� Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
             );
 
             // Show success message
@@ -5635,8 +5635,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </button>
                           </div>
                           <p className="text-blue-700 text-sm mb-3">
-                            Quando ativado, clicar num número de telefone abrirá
-                            diretamente o marcador do telefone.
+                            Quando ativado, clicar num número de telefone
+                            abrir�� diretamente o marcador do telefone.
                           </p>
                           <p className="text-blue-600 text-xs">
                             Estado:{" "}
