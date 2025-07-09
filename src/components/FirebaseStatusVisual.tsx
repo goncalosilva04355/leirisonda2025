@@ -39,7 +39,50 @@ export const FirebaseStatusVisual: React.FC = () => {
     let canWrite = false;
 
     try {
-      // Test Firebase config and readiness
+      // Test mobile Firebase configuration first
+      const { initializeMobileFirebase, resetMobileFirebase } = await import(
+        "../firebase/mobileConfig"
+      );
+
+      console.log("📱 Testando Firebase mobile config...");
+      const mobileResult = await initializeMobileFirebase();
+
+      if (mobileResult.success) {
+        firebaseReady = true;
+        dbConnected = !!mobileResult.db;
+        authReady = !!mobileResult.auth;
+
+        if (mobileResult.db) {
+          // Test read/write with mobile config
+          try {
+            const { doc, getDoc, setDoc } = await import("firebase/firestore");
+            const testDoc = doc(mobileResult.db, "__test__", "mobile-test");
+
+            // Test read
+            await getDoc(testDoc);
+            canRead = true;
+
+            // Test write
+            await setDoc(testDoc, {
+              test: true,
+              timestamp: new Date().toISOString(),
+              device: "mobile",
+              config: "mobile-optimized",
+            });
+            canWrite = true;
+
+            console.log("✅ Mobile Firebase funcionando!");
+          } catch (rwError: any) {
+            errors.push(`Mobile R/W: ${rwError.code || rwError.message}`);
+          }
+        }
+
+        return; // Exit early if mobile config works
+      } else {
+        errors.push(`Mobile init: ${mobileResult.error}`);
+      }
+
+      // Fallback to original config
       const { isFirebaseReady, getDB, getAuthService } = await import(
         "../firebase/config"
       );
