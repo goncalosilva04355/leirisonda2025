@@ -674,7 +674,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "N��o tem permissão para criar manutenç��es. Contacte o administrador.",
+        "N��o tem permissão para criar manutenç���es. Contacte o administrador.",
       );
       return;
     }
@@ -8658,7 +8658,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     }`}
                   >
                     <Wrench className="h-5 w-5" />
-                    <span>Manutenções</span>
+                    <span>Manutencoes</span>
                   </button>
                 )}
 
