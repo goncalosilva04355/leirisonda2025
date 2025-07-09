@@ -75,6 +75,7 @@ import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
 import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
 import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
+import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
@@ -1089,7 +1090,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -3159,7 +3160,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manuten��ão "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -3291,7 +3292,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ����‍🔧 {maint.technician}
+                                ������‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -5872,7 +5873,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç����es
+                        <strong>{maintenance.length}</strong> manutenç��es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -5902,7 +5903,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Projetos e construç��es
+                          Projetos e construções
                         </p>
                       </div>
                     </div>
@@ -9321,6 +9322,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Firebase Auto-Monitor - Discrete indicator */}
         <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
+
+        {/* User Migration Indicator - Shows migration status */}
+        <UserMigrationIndicator migrationStatus={userMigration} />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
