@@ -1263,7 +1263,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         assignedTo.toLowerCase().includes(currentUser?.name.toLowerCase()) ||
         currentUser?.name.toLowerCase().includes(assignedTo.toLowerCase()));
 
-    console.log("🔍 DEBUG: Assignment check:", {
+    console.log("��� DEBUG: Assignment check:", {
       currentUser: currentUser?.name,
       assignedTo,
       exactMatch: currentUser?.name === assignedTo,
@@ -7092,7 +7092,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠��� Nenhum utilizador encontrado. Vá à Área de
-                                Administração → "��� Correção de Atribuição de
+                                Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -7965,7 +7965,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
                             inputs[4] as HTMLInputElement
-                          ).value; // Dura��ão Estimada
+                          ).value; // Duração Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
                             .value; // Duração Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
@@ -8584,6 +8584,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           {/* Migration Progress */}
           <MigrationProgress />
+
+          {/* Firebase-Only Test Button */}
+          <FirebaseOnlyTest />
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
