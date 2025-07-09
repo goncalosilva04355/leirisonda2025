@@ -2,6 +2,7 @@ import { initializeApp, getApps, getApp, deleteApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
+import { FirebaseForceInit } from "../utils/firebaseForceInit";
 
 // Firebase config - Project leirisonda-16f8b is active and working
 const defaultFirebaseConfig = {
@@ -450,14 +451,18 @@ firebaseInitPromise = (async () => {
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
   try {
-    // Force Firebase initialization if not ready
+    // USAR FORCE INIT COMO PRIORIDADE
+    const forceStatus = FirebaseForceInit.getStatus();
+    if (forceStatus.ready) {
+      console.log("🔥 Firebase verificado via Force Init - PRONTO");
+      return true;
+    }
+
+    // Fallback para inicialização original
     if (!app || !auth || !db) {
-      console.log("🔥 Firebase not ready, forcing initialization...");
-      // Trigger initialization
-      ensureFirebaseApp();
-      ensureAuth();
-      ensureFirestore();
-      return false; // Return false for now, but initialization is triggered
+      console.log("🔥 Firebase not ready, triggering force init...");
+      FirebaseForceInit.forceInitializeNow();
+      return false;
     }
     return !!(app && auth && db);
   } catch (error) {
@@ -468,10 +473,26 @@ export const isFirebaseReady = () => {
 
 // Lazy loading getters for Firebase services
 export const getDB = async () => {
+  // PRIORIDADE: Usar Force Init
+  const forceDb = FirebaseForceInit.getDb();
+  if (forceDb) {
+    console.log("🔥 Usando Firestore do Force Init");
+    return forceDb;
+  }
+
+  // Fallback
   return await ensureFirestore();
 };
 
 export const getAuthService = async () => {
+  // PRIORIDADE: Usar Force Init
+  const forceAuth = FirebaseForceInit.getAuth();
+  if (forceAuth) {
+    console.log("🔥 Usando Auth do Force Init");
+    return forceAuth;
+  }
+
+  // Fallback
   return await ensureAuth();
 };
 
