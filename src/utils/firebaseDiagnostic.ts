@@ -120,34 +120,36 @@ export class FirebaseDiagnostic {
   }
 
   static async forceInitialization() {
-    console.log("🔧 FORÇANDO INICIALIZAÇÃO DO FIREBASE");
+    console.log("🔧 VERIFICANDO STATUS DO FIREBASE");
 
     try {
-      // Executar diagnóstico primeiro
+      // Aguardar um pouco para evitar conflitos de inicialização
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Executar diagnóstico usando os serviços existentes
       const diagnostic = await this.runFullDiagnostic();
 
       if (diagnostic.overall) {
-        console.log("✅ Firebase já funcional após diagnóstico");
+        console.log("✅ Firebase já funcional");
         return true;
       }
 
-      // Tentar estratégias alternativas
-      console.log("🔄 Tentando estratégias alternativas...");
-
-      // Estratégia 1: Aguardar e tentar novamente
+      // Se não funcionou, aguardar mais tempo para inicialização
+      console.log("⏳ Aguardando mais tempo para inicialização...");
       await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const retryDiagnostic = await this.runFullDiagnostic();
 
       if (retryDiagnostic.overall) {
-        console.log("✅ Firebase funcional após retry");
+        console.log("✅ Firebase funcional após aguardar");
         return true;
       }
 
-      // Estratégia 2: Modo degradado mas funcional
-      console.log("📱 Configurando modo local funcional...");
+      // Modo local funcional
+      console.log("📱 Funcionando em modo local");
       return false;
     } catch (error) {
-      console.error("❌ Erro na inicialização forçada:", error);
+      console.error("❌ Erro no diagnóstico:", error);
       return false;
     }
   }
