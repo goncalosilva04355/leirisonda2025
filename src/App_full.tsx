@@ -1758,194 +1758,117 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Obras Atribuídas
+                          Todas as Obras
                         </h3>
-                        <p className="text-sm text-gray-500">Atribuídas a si</p>
+                        <p className="text-sm text-gray-500">No sistema</p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {currentUser
-                          ? (() => {
-                              const assignedWorks = works.filter((work) => {
-                                if (!work) return false;
-
-                                // Check if user is in assignedTo string (exact match or comma-separated list)
-                                const assignedToMatch =
-                                  work.assignedTo &&
-                                  work.assignedTo
-                                    .split(",")
-                                    .map((name) => name.trim().toLowerCase())
-                                    .includes(currentUser.name.toLowerCase());
-
-                                // Check if user is in assignedUsers array (exact match)
-                                const assignedUsersMatch =
-                                  work.assignedUsers?.some(
-                                    (user) =>
-                                      user.name &&
-                                      user.name.toLowerCase() ===
-                                        currentUser.name.toLowerCase(),
-                                  );
-
-                                return assignedToMatch || assignedUsersMatch;
-                              });
-
-                              // Simple debug logging for assigned works
-                              if (assignedWorks.length > 0) {
-                                console.log(
-                                  `✅ ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser.name}`,
-                                );
-                              }
-
-                              return assignedWorks.length;
-                            })()
-                          : 0}
+                        {works.length}
                       </div>
                     </div>
                   </button>
                 </div>
 
-                {/* Lista de Obras Atribuídas */}
-                {currentUser &&
-                  works.filter((work) => {
-                    if (!work) return false;
-
-                    // Check if user is in assignedTo string (exact match or comma-separated list)
-                    const assignedToMatch =
-                      work.assignedTo &&
-                      work.assignedTo
-                        .split(",")
-                        .map((name) => name.trim().toLowerCase())
-                        .includes(currentUser.name.toLowerCase());
-
-                    // Check if user is in assignedUsers array (exact match)
-                    const assignedUsersMatch = work.assignedUsers?.some(
-                      (user) =>
-                        user.name &&
-                        user.name.toLowerCase() ===
-                          currentUser.name.toLowerCase(),
-                    );
-
-                    return assignedToMatch || assignedUsersMatch;
-                  }).length > 0 && (
-                    <div className="bg-white rounded-lg shadow-sm">
-                      <div className="flex items-center p-4 border-b border-gray-100">
-                        <Building2 className="h-5 w-5 text-purple-600 mr-3" />
-                        <h2 className="text-lg font-semibold text-gray-900">
-                          Minhas Obras Atribuídas
-                        </h2>
-                      </div>
-                      <div className="p-4 space-y-3">
-                        {works
-                          .filter((work) => {
-                            if (!work) return false;
-
-                            // Check if user is in assignedTo string (exact match or comma-separated list)
-                            const assignedToMatch =
-                              work.assignedTo &&
-                              work.assignedTo
-                                .split(",")
-                                .map((name) => name.trim().toLowerCase())
-                                .includes(currentUser.name.toLowerCase());
-
-                            // Check if user is in assignedUsers array (exact match)
-                            const assignedUsersMatch = work.assignedUsers?.some(
-                              (user) =>
-                                user.name &&
-                                user.name.toLowerCase() ===
-                                  currentUser.name.toLowerCase(),
-                            );
-
-                            return assignedToMatch || assignedUsersMatch;
-                          })
-                          .map((work) => (
-                            <div
-                              key={work.id}
-                              className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 cursor-pointer hover:bg-purple-100 transition-colors"
-                              onClick={() => {
-                                setSelectedWork(work);
-                                setViewingWork(true);
-                              }}
-                            >
-                              <div className="flex items-start justify-between">
-                                <div className="flex items-start space-x-3">
-                                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                    <Building2 className="h-5 w-5 text-purple-600" />
-                                  </div>
-                                  <div>
-                                    <h3 className="font-semibold text-gray-900">
-                                      {work.title}
-                                    </h3>
-                                    <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                      <span>👤</span>
-                                      <span>
-                                        Atribu��da a:{" "}
-                                        {work.assignedUsers &&
-                                        work.assignedUsers.length > 0
-                                          ? work.assignedUsers
-                                              .map((u) => u.name)
-                                              .join(", ")
-                                          : work.assignedTo || "Não atribuída"}
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>📍</span>
-                                      <span>
-                                        Criada em:{" "}
-                                        {new Date(
-                                          work.createdAt,
-                                        ).toLocaleDateString("pt-PT")}
-                                      </span>
-                                    </div>
-                                    <span
-                                      className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
-                                        work.status === "in_progress"
-                                          ? "bg-yellow-100 text-yellow-800"
-                                          : work.status === "completed"
-                                            ? "bg-green-100 text-green-800"
-                                            : "bg-blue-100 text-blue-800"
-                                      }`}
-                                    >
-                                      {work.status}
-                                    </span>
-                                  </div>
+                {/* Lista de Todas as Obras */}
+                {works.length > 0 && (
+                  <div className="bg-white rounded-lg shadow-sm">
+                    <div className="flex items-center p-4 border-b border-gray-100">
+                      <Building2 className="h-5 w-5 text-purple-600 mr-3" />
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Todas as Obras
+                      </h2>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      {works.map((work) => (
+                        <div
+                          key={work.id}
+                          className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 cursor-pointer hover:bg-purple-100 transition-colors"
+                          onClick={() => {
+                            setSelectedWork(work);
+                            setViewingWork(true);
+                          }}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <Building2 className="h-5 w-5 text-purple-600" />
+                              </div>
+                              <div>
+                                <h3 className="font-semibold text-gray-900">
+                                  {work.title}
+                                </h3>
+                                <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                                  <span>👤</span>
+                                  <span>
+                                    Atribu��da a:{" "}
+                                    {work.assignedUsers &&
+                                    work.assignedUsers.length > 0
+                                      ? work.assignedUsers
+                                          .map((u) => u.name)
+                                          .join(", ")
+                                      : work.assignedTo || "Não atribuída"}
+                                  </span>
                                 </div>
-                                <div className="flex space-x-2">
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation(); // Prevent triggering the parent click
-                                      if (work.status !== "in_progress") {
-                                        dataSync.updateWork(work.id, {
-                                          status: "in_progress",
-                                        });
-                                      }
-                                    }}
-                                    className={`px-3 py-1 text-white text-sm rounded-lg transition-colors ${
-                                      work.status === "in_progress"
-                                        ? "bg-gray-400 cursor-not-allowed"
-                                        : "bg-purple-600 hover:bg-purple-700"
-                                    }`}
-                                    disabled={work.status === "in_progress"}
-                                  >
-                                    {work.status === "in_progress"
-                                      ? "Em Progresso"
-                                      : "Iniciar"}
-                                  </button>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation(); // Prevent triggering the parent click
-                                      setSelectedWork(work);
-                                      setViewingWork(true);
-                                    }}
-                                    className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded-lg transition-colors"
-                                  >
-                                    Ver Detalhes
-                                  </button>
+                                <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                                  <span>📍</span>
+                                  <span>
+                                    Criada em:{" "}
+                                    {new Date(
+                                      work.createdAt,
+                                    ).toLocaleDateString("pt-PT")}
+                                  </span>
                                 </div>
+                                <span
+                                  className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
+                                    work.status === "in_progress"
+                                      ? "bg-yellow-100 text-yellow-800"
+                                      : work.status === "completed"
+                                        ? "bg-green-100 text-green-800"
+                                        : "bg-blue-100 text-blue-800"
+                                  }`}
+                                >
+                                  {work.status}
+                                </span>
                               </div>
                             </div>
-                          ))}
-                      </div>
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent triggering the parent click
+                                  if (work.status !== "in_progress") {
+                                    dataSync.updateWork(work.id, {
+                                      status: "in_progress",
+                                    });
+                                  }
+                                }}
+                                className={`px-3 py-1 text-white text-sm rounded-lg transition-colors ${
+                                  work.status === "in_progress"
+                                    ? "bg-gray-400 cursor-not-allowed"
+                                    : "bg-purple-600 hover:bg-purple-700"
+                                }`}
+                                disabled={work.status === "in_progress"}
+                              >
+                                {work.status === "in_progress"
+                                  ? "Em Progresso"
+                                  : "Iniciar"}
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent triggering the parent click
+                                  setSelectedWork(work);
+                                  setViewingWork(true);
+                                }}
+                                className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded-lg transition-colors"
+                              >
+                                Ver Detalhes
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  )}
+                  </div>
+                )}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
@@ -5600,7 +5523,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Resumo executivo</li>
+                        <li>��� Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>• Dados consolidados</li>
                         <li>• Análise de performance</li>
