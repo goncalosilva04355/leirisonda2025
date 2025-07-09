@@ -438,8 +438,14 @@ const ensureAuth = async (): Promise<any> => {
   return auth;
 };
 
-// Basic initialization - just prepare the app
-firebaseInitPromise = ensureFirebaseApp();
+// Force complete Firebase initialization on startup
+firebaseInitPromise = (async () => {
+  console.log("🔥 Iniciando Firebase completo...");
+  await ensureFirebaseApp();
+  await ensureAuth();
+  await ensureFirestore();
+  console.log("🎯 Firebase inicialização completa");
+})();
 
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
