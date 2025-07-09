@@ -90,12 +90,16 @@ export const useAutoUserMigration = () => {
           (detail) =>
             detail.includes("FIRESTORE_NOT_ENABLED") ||
             detail.includes("Service firestore is not available") ||
-            detail.includes("Firestore service not available"),
+            detail.includes("Firestore service not available") ||
+            detail.includes("Firestore service not enabled"),
         );
 
         if (isFirestoreNotEnabled) {
           console.log(
-            "🔥 AUTO-MIGRATION: Firestore service not enabled - using local-only migration",
+            "🔥 AUTO-MIGRATION: Firestore service not enabled detected immediately - using local-only migration",
+          );
+          console.log(
+            "📱 AUTO-MIGRATION: This avoids individual user migration failures",
           );
         } else {
           console.warn(
