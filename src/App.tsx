@@ -550,7 +550,7 @@ function App() {
     console.log("��� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
-      console.log("�� Current notification permission:", permission);
+      console.log("���� Current notification permission:", permission);
       setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
@@ -1126,7 +1126,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç��es Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç��es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
 PRÓXIMAS AÇÕES:
@@ -4282,10 +4282,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           );
                           try {
                             const newWork = await addWork(workData);
-                            console.log(
-                              "✅ Work created successfully with ID:",
-                              newWork,
-                            );
+                            console.log("✅ Work created with ID:", newWork);
+
+                            // Simple success message without notifications
+                            alert(`Obra "${workTitle}" criada com sucesso!`);
                           } catch (error) {
                             console.error("❌ Error creating work:", error);
                             alert(
@@ -4294,13 +4294,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             return;
                           }
 
-                          // Send notifications to all assigned users
-                          assignedUsers.forEach((assignedUser) => {
-                            sendWorkAssignmentNotification(
-                              workTitle,
-                              assignedUser.name,
-                            );
-                          });
+                          // Notifications removed to prevent instability
 
                           // Always capture bore data from the cyan section
                           const furosSection =
@@ -6049,7 +6043,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Crie relatórios com filtros específicos
+                        Crie relat��rios com filtros específicos
                       </p>
                       <div className="space-y-2">
                         <label className="flex items-center">
