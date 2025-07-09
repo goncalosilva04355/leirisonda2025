@@ -84,6 +84,7 @@ import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
 import { FirebaseStatusIndicator } from "./components/FirebaseStatusIndicator";
 import { FirebaseReactivateButton } from "./components/FirebaseReactivateButton";
+import { MigrationProgress } from "./components/MigrationProgress";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
@@ -6552,7 +6553,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Informações relevantes sobre o cliente, preferências, hist��rico, etc."
+                            placeholder="Informações relevantes sobre o cliente, preferências, histórico, etc."
                           />
                         </div>
                       </div>
@@ -9066,7 +9067,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.flowRate
                                   ? `${selectedWork.flowRate} m³/h`
-                                  : "Não especificado"}
+                                  : "N��o especificado"}
                               </p>
                             </div>
                             <div>
