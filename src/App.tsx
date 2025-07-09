@@ -46,7 +46,7 @@ import "./utils/clearModalStates";
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
-import { AutoSyncProvider } from "./components/AutoSyncProvider";
+import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManager } from "./components/InstantSyncManager";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
@@ -3574,7 +3574,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usuários Atribuídos ({users.length} utilizadores
+                            Usu��rios Atribuídos ({users.length} utilizadores
                             disponíveis)
                           </label>
                           {(() => {
@@ -5258,7 +5258,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�����es, recomendações, próxima manutenção..."
+                          placeholder="Observaç������es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -6769,7 +6769,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <span className="font-medium">
-                                  Atribu����da a:
+                                  Atribu������da a:
                                 </span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
@@ -8542,7 +8542,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const syncInterval = syncManager.getSafeInterval();
 
   return (
-    <AutoSyncProvider
+    <AutoSyncProviderSafe
       enabled={true}
       syncInterval={60000}
       collections={["users", "pools", "maintenance", "works", "clients"]}
@@ -9250,7 +9250,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* User Restore Notification */}
         <UserRestoreNotification />
       </InstantSyncManager>
-    </AutoSyncProvider>
+    </AutoSyncProviderSafe>
   );
 }
 
