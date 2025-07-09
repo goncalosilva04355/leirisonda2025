@@ -6766,8 +6766,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span className="font-medium">Local:</span>{" "}
                                 <button
                                   onClick={() => {
-                                    if (work?.location) {
-                                      handleAddressClick(work.location);
+                                    if (work?.address || work?.location) {
+                                      handleAddressClick(
+                                        work.address || work.location,
+                                      );
                                     }
                                   }}
                                   className={`text-xs ${
@@ -6777,7 +6779,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  ��� {work.location}
+                                  ��� {work.address || work.location}
                                 </button>
                               </div>
                               <div>
@@ -9056,7 +9058,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </label>
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.flowRate
-                                  ? `${selectedWork.flowRate} m³/h`
+                                  ? `${selectedWork.flowRate} m��/h`
                                   : "Não especificado"}
                               </p>
                             </div>
