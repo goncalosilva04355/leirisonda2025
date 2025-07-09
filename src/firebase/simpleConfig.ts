@@ -273,27 +273,25 @@ export function getFirebaseStatus() {
   };
 }
 
-// COMPLETELY DISABLED: This file is replaced by unifiedSafeFirebase.ts
-console.log(
-  "🛑 SIMPLECONFIG COMPLETELY DISABLED - USE UnifiedSafeFirebase INSTEAD",
-);
+// TEMPORARY RESTORE: Basic functionality to prevent white screen
+console.log("🔄 simpleConfig restored with safe fallbacks");
 
-// Redirect all functions to throw errors so we know if anything still uses this
+// Safe fallback functions that don't break the app
 export async function getFirebaseDB(): Promise<any> {
-  throw new Error(
-    "❌ simpleConfig.ts is DISABLED - use UnifiedSafeFirebase instead",
-  );
+  console.log("⚠️ simpleConfig.getFirebaseDB() called - returning null safely");
+  return null;
 }
 
 export async function getFirebaseAuth(): Promise<any> {
-  throw new Error(
-    "❌ simpleConfig.ts is DISABLED - use UnifiedSafeFirebase instead",
+  console.log(
+    "⚠️ simpleConfig.getFirebaseAuth() called - returning null safely",
   );
+  return null;
 }
 
 export function isFirebaseInitialized(): boolean {
-  console.error(
-    "❌ simpleConfig.ts is DISABLED - use UnifiedSafeFirebase instead",
+  console.log(
+    "⚠️ simpleConfig.isFirebaseInitialized() called - returning false safely",
   );
   return false;
 }
@@ -305,15 +303,20 @@ export function getFirebaseStatus() {
     db: false,
     ready: false,
     initializing: false,
-    disabled: true,
-    message: "Use UnifiedSafeFirebase instead",
+    mode: "safe-fallback",
   };
 }
 
-// Block all other exports
 export async function getFirebaseApp() {
+  console.log(
+    "⚠️ simpleConfig.getFirebaseApp() called - returning null safely",
+  );
   return null;
 }
+
 export async function waitForFirebaseInit() {
+  console.log(
+    "⚠️ simpleConfig.waitForFirebaseInit() called - returning false safely",
+  );
   return false;
 }
