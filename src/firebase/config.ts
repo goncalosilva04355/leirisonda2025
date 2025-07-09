@@ -1,18 +1,28 @@
-// CONFIGURAÇÃO FIREBASE LIMPA
-// Apenas o essencial, sem complicações
+// Configuração Firebase limpa - baseada na configuração oficial
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-export const firebaseConfig = {
-  // Cole aqui as suas configurações Firebase
-  apiKey: "COLE_AQUI_O_SEU_API_KEY",
-  authDomain: "COLE_AQUI_O_SEU_AUTH_DOMAIN",
-  projectId: "COLE_AQUI_O_SEU_PROJECT_ID",
-  storageBucket: "COLE_AQUI_O_SEU_STORAGE_BUCKET",
-  messagingSenderId: "COLE_AQUI_O_SEU_MESSAGING_SENDER_ID",
-  appId: "COLE_AQUI_O_SEU_APP_ID",
-  measurementId: "COLE_AQUI_O_SEU_MEASUREMENT_ID",
+// Configuração Firebase oficial
+const firebaseConfig = {
+  apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+  authDomain: "leirisonda-16f8b.firebaseapp.com",
+  projectId: "leirisonda-16f8b",
+  storageBucket: "leirisonda-16f8b.firebasestorage.app",
+  messagingSenderId: "540456875574",
+  appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+  measurementId: "G-R9W43EHH2C",
 };
 
-// Exports vazios por agora - vamos configurar passo a passo
-export let app: any = null;
-export let db: any = null;
-export let auth: any = null;
+// Inicializar Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+// Inicializar serviços
+export const db = getFirestore(app);
+export const auth = getAuth(app);
+
+// Exports
+export { app, analytics };
+export default app;
