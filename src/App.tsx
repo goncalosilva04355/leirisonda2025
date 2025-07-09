@@ -160,11 +160,54 @@ function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
-  // Reativar Firebase com melhor estabilidade
-  const universalSync = useUniversalDataSync();
+  // EMERGENCY STABLE VERSION - No complex hooks
+  const [works, setWorks] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("works") || "[]");
+    } catch {
+      return [];
+    }
+  });
 
-  // Data sync hook - versão segura para evitar erros
-  const dataSync = useDataSyncSafe();
+  const [maintenance, setMaintenance] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("maintenance") || "[]");
+    } catch {
+      return [];
+    }
+  });
+
+  const [pools, setPools] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("pools") || "[]");
+    } catch {
+      return [];
+    }
+  });
+
+  const [clients, setClients] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("clients") || "[]");
+    } catch {
+      return [];
+    }
+  });
+
+  // Minimal compatibility object
+  const universalSync = {
+    obras: works,
+    manutencoes: maintenance,
+    piscinas: pools,
+    clientes: clients,
+    syncStatus: "local",
+  };
+
+  const dataSync = {
+    works: works,
+    maintenance: maintenance,
+    pools: pools,
+    clients: clients,
+  };
 
   // Backup and complex initialization temporarily disabled for stability
 
