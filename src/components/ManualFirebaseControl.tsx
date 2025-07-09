@@ -30,21 +30,37 @@ export function ManualFirebaseControl() {
     setTestResults(null);
 
     try {
-      console.log("🚀 Iniciando Firebase com UnifiedSafeFirebase...");
-      const success = await UnifiedSafeFirebase.initialize();
+      console.log("🚀 Iniciando Firebase com UltimateSimpleFirebase...");
+      const success = await UltimateSimpleFirebase.simpleInit();
 
       updateStatus();
 
       if (success) {
-        console.log("✅ Inicialização UnifiedSafe bem-sucedida");
+        console.log("✅ Inicialização UltimateSimple bem-sucedida");
 
         // Executar teste de conectividade
         console.log("🧪 Executando teste de conectividade...");
-        const connectivity = await UnifiedSafeFirebase.testConnectivity();
-        setTestResults(connectivity);
+        const firestoreWorks = await UltimateSimpleFirebase.testFirestore();
+
+        setTestResults({
+          canRead: firestoreWorks,
+          canWrite: firestoreWorks,
+          error: firestoreWorks ? undefined : "Firestore não funcional",
+        });
+      } else {
+        setTestResults({
+          canRead: false,
+          canWrite: false,
+          error: "Inicialização falhou",
+        });
       }
     } catch (error) {
-      console.error("❌ Erro na inicialização UnifiedSafe:", error);
+      console.error("❌ Erro na inicialização UltimateSimple:", error);
+      setTestResults({
+        canRead: false,
+        canWrite: false,
+        error: `Erro: ${error}`,
+      });
     } finally {
       setIsInitializing(false);
     }
