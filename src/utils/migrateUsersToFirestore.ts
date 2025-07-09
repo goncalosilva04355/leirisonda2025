@@ -514,6 +514,23 @@ export class MigrateUsersToFirestore {
           // Small delay between migrations to avoid rate limits
           await new Promise((resolve) => setTimeout(resolve, 100));
         } catch (error: any) {
+          if (error.message === "FIRESTORE_NOT_ENABLED") {
+            console.log(
+              `🔄 Firestore not enabled, triggering immediate local fallback...`,
+            );
+
+            // Return special result to trigger local fallback
+            return {
+              success: false,
+              migrated: 0,
+              skipped: 0,
+              failed: allUsers.length,
+              details: [
+                "FIRESTORE_NOT_ENABLED - Will use local migration fallback",
+              ],
+            };
+          }
+
           failed++;
           details.push(
             `❌ Exception migrating ${user.email}: ${error.message}`,
