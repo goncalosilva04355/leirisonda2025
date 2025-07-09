@@ -130,7 +130,7 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     };
 
     setConfig(defaultConfig);
-    saveFirebaseConfig(defaultConfig);
+    // Default config applied automatically
     setSuccess(true);
     setError("");
   };
