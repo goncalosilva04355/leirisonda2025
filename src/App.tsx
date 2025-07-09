@@ -1782,7 +1782,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
                   style={{
-                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fe6dd131c94c1407994895f6f7cf7f1c7?format=webp&width=800')`,
+                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F4aa5ed953548445997f9d2fcbd4d2e2b?format=webp&width=800')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
