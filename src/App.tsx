@@ -94,14 +94,7 @@ import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
-import { FirebaseStatusIndicator } from "./components/FirebaseStatusIndicator";
-import { FirebaseReactivateButton } from "./components/FirebaseReactivateButton";
-import { MigrationProgress } from "./components/MigrationProgress";
-import { FirebaseOnlyTest } from "./components/FirebaseOnlyTest";
-import { FirebaseStorageStatus } from "./components/FirebaseStorageStatus";
-import { FirestoreSetupGuide } from "./components/FirestoreSetupGuide";
-import { FirebaseErrorMonitor } from "./components/FirebaseErrorMonitor";
-import { ManualFirebaseControl } from "./components/ManualFirebaseControl";
+// Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
@@ -1035,7 +1028,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -3211,7 +3204,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <BarChart3 className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção agendada
+                        Nenhuma manutenç��o agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
                         As futuras manutenções aparecerão aqui quando forem
@@ -7889,7 +7882,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Custo (€)
+                          Custo (���)
                         </label>
                         <input
                           type="number"
