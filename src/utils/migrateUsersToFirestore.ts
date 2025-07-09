@@ -94,6 +94,8 @@ export class MigrateUsersToFirestore {
     user: LocalUser | MockUser,
   ): Promise<boolean> {
     try {
+      console.log(`🔄 Attempting to migrate user: ${user.email}`);
+
       const { getDB } = await import("../firebase/config");
       const db = await getDB();
 
@@ -103,47 +105,140 @@ export class MigrateUsersToFirestore {
 
       const { doc, setDoc } = await import("firebase/firestore");
 
-      // Convert user to Firestore format
+      // Validate user data first
+      if (!user.email || !user.name) {
+        throw new Error("Missing required user data (email or name)");
+      }
+
+      // Convert user to Firestore format with validation
       let firestoreUser;
+      let documentId;
 
       if ("uid" in user) {
         // MockUser format
+        documentId = this.sanitizeDocumentId(user.uid);
         firestoreUser = {
           uid: user.uid,
-          email: user.email,
-          name: user.name,
-          role: user.role,
+          email: String(user.email).trim(),
+          name: String(user.name).trim(),
+          role: String(user.role),
           permissions: this.getDefaultPermissions(user.role),
-          active: user.active,
-          createdAt: user.createdAt,
+          active: Boolean(user.active),
+          createdAt: String(user.createdAt || new Date().toISOString()),
           migratedFrom: "mock-auth",
           migratedAt: new Date().toISOString(),
         };
       } else {
         // LocalUser format
         const convertedRole = this.convertLocalRole(user.role);
+        documentId = this.sanitizeDocumentId(user.id);
         firestoreUser = {
           uid: user.id,
-          email: user.email,
-          name: user.name,
+          email: String(user.email).trim(),
+          name: String(user.name).trim(),
           role: convertedRole,
           permissions:
             user.permissions || this.getDefaultPermissions(convertedRole),
-          active: user.active,
-          createdAt: user.createdAt,
+          active: Boolean(user.active),
+          createdAt: String(user.createdAt || new Date().toISOString()),
           migratedFrom: "local-storage",
           migratedAt: new Date().toISOString(),
         };
       }
 
-      // Use email as document ID for consistency
-      const userDocRef = doc(db, "users", firestoreUser.uid);
+      // Ensure document ID is valid
+      if (!documentId || documentId.length === 0) {
+        documentId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        console.warn(
+          `Generated new document ID for ${user.email}: ${documentId}`,
+        );
+      }
+
+      console.log(
+        `📝 Creating document with ID: ${documentId} for ${user.email}`,
+      );
+
+      // Try to create the document
+      const userDocRef = doc(db, "users", documentId);
+
+      // Test if we can write to Firestore first
+      console.log(`🧪 Testing Firestore write access...`);
+      const testData = { test: true, timestamp: new Date().toISOString() };
+      const testDocRef = doc(db, "__migration_test__", "test");
+      await setDoc(testDocRef, testData);
+      console.log(`✅ Firestore write test successful`);
+
+      // Now migrate the actual user
+      console.log(`💾 Writing user data to Firestore...`);
       await setDoc(userDocRef, firestoreUser);
 
-      console.log(`✅ Migrated user ${user.email} to Firestore`);
+      console.log(`✅ Successfully migrated user ${user.email} to Firestore`);
       return true;
-    } catch (error) {
+    } catch (error: any) {
       console.error(`❌ Failed to migrate user ${user.email}:`, error);
+      console.error(`Error code: ${error.code}`);
+      console.error(`Error message: ${error.message}`);
+      console.error(`Full error:`, error);
+
+      // Try alternative migration strategies
+      return await this.tryAlternativeMigration(user);
+    }
+  }
+
+  /**
+   * Sanitize document ID for Firestore
+   */
+  private static sanitizeDocumentId(id: string): string {
+    if (!id) return "";
+
+    // Remove invalid characters and ensure valid Firestore document ID
+    return String(id)
+      .replace(/[\/\s\.\#\$\[\]]/g, "_") // Replace invalid chars with underscore
+      .substring(0, 1500); // Firestore limit
+  }
+
+  /**
+   * Try alternative migration strategies if main method fails
+   */
+  private static async tryAlternativeMigration(
+    user: LocalUser | MockUser,
+  ): Promise<boolean> {
+    try {
+      console.log(`🔄 Trying alternative migration for ${user.email}...`);
+
+      const { getDB } = await import("../firebase/config");
+      const db = await getDB();
+
+      if (!db) {
+        return false;
+      }
+
+      const { doc, setDoc } = await import("firebase/firestore");
+
+      // Create minimal user object
+      const minimalUser = {
+        email: String(user.email).trim(),
+        name: String(user.name).trim(),
+        role: "uid" in user ? user.role : this.convertLocalRole(user.role),
+        active: true,
+        createdAt: new Date().toISOString(),
+        migratedFrom: "alternative-method",
+        migratedAt: new Date().toISOString(),
+      };
+
+      // Use email-based document ID
+      const emailId = user.email.replace(/[\.@]/g, "_");
+      const userDocRef = doc(db, "users", emailId);
+
+      await setDoc(userDocRef, minimalUser);
+
+      console.log(`✅ Alternative migration successful for ${user.email}`);
+      return true;
+    } catch (error: any) {
+      console.error(
+        `❌ Alternative migration also failed for ${user.email}:`,
+        error,
+      );
       return false;
     }
   }
