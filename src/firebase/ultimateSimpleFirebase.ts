@@ -135,4 +135,15 @@ export class UltimateSimpleFirebase {
   }
 }
 
-console.log("🟢 UltimateSimpleFirebase carregado (pronto para uso manual)");
+// Auto-initialize Firebase silently in background
+if (typeof window !== "undefined") {
+  setTimeout(async () => {
+    console.log("🔇 Firebase inicializing silently in background...");
+    const success = await UltimateSimpleFirebase.simpleInit();
+    if (success) {
+      console.log("🔇 Firebase ready silently");
+    } else {
+      console.log("🔇 Firebase partially ready - app will work in local mode");
+    }
+  }, 3000); // Start after 3 seconds to avoid startup conflicts
+}
