@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Settings } from "lucide-react";
+import { Settings, Bug } from "lucide-react";
+import LoginDebugHelper from "../components/LoginDebugHelper";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -17,6 +18,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     password: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
+  const [showDiagnostic, setShowDiagnostic] = useState(false);
 
   // Load saved credentials from sessionStorage for "remember me" functionality
   useEffect(() => {
