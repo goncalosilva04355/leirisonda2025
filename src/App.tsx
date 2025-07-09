@@ -66,7 +66,7 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSync } from "./hooks/useAutoSync";
+import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
@@ -300,8 +300,8 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
-  const autoSyncData = useAutoSync();
-  const { syncStatus: autoSyncStatus, isAutoSyncing } = autoSyncData;
+  const autoSyncData = useAutoSyncSafe();
+  const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
   // Keep local users state for user management
