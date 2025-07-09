@@ -23,24 +23,64 @@ const analytics = getAnalytics(app);
 let db: any = null;
 let auth: any = null;
 
+// Inicializar Firestore de forma lazy
+const initFirestore = () => {
+  if (!db) {
+    try {
+      db = getFirestore(app);
+      console.log("✅ Firestore inicializado com sucesso");
+    } catch (error) {
+      console.error("❌ Erro ao inicializar Firestore:", error);
+      return null;
+    }
+  }
+  return db;
+};
+
+// Inicializar Auth de forma lazy
+const initAuth = () => {
+  if (!auth) {
+    try {
+      auth = getAuth(app);
+      console.log("✅ Firebase Auth inicializado com sucesso");
+    } catch (error) {
+      console.error("❌ Erro ao inicializar Auth:", error);
+      return null;
+    }
+  }
+  return auth;
+};
+
 // Função para verificar se Firebase está pronto
 export const isFirebaseReady = (): boolean => {
-  return !!(app && db && auth);
+  return !!(app && initFirestore() && initAuth());
 };
 
 // Função para aguardar inicialização (compatibilidade)
 export const waitForFirebaseInit = async (): Promise<boolean> => {
-  return isFirebaseReady();
+  try {
+    initFirestore();
+    initAuth();
+    return !!(db && auth);
+  } catch (error) {
+    console.error("Erro na inicialização:", error);
+    return false;
+  }
 };
 
 // Funções para obter serviços (compatibilidade)
 export const getDB = async () => {
-  return db;
+  return initFirestore();
 };
 
 export const getAuthService = async () => {
-  return auth;
+  return initAuth();
 };
+
+// Exports dos serviços com lazy loading
+export { app, analytics };
+export { db, auth };
+export default app;
 
 // Exports
 export { app, analytics };
