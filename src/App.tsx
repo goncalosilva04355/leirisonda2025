@@ -289,9 +289,34 @@ function App() {
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
   );
 
-  // Funções de compatibilidade
+  // Funções de compatibilidade simplificadas
   const addPool = (data: any) => addPiscina(data);
-  const addWork = (data: any) => addObra(data);
+  const addWork = async (data: any) => {
+    try {
+      // Simple localStorage save to prevent crashes
+      const works = JSON.parse(localStorage.getItem("works") || "[]");
+      const newWork = {
+        ...data,
+        id: data.id || Date.now().toString(),
+        createdAt: data.createdAt || new Date().toISOString(),
+      };
+
+      // Check for duplicates
+      const exists = works.some((w: any) => w.id === newWork.id);
+      if (!exists) {
+        works.push(newWork);
+        localStorage.setItem("works", JSON.stringify(works));
+        console.log("✅ Work saved to localStorage:", newWork.id);
+        return newWork.id;
+      } else {
+        console.log("⚠️ Work already exists:", newWork.id);
+        return newWork.id;
+      }
+    } catch (error) {
+      console.error("❌ Error in addWork:", error);
+      throw error;
+    }
+  };
   const addMaintenance = (data: any) => addManutencao(data);
   const addClient = (data: any) => addCliente(data);
   const syncWithFirebase = () => forceSyncAll();
@@ -1496,7 +1521,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("��️ Opening Google Maps:", mapsUrl);
+      console.log("���️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -2705,7 +2730,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">����</div>
+                                  <div className="text-gray-400 mb-2">
+                                    �����
+                                  </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -3239,7 +3266,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ���‍🔧 {maint.technician}
+                                ����‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -5868,7 +5895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>• Estados de progresso</li>
+                        <li>��� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -7588,7 +7615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenção">Em Manutenç��o</option>
+                          <option value="Em Manutenç��o">Em Manutenç��o</option>
                         </select>
                       </div>
                       <div>
