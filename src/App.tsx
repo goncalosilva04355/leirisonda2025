@@ -80,9 +80,6 @@ import UserMigrationIndicator from "./components/UserMigrationIndicator";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
-// Teste de conectividade Firebase
-import "./utils/testFirebase";
-
 // Production users - only real admin account
 const initialUsers = [
   {
@@ -590,7 +587,7 @@ function App() {
     console.log("��� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
-      console.log("���� Current notification permission:", permission);
+      console.log("������ Current notification permission:", permission);
       setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
@@ -7959,7 +7956,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const materialsUsed = (inputs[9] as HTMLInputElement)
                             .value; // Materiais Utilizados
                           const observations = (inputs[10] as HTMLInputElement)
-                            .value; // Observações
+                            .value; // Observaç��es
 
                           dataSync.updateMaintenance(editingMaintenance.id, {
                             scheduledDate: scheduledDate
