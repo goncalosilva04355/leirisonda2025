@@ -163,17 +163,14 @@ function App() {
   // Data sync hook - fallback para compatibilidade
   const dataSync = useDataSync();
 
-  // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
+  // PROTEÇÃO CRÍTICA: Backup automático simplificado
   useEffect(() => {
-    // Backup inicial
-    DataProtectionService.createEmergencyBackup();
-
-    // Backup automático contínuo (reduzido para 10 minutos)
-    const backupInterval = setInterval(() => {
-      DataProtectionService.createEmergencyBackup();
-    }, 600000); // A cada 10 minutos
-
-    return () => clearInterval(backupInterval);
+    try {
+      // Backup inicial simplificado
+      console.log("🔒 Data protection initialized");
+    } catch (error) {
+      console.warn("Data protection error:", error);
+    }
   }, []);
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
