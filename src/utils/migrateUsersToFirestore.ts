@@ -403,18 +403,19 @@ export class MigrateUsersToFirestore {
     try {
       console.log("🔄 Starting user migration to Firestore...");
 
-      // Test connectivity first
+      // Test connectivity first (but don't abort if it fails)
       const isConnected = await this.testFirestoreConnectivity();
       if (!isConnected) {
-        return {
-          success: false,
-          migrated: 0,
-          skipped: 0,
-          failed: 0,
-          details: [
-            "❌ Firestore connectivity test failed - migration aborted",
-          ],
-        };
+        console.log(
+          "⚠️ Connectivity test failed, but proceeding with migration anyway...",
+        );
+        console.log(
+          "🔧 Migration will attempt to initialize Firebase during the process",
+        );
+      } else {
+        console.log(
+          "✅ Connectivity test passed, proceeding with migration...",
+        );
       }
 
       // Get all local users
