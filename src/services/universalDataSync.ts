@@ -284,33 +284,21 @@ class UniversalDataSyncService {
     // Load initial data
     refreshAllData();
 
-    // Listen for custom storage events (immediate updates)
-    const handleDataChange = (event: CustomEvent) => {
-      console.log("📱 Dados locais alterados:", event.detail);
-      refreshAllData();
-    };
-
-    window.addEventListener(
-      "localDataChanged",
-      handleDataChange as EventListener,
-    );
-
-    // Also listen for native storage events (for other tabs)
+    // Only listen for native storage events (more stable)
     const handleStorageChange = (event: StorageEvent) => {
       if (
         event.key &&
         ["works", "maintenance", "pools", "clients"].includes(event.key)
       ) {
-        console.log("📱 Storage alterado em outra aba:", event.key);
+        console.log("📱 Storage alterado:", event.key);
         refreshAllData();
       }
     };
 
     window.addEventListener("storage", handleStorageChange);
 
-    // Disable automatic polling to prevent duplicate data issues
-    // Only use event-based updates for better reliability
-    // const pollInterval = setInterval(refreshAllData, 30000);
+    // Use minimal polling as backup (longer interval for stability)
+    const pollInterval = setInterval(refreshAllData, 10000); // 10 seconds
 
     // Return cleanup function
     return () => {
