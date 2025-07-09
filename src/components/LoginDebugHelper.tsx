@@ -14,6 +14,7 @@ import UserSyncManager from "../utils/userSyncManager";
 import FirebaseStatusChecker from "./FirebaseStatusChecker";
 import EmergencyFirebaseFix from "./EmergencyFirebaseFix";
 import FirestoreActivationGuide from "./FirestoreActivationGuide";
+import FirestoreVerification from "./FirestoreVerification";
 
 export const LoginDebugHelper: React.FC = () => {
   const [testEmail, setTestEmail] = useState("");
