@@ -97,13 +97,22 @@ export class UserSyncManager {
   private static convertRoleReverse(
     mockRole: string,
   ): "user" | "admin" | "super_admin" {
-    switch (mockRole) {
-      case "super_admin":
-        return "super_admin";
-      case "manager":
-        return "admin";
-      default:
+    try {
+      if (!mockRole || typeof mockRole !== "string") {
         return "user";
+      }
+
+      switch (mockRole.toLowerCase()) {
+        case "super_admin":
+          return "super_admin";
+        case "manager":
+          return "admin";
+        default:
+          return "user";
+      }
+    } catch (error) {
+      console.warn("Error converting mock role:", error);
+      return "user";
     }
   }
 
