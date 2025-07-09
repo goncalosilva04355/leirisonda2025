@@ -59,8 +59,8 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 
-// Create test user for yrzamr01@gmail.com
-import "./utils/createTestUser";
+// Force create Yuri user
+import "./utils/forceCreateYuri";
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
