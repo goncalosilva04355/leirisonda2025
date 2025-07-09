@@ -115,7 +115,7 @@ export function ManualFirebaseControl() {
             >
               {isInitializing
                 ? "🔄 Inicializando..."
-                : "🚀 Ativar Sistema Unificado"}
+                : "🟢 Inicializar Simples"}
             </button>
           )}
 
