@@ -73,6 +73,7 @@ import { ForceInitialization } from "./utils/forceInitialization";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
 import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
+import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
@@ -169,6 +170,9 @@ function App() {
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
+
+  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
+  const userMigration = useAutoUserMigration();
 
   // Backup and complex initialization temporarily disabled for stability
 
@@ -1085,7 +1089,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -5868,7 +5872,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç��es
+                        <strong>{maintenance.length}</strong> manutenç����es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -5898,7 +5902,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Projetos e construções
+                          Projetos e construç��es
                         </p>
                       </div>
                     </div>
