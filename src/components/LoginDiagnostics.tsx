@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import UserSyncManager from "../utils/userSyncManager";
 import UserCreationHelper from "./UserCreationHelper";
+import LoginDebugHelper from "./LoginDebugHelper";
 
 interface LoginDiagnosticsProps {
   isOpen: boolean;
@@ -429,6 +430,11 @@ export const LoginDiagnostics: React.FC<LoginDiagnosticsProps> = ({
                   />
                 </div>
               )}
+
+              {/* Advanced Debug Helper */}
+              <div className="mt-6">
+                <LoginDebugHelper />
+              </div>
             </div>
           )}
 
