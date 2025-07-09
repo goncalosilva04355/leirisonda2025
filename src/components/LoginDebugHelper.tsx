@@ -10,6 +10,7 @@ import {
 import { authService } from "../services/authService";
 import { mockAuthService } from "../services/mockAuthService";
 import UserSyncManager from "../utils/userSyncManager";
+import FirebaseStatusChecker from "./FirebaseStatusChecker";
 
 export const LoginDebugHelper: React.FC = () => {
   const [testEmail, setTestEmail] = useState("");
@@ -191,6 +192,9 @@ export const LoginDebugHelper: React.FC = () => {
       </div>
 
       <div className="space-y-4">
+        {/* Firebase Status Check */}
+        <FirebaseStatusChecker />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
