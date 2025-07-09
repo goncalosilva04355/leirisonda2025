@@ -133,15 +133,31 @@ export class UserSyncManager {
       });
 
       const mockUser: MockUser = {
-        uid: localUser.id.startsWith("mock-")
-          ? localUser.id
-          : `mock-${localUser.id}`,
-        email: localUser.email,
-        password: localUser.password || "",
-        name: localUser.name || "",
-        role: this.convertRole(localUser.role || "user"),
+        uid:
+          localUser.id &&
+          typeof localUser.id === "string" &&
+          localUser.id.startsWith("mock-")
+            ? localUser.id
+            : `mock-${localUser.id || "unknown"}`,
+        email: localUser.email || "",
+        password:
+          localUser.password && typeof localUser.password === "string"
+            ? localUser.password
+            : "",
+        name:
+          localUser.name && typeof localUser.name === "string"
+            ? localUser.name
+            : "",
+        role: this.convertRole(
+          localUser.role && typeof localUser.role === "string"
+            ? localUser.role
+            : "user",
+        ),
         active: localUser.active !== false,
-        createdAt: localUser.createdAt || new Date().toISOString(),
+        createdAt:
+          localUser.createdAt && typeof localUser.createdAt === "string"
+            ? localUser.createdAt
+            : new Date().toISOString(),
       };
 
       if (existingIndex >= 0) {
