@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CheckCircle, XCircle, RefreshCw, AlertCircle } from "lucide-react";
+import FirestoreActivationSteps from "./FirestoreActivationSteps";
 
 interface FirestoreStatus {
   isAvailable: boolean;
@@ -250,27 +251,10 @@ export const FirestoreVerification: React.FC = () => {
         )}
       </div>
 
-      {/* Instructions for fixing */}
+      {/* Detailed activation guide when Firestore is not working */}
       {!status.canWrite && (
-        <div className="mt-4 p-3 bg-blue-100 border border-blue-200 rounded text-sm">
-          <strong>💡 Para ativar o Firestore:</strong>
-          <ol className="mt-2 ml-4 list-decimal space-y-1">
-            <li>
-              Vá ao{" "}
-              <a
-                href="https://console.firebase.google.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline"
-              >
-                Firebase Console
-              </a>
-            </li>
-            <li>Selecione o projeto "leirisonda-16f8b"</li>
-            <li>Clique em "Firestore Database" no menu lateral</li>
-            <li>Clique em "Create database"</li>
-            <li>Escolha modo "Start in test mode" para começar</li>
-          </ol>
+        <div className="mt-4">
+          <FirestoreActivationSteps />
         </div>
       )}
     </div>
