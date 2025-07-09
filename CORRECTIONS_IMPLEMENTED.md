@@ -238,7 +238,7 @@ useEffect(() => {
 ### **2. Teste de Limpeza de Dados:**
 
 ```
-1. Login como Super Admin (goncalosfonseca@gmail.com)
+1. Login como Super Admin (gongonsilva@gmail.com)
 2. Ir para Configurações
 3. Procurar seção "Gestão de Dados"
 4. Verificar contadores de registos

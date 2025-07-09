@@ -46,7 +46,7 @@
 
 ### **Login Ativo:** ✅
 
-- Email: `goncalosfonseca@gmail.com`
+- Email: `gongonsilva@gmail.com`
 - Password: `19867gsf`
 
 ### **Firebase:**
