@@ -1300,7 +1300,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     if (Notification.permission === "granted") {
       showNotification(
         "Teste de Notificação",
-        "As notificaç����es estão a funcionar corretamente!",
+        "As notificaç��es estão a funcionar corretamente!",
         "test",
       );
     } else {
@@ -2867,7 +2867,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr��xima manutenção:{" "}
+                                Pr��xima manuten��ão:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -6639,7 +6639,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                     >
                       Pendentes (
-                      {works.filter((w) => w.status === "pending").length})
+                      {
+                        works.filter(
+                          (w) =>
+                            w.status === "pendente" || w.status === "pending",
+                        ).length
+                      }
+                      )
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("in_progress")}
@@ -6798,7 +6804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <span className="font-medium">
-                                  Atribu��������da a:
+                                  Atribu������da a:
                                 </span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
