@@ -155,19 +155,6 @@ export class FirebaseDiagnostic {
   }
 }
 
-// Auto-executar diagnóstico quando importado
-if (typeof window !== "undefined") {
-  // Executar após um delay para não interferir com o startup
-  setTimeout(() => {
-    FirebaseDiagnostic.forceInitialization().then((success) => {
-      if (success) {
-        console.log("🔥 Firebase Status: ATIVO");
-        // Disparar evento para componentes que aguardam Firebase
-        window.dispatchEvent(new CustomEvent("firebaseReady"));
-      } else {
-        console.log("📱 Firebase Status: MODO LOCAL");
-        window.dispatchEvent(new CustomEvent("firebaseLocalMode"));
-      }
-    });
-  }, 1000);
-}
+// Diagnóstico disponível para uso manual - não executa automaticamente
+// Para executar manualmente: FirebaseDiagnostic.forceInitialization()
+console.log("🔧 Firebase Diagnostic ready for manual execution");
