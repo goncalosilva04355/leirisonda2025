@@ -3710,7 +3710,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    👤 {assignedUser.name}
+                                    �� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -5863,7 +5863,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten��������es</li>
+                        <li>• Histórico de manuten������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -5897,7 +5897,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>📋 Trabalhos realizados</li>
+                        <li>�� Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
@@ -6598,11 +6598,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Obras
+                          Obras ({works.length})
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gestão de obras e projetos
                         </p>
+                        {(() => {
+                          console.log(
+                            "📋 OBRAS CARREGADAS:",
+                            works.length,
+                            works,
+                          );
+                          return null;
+                        })()}
                       </div>
                     </div>
                     {hasPermission("obras", "create") && (
@@ -8593,7 +8601,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb��m funciona na página de login */}
+        {/* Admin Login Modal - tamb���m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
