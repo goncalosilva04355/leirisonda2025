@@ -5576,7 +5576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Configurações de Localização Individual - Apenas para super_admin */}
+                    {/* Configurações de Localiza��ão Individual - Apenas para super_admin */}
                     {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
@@ -5747,8 +5747,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manuten���ões e piscinas
-                      para começar com uma aplicação limpa. Os utilizadores são
+                      Elimine todos os dados de obras, manutencoes e piscinas
+                      para comecar com uma aplicacao limpa. Os utilizadores sao
                       mantidos.
                     </p>
 
@@ -8804,7 +8804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N��o especificado"}
+                          {selectedWork.type || "N����o especificado"}
                         </p>
                       </div>
                       <div>
