@@ -314,6 +314,16 @@ function App() {
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
+  // Debug: Log works whenever they change
+  useEffect(() => {
+    console.log("📋 OBRAS ATUALIZADAS:", {
+      quantidade: works.length,
+      obras: works,
+      syncStatus: syncStatus,
+      universalSyncObras: universalSync.obras?.length || 0,
+    });
+  }, [works, syncStatus, universalSync.obras]);
+
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
 
@@ -776,7 +786,7 @@ function App() {
       }
     }
 
-    console.log("Manutenç��o salva com sucesso:", interventionData);
+    console.log("Manutenção salva com sucesso:", interventionData);
 
     let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
 
@@ -2846,7 +2856,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : "text-gray-600 hover:text-blue-600"
                               }`}
                             >
-                              📍 {pool.location}
+                              �� {pool.location}
                             </button>
                             <div className="flex items-center space-x-4 mt-2">
                               <span className="text-sm text-gray-500">
