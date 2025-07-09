@@ -20,6 +20,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   });
   const [rememberMe, setRememberMe] = useState(false);
   const [showDiagnostic, setShowDiagnostic] = useState(false);
+  const [showConnectivityDiagnostic, setShowConnectivityDiagnostic] =
+    useState(false);
 
   // Load saved credentials from sessionStorage for "remember me" functionality
   useEffect(() => {
