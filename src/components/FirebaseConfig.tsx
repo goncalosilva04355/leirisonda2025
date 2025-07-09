@@ -70,8 +70,7 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
       setIsConfigLoaded(true);
       setSuccess(true);
 
-      // Save default config to localStorage
-      saveFirebaseConfig(defaultConfig);
+      // Default config applied automatically
       console.log(
         "🔧 FirebaseConfig: Saved default configuration to localStorage",
       );
