@@ -88,6 +88,7 @@ class AuthService {
     const firebaseAuth = await getAuthService();
     const firebaseDB = await getDB();
 
+    // Only try Firebase if BOTH auth and database are available
     if (firebaseAuth && firebaseDB) {
       console.log(
         "🔥 Attempting Firebase registration for cross-device access...",
@@ -124,7 +125,17 @@ class AuthService {
         }
       }
     } else {
-      console.log("📱 Firebase not ready, using local auth");
+      if (firebaseAuth && !firebaseDB) {
+        console.log(
+          "⚠️ Firebase Auth available but Database unavailable - using local auth for consistency",
+        );
+      } else if (!firebaseAuth && firebaseDB) {
+        console.log(
+          "⚠️ Firebase Database available but Auth unavailable - using local auth for consistency",
+        );
+      } else {
+        console.log("📱 Firebase not ready, using local auth");
+      }
     }
 
     // Fallback to mock authentication (device-specific only)
