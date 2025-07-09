@@ -338,11 +338,20 @@ class UniversalDataSyncService {
   }): () => void {
     if (!isFirebaseReady() || !db) {
       console.log(
-        "📱 Firebase não disponível - usando modo local para listeners",
+        "📱 Firebase não disponível - listeners temporariamente desativados",
       );
 
-      // Setup localStorage polling as fallback
-      return this.setupLocalStorageListeners(callbacks);
+      // Temporarily disable localStorage listeners to prevent loops
+      // Load initial data once and return empty cleanup
+      const localData = this.getLocalData();
+      callbacks.onObrasChange(localData.obras);
+      callbacks.onManutencoesChange(localData.manutencoes);
+      callbacks.onPiscinasChange(localData.piscinas);
+      callbacks.onClientesChange(localData.clientes);
+
+      return () => {
+        console.log("🛑 No listeners to disconnect");
+      };
     }
 
     console.log("📡 CONFIGURANDO LISTENERS UNIVERSAIS");
