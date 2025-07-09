@@ -158,8 +158,8 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Versão segura temporária para evitar erros
-  const universalSync = useUniversalDataSyncSafe();
+  // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
+  const universalSync = useUniversalDataSync();
 
   // Data sync hook - versão segura para evitar erros
   const dataSync = useDataSyncSafe();
@@ -3148,7 +3148,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenção</span>
+                      <span>Agendar Manutenç��o</span>
                     </button>
                   </div>
                 </div>
