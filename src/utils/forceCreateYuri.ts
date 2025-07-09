@@ -88,18 +88,13 @@ const createYuriUser = () => {
       JSON.parse(localStorage.getItem("mock-users") || "[]"),
     );
 
-    // Show alert to user
-    setTimeout(() => {
-      alert(
-        "✅ Utilizador criado!\n\nEmail: yuri@leirisonda.pt\nPassword: 123\n\nPode fazer login agora!",
-      );
-    }, 1000);
+    // Notifications disabled
   } catch (error) {
     console.error("❌ Error creating user:", error);
   }
 };
 
-// Execute immediately when file is loaded
-createYuriUser();
+// Auto-execution disabled
+// createYuriUser();
 
 export default createYuriUser;
