@@ -62,6 +62,7 @@ import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
+import { FirebaseDiagnostic } from "./utils/firebaseDiagnostic";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import { ForceInitialization } from "./utils/forceInitialization";
 
@@ -164,6 +165,16 @@ function App() {
   useEffect(() => {
     // Backup inicial
     DataProtectionService.createEmergencyBackup();
+
+    // FIREBASE DIAGNOSTIC E FORÇA INICIALIZAÇÃO
+    console.log("🔧 Iniciando diagnóstico Firebase...");
+    FirebaseDiagnostic.forceInitialization().then((success) => {
+      if (success) {
+        console.log("🔥 Firebase inicializado com sucesso!");
+      } else {
+        console.log("📱 Aplicação funcionará em modo local");
+      }
+    });
 
     // Backup automático contínuo (reduzido para 10 minutos)
     const backupInterval = setInterval(() => {
@@ -538,7 +549,7 @@ function App() {
     console.log("��� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
-      console.log("🔔 Current notification permission:", permission);
+      console.log("�� Current notification permission:", permission);
       setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
