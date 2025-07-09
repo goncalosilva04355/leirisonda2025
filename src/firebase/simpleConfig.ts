@@ -195,10 +195,31 @@ export async function getFirebaseApp(): Promise<FirebaseApp | null> {
  * Get Firestore instance
  */
 export async function getFirebaseDB(): Promise<Firestore | null> {
-  if (!db) {
-    await initializeFirebase();
+  // Prevent concurrent access that can cause getImmediate errors
+  if (serviceAccessMutex) {
+    console.log("🔒 Waiting for service access mutex...");
+    await new Promise((resolve) => {
+      const checkMutex = () => {
+        if (!serviceAccessMutex) {
+          resolve(undefined);
+        } else {
+          setTimeout(checkMutex, 100);
+        }
+      };
+      checkMutex();
+    });
   }
-  return db;
+
+  serviceAccessMutex = true;
+
+  try {
+    if (!db) {
+      await initializeFirebase();
+    }
+    return db;
+  } finally {
+    serviceAccessMutex = false;
+  }
 }
 
 /**
