@@ -59,21 +59,23 @@ export const useAutoFirebaseFix = () => {
     fixingRef.current = true;
 
     try {
-      console.log("🔧 Auto-fixing Firebase connection...");
-
-      // Import and reinitialize Firebase
-      const { UltimateSimpleFirebase } = await import(
-        "../firebase/ultimateSimpleFirebase"
+      console.log(
+        "🔧 Auto-fixing Firebase connection with AGGRESSIVE methods...",
       );
 
-      // Force reinitialization
-      const success = await UltimateSimpleFirebase.simpleInit();
+      // Try aggressive fix first (especially for iOS/Safari)
+      const { AggressiveFirebaseFix } = await import(
+        "../firebase/aggressiveFirebaseFix"
+      );
+      const aggressiveResult = await AggressiveFirebaseFix.fixFirestore();
 
-      if (success) {
-        console.log("✅ Auto-fix successful - Firebase restored");
+      if (aggressiveResult.success) {
+        console.log(
+          `✅ AGGRESSIVE FIX SUCCESSFUL using ${aggressiveResult.method}`,
+        );
 
-        // Wait a bit for services to stabilize
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Wait for services to stabilize
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
         // Verify the fix worked
         const newStatus = await checkFirebaseHealth();
@@ -84,8 +86,31 @@ export const useAutoFirebaseFix = () => {
         }));
 
         return newStatus.isHealthy;
+      }
+
+      // Fallback to original method if aggressive fix fails
+      console.log("🔧 Aggressive fix failed, trying standard method...");
+      const { UltimateSimpleFirebase } = await import(
+        "../firebase/ultimateSimpleFirebase"
+      );
+      const success = await UltimateSimpleFirebase.simpleInit();
+
+      if (success) {
+        console.log("✅ Standard auto-fix successful - Firebase restored");
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const newStatus = await checkFirebaseHealth();
+
+        setStatus((prev) => ({
+          ...newStatus,
+          autoFixAttempts: prev.autoFixAttempts + 1,
+        }));
+
+        return newStatus.isHealthy;
       } else {
-        console.warn("⚠️ Auto-fix failed - Firebase still not working");
+        console.warn(
+          "⚠️ All auto-fix methods failed - Firebase still not working",
+        );
         setStatus((prev) => ({
           ...prev,
           autoFixAttempts: prev.autoFixAttempts + 1,
