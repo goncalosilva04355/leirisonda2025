@@ -326,7 +326,7 @@ const initializeFirebaseServices = async (): Promise<void> => {
     }
   } catch (error) {
     console.warn(
-      "���️ Firebase services initialization failed, using fallback mode:",
+      "⚠️ Firebase services initialization failed, using fallback mode:",
       error,
     );
     app = null;
@@ -492,12 +492,25 @@ export const waitForFirebaseInit = async (): Promise<boolean> => {
 };
 
 // Function to get Firebase connection status
-export const getFirebaseStatus = () => {
-  const simpleStatus = getSimpleStatus();
-  return {
-    ...simpleStatus,
-    quotaExceeded: isQuotaExceeded(),
-  };
+export const getFirebaseStatus = async () => {
+  try {
+    const { UnifiedSafeFirebase } = await import("./unifiedSafeFirebase");
+    const unifiedStatus = UnifiedSafeFirebase.getStatus();
+    return {
+      ...unifiedStatus,
+      quotaExceeded: isQuotaExceeded(),
+      unified: true,
+    };
+  } catch (error) {
+    return {
+      app: false,
+      auth: false,
+      db: false,
+      ready: false,
+      quotaExceeded: isQuotaExceeded(),
+      error: "Failed to load UnifiedSafeFirebase",
+    };
+  }
 };
 
 // Function to mark quota exceeded - Firebase handles this automatically
