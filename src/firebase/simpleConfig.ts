@@ -181,15 +181,7 @@ async function initializeFirebase(): Promise<boolean> {
   return initializationPromise;
 }
 
-/**
- * Get Firebase app instance
- */
-export async function getFirebaseApp(): Promise<FirebaseApp | null> {
-  if (!app) {
-    await initializeFirebase();
-  }
-  return app;
-}
+// Removed duplicate getFirebaseApp declaration - using safe fallback version below
 
 // Removed duplicate getFirebaseDB declaration - using safe fallback version below
 
