@@ -63,7 +63,7 @@ const getFirebaseApp = () => {
       }
     }
 
-    // Inicializar novo Firebase app com configurações válidas
+    // Inicializar novo Firebase app com configuraç��es válidas
     console.log(
       "🚀 Inicializando Firebase app com configurações atualizadas...",
     );
@@ -577,20 +577,7 @@ export const reinitializeFirebase = async (): Promise<boolean> => {
   }
 };
 
-// Auto-initialize Firebase when module loads
-waitForFirebaseInit()
-  .then((success) => {
-    if (success) {
-      console.log("🔥 Firebase auto-initialized successfully");
-    } else {
-      console.log(
-        "⚠️ Firebase auto-initialization failed, will use local mode",
-      );
-    }
-  })
-  .catch((error) => {
-    console.warn("Firebase auto-initialization error:", error);
-  });
+// Auto-initialization removed to prevent loops - Firebase will initialize on demand
 
 export { app, db, auth };
 export default app;
