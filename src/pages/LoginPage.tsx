@@ -192,6 +192,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 ? "✅ SIM"
                 : "❌ NÃO"}
             </div>
+            {(() => {
+              const yuriUser = JSON.parse(
+                localStorage.getItem("app-users") || "[]",
+              ).find((u: any) => u.email === "yuri@leirisonda.pt");
+              const yuriMock = JSON.parse(
+                localStorage.getItem("mock-users") || "[]",
+              ).find((u: any) => u.email === "yuri@leirisonda.pt");
+              return yuriUser ? (
+                <div className="space-y-1 text-xs border-t pt-2">
+                  <div className="font-bold text-blue-600">Dados do Yuri:</div>
+                  <div>Password App: "{yuriUser.password}"</div>
+                  <div>Password Mock: "{yuriMock?.password || "N/A"}"</div>
+                  <div>Active: {yuriUser.active ? "✅" : "❌"}</div>
+                  <div>Role: {yuriUser.role}</div>
+                </div>
+              ) : null;
+            })()}
           </div>
 
           {/* Quick Login for Yuri */}
