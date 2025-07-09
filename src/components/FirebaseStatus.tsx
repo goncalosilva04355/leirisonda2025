@@ -1,103 +1,50 @@
-import React, { useState, useEffect } from "react";
-import { CheckCircle, AlertCircle, Wifi, WifiOff } from "lucide-react";
-import { app, db, auth } from "../firebase/config";
-import { realFirebaseService } from "../services/realFirebaseService";
+import React from "react";
+import { AlertCircle, Wifi, WifiOff } from "lucide-react";
 
-export const FirebaseStatus: React.FC = () => {
-  const [status, setStatus] = useState({
-    app: false,
-    auth: false,
-    firestore: false,
-    database: false,
-    lastCheck: new Date(),
-  });
+interface FirebaseStatusProps {
+  isConnected: boolean;
+  className?: string;
+}
 
-  useEffect(() => {
-    const checkStatus = async () => {
-      // Check if Firebase is disabled for quota protection
-      const isFirebaseDisabled = !app && !db && !auth;
-
-      const newStatus = {
-        app: !!app,
-        auth: !!auth,
-        firestore: !!db,
-        database: false,
-        lastCheck: new Date(),
-      };
-
-      // Skip Firebase checks if it's disabled for quota protection
-      if (isFirebaseDisabled) {
-        console.log("⏸️ Firebase status check skipped - quota protection mode");
-        setStatus(newStatus);
-        return;
-      }
-
-      // Check database service
-      try {
-        const initialized = realFirebaseService.initialize();
-        if (initialized) {
-          const connectionOk = await realFirebaseService.testConnection();
-          newStatus.database = connectionOk;
-        }
-      } catch (error) {
-        console.warn("Database status check failed:", error);
-      }
-
-      setStatus(newStatus);
-    };
-
-    checkStatus();
-
-    // Check status every 2 minutes (reduzido para melhorar performance)
-    const interval = setInterval(checkStatus, 120000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const getStatusIcon = (isOk: boolean) => {
-    return isOk ? (
-      <CheckCircle className="w-4 h-4 text-green-500" />
-    ) : (
-      <AlertCircle className="w-4 h-4 text-red-500" />
+export const FirebaseStatus: React.FC<FirebaseStatusProps> = ({
+  isConnected,
+  className = "",
+}) => {
+  if (isConnected) {
+    return (
+      <div
+        className={`flex items-center space-x-2 text-green-600 text-sm ${className}`}
+      >
+        <Wifi className="h-4 w-4" />
+        <span>Sincronização ativa</span>
+      </div>
     );
-  };
-
-  const allOk = status.app && status.auth && status.firestore;
+  }
 
   return (
-    <div className="fixed top-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50">
-      <div className="flex items-center space-x-2 mb-2">
-        {allOk ? (
-          <Wifi className="w-4 h-4 text-green-500" />
-        ) : (
-          <WifiOff className="w-4 h-4 text-red-500" />
-        )}
-        <span className="text-sm font-medium">
-          Firebase {allOk ? "Ativo" : "Problemas"}
-        </span>
-      </div>
+    <div
+      className={`flex items-center space-x-2 text-yellow-600 text-sm ${className}`}
+    >
+      <WifiOff className="h-4 w-4" />
+      <span>Modo local - dados apenas neste dispositivo</span>
+    </div>
+  );
+};
 
-      <div className="space-y-1 text-xs">
-        <div className="flex items-center justify-between">
-          <span>App:</span>
-          {getStatusIcon(status.app)}
+export const FirebaseStatusBanner: React.FC = () => {
+  return (
+    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+      <div className="flex">
+        <div className="flex-shrink-0">
+          <AlertCircle className="h-5 w-5 text-yellow-400" />
         </div>
-        <div className="flex items-center justify-between">
-          <span>Auth:</span>
-          {getStatusIcon(status.auth)}
+        <div className="ml-3">
+          <p className="text-sm text-yellow-700">
+            <strong>Modo Local Ativo:</strong> Os seus dados estão guardados
+            localmente neste dispositivo. Para sincronizar entre dispositivos,
+            contacte o administrador do sistema.
+          </p>
         </div>
-        <div className="flex items-center justify-between">
-          <span>Firestore:</span>
-          {getStatusIcon(status.firestore)}
-        </div>
-        <div className="flex items-center justify-between">
-          <span>Database:</span>
-          {getStatusIcon(status.database)}
-        </div>
-      </div>
-
-      <div className="text-xs text-gray-500 mt-2">
-        {status.lastCheck.toLocaleTimeString("pt-PT")}
       </div>
     </div>
   );
