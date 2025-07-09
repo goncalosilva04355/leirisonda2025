@@ -10,6 +10,7 @@ import {
   Settings,
 } from "lucide-react";
 import UserSyncManager from "../utils/userSyncManager";
+import UserCreationHelper from "./UserCreationHelper";
 
 interface LoginDiagnosticsProps {
   isOpen: boolean;
@@ -415,6 +416,19 @@ export const LoginDiagnostics: React.FC<LoginDiagnosticsProps> = ({
                     : "Foi identificado um problema que impede o login. Siga as sugestões acima para resolver."}
                 </p>
               </div>
+
+              {/* User Creation Helper - Show when user doesn't exist */}
+              {!diagnostics.userExists && (
+                <div className="mt-6">
+                  <UserCreationHelper
+                    email={testEmail}
+                    onUserCreated={() => {
+                      // Re-run diagnostics after user creation
+                      runDiagnostics();
+                    }}
+                  />
+                </div>
+              )}
             </div>
           )}
 
