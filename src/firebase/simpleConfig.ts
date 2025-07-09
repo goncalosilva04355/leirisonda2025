@@ -193,36 +193,7 @@ export async function getFirebaseApp(): Promise<FirebaseApp | null> {
 
 // Removed duplicate getFirebaseDB declaration - using safe fallback version below
 
-/**
- * Get Auth instance
- */
-export async function getFirebaseAuth(): Promise<Auth | null> {
-  // Prevent concurrent access that can cause getImmediate errors
-  if (serviceAccessMutex) {
-    console.log("🔒 Waiting for auth access mutex...");
-    await new Promise((resolve) => {
-      const checkMutex = () => {
-        if (!serviceAccessMutex) {
-          resolve(undefined);
-        } else {
-          setTimeout(checkMutex, 100);
-        }
-      };
-      checkMutex();
-    });
-  }
-
-  serviceAccessMutex = true;
-
-  try {
-    if (!auth) {
-      await initializeFirebase();
-    }
-    return auth;
-  } finally {
-    serviceAccessMutex = false;
-  }
-}
+// Removed duplicate getFirebaseAuth declaration - using safe fallback version below
 
 /**
  * Check if Firebase is ready
