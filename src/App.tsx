@@ -1848,30 +1848,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="absolute bottom-2 right-2 z-20">
                     <div className="flex items-center space-x-1">
                       <div
-                        className={`w-2 h-2 rounded-full ${(() => {
-                          try {
-                            const {
-                              isFirebaseReady,
-                            } = require("./firebase/config");
-                            return isFirebaseReady()
-                              ? "bg-green-500"
-                              : "bg-red-500";
-                          } catch {
-                            return "bg-red-500";
-                          }
-                        })()}`}
-                        title={(() => {
-                          try {
-                            const {
-                              isFirebaseReady,
-                            } = require("./firebase/config");
-                            return isFirebaseReady()
-                              ? "Firebase Ativo"
-                              : "Firebase Inativo";
-                          } catch {
-                            return "Firebase Inativo";
-                          }
-                        })()}
+                        className={`w-2 h-2 rounded-full ${
+                          isFirebaseReady() ? "bg-green-500" : "bg-red-500"
+                        }`}
+                        title={
+                          isFirebaseReady()
+                            ? "Firebase Ativo"
+                            : "Firebase Inativo"
+                        }
                       ></div>
                     </div>
                   </div>
