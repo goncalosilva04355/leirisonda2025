@@ -7,7 +7,7 @@ export const createTestUser = () => {
     id: `user-${Date.now()}`,
     name: "Yuri",
     email: "yuri@leirisonda.pt",
-    password: "leirisonda123",
+    password: "123",
     role: "user" as const,
     active: true,
     createdAt: new Date().toISOString(),
@@ -40,7 +40,7 @@ export const createTestUser = () => {
     existingUsers.push(newUser);
 
     // Save to localStorage
-    localStorage.setItem("app-users", JSON.stringify(existingUsers));
+    localStorage.setItem("app-users", JSON.stringify(filteredUsers));
 
     // Also create in mock-users for compatibility
     const mockUser = {
