@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { getFirebaseStatus } from "../firebase/simpleConfig";
+import { UnifiedSafeFirebase } from "../firebase/unifiedSafeFirebase";
 
 export function FirebaseStatusIndicator() {
   const [status, setStatus] = useState<any>(null);
