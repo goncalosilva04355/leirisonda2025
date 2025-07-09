@@ -78,6 +78,9 @@ import("./utils/dualStorageDiagnosis");
 
 // Migrate to Firebase-only system
 import("./utils/migrateToFirebaseOnly");
+
+// Test Firebase storage configuration
+import("./utils/testFirebaseStorage");
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -559,7 +562,7 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
-    console.log("��� Initializing notifications...");
+    console.log("���� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
       console.log("�� Current notification permission:", permission);
@@ -1263,7 +1266,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         assignedTo.toLowerCase().includes(currentUser?.name.toLowerCase()) ||
         currentUser?.name.toLowerCase().includes(assignedTo.toLowerCase()));
 
-    console.log("��� DEBUG: Assignment check:", {
+    console.log("🔍 DEBUG: Assignment check:", {
       currentUser: currentUser?.name,
       assignedTo,
       exactMatch: currentUser?.name === assignedTo,
@@ -2977,7 +2980,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <input
                       type="text"
-                      placeholder="Pesquisar manuten��ões..."
+                      placeholder="Pesquisar manuten����ões..."
                       className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -4714,7 +4717,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G��s</option>
+                          <option value="gas">Aquecimento a G���s</option>
                         </select>
                       </div>
                     </div>
@@ -5866,7 +5869,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>🔍 Estado e localização</li>
+                        <li>🔍 Estado e localiza��ão</li>
                         <li>• Informaç��es de clientes</li>
                         <li>• Histórico de manuten����ões</li>
                         <li>• Próximas interven��ões</li>
