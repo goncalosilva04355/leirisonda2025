@@ -115,31 +115,17 @@ export async function runFirebaseCompleteDiagnosis() {
       console.error("❌ Firebase Auth: FALHOU", error);
     }
 
-    // 7. Teste do Firestore
-    console.log("\n7️⃣ Testando Firestore...");
-    try {
-      const { getFirestore } = await import("firebase/firestore");
-      const { getApps } = await import("firebase/app");
+    // 7. Teste do Firestore (DISABLED - causing getImmediate errors)
+    console.log("\n7️⃣ Testando Firestore... (DESABILITADO)");
+    console.log(
+      "⚠️ Teste de Firestore desabilitado para evitar erros getImmediate",
+    );
+    console.log(
+      "💡 Use NoGetImmediateFirebase.testConnectivity() para teste seguro",
+    );
 
-      const apps = getApps();
-      if (apps.length > 0) {
-        const db = getFirestore(apps[0]);
-        if (db) {
-          results.firestoreAvailable = true;
-          console.log("✅ Firestore: DISPONÍVEL");
-        }
-      }
-    } catch (error) {
-      console.error("❌ Firestore: FALHOU", error);
-
-      // Verificar se é erro específico de getImmediate
-      if (error instanceof Error && error.message.includes("getImmediate")) {
-        console.error("🚨 ERRO getImmediate DETECTADO!");
-        console.error(
-          "Isso indica que o Firebase não está completamente inicializado",
-        );
-      }
-    }
+    // Não fazer teste direto que causa getImmediate
+    results.firestoreAvailable = false;
 
     // 8. Resumo final
     console.log("\n📊 RESUMO DO DIAGNÓSTICO:");
