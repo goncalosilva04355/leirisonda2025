@@ -1,10 +1,14 @@
 /**
  * Ferramenta de diagnóstico e correção automática do Firebase
+ * FIXED: Prevenindo conflitos de inicialização e erros getImmediate
  */
 
-import { initializeApp, getApps, deleteApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { initializeApp, getApps, deleteApp, getApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+
+// Import the main Firebase config instead of duplicating it
+import { getDB, getAuthService, waitForFirebaseInit } from "../firebase/config";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
