@@ -677,6 +677,43 @@ class UniversalDataSyncService {
   }
 
   /**
+   * Carregar dados do localStorage
+   */
+  private getLocalData(): UniversalDataState {
+    try {
+      const obras = JSON.parse(localStorage.getItem("works") || "[]");
+      const manutencoes = JSON.parse(
+        localStorage.getItem("maintenance") || "[]",
+      );
+      const piscinas = JSON.parse(localStorage.getItem("pools") || "[]");
+      const clientes = JSON.parse(localStorage.getItem("clients") || "[]");
+
+      return {
+        obras,
+        manutencoes,
+        piscinas,
+        clientes,
+        totalItems:
+          obras.length + manutencoes.length + piscinas.length + clientes.length,
+        lastSync:
+          localStorage.getItem("lastLocalSync") || new Date().toISOString(),
+        isGloballyShared: false, // Local data is not globally shared
+      };
+    } catch (error) {
+      console.warn("Erro ao carregar dados locais:", error);
+      return {
+        obras: [],
+        manutencoes: [],
+        piscinas: [],
+        clientes: [],
+        totalItems: 0,
+        lastSync: new Date().toISOString(),
+        isGloballyShared: false,
+      };
+    }
+  }
+
+  /**
    * Obter todos os dados universais
    */
   async getAllUniversalData(): Promise<UniversalDataState> {
