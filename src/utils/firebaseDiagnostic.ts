@@ -44,30 +44,24 @@ export class FirebaseDiagnostic {
         return results;
       }
 
-      // 2. Limpar apps existentes
-      console.log("🧹 2. Limpando apps existentes...");
+      // 2. Aguardar inicialização do Firebase principal
+      console.log("⏳ 2. Aguardando inicialização do Firebase principal...");
+      await waitForFirebaseInit();
+
+      // 3. Verificar se app principal está disponível
+      console.log("🚀 3. Verificando Firebase app...");
       const existingApps = getApps();
-      for (const app of existingApps) {
-        try {
-          await deleteApp(app);
-          console.log("🗑️ App existente removido");
-        } catch (error) {
-          console.warn("⚠️ Erro ao remover app:", error);
-        }
-      }
-
-      // 3. Inicializar app
-      console.log("🚀 3. Inicializando Firebase app...");
-      const app = initializeApp(firebaseConfig);
-      if (app) {
+      if (existingApps.length > 0) {
         results.appInitialized = true;
-        console.log("✅ Firebase app inicializado");
+        console.log("✅ Firebase app principal está ativo");
+      } else {
+        console.warn("⚠️ Nenhum app Firebase encontrado");
       }
 
-      // 4. Testar Auth
+      // 4. Testar Auth usando o serviço principal
       console.log("🔐 4. Testando Firebase Auth...");
       try {
-        const auth = getAuth(app);
+        const auth = await getAuthService();
         if (auth) {
           results.authAvailable = true;
           console.log("✅ Firebase Auth disponível");
@@ -76,10 +70,10 @@ export class FirebaseDiagnostic {
         console.error("❌ Firebase Auth falhou:", error);
       }
 
-      // 5. Testar Firestore
+      // 5. Testar Firestore usando o serviço principal
       console.log("🔄 5. Testando Firestore...");
       try {
-        const db = getFirestore(app);
+        const db = await getDB();
         if (db) {
           results.firestoreAvailable = true;
           console.log("✅ Firestore disponível");
