@@ -3071,7 +3071,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���������� {maint.clientContact}
+                                        ������������ {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -6147,7 +6147,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest���o da base de dados de clientes
+                          Gest��o da base de dados de clientes
                         </p>
                       </div>
                     </div>
@@ -8599,6 +8599,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           {/* Firestore Setup Guide */}
           <FirestoreSetupGuide />
+
+          {/* Firebase Error Monitor */}
+          <FirebaseErrorMonitor />
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
@@ -8898,7 +8901,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Contacto
                         </label>
                         <p className="text-gray-900">
-                          {selectedWork.contact || "N��o especificado"}
+                          {selectedWork.contact || "Não especificado"}
                         </p>
                       </div>
 
@@ -8952,7 +8955,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In�����cio
+                          Data de In����cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
