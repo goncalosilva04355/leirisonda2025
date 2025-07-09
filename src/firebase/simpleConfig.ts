@@ -226,10 +226,31 @@ export async function getFirebaseDB(): Promise<Firestore | null> {
  * Get Auth instance
  */
 export async function getFirebaseAuth(): Promise<Auth | null> {
-  if (!auth) {
-    await initializeFirebase();
+  // Prevent concurrent access that can cause getImmediate errors
+  if (serviceAccessMutex) {
+    console.log("🔒 Waiting for auth access mutex...");
+    await new Promise((resolve) => {
+      const checkMutex = () => {
+        if (!serviceAccessMutex) {
+          resolve(undefined);
+        } else {
+          setTimeout(checkMutex, 100);
+        }
+      };
+      checkMutex();
+    });
   }
-  return auth;
+
+  serviceAccessMutex = true;
+
+  try {
+    if (!auth) {
+      await initializeFirebase();
+    }
+    return auth;
+  } finally {
+    serviceAccessMutex = false;
+  }
 }
 
 /**
