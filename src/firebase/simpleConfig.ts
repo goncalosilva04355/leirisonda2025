@@ -273,8 +273,47 @@ export function getFirebaseStatus() {
   };
 }
 
-// DISABLED: Automatic initialization to prevent getImmediate errors
-// Firebase will be initialized manually when needed
+// COMPLETELY DISABLED: This file is replaced by unifiedSafeFirebase.ts
 console.log(
-  "🚫 SimpleConfig auto-initialization DISABLED to prevent getImmediate errors",
+  "🛑 SIMPLECONFIG COMPLETELY DISABLED - USE UnifiedSafeFirebase INSTEAD",
 );
+
+// Redirect all functions to throw errors so we know if anything still uses this
+export async function getFirebaseDB(): Promise<any> {
+  throw new Error(
+    "❌ simpleConfig.ts is DISABLED - use UnifiedSafeFirebase instead",
+  );
+}
+
+export async function getFirebaseAuth(): Promise<any> {
+  throw new Error(
+    "❌ simpleConfig.ts is DISABLED - use UnifiedSafeFirebase instead",
+  );
+}
+
+export function isFirebaseInitialized(): boolean {
+  console.error(
+    "❌ simpleConfig.ts is DISABLED - use UnifiedSafeFirebase instead",
+  );
+  return false;
+}
+
+export function getFirebaseStatus() {
+  return {
+    app: false,
+    auth: false,
+    db: false,
+    ready: false,
+    initializing: false,
+    disabled: true,
+    message: "Use UnifiedSafeFirebase instead",
+  };
+}
+
+// Block all other exports
+export async function getFirebaseApp() {
+  return null;
+}
+export async function waitForFirebaseInit() {
+  return false;
+}
