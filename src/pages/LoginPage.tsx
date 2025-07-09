@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Settings, Bug } from "lucide-react";
 import LoginDebugHelper from "../components/LoginDebugHelper";
+import FirestoreVerification from "../components/FirestoreVerification";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -186,6 +187,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             </button>
           </div>
         </form>
+
+        {/* Firestore Status Verification */}
+        <div className="mt-6">
+          <FirestoreVerification />
+        </div>
       </div>
 
       {/* Floating Action Buttons (Bottom Right) */}
