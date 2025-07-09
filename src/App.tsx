@@ -87,6 +87,9 @@ import("./firebase/ultraSafeConfig");
 
 // No-getImmediate Firebase configuration (manual only)
 import("./firebase/noGetImmediateConfig");
+
+// SOLUÇÃO DEFINITIVA: Sistema Firebase Unificado
+import("./firebase/unifiedSafeFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -1317,7 +1320,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ��� ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -4160,7 +4163,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const budget =
                             (
                               form.querySelector(
-                                'input[placeholder*="Or��amento"]',
+                                'input[placeholder*="Orçamento"]',
                               ) as HTMLInputElement
                             )?.value || "";
 
@@ -8296,7 +8299,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>�������</span>
+                  <span>������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
