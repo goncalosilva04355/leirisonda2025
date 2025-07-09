@@ -1885,7 +1885,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {works.filter((w) => w.status === "pending").length}
+                        {
+                          works.filter(
+                            (w) =>
+                              w.status === "pending" || w.status === "pendente",
+                          ).length
+                        }
                       </div>
                     </div>
                   </button>
