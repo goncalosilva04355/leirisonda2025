@@ -4177,7 +4177,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observações sobre a obra"]',
+                                'textarea[placeholder*="Observa��ões sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -4322,13 +4322,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           };
 
                           // Use sync system to add work (will handle Firebase and localStorage)
-                          console.log(
-                            "🔧 Attempting to add work with data:",
-                            workData,
-                          );
                           try {
                             const newWork = await addWork(workData);
-                            console.log("✅ Work created with ID:", newWork);
 
                             // Success - no notification needed
                           } catch (error) {
@@ -7251,7 +7246,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descrição do trabalho realizado..."
+                            placeholder="Descriç��o do trabalho realizado..."
                           />
                         </div>
                         <div>
