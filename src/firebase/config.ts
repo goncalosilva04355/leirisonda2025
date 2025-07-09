@@ -4,13 +4,8 @@ import { getAuth } from "firebase/auth";
 import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 import { FirebaseForceInit } from "../utils/firebaseForceInit";
 
-// Import simplified config as primary
-import {
-  getFirebaseDB as getSimpleDB,
-  getFirebaseAuth as getSimpleAuth,
-  isFirebaseInitialized as isSimpleReady,
-  getFirebaseStatus as getSimpleStatus,
-} from "./simpleConfig";
+// Simplified config imports removed to prevent conflicts
+// All Firebase access now goes through safe fallbacks
 
 // Firebase config - Project leirisonda-16f8b is active and working
 const defaultFirebaseConfig = {
