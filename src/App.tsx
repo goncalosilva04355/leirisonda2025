@@ -3597,8 +3597,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             return null;
                           })()}
                           <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuários responsáveis por esta obra.
-                            Utilizadores inativos são marcados como "(Inativo)".
+                            Selecione os usuarios responsaveis por esta obra.
+                            Utilizadores inativos sao marcados como "(Inativo)".
                           </p>
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
