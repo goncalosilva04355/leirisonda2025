@@ -479,29 +479,15 @@ export const isFirebaseReady = () => {
   }
 };
 
-// Lazy loading getters for Firebase services
+// Use simplified Firebase approach to avoid getImmediate errors
 export const getDB = async () => {
-  // PRIORIDADE: Usar Force Init
-  const forceDb = FirebaseForceInit.getDb();
-  if (forceDb) {
-    console.log("🔥 Usando Firestore do Force Init");
-    return forceDb;
-  }
-
-  // Fallback
-  return await ensureFirestore();
+  console.log("🔥 Getting Firestore via simplified config");
+  return await getSimpleDB();
 };
 
 export const getAuthService = async () => {
-  // PRIORIDADE: Usar Force Init
-  const forceAuth = FirebaseForceInit.getAuth();
-  if (forceAuth) {
-    console.log("🔥 Usando Auth do Force Init");
-    return forceAuth;
-  }
-
-  // Fallback
-  return await ensureAuth();
+  console.log("🔥 Getting Auth via simplified config");
+  return await getSimpleAuth();
 };
 
 // Function to ensure Firebase is initialized before use
