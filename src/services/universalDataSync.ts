@@ -798,6 +798,25 @@ class UniversalDataSyncService {
   }
 
   /**
+   * Reset completo de emergência - limpa todos os dados
+   */
+  static emergencyReset(): void {
+    console.log("🚨 RESET DE EMERGÊNCIA - Limpando todos os dados");
+
+    // Clear localStorage
+    localStorage.removeItem("works");
+    localStorage.removeItem("maintenance");
+    localStorage.removeItem("pools");
+    localStorage.removeItem("clients");
+    localStorage.removeItem("lastLocalSync");
+
+    // Clear session storage
+    sessionStorage.clear();
+
+    console.log("✅ Dados limpos - recarregue a página");
+  }
+
+  /**
    * Limpar dados duplicados do localStorage
    */
   private cleanupDuplicateWorks(): void {
@@ -960,6 +979,6 @@ class UniversalDataSyncService {
   }
 }
 
-// Exportar instância singleton
+// Exportar inst��ncia singleton
 export const universalDataSync = new UniversalDataSyncService();
 export default universalDataSync;
