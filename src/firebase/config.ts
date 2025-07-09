@@ -455,19 +455,23 @@ export const isFirebaseReady = () => {
   }
 };
 
-// Safe fallback functions that don't break the app
+// Use UltimateSimpleFirebase silently in background
 export const getDB = async () => {
-  console.log(
-    "⚠️ getDB() called - returning null safely (use UnifiedSafeFirebase instead)",
-  );
-  return null;
+  try {
+    const { UltimateSimpleFirebase } = await import("./ultimateSimpleFirebase");
+    return UltimateSimpleFirebase.getDB();
+  } catch (error) {
+    return null;
+  }
 };
 
 export const getAuthService = async () => {
-  console.log(
-    "⚠️ getAuthService() called - returning null safely (use UnifiedSafeFirebase instead)",
-  );
-  return null;
+  try {
+    const { UltimateSimpleFirebase } = await import("./ultimateSimpleFirebase");
+    return UltimateSimpleFirebase.getAuth();
+  } catch (error) {
+    return null;
+  }
 };
 
 // Function to ensure Firebase is initialized before use
