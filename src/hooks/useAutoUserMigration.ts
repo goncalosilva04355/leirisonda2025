@@ -111,12 +111,24 @@ export const useAutoUserMigration = () => {
           const localResult = await LocalUserMigration.migrateLocalUsers();
 
           if (localResult.success) {
-            console.log(
-              `✅ AUTO-MIGRATION: Local fallback success! Migrated ${localResult.migrated} users locally`,
-            );
-            console.log(
-              "⚠️ Users work on this device only (Firestore not available)",
-            );
+            if (isFirestoreNotEnabled) {
+              console.log(
+                `✅ AUTO-MIGRATION: Local-only migration successful! Synchronized ${localResult.migrated + localResult.synchronized} users`,
+              );
+              console.log(
+                "📱 Users work on this device only (Firestore not enabled in Firebase project)",
+              );
+              console.log(
+                "💡 To enable cross-device access, activate Firestore in Firebase Console",
+              );
+            } else {
+              console.log(
+                `✅ AUTO-MIGRATION: Local fallback success! Migrated ${localResult.migrated} users locally`,
+              );
+              console.log(
+                "⚠️ Users work on this device only (Firestore connectivity issues)",
+              );
+            }
 
             setStatus({
               isRunning: false,
@@ -125,7 +137,9 @@ export const useAutoUserMigration = () => {
               skipped: localResult.synchronized,
               failed: 0,
               lastAttempt: Date.now(),
-              error: "Firestore not available - using local-only migration",
+              error: isFirestoreNotEnabled
+                ? "Local-only mode (Firestore not enabled)"
+                : "Local fallback (Firestore connectivity issues)",
             });
 
             // Notify that local migration completed
