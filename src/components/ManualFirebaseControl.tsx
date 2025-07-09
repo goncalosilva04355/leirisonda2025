@@ -30,29 +30,29 @@ export function ManualFirebaseControl() {
     setTestResults(null);
 
     try {
-      console.log("🚀 Iniciando Firebase manualmente...");
-      const success = await NoGetImmediateFirebase.manualInitialize();
+      console.log("🚀 Iniciando Firebase com UnifiedSafeFirebase...");
+      const success = await UnifiedSafeFirebase.initialize();
 
       updateStatus();
 
       if (success) {
-        console.log("✅ Inicialização manual bem-sucedida");
+        console.log("✅ Inicialização UnifiedSafe bem-sucedida");
 
         // Executar teste de conectividade
         console.log("🧪 Executando teste de conectividade...");
-        const connectivity = await NoGetImmediateFirebase.testConnectivity();
+        const connectivity = await UnifiedSafeFirebase.testConnectivity();
         setTestResults(connectivity);
       }
     } catch (error) {
-      console.error("❌ Erro na inicialização manual:", error);
+      console.error("❌ Erro na inicialização UnifiedSafe:", error);
     } finally {
       setIsInitializing(false);
     }
   };
 
   const handleTest = async () => {
-    console.log("🧪 Executando teste de conectividade...");
-    const connectivity = await NoGetImmediateFirebase.testConnectivity();
+    console.log("🧪 Executando teste de conectividade UnifiedSafe...");
+    const connectivity = await UnifiedSafeFirebase.testConnectivity();
     setTestResults(connectivity);
   };
 
