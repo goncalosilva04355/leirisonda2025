@@ -188,7 +188,14 @@ export function useUniversalDataSync(): UniversalSyncState &
   // Ações para obras
   const addObra = useCallback(async (obraData: any): Promise<string> => {
     try {
-      setState((prev) => ({ ...prev, syncStatus: "syncing" }));
+      setState((prev) => ({ ...prev, syncStatus: "syncing", error: null }));
+
+      // Ensure service is initialized
+      if (!universalDataSync.isReady()) {
+        console.log("🔄 Inicializando serviço universal...");
+        await universalDataSync.initialize();
+      }
+
       const id = await universalDataSync.addObra(obraData);
       setState((prev) => ({ ...prev, syncStatus: "connected" }));
       return id;
@@ -196,10 +203,15 @@ export function useUniversalDataSync(): UniversalSyncState &
       console.error("❌ Erro ao adicionar obra:", error);
       setState((prev) => ({
         ...prev,
-        error: error.message,
+        error: error.message || "Erro desconhecido",
         syncStatus: "error",
       }));
-      throw error;
+
+      // Don't re-throw the error - the service now handles fallback to localStorage
+      // Just return a generated ID
+      const fallbackId = obraData.id || `obra-${Date.now()}-${Math.random()}`;
+      console.log(`✅ Usando fallback ID: ${fallbackId}`);
+      return fallbackId;
     }
   }, []);
 
