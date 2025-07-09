@@ -206,6 +206,33 @@ export const FirebaseStatusChecker: React.FC = () => {
                     <strong>Resultado:</strong> Utilizadores não funcionam em
                     modo anónimo ou outros dispositivos.
                   </div>
+
+                  <button
+                    onClick={async () => {
+                      setIsChecking(true);
+                      try {
+                        // Force reinitialize Firebase
+                        const { UltimateSimpleFirebase } = await import(
+                          "../firebase/ultimateSimpleFirebase"
+                        );
+                        await UltimateSimpleFirebase.simpleInit();
+
+                        // Wait a bit and recheck
+                        setTimeout(() => {
+                          checkFirebaseStatus();
+                        }, 2000);
+                      } catch (error) {
+                        console.error("Fix failed:", error);
+                        setIsChecking(false);
+                      }
+                    }}
+                    disabled={isChecking}
+                    className="mt-3 px-3 py-1 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 disabled:bg-gray-400 text-sm"
+                  >
+                    {isChecking
+                      ? "A corrigir..."
+                      : "🔧 Tentar Corrigir Firebase"}
+                  </button>
                 </div>
               )}
             </>
