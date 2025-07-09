@@ -173,6 +173,42 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             </div>
           )}
 
+          {/* Visual User Status for iPhone Debug */}
+          <div className="bg-gray-100 p-3 rounded-md text-xs space-y-1 mb-4">
+            <div className="font-bold">Estado dos Utilizadores:</div>
+            <div>
+              App Users:{" "}
+              {JSON.parse(localStorage.getItem("app-users") || "[]").length}
+            </div>
+            <div>
+              Mock Users:{" "}
+              {JSON.parse(localStorage.getItem("mock-users") || "[]").length}
+            </div>
+            <div className="text-green-600">
+              Yuri existe:{" "}
+              {JSON.parse(localStorage.getItem("app-users") || "[]").some(
+                (u: any) => u.email === "yuri@leirisonda.pt",
+              )
+                ? "✅ SIM"
+                : "❌ NÃO"}
+            </div>
+          </div>
+
+          {/* Quick Login for Yuri */}
+          <button
+            type="button"
+            onClick={() => {
+              setLoginForm({ email: "yuri@leirisonda.pt", password: "123" });
+              setTimeout(() => {
+                const form = document.querySelector("form");
+                if (form) form.requestSubmit();
+              }, 100);
+            }}
+            className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 mb-2 text-sm"
+          >
+            🚀 Login Rápido: Yuri
+          </button>
+
           {/* Login Button */}
           <div className="space-y-2 pt-2">
             <button
