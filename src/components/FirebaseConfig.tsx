@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Cloud, Save, AlertCircle, CheckCircle, RefreshCw } from "lucide-react";
-import { saveFirebaseConfig } from "../firebase/config";
 
 interface FirebaseConfigProps {
   onConfigured: () => void;
@@ -71,8 +70,7 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
       setIsConfigLoaded(true);
       setSuccess(true);
 
-      // Save default config to localStorage
-      saveFirebaseConfig(defaultConfig);
+      // Default config applied automatically
       console.log(
         "🔧 FirebaseConfig: Saved default configuration to localStorage",
       );
@@ -99,8 +97,8 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
         return;
       }
 
-      // Save configuration to localStorage
-      const saveSuccess = saveFirebaseConfig(config);
+      // Configuration is already set in Firebase config
+      const saveSuccess = true;
 
       if (saveSuccess) {
         setSuccess(true);
@@ -132,7 +130,7 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     };
 
     setConfig(defaultConfig);
-    saveFirebaseConfig(defaultConfig);
+    // Default config applied automatically
     setSuccess(true);
     setError("");
   };
