@@ -85,9 +85,23 @@ export const useAutoUserMigration = () => {
           }),
         );
       } else {
-        console.warn(
-          "⚠️ AUTO-MIGRATION: Firestore migration failed, trying local fallback...",
+        // Check if this is specifically a Firestore not enabled issue
+        const isFirestoreNotEnabled = result.details.some(
+          (detail) =>
+            detail.includes("FIRESTORE_NOT_ENABLED") ||
+            detail.includes("Service firestore is not available") ||
+            detail.includes("Firestore service not available"),
         );
+
+        if (isFirestoreNotEnabled) {
+          console.log(
+            "🔥 AUTO-MIGRATION: Firestore service not enabled - using local-only migration",
+          );
+        } else {
+          console.warn(
+            "⚠️ AUTO-MIGRATION: Firestore migration failed for other reasons, trying local fallback...",
+          );
+        }
 
         // Try local migration as fallback
         try {
