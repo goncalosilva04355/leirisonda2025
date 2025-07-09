@@ -170,6 +170,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               <strong>Erro de Login:</strong>
               <br />
               {loginError}
+              <div className="text-xs mt-2 text-gray-600">
+                Debug: {loginForm.email} / {loginForm.password}
+              </div>
             </div>
           )}
 
