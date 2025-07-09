@@ -393,7 +393,7 @@ const ensureFirestore = async (): Promise<any> => {
       );
     } catch (error: any) {
       console.warn("⚠️ Falha na inicialização do Firestore:", error.message);
-      console.log("📱 Aplicação continuará em modo local");
+      console.log("📱 Aplica��ão continuará em modo local");
       db = null;
     }
   }
@@ -446,21 +446,15 @@ console.log("🔥 Firebase initialization delegated to simplified system");
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
   try {
-    // Check if db is available from main config or fallback to UltimateSimpleFirebase
-    if (db) {
+    // Check if we have Firebase services available
+    const hasServices = !!(db || auth);
+    if (hasServices) {
+      console.log("✅ Firebase services available");
       return true;
     }
 
-    // Try to check UltimateSimpleFirebase status
-    import("./ultimateSimpleFirebase")
-      .then(({ UltimateSimpleFirebase }) => {
-        const status = UltimateSimpleFirebase.getStatus();
-        return status.ready && (status.hasDB || status.hasAuth);
-      })
-      .catch(() => false);
-
-    // For synchronous check, return true if we have any db instance
-    return !!db;
+    console.log("⚠️ Firebase services not yet available");
+    return false;
   } catch (error) {
     console.warn("Firebase health check failed:", error);
     return false;
