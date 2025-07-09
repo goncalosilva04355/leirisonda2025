@@ -2008,9 +2008,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Obras Atribuídas
+                          Todas as Obras
                         </h3>
-                        <p className="text-sm text-gray-500">Atribuídas a si</p>
+                        <p className="text-sm text-gray-500">No sistema</p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {works.length}
@@ -5850,7 +5850,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>���� Estados de progresso</li>
+                        <li>��� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -8107,7 +8107,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conteúdo. Por favor, tente
+              Ocorreu um erro ao carregar o conte��do. Por favor, tente
               novamente.
             </p>
             <button
