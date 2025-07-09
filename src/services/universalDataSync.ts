@@ -302,7 +302,7 @@ class UniversalDataSyncService {
 
     // Return cleanup function
     return () => {
-      clearInterval(pollInterval);
+      // clearInterval(pollInterval); // Disabled polling
       window.removeEventListener(
         "localDataChanged",
         handleDataChange as EventListener,
