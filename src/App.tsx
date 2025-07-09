@@ -159,7 +159,7 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
+  // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   const universalSync = useUniversalDataSync();
 
   // Data sync hook - versão segura para evitar erros
@@ -314,15 +314,7 @@ function App() {
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
-  // Debug: Log works whenever they change
-  useEffect(() => {
-    console.log("📋 OBRAS ATUALIZADAS:", {
-      quantidade: works.length,
-      obras: works,
-      syncStatus: syncStatus,
-      universalSyncObras: universalSync.obras?.length || 0,
-    });
-  }, [works, syncStatus, universalSync.obras]);
+  // Debug logging removed to prevent re-render loops
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
