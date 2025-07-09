@@ -1,10 +1,14 @@
 /**
  * Ferramenta de diagnóstico e correção automática do Firebase
+ * FIXED: Prevenindo conflitos de inicialização e erros getImmediate
  */
 
-import { initializeApp, getApps, deleteApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { initializeApp, getApps, deleteApp, getApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+
+// Import the main Firebase config instead of duplicating it
+import { getDB, getAuthService, waitForFirebaseInit } from "../firebase/config";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
@@ -40,30 +44,24 @@ export class FirebaseDiagnostic {
         return results;
       }
 
-      // 2. Limpar apps existentes
-      console.log("🧹 2. Limpando apps existentes...");
+      // 2. Aguardar inicialização do Firebase principal
+      console.log("⏳ 2. Aguardando inicialização do Firebase principal...");
+      await waitForFirebaseInit();
+
+      // 3. Verificar se app principal está disponível
+      console.log("🚀 3. Verificando Firebase app...");
       const existingApps = getApps();
-      for (const app of existingApps) {
-        try {
-          await deleteApp(app);
-          console.log("🗑️ App existente removido");
-        } catch (error) {
-          console.warn("⚠️ Erro ao remover app:", error);
-        }
-      }
-
-      // 3. Inicializar app
-      console.log("🚀 3. Inicializando Firebase app...");
-      const app = initializeApp(firebaseConfig);
-      if (app) {
+      if (existingApps.length > 0) {
         results.appInitialized = true;
-        console.log("✅ Firebase app inicializado");
+        console.log("✅ Firebase app principal está ativo");
+      } else {
+        console.warn("⚠️ Nenhum app Firebase encontrado");
       }
 
-      // 4. Testar Auth
+      // 4. Testar Auth usando o serviço principal
       console.log("🔐 4. Testando Firebase Auth...");
       try {
-        const auth = getAuth(app);
+        const auth = await getAuthService();
         if (auth) {
           results.authAvailable = true;
           console.log("✅ Firebase Auth disponível");
@@ -72,10 +70,10 @@ export class FirebaseDiagnostic {
         console.error("❌ Firebase Auth falhou:", error);
       }
 
-      // 5. Testar Firestore
+      // 5. Testar Firestore usando o serviço principal
       console.log("🔄 5. Testando Firestore...");
       try {
-        const db = getFirestore(app);
+        const db = await getDB();
         if (db) {
           results.firestoreAvailable = true;
           console.log("✅ Firestore disponível");
@@ -122,52 +120,41 @@ export class FirebaseDiagnostic {
   }
 
   static async forceInitialization() {
-    console.log("🔧 FORÇANDO INICIALIZAÇÃO DO FIREBASE");
+    console.log("🔧 VERIFICANDO STATUS DO FIREBASE");
 
     try {
-      // Executar diagnóstico primeiro
+      // Aguardar um pouco para evitar conflitos de inicialização
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Executar diagnóstico usando os serviços existentes
       const diagnostic = await this.runFullDiagnostic();
 
       if (diagnostic.overall) {
-        console.log("✅ Firebase já funcional após diagnóstico");
+        console.log("✅ Firebase já funcional");
         return true;
       }
 
-      // Tentar estratégias alternativas
-      console.log("🔄 Tentando estratégias alternativas...");
-
-      // Estratégia 1: Aguardar e tentar novamente
+      // Se não funcionou, aguardar mais tempo para inicialização
+      console.log("⏳ Aguardando mais tempo para inicialização...");
       await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const retryDiagnostic = await this.runFullDiagnostic();
 
       if (retryDiagnostic.overall) {
-        console.log("✅ Firebase funcional após retry");
+        console.log("✅ Firebase funcional após aguardar");
         return true;
       }
 
-      // Estratégia 2: Modo degradado mas funcional
-      console.log("📱 Configurando modo local funcional...");
+      // Modo local funcional
+      console.log("📱 Funcionando em modo local");
       return false;
     } catch (error) {
-      console.error("❌ Erro na inicialização forçada:", error);
+      console.error("❌ Erro no diagnóstico:", error);
       return false;
     }
   }
 }
 
-// Auto-executar diagnóstico quando importado
-if (typeof window !== "undefined") {
-  // Executar após um delay para não interferir com o startup
-  setTimeout(() => {
-    FirebaseDiagnostic.forceInitialization().then((success) => {
-      if (success) {
-        console.log("🔥 Firebase Status: ATIVO");
-        // Disparar evento para componentes que aguardam Firebase
-        window.dispatchEvent(new CustomEvent("firebaseReady"));
-      } else {
-        console.log("📱 Firebase Status: MODO LOCAL");
-        window.dispatchEvent(new CustomEvent("firebaseLocalMode"));
-      }
-    });
-  }, 1000);
-}
+// Diagnóstico disponível para uso manual - não executa automaticamente
+// Para executar manualmente: FirebaseDiagnostic.forceInitialization()
+console.log("🔧 Firebase Diagnostic ready for manual execution");

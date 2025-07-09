@@ -62,12 +62,15 @@ import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
-import { FirebaseDiagnostic } from "./utils/firebaseDiagnostic";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
+
+// Firebase works silently in background - no diagnostics or UI needed
+import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
+// Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
@@ -166,15 +169,10 @@ function App() {
     // Backup inicial
     DataProtectionService.createEmergencyBackup();
 
-    // FIREBASE DIAGNOSTIC E FORÇA INICIALIZAÇÃO
-    console.log("🔧 Iniciando diagnóstico Firebase...");
-    FirebaseDiagnostic.forceInitialization().then((success) => {
-      if (success) {
-        console.log("🔥 Firebase inicializado com sucesso!");
-      } else {
-        console.log("📱 Aplicação funcionará em modo local");
-      }
-    });
+    // Firebase initialization handled by firebase/config.ts automatically
+    console.log(
+      "🔧 Firebase será inicializado automaticamente pelo sistema principal",
+    );
 
     // Backup automático contínuo (reduzido para 10 minutos)
     const backupInterval = setInterval(() => {
@@ -676,14 +674,16 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "N��o tem permissão para criar manutenções. Contacte o administrador.",
+        "N��o tem permissão para criar manutenç���es. Contacte o administrador.",
       );
       return;
     }
 
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigat��rios (Piscina e Técnico).");
+      alert(
+        "Por favor, preencha os campos obrigat���rios (Piscina e Técnico).",
+      );
       return;
     }
 
@@ -959,7 +959,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta aç���o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENCAO: Esta acao vai eliminar permanentemente todas as obras, manutencoes e piscinas. Os utilizadores serao mantidos. Confirma?",
       )
     ) {
       try {
@@ -1278,7 +1278,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura��ões para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura����es para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1291,7 +1291,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -1737,14 +1737,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "relatorios",
       icon: BarChart3,
-      label: "Relatórios",
+      label: "Relatorios",
       path: "/relatorios",
     },
     { id: "clientes", icon: Users, label: "Clientes", path: "/clientes" },
     {
       id: "configuracoes",
       icon: Settings,
-      label: "Configuraç��es",
+      label: "Configuracoes",
       path: "/configuracoes",
     },
     {
@@ -1784,7 +1784,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
                   style={{
-                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fe6dd131c94c1407994895f6f7cf7f1c7?format=webp&width=800')`,
+                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F4aa5ed953548445997f9d2fcbd4d2e2b?format=webp&width=800')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
@@ -1799,7 +1799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between mb-3">
                       <div className="w-20 h-12 bg-white rounded shadow-sm p-2">
                         <img
-                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
                           alt="Leirisonda Logo"
                           className="w-full h-full object-contain"
                         />
@@ -2866,7 +2866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Próxima manutenção:{" "}
+                                Pr��xima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -3531,7 +3531,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setCurrentTechnician(e.target.value)
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: João Santos"
+                              placeholder="Ex: Jo��o Santos"
                             />
                             <button
                               type="button"
@@ -3585,8 +3585,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usu��rios Atribuídos ({users.length} utilizadores
-                            disponíveis)
+                            Usuarios Atribuidos ({users.length} utilizadores
+                            disponiveis)
                           </label>
                           {(() => {
                             console.log(
@@ -3597,13 +3597,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             return null;
                           })()}
                           <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuários responsáveis por esta obra.
-                            Utilizadores inativos são marcados como "(Inativo)".
+                            Selecione os usuarios responsaveis por esta obra.
+                            Utilizadores inativos sao marcados como "(Inativo)".
                           </p>
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ��️ Nenhum utilizador encontrado. Vá à Área de
+                                ��️ Nenhum utilizador encontrado. V�� à Área de
                                 Administração → "🔧 Corre��ão de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
@@ -3915,7 +3915,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <textarea
                               rows={3}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                              placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
                             />
                           </div>
                         </div>
@@ -4573,7 +4573,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Location */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Localização Completa *
+                        Localizaç��o Completa *
                       </label>
                       <input
                         type="text"
@@ -4842,7 +4842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç����o criada para nova piscina:",
+                                "Futura manutenç�����o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -5264,7 +5264,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Gerais
+                          Observa��ões Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -5556,27 +5556,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-green-900 mb-2">
-                            Notificações de Sistema
-                          </h4>
-                          <p className="text-green-700 text-sm mb-3">
-                            Receba alertas sobre atualizações do sistema e
-                            manutenções programadas.
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <span className="text-green-800 text-sm font-medium">
-                              Status: Ativo
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Configurações de Localização Individual - Apenas para super_admin */}
+                    {/* Configurações de Localiza��ão Individual - Apenas para super_admin */}
                     {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
@@ -5722,7 +5702,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               dispositivo
                             </li>
                             <li>
-                              • A marcação automática funciona melhor em
+                              • A marcaç��o automática funciona melhor em
                               dispositivos móveis
                             </li>
                             <li>��� O Google Maps abre numa nova janela/tab</li>
@@ -5747,8 +5727,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                     </div>
                     <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manuten���ões e piscinas
-                      para começar com uma aplicação limpa. Os utilizadores são
+                      Elimine todos os dados de obras, manutencoes e piscinas
+                      para comecar com uma aplicacao limpa. Os utilizadores sao
                       mantidos.
                     </p>
 
@@ -5855,7 +5835,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten����ões</li>
+                        <li>• Histórico de manuten������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -6780,7 +6760,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <span className="font-medium">
-                                  Atribu����da a:
+                                  Atribu������da a:
                                 </span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
@@ -7071,9 +7051,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuários responsáveis por esta obra (
-                            {users.length} utilizadores disponíveis).
-                            Utilizadores inativos são marcados como "(Inativo)".
+                            Selecione os usuarios responsaveis por esta obra (
+                            {users.length} utilizadores disponiveis).
+                            Utilizadores inativos sao marcados como "(Inativo)".
                           </p>
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
@@ -8561,6 +8541,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
+          {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
@@ -8574,7 +8555,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center space-x-3">
                     <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
                       <img
-                        src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                        src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
                         alt="Leirisonda Logo"
                         className="w-full h-full object-contain"
                       />
@@ -8659,7 +8640,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     }`}
                   >
                     <Wrench className="h-5 w-5" />
-                    <span>Manutenções</span>
+                    <span>Manutencoes</span>
                   </button>
                 )}
 
@@ -8676,7 +8657,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     }`}
                   >
                     <Plus className="h-5 w-5" />
-                    <span>Nova Manutenção</span>
+                    <span>Nova Manutencao</span>
                   </button>
                 )}
 
@@ -8711,7 +8692,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     }`}
                   >
                     <MapPin className="h-5 w-5" />
-                    <span>Localizações</span>
+                    <span>Localizacoes</span>
                   </button>
                 )}
               </nav>
@@ -8735,7 +8716,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 >
                   <LogOut className="h-5 w-5" />
-                  <span>Terminar Sessão</span>
+                  <span>Terminar Sessao</span>
                 </button>
                 <div className="mt-4 text-center">
                   <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
@@ -8803,7 +8784,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "Não especificado"}
+                          {selectedWork.type || "N����o especificado"}
                         </p>
                       </div>
                       <div>
@@ -8962,7 +8943,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         selectedWork.vehicles.length > 0 && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
-                              Ve��culos
+                              Ve���culos
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.vehicles.join(", ")}

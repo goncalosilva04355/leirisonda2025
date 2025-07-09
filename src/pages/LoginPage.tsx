@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Settings } from "lucide-react";
-import { FirebaseStatusMonitor } from "../components/FirebaseStatusMonitor";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -97,15 +96,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
   return (
     <div className="min-h-screen bg-blue-600 flex items-center justify-center">
-      {/* Firebase Status Monitor */}
-      <FirebaseStatusMonitor />
-
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-32 h-20 bg-white rounded-lg shadow-md p-2 mx-auto">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+              src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
               alt="Leirisonda Logo"
               className="w-full h-full object-contain"
             />

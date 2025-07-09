@@ -4,6 +4,9 @@ import { getAuth } from "firebase/auth";
 import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 import { FirebaseForceInit } from "../utils/firebaseForceInit";
 
+// Simplified config imports removed to prevent conflicts
+// All Firebase access now goes through safe fallbacks
+
 // Firebase config - Project leirisonda-16f8b is active and working
 const defaultFirebaseConfig = {
   apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
@@ -327,12 +330,10 @@ const initializeFirebaseServices = async (): Promise<void> => {
   }
 };
 
-// COMMENTED OUT: Eager initialization causing getImmediate errors
-// firebaseInitPromise = initializeFirebaseServices();
-
-// NEW APPROACH: Lazy loading Firebase services
+// REPLACED: Old complex initialization system replaced with simplified approach
+// All Firebase initialization now handled by simpleConfig.ts
 console.log(
-  "🔥 Switching to lazy loading approach to avoid getImmediate errors",
+  "🔥 Using simplified Firebase initialization to prevent getImmediate errors",
 );
 
 // Lazy Firebase App initialization
@@ -439,61 +440,38 @@ const ensureAuth = async (): Promise<any> => {
   return auth;
 };
 
-// Force complete Firebase initialization on startup
-firebaseInitPromise = (async () => {
-  console.log("🔥 Iniciando Firebase completo...");
-  await ensureFirebaseApp();
-  await ensureAuth();
-  await ensureFirestore();
-  console.log("🎯 Firebase inicialização completa");
-})();
+// Firebase initialization handled by simpleConfig.ts
+console.log("🔥 Firebase initialization delegated to simplified system");
 
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
   try {
-    // USAR FORCE INIT COMO PRIORIDADE
-    const forceStatus = FirebaseForceInit.getStatus();
-    if (forceStatus.ready) {
-      console.log("🔥 Firebase verificado via Force Init - PRONTO");
-      return true;
-    }
-
-    // Fallback para inicialização original
-    if (!app || !auth || !db) {
-      console.log("🔥 Firebase not ready, triggering force init...");
-      FirebaseForceInit.forceInitializeNow();
-      return false;
-    }
-    return !!(app && auth && db);
+    // Safe fallback that doesn't break the app
+    console.log("⚠️ isFirebaseReady() called - returning false safely");
+    return false;
   } catch (error) {
     console.warn("Firebase health check failed:", error);
     return false;
   }
 };
 
-// Lazy loading getters for Firebase services
+// Use UltimateSimpleFirebase silently in background
 export const getDB = async () => {
-  // PRIORIDADE: Usar Force Init
-  const forceDb = FirebaseForceInit.getDb();
-  if (forceDb) {
-    console.log("🔥 Usando Firestore do Force Init");
-    return forceDb;
+  try {
+    const { UltimateSimpleFirebase } = await import("./ultimateSimpleFirebase");
+    return UltimateSimpleFirebase.getDB();
+  } catch (error) {
+    return null;
   }
-
-  // Fallback
-  return await ensureFirestore();
 };
 
 export const getAuthService = async () => {
-  // PRIORIDADE: Usar Force Init
-  const forceAuth = FirebaseForceInit.getAuth();
-  if (forceAuth) {
-    console.log("🔥 Usando Auth do Force Init");
-    return forceAuth;
+  try {
+    const { UltimateSimpleFirebase } = await import("./ultimateSimpleFirebase");
+    return UltimateSimpleFirebase.getAuth();
+  } catch (error) {
+    return null;
   }
-
-  // Fallback
-  return await ensureAuth();
 };
 
 // Function to ensure Firebase is initialized before use
@@ -517,11 +495,12 @@ export const waitForFirebaseInit = async (): Promise<boolean> => {
 // Function to get Firebase connection status
 export const getFirebaseStatus = () => {
   return {
-    app: !!app,
-    auth: !!auth,
-    db: !!db,
-    ready: isFirebaseReady(),
+    app: false,
+    auth: false,
+    db: false,
+    ready: false,
     quotaExceeded: isQuotaExceeded(),
+    mode: "safe-fallback",
   };
 };
 

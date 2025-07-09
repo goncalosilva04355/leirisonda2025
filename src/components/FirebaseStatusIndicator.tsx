@@ -1,70 +1,128 @@
-import React, { useState, useEffect } from "react";
-import { Wifi, WifiOff, AlertCircle } from "lucide-react";
+/**
+ * Componente para mostrar o status do Firebase na interface
+ */
 
-export const FirebaseStatusIndicator: React.FC = () => {
-  const [status, setStatus] = useState<
-    "connecting" | "connected" | "local" | "error"
-  >("connecting");
+import React, { useState, useEffect } from "react";
+import { getFirebaseStatus } from "../firebase/config";
+
+export function FirebaseStatusIndicator() {
+  const [status, setStatus] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Escutar eventos de status do Firebase
-    const handleFirebaseReady = () => setStatus("connected");
-    const handleFirebaseLocal = () => setStatus("local");
+    // Detectar se é dispositivo móvel
+    const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    setIsMobile(mobile);
 
-    window.addEventListener("firebaseReady", handleFirebaseReady);
-    window.addEventListener("firebaseLocalMode", handleFirebaseLocal);
-
-    // Timeout para considerar erro se não conectar
-    const timeout = setTimeout(() => {
-      if (status === "connecting") {
-        setStatus("local");
+    const checkStatus = async () => {
+      try {
+        const firebaseStatus = getFirebaseStatus();
+        setStatus(firebaseStatus);
+      } catch (error) {
+        console.error("Erro ao verificar status Firebase:", error);
+        setStatus({ ready: false, error: true });
+      } finally {
+        setLoading(false);
       }
-    }, 10000); // 10 segundos
+    };
+
+    checkStatus();
+
+    // Verificar status a cada 10 segundos (menos frequente no mobile)
+    const interval = setInterval(checkStatus, mobile ? 10000 : 5000);
+
+    // Escutar eventos específicos do mobile
+    const handleMobileReady = () => {
+      setStatus((prev) => ({ ...prev, ready: true, mobile: true }));
+      setLoading(false);
+    };
+
+    const handleMobileNotReady = (event: any) => {
+      setStatus({ ready: false, mobile: true, details: event.detail });
+      setLoading(false);
+    };
+
+    window.addEventListener("firebaseMobileReady", handleMobileReady);
+    window.addEventListener("firebaseMobileNotReady", handleMobileNotReady);
 
     return () => {
-      window.removeEventListener("firebaseReady", handleFirebaseReady);
-      window.removeEventListener("firebaseLocalMode", handleFirebaseLocal);
-      clearTimeout(timeout);
+      clearInterval(interval);
+      window.removeEventListener("firebaseMobileReady", handleMobileReady);
+      window.removeEventListener(
+        "firebaseMobileNotReady",
+        handleMobileNotReady,
+      );
     };
-  }, [status]);
+  }, []);
 
-  const getStatusInfo = () => {
-    switch (status) {
-      case "connecting":
-        return {
-          icon: <Wifi className="h-4 w-4 animate-pulse" />,
-          text: "Conectando...",
-          color: "text-yellow-600 bg-yellow-50 border-yellow-200",
-        };
-      case "connected":
-        return {
-          icon: <Wifi className="h-4 w-4" />,
-          text: "Sincronização ativa",
-          color: "text-green-600 bg-green-50 border-green-200",
-        };
-      case "local":
-        return {
-          icon: <WifiOff className="h-4 w-4" />,
-          text: "Modo local",
-          color: "text-blue-600 bg-blue-50 border-blue-200",
-        };
-      case "error":
-        return {
-          icon: <AlertCircle className="h-4 w-4" />,
-          text: "Erro de conexão",
-          color: "text-red-600 bg-red-50 border-red-200",
-        };
-    }
-  };
+  if (loading) {
+    return (
+      <div className="fixed top-4 right-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 py-2 rounded text-sm max-w-xs">
+        🔄{" "}
+        {isMobile
+          ? "Verificando Firebase (iPhone)..."
+          : "Verificando Firebase..."}
+      </div>
+    );
+  }
 
-  const statusInfo = getStatusInfo();
+  if (!status) {
+    return (
+      <div className="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+        ❌ Erro ao verificar Firebase
+      </div>
+    );
+  }
+
+  if (status.ready) {
+    const isMigrated =
+      localStorage.getItem("migratedToFirebaseOnly") === "true";
+
+    return (
+      <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded text-sm max-w-xs">
+        ✅ Firebase Ativo {isMobile ? "(iPhone)" : ""}
+        {status.db && " | DB ✓"}
+        {status.auth && " | Auth ✓"}
+        {status.unified && (
+          <div className="text-xs mt-1 text-purple-600">
+            🛡️ Sistema Unificado
+          </div>
+        )}
+        {isMigrated && (
+          <div className="text-xs mt-1 text-blue-600">
+            🔥 Modo Firebase-Only
+          </div>
+        )}
+        {status.mobile && (
+          <div className="text-xs mt-1">📱 Otimizado para mobile</div>
+        )}
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-sm ${statusInfo.color}`}
-    >
-      {statusInfo.icon}
-      <span>{statusInfo.text}</span>
+    <div className="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm max-w-xs">
+      ❌ Firebase Inativo {isMobile ? "(iPhone)" : ""}
+      <details className="mt-1">
+        <summary className="cursor-pointer text-xs">
+          Detalhes {isMobile ? "📱" : ""}
+        </summary>
+        <div className="text-xs mt-1">
+          <div>App: {status.app ? "✅" : "❌"}</div>
+          <div>Auth: {status.auth ? "✅" : "❌"}</div>
+          <div>DB: {status.db ? "✅" : "❌"}</div>
+          <div>Inicializando: {status.initializing ? "✅" : "❌"}</div>
+          {isMobile && (
+            <div className="text-orange-600 mt-1">📱 Modo iPhone detectado</div>
+          )}
+          {status.details?.errorDetails && (
+            <div className="text-red-600 mt-1 text-xs">
+              Erro: {status.details.errorDetails.message}
+            </div>
+          )}
+        </div>
+      </details>
     </div>
   );
-};
+}
