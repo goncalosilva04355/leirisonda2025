@@ -1298,7 +1298,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura����es para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura����es para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -6541,7 +6541,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={(e) => {
                           e.preventDefault();
                           alert(
-                            "Cliente criado com sucesso! (Funç��o em desenvolvimento)",
+                            "Cliente criado com sucesso! (Fun����o em desenvolvimento)",
                           );
                           setActiveSection("clientes");
                         }}
@@ -6666,7 +6666,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Sem Folha de Obra (
                       {
                         works.filter(
-                          (w) => !w.folhaGerada && w.status !== "completed",
+                          (w) =>
+                            !w.folhaGerada &&
+                            w.status !== "completed" &&
+                            w.status !== "concluida",
                         ).length
                       }
                       )
