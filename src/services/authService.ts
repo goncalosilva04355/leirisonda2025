@@ -379,7 +379,7 @@ class AuthService {
         let name = firebaseUser.displayName || "Utilizador";
 
         // Special case for Gonçalo's admin account
-        if (firebaseUser.email === "goncalosfonseca@gmail.com") {
+        if (firebaseUser.email === "gongonsilva@gmail.com") {
           role = "super_admin";
           name = "Gonçalo Fonseca";
         }
