@@ -230,11 +230,28 @@ export function getFirebaseStatus() {
 
 // Initialize Firebase when module is imported (in browser environment)
 if (typeof window !== "undefined") {
-  initializeFirebase().then((success) => {
+  // Use a retry mechanism for initialization
+  let initRetries = 0;
+  const maxRetries = 3;
+
+  const tryInitialize = async () => {
+    initRetries++;
+    console.log(
+      `🔄 Firebase initialization attempt ${initRetries}/${maxRetries}`,
+    );
+
+    const success = await initializeFirebase();
+
     if (success) {
       console.log("🔥 Firebase ready");
+    } else if (initRetries < maxRetries) {
+      console.log(`⚠️ Attempt ${initRetries} failed, retrying in 2 seconds...`);
+      setTimeout(tryInitialize, 2000);
     } else {
-      console.log("📱 Running in local mode");
+      console.log("📱 Running in local mode after all retries failed");
     }
-  });
+  };
+
+  // Start initialization with small delay to avoid race conditions
+  setTimeout(tryInitialize, 1000);
 }
