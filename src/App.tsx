@@ -1300,7 +1300,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     if (Notification.permission === "granted") {
       showNotification(
         "Teste de Notificação",
-        "As notificaç��es estão a funcionar corretamente!",
+        "As notificaç����es estão a funcionar corretamente!",
         "test",
       );
     } else {
@@ -6703,20 +6703,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="flex items-center space-x-2"></div>
                               <span
                                 className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                  work.status === "pendente" ||
                                   work.status === "pending"
                                     ? "bg-red-100 text-red-700 border border-red-200"
-                                    : work.status === "in_progress"
+                                    : work.status === "em_progresso" ||
+                                        work.status === "in_progress"
                                       ? "bg-orange-100 text-orange-700 border border-orange-200"
-                                      : work.status === "completed"
+                                      : work.status === "concluida" ||
+                                          work.status === "completed"
                                         ? "bg-green-100 text-green-700 border border-green-200"
                                         : "bg-gray-100 text-gray-700 border border-gray-200"
                                 }`}
                               >
-                                {work.status === "pending"
+                                {work.status === "pendente" ||
+                                work.status === "pending"
                                   ? "Pendente"
-                                  : work.status === "in_progress"
+                                  : work.status === "em_progresso" ||
+                                      work.status === "in_progress"
                                     ? "Em Progresso"
-                                    : work.status === "completed"
+                                    : work.status === "concluida" ||
+                                        work.status === "completed"
                                       ? "Concluída"
                                       : work.status}
                               </span>
@@ -6792,7 +6798,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <span className="font-medium">
-                                  Atribu������da a:
+                                  Atribu��������da a:
                                 </span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
