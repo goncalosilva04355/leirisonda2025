@@ -4250,7 +4250,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           };
 
                           // Use sync system to add work (will handle Firebase and localStorage)
-                          const newWork = addWork(workData);
+                          console.log(
+                            "🔧 Attempting to add work with data:",
+                            workData,
+                          );
+                          try {
+                            const newWork = await addWork(workData);
+                            console.log(
+                              "✅ Work created successfully with ID:",
+                              newWork,
+                            );
+                          } catch (error) {
+                            console.error("❌ Error creating work:", error);
+                            alert(
+                              `Erro ao criar obra: ${error.message || error}`,
+                            );
+                            return;
+                          }
 
                           // Send notifications to all assigned users
                           assignedUsers.forEach((assignedUser) => {
@@ -5837,7 +5853,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
                         <li>• Histórico de manuten������es</li>
-                        <li>�� Próximas interven��ões</li>
+                        <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
                     <button
