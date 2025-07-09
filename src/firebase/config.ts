@@ -33,6 +33,15 @@ export const waitForFirebaseInit = async (): Promise<boolean> => {
   return isFirebaseReady();
 };
 
+// Funções para obter serviços (compatibilidade)
+export const getDB = async () => {
+  return db;
+};
+
+export const getAuthService = async () => {
+  return auth;
+};
+
 // Exports
 export { app, analytics };
 export default app;
