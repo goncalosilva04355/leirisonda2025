@@ -48,9 +48,19 @@ export class UltimateSimpleFirebase {
 
       // 5. Tentar Firestore (silenciosamente)
       try {
-        const { getFirestore } = await import("firebase/firestore");
+        const { getFirestore, connectFirestoreEmulator } = await import(
+          "firebase/firestore"
+        );
         this.db = getFirestore(this.app);
+
+        // Test Firestore connectivity
+        const { collection, getDocs } = await import("firebase/firestore");
+        const testCol = collection(this.db, "__test__");
+        await getDocs(testCol);
+
+        console.log("✅ Firestore initialized and tested successfully");
       } catch (firestoreError) {
+        console.warn("⚠️ Firestore initialization failed:", firestoreError);
         this.db = null;
       }
 

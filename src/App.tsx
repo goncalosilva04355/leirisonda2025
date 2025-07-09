@@ -72,6 +72,10 @@ import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
+import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
+import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
+import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
+import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
@@ -164,6 +168,24 @@ function App() {
   // Firebase ativo como solicitado
   const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSafe();
+
+  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
+  const firebaseAutoFix = useAutoFirebaseFix();
+
+  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
+  const userMigration = useAutoUserMigration();
+
+  // Log migration status changes
+  useEffect(() => {
+    if (userMigration.status.completed && userMigration.status.migrated > 0) {
+      console.log(
+        `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
+      );
+      console.log(
+        "✅ AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+      );
+    }
+  }, [userMigration.status.completed, userMigration.status.migrated]);
 
   // Backup and complex initialization temporarily disabled for stability
 
@@ -1296,7 +1318,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura����es para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -3185,7 +3207,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenções agendadas e programadas
+                          Manutenç��es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -5511,7 +5533,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Notificações de Obras
                           </h4>
                           <p className="text-blue-700 text-sm mb-3">
-                            Receba notificações quando uma nova obra for
+                            Receba notifica��ões quando uma nova obra for
                             atribuída a si.
                           </p>
                           <button
@@ -6504,7 +6526,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic��vel)
+                            Pessoa de Contacto (se aplic����vel)
                           </label>
                           <input
                             type="text"
@@ -7865,7 +7887,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenç��o">Manutenção</option>
-                          <option value="Reparaç��o">Reparação</option>
+                          <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
                       <div>
@@ -8147,7 +8169,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Página não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A seç��o solicitada não foi encontrada.
+                  A seç���o solicitada não foi encontrada.
                 </p>
               </div>
             </div>
@@ -8415,7 +8437,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 (!isAuthenticated || !currentUser)
               ) {
                 console.log(
-                  "❌ Access denied: User management requires authentication",
+                  "��� Access denied: User management requires authentication",
                 );
                 setLoginError(
                   "Por favor, faça login primeiro para aceder à gestão de utilizadores",
@@ -8523,6 +8545,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
+              // Auto-check Firebase before login attempt
+              await firebaseAutoFix.checkOnUserAction();
+
               const result = await authService.login(email.trim(), password);
 
               console.log("🔐 Auth result:", result);
@@ -9306,6 +9331,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* User Restore Notification */}
         <UserRestoreNotification />
+
+        {/* Firebase Auto-Monitor - Discrete indicator */}
+        <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
+
+        {/* User Migration Indicator - Shows migration status */}
+        <UserMigrationIndicator migrationStatus={userMigration} />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );

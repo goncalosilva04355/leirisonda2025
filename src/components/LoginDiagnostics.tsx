@@ -10,6 +10,8 @@ import {
   Settings,
 } from "lucide-react";
 import UserSyncManager from "../utils/userSyncManager";
+import UserCreationHelper from "./UserCreationHelper";
+import LoginDebugHelper from "./LoginDebugHelper";
 
 interface LoginDiagnosticsProps {
   isOpen: boolean;
@@ -47,6 +49,68 @@ export const LoginDiagnostics: React.FC<LoginDiagnosticsProps> = ({
     setSyncResult(sync);
 
     setIsRunning(false);
+  };
+
+  const createMissingUser = async () => {
+    if (!testEmail || !testPassword) {
+      alert("Por favor, insira email e password para criar utilizador");
+      return;
+    }
+
+    setIsRunning(true);
+    try {
+      // Import auth service
+      const { authService } = await import("../services/authService");
+
+      // Extract name from email (basic fallback)
+      const name = testEmail.split("@")[0] || "Utilizador";
+
+      // Create user with technician role by default
+      const result = await authService.register(
+        testEmail,
+        testPassword,
+        name,
+        "technician",
+      );
+
+      if (result.success) {
+        alert("✅ Utilizador criado com sucesso!");
+        // Re-run diagnostics to show updated status
+        runDiagnostics();
+      } else {
+        alert(`❌ Erro ao criar utilizador: ${result.error}`);
+      }
+    } catch (error: any) {
+      console.error("Error creating user:", error);
+      alert(`❌ Erro inesperado: ${error.message}`);
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  const forceSync = () => {
+    setIsRunning(true);
+    try {
+      // Force a complete sync between all user storage systems
+      const result = UserSyncManager.performFullSync();
+      setSyncResult(result);
+
+      // Re-run diagnostics after sync
+      if (testEmail) {
+        const diagnosticResult = UserSyncManager.getLoginDiagnostics(
+          testEmail,
+          testPassword,
+        );
+        setDiagnostics(diagnosticResult);
+      }
+
+      alert("✅ Sincronização forçada concluída!");
+    } catch (error: any) {
+      console.error("Error during force sync:", error);
+      alert(`❌ Erro na sincronização: ${error.message}`);
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   const StatusIcon = ({ condition }: { condition: boolean }) => {
@@ -111,18 +175,29 @@ export const LoginDiagnostics: React.FC<LoginDiagnosticsProps> = ({
                 />
               </div>
             </div>
-            <button
-              onClick={runDiagnostics}
-              disabled={isRunning}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center"
-            >
-              {isRunning ? (
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <AlertCircle className="h-4 w-4 mr-2" />
-              )}
-              {isRunning ? "A executar..." : "Executar Diagnóstico"}
-            </button>
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={runDiagnostics}
+                disabled={isRunning}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center"
+              >
+                {isRunning ? (
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <AlertCircle className="h-4 w-4 mr-2" />
+                )}
+                {isRunning ? "A executar..." : "Executar Diagnóstico"}
+              </button>
+
+              <button
+                onClick={forceSync}
+                disabled={isRunning}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 flex items-center"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Forçar Sincronização
+              </button>
+            </div>
           </div>
 
           {/* Diagnostics Results */}
@@ -212,7 +287,7 @@ export const LoginDiagnostics: React.FC<LoginDiagnosticsProps> = ({
                       <AlertCircle className="h-5 w-5 mr-2" />
                       Sugestões para Resolver o Problema
                     </h3>
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 mb-4">
                       {diagnostics.suggestions.map(
                         (suggestion: string, index: number) => (
                           <li
@@ -225,6 +300,26 @@ export const LoginDiagnostics: React.FC<LoginDiagnosticsProps> = ({
                         ),
                       )}
                     </ul>
+
+                    {/* Quick Fix Button */}
+                    {!diagnostics.userExists && testEmail && testPassword && (
+                      <div className="border-t border-yellow-200 pt-4">
+                        <h4 className="text-sm font-semibold text-yellow-800 mb-2">
+                          Solução Rápida:
+                        </h4>
+                        <button
+                          onClick={createMissingUser}
+                          disabled={isRunning}
+                          className="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 disabled:bg-gray-400 text-sm font-medium"
+                        >
+                          {isRunning ? "A criar..." : "Criar Utilizador Agora"}
+                        </button>
+                        <p className="text-xs text-yellow-700 mt-2">
+                          Isto criará automaticamente o utilizador com as
+                          credenciais inseridas
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -321,6 +416,24 @@ export const LoginDiagnostics: React.FC<LoginDiagnosticsProps> = ({
                     ? "Todas as verificações passaram. O login deve funcionar normalmente."
                     : "Foi identificado um problema que impede o login. Siga as sugestões acima para resolver."}
                 </p>
+              </div>
+
+              {/* User Creation Helper - Show when user doesn't exist */}
+              {!diagnostics.userExists && (
+                <div className="mt-6">
+                  <UserCreationHelper
+                    email={testEmail}
+                    onUserCreated={() => {
+                      // Re-run diagnostics after user creation
+                      runDiagnostics();
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Advanced Debug Helper */}
+              <div className="mt-6">
+                <LoginDebugHelper />
               </div>
             </div>
           )}
