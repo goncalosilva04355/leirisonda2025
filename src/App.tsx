@@ -1964,7 +1964,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="text-4xl font-bold text-gray-900">
                         {
                           works.filter(
-                            (w) => !w.folhaGerada && w.status !== "completed",
+                            (w) =>
+                              !w.folhaGerada &&
+                              w.status !== "completed" &&
+                              w.status !== "concluida",
                           ).length
                         }
                       </div>
@@ -3643,8 +3646,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ��️ Nenhum utilizador encontrado. V�� à Área de
-                                Administração → "🔧 Corre��ão de Atribuiç����o
-                                de Obras" para corrigir este problema.
+                                Administração → "🔧 Corre��ão de Atribuiç��o de
+                                Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
