@@ -65,19 +65,25 @@ async function initializeFirebase(): Promise<boolean> {
 
       // Initialize Auth
       try {
+        console.log("🔐 Initializing Firebase Auth...");
         auth = getAuth(app);
-        console.log("✅ Firebase Auth initialized");
+        console.log("✅ Firebase Auth initialized successfully");
+        console.log("📋 Auth instance:", !!auth);
       } catch (error) {
-        console.warn("⚠️ Firebase Auth failed:", error);
+        console.error("❌ Firebase Auth failed:", error);
+        console.error("📋 Error details:", error);
         auth = null;
       }
 
       // Initialize Firestore
       try {
+        console.log("🔄 Initializing Firestore...");
         db = getFirestore(app);
-        console.log("✅ Firestore initialized");
+        console.log("✅ Firestore initialized successfully");
+        console.log("📋 Firestore instance:", !!db);
       } catch (error) {
-        console.warn("⚠️ Firestore failed:", error);
+        console.error("❌ Firestore failed:", error);
+        console.error("📋 Error details:", error);
         db = null;
       }
 
