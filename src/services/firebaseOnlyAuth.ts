@@ -20,7 +20,7 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
-import { getFirebaseAuth, getFirebaseDB } from "../firebase/simpleConfig";
+import { UnifiedSafeFirebase } from "../firebase/unifiedSafeFirebase";
 
 export interface UserProfile {
   uid: string;
