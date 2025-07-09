@@ -64,32 +64,8 @@ import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
-// Check Firebase status in development
-if (import.meta.env.DEV) {
-  import("./utils/checkFirebaseStatus");
-  import("./utils/firebaseCompleteDiagnosis");
-}
-
-// Always import iPhone checker for mobile devices
-import("./utils/iPhoneFirebaseCheck");
-
-// Analyze dual storage usage
-import("./utils/dualStorageDiagnosis");
-
-// Migrate to Firebase-only system
-import("./utils/migrateToFirebaseOnly");
-
-// Test Firebase storage configuration
-import("./utils/testFirebaseStorage");
-
-// Ultra-safe Firebase configuration (fallback)
-import("./firebase/ultraSafeConfig");
-
-// No-getImmediate Firebase configuration (manual only)
-import("./firebase/noGetImmediateConfig");
-
-// SOLUÇÃO DEFINITIVA: Sistema Firebase Unificado
-import("./firebase/unifiedSafeFirebase");
+// Firebase works silently in background - no diagnostics or UI needed
+import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -230,7 +206,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificaç��es autom��ticas desabilitadas para resolver instabilidade
+    // Verificações autom��ticas desabilitadas para resolver instabilidade
     // Sistema funcionará normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
@@ -1300,7 +1276,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura��ões para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura����es para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -5794,7 +5770,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registos)
                               </li>
                               <li>
-                                ��� Todas as piscinas ({pools.length} registos)
+                                • Todas as piscinas ({pools.length} registos)
                               </li>
                               <li>
                                 🔥 Dados do Firebase e armazenamento local
@@ -5876,7 +5852,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>• Informaç����es de clientes</li>
+                        <li>• Informaç��es de clientes</li>
                         <li>• Histórico de manuten����ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
@@ -5982,7 +5958,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>���� Piscinas associadas</li>
+                        <li>�� Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
@@ -6802,7 +6778,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <span className="font-medium">
-                                  Atribu����da a:
+                                  Atribu������da a:
                                 </span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
@@ -7870,7 +7846,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duraç����o Real (horas)
+                          Duraç��o Real (horas)
                         </label>
                         <input
                           type="number"
@@ -8826,7 +8802,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "Não especificado"}
+                          {selectedWork.type || "N��o especificado"}
                         </p>
                       </div>
                       <div>
