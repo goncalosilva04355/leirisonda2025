@@ -6741,7 +6741,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     �� Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
-                                    {work.client}
+                                    {work.clientName || work.client}
                                   </span>
                                   {work.contact && (
                                     <div className="mt-1">
