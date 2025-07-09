@@ -85,6 +85,14 @@ export const useAutoFirebaseFix = () => {
           autoFixAttempts: prev.autoFixAttempts + 1,
         }));
 
+        // Trigger user migration check after successful Firebase fix
+        if (newStatus.isHealthy) {
+          console.log(
+            "🔄 Triggering user migration check after Firebase fix...",
+          );
+          window.dispatchEvent(new CustomEvent("firebaseFixed"));
+        }
+
         return newStatus.isHealthy;
       }
 
