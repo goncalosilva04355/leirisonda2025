@@ -59,7 +59,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 import { useDataSync } from "./hooks/useDataSync";
-import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
+import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -154,8 +154,8 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Garante que todos os utilizadores vejam todos os dados
-  const universalSync = useUniversalDataSync();
+  // SINCRONIZAÇÃO UNIVERSAL - Versão segura temporária para evitar erros
+  const universalSync = useUniversalDataSyncSafe();
 
   // Data sync hook - fallback para compatibilidade
   const dataSync = useDataSync();
@@ -948,7 +948,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta aç����o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta aç���o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -2090,7 +2090,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 )}
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    🔧 Trabalho:
+                                    ���� Trabalho:
                                   </span>
                                   <span className="text-sm text-gray-900">
                                     {work.workPerformed ||
