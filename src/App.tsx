@@ -3603,7 +3603,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ��️ Nenhum utilizador encontrado. Vá à Área de
+                                ��️ Nenhum utilizador encontrado. V�� à Área de
                                 Administração → "🔧 Corre��ão de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
@@ -8736,7 +8736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 >
                   <LogOut className="h-5 w-5" />
-                  <span>Terminar Sessão</span>
+                  <span>Terminar Sessao</span>
                 </button>
                 <div className="mt-4 text-center">
                   <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
