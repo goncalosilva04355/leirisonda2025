@@ -4206,28 +4206,36 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             };
                           }
 
-                          // Create complete work data object
+                          // Create complete work data object (matching Work interface)
                           const workData = {
                             id: Date.now().toString(),
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
                               : `LS-${Date.now()}`,
-                            title: workTitle || "",
-                            type: workType || "",
-                            client: client || "",
+                            type:
+                              (workType as
+                                | "piscina"
+                                | "manutencao"
+                                | "avaria"
+                                | "montagem") || "piscina",
+                            clientName: client || "",
                             contact: contact || "",
-                            location: location || "",
-                            startTime: startTime || "",
-                            endTime: endTime || "",
-                            status:
-                              (status as
-                                | "pending"
-                                | "in_progress"
-                                | "completed"
-                                | "cancelled") || "pending",
-                            description: description || "",
+                            address: location || "",
+                            entryTime: startTime || new Date().toISOString(),
+                            exitTime: endTime || undefined,
+                            status: (() => {
+                              switch (status) {
+                                case "pending":
+                                  return "pendente";
+                                case "in_progress":
+                                  return "em_progresso";
+                                case "completed":
+                                  return "concluida";
+                                default:
+                                  return "pendente";
+                              }
+                            })(),
                             ...boreData, // Spread bore-specific data if applicable
-                            budget: budget ? parseFloat(budget) : null,
                             assignedTo:
                               assignedUsers.length > 0
                                 ? assignedUsers.map((u) => u.name).join(", ")
@@ -4238,15 +4246,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               : [], // Store user IDs
                             vehicles: workVehicles || [],
                             technicians: workTechnicians || [],
-                            photos: uploadedPhotos || [],
-                            photoCount: uploadedPhotos
-                              ? uploadedPhotos.length
-                              : 0,
+                            photos:
+                              uploadedPhotos.map((photo) => ({
+                                id: photo.id,
+                                url: photo.data,
+                                filename: photo.name,
+                                uploadedAt: new Date().toISOString(),
+                              })) || [],
                             observations: observations || "",
-                            workPerformed: "",
+                            workPerformed: description || "",
                             workSheetCompleted: false,
                             createdAt: new Date().toISOString(),
-                            startDate: new Date().toISOString(),
+                            updatedAt: new Date().toISOString(),
                           };
 
                           // Use sync system to add work (will handle Firebase and localStorage)
