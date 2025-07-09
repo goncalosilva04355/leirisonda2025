@@ -326,7 +326,7 @@ const initializeFirebaseServices = async (): Promise<void> => {
     }
   } catch (error) {
     console.warn(
-      "⚠️ Firebase services initialization failed, using fallback mode:",
+      "���️ Firebase services initialization failed, using fallback mode:",
       error,
     );
     app = null;
@@ -449,9 +449,11 @@ const ensureAuth = async (): Promise<any> => {
 console.log("🔥 Firebase initialization delegated to simplified system");
 
 // Function to check if Firebase is properly initialized and ready
-export const isFirebaseReady = () => {
+export const isFirebaseReady = async () => {
   try {
-    return isSimpleReady();
+    const { UnifiedSafeFirebase } = await import("./unifiedSafeFirebase");
+    const status = UnifiedSafeFirebase.getStatus();
+    return status.ready;
   } catch (error) {
     console.warn("Firebase health check failed:", error);
     return false;
