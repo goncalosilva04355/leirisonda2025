@@ -1290,7 +1290,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         assignedTo.toLowerCase().includes(currentUser?.name.toLowerCase()) ||
         currentUser?.name.toLowerCase().includes(assignedTo.toLowerCase()));
 
-    console.log("🔍 DEBUG: Assignment check:", {
+    console.log("�� DEBUG: Assignment check:", {
       currentUser: currentUser?.name,
       assignedTo,
       exactMatch: currentUser?.name === assignedTo,
@@ -2053,193 +2053,150 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 </div>
 
-                {/* Lista de Obras Atribu��das */}
-                {currentUser &&
-                  works.filter((work) => {
-                    if (!work) return false;
+                {/* Lista de Todas as Obras */}
+                {works.length > 0 && (
+                  <div className="bg-white rounded-lg shadow-sm">
+                    <div className="flex items-center p-4 border-b border-gray-100">
+                      <Building2 className="h-5 w-5 text-purple-600 mr-3" />
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Todas as Obras
+                      </h2>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      {works.map((work) => (
+                        <div
+                          key={work.id}
+                          className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
+                        >
+                          <div className="space-y-3">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-sm font-medium text-gray-600">
+                                📍 Morada:
+                              </span>
+                              {work.location ? (
+                                <button
+                                  onClick={() =>
+                                    handleAddressClick(work.location)
+                                  }
+                                  className={`text-sm cursor-pointer hover:opacity-80 ${
+                                    enableMapsRedirect
+                                      ? "text-blue-600 hover:text-blue-800 underline"
+                                      : "text-gray-900 hover:text-blue-600"
+                                  }`}
+                                >
+                                  {work.location}
+                                </button>
+                              ) : (
+                                <span className="text-sm text-gray-500">
+                                  N��o especificada
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-sm font-medium text-gray-600">
+                                👤 Cliente:
+                              </span>
+                              <span className="text-sm text-gray-900">
+                                {work.client || "Não especificado"}
+                              </span>
+                            </div>
+                            {work.contact && (
+                              <div className="flex items-center space-x-2">
+                                <span className="text-sm font-medium text-gray-600">
+                                  📞 Contacto:
+                                </span>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (enablePhoneDialer) {
+                                      window.location.href = `tel:${work.contact}`;
+                                    }
+                                  }}
+                                  className={`text-sm ${
+                                    enablePhoneDialer
+                                      ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                      : "text-gray-900"
+                                  }`}
+                                >
+                                  {work.contact}
+                                </button>
+                              </div>
+                            )}
+                            <div className="flex items-center space-x-2">
+                              <span className="text-sm font-medium text-gray-600">
+                                ���� Trabalho:
+                              </span>
+                              <span className="text-sm text-gray-900">
+                                {work.workPerformed ||
+                                  work.type ||
+                                  "Não especificado"}
+                              </span>
+                            </div>
 
-                    // Check if user is in assignedTo string (exact match or comma-separated list)
-                    const assignedToMatch =
-                      work.assignedTo &&
-                      work.assignedTo
-                        .split(",")
-                        .map((name) => name.trim().toLowerCase())
-                        .includes(currentUser?.name.toLowerCase());
+                            {/* Estado e Ações */}
+                            <div className="flex items-center justify-between pt-2 border-t border-purple-200">
+                              <span
+                                className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                  work.status === "pending"
+                                    ? "bg-red-100 text-red-700"
+                                    : work.status === "in_progress"
+                                      ? "bg-orange-100 text-orange-700"
+                                      : work.status === "completed"
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-gray-100 text-gray-700"
+                                }`}
+                              >
+                                {work.status === "pending"
+                                  ? "Pendente"
+                                  : work.status === "in_progress"
+                                    ? "Em Progresso"
+                                    : work.status === "completed"
+                                      ? "Conclu��da"
+                                      : work.status}
+                              </span>
 
-                    // Check if user is in assignedUsers array (exact match)
-                    const assignedUsersMatch = work.assignedUsers?.some(
-                      (user) =>
-                        user.name &&
-                        user.name.toLowerCase() ===
-                          currentUser?.name.toLowerCase(),
-                    );
+                              <div className="flex items-center space-x-2">
+                                {/* Botão Visualizar */}
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedWork(work);
+                                    setViewingWork(true);
+                                  }}
+                                  className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-colors"
+                                  title="Visualizar detalhes"
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </button>
 
-                    return assignedToMatch || assignedUsersMatch;
-                  }).length > 0 && (
-                    <div className="bg-white rounded-lg shadow-sm">
-                      <div className="flex items-center p-4 border-b border-gray-100">
-                        <Building2 className="h-5 w-5 text-purple-600 mr-3" />
-                        <h2 className="text-lg font-semibold text-gray-900">
-                          Minhas Obras Atribuídas
-                        </h2>
-                      </div>
-                      <div className="p-4 space-y-3">
-                        {works
-                          .filter((work) => {
-                            if (!work) return false;
-
-                            // Check if user is in assignedTo string (exact match or comma-separated list)
-                            const assignedToMatch =
-                              work.assignedTo &&
-                              work.assignedTo
-                                .split(",")
-                                .map((name) => name.trim().toLowerCase())
-                                .includes(currentUser?.name.toLowerCase());
-
-                            // Check if user is in assignedUsers array (exact match)
-                            const assignedUsersMatch = work.assignedUsers?.some(
-                              (user) =>
-                                user.name &&
-                                user.name.toLowerCase() ===
-                                  currentUser?.name.toLowerCase(),
-                            );
-
-                            return assignedToMatch || assignedUsersMatch;
-                          })
-                          .map((work) => (
-                            <div
-                              key={work.id}
-                              className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
-                            >
-                              <div className="space-y-3">
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-sm font-medium text-gray-600">
-                                    📍 Morada:
-                                  </span>
-                                  {work.location ? (
-                                    <button
-                                      onClick={() =>
-                                        handleAddressClick(work.location)
-                                      }
-                                      className={`text-sm cursor-pointer hover:opacity-80 ${
-                                        enableMapsRedirect
-                                          ? "text-blue-600 hover:text-blue-800 underline"
-                                          : "text-gray-900 hover:text-blue-600"
-                                      }`}
-                                    >
-                                      {work.location}
-                                    </button>
-                                  ) : (
-                                    <span className="text-sm text-gray-500">
-                                      N��o especificada
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-sm font-medium text-gray-600">
-                                    👤 Cliente:
-                                  </span>
-                                  <span className="text-sm text-gray-900">
-                                    {work.client || "Não especificado"}
-                                  </span>
-                                </div>
-                                {work.contact && (
-                                  <div className="flex items-center space-x-2">
-                                    <span className="text-sm font-medium text-gray-600">
-                                      📞 Contacto:
-                                    </span>
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        if (enablePhoneDialer) {
-                                          window.location.href = `tel:${work.contact}`;
-                                        }
-                                      }}
-                                      className={`text-sm ${
-                                        enablePhoneDialer
-                                          ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                          : "text-gray-900"
-                                      }`}
-                                    >
-                                      {work.contact}
-                                    </button>
-                                  </div>
-                                )}
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-sm font-medium text-gray-600">
-                                    ���� Trabalho:
-                                  </span>
-                                  <span className="text-sm text-gray-900">
-                                    {work.workPerformed ||
-                                      work.type ||
-                                      "Não especificado"}
-                                  </span>
-                                </div>
-
-                                {/* Estado e Ações */}
-                                <div className="flex items-center justify-between pt-2 border-t border-purple-200">
-                                  <span
-                                    className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                                      work.status === "pending"
-                                        ? "bg-red-100 text-red-700"
-                                        : work.status === "in_progress"
-                                          ? "bg-orange-100 text-orange-700"
-                                          : work.status === "completed"
-                                            ? "bg-green-100 text-green-700"
-                                            : "bg-gray-100 text-gray-700"
-                                    }`}
+                                {/* Botão Iniciar Obra (só se pendente) */}
+                                {work.status === "pending" && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      dataSync.updateWork(work.id, {
+                                        status: "in_progress",
+                                      });
+                                      showNotification(
+                                        "Obra Iniciada",
+                                        `A obra "${work.client}" foi iniciada`,
+                                        "success",
+                                      );
+                                    }}
+                                    className="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition-colors"
+                                    title="Iniciar obra"
                                   >
-                                    {work.status === "pending"
-                                      ? "Pendente"
-                                      : work.status === "in_progress"
-                                        ? "Em Progresso"
-                                        : work.status === "completed"
-                                          ? "Conclu��da"
-                                          : work.status}
-                                  </span>
-
-                                  <div className="flex items-center space-x-2">
-                                    {/* Botão Visualizar */}
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSelectedWork(work);
-                                        setViewingWork(true);
-                                      }}
-                                      className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-colors"
-                                      title="Visualizar detalhes"
-                                    >
-                                      <Eye className="h-4 w-4" />
-                                    </button>
-
-                                    {/* Botão Iniciar Obra (só se pendente) */}
-                                    {work.status === "pending" && (
-                                      <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          dataSync.updateWork(work.id, {
-                                            status: "in_progress",
-                                          });
-                                          showNotification(
-                                            "Obra Iniciada",
-                                            `A obra "${work.client}" foi iniciada`,
-                                            "success",
-                                          );
-                                        }}
-                                        className="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition-colors"
-                                        title="Iniciar obra"
-                                      >
-                                        <Play className="h-4 w-4" />
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
+                                    <Play className="h-4 w-4" />
+                                  </button>
+                                )}
                               </div>
                             </div>
-                          ))}
-                      </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  )}
+                  </div>
+                )}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
@@ -7886,7 +7843,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç��o">Manutenção</option>
+                          <option value="Manutenç��o">Manutenç��o</option>
                           <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
@@ -9210,7 +9167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {selectedWork.budget && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Orçamento
+                          Or��amento
                         </label>
                         <p className="text-gray-900">€{selectedWork.budget}</p>
                       </div>
