@@ -264,6 +264,100 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             🔍 Teste Directo
           </button>
 
+          {/* Force Create User Button */}
+          <button
+            type="button"
+            onClick={() => {
+              // Force create Yuri user on this device
+              const timestamp = Date.now();
+
+              const appUser = {
+                id: `user-${timestamp}`,
+                name: "Yuri",
+                email: "yuri@leirisonda.pt",
+                password: "123",
+                role: "user",
+                active: true,
+                createdAt: new Date().toISOString(),
+                permissions: {
+                  obras: {
+                    view: true,
+                    create: false,
+                    edit: false,
+                    delete: false,
+                  },
+                  manutencoes: {
+                    view: true,
+                    create: false,
+                    edit: false,
+                    delete: false,
+                  },
+                  piscinas: {
+                    view: true,
+                    create: false,
+                    edit: false,
+                    delete: false,
+                  },
+                  utilizadores: {
+                    view: false,
+                    create: false,
+                    edit: false,
+                    delete: false,
+                  },
+                  relatorios: {
+                    view: true,
+                    create: false,
+                    edit: false,
+                    delete: false,
+                  },
+                  admin: {
+                    view: false,
+                    create: false,
+                    edit: false,
+                    delete: false,
+                  },
+                  dashboard: { view: true },
+                },
+              };
+
+              const mockUser = {
+                uid: `user-${timestamp}`,
+                email: "yuri@leirisonda.pt",
+                password: "123",
+                name: "Yuri",
+                role: "technician",
+                active: true,
+                createdAt: new Date().toISOString(),
+              };
+
+              // Get existing users and filter out any existing Yuri
+              const appUsers = JSON.parse(
+                localStorage.getItem("app-users") || "[]",
+              ).filter((u: any) => u.email !== "yuri@leirisonda.pt");
+              const mockUsers = JSON.parse(
+                localStorage.getItem("mock-users") || "[]",
+              ).filter((u: any) => u.email !== "yuri@leirisonda.pt");
+
+              // Add new user
+              appUsers.push(appUser);
+              mockUsers.push(mockUser);
+
+              // Save to localStorage
+              localStorage.setItem("app-users", JSON.stringify(appUsers));
+              localStorage.setItem("mock-users", JSON.stringify(mockUsers));
+
+              alert(
+                "✅ Utilizador Yuri criado neste dispositivo!\n\nEmail: yuri@leirisonda.pt\nPassword: 123\n\nJá pode fazer login!",
+              );
+
+              // Refresh the page to update the display
+              window.location.reload();
+            }}
+            className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 mb-2 text-sm"
+          >
+            🔄 CRIAR YURI NESTE TELEFONE
+          </button>
+
           {/* Login Button */}
           <div className="space-y-2 pt-2">
             <button
