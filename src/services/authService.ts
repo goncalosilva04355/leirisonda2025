@@ -84,16 +84,76 @@ class AuthService {
       return { success: false, error: "Nome é obrigatório" };
     }
 
+    console.log(`🔄 REGISTERING USER: ${email} in role ${role}`);
+
+    // PRIORITY: Use localStorage (same system as super admin gongonsilva@gmail.com)
+    console.log(
+      "📱 Using localStorage system (same as super admin) for immediate compatibility...",
+    );
+    const result = await this.registerWithMock(email, password, name, role);
+    if (result.success) {
+      console.log(
+        "✅ User created in localStorage - ready to use immediately!",
+      );
+
+      // Try to also sync to Firestore in background (non-blocking)
+      this.tryFirestoreBackgroundSync(email, password, name, role).catch(
+        (error) => {
+          console.warn(
+            "Background Firestore sync failed (non-critical):",
+            error,
+          );
+        },
+      );
+
+      return result;
+    }
+
+    // Only fallback to Firebase if localStorage fails (very rare)
+    console.log("⚠️ localStorage registration failed, trying Firebase...");
+
     // Try lazy loading Firebase services
     const firebaseAuth = await getAuthService();
     const firebaseDB = await getDB();
 
     // Only try Firebase if BOTH auth and database are available
     if (firebaseAuth && firebaseDB) {
-      console.log(
-        "🔥 Attempting Firebase registration for cross-device access...",
-      );
+      console.log("🔥 Attempting Firebase registration as fallback...");
       try {
+        const firebaseResult = await this.registerWithFirebase(
+          email,
+          password,
+          name,
+          role,
+        );
+        if (firebaseResult.success) {
+          console.log("✅ Firebase registration successful as fallback");
+          return firebaseResult;
+        }
+      } catch (error: any) {
+        console.warn("❌ Firebase registration also failed:", error);
+      }
+    }
+
+    return {
+      success: false,
+      error: "Falha ao criar utilizador em ambos os sistemas",
+    };
+  }
+
+  // Background sync to Firestore (non-blocking)
+  private async tryFirestoreBackgroundSync(
+    email: string,
+    password: string,
+    name: string,
+    role: "super_admin" | "manager" | "technician",
+  ): Promise<void> {
+    try {
+      const firebaseAuth = await getAuthService();
+      const firebaseDB = await getDB();
+
+      if (firebaseAuth && firebaseDB) {
+        console.log("🔄 Background sync to Firestore...");
         const result = await this.registerWithFirebase(
           email,
           password,
@@ -101,54 +161,13 @@ class AuthService {
           role,
         );
         if (result.success) {
-          console.log(
-            "✅ Firebase registration successful - user can access from any device",
-          );
-          return result;
-        }
-      } catch (error: any) {
-        // Check for quota exceeded
-        if (
-          error.message?.includes("quota") ||
-          error.message?.includes("resource-exhausted")
-        ) {
-          const { markQuotaExceeded } = await import("../firebase/config");
-          markQuotaExceeded();
-          console.warn(
-            "🚨 Firebase quota exceeded during registration, using local auth",
-          );
-        } else {
-          console.warn(
-            "⚠️ Firebase registration failed, falling back to local:",
-            error,
-          );
+          console.log("✅ Background Firestore sync successful!");
         }
       }
-    } else {
-      if (firebaseAuth && !firebaseDB) {
-        console.log(
-          "⚠️ Firebase Auth available but Database unavailable - using local auth for consistency",
-        );
-      } else if (!firebaseAuth && firebaseDB) {
-        console.log(
-          "⚠️ Firebase Database available but Auth unavailable - using local auth for consistency",
-        );
-      } else {
-        console.log("📱 Firebase not ready, using local auth");
-      }
+    } catch (error) {
+      // Silent fail - this is background sync only
+      console.warn("Background Firestore sync failed (expected):", error);
     }
-
-    // Fallback to mock authentication (device-specific only)
-    console.log(
-      "Using local authentication - access limited to this device...",
-    );
-    const result = await this.registerWithMock(email, password, name, role);
-    if (result.success) {
-      console.log(
-        "⚠️ Local registration successful - user can only access from this device",
-      );
-    }
-    return result;
   }
 
   private async registerWithFirebase(
