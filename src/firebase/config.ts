@@ -3,17 +3,18 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 
-// Default Firebase config
+// Firebase config - Project appears to be inactive, using local mode
 const defaultFirebaseConfig = {
-  apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-  authDomain: "leirisonda-16f8b.firebaseapp.com",
-  databaseURL:
-    "https://leirisonda-16f8b-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leirisonda-16f8b",
-  storageBucket: "leirisonda-16f8b.firebasestorage.app",
-  messagingSenderId: "540456875574",
-  appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
-  measurementId: "G-R9W43EHH2C",
+  // NOTE: Original project leirisonda-16f8b appears to be inactive
+  // Using placeholder config to prevent initialization errors
+  apiKey: "demo-key-local-mode",
+  authDomain: "localhost",
+  databaseURL: "https://localhost",
+  projectId: "leirisonda-local",
+  storageBucket: "leirisonda-local.firebasestorage.app",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:local-mode",
+  measurementId: "G-LOCAL-MODE",
 };
 
 // Function to get Firebase config from localStorage or use default
@@ -107,8 +108,9 @@ let authInitAttempted = false;
 
 // Check if quota was previously exceeded - Firebase handles this internally
 const isQuotaExceeded = () => {
-  // Firebase handles quota management automatically
-  return false;
+  // Firebase project appears to be inactive - force local mode
+  console.log("🏠 Firebase project inactive - using local mode only");
+  return true;
 };
 
 // Promise to track Firebase initialization
@@ -415,7 +417,11 @@ firebaseInitPromise = ensureFirebaseApp();
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
   try {
-    return !!(app && auth && db);
+    // Force local mode since Firebase project is inactive
+    console.log(
+      "🏠 Firebase: Using local mode - project leirisonda-16f8b inactive",
+    );
+    return false;
   } catch (error) {
     console.warn("Firebase health check failed:", error);
     return false;
