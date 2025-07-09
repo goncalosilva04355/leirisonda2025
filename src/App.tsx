@@ -155,13 +155,7 @@ function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // SINCRONIZAÇÃO UNIVERSAL - Garante que todos os utilizadores vejam todos os dados
-  let universalSync;
-  try {
-    universalSync = useUniversalDataSync();
-  } catch (error) {
-    console.error("Error initializing universal sync:", error);
-    universalSync = null;
-  }
+  const universalSync = useUniversalDataSync();
 
   // Data sync hook - fallback para compatibilidade
   const dataSync = useDataSync();
@@ -954,7 +948,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta aç���o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta aç����o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
