@@ -296,8 +296,9 @@ class UniversalDataSyncService {
 
     window.addEventListener("storage", handleStorageChange);
 
-    // Setup periodic polling as fallback (reduced frequency since we have events)
-    const pollInterval = setInterval(refreshAllData, 30000); // Check every 30 seconds
+    // Disable automatic polling to prevent duplicate data issues
+    // Only use event-based updates for better reliability
+    // const pollInterval = setInterval(refreshAllData, 30000);
 
     // Return cleanup function
     return () => {
