@@ -175,6 +175,18 @@ function App() {
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
   const userMigration = useAutoUserMigration();
 
+  // Log migration status changes
+  useEffect(() => {
+    if (userMigration.status.completed && userMigration.status.migrated > 0) {
+      console.log(
+        `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
+      );
+      console.log(
+        "✅ AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+      );
+    }
+  }, [userMigration.status.completed, userMigration.status.migrated]);
+
   // Backup and complex initialization temporarily disabled for stability
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
@@ -1306,7 +1318,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura����es para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -3160,7 +3172,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manuten��ão "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -3292,7 +3304,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ������‍🔧 {maint.technician}
+                                ����‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
