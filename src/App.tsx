@@ -72,6 +72,9 @@ if (import.meta.env.DEV) {
 
 // Always import iPhone checker for mobile devices
 import("./utils/iPhoneFirebaseCheck");
+
+// Analyze dual storage usage
+import("./utils/dualStorageDiagnosis");
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -2204,7 +2207,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenção agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenç��es aparecerão aqui
+                          As futuras manutenç���es aparecerão aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -7674,7 +7677,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa���ões
+                        Observa��ões
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
