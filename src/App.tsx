@@ -1885,12 +1885,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {
-                          works.filter(
+                        {(() => {
+                          const pendingWorks = works.filter(
                             (w) =>
                               w.status === "pending" || w.status === "pendente",
-                          ).length
-                        }
+                          );
+                          console.log(
+                            "📊 Dashboard - Obras Pendentes:",
+                            pendingWorks.length,
+                            pendingWorks.map((w) => ({
+                              id: w.id,
+                              status: w.status,
+                              title: w.workSheetNumber,
+                            })),
+                          );
+                          return pendingWorks.length;
+                        })()}
                       </div>
                     </div>
                   </button>
