@@ -80,6 +80,9 @@ import UserMigrationIndicator from "./components/UserMigrationIndicator";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
+// Teste de conectividade Firebase
+import "./utils/testFirebase";
+
 // Production users - only real admin account
 const initialUsers = [
   {
@@ -1318,7 +1321,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -5702,7 +5705,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ⚠️ ATENÇÃO: Esta operação é irrevers��vel!
+                              ���️ ATENÇÃO: Esta operação é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -8805,7 +8808,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Título
+                          T��tulo
                         </label>
                         <p className="text-gray-900">{selectedWork.title}</p>
                       </div>
