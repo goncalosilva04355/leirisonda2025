@@ -433,6 +433,7 @@ class UniversalDataSyncService {
         const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
         existingWorks.push(obra);
         localStorage.setItem("works", JSON.stringify(existingWorks));
+        localStorage.setItem("lastLocalSync", new Date().toISOString());
 
         console.log(`✅ OBRA SALVA LOCALMENTE: ${id}`);
         return id;
