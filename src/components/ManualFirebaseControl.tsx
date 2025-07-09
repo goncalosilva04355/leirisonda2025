@@ -161,7 +161,7 @@ export function ManualFirebaseControl() {
         )}
 
         <div className="mt-3 text-xs text-gray-600">
-          Sistema Firebase Unificado. Elimina conflitos e erros getImmediate.
+          Sistema Firebase Ultra-Simples. Uma só tentativa, aguarda 5 segundos.
         </div>
       </div>
     </div>
