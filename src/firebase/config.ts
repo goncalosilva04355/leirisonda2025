@@ -577,5 +577,20 @@ export const reinitializeFirebase = async (): Promise<boolean> => {
   }
 };
 
+// Auto-initialize Firebase when module loads
+waitForFirebaseInit()
+  .then((success) => {
+    if (success) {
+      console.log("🔥 Firebase auto-initialized successfully");
+    } else {
+      console.log(
+        "⚠️ Firebase auto-initialization failed, will use local mode",
+      );
+    }
+  })
+  .catch((error) => {
+    console.warn("Firebase auto-initialization error:", error);
+  });
+
 export { app, db, auth };
 export default app;
