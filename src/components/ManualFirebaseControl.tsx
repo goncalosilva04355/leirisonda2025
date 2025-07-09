@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { NoGetImmediateFirebase } from "../firebase/noGetImmediateConfig";
+import { UnifiedSafeFirebase } from "../firebase/unifiedSafeFirebase";
 
 export function ManualFirebaseControl() {
   const [status, setStatus] = useState<any>(null);
