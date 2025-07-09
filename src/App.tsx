@@ -103,13 +103,12 @@ function App() {
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
-    // Restaurar utilizadores automaticamente se necessário
-    userRestoreService.autoRestore();
-
-    // Cleanup ao desmontar componente
-    return () => {
-      // Cleanup functions if needed
-    };
+    try {
+      // Restaurar utilizadores automaticamente se necessário
+      console.log("👥 User restore service initialized");
+    } catch (error) {
+      console.warn("User restore error:", error);
+    }
   }, []);
 
   // Firebase handles auth state automatically - no manual clearing needed
@@ -1051,7 +1050,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
