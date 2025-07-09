@@ -27,6 +27,9 @@ let auth: Auth | null = null;
 let isInitializing = false;
 let initializationPromise: Promise<boolean> | null = null;
 
+// Mutex to prevent concurrent service access
+let serviceAccessMutex = false;
+
 /**
  * Initialize Firebase safely
  */
