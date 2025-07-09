@@ -90,6 +90,35 @@ export const ConnectivityDiagnostic: React.FC<ConnectivityDiagnosticProps> = ({
     }
   };
 
+  const applyEmergencyFix = async () => {
+    setIsEmergencyFixing(true);
+
+    try {
+      const result = await EmergencyConnectivityFix.emergencyFix();
+
+      if (result.success) {
+        alert(
+          "🚨 Correção de emergência aplicada! A página será recarregada em 3 segundos.",
+        );
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      } else {
+        alert(`❌ ${result.message}`);
+      }
+    } catch (error) {
+      console.error("Erro na correção de emergência:", error);
+      alert(
+        "❌ Erro na correção de emergência. A página será recarregada manualmente.",
+      );
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } finally {
+      setIsEmergencyFixing(false);
+    }
+  };
+
   const getStatusIcon = (status: any) => {
     if (!status) return null;
 
