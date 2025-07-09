@@ -414,25 +414,61 @@ class UniversalDataSyncService {
    * Adicionar nova obra universal
    */
   async addObra(obraData: any): Promise<string> {
-    if (!isFirebaseReady() || !db) {
-      throw new Error("Firebase não disponível");
+    try {
+      // Wait for Firebase to be ready
+      const firebaseReady = await waitForFirebaseInit();
+      if (!firebaseReady || !isFirebaseReady() || !db) {
+        console.warn("⚠️ Firebase não disponível - usando armazenamento local");
+
+        // Fallback to localStorage
+        const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
+        const obra = {
+          ...obraData,
+          id,
+          createdAt: obraData.createdAt || new Date().toISOString(),
+        };
+
+        const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
+        existingWorks.push(obra);
+        localStorage.setItem("works", JSON.stringify(existingWorks));
+
+        console.log(`✅ OBRA SALVA LOCALMENTE: ${id}`);
+        return id;
+      }
+
+      const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
+      const obra = {
+        ...obraData,
+        id,
+        universallyShared: true,
+        visibleToAllUsers: true,
+        createdAt: obraData.createdAt || new Date().toISOString(),
+        lastSync: new Date().toISOString(),
+      };
+
+      await setDoc(doc(db, "universal_obras", id), obra);
+      console.log(
+        `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
+      );
+      return id;
+    } catch (error) {
+      console.error("❌ Erro ao adicionar obra:", error);
+
+      // Fallback to localStorage on any error
+      const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
+      const obra = {
+        ...obraData,
+        id,
+        createdAt: obraData.createdAt || new Date().toISOString(),
+      };
+
+      const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      existingWorks.push(obra);
+      localStorage.setItem("works", JSON.stringify(existingWorks));
+
+      console.log(`✅ OBRA SALVA LOCALMENTE (fallback): ${id}`);
+      return id;
     }
-
-    const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
-    const obra = {
-      ...obraData,
-      id,
-      universallyShared: true,
-      visibleToAllUsers: true,
-      createdAt: obraData.createdAt || new Date().toISOString(),
-      lastSync: new Date().toISOString(),
-    };
-
-    await setDoc(doc(db!, "universal_obras", id), obra);
-    console.log(
-      `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
-    );
-    return id;
   }
 
   /**
