@@ -254,11 +254,33 @@ export class UserSyncManager {
 
       // Sync all mock users to local storage (only if they don't exist locally)
       mockUsers.forEach((mockUser) => {
-        const existsLocally = localUsers.some(
-          (u) => u.email.toLowerCase() === mockUser.email.toLowerCase(),
-        );
-        if (!existsLocally) {
-          this.syncToLocalUsers(mockUser);
+        try {
+          const existsLocally = localUsers.some((u) => {
+            try {
+              return (
+                u.email &&
+                mockUser.email &&
+                typeof u.email === "string" &&
+                typeof mockUser.email === "string" &&
+                u.email.toLowerCase() === mockUser.email.toLowerCase()
+              );
+            } catch (error) {
+              console.warn(
+                "Error comparing emails in existsLocally check:",
+                error,
+              );
+              return false;
+            }
+          });
+
+          if (!existsLocally) {
+            this.syncToLocalUsers(mockUser);
+          }
+        } catch (error) {
+          console.error(
+            `Error processing mock user ${mockUser?.email || "unknown"}:`,
+            error,
+          );
         }
       });
 
