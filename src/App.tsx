@@ -160,7 +160,15 @@ function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
-  const universalSync = useUniversalDataSync();
+  // const universalSync = useUniversalDataSync(); // Disabled for stability
+  const universalSync = {
+    obras: JSON.parse(localStorage.getItem("works") || "[]"),
+    manutencoes: JSON.parse(localStorage.getItem("maintenance") || "[]"),
+    piscinas: JSON.parse(localStorage.getItem("pools") || "[]"),
+    clientes: JSON.parse(localStorage.getItem("clients") || "[]"),
+    syncStatus: "local",
+    totalItems: 0,
+  };
 
   // Data sync hook - versão segura para evitar erros
   const dataSync = useDataSyncSafe();
@@ -1503,7 +1511,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������ Address clicked:", address);
+    console.log("�������� Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -4551,7 +4559,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Location */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Localizaç��o Completa *
+                        Localizaç���o Completa *
                       </label>
                       <input
                         type="text"
@@ -5849,7 +5857,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
-                        <li>• Datas e durações</li>
+                        <li>• Datas e dura��ões</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
