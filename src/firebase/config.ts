@@ -81,6 +81,18 @@ export const getAuthService = async () => {
 export const getDbInstance = () => initFirestore();
 export const getAuthInstance = () => initAuth();
 
+// Exports diretos com lazy loading (para compatibilidade)
+Object.defineProperty(exports, "db", {
+  get: () => initFirestore(),
+});
+
+Object.defineProperty(exports, "auth", {
+  get: () => initAuth(),
+});
+
+// Export direto das variáveis (backup method)
+export { db, auth };
+
 // Exports principais
 export { app, analytics };
 export default app;
