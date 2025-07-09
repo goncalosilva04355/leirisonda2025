@@ -72,6 +72,7 @@ import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
+import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
@@ -7865,7 +7866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenç��o">Manutenção</option>
-                          <option value="Reparaç��o">Reparação</option>
+                          <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
                       <div>
@@ -8147,7 +8148,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Página não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A seç��o solicitada não foi encontrada.
+                  A seç���o solicitada não foi encontrada.
                 </p>
               </div>
             </div>
