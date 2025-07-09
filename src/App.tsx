@@ -85,6 +85,7 @@ import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
 import { FirebaseStatusIndicator } from "./components/FirebaseStatusIndicator";
 import { FirebaseReactivateButton } from "./components/FirebaseReactivateButton";
 import { MigrationProgress } from "./components/MigrationProgress";
+import { FirebaseOnlyTest } from "./components/FirebaseOnlyTest";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
@@ -7091,7 +7092,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠��� Nenhum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuição de
+                                Administração → "��� Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -7964,7 +7965,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
                             inputs[4] as HTMLInputElement
-                          ).value; // Duração Estimada
+                          ).value; // Dura��ão Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
                             .value; // Duração Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
@@ -8966,7 +8967,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? selectedWork.assignedUsers
                                 .map((u) => u.name)
                                 .join(", ")
-                            : selectedWork.assignedTo || "N��o atribuída"}
+                            : selectedWork.assignedTo || "Não atribuída"}
                         </p>
                       </div>
                       {selectedWork.technicians &&
