@@ -12,7 +12,7 @@ export function ManualFirebaseControl() {
   const [showControl, setShowControl] = useState(true);
 
   const updateStatus = () => {
-    const currentStatus = NoGetImmediateFirebase.getStatus();
+    const currentStatus = UnifiedSafeFirebase.getStatus();
     setStatus(currentStatus);
   };
 
