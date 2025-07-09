@@ -305,6 +305,50 @@ export class MigrateUsersToFirestore {
   }
 
   /**
+   * Test Firestore connectivity before migration
+   */
+  private static async testFirestoreConnectivity(): Promise<boolean> {
+    try {
+      console.log("🧪 Testing Firestore connectivity...");
+
+      const { getDB } = await import("../firebase/config");
+      const db = await getDB();
+
+      if (!db) {
+        throw new Error("Database not available");
+      }
+
+      const { doc, setDoc, getDoc, deleteDoc } = await import(
+        "firebase/firestore"
+      );
+
+      const testId = `connectivity_test_${Date.now()}`;
+      const testDocRef = doc(db, "__connectivity_test__", testId);
+
+      // Test write
+      await setDoc(testDocRef, {
+        test: true,
+        timestamp: new Date().toISOString(),
+      });
+
+      // Test read
+      const readResult = await getDoc(testDocRef);
+      if (!readResult.exists()) {
+        throw new Error("Read test failed");
+      }
+
+      // Cleanup
+      await deleteDoc(testDocRef);
+
+      console.log("✅ Firestore connectivity test successful");
+      return true;
+    } catch (error: any) {
+      console.error("❌ Firestore connectivity test failed:", error);
+      return false;
+    }
+  }
+
+  /**
    * Main migration function
    */
   static async migrateAllUsers(): Promise<{
@@ -316,6 +360,20 @@ export class MigrateUsersToFirestore {
   }> {
     try {
       console.log("🔄 Starting user migration to Firestore...");
+
+      // Test connectivity first
+      const isConnected = await this.testFirestoreConnectivity();
+      if (!isConnected) {
+        return {
+          success: false,
+          migrated: 0,
+          skipped: 0,
+          failed: 0,
+          details: [
+            "❌ Firestore connectivity test failed - migration aborted",
+          ],
+        };
+      }
 
       // Get all local users
       const { localUsers, mockUsers } = this.getAllLocalUsers();
