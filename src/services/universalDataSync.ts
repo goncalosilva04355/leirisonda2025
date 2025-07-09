@@ -255,8 +255,12 @@ class UniversalDataSyncService {
     onClientesChange: (clientes: any[]) => void;
   }): () => void {
     if (!isFirebaseReady() || !db) {
-      console.error("❌ Firebase não disponível para listeners universais");
-      return () => {};
+      console.log(
+        "📱 Firebase não disponível - usando modo local para listeners",
+      );
+
+      // Setup localStorage polling as fallback
+      return this.setupLocalStorageListeners(callbacks);
     }
 
     console.log("📡 CONFIGURANDO LISTENERS UNIVERSAIS");
