@@ -681,7 +681,9 @@ function App() {
 
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigat��rios (Piscina e Técnico).");
+      alert(
+        "Por favor, preencha os campos obrigat���rios (Piscina e Técnico).",
+      );
       return;
     }
 
@@ -2864,7 +2866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Próxima manutenção:{" "}
+                                Pr��xima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -8710,7 +8712,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     }`}
                   >
                     <MapPin className="h-5 w-5" />
-                    <span>Localizações</span>
+                    <span>Localizacoes</span>
                   </button>
                 )}
               </nav>
