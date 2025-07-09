@@ -256,15 +256,8 @@ class UniversalDataSyncService {
   }): () => void {
     console.log("📱 Configurando listeners do armazenamento local");
 
-    // Load initial data
-    const localData = this.getLocalData();
-    callbacks.onObrasChange(localData.obras);
-    callbacks.onManutencoesChange(localData.manutencoes);
-    callbacks.onPiscinasChange(localData.piscinas);
-    callbacks.onClientesChange(localData.clientes);
-
-    // Setup polling to check for changes (useful if multiple tabs are open)
-    const pollInterval = setInterval(() => {
+    // Function to refresh all data
+    const refreshAllData = () => {
       try {
         const currentData = this.getLocalData();
         callbacks.onObrasChange(currentData.obras);
@@ -274,11 +267,46 @@ class UniversalDataSyncService {
       } catch (error) {
         console.warn("Erro ao verificar mudanças locais:", error);
       }
-    }, 5000); // Check every 5 seconds
+    };
+
+    // Load initial data
+    refreshAllData();
+
+    // Listen for custom storage events (immediate updates)
+    const handleDataChange = (event: CustomEvent) => {
+      console.log("📱 Dados locais alterados:", event.detail);
+      refreshAllData();
+    };
+
+    window.addEventListener(
+      "localDataChanged",
+      handleDataChange as EventListener,
+    );
+
+    // Also listen for native storage events (for other tabs)
+    const handleStorageChange = (event: StorageEvent) => {
+      if (
+        event.key &&
+        ["works", "maintenance", "pools", "clients"].includes(event.key)
+      ) {
+        console.log("📱 Storage alterado em outra aba:", event.key);
+        refreshAllData();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Setup periodic polling as fallback (reduced frequency since we have events)
+    const pollInterval = setInterval(refreshAllData, 30000); // Check every 30 seconds
 
     // Return cleanup function
     return () => {
       clearInterval(pollInterval);
+      window.removeEventListener(
+        "localDataChanged",
+        handleDataChange as EventListener,
+      );
+      window.removeEventListener("storage", handleStorageChange);
       console.log("🛑 Listeners locais desconectados");
     };
   }
