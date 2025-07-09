@@ -959,7 +959,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta aç�����o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENCAO: Esta acao vai eliminar permanentemente todas as obras, manutencoes e piscinas. Os utilizadores serao mantidos. Confirma?",
       )
     ) {
       try {
@@ -3531,7 +3531,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setCurrentTechnician(e.target.value)
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: João Santos"
+                              placeholder="Ex: Jo��o Santos"
                             />
                             <button
                               type="button"
