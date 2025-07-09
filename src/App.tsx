@@ -84,6 +84,9 @@ import("./utils/testFirebaseStorage");
 
 // Ultra-safe Firebase configuration (fallback)
 import("./firebase/ultraSafeConfig");
+
+// No-getImmediate Firebase configuration (manual only)
+import("./firebase/noGetImmediateConfig");
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -903,7 +906,7 @@ function App() {
         }, 100);
       } else {
         console.warn("❌ Login failed:", result.error);
-        setLoginError(result.error || "Credenciais inv��lidas");
+        setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
       console.error("❌ Login error:", error);
@@ -4157,7 +4160,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const budget =
                             (
                               form.querySelector(
-                                'input[placeholder*="Orçamento"]',
+                                'input[placeholder*="Or��amento"]',
                               ) as HTMLInputElement
                             )?.value || "";
 
@@ -6817,7 +6820,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  �����{work.budget}
+                                  ���{work.budget}
                                 </div>
                               )}
                             </div>
@@ -7738,7 +7741,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instala��ão
+                          ).value; // Data de Instalação
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
@@ -8293,7 +8296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>������</span>
+                  <span>�������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -9124,7 +9127,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
                                   ? `${selectedWork.columnDiameter}"`
-                                  : "N��o especificado"}
+                                  : "Não especificado"}
                               </p>
                             </div>
                             <div>
