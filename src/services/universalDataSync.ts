@@ -246,6 +246,44 @@ class UniversalDataSyncService {
   }
 
   /**
+   * Configurar listeners do localStorage como fallback
+   */
+  private setupLocalStorageListeners(callbacks: {
+    onObrasChange: (obras: any[]) => void;
+    onManutencoesChange: (manutencoes: any[]) => void;
+    onPiscinasChange: (piscinas: any[]) => void;
+    onClientesChange: (clientes: any[]) => void;
+  }): () => void {
+    console.log("📱 Configurando listeners do armazenamento local");
+
+    // Load initial data
+    const localData = this.getLocalData();
+    callbacks.onObrasChange(localData.obras);
+    callbacks.onManutencoesChange(localData.manutencoes);
+    callbacks.onPiscinasChange(localData.piscinas);
+    callbacks.onClientesChange(localData.clientes);
+
+    // Setup polling to check for changes (useful if multiple tabs are open)
+    const pollInterval = setInterval(() => {
+      try {
+        const currentData = this.getLocalData();
+        callbacks.onObrasChange(currentData.obras);
+        callbacks.onManutencoesChange(currentData.manutencoes);
+        callbacks.onPiscinasChange(currentData.piscinas);
+        callbacks.onClientesChange(currentData.clientes);
+      } catch (error) {
+        console.warn("Erro ao verificar mudanças locais:", error);
+      }
+    }, 5000); // Check every 5 seconds
+
+    // Return cleanup function
+    return () => {
+      clearInterval(pollInterval);
+      console.log("🛑 Listeners locais desconectados");
+    };
+  }
+
+  /**
    * Configurar listeners universais para todos os tipos de dados
    */
   setupUniversalListeners(callbacks: {
