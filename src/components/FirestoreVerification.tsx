@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CheckCircle, XCircle, RefreshCw, AlertCircle } from "lucide-react";
 import FirestoreActivationSteps from "./FirestoreActivationSteps";
+import UsersCollectionCheck from "./UsersCollectionCheck";
 
 interface FirestoreStatus {
   isAvailable: boolean;
@@ -54,7 +55,7 @@ export const FirestoreVerification: React.FC = () => {
         const testCollection = collection(db, "users");
         await getDocs(testCollection);
         canRead = true;
-        console.log("✅ Leitura: OK");
+        console.log("�� Leitura: OK");
       } catch (readError: any) {
         console.warn("⚠️ Leitura falhou:", readError.message);
         canRead = false;
@@ -196,67 +197,78 @@ export const FirestoreVerification: React.FC = () => {
   };
 
   return (
-    <div className={`p-4 border-2 rounded-lg ${getStatusColor()}`}>
-      <div className="flex items-center gap-3 mb-3">
-        {getStatusIcon()}
-        <h3 className="font-semibold text-lg">{getStatusText()}</h3>
-        <button
-          onClick={verifyFirestore}
-          disabled={status.isLoading}
-          className="ml-auto px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-        >
-          Re-testar
-        </button>
-      </div>
+    <div className="space-y-4">
+      {/* General Firestore Check */}
+      <div className={`p-4 border-2 rounded-lg ${getStatusColor()}`}>
+        <div className="flex items-center gap-3 mb-3">
+          {getStatusIcon()}
+          <h3 className="font-semibold text-lg">{getStatusText()}</h3>
+          <button
+            onClick={verifyFirestore}
+            disabled={status.isLoading}
+            className="ml-auto px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+          >
+            Re-testar
+          </button>
+        </div>
 
-      {/* Detailed Status */}
-      <div className="space-y-2 text-sm">
-        <div className="flex items-center gap-2">
-          <span className="font-medium">Conectividade:</span>
-          {status.isAvailable ? (
-            <span className="text-green-600">✅ Conectado</span>
-          ) : (
-            <span className="text-red-600">❌ Não conectado</span>
+        {/* Detailed Status */}
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="font-medium">Conectividade:</span>
+            {status.isAvailable ? (
+              <span className="text-green-600">✅ Conectado</span>
+            ) : (
+              <span className="text-red-600">❌ Não conectado</span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="font-medium">Leitura:</span>
+            {status.canRead ? (
+              <span className="text-green-600">✅ Funciona</span>
+            ) : (
+              <span className="text-red-600">❌ Falha</span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="font-medium">Escrita:</span>
+            {status.canWrite ? (
+              <span className="text-green-600">✅ Funciona</span>
+            ) : (
+              <span className="text-red-600">❌ Falha</span>
+            )}
+          </div>
+
+          {status.details && (
+            <div className="mt-3 p-2 bg-gray-100 rounded text-xs">
+              <strong>Detalhes:</strong> {status.details}
+            </div>
+          )}
+
+          {status.error && (
+            <div className="mt-2 p-2 bg-red-100 border border-red-200 rounded text-xs">
+              <strong>Erro:</strong> {status.error}
+            </div>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="font-medium">Leitura:</span>
-          {status.canRead ? (
-            <span className="text-green-600">✅ Funciona</span>
-          ) : (
-            <span className="text-red-600">❌ Falha</span>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="font-medium">Escrita:</span>
-          {status.canWrite ? (
-            <span className="text-green-600">✅ Funciona</span>
-          ) : (
-            <span className="text-red-600">❌ Falha</span>
-          )}
-        </div>
-
-        {status.details && (
-          <div className="mt-3 p-2 bg-gray-100 rounded text-xs">
-            <strong>Detalhes:</strong> {status.details}
+        {/* Detailed activation guide when Firestore is not working */}
+        {!status.canWrite && (
+          <div className="mt-4">
+            <FirestoreActivationSteps />
           </div>
         )}
-
-        {status.error && (
-          <div className="mt-2 p-2 bg-red-100 border border-red-200 rounded text-xs">
-            <strong>Erro:</strong> {status.error}
-          </div>
-        )}
       </div>
 
-      {/* Detailed activation guide when Firestore is not working */}
-      {!status.canWrite && (
-        <div className="mt-4">
-          <FirestoreActivationSteps />
-        </div>
-      )}
+      {/* Specific Users Collection Check */}
+      <div>
+        <h4 className="font-medium text-gray-800 mb-2">
+          Verificação Específica - Coleção 'users'
+        </h4>
+        <UsersCollectionCheck />
+      </div>
     </div>
   );
 };
