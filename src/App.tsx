@@ -5584,7 +5584,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Configurações de Localiza��ão Individual - Apenas para super_admin */}
+                    {/* Configurações de Localiza����ão Individual - Apenas para super_admin */}
                     {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
@@ -6708,7 +6708,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     .filter((work) => {
                       if (activeWorkFilter === "all") return true;
                       if (activeWorkFilter === "no_sheet")
-                        return !work.folhaGerada && work.status !== "completed";
+                        return (
+                          !work.folhaGerada &&
+                          work.status !== "completed" &&
+                          work.status !== "concluida"
+                        );
+                      if (activeWorkFilter === "pending")
+                        return (
+                          work.status === "pendente" ||
+                          work.status === "pending"
+                        );
+                      if (activeWorkFilter === "in_progress")
+                        return (
+                          work.status === "em_progresso" ||
+                          work.status === "in_progress"
+                        );
+                      if (activeWorkFilter === "completed")
+                        return (
+                          work.status === "concluida" ||
+                          work.status === "completed"
+                        );
                       return work.status === activeWorkFilter;
                     })
                     .map((work) => (
