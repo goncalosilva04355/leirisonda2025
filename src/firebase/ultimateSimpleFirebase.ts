@@ -19,10 +19,8 @@ export class UltimateSimpleFirebase {
   private static auth: any = null;
   private static status = "not-started";
 
-  // Método extremamente simples - só tenta uma vez e pronto
+  // Método extremamente simples - completamente silencioso
   static async simpleInit(): Promise<boolean> {
-    console.log("🟢 UltimateSimpleFirebase: Tentativa única de inicialização");
-
     try {
       this.status = "initializing";
 
@@ -33,52 +31,35 @@ export class UltimateSimpleFirebase {
       const existingApps = getApps();
       if (existingApps.length > 0) {
         this.app = existingApps[0];
-        console.log("✅ App Firebase existente encontrado");
       } else {
         this.app = initializeApp(firebaseConfig);
-        console.log("✅ Novo app Firebase criado");
       }
 
-      // 3. Aguardar MUITO tempo para ter certeza
-      console.log("⏳ Aguardando 5 segundos para estabilização...");
+      // 3. Aguardar tempo suficiente para estabilização
       await new Promise((resolve) => setTimeout(resolve, 5000));
 
-      // 4. Tentar Auth (opcional)
+      // 4. Tentar Auth (silenciosamente)
       try {
         const { getAuth } = await import("firebase/auth");
         this.auth = getAuth(this.app);
-        console.log("✅ Auth funcionou");
       } catch (authError) {
-        console.log("⚠️ Auth falhou, mas continuar...");
         this.auth = null;
       }
 
-      // 5. Tentar Firestore (opcional)
+      // 5. Tentar Firestore (silenciosamente)
       try {
-        console.log("🔄 Tentando Firestore após 5s de espera...");
         const { getFirestore } = await import("firebase/firestore");
         this.db = getFirestore(this.app);
-        console.log("✅ Firestore funcionou!");
       } catch (firestoreError) {
-        console.log("⚠️ Firestore falhou:", firestoreError);
         this.db = null;
       }
 
       // 6. Resultado final
       const success = !!(this.app && (this.auth || this.db));
-
       this.status = success ? "ready" : "failed";
-
-      if (success) {
-        console.log("🎉 UltimateSimpleFirebase: SUCESSO!");
-        console.log(`📊 Auth: ${!!this.auth}, DB: ${!!this.db}`);
-      } else {
-        console.log("⚠️ UltimateSimpleFirebase: Parcialmente funcional");
-      }
 
       return success;
     } catch (error) {
-      console.error("❌ UltimateSimpleFirebase falhou:", error);
       this.status = "failed";
       return false;
     }
