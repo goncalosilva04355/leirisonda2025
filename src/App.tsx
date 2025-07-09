@@ -75,6 +75,9 @@ import("./utils/iPhoneFirebaseCheck");
 
 // Analyze dual storage usage
 import("./utils/dualStorageDiagnosis");
+
+// Migrate to Firebase-only system
+import("./utils/migrateToFirebaseOnly");
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -2207,7 +2210,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenção agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenç���es aparecerão aqui
+                          As futuras manutenç��es aparecerão aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -6549,7 +6552,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Informações relevantes sobre o cliente, preferências, histórico, etc."
+                            placeholder="Informações relevantes sobre o cliente, preferências, hist��rico, etc."
                           />
                         </div>
                       </div>
