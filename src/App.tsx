@@ -50,7 +50,6 @@ import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
-import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 
@@ -1842,25 +1841,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         })}
                       </p>
                     </div>
+                  </div>
 
-                    {/* Sync Status */}
-                    <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
+                  {/* Firebase Status LED - Bottom Right Corner */}
+                  <div className="absolute bottom-2 right-2 z-20">
+                    <div className="flex items-center space-x-1">
                       <div
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          syncStatus === "completed"
-                            ? "bg-green-500"
-                            : syncStatus === "error"
-                              ? "bg-red-500"
-                              : "bg-blue-500"
-                        }`}
+                        className={`w-2 h-2 rounded-full ${(() => {
+                          try {
+                            const {
+                              isFirebaseReady,
+                            } = require("./firebase/config");
+                            return isFirebaseReady()
+                              ? "bg-green-500"
+                              : "bg-red-500";
+                          } catch {
+                            return "bg-red-500";
+                          }
+                        })()}`}
+                        title={(() => {
+                          try {
+                            const {
+                              isFirebaseReady,
+                            } = require("./firebase/config");
+                            return isFirebaseReady()
+                              ? "Firebase Ativo"
+                              : "Firebase Inativo";
+                          } catch {
+                            return "Firebase Inativo";
+                          }
+                        })()}
                       ></div>
-                      <span>
-                        {syncStatus === "completed"
-                          ? "Sincronizado"
-                          : syncStatus === "error"
-                            ? "Erro Sync"
-                            : "Conectando"}
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -6024,7 +6035,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenções</span>
+                          <span className="text-xs">Manutenç��es</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -7129,8 +7140,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠��� Nenhum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuição de
+                                ⚠���� Nenhum utilizador encontrado. Vá à Área
+                                de Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -9300,9 +9311,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           )}
         </div>
-
-        {/* Firebase Reactivated Notification */}
-        <FirebaseReactivatedNotification />
 
         {/* Realtime Notifications - REMOVIDAS */}
         {/* <RealtimeNotifications /> */}
