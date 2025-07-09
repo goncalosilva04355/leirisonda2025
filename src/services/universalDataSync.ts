@@ -77,7 +77,7 @@ class UniversalDataSyncService {
    */
   private async migrateToUniversalSharing(): Promise<void> {
     if (this.syncInProgress) {
-      console.log("⏳ Migra��ão já em progresso...");
+      console.log("⏳ Migração já em progresso...");
       return;
     }
 
@@ -562,10 +562,16 @@ class UniversalDataSyncService {
         localStorage.setItem("works", JSON.stringify(existingWorks));
         localStorage.setItem("lastLocalSync", new Date().toISOString());
 
-        // Storage events temporarily disabled to prevent loops
-        // window.dispatchEvent(
-        //   new CustomEvent("localDataChanged", { detail: { type: "works" } }),
-        // );
+        // Trigger storage event for cross-tab sync (stable approach)
+        setTimeout(() => {
+          window.dispatchEvent(
+            new StorageEvent("storage", {
+              key: "works",
+              newValue: JSON.stringify(existingWorks),
+              storageArea: localStorage,
+            }),
+          );
+        }, 100);
 
         console.log(`✅ OBRA SALVA LOCALMENTE (fallback): ${id}`);
       } else {
