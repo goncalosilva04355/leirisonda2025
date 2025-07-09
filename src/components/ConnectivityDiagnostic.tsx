@@ -1,6 +1,6 @@
 /**
  * Componente de diagnóstico visual de conectividade
- * Mostra o que está a impedir a conexão e como resolver
+ * Mostra o que está a impedir a conex��o e como resolver
  */
 
 import React, { useState, useEffect } from "react";
@@ -15,6 +15,7 @@ import {
   Play,
 } from "lucide-react";
 import { FirebaseConnectivityFix } from "../utils/firebaseConnectivityFix";
+import { EmergencyConnectivityFix } from "../utils/emergencyConnectivityFix";
 
 interface ConnectivityDiagnosticProps {
   onClose?: () => void;
