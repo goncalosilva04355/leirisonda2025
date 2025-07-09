@@ -2301,7 +2301,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {maint.poolName}
                                     </h3>
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                      <span>🔧</span>
+                                      <span>���</span>
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -4331,8 +4331,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const newWork = await addWork(workData);
                             console.log("✅ Work created with ID:", newWork);
 
-                            // Simple success message without notifications
-                            alert(`Obra "${workTitle}" criada com sucesso!`);
+                            // Success - no notification needed
                           } catch (error) {
                             console.error("❌ Error creating work:", error);
                             alert(
