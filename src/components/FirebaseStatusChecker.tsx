@@ -346,9 +346,43 @@ export const FirebaseStatusChecker: React.FC = () => {
                       disabled={isChecking}
                       className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-gray-400 text-sm font-bold"
                     >
-                      {isChecking
-                        ? "A corrigir..."
-                        : "💥 CORREÇÃO INTENSIVA (iOS)"}
+                      {isChecking ? "A corrigir..." : "💥 CORREÇÃO INTENSIVA"}
+                    </button>
+
+                    <button
+                      onClick={async () => {
+                        setIsChecking(true);
+                        try {
+                          console.log(
+                            "🍎 Starting iOS-SPECIFIC Firebase fix...",
+                          );
+
+                          // Use iOS-specific fix
+                          const { IOSFirebaseFix } = await import(
+                            "../firebase/iosFirebaseFix"
+                          );
+                          const success =
+                            await IOSFirebaseFix.forceFirebaseClear();
+
+                          if (success) {
+                            console.log("🎉 iOS FIX SUCCESSFUL!");
+                          } else {
+                            console.log("❌ iOS FIX FAILED");
+                          }
+
+                          // Wait longer for iOS fixes
+                          setTimeout(() => {
+                            checkFirebaseStatus();
+                          }, 4000);
+                        } catch (error) {
+                          console.error("iOS fix failed:", error);
+                          setIsChecking(false);
+                        }
+                      }}
+                      disabled={isChecking}
+                      className="px-3 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400 text-sm font-bold"
+                    >
+                      {isChecking ? "A corrigir..." : "🍎 CORREÇÃO iOS SAFARI"}
                     </button>
                   </div>
                 </div>
