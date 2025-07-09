@@ -4,6 +4,14 @@ import { getAuth } from "firebase/auth";
 import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 import { FirebaseForceInit } from "../utils/firebaseForceInit";
 
+// Import simplified config as primary
+import {
+  getFirebaseDB as getSimpleDB,
+  getFirebaseAuth as getSimpleAuth,
+  isFirebaseInitialized as isSimpleReady,
+  getFirebaseStatus as getSimpleStatus,
+} from "./simpleConfig";
+
 // Firebase config - Project leirisonda-16f8b is active and working
 const defaultFirebaseConfig = {
   apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
