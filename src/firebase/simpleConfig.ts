@@ -44,15 +44,20 @@ async function initializeFirebase(): Promise<boolean> {
   initializationPromise = (async () => {
     try {
       console.log("🔥 Initializing Firebase...");
+      console.log("📋 Project ID:", firebaseConfig.projectId);
+      console.log("📋 Auth Domain:", firebaseConfig.authDomain);
 
       // Check if an app already exists
       const existingApps = getApps();
       if (existingApps.length > 0) {
         app = existingApps[0];
-        console.log("✅ Using existing Firebase app");
+        console.log("✅ Using existing Firebase app:", app.name);
+        console.log("📋 App options:", app.options);
       } else {
+        console.log("🚀 Creating new Firebase app...");
         app = initializeApp(firebaseConfig);
-        console.log("✅ Created new Firebase app");
+        console.log("✅ Created new Firebase app:", app.name);
+        console.log("📋 App options:", app.options);
       }
 
       // Wait a moment for the app to be fully ready
