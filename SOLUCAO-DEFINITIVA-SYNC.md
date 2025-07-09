@@ -17,7 +17,7 @@ O Builder.io não consegue criar o Pull Request porque:
 
 ### **OPÇÃO 1: Criar Branch Manualmente no GitHub**
 
-1. Acesse: https://github.com/GoncaloFonseca86/Builder-stellar-landing
+1. Acesse: https://github.com/goncalosilva04355/Builder-stellar-landing
 2. Clique no dropdown "main"
 3. Digite: `ai_main_9fcae005c620`
 4. Clique "Create branch: ai_main_9fcae005c620 from main"
@@ -74,7 +74,7 @@ O Builder.io não consegue criar o Pull Request porque:
 2. Resolve definitivamente o problema
 3. Permite continuar usando Builder.io normalmente
 
-**Link direto:** https://github.com/GoncaloFonseca86/Builder-stellar-landing/branches
+**Link direto:** https://github.com/goncalosilva04355/Builder-stellar-landing/branches
 
 ## 📞 SE PRECISAR DE AJUDA
 

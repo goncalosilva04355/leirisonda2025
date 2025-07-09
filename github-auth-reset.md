@@ -18,7 +18,7 @@
 
 1. **Connect to GitHub** novamente
 2. **Quando pedir autorização** → **Grant ALL permissions**
-3. **Verificar**: Repository access = `GoncaloFonseca86/Builder-stellar-landing`
+3. **Verificar**: Repository access = `goncalosilva04355/Builder-stellar-landing`
 
 ### **3. Verificar Token Scopes**
 

@@ -15,7 +15,7 @@
 
 1. **Connect to GitHub**
 2. **Authorize Builder.io**
-3. **Select Repository**: `GoncaloFonseca86/Builder-stellar-landing`
+3. **Select Repository**: `goncalosilva04355/Builder-stellar-landing`
 4. **Grant Permissions**:
    - ✅ Read repository
    - ✅ Write repository

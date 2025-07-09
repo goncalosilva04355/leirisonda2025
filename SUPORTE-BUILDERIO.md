@@ -20,7 +20,7 @@
 
 - Push Code button not syncing with GitHub
 - `git status` shows: "ahead of 'origin/main' by 96 commits"
-- Repository: `GoncaloFonseca86/Builder-stellar-landing`
+- Repository: `goncalosilva04355/Builder-stellar-landing`
 - Branch: `ai_main_92a33b97ea03`
 
 ## 📊 EVIDENCE
