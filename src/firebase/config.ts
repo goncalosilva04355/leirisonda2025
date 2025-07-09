@@ -497,11 +497,9 @@ export const waitForFirebaseInit = async (): Promise<boolean> => {
 
 // Function to get Firebase connection status
 export const getFirebaseStatus = () => {
+  const simpleStatus = getSimpleStatus();
   return {
-    app: !!app,
-    auth: !!auth,
-    db: !!db,
-    ready: isFirebaseReady(),
+    ...simpleStatus,
     quotaExceeded: isQuotaExceeded(),
   };
 };
