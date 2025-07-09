@@ -346,21 +346,37 @@ export class MigrateUsersToFirestore {
 
       // Process each user
       for (const user of allUsers) {
-        const email = user.email.toLowerCase();
+        try {
+          const email = user.email.toLowerCase();
 
-        if (existingEmails.includes(email)) {
-          skipped++;
-          details.push(`⏭️ Skipped ${user.email} (already in Firestore)`);
-          continue;
-        }
+          if (existingEmails.includes(email)) {
+            skipped++;
+            details.push(`⏭️ Skipped ${user.email} (already in Firestore)`);
+            continue;
+          }
 
-        const success = await this.migrateUserToFirestore(user);
-        if (success) {
-          migrated++;
-          details.push(`✅ Migrated ${user.email}`);
-        } else {
+          console.log(`🔄 Processing user ${user.email}...`);
+          const success = await this.migrateUserToFirestore(user);
+
+          if (success) {
+            migrated++;
+            details.push(`✅ Migrated ${user.email}`);
+          } else {
+            failed++;
+            details.push(`❌ Failed to migrate ${user.email}`);
+          }
+
+          // Small delay between migrations to avoid rate limits
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        } catch (error: any) {
           failed++;
-          details.push(`❌ Failed to migrate ${user.email}`);
+          details.push(
+            `❌ Exception migrating ${user.email}: ${error.message}`,
+          );
+          console.error(
+            `💥 Exception during migration of ${user.email}:`,
+            error,
+          );
         }
       }
 
