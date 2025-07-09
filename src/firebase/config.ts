@@ -15,13 +15,13 @@ const firebaseConfig = {
   measurementId: "G-R9W43EHH2C",
 };
 
-// Inicializar Firebase
+// Inicializar Firebase App
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-// Inicializar serviços
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+// Lazy initialization - não inicializar imediatamente
+let db: any = null;
+let auth: any = null;
 
 // Função para verificar se Firebase está pronto
 export const isFirebaseReady = (): boolean => {
