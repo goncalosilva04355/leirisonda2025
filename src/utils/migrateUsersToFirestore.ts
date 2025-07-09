@@ -96,11 +96,33 @@ export class MigrateUsersToFirestore {
     try {
       console.log(`🔄 Attempting to migrate user: ${user.email}`);
 
-      const { getDB } = await import("../firebase/config");
-      const db = await getDB();
+      // Try multiple methods to get database
+      let db = null;
+
+      // Method 1: Try existing getDB
+      try {
+        const { getDB } = await import("../firebase/config");
+        db = await getDB();
+      } catch (error) {
+        console.warn(`⚠️ getDB failed for ${user.email}:`, error);
+      }
+
+      // Method 2: Force Firebase fix if getDB failed
+      if (!db) {
+        try {
+          console.log(`🔧 Attempting Firebase fix for ${user.email}...`);
+          const { IOSFirebaseFix } = await import("../firebase/iosFirebaseFix");
+          await IOSFirebaseFix.forceFirebaseClear();
+
+          const { getDB } = await import("../firebase/config");
+          db = await getDB();
+        } catch (error) {
+          console.warn(`⚠️ Firebase fix failed for ${user.email}:`, error);
+        }
+      }
 
       if (!db) {
-        throw new Error("Firestore not available");
+        throw new Error("Firestore not available after all attempts");
       }
 
       const { doc, setDoc } = await import("firebase/firestore");
