@@ -903,7 +903,7 @@ function App() {
         }, 100);
       } else {
         console.warn("❌ Login failed:", result.error);
-        setLoginError(result.error || "Credenciais inválidas");
+        setLoginError(result.error || "Credenciais inv��lidas");
       }
     } catch (error) {
       console.error("❌ Login error:", error);
@@ -6817,7 +6817,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ���{work.budget}
+                                  �����{work.budget}
                                 </div>
                               )}
                             </div>
@@ -7738,7 +7738,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instalação
+                          ).value; // Data de Instala��ão
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
@@ -8590,6 +8590,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           {/* Firebase Storage Status */}
           <FirebaseStorageStatus />
 
+          {/* Manual Firebase Control */}
+          <ManualFirebaseControl />
+
           {/* Firebase Reactivate Button for mobile */}
           {/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && (
             <FirebaseReactivateButton />
@@ -9121,7 +9124,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
                                   ? `${selectedWork.columnDiameter}"`
-                                  : "Não especificado"}
+                                  : "N��o especificado"}
                               </p>
                             </div>
                             <div>
