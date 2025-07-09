@@ -121,15 +121,28 @@ export class UserSyncManager {
    */
   static syncToMockAuth(localUser: LocalUser): void {
     try {
-      // Validate input user with comprehensive checks
+      // Comprehensive validation of entire user object
+      if (!localUser || typeof localUser !== "object") {
+        console.warn("Invalid user object for sync:", localUser);
+        return;
+      }
+
+      // Validate essential properties exist and are correct types
       if (
-        !localUser ||
         !localUser.email ||
         !localUser.id ||
         typeof localUser.email !== "string" ||
-        localUser.email.trim() === ""
+        typeof localUser.id !== "string" ||
+        localUser.email.trim() === "" ||
+        localUser.id.trim() === ""
       ) {
-        console.warn("Invalid user data for sync:", localUser);
+        console.warn("Invalid user data for sync - missing required fields:", {
+          hasEmail: !!localUser.email,
+          hasId: !!localUser.id,
+          emailType: typeof localUser.email,
+          idType: typeof localUser.id,
+          user: localUser,
+        });
         return;
       }
 
