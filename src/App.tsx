@@ -5584,7 +5584,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Configurações de Localiza����ão Individual - Apenas para super_admin */}
+                    {/* Configurações de Localiza��ão Individual - Apenas para super_admin */}
                     {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
@@ -5863,7 +5863,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten������es</li>
+                        <li>• Histórico de manuten��������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -6907,7 +6907,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {works.filter((work) => {
                     if (activeWorkFilter === "all") return true;
                     if (activeWorkFilter === "no_sheet")
-                      return !work.folhaGerada && work.status !== "completed";
+                      return (
+                        !work.folhaGerada &&
+                        work.status !== "completed" &&
+                        work.status !== "concluida"
+                      );
+                    if (activeWorkFilter === "pending")
+                      return (
+                        work.status === "pendente" || work.status === "pending"
+                      );
+                    if (activeWorkFilter === "in_progress")
+                      return (
+                        work.status === "em_progresso" ||
+                        work.status === "in_progress"
+                      );
+                    if (activeWorkFilter === "completed")
+                      return (
+                        work.status === "concluida" ||
+                        work.status === "completed"
+                      );
                     return work.status === activeWorkFilter;
                   }).length === 0 && (
                     <div className="bg-white rounded-lg p-8 shadow-sm text-center">
