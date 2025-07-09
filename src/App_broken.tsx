@@ -1758,9 +1758,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Obras Atribuídas
+                          Todas as Obras
                         </h3>
-                        <p className="text-sm text-gray-500">Atribuídas a si</p>
+                        <p className="text-sm text-gray-500">No sistema</p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {works.length}
