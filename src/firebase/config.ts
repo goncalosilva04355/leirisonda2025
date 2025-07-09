@@ -23,6 +23,16 @@ const analytics = getAnalytics(app);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
+// Função para verificar se Firebase está pronto
+export const isFirebaseReady = (): boolean => {
+  return !!(app && db && auth);
+};
+
+// Função para aguardar inicialização (compatibilidade)
+export const waitForFirebaseInit = async (): Promise<boolean> => {
+  return isFirebaseReady();
+};
+
 // Exports
 export { app, analytics };
 export default app;
