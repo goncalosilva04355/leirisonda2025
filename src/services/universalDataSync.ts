@@ -256,17 +256,26 @@ class UniversalDataSyncService {
   }): () => void {
     console.log("📱 Configurando listeners do armazenamento local");
 
-    // Function to refresh all data
+    // Debounce function to prevent rapid fire updates
+    let refreshTimeout: NodeJS.Timeout | null = null;
+
+    // Function to refresh all data with debounce
     const refreshAllData = () => {
-      try {
-        const currentData = this.getLocalData();
-        callbacks.onObrasChange(currentData.obras);
-        callbacks.onManutencoesChange(currentData.manutencoes);
-        callbacks.onPiscinasChange(currentData.piscinas);
-        callbacks.onClientesChange(currentData.clientes);
-      } catch (error) {
-        console.warn("Erro ao verificar mudanças locais:", error);
+      if (refreshTimeout) {
+        clearTimeout(refreshTimeout);
       }
+
+      refreshTimeout = setTimeout(() => {
+        try {
+          const currentData = this.getLocalData();
+          callbacks.onObrasChange(currentData.obras);
+          callbacks.onManutencoesChange(currentData.manutencoes);
+          callbacks.onPiscinasChange(currentData.piscinas);
+          callbacks.onClientesChange(currentData.clientes);
+        } catch (error) {
+          console.warn("Erro ao verificar mudanças locais:", error);
+        }
+      }, 100); // 100ms debounce
     };
 
     // Load initial data
@@ -666,7 +675,7 @@ class UniversalDataSyncService {
   }
 
   /**
-   * Atualizar manutenção universal
+   * Atualizar manutenç��o universal
    */
   async updateManutencao(id: string, manutencaoData: any): Promise<void> {
     if (!isFirebaseReady() || !db) {
