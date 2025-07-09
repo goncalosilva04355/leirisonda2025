@@ -63,7 +63,7 @@ const getFirebaseApp = () => {
       }
     }
 
-    // Inicializar novo Firebase app com configuraç��es válidas
+    // Inicializar novo Firebase app com configurações válidas
     console.log(
       "🚀 Inicializando Firebase app com configurações atualizadas...",
     );
@@ -96,7 +96,7 @@ const getFirebaseApp = () => {
     }
 
     // Don't return null - try to continue with a basic app
-    console.warn("⚠️ Tentando continuar sem Firebase");
+    console.warn("���️ Tentando continuar sem Firebase");
     return null;
   }
 };
@@ -577,7 +577,20 @@ export const reinitializeFirebase = async (): Promise<boolean> => {
   }
 };
 
-// Auto-initialization removed to prevent loops - Firebase will initialize on demand
+// Stable Firebase auto-initialization
+setTimeout(() => {
+  waitForFirebaseInit()
+    .then((success) => {
+      if (success) {
+        console.log("🔥 Firebase inicializado com sucesso");
+      } else {
+        console.log("⚠️ Firebase usando modo local");
+      }
+    })
+    .catch((error) => {
+      console.warn("Firebase initialization:", error.message);
+    });
+}, 2000); // Wait 2 seconds for app to stabilize
 
 export { app, db, auth };
 export default app;
