@@ -5,7 +5,7 @@ module.exports = {
 
   // GitHub integration
   github: {
-    owner: "GoncaloFonseca86",
+    owner: "goncalosilva04355",
     repo: "Builder-stellar-landing",
     branch: "main",
     baseBranch: "main",
