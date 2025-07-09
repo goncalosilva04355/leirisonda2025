@@ -492,25 +492,15 @@ export const waitForFirebaseInit = async (): Promise<boolean> => {
 };
 
 // Function to get Firebase connection status
-export const getFirebaseStatus = async () => {
-  try {
-    const { UnifiedSafeFirebase } = await import("./unifiedSafeFirebase");
-    const unifiedStatus = UnifiedSafeFirebase.getStatus();
-    return {
-      ...unifiedStatus,
-      quotaExceeded: isQuotaExceeded(),
-      unified: true,
-    };
-  } catch (error) {
-    return {
-      app: false,
-      auth: false,
-      db: false,
-      ready: false,
-      quotaExceeded: isQuotaExceeded(),
-      error: "Failed to load UnifiedSafeFirebase",
-    };
-  }
+export const getFirebaseStatus = () => {
+  return {
+    app: false,
+    auth: false,
+    db: false,
+    ready: false,
+    quotaExceeded: isQuotaExceeded(),
+    mode: "safe-fallback",
+  };
 };
 
 // Function to mark quota exceeded - Firebase handles this automatically
