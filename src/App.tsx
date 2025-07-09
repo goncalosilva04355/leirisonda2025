@@ -854,7 +854,7 @@ function App() {
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
-      console.log("�� Password length:", loginForm.password?.length || 0);
+      console.log("🔐 Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
         loginForm.email,
@@ -5287,7 +5287,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�����es, recomendações, próxima manutenção..."
+                          placeholder="Observaç������es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7372,7 +7372,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condiç��es do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -8595,6 +8595,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           {/* Firebase-Only Test Button */}
           <FirebaseOnlyTest />
+
+          {/* Firestore Setup Guide */}
+          <FirestoreSetupGuide />
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
