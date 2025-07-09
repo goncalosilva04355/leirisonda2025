@@ -335,12 +335,10 @@ const initializeFirebaseServices = async (): Promise<void> => {
   }
 };
 
-// COMMENTED OUT: Eager initialization causing getImmediate errors
-// firebaseInitPromise = initializeFirebaseServices();
-
-// NEW APPROACH: Lazy loading Firebase services
+// REPLACED: Old complex initialization system replaced with simplified approach
+// All Firebase initialization now handled by simpleConfig.ts
 console.log(
-  "🔥 Switching to lazy loading approach to avoid getImmediate errors",
+  "🔥 Using simplified Firebase initialization to prevent getImmediate errors",
 );
 
 // Lazy Firebase App initialization
@@ -372,7 +370,7 @@ const ensureFirebaseApp = async (): Promise<any> => {
 const ensureFirestore = async (): Promise<any> => {
   if (!db && !dbInitAttempted) {
     dbInitAttempted = true;
-    console.log("🔄 Inicializando Firestore...");
+    console.log("���� Inicializando Firestore...");
 
     const firebaseApp = await ensureFirebaseApp();
     if (!firebaseApp) {
