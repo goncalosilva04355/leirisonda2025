@@ -1599,7 +1599,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           if (result.success) {
             console.log(
-              `✅ Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
+              `��� Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
             );
 
             // Show success message
@@ -4066,7 +4066,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="submit"
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.preventDefault();
 
                           // SECURITY: Check if user has permission to create works
