@@ -90,16 +90,65 @@ async function initializeFirebase(): Promise<boolean> {
         auth = null;
       }
 
-      // Initialize Firestore
+      // Initialize Firestore with proper timing
       try {
         console.log("🔄 Initializing Firestore...");
+
+        // Add extra delay to ensure app is fully ready
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Verify app is still valid before proceeding
+        if (!app || !app.options || !app.name) {
+          throw new Error("Firebase app became invalid during initialization");
+        }
+
+        // Double-check app is in getApps() list
+        const { getApps } = await import("firebase/app");
+        const currentApps = getApps();
+        const appExists = currentApps.find(
+          (existingApp) => existingApp.name === app.name,
+        );
+
+        if (!appExists) {
+          throw new Error("Firebase app no longer exists in apps list");
+        }
+
+        console.log("🔍 App verification passed, initializing Firestore...");
         db = getFirestore(app);
         console.log("✅ Firestore initialized successfully");
         console.log("📋 Firestore instance:", !!db);
       } catch (error) {
         console.error("❌ Firestore failed:", error);
         console.error("📋 Error details:", error);
-        db = null;
+
+        // If it's the getImmediate error, try alternative approach
+        if (error instanceof Error && error.message.includes("getImmediate")) {
+          console.log("🔧 Detected getImmediate error, trying recovery...");
+
+          try {
+            // Wait longer and try again
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            // Try to get a fresh app instance
+            const { getApps } = await import("firebase/app");
+            const apps = getApps();
+
+            if (apps.length > 0) {
+              const freshApp = apps[0];
+              console.log("🔄 Trying with fresh app instance...");
+              db = getFirestore(freshApp);
+              console.log("✅ Firestore initialized with recovery method");
+            } else {
+              console.log("❌ No Firebase apps available for recovery");
+              db = null;
+            }
+          } catch (recoveryError) {
+            console.error("❌ Recovery attempt failed:", recoveryError);
+            db = null;
+          }
+        } else {
+          db = null;
+        }
       }
 
       const success = !!(app && (auth || db));
