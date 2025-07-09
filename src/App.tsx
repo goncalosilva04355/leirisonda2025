@@ -67,6 +67,7 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 // Check Firebase status in development
 if (import.meta.env.DEV) {
   import("./utils/checkFirebaseStatus");
+  import("./utils/firebaseCompleteDiagnosis");
 }
 import { ForceInitialization } from "./utils/forceInitialization";
 
@@ -1485,7 +1486,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("�������� Address clicked:", address);
+    console.log("������ Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -8518,7 +8519,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb��m funciona na página de login */}
+        {/* Admin Login Modal - tamb��m funciona na p��gina de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
