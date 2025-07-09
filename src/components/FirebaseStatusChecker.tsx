@@ -207,32 +207,74 @@ export const FirebaseStatusChecker: React.FC = () => {
                     modo anónimo ou outros dispositivos.
                   </div>
 
-                  <button
-                    onClick={async () => {
-                      setIsChecking(true);
-                      try {
-                        // Force reinitialize Firebase
-                        const { UltimateSimpleFirebase } = await import(
-                          "../firebase/ultimateSimpleFirebase"
-                        );
-                        await UltimateSimpleFirebase.simpleInit();
+                  <div className="mt-3 space-x-2">
+                    <button
+                      onClick={async () => {
+                        setIsChecking(true);
+                        try {
+                          // Force reinitialize Firebase
+                          const { UltimateSimpleFirebase } = await import(
+                            "../firebase/ultimateSimpleFirebase"
+                          );
+                          await UltimateSimpleFirebase.simpleInit();
 
-                        // Wait a bit and recheck
-                        setTimeout(() => {
-                          checkFirebaseStatus();
-                        }, 2000);
-                      } catch (error) {
-                        console.error("Fix failed:", error);
-                        setIsChecking(false);
-                      }
-                    }}
-                    disabled={isChecking}
-                    className="mt-3 px-3 py-1 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 disabled:bg-gray-400 text-sm"
-                  >
-                    {isChecking
-                      ? "A corrigir..."
-                      : "🔧 Tentar Corrigir Firebase"}
-                  </button>
+                          // Wait a bit and recheck
+                          setTimeout(() => {
+                            checkFirebaseStatus();
+                          }, 2000);
+                        } catch (error) {
+                          console.error("Standard fix failed:", error);
+                          setIsChecking(false);
+                        }
+                      }}
+                      disabled={isChecking}
+                      className="px-3 py-1 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 disabled:bg-gray-400 text-sm"
+                    >
+                      {isChecking ? "A corrigir..." : "🔧 Correção Standard"}
+                    </button>
+
+                    <button
+                      onClick={async () => {
+                        setIsChecking(true);
+                        try {
+                          console.log(
+                            "🚀 Starting AGGRESSIVE Firebase fix for iOS/Safari...",
+                          );
+
+                          // Use aggressive fix methods
+                          const { AggressiveFirebaseFix } = await import(
+                            "../firebase/aggressiveFirebaseFix"
+                          );
+                          const result =
+                            await AggressiveFirebaseFix.fixFirestore();
+
+                          if (result.success) {
+                            console.log(
+                              `✅ AGGRESSIVE FIX SUCCESS: ${result.method}`,
+                            );
+                          } else {
+                            console.log(
+                              `❌ AGGRESSIVE FIX FAILED: ${result.error}`,
+                            );
+                          }
+
+                          // Wait longer for aggressive fixes
+                          setTimeout(() => {
+                            checkFirebaseStatus();
+                          }, 3000);
+                        } catch (error) {
+                          console.error("Aggressive fix failed:", error);
+                          setIsChecking(false);
+                        }
+                      }}
+                      disabled={isChecking}
+                      className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-gray-400 text-sm font-bold"
+                    >
+                      {isChecking
+                        ? "A corrigir..."
+                        : "💥 CORREÇÃO INTENSIVA (iOS)"}
+                    </button>
+                  </div>
                 </div>
               )}
             </>
