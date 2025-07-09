@@ -455,17 +455,19 @@ export const isFirebaseReady = () => {
   }
 };
 
-// Use UnifiedSafeFirebase to completely avoid getImmediate errors
+// Safe fallback functions that don't break the app
 export const getDB = async () => {
-  console.log("🔥 Getting Firestore via UnifiedSafeFirebase");
-  const { UnifiedSafeFirebase } = await import("./unifiedSafeFirebase");
-  return await UnifiedSafeFirebase.getDB();
+  console.log(
+    "⚠️ getDB() called - returning null safely (use UnifiedSafeFirebase instead)",
+  );
+  return null;
 };
 
 export const getAuthService = async () => {
-  console.log("🔥 Getting Auth via UnifiedSafeFirebase");
-  const { UnifiedSafeFirebase } = await import("./unifiedSafeFirebase");
-  return await UnifiedSafeFirebase.getAuth();
+  console.log(
+    "⚠️ getAuthService() called - returning null safely (use UnifiedSafeFirebase instead)",
+  );
+  return null;
 };
 
 // Function to ensure Firebase is initialized before use
