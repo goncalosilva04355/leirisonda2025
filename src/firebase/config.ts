@@ -370,7 +370,7 @@ const ensureFirebaseApp = async (): Promise<any> => {
 const ensureFirestore = async (): Promise<any> => {
   if (!db && !dbInitAttempted) {
     dbInitAttempted = true;
-    console.log("���� Inicializando Firestore...");
+    console.log("🔄 Inicializando Firestore...");
 
     const firebaseApp = await ensureFirebaseApp();
     if (!firebaseApp) {
@@ -458,15 +458,17 @@ export const isFirebaseReady = () => {
   }
 };
 
-// Use simplified Firebase approach to avoid getImmediate errors
+// Use UnifiedSafeFirebase to completely avoid getImmediate errors
 export const getDB = async () => {
-  console.log("🔥 Getting Firestore via simplified config");
-  return await getSimpleDB();
+  console.log("🔥 Getting Firestore via UnifiedSafeFirebase");
+  const { UnifiedSafeFirebase } = await import("./unifiedSafeFirebase");
+  return await UnifiedSafeFirebase.getDB();
 };
 
 export const getAuthService = async () => {
-  console.log("🔥 Getting Auth via simplified config");
-  return await getSimpleAuth();
+  console.log("🔥 Getting Auth via UnifiedSafeFirebase");
+  const { UnifiedSafeFirebase } = await import("./unifiedSafeFirebase");
+  return await UnifiedSafeFirebase.getAuth();
 };
 
 // Function to ensure Firebase is initialized before use
