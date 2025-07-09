@@ -3585,8 +3585,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usu��rios Atribuídos ({users.length} utilizadores
-                            disponíveis)
+                            Usuarios Atribuidos ({users.length} utilizadores
+                            disponiveis)
                           </label>
                           {(() => {
                             console.log(
@@ -3915,7 +3915,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <textarea
                               rows={3}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                              placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
                             />
                           </div>
                         </div>
@@ -5722,7 +5722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               dispositivo
                             </li>
                             <li>
-                              • A marcação automática funciona melhor em
+                              • A marcaç��o automática funciona melhor em
                               dispositivos móveis
                             </li>
                             <li>��� O Google Maps abre numa nova janela/tab</li>
@@ -5855,7 +5855,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten����ões</li>
+                        <li>• Histórico de manuten������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -8963,7 +8963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         selectedWork.vehicles.length > 0 && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
-                              Ve��culos
+                              Ve���culos
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.vehicles.join(", ")}
