@@ -165,23 +165,7 @@ function App() {
   // Data sync hook - versão segura para evitar erros
   const dataSync = useDataSyncSafe();
 
-  // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
-  useEffect(() => {
-    // Backup inicial
-    DataProtectionService.createEmergencyBackup();
-
-    // Firebase initialization handled by firebase/config.ts automatically
-    console.log(
-      "🔧 Firebase será inicializado automaticamente pelo sistema principal",
-    );
-
-    // Backup automático contínuo (reduzido para 10 minutos)
-    const backupInterval = setInterval(() => {
-      DataProtectionService.createEmergencyBackup();
-    }, 600000); // A cada 10 minutos
-
-    return () => clearInterval(backupInterval);
-  }, []);
+  // Backup and complex initialization temporarily disabled for stability
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
   useEffect(() => {
