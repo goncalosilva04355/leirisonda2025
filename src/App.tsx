@@ -90,6 +90,7 @@ import { FirebaseReactivateButton } from "./components/FirebaseReactivateButton"
 import { MigrationProgress } from "./components/MigrationProgress";
 import { FirebaseOnlyTest } from "./components/FirebaseOnlyTest";
 import { FirebaseStorageStatus } from "./components/FirebaseStorageStatus";
+import { FirestoreSetupGuide } from "./components/FirestoreSetupGuide";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
@@ -853,7 +854,7 @@ function App() {
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
-      console.log("🔐 Password length:", loginForm.password?.length || 0);
+      console.log("�� Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
         loginForm.email,
@@ -946,7 +947,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "��� Forced logout state clear completed - redirected to login",
+        "�� Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -4903,7 +4904,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manuten���ão
+                        Registar intervenção de manuten��ão
                       </p>
                     </div>
                   </div>
@@ -7371,7 +7372,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          placeholder="Condiç��es do terreno, qualidade da água, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
