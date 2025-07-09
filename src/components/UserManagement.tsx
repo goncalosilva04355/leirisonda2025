@@ -299,6 +299,19 @@ export const UserManagement: React.FC = () => {
     setIsCreatingUser(true);
 
     try {
+      // Auto-check Firebase before user creation
+      try {
+        const { UltimateSimpleFirebase } = await import(
+          "../firebase/ultimateSimpleFirebase"
+        );
+        await UltimateSimpleFirebase.simpleInit();
+      } catch (firebaseError) {
+        console.warn(
+          "⚠️ Firebase auto-check before user creation:",
+          firebaseError,
+        );
+      }
+
       // Import authService dynamically to ensure proper initialization
       const { authService } = await import("../services/authService");
 
