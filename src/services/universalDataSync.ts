@@ -420,7 +420,7 @@ class UniversalDataSyncService {
       // Wait for Firebase to be ready
       const firebaseReady = await waitForFirebaseInit();
       if (!firebaseReady || !isFirebaseReady() || !db) {
-        console.warn("⚠️ Firebase não disponível - usando armazenamento local");
+        console.log("📱 Firebase não disponível - usando armazenamento local");
 
         // Fallback to localStorage
         const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
