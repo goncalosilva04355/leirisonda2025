@@ -1,70 +1,73 @@
-import React, { useState, useEffect } from "react";
-import { Wifi, WifiOff, AlertCircle } from "lucide-react";
+/**
+ * Componente para mostrar o status do Firebase na interface
+ */
 
-export const FirebaseStatusIndicator: React.FC = () => {
-  const [status, setStatus] = useState<
-    "connecting" | "connected" | "local" | "error"
-  >("connecting");
+import React, { useState, useEffect } from "react";
+import { getFirebaseStatus } from "../firebase/simpleConfig";
+
+export function FirebaseStatusIndicator() {
+  const [status, setStatus] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Escutar eventos de status do Firebase
-    const handleFirebaseReady = () => setStatus("connected");
-    const handleFirebaseLocal = () => setStatus("local");
-
-    window.addEventListener("firebaseReady", handleFirebaseReady);
-    window.addEventListener("firebaseLocalMode", handleFirebaseLocal);
-
-    // Timeout para considerar erro se não conectar
-    const timeout = setTimeout(() => {
-      if (status === "connecting") {
-        setStatus("local");
+    const checkStatus = async () => {
+      try {
+        const firebaseStatus = getFirebaseStatus();
+        setStatus(firebaseStatus);
+      } catch (error) {
+        console.error("Erro ao verificar status Firebase:", error);
+        setStatus({ ready: false, error: true });
+      } finally {
+        setLoading(false);
       }
-    }, 10000); // 10 segundos
-
-    return () => {
-      window.removeEventListener("firebaseReady", handleFirebaseReady);
-      window.removeEventListener("firebaseLocalMode", handleFirebaseLocal);
-      clearTimeout(timeout);
     };
-  }, [status]);
 
-  const getStatusInfo = () => {
-    switch (status) {
-      case "connecting":
-        return {
-          icon: <Wifi className="h-4 w-4 animate-pulse" />,
-          text: "Conectando...",
-          color: "text-yellow-600 bg-yellow-50 border-yellow-200",
-        };
-      case "connected":
-        return {
-          icon: <Wifi className="h-4 w-4" />,
-          text: "Sincronização ativa",
-          color: "text-green-600 bg-green-50 border-green-200",
-        };
-      case "local":
-        return {
-          icon: <WifiOff className="h-4 w-4" />,
-          text: "Modo local",
-          color: "text-blue-600 bg-blue-50 border-blue-200",
-        };
-      case "error":
-        return {
-          icon: <AlertCircle className="h-4 w-4" />,
-          text: "Erro de conexão",
-          color: "text-red-600 bg-red-50 border-red-200",
-        };
-    }
-  };
+    checkStatus();
 
-  const statusInfo = getStatusInfo();
+    // Verificar status a cada 5 segundos
+    const interval = setInterval(checkStatus, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="fixed top-4 right-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 py-2 rounded text-sm">
+        🔄 Verificando Firebase...
+      </div>
+    );
+  }
+
+  if (!status) {
+    return (
+      <div className="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+        ❌ Erro ao verificar Firebase
+      </div>
+    );
+  }
+
+  if (status.ready) {
+    return (
+      <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded text-sm">
+        ✅ Firebase Ativo
+        {status.db && " | DB ✓"}
+        {status.auth && " | Auth ✓"}
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-sm ${statusInfo.color}`}
-    >
-      {statusInfo.icon}
-      <span>{statusInfo.text}</span>
+    <div className="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+      ❌ Firebase Inativo
+      <details className="mt-1">
+        <summary className="cursor-pointer text-xs">Detalhes</summary>
+        <div className="text-xs mt-1">
+          <div>App: {status.app ? "✅" : "❌"}</div>
+          <div>Auth: {status.auth ? "✅" : "❌"}</div>
+          <div>DB: {status.db ? "✅" : "❌"}</div>
+          <div>Inicializando: {status.initializing ? "✅" : "❌"}</div>
+        </div>
+      </details>
     </div>
   );
-};
+}
