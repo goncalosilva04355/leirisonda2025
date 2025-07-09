@@ -681,7 +681,8 @@ class UniversalDataSyncService {
    */
   async getAllUniversalData(): Promise<UniversalDataState> {
     if (!isFirebaseReady() || !db) {
-      throw new Error("Firebase não disponível");
+      console.log("📱 Carregando dados do armazenamento local");
+      return this.getLocalData();
     }
 
     try {
