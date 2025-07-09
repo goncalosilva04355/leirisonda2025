@@ -11,6 +11,7 @@ import { authService } from "../services/authService";
 import { mockAuthService } from "../services/mockAuthService";
 import UserSyncManager from "../utils/userSyncManager";
 import FirebaseStatusChecker from "./FirebaseStatusChecker";
+import EmergencyFirebaseFix from "./EmergencyFirebaseFix";
 
 export const LoginDebugHelper: React.FC = () => {
   const [testEmail, setTestEmail] = useState("");
@@ -446,6 +447,11 @@ export const LoginDebugHelper: React.FC = () => {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Emergency Fix */}
+            <div className="mt-6">
+              <EmergencyFirebaseFix />
             </div>
 
             {/* Raw Data */}
