@@ -165,19 +165,34 @@ export class UserSyncManager {
    */
   static syncToLocalUsers(mockUser: MockUser): void {
     try {
-      // Validate input user
-      if (!mockUser || !mockUser.email || !mockUser.uid) {
+      // Validate input user with comprehensive checks
+      if (
+        !mockUser ||
+        !mockUser.email ||
+        !mockUser.uid ||
+        typeof mockUser.email !== "string" ||
+        mockUser.email.trim() === ""
+      ) {
         console.warn("Invalid mock user data for sync:", mockUser);
         return;
       }
 
       const localUsers = this.getLocalUsers();
 
-      // Check if user already exists in local users
-      const existingIndex = localUsers.findIndex(
-        (u) =>
-          u.email && u.email.toLowerCase() === mockUser.email.toLowerCase(),
-      );
+      // Safely check if user already exists in local users
+      const existingIndex = localUsers.findIndex((u) => {
+        try {
+          return (
+            u.email &&
+            typeof u.email === "string" &&
+            typeof mockUser.email === "string" &&
+            u.email.toLowerCase() === mockUser.email.toLowerCase()
+          );
+        } catch (error) {
+          console.warn("Error comparing emails:", error);
+          return false;
+        }
+      });
 
       const localUser: LocalUser = {
         id: mockUser.uid,
