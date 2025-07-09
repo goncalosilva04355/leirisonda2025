@@ -302,14 +302,10 @@ class UniversalDataSyncService {
 
     // Return cleanup function
     return () => {
-      // clearInterval(pollInterval); // Disabled polling
+      clearInterval(pollInterval);
       if (refreshTimeout) {
         clearTimeout(refreshTimeout);
       }
-      window.removeEventListener(
-        "localDataChanged",
-        handleDataChange as EventListener,
-      );
       window.removeEventListener("storage", handleStorageChange);
       console.log("🛑 Listeners locais desconectados");
     };
@@ -326,7 +322,7 @@ class UniversalDataSyncService {
   }): () => void {
     if (!isFirebaseReady() || !db) {
       console.log(
-        "📱 Firebase não disponível - usando localStorage como fallback",
+        "�� Firebase não disponível - usando localStorage como fallback",
       );
 
       // Use localStorage listeners as stable fallback
