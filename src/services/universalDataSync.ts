@@ -454,7 +454,7 @@ class UniversalDataSyncService {
       );
       return id;
     } catch (error) {
-      console.error("❌ Erro ao adicionar obra:", error);
+      console.log("📱 Salvando obra localmente:", error.message || error);
 
       // Fallback to localStorage on any error
       const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
