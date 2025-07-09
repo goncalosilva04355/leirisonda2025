@@ -549,16 +549,23 @@ class UniversalDataSyncService {
       };
 
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
-      existingWorks.push(obra);
-      localStorage.setItem("works", JSON.stringify(existingWorks));
-      localStorage.setItem("lastLocalSync", new Date().toISOString());
 
-      // Trigger storage event for other tabs/windows
-      window.dispatchEvent(
-        new CustomEvent("localDataChanged", { detail: { type: "works" } }),
-      );
+      // Check if work already exists to prevent duplicates
+      const workExists = existingWorks.some((w: any) => w.id === obra.id);
+      if (!workExists) {
+        existingWorks.push(obra);
+        localStorage.setItem("works", JSON.stringify(existingWorks));
+        localStorage.setItem("lastLocalSync", new Date().toISOString());
 
-      console.log(`✅ OBRA SALVA LOCALMENTE (fallback): ${id}`);
+        // Trigger storage event for other tabs/windows
+        window.dispatchEvent(
+          new CustomEvent("localDataChanged", { detail: { type: "works" } }),
+        );
+
+        console.log(`✅ OBRA SALVA LOCALMENTE (fallback): ${id}`);
+      } else {
+        console.log(`⚠️ Obra ${id} já existe, ignorando duplicação`);
+      }
       return id;
     }
   }
