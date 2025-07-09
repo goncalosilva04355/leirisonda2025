@@ -155,7 +155,14 @@ function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // SINCRONIZAÇÃO UNIVERSAL - Garante que todos os utilizadores vejam todos os dados
-  const universalSync = useUniversalDataSync();
+  const universalSync = React.useMemo(() => {
+    try {
+      return useUniversalDataSync();
+    } catch (error) {
+      console.error("Error initializing universal sync:", error);
+      return null;
+    }
+  }, []);
 
   // Data sync hook - fallback para compatibilidade
   const dataSync = useDataSync();
