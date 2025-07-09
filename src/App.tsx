@@ -776,7 +776,7 @@ function App() {
       }
     }
 
-    console.log("Manutenção salva com sucesso:", interventionData);
+    console.log("Manutenç��o salva com sucesso:", interventionData);
 
     let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
 
@@ -6616,14 +6616,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <p className="text-gray-600 text-sm">
                           Gestão de obras e projetos
                         </p>
-                        {(() => {
-                          console.log(
-                            "📋 OBRAS CARREGADAS:",
-                            works.length,
-                            works,
-                          );
-                          return null;
-                        })()}
                       </div>
                     </div>
                     {hasPermission("obras", "create") && (
