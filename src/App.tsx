@@ -836,7 +836,7 @@ function App() {
 
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
-      console.log("🔐 Email:", loginForm.email);
+      console.log("���� Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
@@ -2867,7 +2867,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr��xima manuten��ão:{" "}
+                                Pr��xima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -6656,7 +6656,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                     >
                       Em Progresso (
-                      {works.filter((w) => w.status === "in_progress").length})
+                      {
+                        works.filter(
+                          (w) =>
+                            w.status === "em_progresso" ||
+                            w.status === "in_progress",
+                        ).length
+                      }
+                      )
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("completed")}
