@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Settings } from "lucide-react";
-import { FirebaseStatusMonitor } from "../components/FirebaseStatusMonitor";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -87,7 +86,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     }
 
     try {
-      console.log("📤 LoginPage: Calling onLogin function...");
+      console.log("�� LoginPage: Calling onLogin function...");
       await onLogin(loginForm.email.trim(), loginForm.password);
       console.log("✅ LoginPage: onLogin completed");
     } catch (error) {
