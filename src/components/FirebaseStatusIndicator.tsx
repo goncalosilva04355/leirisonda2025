@@ -17,8 +17,11 @@ export function FirebaseStatusIndicator() {
 
     const checkStatus = async () => {
       try {
-        const firebaseStatus = getFirebaseStatus();
-        setStatus(firebaseStatus);
+        const firebaseStatus = UnifiedSafeFirebase.getStatus();
+        setStatus({
+          ...firebaseStatus,
+          unified: true,
+        });
       } catch (error) {
         console.error("Erro ao verificar status Firebase:", error);
         setStatus({ ready: false, error: true });
