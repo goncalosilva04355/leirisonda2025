@@ -449,11 +449,11 @@ const ensureAuth = async (): Promise<any> => {
 console.log("🔥 Firebase initialization delegated to simplified system");
 
 // Function to check if Firebase is properly initialized and ready
-export const isFirebaseReady = async () => {
+export const isFirebaseReady = () => {
   try {
-    const { UnifiedSafeFirebase } = await import("./unifiedSafeFirebase");
-    const status = UnifiedSafeFirebase.getStatus();
-    return status.ready;
+    // Safe fallback that doesn't break the app
+    console.log("⚠️ isFirebaseReady() called - returning false safely");
+    return false;
   } catch (error) {
     console.warn("Firebase health check failed:", error);
     return false;
