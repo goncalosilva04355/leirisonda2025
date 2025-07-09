@@ -812,6 +812,9 @@ class UniversalDataSyncService {
    */
   private getLocalData(): UniversalDataState {
     try {
+      // Clean up any duplicate works first
+      this.cleanupDuplicateWorks();
+
       const obras = JSON.parse(localStorage.getItem("works") || "[]");
       const manutencoes = JSON.parse(
         localStorage.getItem("maintenance") || "[]",
