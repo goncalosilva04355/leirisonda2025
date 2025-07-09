@@ -1,6 +1,6 @@
 /**
  * Componente de diagnóstico visual de conectividade
- * Mostra o que está a impedir a conex��o e como resolver
+ * Mostra o que está a impedir a conexão e como resolver
  */
 
 import React, { useState, useEffect } from "react";
@@ -30,6 +30,7 @@ export const ConnectivityDiagnostic: React.FC<ConnectivityDiagnosticProps> = ({
   const [results, setResults] = useState<any>(null);
   const [quickStatus, setQuickStatus] = useState<any>(null);
   const [isFixing, setIsFixing] = useState(false);
+  const [isEmergencyFixing, setIsEmergencyFixing] = useState(false);
 
   // Auto-run diagnostic on mount se autoRun for true
   useEffect(() => {
