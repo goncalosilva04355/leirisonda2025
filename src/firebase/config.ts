@@ -77,11 +77,10 @@ export const getAuthService = async () => {
   return initAuth();
 };
 
-// Exports dos serviços com lazy loading
-export { app, analytics };
-export { db, auth };
-export default app;
+// Getter functions que garantem inicialização
+export const getDbInstance = () => initFirestore();
+export const getAuthInstance = () => initAuth();
 
-// Exports
+// Exports principais
 export { app, analytics };
 export default app;
