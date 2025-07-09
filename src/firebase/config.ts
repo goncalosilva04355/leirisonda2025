@@ -378,7 +378,7 @@ const ensureFirestore = async (): Promise<any> => {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       db = getFirestore(firebaseApp);
-      console.log("✅ Firestore inicializado com sucesso");
+      console.log("��� Firestore inicializado com sucesso");
       console.log("🔥 Base de dados pronta para sincronização");
 
       // Test Firestore connectivity
@@ -489,15 +489,35 @@ export const getAuthService = async () => {
 // Function to ensure Firebase is initialized before use
 export const waitForFirebaseInit = async (): Promise<boolean> => {
   try {
+    // Try to use UltimateSimpleFirebase first
+    const { UltimateSimpleFirebase } = await import("./ultimateSimpleFirebase");
+    const success = await UltimateSimpleFirebase.simpleInit();
+
+    if (success) {
+      const ultDb = UltimateSimpleFirebase.getDB();
+      const ultAuth = UltimateSimpleFirebase.getAuth();
+
+      if (ultDb) {
+        db = ultDb;
+        console.log("✅ Firebase DB available via UltimateSimpleFirebase");
+      }
+      if (ultAuth) {
+        auth = ultAuth;
+        console.log("✅ Firebase Auth available via UltimateSimpleFirebase");
+      }
+
+      return !!(db || auth);
+    }
+
+    // Fallback to original initialization
     if (firebaseInitPromise) {
+      await firebaseInitPromise;
+    } else {
+      firebaseInitPromise = initializeFirebaseServices();
       await firebaseInitPromise;
     }
 
-    // In lazy loading mode, try to initialize the services
-    await ensureAuth();
-    await ensureFirestore();
-
-    return isFirebaseReady();
+    return !!(db || auth);
   } catch (error) {
     console.warn("Failed to wait for Firebase initialization:", error);
     return false;
