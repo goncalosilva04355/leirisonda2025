@@ -230,7 +230,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações autom��ticas desabilitadas para resolver instabilidade
+    // Verificaç��es autom��ticas desabilitadas para resolver instabilidade
     // Sistema funcionará normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
@@ -1028,7 +1028,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -3204,7 +3204,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <BarChart3 className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenç��o agendada
+                        Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
                         As futuras manutenções aparecerão aqui quando forem
@@ -5794,7 +5794,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registos)
                               </li>
                               <li>
-                                • Todas as piscinas ({pools.length} registos)
+                                ��� Todas as piscinas ({pools.length} registos)
                               </li>
                               <li>
                                 🔥 Dados do Firebase e armazenamento local
@@ -5876,7 +5876,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>• Informaç��es de clientes</li>
+                        <li>• Informaç����es de clientes</li>
                         <li>• Histórico de manuten����ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
@@ -5982,7 +5982,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>�� Piscinas associadas</li>
+                        <li>���� Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
@@ -7870,7 +7870,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duraç��o Real (horas)
+                          Duraç����o Real (horas)
                         </label>
                         <input
                           type="number"
@@ -7882,7 +7882,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Custo (���)
+                          Custo (€)
                         </label>
                         <input
                           type="number"
@@ -8583,31 +8583,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
-          {/* Firebase Status Indicator */}
-          <FirebaseStatusIndicator />
-
-          {/* Firebase Storage Status */}
-          <FirebaseStorageStatus />
-
-          {/* Manual Firebase Control */}
-          <ManualFirebaseControl />
-
-          {/* Firebase Reactivate Button for mobile */}
-          {/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && (
-            <FirebaseReactivateButton />
-          )}
-
-          {/* Migration Progress */}
-          <MigrationProgress />
-
-          {/* Firebase-Only Test Button */}
-          <FirebaseOnlyTest />
-
-          {/* Firestore Setup Guide */}
-          <FirestoreSetupGuide />
-
-          {/* Firebase Error Monitor */}
-          <FirebaseErrorMonitor />
+          {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
             className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
