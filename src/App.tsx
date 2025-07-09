@@ -81,6 +81,9 @@ import("./utils/migrateToFirebaseOnly");
 
 // Test Firebase storage configuration
 import("./utils/testFirebaseStorage");
+
+// Ultra-safe Firebase configuration (fallback)
+import("./firebase/ultraSafeConfig");
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -3071,7 +3074,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������������ {maint.clientContact}
+                                        ���������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -7083,7 +7086,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Users className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Técnicos Atribuídos
+                          T��cnicos Atribuídos
                         </h3>
                       </div>
 
@@ -9055,7 +9058,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplicável */}
+                      {/* Detalhes do Furo de Água - Se aplic��vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
