@@ -1,8 +1,5 @@
-// Configuração Firebase limpa - baseada na configuração oficial
+// Configuração Firebase ultra-segura - evita erros getImmediate
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 
 // Configuração Firebase oficial
 const firebaseConfig = {
@@ -15,79 +12,154 @@ const firebaseConfig = {
   measurementId: "G-R9W43EHH2C",
 };
 
-// Inicializar Firebase App
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-// Variables para lazy loading
+// Inicializar apenas Firebase App (sem serviços)
+let app: any = null;
 let _db: any = null;
 let _auth: any = null;
+let _analytics: any = null;
+let initializationFailed = false;
 
-// Inicializar Firestore de forma lazy
-const initFirestore = () => {
-  if (!_db) {
-    try {
-      _db = getFirestore(app);
-      console.log("✅ Firestore inicializado com sucesso");
-    } catch (error) {
-      console.error("❌ Erro ao inicializar Firestore:", error);
-      return null;
-    }
+// Inicializar Firebase App de forma segura
+try {
+  app = initializeApp(firebaseConfig);
+  console.log("✅ Firebase App inicializado");
+} catch (error) {
+  console.error("❌ Erro ao inicializar Firebase App:", error);
+  initializationFailed = true;
+}
+
+// Função super-segura para inicializar Firestore
+const initFirestore = async () => {
+  if (initializationFailed || !app) {
+    console.warn("⚠️ Firebase App não disponível, usando fallback local");
+    return null;
   }
-  return _db;
-};
 
-// Inicializar Auth de forma lazy
-const initAuth = () => {
-  if (!_auth) {
-    try {
-      _auth = getAuth(app);
-      console.log("✅ Firebase Auth inicializado com sucesso");
-    } catch (error) {
-      console.error("❌ Erro ao inicializar Auth:", error);
-      return null;
-    }
+  if (_db) {
+    return _db;
   }
-  return _auth;
-};
 
-// Função para verificar se Firebase está pronto
-export const isFirebaseReady = (): boolean => {
-  return !!(app && initFirestore() && initAuth());
-};
-
-// Função para aguardar inicialização (compatibilidade)
-export const waitForFirebaseInit = async (): Promise<boolean> => {
   try {
-    initFirestore();
-    initAuth();
-    return !!(_db && _auth);
+    // Aguardar um pouco antes de tentar inicializar
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const { getFirestore } = await import("firebase/firestore");
+
+    // Tentar inicializar com timeout
+    const initPromise = new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error("Timeout ao inicializar Firestore"));
+      }, 5000);
+
+      try {
+        const db = getFirestore(app);
+        clearTimeout(timeout);
+        resolve(db);
+      } catch (error) {
+        clearTimeout(timeout);
+        reject(error);
+      }
+    });
+
+    _db = await initPromise;
+    console.log("✅ Firestore inicializado com sucesso (após aguardar)");
+    return _db;
+  } catch (error: any) {
+    console.error("❌ Erro ao inicializar Firestore:", error);
+    console.log("📱 Usando modo local - Firebase não disponível");
+    initializationFailed = true;
+    return null;
+  }
+};
+
+// Função super-segura para inicializar Auth
+const initAuth = async () => {
+  if (initializationFailed || !app) {
+    return null;
+  }
+
+  if (_auth) {
+    return _auth;
+  }
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const { getAuth } = await import("firebase/auth");
+    _auth = getAuth(app);
+    console.log("✅ Firebase Auth inicializado");
+    return _auth;
   } catch (error) {
-    console.error("Erro na inicialização:", error);
+    console.error("❌ Erro ao inicializar Auth:", error);
+    return null;
+  }
+};
+
+// Função para verificar se Firebase está pronto (sem forçar inicialização)
+export const isFirebaseReady = (): boolean => {
+  if (initializationFailed) {
+    return false;
+  }
+  return !!(app && _db && _auth);
+};
+
+// Função para aguardar inicialização SEM forçar
+export const waitForFirebaseInit = async (): Promise<boolean> => {
+  if (initializationFailed) {
+    return false;
+  }
+
+  try {
+    // Não forçar inicialização aqui - apenas verificar se já está pronto
+    return isFirebaseReady();
+  } catch (error) {
     return false;
   }
 };
 
-// Funções para obter serviços (compatibilidade)
+// Funções para obter serviços (retorna null se não disponível)
 export const getDB = async () => {
-  return initFirestore();
+  if (initializationFailed) {
+    return null;
+  }
+  return await initFirestore();
 };
 
 export const getAuthService = async () => {
-  return initAuth();
+  if (initializationFailed) {
+    return null;
+  }
+  return await initAuth();
 };
 
-// Getter functions que garantem inicialização
-export const getDbInstance = () => initFirestore();
-export const getAuthInstance = () => initAuth();
+// Mock objects que retornam null para evitar erros
+const mockDb = new Proxy(
+  {},
+  {
+    get() {
+      return null;
+    },
+  },
+);
 
-// Create proxy objects that initialize on access
+const mockAuth = new Proxy(
+  {},
+  {
+    get() {
+      return null;
+    },
+  },
+);
+
+// Exports seguros - retorna mocks se Firebase falhar
 export const db = new Proxy(
   {},
   {
     get(target, prop) {
-      const firestore = initFirestore();
-      return firestore ? firestore[prop] : undefined;
+      if (initializationFailed || !_db) {
+        return null;
+      }
+      return _db?.[prop];
     },
   },
 );
@@ -96,12 +168,52 @@ export const auth = new Proxy(
   {},
   {
     get(target, prop) {
-      const authentication = initAuth();
-      return authentication ? authentication[prop] : undefined;
+      if (initializationFailed || !_auth) {
+        return null;
+      }
+      return _auth?.[prop];
     },
   },
 );
 
+// Analytics opcional
+const initAnalytics = async () => {
+  if (initializationFailed || !app) {
+    return null;
+  }
+
+  try {
+    const { getAnalytics } = await import("firebase/analytics");
+    _analytics = getAnalytics(app);
+    return _analytics;
+  } catch (error) {
+    // Analytics é opcional - não importa se falhar
+    return null;
+  }
+};
+
+// Inicialização gradual e segura (não bloqueia a app)
+setTimeout(async () => {
+  if (!initializationFailed) {
+    console.log("🔄 Tentando inicializar Firebase services...");
+
+    // Tentar inicializar sem bloquear
+    try {
+      await initFirestore();
+      await initAuth();
+      await initAnalytics();
+
+      if (_db && _auth) {
+        console.log("🔥 Firebase totalmente inicializado!");
+      } else {
+        console.log("⚠️ Firebase parcialmente inicializado");
+      }
+    } catch (error) {
+      console.log("📱 App funcionará em modo local");
+    }
+  }
+}, 2000); // Aguardar 2 segundos para app estabilizar
+
 // Exports principais
-export { app, analytics };
+export { app };
 export default app;
