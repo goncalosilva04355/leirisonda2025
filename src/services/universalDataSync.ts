@@ -312,6 +312,9 @@ class UniversalDataSyncService {
     // Return cleanup function
     return () => {
       // clearInterval(pollInterval); // Disabled polling
+      if (refreshTimeout) {
+        clearTimeout(refreshTimeout);
+      }
       window.removeEventListener(
         "localDataChanged",
         handleDataChange as EventListener,
@@ -675,7 +678,7 @@ class UniversalDataSyncService {
   }
 
   /**
-   * Atualizar manutenç��o universal
+   * Atualizar manutenção universal
    */
   async updateManutencao(id: string, manutencaoData: any): Promise<void> {
     if (!isFirebaseReady() || !db) {
