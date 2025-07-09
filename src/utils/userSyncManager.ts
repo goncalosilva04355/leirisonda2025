@@ -72,13 +72,22 @@ export class UserSyncManager {
   private static convertRole(
     localRole: string,
   ): "super_admin" | "manager" | "technician" {
-    switch (localRole) {
-      case "super_admin":
-        return "super_admin";
-      case "admin":
-        return "manager";
-      default:
+    try {
+      if (!localRole || typeof localRole !== "string") {
         return "technician";
+      }
+
+      switch (localRole.toLowerCase()) {
+        case "super_admin":
+          return "super_admin";
+        case "admin":
+          return "manager";
+        default:
+          return "technician";
+      }
+    } catch (error) {
+      console.warn("Error converting role:", error);
+      return "technician";
     }
   }
 
