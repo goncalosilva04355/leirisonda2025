@@ -166,15 +166,10 @@ function App() {
     // Backup inicial
     DataProtectionService.createEmergencyBackup();
 
-    // FIREBASE DIAGNOSTIC E FORÇA INICIALIZAÇÃO
-    console.log("🔧 Iniciando diagnóstico Firebase...");
-    FirebaseDiagnostic.forceInitialization().then((success) => {
-      if (success) {
-        console.log("🔥 Firebase inicializado com sucesso!");
-      } else {
-        console.log("📱 Aplicação funcionará em modo local");
-      }
-    });
+    // Firebase initialization handled by firebase/config.ts automatically
+    console.log(
+      "🔧 Firebase será inicializado automaticamente pelo sistema principal",
+    );
 
     // Backup automático contínuo (reduzido para 10 minutos)
     const backupInterval = setInterval(() => {
