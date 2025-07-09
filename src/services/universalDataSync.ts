@@ -786,6 +786,28 @@ class UniversalDataSyncService {
   }
 
   /**
+   * Limpar dados duplicados do localStorage
+   */
+  private cleanupDuplicateWorks(): void {
+    try {
+      const works = JSON.parse(localStorage.getItem("works") || "[]");
+      const uniqueWorks = works.filter(
+        (work: any, index: number, self: any[]) =>
+          index === self.findIndex((w: any) => w.id === work.id),
+      );
+
+      if (works.length !== uniqueWorks.length) {
+        console.log(
+          `🧹 Removendo ${works.length - uniqueWorks.length} obras duplicadas`,
+        );
+        localStorage.setItem("works", JSON.stringify(uniqueWorks));
+      }
+    } catch (error) {
+      console.warn("Erro ao limpar obras duplicadas:", error);
+    }
+  }
+
+  /**
    * Carregar dados do localStorage
    */
   private getLocalData(): UniversalDataState {
