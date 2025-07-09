@@ -67,9 +67,14 @@ export function ManualFirebaseControl() {
   };
 
   const handleTest = async () => {
-    console.log("🧪 Executando teste de conectividade UnifiedSafe...");
-    const connectivity = await UnifiedSafeFirebase.testConnectivity();
-    setTestResults(connectivity);
+    console.log("🧪 Executando teste de conectividade UltimateSimple...");
+    const firestoreWorks = await UltimateSimpleFirebase.testFirestore();
+
+    setTestResults({
+      canRead: firestoreWorks,
+      canWrite: firestoreWorks,
+      error: firestoreWorks ? undefined : "Firestore não funcional",
+    });
   };
 
   if (!showControl) return null;
