@@ -34,7 +34,13 @@ export class UserSyncManager {
   private static getLocalUsers(): LocalUser[] {
     try {
       const savedUsers = localStorage.getItem("app-users");
-      return savedUsers ? JSON.parse(savedUsers) : [];
+      const users = savedUsers ? JSON.parse(savedUsers) : [];
+
+      // Filter out invalid users
+      return users.filter(
+        (user: any) =>
+          user && user.id && user.email && typeof user.email === "string",
+      );
     } catch (error) {
       console.error("Error loading local users:", error);
       return [];
@@ -47,7 +53,13 @@ export class UserSyncManager {
   private static getMockUsers(): MockUser[] {
     try {
       const savedUsers = localStorage.getItem("mock-users");
-      return savedUsers ? JSON.parse(savedUsers) : [];
+      const users = savedUsers ? JSON.parse(savedUsers) : [];
+
+      // Filter out invalid users
+      return users.filter(
+        (user: any) =>
+          user && user.uid && user.email && typeof user.email === "string",
+      );
     } catch (error) {
       console.error("Error loading mock users:", error);
       return [];
@@ -60,13 +72,22 @@ export class UserSyncManager {
   private static convertRole(
     localRole: string,
   ): "super_admin" | "manager" | "technician" {
-    switch (localRole) {
-      case "super_admin":
-        return "super_admin";
-      case "admin":
-        return "manager";
-      default:
+    try {
+      if (!localRole || typeof localRole !== "string") {
         return "technician";
+      }
+
+      switch (localRole.toLowerCase()) {
+        case "super_admin":
+          return "super_admin";
+        case "admin":
+          return "manager";
+        default:
+          return "technician";
+      }
+    } catch (error) {
+      console.warn("Error converting role:", error);
+      return "technician";
     }
   }
 
@@ -76,13 +97,22 @@ export class UserSyncManager {
   private static convertRoleReverse(
     mockRole: string,
   ): "user" | "admin" | "super_admin" {
-    switch (mockRole) {
-      case "super_admin":
-        return "super_admin";
-      case "manager":
-        return "admin";
-      default:
+    try {
+      if (!mockRole || typeof mockRole !== "string") {
         return "user";
+      }
+
+      switch (mockRole.toLowerCase()) {
+        case "super_admin":
+          return "super_admin";
+        case "manager":
+          return "admin";
+        default:
+          return "user";
+      }
+    } catch (error) {
+      console.warn("Error converting mock role:", error);
+      return "user";
     }
   }
 
@@ -91,23 +121,74 @@ export class UserSyncManager {
    */
   static syncToMockAuth(localUser: LocalUser): void {
     try {
+      // Comprehensive validation of entire user object
+      if (!localUser || typeof localUser !== "object") {
+        console.warn("Invalid user object for sync:", localUser);
+        return;
+      }
+
+      // Validate essential properties exist and are correct types
+      if (
+        !localUser.email ||
+        !localUser.id ||
+        typeof localUser.email !== "string" ||
+        typeof localUser.id !== "string" ||
+        localUser.email.trim() === "" ||
+        localUser.id.trim() === ""
+      ) {
+        console.warn("Invalid user data for sync - missing required fields:", {
+          hasEmail: !!localUser.email,
+          hasId: !!localUser.id,
+          emailType: typeof localUser.email,
+          idType: typeof localUser.id,
+          user: localUser,
+        });
+        return;
+      }
+
       const mockUsers = this.getMockUsers();
 
-      // Check if user already exists in mock auth
-      const existingIndex = mockUsers.findIndex(
-        (u) => u.email.toLowerCase() === localUser.email.toLowerCase(),
-      );
+      // Safely check if user already exists in mock auth
+      const existingIndex = mockUsers.findIndex((u) => {
+        try {
+          return (
+            u.email &&
+            typeof u.email === "string" &&
+            typeof localUser.email === "string" &&
+            u.email.toLowerCase() === localUser.email.toLowerCase()
+          );
+        } catch (error) {
+          console.warn("Error comparing emails:", error);
+          return false;
+        }
+      });
 
       const mockUser: MockUser = {
-        uid: localUser.id.startsWith("mock-")
-          ? localUser.id
-          : `mock-${localUser.id}`,
-        email: localUser.email,
-        password: localUser.password,
-        name: localUser.name,
-        role: this.convertRole(localUser.role),
-        active: localUser.active,
-        createdAt: localUser.createdAt,
+        uid:
+          localUser.id &&
+          typeof localUser.id === "string" &&
+          localUser.id.startsWith("mock-")
+            ? localUser.id
+            : `mock-${localUser.id || "unknown"}`,
+        email: localUser.email || "",
+        password:
+          localUser.password && typeof localUser.password === "string"
+            ? localUser.password
+            : "",
+        name:
+          localUser.name && typeof localUser.name === "string"
+            ? localUser.name
+            : "",
+        role: this.convertRole(
+          localUser.role && typeof localUser.role === "string"
+            ? localUser.role
+            : "user",
+        ),
+        active: localUser.active !== false,
+        createdAt:
+          localUser.createdAt && typeof localUser.createdAt === "string"
+            ? localUser.createdAt
+            : new Date().toISOString(),
       };
 
       if (existingIndex >= 0) {
@@ -131,12 +212,34 @@ export class UserSyncManager {
    */
   static syncToLocalUsers(mockUser: MockUser): void {
     try {
+      // Validate input user with comprehensive checks
+      if (
+        !mockUser ||
+        !mockUser.email ||
+        !mockUser.uid ||
+        typeof mockUser.email !== "string" ||
+        mockUser.email.trim() === ""
+      ) {
+        console.warn("Invalid mock user data for sync:", mockUser);
+        return;
+      }
+
       const localUsers = this.getLocalUsers();
 
-      // Check if user already exists in local users
-      const existingIndex = localUsers.findIndex(
-        (u) => u.email.toLowerCase() === mockUser.email.toLowerCase(),
-      );
+      // Safely check if user already exists in local users
+      const existingIndex = localUsers.findIndex((u) => {
+        try {
+          return (
+            u.email &&
+            typeof u.email === "string" &&
+            typeof mockUser.email === "string" &&
+            u.email.toLowerCase() === mockUser.email.toLowerCase()
+          );
+        } catch (error) {
+          console.warn("Error comparing emails:", error);
+          return false;
+        }
+      });
 
       const localUser: LocalUser = {
         id: mockUser.uid,
@@ -186,16 +289,45 @@ export class UserSyncManager {
 
       // Sync all local users to mock auth
       localUsers.forEach((localUser) => {
-        this.syncToMockAuth(localUser);
+        try {
+          this.syncToMockAuth(localUser);
+        } catch (error) {
+          console.error(
+            `Error syncing user ${localUser?.email || "unknown"}:`,
+            error,
+          );
+        }
       });
 
       // Sync all mock users to local storage (only if they don't exist locally)
       mockUsers.forEach((mockUser) => {
-        const existsLocally = localUsers.some(
-          (u) => u.email.toLowerCase() === mockUser.email.toLowerCase(),
-        );
-        if (!existsLocally) {
-          this.syncToLocalUsers(mockUser);
+        try {
+          const existsLocally = localUsers.some((u) => {
+            try {
+              return (
+                u.email &&
+                mockUser.email &&
+                typeof u.email === "string" &&
+                typeof mockUser.email === "string" &&
+                u.email.toLowerCase() === mockUser.email.toLowerCase()
+              );
+            } catch (error) {
+              console.warn(
+                "Error comparing emails in existsLocally check:",
+                error,
+              );
+              return false;
+            }
+          });
+
+          if (!existsLocally) {
+            this.syncToLocalUsers(mockUser);
+          }
+        } catch (error) {
+          console.error(
+            `Error processing mock user ${mockUser?.email || "unknown"}:`,
+            error,
+          );
         }
       });
 

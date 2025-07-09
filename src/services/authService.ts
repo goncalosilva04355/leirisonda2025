@@ -262,40 +262,7 @@ class AuthService {
       return { success: false, error: "Por favor, insira um email válido" };
     }
 
-    // Try Firebase first for cross-device access with quota protection
-    const quotaStatus = QuotaManager.getQuotaStatus();
-    const firebaseReady = await waitForFirebaseInit();
-
-    if (firebaseReady && isFirebaseReady() && quotaStatus.canSync) {
-      console.log("🔥 Attempting Firebase login for cross-device access...");
-
-      const firebaseLoginResult = await QuotaManager.executeWithQuotaProtection(
-        () => this.loginWithFirebase(email, password),
-        "user-login",
-      );
-
-      if (firebaseLoginResult.success && firebaseLoginResult.data?.success) {
-        console.log(
-          "✅ Firebase login successful - cross-device access enabled",
-        );
-        return firebaseLoginResult.data;
-      } else if (firebaseLoginResult.error?.includes("quota")) {
-        console.log(
-          "🚨 Firebase quota exceeded during login, using local auth",
-        );
-      } else {
-        console.log("🔄 Firebase login failed, using local auth");
-      }
-    } else if (!quotaStatus.canSync) {
-      console.log(
-        `⏸️ Firebase login blocked: ${quotaStatus.recommendedAction}`,
-      );
-    } else {
-      console.log("📱 Firebase not ready, using local authentication");
-    }
-
-    // Fallback to mock auth for local-only users
-    console.log("Using local authentication as fallback...");
+    // Simple login process for speed
     try {
       const result = await this.loginWithMock(email, password);
       if (result.success) {
@@ -321,7 +288,6 @@ class AuthService {
       // Check if user is in the blocked list
       const blockedEmails = [
         "yrzamr@gmail.com",
-        "yrzamr01@gmail.com",
         "alexkamaryta@gmail.com",
         "davidcarreiraa92@gmail.com",
       ];
@@ -457,7 +423,6 @@ class AuthService {
       // Check if user is in the blocked list
       const blockedEmails = [
         "yrzamr@gmail.com",
-        "yrzamr01@gmail.com",
         "alexkamaryta@gmail.com",
         "davidcarreiraa92@gmail.com",
       ];

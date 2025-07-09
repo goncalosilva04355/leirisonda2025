@@ -128,7 +128,6 @@ class MockAuthService {
     // Check if user is in the blocked list
     const blockedEmails = [
       "yrzamr@gmail.com",
-      "yrzamr01@gmail.com",
       "alexkamaryta@gmail.com",
       "davidcarreiraa92@gmail.com",
     ];

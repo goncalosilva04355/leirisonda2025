@@ -50,16 +50,18 @@ import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
-import { FirebaseReactivatedNotification } from "./components/FirebaseReactivatedNotification";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
+import { isFirebaseReady } from "./firebase/config";
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
+
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
+import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -158,33 +160,16 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Versão segura temporária para evitar erros
-  const universalSync = useUniversalDataSyncSafe();
-
-  // Data sync hook - versão segura para evitar erros
+  // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
+  // Firebase ativo como solicitado
+  const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSafe();
 
-  // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
-  useEffect(() => {
-    // Backup inicial
-    DataProtectionService.createEmergencyBackup();
-
-    // Firebase initialization handled by firebase/config.ts automatically
-    console.log(
-      "🔧 Firebase será inicializado automaticamente pelo sistema principal",
-    );
-
-    // Backup automático contínuo (reduzido para 10 minutos)
-    const backupInterval = setInterval(() => {
-      DataProtectionService.createEmergencyBackup();
-    }, 600000); // A cada 10 minutos
-
-    return () => clearInterval(backupInterval);
-  }, []);
+  // Backup and complex initialization temporarily disabled for stability
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
   useEffect(() => {
-    console.log("🌐 SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+    console.log("���� SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
       obras: universalSync.obras.length,
       manutencoes: universalSync.manutencoes.length,
       piscinas: universalSync.piscinas.length,
@@ -288,9 +273,40 @@ function App() {
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
   );
 
-  // Funções de compatibilidade
+  // Funções de compatibilidade simplificadas
   const addPool = (data: any) => addPiscina(data);
-  const addWork = (data: any) => addObra(data);
+  const addWork = async (data: any) => {
+    try {
+      console.log("🔧 addWork iniciado com Firebase ativo");
+
+      // Use Firebase through universal sync but with better error handling
+      const result = await addObra(data);
+      // Log removed for performance
+
+      // Delay removed for faster performance
+
+      return result;
+    } catch (error) {
+      console.error("❌ Erro no Firebase, tentando fallback:", error);
+
+      // Fallback to localStorage if Firebase fails
+      const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const newWork = {
+        ...data,
+        id: data.id || Date.now().toString(),
+        createdAt: data.createdAt || new Date().toISOString(),
+      };
+
+      const exists = existingWorks.some((w: any) => w.id === newWork.id);
+      if (!exists) {
+        existingWorks.push(newWork);
+        localStorage.setItem("works", JSON.stringify(existingWorks));
+        // Log removed for performance
+      }
+
+      return newWork.id;
+    }
+  };
   const addMaintenance = (data: any) => addManutencao(data);
   const addClient = (data: any) => addCliente(data);
   const syncWithFirebase = () => forceSyncAll();
@@ -312,6 +328,8 @@ function App() {
   const autoSyncData = useAutoSyncSafe();
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
+
+  // Debug logging removed to prevent re-render loops
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -547,7 +565,7 @@ function App() {
     console.log("��� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
-      console.log("�� Current notification permission:", permission);
+      console.log("���� Current notification permission:", permission);
       setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
@@ -734,7 +752,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç���o Regular",
+      type: "Manutenç����o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -986,7 +1004,7 @@ function App() {
   // PDF Generation Functions
   const generatePoolsPDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE PISCINAS
+LEIRISONDA - RELAT��RIO DE PISCINAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1123,8 +1141,8 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç��es Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
-- Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
+- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
 ${futureMaintenance
@@ -1278,7 +1296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura����es para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n�� Ative as notificações nas configura����es para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1493,7 +1511,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("��️ Opening Google Maps:", mapsUrl);
+      console.log("���️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -1588,7 +1606,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           if (result.success) {
             console.log(
-              `✅ Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
+              `���� Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
             );
 
             // Show success message
@@ -1599,7 +1617,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
+              `⚠��� Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -1825,25 +1843,21 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         })}
                       </p>
                     </div>
+                  </div>
 
-                    {/* Sync Status */}
-                    <div className="flex items-center justify-center space-x-1 text-gray-800 text-sm font-medium">
+                  {/* Firebase Status LED - Bottom Right Corner */}
+                  <div className="absolute bottom-2 right-2 z-20">
+                    <div className="flex items-center space-x-1">
                       <div
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          syncStatus === "completed"
-                            ? "bg-green-500"
-                            : syncStatus === "error"
-                              ? "bg-red-500"
-                              : "bg-blue-500"
+                        className={`w-2 h-2 rounded-full ${
+                          isFirebaseReady() ? "bg-green-500" : "bg-red-500"
                         }`}
+                        title={
+                          isFirebaseReady()
+                            ? "Firebase Ativo"
+                            : "Firebase Inativo"
+                        }
                       ></div>
-                      <span>
-                        {syncStatus === "completed"
-                          ? "Sincronizado"
-                          : syncStatus === "error"
-                            ? "Erro Sync"
-                            : "Conectando"}
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -1865,7 +1879,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {works.filter((w) => w.status === "pending").length}
+                        {(() => {
+                          const pendingWorks = works.filter(
+                            (w) =>
+                              w.status === "pending" || w.status === "pendente",
+                          );
+                          console.log(
+                            "📊 Dashboard - Obras Pendentes:",
+                            pendingWorks.length,
+                            pendingWorks.map((w) => ({
+                              id: w.id,
+                              status: w.status,
+                              title: w.workSheetNumber,
+                            })),
+                          );
+                          return pendingWorks.length;
+                        })()}
                       </div>
                     </div>
                   </button>
@@ -1885,7 +1914,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {works.filter((w) => w.status === "in_progress").length}
+                        {
+                          works.filter(
+                            (w) =>
+                              w.status === "in_progress" ||
+                              w.status === "em_progresso",
+                          ).length
+                        }
                       </div>
                     </div>
                   </button>
@@ -1905,7 +1940,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {works.filter((w) => w.status === "completed").length}
+                        {
+                          works.filter(
+                            (w) =>
+                              w.status === "completed" ||
+                              w.status === "concluida",
+                          ).length
+                        }
                       </div>
                     </div>
                   </button>
@@ -1927,7 +1968,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="text-4xl font-bold text-gray-900">
                         {
                           works.filter(
-                            (w) => !w.folhaGerada && w.status !== "completed",
+                            (w) =>
+                              !w.folhaGerada &&
+                              w.status !== "completed" &&
+                              w.status !== "concluida",
                           ).length
                         }
                       </div>
@@ -1987,7 +2031,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 </div>
 
-                {/* Lista de Obras Atribuídas */}
+                {/* Lista de Obras Atribu��das */}
                 {currentUser &&
                   works.filter((work) => {
                     if (!work) return false;
@@ -2253,7 +2297,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {maint.poolName}
                                     </h3>
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                      <span>🔧</span>
+                                      <span>���</span>
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -2702,7 +2746,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">����</div>
+                                  <div className="text-gray-400 mb-2">
+                                    �����
+                                  </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -2845,7 +2891,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : "text-gray-600 hover:text-blue-600"
                               }`}
                             >
-                              📍 {pool.location}
+                              �� {pool.location}
                             </button>
                             <div className="flex items-center space-x-4 mt-2">
                               <span className="text-sm text-gray-500">
@@ -3020,7 +3066,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Concluído"
+                                      ? "Conclu��do"
                                       : maint.status}
                               </span>
                             </div>
@@ -3148,7 +3194,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenção</span>
+                      <span>Agendar Manutenç��o</span>
                     </button>
                   </div>
                 </div>
@@ -3236,7 +3282,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ���‍🔧 {maint.technician}
+                                ����‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -3709,7 +3755,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    👤 {assignedUser.name}
+                                    �� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -4055,7 +4101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="submit"
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.preventDefault();
 
                           // SECURITY: Check if user has permission to create works
@@ -4128,7 +4174,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observações sobre a obra"]',
+                                'textarea[placeholder*="Observa��ões sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -4205,28 +4251,49 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             };
                           }
 
-                          // Create complete work data object
+                          // Create complete work data object (matching Work interface)
                           const workData = {
                             id: Date.now().toString(),
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
                               : `LS-${Date.now()}`,
-                            title: workTitle || "",
-                            type: workType || "",
-                            client: client || "",
+                            type: (() => {
+                              const validTypes = [
+                                "piscina",
+                                "manutencao",
+                                "avaria",
+                                "montagem",
+                              ];
+                              if (workType === "instalacao") return "montagem"; // Map instalacao to montagem
+                              if (workType === "reparacao") return "avaria"; // Map reparacao to avaria
+                              if (workType === "limpeza") return "manutencao"; // Map limpeza to manutencao
+                              if (workType === "furo") return "montagem"; // Map furo to montagem
+                              return validTypes.includes(workType)
+                                ? (workType as
+                                    | "piscina"
+                                    | "manutencao"
+                                    | "avaria"
+                                    | "montagem")
+                                : "piscina";
+                            })(),
+                            clientName: client || "",
                             contact: contact || "",
-                            location: location || "",
-                            startTime: startTime || "",
-                            endTime: endTime || "",
-                            status:
-                              (status as
-                                | "pending"
-                                | "in_progress"
-                                | "completed"
-                                | "cancelled") || "pending",
-                            description: description || "",
+                            address: location || "",
+                            entryTime: startTime || new Date().toISOString(),
+                            exitTime: endTime || undefined,
+                            status: (() => {
+                              switch (status) {
+                                case "pending":
+                                  return "pendente";
+                                case "in_progress":
+                                  return "em_progresso";
+                                case "completed":
+                                  return "concluida";
+                                default:
+                                  return "pendente";
+                              }
+                            })(),
                             ...boreData, // Spread bore-specific data if applicable
-                            budget: budget ? parseFloat(budget) : null,
                             assignedTo:
                               assignedUsers.length > 0
                                 ? assignedUsers.map((u) => u.name).join(", ")
@@ -4237,103 +4304,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               : [], // Store user IDs
                             vehicles: workVehicles || [],
                             technicians: workTechnicians || [],
-                            photos: uploadedPhotos || [],
-                            photoCount: uploadedPhotos
-                              ? uploadedPhotos.length
-                              : 0,
+                            photos:
+                              uploadedPhotos.map((photo) => ({
+                                id: photo.id,
+                                url: photo.data,
+                                filename: photo.name,
+                                uploadedAt: new Date().toISOString(),
+                              })) || [],
                             observations: observations || "",
-                            workPerformed: "",
+                            workPerformed: description || "",
                             workSheetCompleted: false,
                             createdAt: new Date().toISOString(),
-                            startDate: new Date().toISOString(),
+                            updatedAt: new Date().toISOString(),
                           };
 
                           // Use sync system to add work (will handle Firebase and localStorage)
-                          const newWork = addWork(workData);
+                          try {
+                            const newWork = await addWork(workData);
 
-                          // Send notifications to all assigned users
-                          assignedUsers.forEach((assignedUser) => {
-                            sendWorkAssignmentNotification(
-                              workTitle,
-                              assignedUser.name,
+                            // Success - no notification needed
+                          } catch (error) {
+                            console.error("❌ Error creating work:", error);
+                            alert(
+                              `Erro ao criar obra: ${error.message || error}`,
                             );
-                          });
-
-                          // Always capture bore data from the cyan section
-                          const furosSection =
-                            document.querySelector("#furo-details");
-                          if (furosSection) {
-                            // Get bore data from form
-                            const boreInputs = furosSection.querySelectorAll(
-                              "input, select, textarea",
-                            );
-
-                            // Update the existing work with bore data
-                            const boreDataUpdate = {
-                              boreDepth:
-                                (boreInputs[0] as HTMLInputElement)?.value ||
-                                "",
-                              waterLevel:
-                                (boreInputs[1] as HTMLInputElement)?.value ||
-                                "",
-                              staticLevel:
-                                (boreInputs[2] as HTMLInputElement)?.value ||
-                                "",
-                              dynamicLevel:
-                                (boreInputs[3] as HTMLInputElement)?.value ||
-                                "",
-                              flowRate:
-                                (boreInputs[4] as HTMLInputElement)?.value ||
-                                "",
-                              columnDiameter:
-                                (boreInputs[5] as HTMLInputElement)?.value ||
-                                "",
-                              pumpModel:
-                                (boreInputs[6] as HTMLInputElement)?.value ||
-                                "",
-                              motorPower:
-                                (boreInputs[7] as HTMLInputElement)?.value ||
-                                "",
-                              pumpVoltage:
-                                (boreInputs[8] as HTMLInputElement)?.value ||
-                                "",
-                              boreObservations:
-                                (boreInputs[9] as HTMLInputElement)?.value ||
-                                "",
-                            };
-
-                            // Update the work with bore data
-                            dataSync.updateWork(workData.id, boreDataUpdate);
-
-                            const waterBoreData = {
-                              id: Date.now(),
-                              workTitle: workTitle,
-                              date: new Date().toISOString(),
-                              photos: uploadedPhotos,
-                              photoCount: uploadedPhotos.length,
-                              workType: "furo",
-                              ...boreDataUpdate,
-                            };
-
-                            const savedWaterBores = JSON.parse(
-                              localStorage.getItem("waterBores") || "[]",
-                            );
-                            savedWaterBores.push(waterBoreData);
-                            localStorage.setItem(
-                              "waterBores",
-                              JSON.stringify(savedWaterBores),
-                            );
+                            return;
                           }
 
-                          alert(
-                            `Obra "${workTitle}" criada com sucesso! ` +
-                              (assignedUsers.length > 0
-                                ? `Notificações enviadas a ${assignedUsers.length} responsável(eis).`
-                                : "") +
-                              (selectedWorkType === "furo"
-                                ? " Dados do furo registados."
-                                : ""),
-                          );
+                          // Complex processing removed to prevent instability
 
                           // Clear form data
                           setSelectedWorkType("");
@@ -5269,7 +5267,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�����es, recomendações, próxima manutenção..."
+                          placeholder="Observaç�������es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5544,7 +5542,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador não suporta notificações.",
+                                  "Este navegador não suporta notificaç��es.",
                                 );
                               }
                             }}
@@ -5556,7 +5554,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Configurações de Localiza��ão Individual - Apenas para super_admin */}
+                    {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
                     {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
@@ -5635,8 +5633,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </button>
                           </div>
                           <p className="text-blue-700 text-sm mb-3">
-                            Quando ativado, clicar num número de telefone abrirá
-                            diretamente o marcador do telefone.
+                            Quando ativado, clicar num número de telefone
+                            abrir�� diretamente o marcador do telefone.
                           </p>
                           <p className="text-blue-600 text-xs">
                             Estado:{" "}
@@ -5869,8 +5867,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>📋 Trabalhos realizados</li>
-                        <li>�� Técnicos responsáveis</li>
+                        <li>�� Trabalhos realizados</li>
+                        <li>�� T��cnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -5907,7 +5905,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>• Estados de progresso</li>
+                        <li>��� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -6006,7 +6004,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Crie relatórios com filtros específicos
+                        Crie relat��rios com filtros específicos
                       </p>
                       <div className="space-y-2">
                         <label className="flex items-center">
@@ -6023,7 +6021,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenções</span>
+                          <span className="text-xs">Manutenç��es</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -6289,7 +6287,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </button>
                               </div>
                               <div>
-                                <p className="font-medium">Informações:</p>
+                                <p className="font-medium">Informa��ões:</p>
                                 <p>Tipo: {client.type}</p>
                                 <p>
                                   Cliente desde:{" "}
@@ -6541,7 +6539,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={(e) => {
                           e.preventDefault();
                           alert(
-                            "Cliente criado com sucesso! (Funç��o em desenvolvimento)",
+                            "Cliente criado com sucesso! (Fun����o em desenvolvimento)",
                           );
                           setActiveSection("clientes");
                         }}
@@ -6570,7 +6568,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Obras
+                          Obras ({works.length})
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gestão de obras e projetos
@@ -6611,7 +6609,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                     >
                       Pendentes (
-                      {works.filter((w) => w.status === "pending").length})
+                      {
+                        works.filter(
+                          (w) =>
+                            w.status === "pendente" || w.status === "pending",
+                        ).length
+                      }
+                      )
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("in_progress")}
@@ -6622,7 +6626,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                     >
                       Em Progresso (
-                      {works.filter((w) => w.status === "in_progress").length})
+                      {
+                        works.filter(
+                          (w) =>
+                            w.status === "em_progresso" ||
+                            w.status === "in_progress",
+                        ).length
+                      }
+                      )
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("completed")}
@@ -6633,7 +6644,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                     >
                       Concluídas (
-                      {works.filter((w) => w.status === "completed").length})
+                      {
+                        works.filter(
+                          (w) =>
+                            w.status === "concluida" ||
+                            w.status === "completed",
+                        ).length
+                      }
+                      )
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("no_sheet")}
@@ -6646,7 +6664,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Sem Folha de Obra (
                       {
                         works.filter(
-                          (w) => !w.folhaGerada && w.status !== "completed",
+                          (w) =>
+                            !w.folhaGerada &&
+                            w.status !== "completed" &&
+                            w.status !== "concluida",
                         ).length
                       }
                       )
@@ -6660,7 +6681,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     .filter((work) => {
                       if (activeWorkFilter === "all") return true;
                       if (activeWorkFilter === "no_sheet")
-                        return !work.folhaGerada && work.status !== "completed";
+                        return (
+                          !work.folhaGerada &&
+                          work.status !== "completed" &&
+                          work.status !== "concluida"
+                        );
+                      if (activeWorkFilter === "pending")
+                        return (
+                          work.status === "pendente" ||
+                          work.status === "pending"
+                        );
+                      if (activeWorkFilter === "in_progress")
+                        return (
+                          work.status === "em_progresso" ||
+                          work.status === "in_progress"
+                        );
+                      if (activeWorkFilter === "completed")
+                        return (
+                          work.status === "concluida" ||
+                          work.status === "completed"
+                        );
                       return work.status === activeWorkFilter;
                     })
                     .map((work) => (
@@ -6675,20 +6715,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="flex items-center space-x-2"></div>
                               <span
                                 className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                  work.status === "pendente" ||
                                   work.status === "pending"
                                     ? "bg-red-100 text-red-700 border border-red-200"
-                                    : work.status === "in_progress"
+                                    : work.status === "em_progresso" ||
+                                        work.status === "in_progress"
                                       ? "bg-orange-100 text-orange-700 border border-orange-200"
-                                      : work.status === "completed"
+                                      : work.status === "concluida" ||
+                                          work.status === "completed"
                                         ? "bg-green-100 text-green-700 border border-green-200"
                                         : "bg-gray-100 text-gray-700 border border-gray-200"
                                 }`}
                               >
-                                {work.status === "pending"
+                                {work.status === "pendente" ||
+                                work.status === "pending"
                                   ? "Pendente"
-                                  : work.status === "in_progress"
+                                  : work.status === "em_progresso" ||
+                                      work.status === "in_progress"
                                     ? "Em Progresso"
-                                    : work.status === "completed"
+                                    : work.status === "concluida" ||
+                                        work.status === "completed"
                                       ? "Concluída"
                                       : work.status}
                               </span>
@@ -6713,7 +6759,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     �� Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
-                                    {work.client}
+                                    {work.clientName || work.client}
                                   </span>
                                   {work.contact && (
                                     <div className="mt-1">
@@ -6738,8 +6784,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span className="font-medium">Local:</span>{" "}
                                 <button
                                   onClick={() => {
-                                    if (work?.location) {
-                                      handleAddressClick(work.location);
+                                    if (work?.address || work?.location) {
+                                      handleAddressClick(
+                                        work.address || work.location,
+                                      );
                                     }
                                   }}
                                   className={`text-xs ${
@@ -6749,14 +6797,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  ��� {work.location}
+                                  ��� {work.address || work.location}
                                 </button>
                               </div>
                               <div>
                                 <span className="font-medium">Início:</span>{" "}
-                                {new Date(work.startDate).toLocaleDateString(
-                                  "pt-PT",
-                                )}
+                                {new Date(
+                                  work.entryTime ||
+                                    work.startDate ||
+                                    work.createdAt,
+                                ).toLocaleDateString("pt-PT")}
                               </div>
                               <div>
                                 <span className="font-medium">
@@ -6830,7 +6880,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {works.filter((work) => {
                     if (activeWorkFilter === "all") return true;
                     if (activeWorkFilter === "no_sheet")
-                      return !work.folhaGerada && work.status !== "completed";
+                      return (
+                        !work.folhaGerada &&
+                        work.status !== "completed" &&
+                        work.status !== "concluida"
+                      );
+                    if (activeWorkFilter === "pending")
+                      return (
+                        work.status === "pendente" || work.status === "pending"
+                      );
+                    if (activeWorkFilter === "in_progress")
+                      return (
+                        work.status === "em_progresso" ||
+                        work.status === "in_progress"
+                      );
+                    if (activeWorkFilter === "completed")
+                      return (
+                        work.status === "concluida" ||
+                        work.status === "completed"
+                      );
                     return work.status === activeWorkFilter;
                   }).length === 0 && (
                     <div className="bg-white rounded-lg p-8 shadow-sm text-center">
@@ -7058,8 +7126,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠��� Nenhum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuição de
+                                ⚠���� Nenhum utilizador encontrado. Vá à Área
+                                de Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -7162,7 +7230,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observações
+                          Observa��ões
                         </h3>
                       </div>
 
@@ -7175,7 +7243,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descrição do trabalho realizado..."
+                            placeholder="Descriç��o do trabalho realizado..."
                           />
                         </div>
                         <div>
@@ -7560,7 +7628,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenção">Em Manutenç��o</option>
+                          <option value="Em Manutenç��o">Em Manutenç��o</option>
                         </select>
                       </div>
                       <div>
@@ -8267,7 +8335,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observaç��es e próxima manutenção</span>
+                  <span>Observaç���es e próxima manutenção</span>
                 </div>
               </div>
             </div>
@@ -8498,7 +8566,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb��m funciona na página de login */}
+        {/* Admin Login Modal - tamb���m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
@@ -9229,9 +9297,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           )}
         </div>
-
-        {/* Firebase Reactivated Notification */}
-        <FirebaseReactivatedNotification />
 
         {/* Realtime Notifications - REMOVIDAS */}
         {/* <RealtimeNotifications /> */}

@@ -47,13 +47,18 @@ class UniversalDataSyncService {
       return true;
     }
 
+    // Clean up any duplicate data first
+    this.cleanupDuplicateWorks();
+
     // Inicializar sincronização universal silenciosa
 
     try {
       const firebaseReady = await waitForFirebaseInit();
-      if (!firebaseReady || !isFirebaseReady() || !db) {
-        console.error("❌ Firebase não disponível - modo local apenas");
-        return false;
+      if (!firebaseReady || !isFirebaseReady()) {
+        console.warn("⚠️ Firebase não disponível - modo local apenas");
+        // Still return true to allow local operation
+        this.isInitialized = true;
+        return true;
       }
 
       // Migrar dados existentes para estrutura universal
@@ -244,6 +249,69 @@ class UniversalDataSyncService {
   }
 
   /**
+   * Configurar listeners do localStorage como fallback
+   */
+  private setupLocalStorageListeners(callbacks: {
+    onObrasChange: (obras: any[]) => void;
+    onManutencoesChange: (manutencoes: any[]) => void;
+    onPiscinasChange: (piscinas: any[]) => void;
+    onClientesChange: (clientes: any[]) => void;
+  }): () => void {
+    console.log("📱 Configurando listeners do armazenamento local");
+
+    // Debounce function to prevent rapid fire updates
+    let refreshTimeout: NodeJS.Timeout | null = null;
+
+    // Function to refresh all data with debounce
+    const refreshAllData = () => {
+      if (refreshTimeout) {
+        clearTimeout(refreshTimeout);
+      }
+
+      refreshTimeout = setTimeout(() => {
+        try {
+          const currentData = this.getLocalData();
+          callbacks.onObrasChange(currentData.obras);
+          callbacks.onManutencoesChange(currentData.manutencoes);
+          callbacks.onPiscinasChange(currentData.piscinas);
+          callbacks.onClientesChange(currentData.clientes);
+        } catch (error) {
+          console.warn("Erro ao verificar mudanças locais:", error);
+        }
+      }, 100); // 100ms debounce
+    };
+
+    // Load initial data
+    refreshAllData();
+
+    // Only listen for native storage events (more stable)
+    const handleStorageChange = (event: StorageEvent) => {
+      if (
+        event.key &&
+        ["works", "maintenance", "pools", "clients"].includes(event.key)
+      ) {
+        console.log("📱 Storage alterado:", event.key);
+        refreshAllData();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Polling temporarily disabled to prevent Builder.io crashes
+    // const pollInterval = setInterval(refreshAllData, 10000);
+
+    // Return cleanup function
+    return () => {
+      // clearInterval(pollInterval); // Disabled polling
+      if (refreshTimeout) {
+        clearTimeout(refreshTimeout);
+      }
+      window.removeEventListener("storage", handleStorageChange);
+      console.log("🛑 Listeners locais desconectados");
+    };
+  }
+
+  /**
    * Configurar listeners universais para todos os tipos de dados
    */
   setupUniversalListeners(callbacks: {
@@ -253,8 +321,12 @@ class UniversalDataSyncService {
     onClientesChange: (clientes: any[]) => void;
   }): () => void {
     if (!isFirebaseReady() || !db) {
-      console.error("❌ Firebase não disponível para listeners universais");
-      return () => {};
+      console.log(
+        "📱 Firebase não disponível - usando localStorage como fallback",
+      );
+
+      // Use localStorage listeners as stable fallback
+      return this.setupLocalStorageListeners(callbacks);
     }
 
     console.log("📡 CONFIGURANDO LISTENERS UNIVERSAIS");
@@ -414,25 +486,99 @@ class UniversalDataSyncService {
    * Adicionar nova obra universal
    */
   async addObra(obraData: any): Promise<string> {
-    if (!isFirebaseReady() || !db) {
-      throw new Error("Firebase não disponível");
+    try {
+      // Wait for Firebase to be ready
+      const firebaseReady = await waitForFirebaseInit();
+      if (!firebaseReady || !isFirebaseReady() || !db) {
+        console.log("📱 Firebase não disponível - usando armazenamento local");
+
+        // Fallback to localStorage
+        const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
+        const obra = {
+          ...obraData,
+          id,
+          createdAt: obraData.createdAt || new Date().toISOString(),
+        };
+
+        const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
+
+        // Check if work already exists to prevent duplicates
+        const workExists = existingWorks.some((w: any) => w.id === obra.id);
+        if (!workExists) {
+          existingWorks.push(obra);
+          localStorage.setItem("works", JSON.stringify(existingWorks));
+          localStorage.setItem("lastLocalSync", new Date().toISOString());
+
+          // Trigger storage event for cross-tab sync (stable approach)
+          setTimeout(() => {
+            window.dispatchEvent(
+              new StorageEvent("storage", {
+                key: "works",
+                newValue: JSON.stringify(existingWorks),
+                storageArea: localStorage,
+              }),
+            );
+          }, 100);
+
+          console.log(`✅ OBRA SALVA LOCALMENTE: ${id}`);
+        } else {
+          console.log(`⚠️ Obra ${id} já existe, ignorando duplicação`);
+        }
+        return id;
+      }
+
+      const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
+      const obra = {
+        ...obraData,
+        id,
+        universallyShared: true,
+        visibleToAllUsers: true,
+        createdAt: obraData.createdAt || new Date().toISOString(),
+        lastSync: new Date().toISOString(),
+      };
+
+      await setDoc(doc(db, "universal_obras", id), obra);
+      console.log(
+        `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - vis��vel para todos`,
+      );
+      return id;
+    } catch (error) {
+      console.log("📱 Salvando obra localmente:", error.message || error);
+
+      // Fallback to localStorage on any error
+      const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
+      const obra = {
+        ...obraData,
+        id,
+        createdAt: obraData.createdAt || new Date().toISOString(),
+      };
+
+      const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
+
+      // Check if work already exists to prevent duplicates
+      const workExists = existingWorks.some((w: any) => w.id === obra.id);
+      if (!workExists) {
+        existingWorks.push(obra);
+        localStorage.setItem("works", JSON.stringify(existingWorks));
+        localStorage.setItem("lastLocalSync", new Date().toISOString());
+
+        // Trigger storage event for cross-tab sync (stable approach)
+        setTimeout(() => {
+          window.dispatchEvent(
+            new StorageEvent("storage", {
+              key: "works",
+              newValue: JSON.stringify(existingWorks),
+              storageArea: localStorage,
+            }),
+          );
+        }, 100);
+
+        console.log(`✅ OBRA SALVA LOCALMENTE (fallback): ${id}`);
+      } else {
+        console.log(`⚠️ Obra ${id} já existe, ignorando duplicação`);
+      }
+      return id;
     }
-
-    const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
-    const obra = {
-      ...obraData,
-      id,
-      universallyShared: true,
-      visibleToAllUsers: true,
-      createdAt: obraData.createdAt || new Date().toISOString(),
-      lastSync: new Date().toISOString(),
-    };
-
-    await setDoc(doc(db!, "universal_obras", id), obra);
-    console.log(
-      `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
-    );
-    return id;
   }
 
   /**
@@ -639,11 +785,93 @@ class UniversalDataSyncService {
   }
 
   /**
+   * Reset completo de emergência - limpa todos os dados
+   */
+  static emergencyReset(): void {
+    console.log("🚨 RESET DE EMERGÊNCIA - Limpando todos os dados");
+
+    // Clear localStorage
+    localStorage.removeItem("works");
+    localStorage.removeItem("maintenance");
+    localStorage.removeItem("pools");
+    localStorage.removeItem("clients");
+    localStorage.removeItem("lastLocalSync");
+
+    // Clear session storage
+    sessionStorage.clear();
+
+    console.log("✅ Dados limpos - recarregue a página");
+  }
+
+  /**
+   * Limpar dados duplicados do localStorage
+   */
+  private cleanupDuplicateWorks(): void {
+    try {
+      const works = JSON.parse(localStorage.getItem("works") || "[]");
+      const uniqueWorks = works.filter(
+        (work: any, index: number, self: any[]) =>
+          index === self.findIndex((w: any) => w.id === work.id),
+      );
+
+      if (works.length !== uniqueWorks.length) {
+        console.log(
+          `🧹 Removendo ${works.length - uniqueWorks.length} obras duplicadas`,
+        );
+        localStorage.setItem("works", JSON.stringify(uniqueWorks));
+      }
+    } catch (error) {
+      console.warn("Erro ao limpar obras duplicadas:", error);
+    }
+  }
+
+  /**
+   * Carregar dados do localStorage
+   */
+  private getLocalData(): UniversalDataState {
+    try {
+      // Clean up any duplicate works first
+      this.cleanupDuplicateWorks();
+
+      const obras = JSON.parse(localStorage.getItem("works") || "[]");
+      const manutencoes = JSON.parse(
+        localStorage.getItem("maintenance") || "[]",
+      );
+      const piscinas = JSON.parse(localStorage.getItem("pools") || "[]");
+      const clientes = JSON.parse(localStorage.getItem("clients") || "[]");
+
+      return {
+        obras,
+        manutencoes,
+        piscinas,
+        clientes,
+        totalItems:
+          obras.length + manutencoes.length + piscinas.length + clientes.length,
+        lastSync:
+          localStorage.getItem("lastLocalSync") || new Date().toISOString(),
+        isGloballyShared: false, // Local data is not globally shared
+      };
+    } catch (error) {
+      console.warn("Erro ao carregar dados locais:", error);
+      return {
+        obras: [],
+        manutencoes: [],
+        piscinas: [],
+        clientes: [],
+        totalItems: 0,
+        lastSync: new Date().toISOString(),
+        isGloballyShared: false,
+      };
+    }
+  }
+
+  /**
    * Obter todos os dados universais
    */
   async getAllUniversalData(): Promise<UniversalDataState> {
     if (!isFirebaseReady() || !db) {
-      throw new Error("Firebase não disponível");
+      console.log("📱 Carregando dados do armazenamento local");
+      return this.getLocalData();
     }
 
     try {
@@ -716,7 +944,7 @@ class UniversalDataSyncService {
   }
 
   /**
-   * Verificar se o serviço está pronto
+   * Verificar se o servi��o está pronto
    */
   isReady(): boolean {
     return this.isInitialized && isFirebaseReady();
@@ -740,4 +968,8 @@ class UniversalDataSyncService {
 
 // Exportar instância singleton
 export const universalDataSync = new UniversalDataSyncService();
+
+// Expor função de reset de emergência globalmente
+(window as any).emergencyReset = UniversalDataSyncService.emergencyReset;
+
 export default universalDataSync;
