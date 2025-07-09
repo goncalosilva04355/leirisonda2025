@@ -9314,6 +9314,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* User Restore Notification */}
         <UserRestoreNotification />
+
+        {/* Firebase Auto-Monitor - Discrete indicator */}
+        <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
