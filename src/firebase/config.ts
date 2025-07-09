@@ -61,7 +61,7 @@ export const waitForFirebaseInit = async (): Promise<boolean> => {
   try {
     initFirestore();
     initAuth();
-    return !!(db && auth);
+    return !!(_db && _auth);
   } catch (error) {
     console.error("Erro na inicialização:", error);
     return false;
