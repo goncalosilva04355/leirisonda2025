@@ -87,6 +87,11 @@ export function FirebaseStatusIndicator() {
         ✅ Firebase Ativo {isMobile ? "(iPhone)" : ""}
         {status.db && " | DB ✓"}
         {status.auth && " | Auth ✓"}
+        {status.unified && (
+          <div className="text-xs mt-1 text-purple-600">
+            🛡️ Sistema Unificado
+          </div>
+        )}
         {isMigrated && (
           <div className="text-xs mt-1 text-blue-600">
             🔥 Modo Firebase-Only
