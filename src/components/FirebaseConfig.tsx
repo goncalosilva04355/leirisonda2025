@@ -97,8 +97,8 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
         return;
       }
 
-      // Save configuration to localStorage
-      const saveSuccess = saveFirebaseConfig(config);
+      // Configuration is already set in Firebase config
+      const saveSuccess = true;
 
       if (saveSuccess) {
         setSuccess(true);
