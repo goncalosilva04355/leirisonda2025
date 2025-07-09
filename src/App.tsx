@@ -58,7 +58,7 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
-import { useDataSync } from "./hooks/useDataSync";
+import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
@@ -157,8 +157,8 @@ function App() {
   // SINCRONIZAÇÃO UNIVERSAL - Versão segura temporária para evitar erros
   const universalSync = useUniversalDataSyncSafe();
 
-  // Data sync hook - fallback para compatibilidade
-  const dataSync = useDataSync();
+  // Data sync hook - versão segura para evitar erros
+  const dataSync = useDataSyncSafe();
 
   // PROTEÇÃO CRÍTICA: Backup automático reduzido para melhorar performance
   useEffect(() => {
@@ -5258,7 +5258,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç���es, recomendações, próxima manutenção..."
+                          placeholder="Observaç�����es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5868,7 +5868,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Histórico de intervenções
+                          Histórico de intervenç��es
                         </p>
                       </div>
                     </div>
