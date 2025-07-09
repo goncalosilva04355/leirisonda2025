@@ -957,7 +957,7 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENÇÃO: Esta aç���o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
+        "ATENÇÃO: Esta aç�����o vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
@@ -8675,7 +8675,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     }`}
                   >
                     <Plus className="h-5 w-5" />
-                    <span>Nova Manutenção</span>
+                    <span>Nova Manutencao</span>
                   </button>
                 )}
 
