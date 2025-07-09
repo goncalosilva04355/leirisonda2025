@@ -1737,7 +1737,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "relatorios",
       icon: BarChart3,
-      label: "Relatórios",
+      label: "Relatorios",
       path: "/relatorios",
     },
     { id: "clientes", icon: Users, label: "Clientes", path: "/clientes" },
@@ -7200,7 +7200,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações sobre a obra
+                            Observa��ões sobre a obra
                           </label>
                           <textarea
                             defaultValue={editingWork?.observations}
@@ -7816,7 +7816,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç��o">Manutenção</option>
+                          <option value="Manutenç���o">Manutenção</option>
                           <option value="Reparaç��o">Reparação</option>
                         </select>
                       </div>
