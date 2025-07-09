@@ -233,6 +233,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
       )}
+
+      {/* Firebase Status Visual for Mobile */}
+      <FirebaseStatusVisual />
     </div>
   );
 };
