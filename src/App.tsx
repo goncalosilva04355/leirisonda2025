@@ -160,54 +160,9 @@ function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
-  // EMERGENCY STABLE VERSION - No complex hooks
-  const [works, setWorks] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("works") || "[]");
-    } catch {
-      return [];
-    }
-  });
-
-  const [maintenance, setMaintenance] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("maintenance") || "[]");
-    } catch {
-      return [];
-    }
-  });
-
-  const [pools, setPools] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("pools") || "[]");
-    } catch {
-      return [];
-    }
-  });
-
-  const [clients, setClients] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("clients") || "[]");
-    } catch {
-      return [];
-    }
-  });
-
-  // Minimal compatibility object
-  const universalSync = {
-    obras: works,
-    manutencoes: maintenance,
-    piscinas: pools,
-    clientes: clients,
-    syncStatus: "local",
-  };
-
-  const dataSync = {
-    works: works,
-    maintenance: maintenance,
-    pools: pools,
-    clients: clients,
-  };
+  // Firebase ativo como solicitado
+  const universalSync = useUniversalDataSync();
+  const dataSync = useDataSyncSafe();
 
   // Backup and complex initialization temporarily disabled for stability
 
@@ -5923,7 +5878,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
-                        <li>�� Técnicos responsáveis</li>
+                        <li>�� T��cnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
