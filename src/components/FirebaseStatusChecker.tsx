@@ -34,9 +34,28 @@ export const FirebaseStatusChecker: React.FC = () => {
         console.log("DB service not available:", error);
       }
 
+      // Test Firestore rules if database is available
+      let rulesTest = null;
+      if (dbService) {
+        try {
+          const { FirestoreRulesFix } = await import(
+            "../firebase/firestoreRulesFix"
+          );
+          rulesTest = await FirestoreRulesFix.testFirestoreAccess();
+        } catch (error) {
+          console.log("Rules test failed:", error);
+          rulesTest = {
+            canRead: false,
+            canWrite: false,
+            error: "Rules test failed",
+            suggestion: "Could not test Firestore rules",
+          };
+        }
+      }
+
       // Test user creation capability
       let canCreateUsers = false;
-      if (authService && dbService) {
+      if (authService && dbService && rulesTest?.canWrite) {
         try {
           // Test if we can create a test user (without actually creating)
           const { authService: auth } = await import("../services/authService");
@@ -51,6 +70,7 @@ export const FirebaseStatusChecker: React.FC = () => {
         ultStatus,
         authService: !!authService,
         dbService: !!dbService,
+        rulesTest,
         canCreateUsers,
         timestamp: new Date().toISOString(),
       });
@@ -156,6 +176,48 @@ export const FirebaseStatusChecker: React.FC = () => {
                   </div>
                 </div>
 
+                {status.rulesTest && (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-700">
+                        Firestore READ:
+                      </span>
+                      <div className="flex items-center space-x-1">
+                        <StatusIcon condition={status.rulesTest.canRead} />
+                        <span
+                          className={
+                            status.rulesTest.canRead
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }
+                        >
+                          {status.rulesTest.canRead ? "Permitido" : "Bloqueado"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-700">
+                        Firestore WRITE:
+                      </span>
+                      <div className="flex items-center space-x-1">
+                        <StatusIcon condition={status.rulesTest.canWrite} />
+                        <span
+                          className={
+                            status.rulesTest.canWrite
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }
+                        >
+                          {status.rulesTest.canWrite
+                            ? "Permitido"
+                            : "Bloqueado"}
+                        </span>
+                      </div>
+                    </div>
+                  </>
+                )}
+
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-700">
                     Pode criar utilizadores:
@@ -195,10 +257,24 @@ export const FirebaseStatusChecker: React.FC = () => {
                 </div>
               )}
 
+              {status.rulesTest &&
+                (!status.rulesTest.canRead || !status.rulesTest.canWrite) && (
+                  <div className="bg-red-50 border border-red-200 rounded-md p-3">
+                    <div className="text-red-800 text-sm">
+                      <strong>🚨 PROBLEMA DAS REGRAS FIRESTORE:</strong>
+                      <br />
+                      {status.rulesTest.suggestion}
+                      <br />
+                      <strong>Correção:</strong> Vá ao Firebase Console → Regras
+                      e defina regras permissivas.
+                    </div>
+                  </div>
+                )}
+
               {(!status.authService || !status.dbService) && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
                   <div className="text-yellow-800 text-sm">
-                    <strong>⚠️ Problema identificado:</strong>
+                    <strong>⚠️ Problema de conectividade:</strong>
                     <br />
                     Firebase não está completamente funcional. Os utilizadores
                     são criados apenas localmente.
