@@ -836,7 +836,7 @@ function App() {
 
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
-      console.log("���� Email:", loginForm.email);
+      console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
@@ -6674,7 +6674,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                     >
                       Concluídas (
-                      {works.filter((w) => w.status === "completed").length})
+                      {
+                        works.filter(
+                          (w) =>
+                            w.status === "concluida" ||
+                            w.status === "completed",
+                        ).length
+                      }
+                      )
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("no_sheet")}
