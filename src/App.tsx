@@ -73,6 +73,7 @@ import { ForceInitialization } from "./utils/forceInitialization";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
 import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
+import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
@@ -2983,7 +2984,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenç����o</span>
+                      <span>Nova Manutenç��o</span>
                     </button>
                   </div>
                 </div>
@@ -5515,7 +5516,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Notificações de Obras
                           </h4>
                           <p className="text-blue-700 text-sm mb-3">
-                            Receba notificações quando uma nova obra for
+                            Receba notifica��ões quando uma nova obra for
                             atribuída a si.
                           </p>
                           <button
@@ -6508,7 +6509,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic��vel)
+                            Pessoa de Contacto (se aplic����vel)
                           </label>
                           <input
                             type="text"
