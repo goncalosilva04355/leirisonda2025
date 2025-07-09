@@ -446,9 +446,21 @@ console.log("🔥 Firebase initialization delegated to simplified system");
 // Function to check if Firebase is properly initialized and ready
 export const isFirebaseReady = () => {
   try {
-    // Safe fallback that doesn't break the app
-    console.log("⚠️ isFirebaseReady() called - returning false safely");
-    return false;
+    // Check if db is available from main config or fallback to UltimateSimpleFirebase
+    if (db) {
+      return true;
+    }
+
+    // Try to check UltimateSimpleFirebase status
+    import("./ultimateSimpleFirebase")
+      .then(({ UltimateSimpleFirebase }) => {
+        const status = UltimateSimpleFirebase.getStatus();
+        return status.ready && (status.hasDB || status.hasAuth);
+      })
+      .catch(() => false);
+
+    // For synchronous check, return true if we have any db instance
+    return !!db;
   } catch (error) {
     console.warn("Firebase health check failed:", error);
     return false;
