@@ -881,7 +881,7 @@ function App() {
         setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
-      console.error("❌ Login error:", error);
+      console.error("�� Login error:", error);
       setLoginError("Erro de sistema. Por favor, tente novamente.");
     }
   };
@@ -1797,7 +1797,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between mb-3">
                       <div className="w-20 h-12 bg-white rounded shadow-sm p-2">
                         <img
-                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
                           alt="Leirisonda Logo"
                           className="w-full h-full object-contain"
                         />
@@ -3167,7 +3167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manutenções
+                      Futuras Manutenç��es
                     </button>
                   </div>
                 </div>
