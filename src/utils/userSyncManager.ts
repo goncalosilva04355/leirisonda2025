@@ -139,7 +139,7 @@ export class UserSyncManager {
         email: localUser.email,
         password: localUser.password || "",
         name: localUser.name || "",
-        role: this.convertRole(localUser.role),
+        role: this.convertRole(localUser.role || "user"),
         active: localUser.active !== false,
         createdAt: localUser.createdAt || new Date().toISOString(),
       };
