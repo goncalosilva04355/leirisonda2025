@@ -25,30 +25,30 @@ let _auth: any = null;
 
 // Inicializar Firestore de forma lazy
 const initFirestore = () => {
-  if (!db) {
+  if (!_db) {
     try {
-      db = getFirestore(app);
+      _db = getFirestore(app);
       console.log("✅ Firestore inicializado com sucesso");
     } catch (error) {
       console.error("❌ Erro ao inicializar Firestore:", error);
       return null;
     }
   }
-  return db;
+  return _db;
 };
 
 // Inicializar Auth de forma lazy
 const initAuth = () => {
-  if (!auth) {
+  if (!_auth) {
     try {
-      auth = getAuth(app);
+      _auth = getAuth(app);
       console.log("✅ Firebase Auth inicializado com sucesso");
     } catch (error) {
       console.error("❌ Erro ao inicializar Auth:", error);
       return null;
     }
   }
-  return auth;
+  return _auth;
 };
 
 // Função para verificar se Firebase está pronto
