@@ -5,9 +5,9 @@
 export const createTestUser = () => {
   const newUser = {
     id: `user-${Date.now()}`,
-    name: "Utilizador Teste",
-    email: "yrzamr01@gmail.com",
-    password: "teste123",
+    name: "Yuri",
+    email: "yuri@leirisonda.pt",
+    password: "leirisonda123",
     role: "user" as const,
     active: true,
     createdAt: new Date().toISOString(),
