@@ -99,12 +99,26 @@ export function ManualFirebaseControl() {
           )}
 
           {status?.ready && (
-            <button
-              onClick={handleTest}
-              className="w-full bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm font-medium"
-            >
-              🧪 Testar Conectividade
-            </button>
+            <div className="space-y-2">
+              <button
+                onClick={handleTest}
+                className="w-full bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm font-medium"
+              >
+                🧪 Testar Conectividade
+              </button>
+
+              <button
+                onClick={async () => {
+                  console.log("🔄 Reset completo do Firebase...");
+                  await UnifiedSafeFirebase.reset();
+                  updateStatus();
+                  setTestResults(null);
+                }}
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded text-sm font-medium"
+              >
+                🔄 Reset Sistema
+              </button>
+            </div>
           )}
         </div>
 
