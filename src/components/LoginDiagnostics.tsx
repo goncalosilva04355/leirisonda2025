@@ -86,6 +86,31 @@ export const LoginDiagnostics: React.FC<LoginDiagnosticsProps> = ({
     }
   };
 
+  const forceSync = () => {
+    setIsRunning(true);
+    try {
+      // Force a complete sync between all user storage systems
+      const result = UserSyncManager.performFullSync();
+      setSyncResult(result);
+
+      // Re-run diagnostics after sync
+      if (testEmail) {
+        const diagnosticResult = UserSyncManager.getLoginDiagnostics(
+          testEmail,
+          testPassword,
+        );
+        setDiagnostics(diagnosticResult);
+      }
+
+      alert("✅ Sincronização forçada concluída!");
+    } catch (error: any) {
+      console.error("Error during force sync:", error);
+      alert(`❌ Erro na sincronização: ${error.message}`);
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
   const StatusIcon = ({ condition }: { condition: boolean }) => {
     return condition ? (
       <CheckCircle className="h-5 w-5 text-green-600" />
@@ -148,18 +173,29 @@ export const LoginDiagnostics: React.FC<LoginDiagnosticsProps> = ({
                 />
               </div>
             </div>
-            <button
-              onClick={runDiagnostics}
-              disabled={isRunning}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center"
-            >
-              {isRunning ? (
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <AlertCircle className="h-4 w-4 mr-2" />
-              )}
-              {isRunning ? "A executar..." : "Executar Diagnóstico"}
-            </button>
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={runDiagnostics}
+                disabled={isRunning}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center"
+              >
+                {isRunning ? (
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <AlertCircle className="h-4 w-4 mr-2" />
+                )}
+                {isRunning ? "A executar..." : "Executar Diagnóstico"}
+              </button>
+
+              <button
+                onClick={forceSync}
+                disabled={isRunning}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 flex items-center"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Forçar Sincronização
+              </button>
+            </div>
           </div>
 
           {/* Diagnostics Results */}
