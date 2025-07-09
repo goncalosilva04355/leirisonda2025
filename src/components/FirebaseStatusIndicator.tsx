@@ -58,8 +58,11 @@ export function FirebaseStatusIndicator() {
 
   if (loading) {
     return (
-      <div className="fixed top-4 right-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 py-2 rounded text-sm">
-        🔄 Verificando Firebase...
+      <div className="fixed top-4 right-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 py-2 rounded text-sm max-w-xs">
+        🔄{" "}
+        {isMobile
+          ? "Verificando Firebase (iPhone)..."
+          : "Verificando Firebase..."}
       </div>
     );
   }
