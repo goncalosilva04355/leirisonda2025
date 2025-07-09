@@ -95,6 +95,7 @@ import { FirebaseOnlyTest } from "./components/FirebaseOnlyTest";
 import { FirebaseStorageStatus } from "./components/FirebaseStorageStatus";
 import { FirestoreSetupGuide } from "./components/FirestoreSetupGuide";
 import { FirebaseErrorMonitor } from "./components/FirebaseErrorMonitor";
+import { ManualFirebaseControl } from "./components/ManualFirebaseControl";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotification from "./components/UserRestoreNotification";
 
@@ -7086,7 +7087,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Users className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          T��cnicos Atribuídos
+                          Técnicos Atribuídos
                         </h3>
                       </div>
 
@@ -9058,7 +9059,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic��vel */}
+                      {/* Detalhes do Furo de Água - Se aplicável */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
