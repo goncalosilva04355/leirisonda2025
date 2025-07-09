@@ -125,7 +125,7 @@ Se tiver problemas:
 1. **Configurações**: Verifique estado na secção "Configurações"
 2. **Reconectar**: Use botão "Reconectar" se necessário
 3. **Logs**: Abra Console do Browser (F12) para ver erros
-4. **Contacto**: gongonsilva@gmail.com para suporte técnico
+4. **Contacto**: goncalosfonseca@gmail.com para suporte técnico
 
 ---
 

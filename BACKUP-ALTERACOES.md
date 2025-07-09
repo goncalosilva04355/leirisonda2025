@@ -10,7 +10,7 @@
 
 - ✅ **Arquivo:** `src/services/userDeletionService.ts`
 - ✅ **Funcionalidade:** Eliminação completa de todos os utilizadores exceto superadmin
-- ✅ **Preserva:** Gonçalo Fonseca (gongonsilva@gmail.com)
+- ✅ **Preserva:** Gonçalo Fonseca (goncalosfonseca@gmail.com)
 
 ### 2. Serviço de Limpeza Nuclear
 
@@ -93,7 +93,7 @@ REMOVIDOS:
 **SuperAdmin Preservado:**
 
 - Nome: Gonçalo Fonseca
-- Email: gongonsilva@gmail.com
+- Email: goncalosfonseca@gmail.com
 - Password: 19867gsf
 - Role: super_admin
 
