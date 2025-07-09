@@ -19,9 +19,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-// Lazy initialization - não inicializar imediatamente
-let db: any = null;
-let auth: any = null;
+// Variables para lazy loading
+let _db: any = null;
+let _auth: any = null;
 
 // Inicializar Firestore de forma lazy
 const initFirestore = () => {
