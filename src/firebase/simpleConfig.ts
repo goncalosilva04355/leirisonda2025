@@ -47,6 +47,21 @@ async function initializeFirebase(): Promise<boolean> {
       console.log("📋 Project ID:", firebaseConfig.projectId);
       console.log("📋 Auth Domain:", firebaseConfig.authDomain);
 
+      // Test network connectivity first
+      try {
+        console.log("🌐 Testing network connectivity...");
+        const connectivityTest = await fetch(
+          "https://www.google.com/favicon.ico",
+          {
+            method: "HEAD",
+            mode: "no-cors",
+          },
+        );
+        console.log("✅ Network connectivity OK");
+      } catch (networkError) {
+        console.warn("⚠️ Network connectivity issues:", networkError);
+      }
+
       // Check if an app already exists
       const existingApps = getApps();
       if (existingApps.length > 0) {
