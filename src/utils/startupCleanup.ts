@@ -5,7 +5,6 @@
 
 const BLOCKED_EMAILS = [
   "yrzamr@gmail.com",
-  "yrzamr01@gmail.com",
   "alexkamaryta@gmail.com",
   "davidcarreiraa92@gmail.com",
 ];

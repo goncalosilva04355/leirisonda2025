@@ -5,7 +5,6 @@
 
 const PROBLEMATIC_EMAILS = [
   "yrzamr@gmail.com",
-  "yrzamr01@gmail.com",
   "alexkamaryta@gmail.com",
   "davidcarreiraa92@gmail.com",
   // Add any additional emails that need to be blocked
