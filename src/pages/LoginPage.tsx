@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Settings } from "lucide-react";
+import { FirebaseStatusIndicator } from "../components/FirebaseStatusIndicator";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -96,6 +97,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
   return (
     <div className="min-h-screen bg-blue-600 flex items-center justify-center">
+      {/* Firebase Status Indicator */}
+      <div className="fixed top-4 right-4 z-10">
+        <FirebaseStatusIndicator />
+      </div>
+
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
