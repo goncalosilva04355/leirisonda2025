@@ -3574,7 +3574,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usuários Atribuídos ({users.length} utilizadores
+                            Usu��rios Atribuídos ({users.length} utilizadores
                             disponíveis)
                           </label>
                           {(() => {
@@ -8548,7 +8548,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={false}
     >
-      <InstantSyncManager>
+      <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
           {/* Sidebar */}
           <div
@@ -9249,7 +9249,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* User Restore Notification */}
         <UserRestoreNotification />
-      </InstantSyncManager>
+      </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
 }
