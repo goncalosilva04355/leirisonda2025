@@ -81,17 +81,26 @@ export const getAuthService = async () => {
 export const getDbInstance = () => initFirestore();
 export const getAuthInstance = () => initAuth();
 
-// Exports diretos com lazy loading (para compatibilidade)
-Object.defineProperty(exports, "db", {
-  get: () => initFirestore(),
-});
+// Create proxy objects that initialize on access
+export const db = new Proxy(
+  {},
+  {
+    get(target, prop) {
+      const firestore = initFirestore();
+      return firestore ? firestore[prop] : undefined;
+    },
+  },
+);
 
-Object.defineProperty(exports, "auth", {
-  get: () => initAuth(),
-});
-
-// Export direto das variáveis (backup method)
-export { db, auth };
+export const auth = new Proxy(
+  {},
+  {
+    get(target, prop) {
+      const authentication = initAuth();
+      return authentication ? authentication[prop] : undefined;
+    },
+  },
+);
 
 // Exports principais
 export { app, analytics };
