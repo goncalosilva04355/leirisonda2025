@@ -26,7 +26,7 @@ export class FirebaseForceInit {
   static isInitialized = false;
 
   static async forceInitializeNow(): Promise<boolean> {
-    console.log("🔥 FORÇA INICIALIZAÇÃO FIREBASE - TENTATIVA DEFINITIVA");
+    console.log("🔥 FOR��A INICIALIZAÇÃO FIREBASE - TENTATIVA DEFINITIVA");
 
     try {
       // 1. LIMPAR TUDO
@@ -120,17 +120,6 @@ export class FirebaseForceInit {
   }
 }
 
-// EXECUTAR IMEDIATAMENTE QUANDO IMPORTADO
-if (typeof window !== "undefined") {
-  console.log("🔥 Executando inicialização Firebase IMEDIATA...");
-  FirebaseForceInit.forceInitializeNow().then((success) => {
-    if (success) {
-      console.log("🔥 Firebase Status: FORÇADO E ATIVO");
-      // Definir flag global
-      (window as any).FIREBASE_FORCED_READY = true;
-    } else {
-      console.log("📱 Firebase Status: MODO LOCAL FORÇADO");
-      (window as any).FIREBASE_FORCED_LOCAL = true;
-    }
-  });
-}
+// FirebaseForceInit disponível para uso manual quando necessário
+// Para executar: FirebaseForceInit.forceInitializeNow()
+console.log("🔧 FirebaseForceInit ready for manual execution if needed");
