@@ -478,7 +478,47 @@ export class MigrateUsersToFirestore {
 
       console.log(`📊 Found ${allUsers.length} users to potentially migrate`);
 
-      // Check existing users in Firestore
+      // Early check: Is Firestore service available at all?
+      console.log("🔍 Checking if Firestore service is available...");
+      try {
+        const { FirestoreServiceFix } = await import(
+          "../firebase/firestoreServiceFix"
+        );
+        const serviceCheck =
+          await FirestoreServiceFix.checkAndEnableFirestore();
+
+        if (!serviceCheck.available) {
+          console.log(
+            "❌ Firestore service not available - switching to local migration immediately",
+          );
+          console.log(`Reason: ${serviceCheck.error}`);
+          console.log(`Solution: ${serviceCheck.solution}`);
+
+          // Return special result to trigger immediate local fallback
+          return {
+            success: false,
+            migrated: 0,
+            skipped: 0,
+            failed: allUsers.length,
+            details: [
+              "FIRESTORE_NOT_ENABLED",
+              `Firestore service not available: ${serviceCheck.error}`,
+              `Solution: ${serviceCheck.solution}`,
+              "Switching to local-only migration",
+            ],
+          };
+        }
+
+        console.log(
+          "✅ Firestore service is available, proceeding with migration...",
+        );
+      } catch (serviceError: any) {
+        console.warn(
+          "⚠️ Could not check Firestore service, proceeding with caution...",
+        );
+      }
+
+      // Check existing users in Firestore (only if service is available)
       const existingEmails = await this.getUsersInFirestore();
       console.log(
         `📊 Found ${existingEmails.length} users already in Firestore`,
