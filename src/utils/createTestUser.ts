@@ -65,6 +65,16 @@ export const createTestUser = () => {
     console.log("🔑 Password:", newUser.password);
     console.log("👤 Role:", newUser.role);
 
+    // Debug: Show created users
+    console.log(
+      "📋 App users:",
+      JSON.parse(localStorage.getItem("app-users") || "[]"),
+    );
+    console.log(
+      "📋 Mock users:",
+      JSON.parse(localStorage.getItem("mock-users") || "[]"),
+    );
+
     return {
       success: true,
       message: "User created successfully",
