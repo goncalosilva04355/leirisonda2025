@@ -122,7 +122,11 @@ export const useAutoFirebaseFix = () => {
 
   // Start monitoring when hook is used
   useEffect(() => {
-    console.log("🔍 Starting automatic Firebase monitoring...");
+    console.log(
+      "🔍 FIREBASE AUTO-MONITOR: Sistema de monitorização automática iniciado",
+    );
+    console.log("🔧 FIREBASE AUTO-FIX: Detecção e correção automática ativada");
+    console.log("⏰ FIREBASE MONITOR: Verificação a cada 30 segundos");
 
     // Initial check immediately
     monitorAndFix();
@@ -136,6 +140,7 @@ export const useAutoFirebaseFix = () => {
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+        console.log("🔍 FIREBASE AUTO-MONITOR: Sistema desativado");
       }
     };
   }, []);
