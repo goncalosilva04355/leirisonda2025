@@ -29,7 +29,7 @@ export const saveFirebaseConfig = (config: any) => {
     console.log("🔧 Firebase: Configuration using default settings");
     return true;
   } catch (error) {
-    console.error("��� Firebase: Error saving config to localStorage:", error);
+    console.error("�� Firebase: Error saving config to localStorage:", error);
     return false;
   }
 };
@@ -363,24 +363,35 @@ const ensureFirebaseApp = async (): Promise<any> => {
 const ensureFirestore = async (): Promise<any> => {
   if (!db && !dbInitAttempted) {
     dbInitAttempted = true;
-    console.log("🔄 Lazy loading Firestore...");
+    console.log("🔄 Inicializando Firestore...");
 
     const firebaseApp = await ensureFirebaseApp();
     if (!firebaseApp) {
-      console.warn("⚠️ Firebase app not available for Firestore");
+      console.warn("⚠️ Firebase app não disponível para Firestore");
       return null;
     }
 
     try {
-      // Give more time before attempting Firestore
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Give Firebase app time to fully initialize
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       db = getFirestore(firebaseApp);
-      console.log("✅ Firestore lazy loaded successfully");
-    } catch (error: any) {
-      console.warn(
-        "⚠️ Firestore lazy loading failed, app will use fallback:",
-        error.message,
+      console.log("✅ Firestore inicializado com sucesso");
+      console.log("🔥 Base de dados pronta para sincronização");
+
+      // Test Firestore connectivity
+      import("firebase/firestore").then(
+        ({ connectFirestoreEmulator, enableNetwork }) => {
+          if (db) {
+            enableNetwork(db).catch(() => {
+              console.log("🌐 Conectividade Firestore sendo estabelecida...");
+            });
+          }
+        },
       );
+    } catch (error: any) {
+      console.warn("⚠️ Falha na inicialização do Firestore:", error.message);
+      console.log("📱 Aplicação continuará em modo local");
       db = null;
     }
   }
@@ -392,19 +403,34 @@ const ensureFirestore = async (): Promise<any> => {
 const ensureAuth = async (): Promise<any> => {
   if (!auth && !authInitAttempted) {
     authInitAttempted = true;
-    console.log("🔐 Lazy loading Firebase Auth...");
+    console.log("🔐 Inicializando Firebase Auth...");
 
     const firebaseApp = await ensureFirebaseApp();
     if (!firebaseApp) {
-      console.warn("⚠️ Firebase app not available for Auth");
+      console.warn("⚠️ Firebase app não disponível para Auth");
       return null;
     }
 
     try {
       auth = getAuth(firebaseApp);
-      console.log("✅ Firebase Auth lazy loaded successfully");
+      console.log("✅ Firebase Auth inicializado com sucesso");
+
+      // Set up auth persistence immediately
+      import("firebase/auth").then(
+        ({ setPersistence, browserSessionPersistence }) => {
+          if (auth) {
+            setPersistence(auth, browserSessionPersistence)
+              .then(() => {
+                console.log("🔐 Firebase Auth persistence configurada");
+              })
+              .catch((error) => {
+                console.warn("⚠️ Erro ao configurar persistência:", error);
+              });
+          }
+        },
+      );
     } catch (error) {
-      console.warn("⚠️ Firebase Auth lazy loading failed:", error);
+      console.warn("⚠️ Falha na inicialização do Firebase Auth:", error);
       auth = null;
     }
   }
