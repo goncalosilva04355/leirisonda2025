@@ -34,7 +34,13 @@ export class UserSyncManager {
   private static getLocalUsers(): LocalUser[] {
     try {
       const savedUsers = localStorage.getItem("app-users");
-      return savedUsers ? JSON.parse(savedUsers) : [];
+      const users = savedUsers ? JSON.parse(savedUsers) : [];
+
+      // Filter out invalid users
+      return users.filter(
+        (user: any) =>
+          user && user.id && user.email && typeof user.email === "string",
+      );
     } catch (error) {
       console.error("Error loading local users:", error);
       return [];
@@ -47,7 +53,13 @@ export class UserSyncManager {
   private static getMockUsers(): MockUser[] {
     try {
       const savedUsers = localStorage.getItem("mock-users");
-      return savedUsers ? JSON.parse(savedUsers) : [];
+      const users = savedUsers ? JSON.parse(savedUsers) : [];
+
+      // Filter out invalid users
+      return users.filter(
+        (user: any) =>
+          user && user.uid && user.email && typeof user.email === "string",
+      );
     } catch (error) {
       console.error("Error loading mock users:", error);
       return [];
