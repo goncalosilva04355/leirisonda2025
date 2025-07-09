@@ -195,12 +195,7 @@ export async function getFirebaseApp(): Promise<FirebaseApp | null> {
 
 // Removed duplicate getFirebaseAuth declaration - using safe fallback version below
 
-/**
- * Check if Firebase is ready
- */
-export function isFirebaseInitialized(): boolean {
-  return !!(app && (auth || db));
-}
+// Removed duplicate isFirebaseInitialized declaration - using safe fallback version below
 
 /**
  * Get Firebase status
