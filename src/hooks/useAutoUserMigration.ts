@@ -108,6 +108,9 @@ export const useAutoUserMigration = () => {
   // Start automatic migration check when hook is mounted
   useEffect(() => {
     console.log("🚀 AUTO-MIGRATION: System started");
+    console.log(
+      "🔄 AUTO-MIGRATION: Automatic user migration to Firestore enabled",
+    );
 
     // Initial check after a short delay to let Firebase initialize
     const initialTimeout = setTimeout(() => {
@@ -121,6 +124,18 @@ export const useAutoUserMigration = () => {
       }
     }, 60000);
 
+    // Listen for Firebase fix events to trigger immediate migration
+    const handleFirebaseFixed = () => {
+      console.log(
+        "🔔 AUTO-MIGRATION: Firebase fixed event received, triggering migration...",
+      );
+      setTimeout(() => {
+        checkAndMigrate();
+      }, 1000);
+    };
+
+    window.addEventListener("firebaseFixed", handleFirebaseFixed);
+
     // Cleanup
     return () => {
       if (initialTimeout) {
@@ -129,6 +144,7 @@ export const useAutoUserMigration = () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
+      window.removeEventListener("firebaseFixed", handleFirebaseFixed);
     };
   }, []);
 
