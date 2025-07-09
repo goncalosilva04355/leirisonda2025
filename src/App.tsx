@@ -63,6 +63,11 @@ import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
+
+// Check Firebase status in development
+if (import.meta.env.DEV) {
+  import("./utils/checkFirebaseStatus");
+}
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -670,7 +675,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "N��o tem permissão para criar manutenções. Contacte o administrador.",
+        "N��o tem permissão para criar manutenç��es. Contacte o administrador.",
       );
       return;
     }
@@ -4836,7 +4841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç����o criada para nova piscina:",
+                                "Futura manutenç�����o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
