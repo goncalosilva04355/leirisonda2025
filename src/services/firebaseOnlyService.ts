@@ -16,24 +16,29 @@ import {
   where,
   getDoc,
 } from "firebase/firestore";
-import { getFirebaseDB } from "../firebase/simpleConfig";
+import { UnifiedSafeFirebase } from "../firebase/unifiedSafeFirebase";
 
 export class FirebaseOnlyService {
   private static db: any = null;
 
-  // Inicializar conexão com Firebase
+  // Inicializar conexão com Firebase usando sistema unificado
   static async initialize(): Promise<boolean> {
     try {
-      this.db = await getFirebaseDB();
-      if (this.db) {
-        console.log("✅ FirebaseOnlyService inicializado");
-        return true;
-      } else {
-        console.error("❌ Firebase não disponível");
-        return false;
+      console.log("🔄 FirebaseOnlyService usando UnifiedSafeFirebase...");
+      const success = await UnifiedSafeFirebase.initialize();
+
+      if (success) {
+        this.db = await UnifiedSafeFirebase.getDB();
+        if (this.db) {
+          console.log("✅ FirebaseOnlyService inicializado com UnifiedSafe");
+          return true;
+        }
       }
+
+      console.error("❌ Firebase não disponível via UnifiedSafe");
+      return false;
     } catch (error) {
-      console.error("❌ Erro ao inicializar Firebase:", error);
+      console.error("❌ Erro ao inicializar Firebase via UnifiedSafe:", error);
       return false;
     }
   }
@@ -41,7 +46,11 @@ export class FirebaseOnlyService {
   // Obter instância do banco
   private static async getDatabase() {
     if (!this.db) {
-      await this.initialize();
+      const success = await this.initialize();
+      if (!success) {
+        console.error("❌ Falha ao obter database via UnifiedSafe");
+        return null;
+      }
     }
     return this.db;
   }
@@ -214,7 +223,7 @@ export class FirebaseOnlyService {
       );
       return maintenance;
     } catch (error) {
-      console.error("❌ Erro ao carregar manutenções:", error);
+      console.error("❌ Erro ao carregar manutenç��es:", error);
       return [];
     }
   }
