@@ -1763,41 +1763,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <p className="text-sm text-gray-500">Atribuídas a si</p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {currentUser
-                          ? (() => {
-                              const assignedWorks = works.filter((work) => {
-                                if (!work) return false;
-
-                                // Check if user is in assignedTo string (exact match or comma-separated list)
-                                const assignedToMatch =
-                                  work.assignedTo &&
-                                  work.assignedTo
-                                    .split(",")
-                                    .map((name) => name.trim().toLowerCase())
-                                    .includes(currentUser.name.toLowerCase());
-
-                                // Check if user is in assignedUsers array (exact match)
-                                const assignedUsersMatch =
-                                  work.assignedUsers?.some(
-                                    (user) =>
-                                      user.name &&
-                                      user.name.toLowerCase() ===
-                                        currentUser.name.toLowerCase(),
-                                  );
-
-                                return assignedToMatch || assignedUsersMatch;
-                              });
-
-                              // Simple debug logging for assigned works
-                              if (assignedWorks.length > 0) {
-                                console.log(
-                                  `✅ ${assignedWorks.length} obra(s) atribuída(s) a ${currentUser.name}`,
-                                );
-                              }
-
-                              return assignedWorks.length;
-                            })()
-                          : 0}
+                        {works.length}
                       </div>
                     </div>
                   </button>
