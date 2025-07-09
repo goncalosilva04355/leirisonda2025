@@ -302,7 +302,7 @@ class UniversalDataSyncService {
 
     // Return cleanup function
     return () => {
-      clearInterval(pollInterval);
+      // clearInterval(pollInterval); // Disabled polling
       if (refreshTimeout) {
         clearTimeout(refreshTimeout);
       }
@@ -944,7 +944,7 @@ class UniversalDataSyncService {
   }
 
   /**
-   * Verificar se o serviço está pronto
+   * Verificar se o servi��o está pronto
    */
   isReady(): boolean {
     return this.isInitialized && isFirebaseReady();
