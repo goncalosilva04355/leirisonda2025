@@ -166,6 +166,9 @@ function App() {
   const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSafe();
 
+  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
+  const firebaseAutoFix = useAutoFirebaseFix();
+
   // Backup and complex initialization temporarily disabled for stability
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
@@ -3186,7 +3189,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenções agendadas e programadas
+                          Manutenç��es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -8416,7 +8419,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 (!isAuthenticated || !currentUser)
               ) {
                 console.log(
-                  "❌ Access denied: User management requires authentication",
+                  "��� Access denied: User management requires authentication",
                 );
                 setLoginError(
                   "Por favor, faça login primeiro para aceder à gestão de utilizadores",
