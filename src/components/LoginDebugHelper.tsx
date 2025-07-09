@@ -13,6 +13,7 @@ import { mockAuthService } from "../services/mockAuthService";
 import UserSyncManager from "../utils/userSyncManager";
 import FirebaseStatusChecker from "./FirebaseStatusChecker";
 import EmergencyFirebaseFix from "./EmergencyFirebaseFix";
+import FirestoreActivationGuide from "./FirestoreActivationGuide";
 
 export const LoginDebugHelper: React.FC = () => {
   const [testEmail, setTestEmail] = useState("");
@@ -521,6 +522,19 @@ export const LoginDebugHelper: React.FC = () => {
                 </button>
               </div>
             </div>
+
+            {/* Firestore Activation Guide - Show when service is not available */}
+            {debugResults &&
+              (debugResults.authServiceTest?.error?.includes(
+                "Service firestore is not available",
+              ) ||
+                debugResults.authServiceTest?.error?.includes(
+                  "getImmediate",
+                )) && (
+                <div className="mt-6">
+                  <FirestoreActivationGuide />
+                </div>
+              )}
 
             {/* Emergency Fix */}
             <div className="mt-6">
