@@ -126,7 +126,7 @@ export function ManualFirebaseControl() {
         )}
 
         <div className="mt-3 text-xs text-gray-600">
-          Sistema anti-getImmediate ativo. Inicialização apenas quando seguro.
+          Sistema Firebase Unificado. Elimina conflitos e erros getImmediate.
         </div>
       </div>
     </div>
