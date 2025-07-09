@@ -185,7 +185,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
   useEffect(() => {
-    console.log("🌐 SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+    console.log("���� SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
       obras: universalSync.obras.length,
       manutencoes: universalSync.manutencoes.length,
       piscinas: universalSync.piscinas.length,
@@ -4212,12 +4212,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
                               : `LS-${Date.now()}`,
-                            type:
-                              (workType as
-                                | "piscina"
-                                | "manutencao"
-                                | "avaria"
-                                | "montagem") || "piscina",
+                            type: (() => {
+                              const validTypes = [
+                                "piscina",
+                                "manutencao",
+                                "avaria",
+                                "montagem",
+                              ];
+                              if (workType === "instalacao") return "montagem"; // Map instalacao to montagem
+                              if (workType === "reparacao") return "avaria"; // Map reparacao to avaria
+                              if (workType === "limpeza") return "manutencao"; // Map limpeza to manutencao
+                              if (workType === "furo") return "montagem"; // Map furo to montagem
+                              return validTypes.includes(workType)
+                                ? (workType as
+                                    | "piscina"
+                                    | "manutencao"
+                                    | "avaria"
+                                    | "montagem")
+                                : "piscina";
+                            })(),
                             clientName: client || "",
                             contact: contact || "",
                             address: location || "",
