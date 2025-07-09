@@ -5,7 +5,7 @@
 1. **Aceda à Firebase Console:**
 
    - Vá a: https://console.firebase.google.com
-   - Faça login com a sua conta Google (gongonsilva@gmail.com)
+   - Faça login com a sua conta Google (goncalosfonseca@gmail.com)
 
 2. **Criar Novo Projeto:**
    - Clique em "Add project" (Adicionar projeto)
