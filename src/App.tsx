@@ -946,7 +946,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "�� Forced logout state clear completed - redirected to login",
+        "��� Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -4903,7 +4903,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manuten��ão
+                        Registar intervenção de manuten���ão
                       </p>
                     </div>
                   </div>
@@ -7223,7 +7223,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.observations}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observaç��es sobre a obra..."
+                            placeholder="Observações sobre a obra..."
                           />
                         </div>
                       </div>
@@ -8580,6 +8580,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         <div className="min-h-screen bg-gray-50">
           {/* Firebase Status Indicator */}
           <FirebaseStatusIndicator />
+
+          {/* Firebase Storage Status */}
+          <FirebaseStorageStatus />
 
           {/* Firebase Reactivate Button for mobile */}
           {/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && (
