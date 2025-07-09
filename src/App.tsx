@@ -58,6 +58,9 @@ import { isFirebaseReady } from "./firebase/config";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
+
+// Create test user for yrzamr01@gmail.com
+import "./utils/createTestUser";
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
@@ -8334,7 +8337,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observaç��es e próxima manutenção</span>
+                  <span>Observaç���es e próxima manutenção</span>
                 </div>
               </div>
             </div>
