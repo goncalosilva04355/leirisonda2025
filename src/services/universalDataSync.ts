@@ -297,8 +297,8 @@ class UniversalDataSyncService {
 
     window.addEventListener("storage", handleStorageChange);
 
-    // Use minimal polling as backup (longer interval for stability)
-    const pollInterval = setInterval(refreshAllData, 10000); // 10 seconds
+    // Polling temporarily disabled to prevent Builder.io crashes
+    // const pollInterval = setInterval(refreshAllData, 10000);
 
     // Return cleanup function
     return () => {
