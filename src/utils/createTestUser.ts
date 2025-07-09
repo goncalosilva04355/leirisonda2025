@@ -26,18 +26,13 @@ export const createTestUser = () => {
     // Get existing users
     const existingUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
 
-    // Check if user already exists
-    const userExists = existingUsers.some(
-      (user: any) => user.email.toLowerCase() === newUser.email.toLowerCase(),
+    // Remove existing user if exists (to force recreation)
+    const filteredUsers = existingUsers.filter(
+      (user: any) => user.email.toLowerCase() !== newUser.email.toLowerCase(),
     );
 
-    if (userExists) {
-      console.log("ℹ️ User already exists:", newUser.email);
-      return { success: false, message: "User already exists" };
-    }
-
     // Add new user
-    existingUsers.push(newUser);
+    filteredUsers.push(newUser);
 
     // Save to localStorage
     localStorage.setItem("app-users", JSON.stringify(filteredUsers));
@@ -56,14 +51,14 @@ export const createTestUser = () => {
     const existingMockUsers = JSON.parse(
       localStorage.getItem("mock-users") || "[]",
     );
-    const mockUserExists = existingMockUsers.some(
-      (user: any) => user.email.toLowerCase() === mockUser.email.toLowerCase(),
+
+    // Remove existing mock user if exists (to force recreation)
+    const filteredMockUsers = existingMockUsers.filter(
+      (user: any) => user.email.toLowerCase() !== mockUser.email.toLowerCase(),
     );
 
-    if (!mockUserExists) {
-      existingMockUsers.push(mockUser);
-      localStorage.setItem("mock-users", JSON.stringify(existingMockUsers));
-    }
+    filteredMockUsers.push(mockUser);
+    localStorage.setItem("mock-users", JSON.stringify(filteredMockUsers));
 
     console.log("✅ Test user created successfully:", newUser.email);
     console.log("📧 Email:", newUser.email);
