@@ -6,6 +6,7 @@ import {
   XCircle,
   Eye,
   EyeOff,
+  Users,
 } from "lucide-react";
 import { authService } from "../services/authService";
 import { mockAuthService } from "../services/mockAuthService";
@@ -446,6 +447,78 @@ export const LoginDebugHelper: React.FC = () => {
                     Erro: {debugResults.authServiceTest.error}
                   </div>
                 )}
+              </div>
+            </div>
+
+            {/* User Migration */}
+            <div className="mt-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-center mb-3">
+                  <Users className="h-5 w-5 mr-2 text-blue-600" />
+                  <h3 className="text-lg font-semibold text-blue-900">
+                    🔄 Migração de Utilizadores para Firestore
+                  </h3>
+                </div>
+
+                <div className="text-sm text-blue-800 mb-4">
+                  <p className="mb-2">
+                    <strong>
+                      Se outros dados estão na database mas utilizadores não
+                      funcionam:
+                    </strong>
+                  </p>
+                  <p>
+                    Os utilizadores podem estar apenas no localStorage. Esta
+                    migração move-os para o Firestore.
+                  </p>
+                </div>
+
+                <button
+                  onClick={async () => {
+                    setIsRunning(true);
+                    try {
+                      console.log("🔄 Starting user migration...");
+
+                      const { MigrateUsersToFirestore } = await import(
+                        "../utils/migrateUsersToFirestore"
+                      );
+                      const result =
+                        await MigrateUsersToFirestore.migrateAllUsers();
+
+                      if (result.success) {
+                        alert(
+                          `✅ Migração concluída!\n\nMigrados: ${result.migrated}\nJá existiam: ${result.skipped}\nFalharam: ${result.failed}\n\nTeste agora o login em modo anónimo!`,
+                        );
+                      } else {
+                        alert(
+                          `❌ Migração falhou:\n\n${result.details.join("\n")}`,
+                        );
+                      }
+
+                      // Re-run diagnostics
+                      runFullLoginDiagnostic();
+                    } catch (error: any) {
+                      console.error("Migration error:", error);
+                      alert(`❌ Erro na migração: ${error.message}`);
+                    } finally {
+                      setIsRunning(false);
+                    }
+                  }}
+                  disabled={isRunning}
+                  className="w-full px-4 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center font-bold"
+                >
+                  {isRunning ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />A
+                      migrar utilizadores...
+                    </>
+                  ) : (
+                    <>
+                      <Users className="h-4 w-4 mr-2" />
+                      🔄 MIGRAR UTILIZADORES PARA FIRESTORE
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
