@@ -451,7 +451,7 @@ class UniversalDataSyncService {
 
       await setDoc(doc(db, "universal_obras", id), obra);
       console.log(
-        `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
+        `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - vis��vel para todos`,
       );
       return id;
     } catch (error) {
@@ -468,6 +468,7 @@ class UniversalDataSyncService {
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
       existingWorks.push(obra);
       localStorage.setItem("works", JSON.stringify(existingWorks));
+      localStorage.setItem("lastLocalSync", new Date().toISOString());
 
       console.log(`✅ OBRA SALVA LOCALMENTE (fallback): ${id}`);
       return id;
