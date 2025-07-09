@@ -91,11 +91,18 @@ export class UserSyncManager {
    */
   static syncToMockAuth(localUser: LocalUser): void {
     try {
+      // Validate input user
+      if (!localUser || !localUser.email || !localUser.id) {
+        console.warn("Invalid user data for sync:", localUser);
+        return;
+      }
+
       const mockUsers = this.getMockUsers();
 
       // Check if user already exists in mock auth
       const existingIndex = mockUsers.findIndex(
-        (u) => u.email.toLowerCase() === localUser.email.toLowerCase(),
+        (u) =>
+          u.email && u.email.toLowerCase() === localUser.email.toLowerCase(),
       );
 
       const mockUser: MockUser = {
@@ -103,11 +110,11 @@ export class UserSyncManager {
           ? localUser.id
           : `mock-${localUser.id}`,
         email: localUser.email,
-        password: localUser.password,
-        name: localUser.name,
+        password: localUser.password || "",
+        name: localUser.name || "",
         role: this.convertRole(localUser.role),
-        active: localUser.active,
-        createdAt: localUser.createdAt,
+        active: localUser.active !== false,
+        createdAt: localUser.createdAt || new Date().toISOString(),
       };
 
       if (existingIndex >= 0) {
@@ -131,11 +138,18 @@ export class UserSyncManager {
    */
   static syncToLocalUsers(mockUser: MockUser): void {
     try {
+      // Validate input user
+      if (!mockUser || !mockUser.email || !mockUser.uid) {
+        console.warn("Invalid mock user data for sync:", mockUser);
+        return;
+      }
+
       const localUsers = this.getLocalUsers();
 
       // Check if user already exists in local users
       const existingIndex = localUsers.findIndex(
-        (u) => u.email.toLowerCase() === mockUser.email.toLowerCase(),
+        (u) =>
+          u.email && u.email.toLowerCase() === mockUser.email.toLowerCase(),
       );
 
       const localUser: LocalUser = {
@@ -186,7 +200,14 @@ export class UserSyncManager {
 
       // Sync all local users to mock auth
       localUsers.forEach((localUser) => {
-        this.syncToMockAuth(localUser);
+        try {
+          this.syncToMockAuth(localUser);
+        } catch (error) {
+          console.error(
+            `Error syncing user ${localUser?.email || "unknown"}:`,
+            error,
+          );
+        }
       });
 
       // Sync all mock users to local storage (only if they don't exist locally)
