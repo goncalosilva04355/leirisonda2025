@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Settings, Bug } from "lucide-react";
 import LoginDebugHelper from "../components/LoginDebugHelper";
-import FirebaseStatusVisual from "../components/FirebaseStatusVisual";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
