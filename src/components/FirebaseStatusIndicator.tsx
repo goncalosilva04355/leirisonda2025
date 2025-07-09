@@ -77,24 +77,37 @@ export function FirebaseStatusIndicator() {
 
   if (status.ready) {
     return (
-      <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded text-sm">
-        ✅ Firebase Ativo
+      <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded text-sm max-w-xs">
+        ✅ Firebase Ativo {isMobile ? "(iPhone)" : ""}
         {status.db && " | DB ✓"}
         {status.auth && " | Auth ✓"}
+        {status.mobile && (
+          <div className="text-xs mt-1">📱 Otimizado para mobile</div>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
-      ❌ Firebase Inativo
+    <div className="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm max-w-xs">
+      ❌ Firebase Inativo {isMobile ? "(iPhone)" : ""}
       <details className="mt-1">
-        <summary className="cursor-pointer text-xs">Detalhes</summary>
+        <summary className="cursor-pointer text-xs">
+          Detalhes {isMobile ? "📱" : ""}
+        </summary>
         <div className="text-xs mt-1">
           <div>App: {status.app ? "✅" : "❌"}</div>
           <div>Auth: {status.auth ? "✅" : "❌"}</div>
           <div>DB: {status.db ? "✅" : "❌"}</div>
           <div>Inicializando: {status.initializing ? "✅" : "❌"}</div>
+          {isMobile && (
+            <div className="text-orange-600 mt-1">📱 Modo iPhone detectado</div>
+          )}
+          {status.details?.errorDetails && (
+            <div className="text-red-600 mt-1 text-xs">
+              Erro: {status.details.errorDetails.message}
+            </div>
+          )}
         </div>
       </details>
     </div>
