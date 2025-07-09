@@ -1213,10 +1213,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error(
-          "�����️ Error requesting notification permission:",
-          error,
-        );
+        console.error("���️ Error requesting notification permission:", error);
         return "error";
       }
     }
@@ -1939,7 +1936,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {works.filter((w) => w.status === "completed").length}
+                        {
+                          works.filter(
+                            (w) =>
+                              w.status === "completed" ||
+                              w.status === "concluida",
+                          ).length
+                        }
                       </div>
                     </div>
                   </button>
@@ -2219,7 +2222,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manutenç��es
+                      Próximas Manutenções
                     </h2>
                   </div>
 
@@ -3378,7 +3381,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç������o</option>
+                            <option value="instalacao">Instalaç����o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -3640,8 +3643,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ��️ Nenhum utilizador encontrado. V�� à Área de
-                                Administração → "🔧 Corre��ão de Atribuiç��o de
-                                Obras" para corrigir este problema.
+                                Administração → "🔧 Corre��ão de Atribuiç����o
+                                de Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
@@ -3951,7 +3954,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <textarea
                               rows={3}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Condi���ões do terreno, qualidade da água, dificuldades encontradas, etc..."
+                              placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
                             />
                           </div>
                         </div>
@@ -7857,7 +7860,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç����o">Manutenção</option>
+                          <option value="Manutenç��o">Manutenção</option>
                           <option value="Reparaç��o">Reparação</option>
                         </select>
                       </div>
