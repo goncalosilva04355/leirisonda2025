@@ -320,7 +320,8 @@ class GlobalDataShareService {
     type: "pools" | "works" | "maintenance" | "clients",
     data: any,
   ): Promise<string> {
-    if (!isFirebaseReady() || !db) {
+    const db = await attemptFirestoreInit();
+    if (!db) {
       throw new Error("Firebase não disponível");
     }
 
