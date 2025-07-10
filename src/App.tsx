@@ -4409,7 +4409,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Observações e Trabalho */}
+                    {/* Observaç��es e Trabalho */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -8640,7 +8640,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     onRegisterSuccess={() => {
                       navigateToSection("utilizadores");
                     }}
-                    onBackToLogin={() => {
+                    onCancel={() => {
                       navigateToSection("utilizadores");
                     }}
                   />
@@ -8890,7 +8890,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observaç���es e próxima manutenção</span>
+                  <span>Observaç����es e próxima manutenção</span>
                 </div>
               </div>
             </div>
