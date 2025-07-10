@@ -97,6 +97,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       color: "bg-indigo-600",
     },
     {
+      id: "data-migration" as AdminSection,
+      title: "🔄 Migração de Dados",
+      description: "Migrar dados do localStorage para Firestore e testar",
+      icon: Database,
+      color: "bg-purple-600",
+    },
+    {
       id: "work-assignment-fix" as AdminSection,
       title: "🔧 Correção de Atribuição de Obras",
       description: "Corrigir problemas na atribuição de utilizadores às obras",
