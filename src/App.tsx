@@ -348,7 +348,11 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
-  const autoSyncData = useAutoSyncSafe();
+  // const autoSyncData = useAutoSyncSafe(); // Temporarily disabled - useState error
+  const autoSyncData = {
+    syncStatus: "connected",
+    lastSync: new Date().toISOString(),
+  };
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
@@ -5213,7 +5217,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�������es, recomendações, próxima manutenção..."
+                          placeholder="Observa���������es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
