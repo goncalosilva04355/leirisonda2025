@@ -1125,7 +1125,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç������o: ${pool.location}
+   Localizaç����o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -2932,7 +2932,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr��xima manutenção:{" "}
+                                Pr��xima manutenç��o:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -5983,7 +5983,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório Completo
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Todas as informações
+                          Todas as informaç��es
                         </p>
                       </div>
                     </div>
@@ -6386,7 +6386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nome / Razão Social *
+                            Nome / Raz��o Social *
                           </label>
                           <input
                             type="text"
@@ -6837,7 +6837,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? work.assignedUsers
                                       .map((u) => u.name)
                                       .join(", ")
-                                  : work.assignedTo || "Não atribu��da"}
+                                  : work.assignedTo || "Não atribuída"}
                               </div>
                               {work.budget && (
                                 <div>
@@ -8164,7 +8164,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                  Página não encontrada
+                  P��gina não encontrada
                 </h1>
                 <p className="text-gray-600">
                   A seç���o solicitada não foi encontrada.
@@ -8880,7 +8880,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               onClick={async () => {
                 console.log("🧪 Testing Firebase connectivity...");
                 const { testFirebaseConnectivity, testFirestoreOperations } =
-                  await import("../utils/firebaseTest");
+                  await import("./utils/firebaseTest");
                 const results = await testFirebaseConnectivity();
                 console.log("📊 Firebase Test Results:", results);
 
@@ -8951,7 +8951,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          T��tulo
+                          T���tulo
                         </label>
                         <p className="text-gray-900">{selectedWork.title}</p>
                       </div>
