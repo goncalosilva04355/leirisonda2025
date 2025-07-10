@@ -1320,7 +1320,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n�� ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -6855,7 +6855,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
-                          ? "N��o há obras registadas no sistema."
+                          ? "N����o há obras registadas no sistema."
                           : `Não há obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
@@ -8515,6 +8515,49 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           loginError={loginError}
           isLoading={false}
         />
+
+        {/* Firebase Rules Guide Button - floating bottom left */}
+        <div className="fixed bottom-4 left-4">
+          <button
+            onClick={() => setShowFirebaseRulesGuide(true)}
+            className="px-4 py-2 bg-orange-600 text-white rounded-lg shadow-lg hover:bg-orange-700 text-sm"
+            title="Configurar Firebase"
+          >
+            🔥 Configurar Firebase
+          </button>
+        </div>
+
+        {/* Firebase Rules Guide Modal */}
+        {showFirebaseRulesGuide && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Configurar Firebase
+                  </h2>
+                  <button
+                    onClick={() => setShowFirebaseRulesGuide(false)}
+                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <FirebaseRulesGuide />
+
+                <div className="flex justify-end mt-6 pt-4 border-t border-gray-200">
+                  <button
+                    onClick={() => setShowFirebaseRulesGuide(false)}
+                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                  >
+                    Fechar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Admin Login Modal - tamb���m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
