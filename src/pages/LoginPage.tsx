@@ -187,18 +187,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         </form>
       </div>
 
-      {/* Floating Action Buttons (Bottom Right) */}
-      <div className="fixed bottom-4 right-4 flex flex-col space-y-2">
-        <button
-          onClick={() => (window.location.hash = "administracao")}
-          className="w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 hover:shadow-xl transition-all duration-200 hover:scale-105"
-          disabled={isLoading}
-          title="Administração"
-        >
-          <Settings className="h-5 w-5" />
-        </button>
-      </div>
-
       {/* Diagnostic Modal */}
       {showDiagnostic && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
