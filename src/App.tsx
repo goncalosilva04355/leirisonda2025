@@ -379,7 +379,31 @@ function App() {
       return newWork.id;
     }
   };
-  const addMaintenance = (data: any) => addManutencao(data);
+  const addMaintenance = async (data: any) => {
+    try {
+      console.log("🔧 addMaintenance iniciado com Firestore ativo");
+
+      const firestoreId = await firestoreService.createManutencao(data);
+
+      if (firestoreId) {
+        console.log("✅ Manutenção criada no Firestore:", firestoreId);
+
+        // Sincronizar com sistema universal
+        try {
+          await addManutencao(data);
+        } catch (syncError) {
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
+        }
+
+        return firestoreId;
+      } else {
+        return await addManutencao(data);
+      }
+    } catch (error) {
+      console.error("❌ Erro no sistema de manutenções:", error);
+      return await addManutencao(data);
+    }
+  };
   const addClient = (data: any) => addCliente(data);
   const syncWithFirebase = () => forceSyncAll();
   const enableSync = (enabled: boolean) => {
@@ -553,7 +577,7 @@ function App() {
       try {
         // Clear Firebase auth state
         await authService.logout();
-        console.log("🔒 Firebase auth cleared");
+        console.log("���� Firebase auth cleared");
       } catch (error) {
         console.log("🔒 Firebase logout error (expected):", error);
       }
@@ -3315,7 +3339,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <BarChart3 className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenç��o agendada
+                        Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
                         As futuras manutenções aparecerão aqui quando forem
