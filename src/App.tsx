@@ -33,7 +33,7 @@ import {
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
-import { InstallPrompt } from "./components/InstallPrompt";
+import { InstallPromptFixed } from "./components/InstallPromptFixed";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
@@ -49,7 +49,7 @@ import "./utils/clearModalStates";
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
+import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNotificationsFixed";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
@@ -79,7 +79,7 @@ import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
-import { UserRestoreNotification } from "./components/UserRestoreNotification";
+import { UserRestoreNotificationFixed } from "./components/UserRestoreNotificationFixed";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -1324,7 +1324,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -2043,7 +2043,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <div className="space-y-3">
                             <div className="flex items-center space-x-2">
                               <span className="text-sm font-medium text-gray-600">
-                                �� Morada:
+                                📍 Morada:
                               </span>
                               {work.location ? (
                                 <button
@@ -9220,8 +9220,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="p-4 lg:p-6">{renderContent()}</div>
           </main>
 
-          {/* Install Prompt for Mobile - Temporarily disabled */}
-          {/* <InstallPrompt /> */}
+          {/* Install Prompt for Mobile */}
+          <InstallPromptFixed />
 
           {/* Data Sharing Fix Manager */}
 
@@ -9256,11 +9256,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* Realtime Notifications - REMOVIDAS */}
         {/* <RealtimeNotifications /> */}
 
-        {/* Work Assignment Notifications - Temporarily disabled */}
-        {/* <WorkAssignmentNotifications currentUser={currentUser} /> */}
+        {/* Work Assignment Notifications */}
+        <WorkAssignmentNotificationsFixed currentUser={currentUser} />
 
-        {/* User Restore Notification - Temporarily disabled */}
-        {/* <UserRestoreNotification /> */}
+        {/* User Restore Notification */}
+        <UserRestoreNotificationFixed />
 
         {/* Firebase Auto-Monitor - Discrete indicator */}
         <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
