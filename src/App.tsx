@@ -2809,7 +2809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Verificar assignedUserIds array
                           (w.assignedUserIds &&
                             w.assignedUserIds.includes(currentUser.id)));
-                      return isNotCompleted && isAssignedToUser;
+                      return true; // Mostrar todas as obras na lista
                     })
                     .slice(0, 3); // Pegar apenas as últimas 3 obras
 
@@ -4041,7 +4041,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                �������‍���� {maint.technician}
+                                �������‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -5116,7 +5116,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condi���ões do terreno"]',
+                                    'textarea[placeholder*="Condi��ões do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -6187,7 +6187,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {[
                           "Limpeza de filtros",
-                          "Limpeza de pré-filtro",
+                          "Limpeza de pr��-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimenta��ão",
                           "Enchimento automático",
@@ -6534,7 +6534,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                           >
-                            Ativar Notificaç����es
+                            Ativar Notificaç������es
                           </button>
                         </div>
                       </div>
@@ -8113,7 +8113,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠���� Nenhum utilizador encontrado. Vá à Área
-                                de Administra����ão → "🔧 Correção de Atribuição
+                                de Administra��ão → "🔧 Correção de Atribuição
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -8186,7 +8186,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    �� {assignedUser.name}
+                                    👤 {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
