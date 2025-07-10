@@ -2169,7 +2169,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // Settings persistence functions
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
-    // Firebase handles settings persistence automatically
+
+    // Save to localStorage
+    try {
+      localStorage.setItem("enablePhoneDialer", JSON.stringify(enabled));
+      console.log(
+        `✅ Configuração Phone Dialer guardada: ${enabled ? "ativado" : "desativado"}`,
+      );
+    } catch (error) {
+      console.error("❌ Erro ao guardar configuração Phone Dialer:", error);
+    }
   };
 
   const toggleMapsRedirect = (enabled: boolean) => {
@@ -9399,7 +9408,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               "input, select, textarea",
                             );
                             console.log(
-                              "🔍 DEBUG boreInputs found:",
+                              "�� DEBUG boreInputs found:",
                               boreInputs.length,
                             );
                             updateData = {
@@ -10314,7 +10323,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              console.log(`���� Navegando para seç��o: ${section}`);
+              console.log(`����� Navegando para seç��o: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               if (
