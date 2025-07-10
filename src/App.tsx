@@ -2402,7 +2402,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("🔐 Login attempt for:", email);
+            // console.log("�� Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
@@ -2592,7 +2592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                         title={
                           autoSyncActive
-                            ? "Sincronização Automática Ativa"
+                            ? "Sincronizaç��o Automática Ativa"
                             : "Sincronização Automática Inativa"
                         }
                       ></div>
@@ -7005,7 +7005,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       Notificações de Obras
                                     </h4>
                                     <p className="text-blue-700 text-sm mb-3">
-                                      Receba notificações quando uma nova obra
+                                      Receba notificaç��es quando uma nova obra
                                       for atribuída a si.
                                     </p>
                                     <button
@@ -10284,7 +10284,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 (!isAuthenticated || !currentUser)
               ) {
                 console.log(
-                  "��� Access denied: User management requires authentication",
+                  "���� Access denied: User management requires authentication",
                 );
                 setLoginError(
                   "Por favor, faça login primeiro para aceder à gestão de utilizadores",
@@ -11671,15 +11671,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Data Persistence Status Indicator */}
         <DataPersistenceIndicator onClick={() => setShowDataDiagnostic(true)} />
-
-        {/* Data Input Status Indicator */}
-        <DataInputStatusIndicator />
-
-        {/* Data Input Tutorial */}
-        <DataInputTutorial />
-
-        {/* Firebase Fix Button - Show if there are login errors */}
-        {loginError && loginError.includes("Firebase") && <FirebaseFixButton />}
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
