@@ -1800,18 +1800,63 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   ];
 
   const renderContent = () => {
-    // Add loading state check with timeout
+    // Show login page when user not authenticated
     if (!currentUser || !isAuthenticated) {
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">A carregar aplicação...</p>
-            <p className="mt-2 text-sm text-gray-500">
-              Se esta mensagem persistir, recarregue a página
-            </p>
-          </div>
-        </div>
+        <LoginPage
+          onLogin={async (
+            email: string,
+            password: string,
+            rememberMe: boolean = false,
+          ) => {
+            console.log("🔐 Login attempt for:", email);
+
+            // Clear any previous errors
+            setLoginError("");
+
+            // Basic validation
+            if (!email?.trim() || !password?.trim()) {
+              setLoginError("Por favor, preencha todos os campos");
+              return;
+            }
+
+            try {
+              const result = await authService.login(
+                email.trim(),
+                password,
+                rememberMe,
+              );
+
+              console.log("🔐 Auth result:", result);
+
+              if (result.success && result.user) {
+                console.log("✅ Login successful for:", result.user.email);
+
+                // Update state
+                setCurrentUser(result.user);
+                setIsAuthenticated(true);
+
+                // Navigate to dashboard or requested section
+                const hash = window.location.hash.substring(1);
+                if (hash && hash !== "login") {
+                  setActiveSection(hash);
+                } else {
+                  navigateToSection("dashboard");
+                }
+
+                console.log("✅ Login state updated successfully");
+              } else {
+                console.warn("❌ Login failed:", result.error);
+                setLoginError(result.error || "Credenciais inválidas");
+              }
+            } catch (error: any) {
+              console.error("❌ Login error:", error);
+              setLoginError("Erro de sistema. Por favor, tente novamente.");
+            }
+          }}
+          loginError={loginError}
+          isLoading={false}
+        />
       );
     }
 
@@ -3598,8 +3643,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ���� Nenhum utilizador encontrado. V�� à Área de
-                                Administração → "🔧 Corre��ão de Atribuiç��o de
-                                Obras" para corrigir este problema.
+                                Administração → "🔧 Corre����ão de Atribuiç��o
+                                de Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
@@ -8274,7 +8319,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>��</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
