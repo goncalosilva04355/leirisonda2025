@@ -6750,13 +6750,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? "translate-x-5"
                                   : "translate-x-0"
                               }`}
-                            />
+                                                        />
                           </button>
                         </div>
                       </div>
                     </div>
                   </div>
-                )}
               </div>
             </div>
           );
@@ -7353,7 +7352,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Relatórios do Sistema
                             </h2>
                             <p className="text-gray-600 mb-6">
-                              Gere relatórios detalhados em PDF sobre piscinas,
+                              Gere relat��rios detalhados em PDF sobre piscinas,
                               manutenções e obras.
                             </p>
                           </div>
@@ -9371,7 +9370,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localizaç��o da piscina"
+                          placeholder="Localizaç���o da piscina"
                           required
                         />
                       </div>
@@ -10078,7 +10077,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>������</span>
+                  <span>�������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
