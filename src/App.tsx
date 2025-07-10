@@ -278,6 +278,9 @@ function App() {
     deleteManutencao: () => Promise.resolve(),
     deletePiscina: () => Promise.resolve(),
     deleteCliente: () => Promise.resolve(),
+    updateWork: () => Promise.resolve(),
+    deletePool: () => Promise.resolve(),
+    deleteMaintenance: () => Promise.resolve(),
     forceSyncAll: () => Promise.resolve(),
     syncStatus: "disabled" as const,
   };
@@ -2295,7 +2298,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => navigateToSection("nova-manutencao")}
                             className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
                           >
-                            Agendar Manutenção
+                            Agendar Manutenç��o
                           </button>
                         )}
                       </div>
@@ -8006,7 +8009,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa��ões
+                        Observa����es
                       </label>
                       <textarea
                         defaultValue={editingMaintenance?.observations}
@@ -8968,7 +8971,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N����o especificado"}
+                          {selectedWork.type || "N������o especificado"}
                         </p>
                       </div>
                       <div>
