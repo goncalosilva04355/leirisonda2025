@@ -2549,7 +2549,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenção
+                          Obras necessitam atenç��o
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -2887,10 +2887,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                             </div>
                           </div>
-                        ))}
+                                                })}
                       </div>
                     </div>
-                                    )
                 )}
 
                 {/* Próximas Manutenções */}
@@ -4561,7 +4560,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ������ {assignedUser.name}
+                                    ������� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -6458,7 +6457,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   });
                                 } else {
                                   alert(
-                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
+                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configura����es do navegador.",
                                   );
                                 }
                               } else {
