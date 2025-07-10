@@ -105,21 +105,42 @@ self.addEventListener("notificationclick", (event) => {
 
   event.notification.close();
 
-  if (event.action === "view") {
-    // Open or focus the app
-    event.waitUntil(
-      self.clients.matchAll({ type: "window" }).then((clientList) => {
-        for (const client of clientList) {
-          if (client.url.includes("leirisonda") && "focus" in client) {
-            return client.focus();
-          }
-        }
-        if (self.clients.openWindow) {
-          return self.clients.openWindow("/");
-        }
-      }),
-    );
+  if (event.action === "dismiss") {
+    return; // Just close the notification
   }
+
+  // Handle view action or default click
+  const notificationData = event.notification.data || {};
+  let targetUrl = "/";
+
+  // Navigate to specific work if available
+  if (notificationData.workId) {
+    targetUrl = `/#obras`; // Navigate to obras section
+  } else if (notificationData.url) {
+    targetUrl = notificationData.url;
+  }
+
+  event.waitUntil(
+    self.clients.matchAll({ type: "window" }).then((clientList) => {
+      // Check if app is already open
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && "focus" in client) {
+          // Focus existing window and navigate if needed
+          client.postMessage({
+            type: "NOTIFICATION_CLICK",
+            data: notificationData,
+            targetUrl: targetUrl,
+          });
+          return client.focus();
+        }
+      }
+
+      // Open new window if none is open
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(targetUrl);
+      }
+    }),
+  );
 });
 
 // Background sync for offline functionality
