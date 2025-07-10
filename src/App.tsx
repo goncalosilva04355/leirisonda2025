@@ -760,7 +760,7 @@ function App() {
     testFirestoreStep3();
   }, []);
 
-  // Sincronização inicial de todos os dados com Firestore
+  // Sincroniza��ão inicial de todos os dados com Firestore
   useEffect(() => {
     const syncAllData = async () => {
       // Aguardar um pouco para o Firestore estar pronto
@@ -8650,8 +8650,11 @@ Super Admin: ${currentUser?.role === "super_admin"}
           );
 
         case "localizacoes":
-          // SECURITY: Only super_admin can access location features
-          if (currentUser?.role !== "super_admin") {
+          // SECURITY: Only super_admin and admin can access location features
+          if (
+            currentUser?.role !== "super_admin" &&
+            currentUser?.role !== "admin"
+          ) {
             return (
               <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
