@@ -811,7 +811,7 @@ function App() {
     };
   }, []);
 
-  // Listeners para atualiza��ões automáticas da UI
+  // Listeners para atualizações automáticas da UI
   useEffect(() => {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
@@ -4253,7 +4253,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N���vel da Água (m) *
+                                  N����vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -6839,7 +6839,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 </button>
                               </div>
                               <div>
-                                <p className="font-medium">Informa��ões:</p>
+                                <p className="font-medium">Informações:</p>
                                 <p>Tipo: {client.type}</p>
                                 <p>
                                   Cliente desde:{" "}
@@ -9617,7 +9617,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç����es Detalhadas
+                          Informaç��es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
