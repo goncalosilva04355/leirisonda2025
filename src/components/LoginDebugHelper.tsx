@@ -9,7 +9,6 @@ import {
   Users,
 } from "lucide-react";
 import { authService } from "../services/authService";
-import { mockAuthService } from "../services/mockAuthService";
 import UserSyncManager from "../utils/userSyncManager";
 import FirebaseStatusChecker from "./FirebaseStatusChecker";
 import EmergencyFirebaseFix from "./EmergencyFirebaseFix";
