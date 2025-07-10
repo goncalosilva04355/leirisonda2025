@@ -573,6 +573,199 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
                 </button>
               </div>
 
+              {/* Botões de atalho para permissões */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <h4 className="text-sm font-medium text-gray-700 mb-3">
+                  Atalhos rápidos:
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      const fullPermissions = {
+                        obras: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                        manutencoes: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                        piscinas: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                        utilizadores: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                        relatorios: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                        clientes: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                      };
+                      setTempPermissions(fullPermissions);
+                    }}
+                    className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+                  >
+                    Todas as Permissões
+                  </button>
+                  <button
+                    onClick={() => {
+                      const viewOnlyPermissions = {
+                        obras: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        manutencoes: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        piscinas: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        utilizadores: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        relatorios: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        clientes: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                      };
+                      setTempPermissions(viewOnlyPermissions);
+                    }}
+                    className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                  >
+                    Apenas Visualização
+                  </button>
+                  <button
+                    onClick={() => {
+                      const technicianPermissions = {
+                        obras: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: false,
+                        },
+                        manutencoes: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: false,
+                        },
+                        piscinas: {
+                          view: true,
+                          create: false,
+                          edit: true,
+                          delete: false,
+                        },
+                        utilizadores: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        relatorios: {
+                          view: true,
+                          create: true,
+                          edit: false,
+                          delete: false,
+                        },
+                        clientes: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                      };
+                      setTempPermissions(technicianPermissions);
+                    }}
+                    className="px-3 py-1 bg-yellow-600 text-white rounded text-sm hover:bg-yellow-700"
+                  >
+                    Técnico Padrão
+                  </button>
+                  <button
+                    onClick={() => {
+                      const noPermissions = {
+                        obras: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        manutencoes: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        piscinas: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        utilizadores: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        relatorios: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        clientes: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                      };
+                      setTempPermissions(noPermissions);
+                    }}
+                    className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+                  >
+                    Remover Todas
+                  </button>
+                </div>
+              </div>
+
               <div className="grid gap-6">
                 {Object.entries(tempPermissions).map(
                   ([section, perms]: [string, any]) => (
