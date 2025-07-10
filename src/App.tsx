@@ -1792,7 +1792,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         if (permission === "granted") {
           setNotificationsEnabled(true);
           showNotification(
-            "Notifica����es Ativadas",
+            "Notifica������es Ativadas",
             "Agora vai receber notificações de obras atribu��das",
             "success",
           );
@@ -9716,65 +9716,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Administração - Grouped Section */}
-                <div className="border-t border-gray-200 pt-4 mt-4">
-                  <p className="px-4 text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
-                    Administração
-                  </p>
-
-                  {/* Relatórios */}
-                  {hasPermission("relatorios", "view") && (
-                    <button
-                      onClick={() => {
-                        navigateToSection("relatorios");
-                        setSidebarOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                        activeSection === "relatorios"
-                          ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      <BarChart3 className="h-5 w-5" />
-                      <span>Relatórios</span>
-                    </button>
-                  )}
-
-                  {/* Configurações */}
-                  <button
-                    onClick={() => {
-                      navigateToSection("configuracoes");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "configuracoes"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Settings className="h-5 w-5" />
-                    <span>Configurações</span>
-                  </button>
-
-                  {/* Gestão de Utilizadores - Para super_admin e admin */}
-                  {(currentUser?.role === "super_admin" ||
-                    currentUser?.role === "admin") && (
-                    <button
-                      onClick={() => {
-                        navigateToSection("utilizadores");
-                        setSidebarOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                        activeSection === "utilizadores"
-                          ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      <UserPlus className="h-5 w-5" />
-                      <span>Utilizadores</span>
-                    </button>
-                  )}
-                </div>
+                {/* Administração - Single Unified Page */}
+                <button
+                  onClick={() => {
+                    navigateToSection("administracao");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "administracao" ||
+                    activeSection === "relatorios" ||
+                    activeSection === "configuracoes" ||
+                    activeSection === "utilizadores"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Shield className="h-5 w-5" />
+                  <span>Administração</span>
+                </button>
 
                 {/* Localizações - Para super_admin e admin */}
                 {(currentUser?.role === "super_admin" ||
@@ -10102,7 +10061,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <p className="text-gray-900">
                               {selectedWork.budget
                                 ? `€${selectedWork.budget.toLocaleString("pt-PT")}`
-                                : "Não especificado"}
+                                : "N��o especificado"}
                             </p>
                           </div>
                           <div>
