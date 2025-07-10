@@ -534,6 +534,9 @@ export const FirebaseDebugUtility: React.FC = () => {
                 </div>
               </div>
             )}
+
+            {/* Diagnostic Tab */}
+            {activeTab === "diagnostic" && <DiagnosticTab />}
           </div>
         </div>
       )}
