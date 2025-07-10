@@ -171,7 +171,7 @@ function App() {
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   // Firebase ativo como solicitado
   const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSafe();
+  // const dataSync = useDataSyncSafe(); // Temporarily disabled due to useState error
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
@@ -1322,7 +1322,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n���� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -2178,7 +2178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manutenções
+                      Próximas Manuten��ões
                     </h2>
                   </div>
 
@@ -3231,7 +3231,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ����‍🔧 {maint.technician}
+                                ����‍�� {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -5922,7 +5922,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
-                        <li>• Estatísticas gerais</li>
+                        <li>�� Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
                         <li>• Análise de performance</li>
                       </ul>
