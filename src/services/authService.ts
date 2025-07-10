@@ -5,9 +5,12 @@ import {
   signOut,
   onAuthStateChanged,
   User as FirebaseUser,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/config";
+import { getAuthService, attemptFirestoreInit } from "../firebase/config";
 
 export interface UserProfile {
   uid: string;
