@@ -2725,39 +2725,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 </div>
 
-                {/* Lista das Últimas 3 Obras Atribuídas */}
-                {(() => {
-                  // Filtrar obras atribuídas ao utilizador atual (excluir concluídas) e pegar apenas as últimas 3
-                  const assignedWorks = works
-                    .filter((w) => {
-                      const isNotCompleted =
-                        w.status !== "completed" && w.status !== "concluida";
-                      const isAssignedToUser =
-                        currentUser &&
-                        // Verificar assignedTo (campo legacy)
-                        ((w.assignedTo &&
-                          (w.assignedTo === currentUser.name ||
-                            w.assignedTo
-                              .toLowerCase()
-                              .includes(currentUser.name.toLowerCase()) ||
-                            currentUser.name
-                              .toLowerCase()
-                              .includes(w.assignedTo.toLowerCase()))) ||
-                          // Verificar assignedUsers array
-                          (w.assignedUsers &&
-                            w.assignedUsers.some(
-                              (user) =>
-                                user.name === currentUser.name ||
-                                user.id === currentUser.id,
-                            )) ||
-                          // Verificar assignedUserIds array
-                          (w.assignedUserIds &&
-                            w.assignedUserIds.includes(currentUser.id)));
-                      return isNotCompleted && isAssignedToUser;
-                    })
-                    .slice(0, 3); // Pegar apenas as últimas 3 obras
-
-                  return assignedWorks.length > 0 ? (
+                                {/* Lista das Últimas 3 Obras */}
+                {works.length > 0 && (
                     <div className="bg-white rounded-lg shadow-sm">
                       <div className="flex items-center p-4 border-b border-gray-100">
                         <Building2 className="h-5 w-5 text-purple-600 mr-3" />
