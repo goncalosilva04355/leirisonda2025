@@ -114,13 +114,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
 
-        {/* Authorized Users Info */}
-        <div className="text-center mb-4">
-          <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-            🔐 Apenas emails autorizados podem fazer login
-          </div>
-        </div>
-
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
