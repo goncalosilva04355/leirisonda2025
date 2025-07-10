@@ -385,7 +385,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notificações de atribuição de obra...");
+      console.log("📱 Enviando notificações de atribui��ão de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -568,7 +568,7 @@ function App() {
         try {
           await addObra(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("⚠️ Erro na sincroniza��ão universal:", syncError);
         }
 
         // Enviar notificações push para utilizadores atribuídos
@@ -1515,7 +1515,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "�� Forced logout state clear completed - redirected to login",
+        "���� Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -2692,12 +2692,44 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Todas as Obras
+                          Obras Atribuídas
                         </h3>
-                        <p className="text-sm text-gray-500">No sistema</p>
+                        <p className="text-sm text-gray-500">
+                          Atribuídas a mim
+                        </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {works.length}
+                        {(() => {
+                          // Filtrar TODAS as obras atribuídas ao utilizador atual (excluir concluídas)
+                          const assignedWorks = works.filter((w) => {
+                            const isNotCompleted =
+                              w.status !== "completed" &&
+                              w.status !== "concluida";
+                            const isAssignedToUser =
+                              currentUser &&
+                              // Verificar assignedTo (campo legacy)
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                // Verificar assignedUsers array
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                // Verificar assignedUserIds array
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return isNotCompleted && isAssignedToUser;
+                          });
+                          return assignedWorks.length;
+                        })()}
                       </div>
                     </div>
                   </button>
@@ -4418,7 +4450,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                   console.log(
-                                    "🔍 FILTRO UTILIZADOR:",
+                                    "���� FILTRO UTILIZADOR:",
                                     user.name,
                                     "| Role:",
                                     user.role,
@@ -5388,7 +5420,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   );
                                 } catch (error) {
                                   console.error(
-                                    "❌ Erro ao adicionar cliente:",
+                                    "��� Erro ao adicionar cliente:",
                                     error,
                                   );
                                   alert(
