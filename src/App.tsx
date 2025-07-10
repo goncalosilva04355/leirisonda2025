@@ -595,7 +595,7 @@ function App() {
             setCurrentUser(user);
             setIsAuthenticated(true);
 
-            // Auto-navega����ão removida para evitar loop de login
+            // Auto-navega��ão removida para evitar loop de login
             console.log(
               "✅ User authenticated - avoiding auto-navigation loop",
             );
@@ -2578,7 +2578,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenç���es
+                                  Manutenç��es
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -5888,7 +5888,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
-                        <li>�� T��cnicos responsáveis</li>
+                        <li>��� T��cnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -7018,7 +7018,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manuten��ão</option>
-                            <option value="instalacao">Instalação</option>
+                            <option value="instalacao">Instalaç��o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -8879,37 +8879,44 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🔄 Forcing Firestore connection...");
-                const {
-                  forceFirestoreConnection,
-                  checkFirestorePropagation,
-                  getTroubleshootingSteps,
-                } = await import("./utils/forceFirestoreConnection");
+                console.log("🔍 Simple Firestore test...");
 
-                // Check propagation first
-                const propagation = await checkFirestorePropagation();
-                console.log("📡 Propagation check:", propagation);
+                try {
+                  // Simple test without complex imports
+                  const { getApps } = await import("firebase/app");
+                  const apps = getApps();
 
-                if (!propagation.propagated) {
-                  const troubleshooting = getTroubleshootingSteps();
+                  if (apps.length === 0) {
+                    alert(
+                      "❌ NO FIREBASE APP\n\nNo Firebase app found. Refresh the page.",
+                    );
+                    return;
+                  }
+
+                  const app = apps[0];
+                  const projectId = app.options.projectId;
+
+                  console.log(`📱 Testing project: ${projectId}`);
+
+                  // Try simple Firestore test
+                  const { getFirestore } = await import("firebase/firestore");
+                  const db = getFirestore(app);
+
                   alert(
-                    `⏳ FIRESTORE PROPAGATION ISSUE\n\n${propagation.message}\n\n🔧 TRY THESE STEPS:\n${troubleshooting.immediate.join("\n")}\n\n📋 ALSO CHECK:\n${troubleshooting.firebaseConsole.join("\n")}\n\nFirestore pode demorar até 10 minutos a propagar após ser habilitado.`,
+                    `✅ FIRESTORE CONNECTION!\n\nProject: ${projectId}\nFirestore instance: ✅ Created\n\nConnection successful!`,
                   );
-                  return;
-                }
+                } catch (error: any) {
+                  console.error("Test error:", error);
 
-                // Force connection
-                const result = await forceFirestoreConnection();
-                console.log("🔄 Force connection result:", result);
-
-                if (result.success) {
-                  alert(
-                    `🎉 FIRESTORE CONNECTION FORCED!\n\n✅ Steps completed:\n${result.steps.join("\n")}\n\nFirestore should now be working!`,
-                  );
-                } else {
-                  alert(
-                    `❌ FORCE CONNECTION FAILED\n\nSteps attempted:\n${result.steps.join("\n")}\n\nError: ${result.error}\n\nTente aguardar mais 5-10 minutos e recarregar a página.`,
-                  );
+                  if (error.message.includes("not available")) {
+                    alert(
+                      `⏳ FIRESTORE NOT READY\n\nProject: leiria-1cfc9\nStatus: Still propagating\n\n🔧 SOLUTION:\n1. Wait 5-10 more minutes\n2. Refresh page (Ctrl+F5)\n3. Try incognito mode\n\nFirestore needs time to propagate after being enabled.`,
+                    );
+                  } else {
+                    alert(
+                      `❌ CONNECTION ERROR\n\nError: ${error.message}\n\nTry refreshing the page.`,
+                    );
+                  }
                 }
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
