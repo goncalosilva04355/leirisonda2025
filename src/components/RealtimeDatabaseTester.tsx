@@ -199,6 +199,94 @@ export const RealtimeDatabaseTester: React.FC = () => {
             </ol>
           </div>
         )}
+
+        {/* Rules Guide */}
+        {showRulesGuide && (
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                <BookOpen className="h-4 w-4 mr-2" />
+                Configuração de Regras de Segurança
+              </h4>
+
+              {/* Quick Rules */}
+              <div className="space-y-3">
+                <div className="bg-blue-50 border border-blue-200 rounded p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-blue-900 text-sm">
+                      🔧 Desenvolvimento (Recomendado)
+                    </span>
+                    <button
+                      onClick={() =>
+                        navigator.clipboard.writeText(`{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null"
+  }
+}`)
+                      }
+                      className="text-xs bg-blue-100 hover:bg-blue-200 text-blue-800 px-2 py-1 rounded"
+                    >
+                      Copiar
+                    </button>
+                  </div>
+                  <p className="text-blue-700 text-xs mb-2">
+                    Permite acesso apenas a utilizadores autenticados
+                  </p>
+                  <pre className="bg-gray-900 text-green-400 p-2 rounded text-xs overflow-x-auto">
+                    {`{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null"
+  }
+}`}
+                  </pre>
+                </div>
+
+                <div className="bg-red-50 border border-red-200 rounded p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-red-900 text-sm">
+                      🧪 Teste (Temporário)
+                    </span>
+                    <button
+                      onClick={() =>
+                        navigator.clipboard.writeText(`{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}`)
+                      }
+                      className="text-xs bg-red-100 hover:bg-red-200 text-red-800 px-2 py-1 rounded"
+                    >
+                      Copiar
+                    </button>
+                  </div>
+                  <p className="text-red-700 text-xs mb-1">
+                    ⚠️ Acesso total sem autenticação
+                  </p>
+                  <p className="text-red-600 text-xs mb-2">
+                    APENAS para teste rápido!
+                  </p>
+                  <pre className="bg-gray-900 text-green-400 p-2 rounded text-xs overflow-x-auto">
+                    {`{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}`}
+                  </pre>
+                </div>
+              </div>
+
+              <div className="mt-4 text-xs text-gray-600">
+                <p>1. Copie uma das regras acima</p>
+                <p>2. Abra o Firebase Console → Realtime Database → Rules</p>
+                <p>3. Cole as regras e clique "Publish"</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
