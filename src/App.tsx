@@ -4003,9 +4003,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ���� Nenhum utilizador encontrado. V�� à Área de
-                                Administração → "🔧 Corre�����ão de Atribuiç��o
-                                de Obras" para corrigir este problema.
+                                ⚠️ Nenhum utilizador encontrado. Vá à Área de
+                                Administração → "🔧 Correção de Atribuição de
+                                Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
@@ -5260,7 +5260,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenç��o
+                          Frequência de Manutenç����o
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
