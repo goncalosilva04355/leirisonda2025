@@ -1,5 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense, memo } from "react";
 import PerformanceOptimizer from "./utils/performanceOptimizer";
+import CacheManager from "./utils/cacheManager";
 import { authService, UserProfile } from "./services/authService";
 
 // Lazy load dos componentes principais
