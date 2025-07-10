@@ -30,13 +30,19 @@ class AuthService {
     if (this.initialized) return true;
 
     try {
-      await firebaseService.initialize();
+      // Wait for Firebase to initialize
+      const initResult = await firebaseService.initialize();
+      if (!initResult) {
+        console.warn("⚠️ Firebase failed to initialize, using fallback mode");
+        return false;
+      }
+
       this.auth = await firebaseService.getAuth();
       this.db = await firebaseService.getFirestore();
 
       if (this.auth) {
         this.initialized = true;
-        console.log("✅ AuthService initialized");
+        console.log("✅ AuthService initialized with Firebase Auth");
         return true;
       }
 
