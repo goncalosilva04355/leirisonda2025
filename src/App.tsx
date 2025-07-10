@@ -100,8 +100,8 @@ import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
-import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
-import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
+// import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix"; // Disabled - Firestore not available
+// import { useAutoUserMigration } from "./hooks/useAutoUserMigration"; // Disabled - Firestore not available
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 import StabilityMonitor from "./utils/stabilityMonitor";
@@ -3849,7 +3849,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
 
                         <div className="space-y-6">
-                          {/* Medições do Furo */}
+                          {/* Medi��ões do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
                               Medi������ões do Furo
@@ -5261,7 +5261,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de filtros",
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
-                          "Verificação alimentação",
+                          "Verificação alimenta��ão",
                           "Enchimento automático",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
@@ -5754,7 +5754,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              �� As definições são guardadas localmente no
+                              • As definições são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
@@ -5912,7 +5912,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat���rio de Manutenções
+                          Relat��rio de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Hist��rico de intervenç��es
@@ -8986,7 +8986,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          T���tulo
+                          T����tulo
                         </label>
                         <p className="text-gray-900">{selectedWork.title}</p>
                       </div>
