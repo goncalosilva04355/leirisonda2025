@@ -598,7 +598,7 @@ function App() {
 
             // Auto-navega��ão removida para evitar loop de login
             console.log(
-              "��� User authenticated - avoiding auto-navigation loop",
+              "✅ User authenticated - avoiding auto-navigation loop",
             );
           } else {
             console.log("🔒 Firebase Auth: No user session found");
@@ -1115,7 +1115,7 @@ function App() {
   // PDF Generation Functions
   const generatePoolsPDF = () => {
     const content = `
-LEIRISONDA - RELAT����RIO DE PISCINAS
+LEIRISONDA - RELAT��RIO DE PISCINAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -2554,7 +2554,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} ���� {pool.location}
+                                            {pool.client} �� {pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -8165,7 +8165,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                  P���gina não encontrada
+                  P��gina não encontrada
                 </h1>
                 <p className="text-gray-600">
                   A seç���o solicitada não foi encontrada.
@@ -8876,8 +8876,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               onClick={handleGoBack}
               className="bg-white p-2 rounded-md shadow-md"
             >
-                            <ArrowLeft className="h-6 w-6 text-gray-600" />
-            </button>
+              <ArrowLeft className="h-6 w-6 text-gray-600" />
+                        </button>
             <button
               onClick={() => {
                 try {
@@ -8892,9 +8892,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 } catch (error: any) {
                   alert(`❌ Simple test error: ${error.message}`);
                 }
-                  
+                  console.log("📊 Realtime Database Test:", result);
 
-                  
+                  if (result.success) {
+                    alert(
                       `🎉 REALTIME DATABASE WORKING!\n\n✅ Connection: Successful\n✅ Read/Write: Working\n✅ Test Value: ${result.testValue}\n\n🔥 FIREBASE SERVICES:\n- Auth: ✅ Working\n- Storage: ✅ Working\n- Realtime Database: ✅ Working\n- Project: leiria-1cfc9\n\n🌐 DATA SHARING:\n- Multi-user: ✅ Enabled\n- Multi-device: ��� Enabled\n- Real-time sync: ✅ Working\n\nPerfect for sharing data between users and devices!`,
                     );
                   } else {
