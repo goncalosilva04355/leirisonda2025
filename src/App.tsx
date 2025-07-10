@@ -7184,7 +7184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </button>
                                     </div>
                                     <p className="text-green-700 text-sm mb-3">
-                                      Quando ativado, clicar numa morada abrir��
+                                      Quando ativado, clicar numa morada abrirá
                                       o Google Maps para navegação.
                                     </p>
                                     <p className="text-green-600 text-xs">
@@ -7411,8 +7411,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Relatórios do Sistema
                             </h2>
                             <p className="text-gray-600 mb-6">
-                              Gere relat��rios detalhados em PDF sobre piscinas,
-                              manutenções e obras.
+                              Gere relat����rios detalhados em PDF sobre
+                              piscinas, manutenções e obras.
                             </p>
                           </div>
 
@@ -7455,7 +7455,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Manutenções
+                                    Relat��rio de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Histórico de intervenções
@@ -11626,6 +11626,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Data Input Tutorial */}
         <DataInputTutorial />
+
+        {/* Firebase Fix Button - Show if there are login errors */}
+        {loginError && loginError.includes("Firebase") && <FirebaseFixButton />}
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
