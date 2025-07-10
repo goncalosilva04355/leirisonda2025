@@ -7,6 +7,7 @@ import {
   CheckCircle,
   AlertCircle,
   ExternalLink,
+  BookOpen,
 } from "lucide-react";
 
 interface RealtimeTestResult {
