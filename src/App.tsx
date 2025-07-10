@@ -72,7 +72,6 @@ import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 
 import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
-import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncSafe";
 import {
   hybridAuthService as authService,
@@ -1845,7 +1844,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("⚠️ Maps redirect is disabled");
+        console.warn("⚠��� Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠��� No address provided");
@@ -3988,7 +3987,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ���� Nenhum utilizador encontrado. V�� à Área de
-                                Administração → "🔧 Corre������ão de Atribuiç��o
+                                Administração → "🔧 Corre�����ão de Atribuiç��o
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -6018,7 +6017,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
-                            {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
+                            {enableMapsRedirect ? "�� Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
@@ -6687,7 +6686,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente ����� base de dados
+                        Adicionar cliente ���� base de dados
                       </p>
                     </div>
                   </div>
