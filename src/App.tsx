@@ -387,7 +387,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notificações de atribui��ão de obra...");
+      console.log("📱 Enviando notificações de atribui���ão de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -570,7 +570,7 @@ function App() {
         try {
           await addObra(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincroniza��ão universal:", syncError);
+          console.warn("���️ Erro na sincroniza��ão universal:", syncError);
         }
 
         // Enviar notificações push para utilizadores atribuídos
@@ -2103,7 +2103,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const handleAddressClick = (address: string) => {
     console.log("������ Address clicked:", address);
-    console.log("��️ Maps redirect enabled:", enableMapsRedirect);
+    console.log("����️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
       // Open Google Maps with the address
@@ -6281,7 +6281,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h4>
                         <p className="text-gray-600 text-sm mb-4">
                           Arraste e solte ou clique para selecionar fotos da
-                          manutenç��o
+                          manutenç����o
                         </p>
                         <p className="text-gray-500 text-xs mb-4">
                           {uploadedPhotos.length}/20 fotografias
@@ -6688,11 +6688,75 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </p>
                           </div>
 
-                                                    <UserPermissionsManager />
+                                                                              <UserPermissionsManager />
                         </div>
                       )}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  /* Simple configuration for non-admin users */
+                  <div className="space-y-6">
+                    {/* System Information */}
+                    <div className="bg-white rounded-lg p-6 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Informações do Sistema
+                      </h3>
+                      <div className="grid gap-3">
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Versão</span>
+                          <span className="font-medium">1.0.0</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Utilizador Ativo</span>
+                          <span className="font-medium">{currentUser?.name}</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Perfil</span>
+                          <span className="font-medium capitalize">
+                            {currentUser?.role?.replace("_", " ")}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2">
+                          <span className="text-gray-600">Modo de Dados</span>
+                          <span className="font-medium">Armazenamento Local</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Basic Notifications for all users */}
+                    <div className="bg-white rounded-lg p-6 shadow-sm">
+                      <div className="flex items-center mb-4">
+                        <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Notificações
+                        </h3>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-700">
+                            Notificações Push
+                          </span>
+                          <button
+                            onClick={requestNotificationPermission}
+                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                              notificationsEnabled
+                                ? "bg-blue-600"
+                                : "bg-gray-200"
+                            }`}
+                          >
+                            <span
+                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                notificationsEnabled
+                                  ? "translate-x-5"
+                                  : "translate-x-0"
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -7556,7 +7620,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç����es
+                        <strong>{maintenance.length}</strong> manutenç������es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
