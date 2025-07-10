@@ -723,7 +723,7 @@ function App() {
               // Escrever teste
               await setDoc(testDoc, testData);
               console.log(
-                "📝 Passo 3: Dados escritos no Firestore com sucesso",
+                "�� Passo 3: Dados escritos no Firestore com sucesso",
               );
 
               // Ler teste
@@ -1374,7 +1374,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa���ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -1850,7 +1850,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("⚠���� Maps redirect is disabled");
+        console.warn("⚠��� Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠��� No address provided");
@@ -5392,7 +5392,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç������������o criada para nova piscina:",
+                                "Futura manutenç����������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -7369,7 +7369,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   ? work.assignedUsers
                                       .map((u) => u.name)
                                       .join(", ")
-                                  : work.assignedTo || "Não atribuída"}
+                                  : work.assignedTo || "N��o atribuída"}
                               </div>
                               {work.budget && (
                                 <div>
@@ -7806,7 +7806,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             defaultValue={editingWork?.observations}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observações sobre a obra..."
+                            placeholder="Observaç��es sobre a obra..."
                           />
                         </div>
                       </div>
@@ -8367,7 +8367,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manuten����o
+                        Editar Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
@@ -9617,7 +9617,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç��es Detalhadas
+                          Informa����es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
