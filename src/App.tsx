@@ -61,7 +61,7 @@ import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNot
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/configWithoutFirestore";
-// import "./firebase/realtimeDatabase"; // Initialize Realtime Database - temporarily disabled
+import "./firebase/realtimeDatabase"; // Initialize Realtime Database
 
 // SECURITY: RegisterForm removed - only super admin can create users
 // import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
@@ -3849,7 +3849,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
 
                         <div className="space-y-6">
-                          {/* Medi��ões do Furo */}
+                          {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
                               Medi������ões do Furo
@@ -5261,7 +5261,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de filtros",
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
-                          "Verificação alimenta��ão",
+                          "Verificação alimentação",
                           "Enchimento automático",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
@@ -8986,7 +8986,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          T����tulo
+                          T���tulo
                         </label>
                         <p className="text-gray-900">{selectedWork.title}</p>
                       </div>
