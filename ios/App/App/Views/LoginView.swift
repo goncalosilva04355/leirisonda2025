@@ -191,7 +191,7 @@ struct LoginView: View {
     
     private func performLogin(email: String, password: String) async throws {
         // Simulate network delay
-        try await Task.sleep(nanoseconds: 2_000_000_000)
+                try await Task.sleep(nanoseconds: 1_000_000_000)
         
         // For demo purposes - replace with actual authentication
         if email.isEmpty || password.isEmpty {
