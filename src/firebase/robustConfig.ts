@@ -177,5 +177,12 @@ export const getAuthService = () => firebaseService.getAuth();
 export const attemptFirestoreInit = () => firebaseService.getFirestore();
 export const isFirebaseReady = () => firebaseService.isInitialized();
 
-// Initialize on module load
-firebaseService.initialize().catch(console.error);
+// Initialize on module load with a small delay to avoid race conditions
+setTimeout(() => {
+  firebaseService.initialize().catch((error) => {
+    console.warn(
+      "⚠️ Firebase initialization delayed, will retry on first use:",
+      error,
+    );
+  });
+}, 100);
