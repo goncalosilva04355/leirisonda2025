@@ -274,7 +274,7 @@ function App() {
     );
 
     // Verificações autom��ticas desabilitadas para resolver instabilidade
-    // Sistema funcionará normalmente sem verificações constantes
+    // Sistema funcionar�� normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
 
@@ -448,7 +448,7 @@ function App() {
           };
 
           userNotifications.unshift(newNotification);
-          // Manter apenas as ��ltimas 50 notificações
+          // Manter apenas as últimas 50 notificações
           const limitedNotifications = userNotifications.slice(0, 50);
 
           localStorage.setItem(
@@ -517,7 +517,7 @@ function App() {
             }
           }
 
-          // Salvar notificação no Firestore (se disponível)
+          // Salvar notifica��ão no Firestore (se disponível)
           try {
             if (firestoreService) {
               await firestoreService.createNotification({
@@ -7655,7 +7655,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                     ? "Em Progresso"
                                     : work.status === "concluida" ||
                                         work.status === "completed"
-                                      ? "Conclu��da"
+                                      ? "Concluída"
                                       : work.status}
                               </span>
                               {!work.folhaGerada && (
@@ -7694,7 +7694,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        �������� {work.contact}
+                                        ���������� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -9384,7 +9384,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configurações avançadas
+                Insira a palavra-passe para aceder às configura��ões avançadas
               </p>
             </div>
 
@@ -10251,9 +10251,6 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
         {/* User Migration Indicator - Shows migration status */}
         <UserMigrationIndicator migrationStatus={userMigration} />
-
-        {/* Firestore Status Indicator - Passo 3 */}
-        <FirestoreStatusIndicator />
 
         {/* Data Persistence Diagnostic - Modal for persistence issues */}
         {showDataDiagnostic && (
