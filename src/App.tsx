@@ -5004,7 +5004,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             })
                           }
                         >
-                          <option value="">Selecionar técnico</option>
+                          <option value="">Selecionar t��cnico</option>
                           {users
                             .filter((user) => user.role !== "super_admin")
                             .map((user) => (
@@ -5224,7 +5224,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento autom��tico",
+                          "Enchimento automático",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
@@ -8879,19 +8879,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🔍 Running final Firebase diagnosis...");
-                const { testFirebaseStatus, checkWorkingServices } =
-                  await import("./utils/finalFirebaseTest");
+                console.log("🔥 Attempting to enable Firestore...");
+                const { tryEnableFirestore, openFirebaseConsole } =
+                  await import("./utils/enableFirestore");
 
-                const results = await testFirebaseStatus();
-                const workingReport = checkWorkingServices();
+                const results = await tryEnableFirestore();
+                console.log("🔥 Firestore Enable Results:", results);
 
-                console.log("📊 Final Firebase Diagnosis:", results);
-                console.log("📋 Working Services:", workingReport);
-
-                let message = `Firebase Status:\n✅ Auth: ${results.auth}\n✅ Storage: ${results.storage}\n❌ Firestore: ${results.firestoreEnabled}\n\n${results.diagnosis}`;
-
-                alert(message);
+                if (results.success) {
+                  alert("✅ Firestore enabled successfully! Test again.");
+                } else {
+                  // Show instructions and try to open console
+                  console.log(results.instructions);
+                  openFirebaseConsole();
+                  alert(
+                    `⚠️ Firestore needs manual setup.\n\nOpening Firebase Console...\n\nFollow the instructions in the browser console.`,
+                  );
+                }
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
               title="Test Firebase Connectivity"
