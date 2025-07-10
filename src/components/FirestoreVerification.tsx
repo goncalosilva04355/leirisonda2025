@@ -48,7 +48,7 @@ export const FirestoreVerification: React.FC = () => {
       console.log("✅ Conectividade básica: OK");
 
       // Test 2: Read operation
-      console.log("📖 Teste 2: Opera��ão de leitura...");
+      console.log("📖 Teste 2: Operação de leitura...");
       let canRead = false;
       try {
         const { collection, getDocs } = await import("firebase/firestore");
