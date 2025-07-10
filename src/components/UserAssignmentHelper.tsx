@@ -43,16 +43,53 @@ export const UserAssignmentHelper: React.FC<UserAssignmentHelperProps> = ({
       if (savedUsers) {
         const parsedUsers = JSON.parse(savedUsers);
         // Filter only active users that can be assigned to works
-        const availableUsers = parsedUsers.filter(
+        let availableUsers = parsedUsers.filter(
           (user: User) => user.active && user.role !== "viewer",
         );
+
+        // Ensure Gonçalo Fonseca is always available for assignment
+        const goncaloExists = availableUsers.some(
+          (user: User) =>
+            user.email === "gongonsilva@gmail.com" ||
+            user.name === "Gonçalo Fonseca",
+        );
+
+        if (!goncaloExists) {
+          // Add Gonçalo Fonseca as a default assignable user
+          availableUsers.push({
+            id: "1",
+            name: "Gonçalo Fonseca",
+            email: "gongonsilva@gmail.com",
+            active: true,
+            role: "super_admin",
+          } as User);
+        }
+
         setUsers(availableUsers);
       } else {
-        setUsers([]);
+        // If no users saved, ensure Gonçalo is available
+        setUsers([
+          {
+            id: "1",
+            name: "Gonçalo Fonseca",
+            email: "gongonsilva@gmail.com",
+            active: true,
+            role: "super_admin",
+          } as User,
+        ]);
       }
     } catch (error) {
       console.error("Error loading users:", error);
-      setUsers([]);
+      // Fallback: at least provide Gonçalo as assignable
+      setUsers([
+        {
+          id: "1",
+          name: "Gonçalo Fonseca",
+          email: "gongonsilva@gmail.com",
+          active: true,
+          role: "super_admin",
+        } as User,
+      ]);
     }
     setIsLoading(false);
   };
