@@ -1633,7 +1633,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     // Console log for debugging purposes (admin view)
     console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
-    console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
+    console.log(`���� Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
   const testPushNotification = () => {
@@ -3427,7 +3427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        �������������� {maint.clientContact}
+                                        ������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -5309,7 +5309,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           // SECURITY: Check if user has permission to create pools
                           if (!currentUser?.permissions?.piscinas?.create) {
                             alert(
-                              "Não tem permiss��o para criar piscinas. Contacte o administrador.",
+                              "Não tem permissão para criar piscinas. Contacte o administrador.",
                             );
                             return;
                           }
@@ -6106,7 +6106,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                     </div>
 
-                    {/* Configurações de Localiza����ão Individual - Apenas para super_admin */}
+                    {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
                     {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
@@ -6526,7 +6526,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>📊 Dados consolidados</li>
+                        <li>���� Dados consolidados</li>
                         <li>• Análise de performance</li>
                       </ul>
                     </div>
@@ -7832,7 +7832,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nível da Água (m)
+                            Nível da ��gua (m)
                           </label>
                           <input
                             type="number"
