@@ -335,7 +335,11 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
             Mapa de Utilizadores
           </h2>
           <p className="text-gray-600 text-sm">
-            Localizações de todos os utilizadores da equipa
+            {userLocations.length === 0
+              ? "Nenhuma localização partilhada ainda"
+              : userLocations.length === 1
+                ? "Apenas a sua localização está partilhada"
+                : `${userLocations.length} utilizadores com localizações partilhadas`}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
