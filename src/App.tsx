@@ -2687,7 +2687,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas (atribuídas)
+                          Folhas não geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -5253,7 +5253,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     🔍 Diagn��stico de Permissões
                   </h3>
                   <div className="text-xs text-yellow-700 space-y-1">
-                    <div>Usu��rio: {currentUser?.name || "Não logado"}</div>
+                    <div>Usuário: {currentUser?.name || "Não logado"}</div>
                     <div>Role: {currentUser?.role || "Indefinido"}</div>
                     <div>
                       Clientes - Create:{" "}
@@ -6565,8 +6565,8 @@ Super Admin: ${currentUser?.role === "super_admin"}
                               inicial
                             </li>
                             <li>
-                              • Configure a sua localização abaixo e veja o mapa
-                              da equipa na página "Localizações"
+                              �� Configure a sua localização abaixo e veja o
+                              mapa da equipa na página "Localizações"
                             </li>
                           </ul>
                         </div>
