@@ -65,8 +65,26 @@ import { isFirebaseReady } from "./firebase/config";
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
-import { LoginPage } from "./pages/LoginPage";
-import SimpleFirebaseDebug from "./components/SimpleFirebaseDebug";
+// Lazy loading para componentes pesados
+const LoginPage = lazy(() =>
+  import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
+);
+const SimpleFirebaseDebug = lazy(
+  () => import("./components/SimpleFirebaseDebug"),
+);
+const AdvancedSettings = lazy(() =>
+  import("./components/AdvancedSettings").then((module) => ({
+    default: module.AdvancedSettings,
+  })),
+);
+const AdminLogin = lazy(() =>
+  import("./admin/AdminLogin").then((module) => ({
+    default: module.AdminLogin,
+  })),
+);
+const AdminPage = lazy(() =>
+  import("./admin/AdminPage").then((module) => ({ default: module.AdminPage })),
+);
 
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
@@ -1340,7 +1358,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }, 1000);
       }
     } else {
-      console.log("ℹ️ Notification not for current user:", {
+      console.log("��️ Notification not for current user:", {
         currentUser: currentUser?.name,
         assignedTo,
         isAssignedToCurrentUser,
@@ -4142,7 +4160,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const budget =
                             (
                               form.querySelector(
-                                'input[placeholder*="Or��amento"]',
+                                'input[placeholder*="Orçamento"]',
                               ) as HTMLInputElement
                             )?.value || "";
 
@@ -4792,7 +4810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutenção programada durante criaç��o da piscina",
+                                  "Manutenção programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -5499,7 +5517,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                   );
                                 }
                               } else {
@@ -5816,7 +5834,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Manuten��ões
+                          Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Hist��rico de intervenç��es
@@ -6736,7 +6754,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����� {work.contact}
+                                        ������� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -8818,7 +8836,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N�����o especificado"}
+                          {selectedWork.type || "N����o especificado"}
                         </p>
                       </div>
                       <div>
