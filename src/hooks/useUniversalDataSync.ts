@@ -84,7 +84,7 @@ export function useUniversalDataSync(): UniversalSyncState &
     }
   });
 
-    // Inicializar sincronização universal
+  // Inicializar sincronização universal
   useEffect(() => {
     let mounted = true;
 
@@ -154,69 +154,73 @@ export function useUniversalDataSync(): UniversalSyncState &
     };
   }, []);
 
-    // Configurar listeners universais em tempo real
+  // Configurar listeners universais em tempo real
   useEffect(() => {
     try {
       if (!universalDataSync || !universalDataSync.isReady()) return;
 
       // Configurar listeners silenciosos
       const cleanup = universalDataSync.setupUniversalListeners({
-      onObrasChange: (obras) => {
-        setState((prev) => ({
-          ...prev,
-          obras,
-          totalItems:
-            obras.length +
-            prev.manutencoes.length +
-            prev.piscinas.length +
-            prev.clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-      onManutencoesChange: (manutencoes) => {
-        setState((prev) => ({
-          ...prev,
-          manutencoes,
-          totalItems:
-            prev.obras.length +
-            manutencoes.length +
-            prev.piscinas.length +
-            prev.clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-      onPiscinasChange: (piscinas) => {
-        setState((prev) => ({
-          ...prev,
-          piscinas,
-          totalItems:
-            prev.obras.length +
-            prev.manutencoes.length +
-            piscinas.length +
-            prev.clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-      onClientesChange: (clientes) => {
-        setState((prev) => ({
-          ...prev,
-          clientes,
-          totalItems:
-            prev.obras.length +
-            prev.manutencoes.length +
-            prev.piscinas.length +
-            clientes.length,
-          lastSync: new Date().toISOString(),
-          syncStatus: "connected",
-        }));
-      },
-    });
+        onObrasChange: (obras) => {
+          setState((prev) => ({
+            ...prev,
+            obras,
+            totalItems:
+              obras.length +
+              prev.manutencoes.length +
+              prev.piscinas.length +
+              prev.clientes.length,
+            lastSync: new Date().toISOString(),
+            syncStatus: "connected",
+          }));
+        },
+        onManutencoesChange: (manutencoes) => {
+          setState((prev) => ({
+            ...prev,
+            manutencoes,
+            totalItems:
+              prev.obras.length +
+              manutencoes.length +
+              prev.piscinas.length +
+              prev.clientes.length,
+            lastSync: new Date().toISOString(),
+            syncStatus: "connected",
+          }));
+        },
+        onPiscinasChange: (piscinas) => {
+          setState((prev) => ({
+            ...prev,
+            piscinas,
+            totalItems:
+              prev.obras.length +
+              prev.manutencoes.length +
+              piscinas.length +
+              prev.clientes.length,
+            lastSync: new Date().toISOString(),
+            syncStatus: "connected",
+          }));
+        },
+        onClientesChange: (clientes) => {
+          setState((prev) => ({
+            ...prev,
+            clientes,
+            totalItems:
+              prev.obras.length +
+              prev.manutencoes.length +
+              prev.piscinas.length +
+              clientes.length,
+            lastSync: new Date().toISOString(),
+            syncStatus: "connected",
+          }));
+        },
+      });
 
-    return cleanup;
-  }, [universalDataSync.isReady()]);
+      return cleanup;
+    } catch (error) {
+      console.error("❌ Error setting up listeners:", error);
+      return () => {}; // Return empty cleanup function
+    }
+  }, []);
 
   // Ações para obras
   const addObra = useCallback(async (obraData: any): Promise<string> => {
