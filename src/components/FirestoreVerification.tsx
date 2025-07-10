@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { CheckCircle, XCircle, RefreshCw, AlertCircle } from "lucide-react";
 import FirestoreActivationSteps from "./FirestoreActivationSteps";
 import UsersCollectionCheck from "./UsersCollectionCheck";
