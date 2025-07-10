@@ -320,7 +320,13 @@ export const UserPermissionsManager: React.FC = () => {
     setError(null);
 
     try {
-      if (db) {
+      // Check if Firebase/Firestore is properly initialized
+      if (
+        db &&
+        typeof db === "object" &&
+        db.constructor &&
+        db.constructor.name !== "Object"
+      ) {
         // Load from Firebase
         const usersCollection = collection(db, "users");
         const usersSnapshot = await getDocs(usersCollection);
