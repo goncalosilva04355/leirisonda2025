@@ -81,7 +81,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
       { ...newUser, email: newUser.email.toLowerCase() },
     ];
     saveUsers(updatedUsers);
-    setNewUser({ email: "", name: "", role: "technician" });
+    setNewUser({ email: "", name: "", role: "technician", password: "" });
     setShowAddForm(false);
     setErrors("");
   };
