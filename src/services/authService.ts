@@ -39,13 +39,12 @@ class AuthService {
         return { success: true, user: userProfile };
       }
 
-      // For other users, try Firebase if available
+      // For other users, try Firebase Auth only (no Firestore)
       try {
         const auth = await getAuthSafe();
-        const db = await getFirestoreSafe();
 
-        if (!auth || !db) {
-          throw new Error("Firebase services not available");
+        if (!auth) {
+          throw new Error("Firebase Auth not available");
         }
 
         const userCredential = await signInWithEmailAndPassword(
@@ -55,26 +54,18 @@ class AuthService {
         );
         const firebaseUser = userCredential.user;
 
-        // Buscar perfil do usuário
-        const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+        // Create basic profile without Firestore
+        const userProfile: UserProfile = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email!,
+          name: firebaseUser.displayName || "Utilizador",
+          role: "technician",
+          active: true,
+          createdAt: new Date().toISOString(),
+        };
 
-        if (userDoc.exists()) {
-          const userProfile = userDoc.data() as UserProfile;
-          return { success: true, user: userProfile };
-        } else {
-          // Criar perfil básico se não existir
-          const userProfile: UserProfile = {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email!,
-            name: "Utilizador",
-            role: "technician",
-            active: true,
-            createdAt: new Date().toISOString(),
-          };
-
-          await setDoc(doc(db, "users", firebaseUser.uid), userProfile);
-          return { success: true, user: userProfile };
-        }
+        console.log("✅ Firebase authentication successful");
+        return { success: true, user: userProfile };
       } catch (firebaseError) {
         console.warn(
           "Firebase authentication failed, falling back to local auth",
