@@ -609,7 +609,7 @@ function App() {
 
         return unsubscribe;
       } catch (error) {
-        console.error("��� Firebase Auth setup error:", error);
+        console.error("����� Firebase Auth setup error:", error);
         setIsAuthenticated(false);
         setCurrentUser(null);
         return () => {}; // Return empty cleanup function
@@ -682,7 +682,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("���️ Notifications not supported in this browser");
+      console.warn("������ Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -1728,7 +1728,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠��� Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
+              `⚠��� Utilizador ${userForm.name} criado localmente. Sincroniza����o Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -3000,7 +3000,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenç��o</span>
+                      <span>Nova Manuten����o</span>
                     </button>
                   </div>
                 </div>
@@ -3053,7 +3053,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Wrench className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção registada
+                        Nenhuma manutenç��o registada
                       </h3>
                       <p className="text-gray-600 text-sm">
                         As manutenções aparecerão aqui quando forem criadas
@@ -8544,7 +8544,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
-        <SimpleFirebaseDebug />
         <LoginPage
           onLogin={async (email: string, password: string) => {
             console.log("🔐 Login attempt for:", email);
