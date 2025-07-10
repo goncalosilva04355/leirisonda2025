@@ -1018,7 +1018,7 @@ function App() {
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização automática ativa!");
+          console.log("✅ Sincroniza��ão automática ativa!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -1671,7 +1671,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu�����da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -2605,7 +2605,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isInProgress && isAssignedToUser;
+                            return isInProgress;
                           });
                           return inProgressWorks.length;
                         })()}
@@ -4566,7 +4566,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ���� {assignedUser.name}
+                                    ����� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -4943,7 +4943,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="João Silva"]',
+                                'input[placeholder*="Jo��o Silva"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
