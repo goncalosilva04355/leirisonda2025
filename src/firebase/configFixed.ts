@@ -19,6 +19,9 @@ const firebaseConfig = {
 
 // Inicialização segura do Firebase App
 let app: any = null;
+let db: any = null;
+let auth: any = null;
+let storage: any = null;
 
 try {
   // Verificar se já existe uma app inicializada
@@ -29,6 +32,30 @@ try {
   } else {
     app = initializeApp(firebaseConfig);
     console.log("✅ Firebase App inicializado com sucesso:", app.name);
+  }
+
+  // Initialize services immediately
+  if (app) {
+    try {
+      db = getFirestore(app);
+      console.log("✅ Firestore inicializado");
+    } catch (firestoreError) {
+      console.warn("⚠️ Firestore initialization warning:", firestoreError);
+    }
+
+    try {
+      auth = getAuth(app);
+      console.log("✅ Auth inicializado");
+    } catch (authError) {
+      console.warn("⚠️ Auth initialization warning:", authError);
+    }
+
+    try {
+      storage = getStorage(app);
+      console.log("✅ Storage inicializado");
+    } catch (storageError) {
+      console.warn("⚠️ Storage initialization warning:", storageError);
+    }
   }
 } catch (error) {
   console.error("❌ Erro ao inicializar Firebase App:", error);
