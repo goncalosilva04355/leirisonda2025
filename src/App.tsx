@@ -893,7 +893,7 @@ function App() {
         };
 
         addMaintenance(futureMaintenance);
-        console.log("Futura manutenç��o criada:", futureMaintenance);
+        console.log("Futura manutenção criada:", futureMaintenance);
       }
     }
 
@@ -1057,7 +1057,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "��� Forced logout state clear completed - redirected to login",
+        "�� Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -1406,7 +1406,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura������es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -1716,7 +1716,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           if (result.success) {
             console.log(
-              `���� Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
+              `������ Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
             );
 
             // Show success message
@@ -3670,7 +3670,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ������ Nenhum utilizador encontrado. V�� à Área
-                                de Administração → "🔧 Corre���ão de Atribuiç��o
+                                de Administração → "🔧 Corre��ão de Atribui����o
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -8878,21 +8878,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("📱 Running offline Firebase test...");
-                const { testOfflineFirebase } = await import(
-                  "./utils/offlineFirebaseTest"
-                );
+                console.log("🔍 Running final Firebase diagnosis...");
+                const { testFirebaseStatus, checkWorkingServices } =
+                  await import("./utils/finalFirebaseTest");
 
-                const results = await testOfflineFirebase();
-                console.log("📊 Offline Firebase Test Results:", results);
+                const results = await testFirebaseStatus();
+                const workingReport = checkWorkingServices();
 
-                let message = `Firebase Offline Test:\n✅ Project: ${results.projectCheck}\n✅ App: ${results.app}\n✅ Firestore: ${results.firestore}\n✅ Offline Mode: ${results.offlineMode}`;
+                console.log("📊 Final Firebase Diagnosis:", results);
+                console.log("📋 Working Services:", workingReport);
 
-                if (results.errors.length > 0) {
-                  message += `\n\n❌ Errors:\n${results.errors.join("\n")}`;
-                }
+                let message = `Firebase Status:\n✅ Auth: ${results.auth}\n✅ Storage: ${results.storage}\n❌ Firestore: ${results.firestoreEnabled}\n\n${results.diagnosis}`;
 
-                message += "\n\nCheck console for detailed logs";
                 alert(message);
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
