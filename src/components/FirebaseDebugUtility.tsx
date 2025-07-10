@@ -20,6 +20,155 @@ import {
 } from "lucide-react";
 import AppDiagnostics from "../utils/appDiagnostics";
 
+// Componente separado para o separador de diagnóstico
+const DiagnosticTab: React.FC = () => {
+  const [diagnosticReport, setDiagnosticReport] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+
+  const runDiagnostic = async () => {
+    setLoading(true);
+    try {
+      const report = await AppDiagnostics.generateReport();
+      setDiagnosticReport(report);
+    } catch (error) {
+      setDiagnosticReport(`Erro ao gerar diagnóstico: ${error}`);
+    }
+    setLoading(false);
+  };
+
+  const downloadReport = () => {
+    const blob = new Blob([diagnosticReport], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `leirisonda-diagnostico-${new Date().toISOString().split("T")[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard
+      .writeText(diagnosticReport)
+      .then(() => {
+        alert("Relatório copiado para a área de transferência!");
+      })
+      .catch(() => {
+        alert("Erro ao copiar relatório");
+      });
+  };
+
+  const clearErrorLog = () => {
+    AppDiagnostics.clearErrors();
+    alert("Log de erros limpo!");
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h4 className="text-sm font-medium text-gray-700">
+          Diagnóstico Completo da Aplicação
+        </h4>
+        <div className="flex gap-2">
+          <button
+            onClick={runDiagnostic}
+            disabled={loading}
+            className="flex items-center px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+          >
+            {loading ? (
+              <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+            ) : (
+              <Bug className="h-3 w-3 mr-1" />
+            )}
+            {loading ? "A analisar..." : "Executar Diagnóstico"}
+          </button>
+        </div>
+      </div>
+
+      {diagnosticReport && (
+        <div className="space-y-3">
+          <div className="flex gap-2">
+            <button
+              onClick={downloadReport}
+              className="flex items-center px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              <Download className="h-3 w-3 mr-1" />
+              Descarregar
+            </button>
+            <button
+              onClick={copyToClipboard}
+              className="flex items-center px-2 py-1 text-xs bg-gray-600 text-white rounded hover:bg-gray-700"
+            >
+              <Copy className="h-3 w-3 mr-1" />
+              Copiar
+            </button>
+            <button
+              onClick={clearErrorLog}
+              className="flex items-center px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              <Trash2 className="h-3 w-3 mr-1" />
+              Limpar Erros
+            </button>
+          </div>
+
+          <div className="max-h-96 overflow-y-auto">
+            <pre className="text-xs bg-gray-50 p-3 rounded border whitespace-pre-wrap">
+              {diagnosticReport}
+            </pre>
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <h5 className="text-xs font-medium text-gray-600">
+          Diagnóstico Rápido
+        </h5>
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+            <span>Localização:</span>
+            <span className="font-mono">{window.location.hostname}</span>
+          </div>
+          <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+            <span>Online:</span>
+            <span
+              className={navigator.onLine ? "text-green-600" : "text-red-600"}
+            >
+              {navigator.onLine ? "✅ Sim" : "❌ Não"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+            <span>Browser:</span>
+            <span className="font-mono text-xs truncate">
+              {navigator.userAgent.includes("Chrome")
+                ? "Chrome"
+                : navigator.userAgent.includes("Firefox")
+                  ? "Firefox"
+                  : navigator.userAgent.includes("Safari")
+                    ? "Safari"
+                    : "Outro"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+            <span>Viewport:</span>
+            <span className="font-mono">
+              {window.innerWidth}x{window.innerHeight}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
+        <p className="text-xs text-yellow-800">
+          <strong>💡 Dica:</strong> Use este diagnóstico para identificar
+          problemas na aplicação. Partilhe o relatório completo com o suporte
+          técnico se necessário.
+        </p>
+      </div>
+    </div>
+  );
+};
+
 interface FirebaseStatus {
   app: boolean;
   auth: boolean;
