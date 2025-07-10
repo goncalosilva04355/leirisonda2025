@@ -104,6 +104,7 @@ import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
 // import { useAutoUserMigration } from "./hooks/useAutoUserMigration"; // Disabled - Firestore not available
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
+import RealtimeDatabaseTester from "./components/RealtimeDatabaseTester";
 import StabilityMonitor from "./utils/stabilityMonitor";
 import PerformanceOptimizer from "./utils/performanceOptimizer";
 // import { useSafeEffect, useThrottledLog, useRenderCounter } from "./hooks/useSafeEffect"; // Temporarily disabled
@@ -1353,7 +1354,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             "Agora vai receber notificações de obras atribu��das",
             "success",
           );
-          console.log("�� Notifications enabled successfully");
+          console.log("���� Notifications enabled successfully");
         } else {
           console.warn("❌ Notification permission denied or dismissed");
         }
@@ -1693,7 +1694,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "�������️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "��������️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
@@ -7288,7 +7289,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa���ões
+                          Observa�����ões
                         </h3>
                       </div>
 
