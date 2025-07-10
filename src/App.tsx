@@ -5674,7 +5674,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <p className="text-green-700 text-sm mb-3">
                             Quando ativado, clicar numa morada abrirá o Google
-                            Maps para navegação.
+                            Maps para navegaç��o.
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
@@ -8316,7 +8316,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��������</span>
+                  <span>�������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -8678,90 +8678,80 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dashboard</span>
                 </button>
 
-                {hasPermission("obras", "view") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("obras");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "obras"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Building2 className="h-5 w-5" />
-                    <span>Obras</span>
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    navigateToSection("obras");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "obras"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Building2 className="h-5 w-5" />
+                  <span>Obras</span>
+                </button>
 
-                {hasPermission("obras", "create") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("nova-obra");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "nova-obra"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Plus className="h-5 w-5" />
-                    <span>Nova Obra</span>
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    navigateToSection("nova-obra");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "nova-obra"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>Nova Obra</span>
+                </button>
 
-                {hasPermission("manutencoes", "view") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("manutencoes");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "manutencoes"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Wrench className="h-5 w-5" />
-                    <span>Manutencoes</span>
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    navigateToSection("manutencoes");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "manutencoes"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Wrench className="h-5 w-5" />
+                  <span>Manutencoes</span>
+                </button>
 
-                {hasPermission("manutencoes", "create") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("nova-manutencao");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "nova-manutencao"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Plus className="h-5 w-5" />
-                    <span>Nova Manutencao</span>
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    navigateToSection("nova-manutencao");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "nova-manutencao"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>Nova Manutencao</span>
+                </button>
 
-                {hasPermission("piscinas", "view") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("piscinas");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "piscinas"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Waves className="h-5 w-5" />
-                    <span>Piscinas</span>
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    navigateToSection("piscinas");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "piscinas"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Waves className="h-5 w-5" />
+                  <span>Piscinas</span>
+                </button>
 
                 {/* Localizações - Apenas para super_admin */}
                 {currentUser?.role === "super_admin" && (
