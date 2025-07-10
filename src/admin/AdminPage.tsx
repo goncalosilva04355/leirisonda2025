@@ -69,7 +69,8 @@ type AdminSection =
   | "user-deletion"
   | "notification-demo"
   | "nuclear-cleanup"
-  | "data-sharing-status";
+  | "data-sharing-status"
+  | "data-persistence-diagnostic";
 
 export const AdminPage: React.FC<AdminPageProps> = ({
   onLogout,
