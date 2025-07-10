@@ -881,8 +881,20 @@ class UniversalDataSyncService {
    * Obter todos os dados universais
    */
   async getAllUniversalData(): Promise<UniversalDataState> {
-    if (!isFirebaseReady() || !db) {
+    // Verificação mais robusta para Firestore
+    try {
+      if (!isFirebaseReady() || !db || typeof db !== "object") {
+        throw new Error("Firestore não disponível");
+      }
+
+      // Teste básico para ver se Firestore funciona
+      const testCollection = collection(db, "test");
+      if (!testCollection) {
+        throw new Error("Firestore collection não funciona");
+      }
+    } catch (error) {
       console.log("📱 Carregando dados do armazenamento local");
+      console.log("💡 Firestore não disponível:", (error as Error).message);
       return this.getLocalData();
     }
 
