@@ -10,7 +10,7 @@ import {
 import {
   dataPersistenceManager,
   DataPersistenceStatus,
-} from "../utils/dataPersstenceFix";
+} from "../utils/dataPersistenceFix";
 
 interface DataPersistenceDiagnosticProps {
   onClose?: () => void;
