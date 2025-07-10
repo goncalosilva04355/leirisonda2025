@@ -132,7 +132,7 @@ function App() {
     // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
 
-    // Monitorização automática de persistência de dados
+    // Monitorização autom��tica de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
         // Aguardar um pouco antes de iniciar verificação
@@ -3319,7 +3319,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ).length === 0 && (
                                 <div className="text-center py-8">
                                   <div className="text-gray-400 mb-2">
-                                    �������
+                                    ���������
                                   </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
@@ -10142,42 +10142,10 @@ Super Admin: ${currentUser?.role === "super_admin"}
           </div>
         )}
 
-        {/* Emergency Data Persistence Alert */}
-        {persistenceIssueDetected && (
-          <div className="fixed bottom-4 right-4 z-50">
-            <div className="bg-red-600 text-white p-4 rounded-lg shadow-lg max-w-sm">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-bold">🚨 Problema de Dados</h4>
-                <button
-                  onClick={() => setPersistenceIssueDetected(false)}
-                  className="text-white hover:text-gray-200"
-                >
-                  ✕
-                </button>
-              </div>
-              <p className="text-sm mb-3">
-                Dados podem não estar a ser guardados corretamente.
-              </p>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => {
-                    setShowDataDiagnostic(true);
-                    setPersistenceIssueDetected(false);
-                  }}
-                  className="px-3 py-1 bg-white text-red-600 rounded text-sm font-medium hover:bg-gray-100"
-                >
-                  Reparar Agora
-                </button>
-                <button
-                  onClick={() => setPersistenceIssueDetected(false)}
-                  className="px-3 py-1 bg-red-700 text-white rounded text-sm hover:bg-red-800"
-                >
-                  Mais Tarde
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Data Persistence Alert - Smart automatic alert */}
+        <DataPersistenceAlert
+          onOpenDiagnostic={() => setShowDataDiagnostic(true)}
+        />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
