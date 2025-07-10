@@ -1614,7 +1614,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n���� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -2232,7 +2232,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
 
-                  {/* Firebase & Firestore Status LEDs - Bottom Right Corner */}
+                  {/* Firebase, Firestore & AutoSync Status LEDs - Bottom Right Corner */}
                   <div className="absolute bottom-2 right-2 z-20">
                     <div className="flex items-center space-x-1">
                       <div
@@ -2253,6 +2253,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           isFirestoreReady()
                             ? "Firestore Ativo"
                             : "Firestore Inativo"
+                        }
+                      ></div>
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          autoSyncActive
+                            ? "bg-purple-500 animate-pulse"
+                            : "bg-gray-400"
+                        }`}
+                        title={
+                          autoSyncActive
+                            ? "Sincronização Automática Ativa"
+                            : "Sincronização Automática Inativa"
                         }
                       ></div>
                     </div>
