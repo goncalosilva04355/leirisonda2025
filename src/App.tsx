@@ -4889,7 +4889,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutenção programada durante criação da piscina",
+                                  "Manutenção programada durante criaç��o da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -8742,11 +8742,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         )}
       </div>
     );
-  }
+    }
 
   // Use sync manager to determine if sync should be enabled
-  const quotaStatus = syncManager.getSyncStatus();
-  const syncInterval = syncManager.getSafeInterval();
+  // const quotaStatus = syncManager.getSyncStatus();
+  // const syncInterval = syncManager.getSafeInterval();
 
   // Debug log for authenticated state
   console.log("🔐 Authentication Status:", {
