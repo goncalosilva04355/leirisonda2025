@@ -63,9 +63,9 @@ import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
 import {
-  simpleAuthService as authService,
+  localAuthService as authService,
   UserProfile,
-} from "./services/simpleAuthService";
+} from "./services/localAuthService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
@@ -1647,7 +1647,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincroniza��ão:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
             syncError,
           );
         }
@@ -2506,7 +2506,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenç����es
+                                  Manutenç��es
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -5485,7 +5485,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
                                   );
                                 }
                               } else {
