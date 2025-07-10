@@ -101,6 +101,7 @@ import UserMigrationIndicator from "./components/UserMigrationIndicator";
 
 // Diagnóstico automático para problemas de inserção de dados
 import "./utils/datainput-diagnostic";
+import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
@@ -5824,7 +5825,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manuten��ão programada durante criação da piscina",
+                                  "Manuten����ão programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -6945,7 +6946,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informa��ões do Sistema
+                              Informações do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7676,7 +7677,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>��� Trabalhos realizados</li>
+                        <li>�� Trabalhos realizados</li>
                         <li>�� T��cnicos responsáveis</li>
                         <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
