@@ -7,7 +7,7 @@ import {
   User as FirebaseUser,
   setPersistence,
   browserLocalPersistence,
-  browserSessionPersistence
+  browserSessionPersistence,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { firebaseService } from "../firebase/robustConfig";
@@ -26,7 +26,7 @@ class AuthService {
   private db: any = null;
   private initialized = false;
 
-    async initialize(): Promise<boolean> {
+  async initialize(): Promise<boolean> {
     if (this.initialized) return true;
 
     try {
@@ -36,37 +36,41 @@ class AuthService {
 
       if (this.auth) {
         this.initialized = true;
-        console.log('✅ AuthService initialized');
+        console.log("✅ AuthService initialized");
         return true;
       }
 
-      console.warn('⚠️ AuthService: Firebase Auth not available');
+      console.warn("⚠️ AuthService: Firebase Auth not available");
       return false;
     } catch (error) {
-      console.error('❌ Failed to initialize AuthService:', error);
+      console.error("❌ Failed to initialize AuthService:", error);
       return false;
     }
   }
 
-    // Login
+  // Login
   async login(
     email: string,
     password: string,
-    rememberMe: boolean = false
+    rememberMe: boolean = false,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
       // Use retry mechanism for the entire login operation
       return await firebaseService.retryOperation(async () => {
-        if (!await this.initialize()) {
-          throw new Error('Firebase: Firebase App named \'[DEFAULT]\' already deleted (app/app-deleted).');
+        if (!(await this.initialize())) {
+          throw new Error(
+            "Firebase: Firebase App named '[DEFAULT]' already deleted (app/app-deleted).",
+          );
         }
 
         // Set persistence based on remember me preference
         try {
-          const persistence = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+          const persistence = rememberMe
+            ? browserLocalPersistence
+            : browserSessionPersistence;
           await setPersistence(this.auth, persistence);
         } catch (persistError) {
-          console.warn('⚠️ Could not set persistence:', persistError);
+          console.warn("⚠️ Could not set persistence:", persistError);
         }
 
         const userCredential = await signInWithEmailAndPassword(
@@ -74,18 +78,47 @@ class AuthService {
           email,
           password,
         );
-      const firebaseUser = userCredential.user;
+        const firebaseUser = userCredential.user;
 
-      // If Firestore is available, try to get user profile
-      if (this.db) {
-        try {
-          const userDoc = await getDoc(doc(this.db, "users", firebaseUser.uid));
+        // If Firestore is available, try to get user profile
+        if (this.db) {
+          try {
+            const userDoc = await getDoc(
+              doc(this.db, "users", firebaseUser.uid),
+            );
 
-          if (userDoc.exists()) {
-            const userProfile = userDoc.data() as UserProfile;
-            return { success: true, user: userProfile };
-          } else {
-            // Create basic profile if doesn't exist
+            if (userDoc.exists()) {
+              const userProfile = userDoc.data() as UserProfile;
+              return { success: true, user: userProfile };
+            } else {
+              // Create basic profile if doesn't exist
+              const userProfile: UserProfile = {
+                uid: firebaseUser.uid,
+                email: firebaseUser.email!,
+                name:
+                  firebaseUser.email === "gongonsilva@gmail.com"
+                    ? "Gonçalo Fonseca"
+                    : "Utilizador",
+                role:
+                  firebaseUser.email === "gongonsilva@gmail.com"
+                    ? "super_admin"
+                    : "technician",
+                active: true,
+                createdAt: new Date().toISOString(),
+              };
+
+              await setDoc(
+                doc(this.db, "users", firebaseUser.uid),
+                userProfile,
+              );
+              return { success: true, user: userProfile };
+            }
+          } catch (firestoreError) {
+            console.warn(
+              "⚠️ Firestore error, using basic profile:",
+              firestoreError,
+            );
+            // Fallback to basic profile without Firestore
             const userProfile: UserProfile = {
               uid: firebaseUser.uid,
               email: firebaseUser.email!,
@@ -100,81 +133,74 @@ class AuthService {
               active: true,
               createdAt: new Date().toISOString(),
             };
-
-            await setDoc(doc(this.db, "users", firebaseUser.uid), userProfile);
             return { success: true, user: userProfile };
           }
-        } catch (firestoreError) {
-          console.warn('⚠️ Firestore error, using basic profile:', firestoreError);
-          // Fallback to basic profile without Firestore
+        } else {
+          // No Firestore, create basic profile
           const userProfile: UserProfile = {
             uid: firebaseUser.uid,
             email: firebaseUser.email!,
-            name: firebaseUser.email === "gongonsilva@gmail.com" ? "Gonçalo Fonseca" : "Utilizador",
-            role: firebaseUser.email === "gongonsilva@gmail.com" ? "super_admin" : "technician",
+            name:
+              firebaseUser.email === "gongonsilva@gmail.com"
+                ? "Gonçalo Fonseca"
+                : "Utilizador",
+            role:
+              firebaseUser.email === "gongonsilva@gmail.com"
+                ? "super_admin"
+                : "technician",
             active: true,
             createdAt: new Date().toISOString(),
           };
           return { success: true, user: userProfile };
         }
-      } else {
-        // No Firestore, create basic profile
-        const userProfile: UserProfile = {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email!,
-          name: firebaseUser.email === "gongonsilva@gmail.com" ? "Gonçalo Fonseca" : "Utilizador",
-          role: firebaseUser.email === "gongonsilva@gmail.com" ? "super_admin" : "technician",
-          active: true,
-          createdAt: new Date().toISOString(),
-        };
-        return { success: true, user: userProfile };
-      }
+      });
     } catch (error: any) {
-      console.error('❌ Login error:', error);
+      console.error("❌ Login error:", error);
 
-      let errorMessage = 'Erro de autenticação';
+      let errorMessage = "Erro de autenticação";
 
       switch (error.code) {
-        case 'auth/user-not-found':
-          errorMessage = 'Utilizador não encontrado';
+        case "auth/user-not-found":
+          errorMessage = "Utilizador não encontrado";
           break;
-        case 'auth/wrong-password':
-          errorMessage = 'Palavra-passe incorreta';
+        case "auth/wrong-password":
+          errorMessage = "Palavra-passe incorreta";
           break;
-        case 'auth/invalid-email':
-          errorMessage = 'Email inválido';
+        case "auth/invalid-email":
+          errorMessage = "Email inválido";
           break;
-        case 'auth/user-disabled':
-          errorMessage = 'Conta desativada';
+        case "auth/user-disabled":
+          errorMessage = "Conta desativada";
           break;
-        case 'auth/too-many-requests':
-          errorMessage = 'Muitas tentativas. Tente novamente mais tarde';
+        case "auth/too-many-requests":
+          errorMessage = "Muitas tentativas. Tente novamente mais tarde";
           break;
-        case 'auth/network-request-failed':
-          errorMessage = 'Erro de conexão. Verifique sua internet';
+        case "auth/network-request-failed":
+          errorMessage = "Erro de conexão. Verifique sua internet";
           break;
-        case 'auth/app-deleted':
-          errorMessage = 'Firebase: Firebase App named \'[DEFAULT]\' already deleted (app/app-deleted).';
+        case "auth/app-deleted":
+          errorMessage =
+            "Firebase: Firebase App named '[DEFAULT]' already deleted (app/app-deleted).";
           break;
         default:
-          errorMessage = error.message || 'Erro desconhecido';
+          errorMessage = error.message || "Erro desconhecido";
       }
 
       return { success: false, error: errorMessage };
     }
   }
 
-    // Logout
+  // Logout
   async logout(): Promise<void> {
-    if (!await this.initialize()) {
+    if (!(await this.initialize())) {
       return;
     }
 
     try {
       await signOut(this.auth);
-      console.log('✅ User logged out successfully');
+      console.log("✅ User logged out successfully");
     } catch (error) {
-      console.error('❌ Logout error:', error);
+      console.error("❌ Logout error:", error);
     }
   }
 
@@ -194,14 +220,18 @@ class AuthService {
     return this._setupAuthStateListener(callback);
   }
 
-  private _setupAuthStateListener(callback: (user: UserProfile | null) => void): () => void {
+  private _setupAuthStateListener(
+    callback: (user: UserProfile | null) => void,
+  ): () => void {
     return onAuthStateChanged(
       this.auth,
       async (firebaseUser: FirebaseUser | null) => {
         if (firebaseUser) {
           try {
             if (this.db) {
-              const userDoc = await getDoc(doc(this.db, "users", firebaseUser.uid));
+              const userDoc = await getDoc(
+                doc(this.db, "users", firebaseUser.uid),
+              );
               if (userDoc.exists()) {
                 const userProfile = userDoc.data() as UserProfile;
                 callback(userProfile);
@@ -213,14 +243,20 @@ class AuthService {
             const userProfile: UserProfile = {
               uid: firebaseUser.uid,
               email: firebaseUser.email!,
-              name: firebaseUser.email === "gongonsilva@gmail.com" ? "Gonçalo Fonseca" : "Utilizador",
-              role: firebaseUser.email === "gongonsilva@gmail.com" ? "super_admin" : "technician",
+              name:
+                firebaseUser.email === "gongonsilva@gmail.com"
+                  ? "Gonçalo Fonseca"
+                  : "Utilizador",
+              role:
+                firebaseUser.email === "gongonsilva@gmail.com"
+                  ? "super_admin"
+                  : "technician",
               active: true,
               createdAt: new Date().toISOString(),
             };
             callback(userProfile);
           } catch (error) {
-            console.warn('⚠️ Error in auth state change:', error);
+            console.warn("⚠️ Error in auth state change:", error);
             callback(null);
           }
         } else {
@@ -232,7 +268,7 @@ class AuthService {
 
   // Get current user
   async getCurrentUserProfile(): Promise<UserProfile | null> {
-    if (!await this.initialize()) {
+    if (!(await this.initialize())) {
       return null;
     }
 
@@ -240,7 +276,9 @@ class AuthService {
 
     try {
       if (this.db) {
-        const userDoc = await getDoc(doc(this.db, "users", this.auth.currentUser.uid));
+        const userDoc = await getDoc(
+          doc(this.db, "users", this.auth.currentUser.uid),
+        );
         return userDoc.exists() ? (userDoc.data() as UserProfile) : null;
       }
 
@@ -248,13 +286,19 @@ class AuthService {
       return {
         uid: this.auth.currentUser.uid,
         email: this.auth.currentUser.email!,
-        name: this.auth.currentUser.email === "gongonsilva@gmail.com" ? "Gonçalo Fonseca" : "Utilizador",
-        role: this.auth.currentUser.email === "gongonsilva@gmail.com" ? "super_admin" : "technician",
+        name:
+          this.auth.currentUser.email === "gongonsilva@gmail.com"
+            ? "Gonçalo Fonseca"
+            : "Utilizador",
+        role:
+          this.auth.currentUser.email === "gongonsilva@gmail.com"
+            ? "super_admin"
+            : "technician",
         active: true,
         createdAt: new Date().toISOString(),
       };
     } catch (error) {
-      console.warn('⚠️ Error getting current user profile:', error);
+      console.warn("⚠️ Error getting current user profile:", error);
       return null;
     }
   }
