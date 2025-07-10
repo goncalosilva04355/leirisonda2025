@@ -200,6 +200,70 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
     }
   };
 
+  // Obter permissões do utilizador do sistema principal
+  const getUserPermissions = (email: string) => {
+    const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const user = mainUsers.find(
+      (u: any) => u.email.toLowerCase() === email.toLowerCase(),
+    );
+    return user?.permissions || null;
+  };
+
+  // Editar permissões
+  const handleEditPermissions = (email: string) => {
+    const permissions = getUserPermissions(email);
+    if (permissions) {
+      setTempPermissions({ ...permissions });
+      setEditingPermissions(email);
+    }
+  };
+
+  // Salvar permissões
+  const handleSavePermissions = () => {
+    if (!editingPermissions || !tempPermissions) return;
+
+    const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const userIndex = mainUsers.findIndex(
+      (u: any) => u.email.toLowerCase() === editingPermissions.toLowerCase(),
+    );
+
+    if (userIndex !== -1) {
+      mainUsers[userIndex].permissions = { ...tempPermissions };
+      localStorage.setItem("app-users", JSON.stringify(mainUsers));
+
+      // Triggerar evento para atualizar outros componentes
+      window.dispatchEvent(new CustomEvent("usersUpdated"));
+
+      console.log("✅ Permissões atualizadas para:", editingPermissions);
+    }
+
+    setEditingPermissions(null);
+    setTempPermissions(null);
+  };
+
+  // Cancelar edição de permissões
+  const handleCancelPermissionsEdit = () => {
+    setEditingPermissions(null);
+    setTempPermissions(null);
+  };
+
+  // Atualizar permissão específica
+  const updatePermission = (
+    section: string,
+    action: string,
+    value: boolean,
+  ) => {
+    if (!tempPermissions) return;
+
+    setTempPermissions({
+      ...tempPermissions,
+      [section]: {
+        ...tempPermissions[section],
+        [action]: value,
+      },
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
