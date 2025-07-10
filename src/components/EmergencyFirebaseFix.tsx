@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import React, { useState } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
 export const EmergencyFirebaseFix: React.FC = () => {
