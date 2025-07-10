@@ -46,14 +46,14 @@ import "./utils/clearModalStates";
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
-import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
-import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
-import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNotificationsFixed";
-import { syncManager } from "./utils/syncManager";
-import { clearQuotaProtection } from "./utils/clearQuotaProtection";
+// import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe"; // Temporarily disabled
+// import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe"; // Temporarily disabled
+// import { RealtimeNotifications } from "./components/RealtimeNotifications"; // Temporarily disabled
+// import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNotificationsFixed"; // Temporarily disabled
+// import { syncManager } from "./utils/syncManager"; // Temporarily disabled
+// import { clearQuotaProtection } from "./utils/clearQuotaProtection"; // Temporarily disabled
 import { isFirebaseReady } from "./firebase/configWithoutFirestore";
-import "./firebase/realtimeDatabase"; // Initialize Realtime Database
+// import "./firebase/realtimeDatabase"; // Initialize Realtime Database - Temporarily disabled
 
 // SECURITY: RegisterForm removed - only super admin can create users
 // import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
@@ -865,7 +865,7 @@ function App() {
         | "in_progress"
         | "completed"
         | "cancelled",
-      description: maintenanceForm.workPerformed || "Manutenção realizada",
+      description: maintenanceForm.workPerformed || "Manutenç��o realizada",
       notes: maintenanceForm.observations,
     };
 
@@ -1407,7 +1407,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n������ Ative as notifica��ões nas configura������es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n������ Ative as notifica��ões nas configura������es para receber alertas autom���ticos.`,
           );
         }, 1000);
       }
