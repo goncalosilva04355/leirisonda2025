@@ -93,7 +93,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     try {
       console.log("📤 LoginPage: Calling onLogin function...");
-      await onLogin(loginForm.email.trim(), loginForm.password);
+      await onLogin(loginForm.email.trim(), loginForm.password, rememberMe);
       console.log("✅ LoginPage: onLogin completed");
     } catch (error) {
       console.error("❌ LoginPage: Login form error:", error);
