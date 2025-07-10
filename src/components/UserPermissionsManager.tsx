@@ -322,8 +322,8 @@ export const UserPermissionsManager: React.FC = () => {
     try {
       let firebaseSuccess = false;
 
-      // Try to load from Firebase first
-      if (db) {
+      // Try to load from Firebase first if it's available
+      if (db && isFirestoreReady && isFirestoreReady()) {
         try {
           // Attempt to create collection reference and get data
           const usersCollection = collection(db, "users");
