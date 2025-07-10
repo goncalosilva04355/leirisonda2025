@@ -139,7 +139,7 @@ function App() {
       StabilityMonitor.initialize();
       PerformanceOptimizer.initialize();
       console.log(
-        "���️ Stability Monitor ativo - previne crashes e loops infinitos",
+        "🛡️ Stability Monitor ativo - previne crashes e loops infinitos",
       );
       console.log(
         "🚀 Performance Optimizer ativo - melhora velocidade drasticamente",
@@ -589,7 +589,7 @@ function App() {
         const unsubscribe = authService.onAuthStateChanged((user) => {
           if (user) {
             console.log(
-              "����� Firebase Auth: User automatically restored",
+              "���� Firebase Auth: User automatically restored",
               user.email,
             );
             setCurrentUser(user);
@@ -699,7 +699,7 @@ function App() {
           .register("/sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "��� Service Worker registered successfully:",
+              "�� Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -893,7 +893,7 @@ function App() {
         };
 
         addMaintenance(futureMaintenance);
-        console.log("Futura manutenção criada:", futureMaintenance);
+        console.log("Futura manutenç��o criada:", futureMaintenance);
       }
     }
 
@@ -1057,7 +1057,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "�� Forced logout state clear completed - redirected to login",
+        "��� Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -1406,7 +1406,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura������es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -8878,15 +8878,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🧪 Testing Firebase with simple approach...");
-                const { testFirebaseSimple } = await import(
-                  "./utils/simpleFirebaseTest"
+                console.log("🔬 Running minimal Firebase diagnostic...");
+                const { testMinimalFirebase } = await import(
+                  "./utils/minimalFirebaseTest"
                 );
 
-                const results = await testFirebaseSimple();
-                console.log("📊 Simple Firebase Test Results:", results);
+                const results = await testMinimalFirebase();
+                console.log("📊 Minimal Firebase Test Results:", results);
 
-                let message = `Firebase Test Results:\n✅ App: ${results.app}\n✅ Firestore: ${results.firestore}\n✅ Auth: ${results.auth}\n✅ Storage: ${results.storage}`;
+                let message = `Firebase Diagnostic Results:\n✅ Imports: ${results.imports}\n✅ App: ${results.app}\n✅ Firestore: ${results.firestore}`;
 
                 if (results.errors.length > 0) {
                   message += `\n\n❌ Errors:\n${results.errors.join("\n")}`;
