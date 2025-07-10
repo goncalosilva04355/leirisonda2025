@@ -193,7 +193,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     {
       id: "phone-settings" as AdminSection,
       title: "Telefone & Navegação",
-      description: "Marcação automática e redirecionamento para Maps",
+      description: "Marcação autom��tica e redirecionamento para Maps",
       icon: Settings,
       color: "bg-blue-500",
     },
@@ -247,7 +247,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       case "complete-activation":
         return <CompleteDeviceActivation />;
       case "user-management":
-        return <UserManagement />;
+        return (
+          <UserManager
+            currentUser={{
+              email: "gongonsilva@gmail.com",
+              name: "Gonçalo Fonseca",
+            }}
+          />
+        );
       case "work-assignment-fix":
         return <WorkAssignmentFix />;
       case "works-data-diagnostic":
