@@ -422,7 +422,7 @@ function App() {
           const user = allUsers.find((u: any) => u.id === assignedUser.id);
           if (!user) {
             console.warn(
-              `���️ Utilizador ${assignedUser.name} não encontrado na lista`,
+              `�����️ Utilizador ${assignedUser.name} não encontrado na lista`,
             );
             continue;
           }
@@ -648,7 +648,7 @@ function App() {
         return await addCliente(data);
       }
     } catch (error) {
-      console.error("❌ Erro no sistema de clientes:", error);
+      console.error("��� Erro no sistema de clientes:", error);
       return await addCliente(data);
     }
   };
@@ -1803,7 +1803,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error("���️ Error requesting notification permission:", error);
+        console.error("����️ Error requesting notification permission:", error);
         return "error";
       }
     }
@@ -2101,7 +2101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������ Address clicked:", address);
+    console.log("�������� Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -2244,7 +2244,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠��� Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
+            `⚠️ Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
             syncError,
           );
         }
@@ -3846,7 +3846,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����������������� {maint.clientContact}
+                                        ��������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -6589,7 +6589,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </span>
                                 <button
                                   onClick={requestNotificationPermission}
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none $\{
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                     notificationsEnabled
                                       ? "bg-red-600"
                                       : "bg-gray-200"
@@ -7228,7 +7228,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório Completo
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Todas as informações
+                          Todas as informaç��es
                         </p>
                       </div>
                     </div>
@@ -8262,7 +8262,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manuten��ão</option>
+                            <option value="manutencao">Manuten���ão</option>
                             <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -10296,7 +10296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In����cio
+                          Data de In������cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
