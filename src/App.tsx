@@ -1,4 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  lazy,
+  Suspense,
+  memo,
+  useMemo,
+  useCallback,
+} from "react";
 import {
   Building2,
   Menu,
@@ -1464,7 +1472,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       pdf.save(pdfFilename);
 
       // Show success message
-      alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
+      alert(`Relat��rio "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
       alert("Erro ao gerar o relatório PDF. Tente novamente.");
@@ -6727,7 +6735,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����� {work.contact}
+                                        ������ {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -6777,7 +6785,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ���{work.budget}
+                                  �����{work.budget}
                                 </div>
                               )}
                             </div>
