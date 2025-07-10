@@ -50,7 +50,7 @@ import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
-import FirestoreStatusIndicator from "./components/FirestoreStatusIndicator";
+
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
@@ -448,7 +448,7 @@ function App() {
           };
 
           userNotifications.unshift(newNotification);
-          // Manter apenas as últimas 50 notificações
+          // Manter apenas as ��ltimas 50 notificações
           const limitedNotifications = userNotifications.slice(0, 50);
 
           localStorage.setItem(
@@ -7655,7 +7655,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                     ? "Em Progresso"
                                     : work.status === "concluida" ||
                                         work.status === "completed"
-                                      ? "Concluída"
+                                      ? "Conclu��da"
                                       : work.status}
                               </span>
                               {!work.folhaGerada && (
