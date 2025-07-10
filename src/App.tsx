@@ -2682,11 +2682,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return (
-                              isNotCompleted &&
-                              noSheetGenerated &&
-                              isAssignedToUser
-                            );
+                            return isNotCompleted && noSheetGenerated;
                           });
                           return worksWithoutSheets.length;
                         })()}
