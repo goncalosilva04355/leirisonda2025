@@ -169,7 +169,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           {/* Error Message */}
           {loginError && (
             <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded border border-red-200">
-              <strong>Erro de Login:</strong>
+              <strong>Erro de Início de Sessão:</strong>
               <br />
               {loginError}
             </div>
