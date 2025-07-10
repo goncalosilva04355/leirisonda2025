@@ -614,7 +614,7 @@ function App() {
         try {
           await addManutencao(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronizaç��o universal:", syncError);
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
@@ -918,7 +918,7 @@ function App() {
   // Passo 3: Teste completo do Firestore com operações reais
   useEffect(() => {
     const testFirestoreStep3 = async () => {
-      console.log("�� Passo 3: Iniciando teste completo do Firestore...");
+      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
 
       // Aguardar um pouco para Firebase se inicializar
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -986,7 +986,7 @@ function App() {
     testFirestoreStep3();
   }, []);
 
-  // Sincroniza����o inicial de todos os dados com Firestore
+  // Sincroniza��ão inicial de todos os dados com Firestore
   useEffect(() => {
     const syncAllData = async () => {
       // Aguardar um pouco para o Firestore estar pronto
@@ -1024,7 +1024,7 @@ function App() {
           setAutoSyncActive(true);
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
         } catch (error) {
-          console.error("�� Erro ao iniciar sincronização autom��tica:", error);
+          console.error("❌ Erro ao iniciar sincronização autom��tica:", error);
         }
       }
     };
@@ -1264,7 +1264,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!hasPermission("manutencoes", "create")) {
       alert(
-        "N��o tem permissão para criar manutenç�����es. Contacte o administrador.",
+        "N��o tem permissão para criar manutenç���es. Contacte o administrador.",
       );
       return;
     }
@@ -1642,7 +1642,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa����ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -1732,7 +1732,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu������das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu�����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -1756,7 +1756,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTENÇ��ES RECENTES ===
+=== MANUTENÇÕES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -1872,7 +1872,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Send notification if user is assigned to current user and notifications are enabled
     if (isAssignedToCurrentUser) {
       if (notificationsEnabled && Notification.permission === "granted") {
-        console.log("���� All conditions met, sending notification...");
+        console.log("�� All conditions met, sending notification...");
         showNotification(
           "Nova Obra Atribuída",
           `A obra "${workTitle}" foi-lhe atribuída`,
@@ -2549,22 +2549,49 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenç��o
+                          Obras atribuídas pendentes
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          const pendingWorks = works.filter(
-                            (w) =>
-                              w.status === "pending" || w.status === "pendente",
-                          );
+                          // Filtrar obras pendentes atribuídas ao utilizador atual
+                          const pendingWorks = works.filter((w) => {
+                            const isPending =
+                              w.status === "pending" || w.status === "pendente";
+                            const isAssignedToUser =
+                              currentUser &&
+                              // Verificar assignedTo (campo legacy)
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                // Verificar assignedUsers array
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                // Verificar assignedUserIds array
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return isPending && isAssignedToUser;
+                          });
                           console.log(
-                            "📊 Dashboard - Obras Pendentes:",
+                            "📊 Dashboard - Obras Pendentes Atribuídas:",
                             pendingWorks.length,
+                            "Utilizador:",
+                            currentUser?.name,
                             pendingWorks.map((w) => ({
                               id: w.id,
                               status: w.status,
                               title: w.workSheetNumber,
+                              assignedTo: w.assignedTo,
+                              assignedUsers: w.assignedUsers,
                             })),
                           );
                           return pendingWorks.length;
@@ -2584,46 +2611,46 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Em Progresso
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras em andamento
+                          Obras atribuídas em andamento
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {
-                          works.filter(
-                            (w) =>
+                        {(() => {
+                          // Filtrar obras em progresso atribuídas ao utilizador atual
+                          const inProgressWorks = works.filter((w) => {
+                            const isInProgress =
                               w.status === "in_progress" ||
-                              w.status === "em_progresso",
-                          ).length
-                        }
+                              w.status === "em_progresso";
+                            const isAssignedToUser =
+                              currentUser &&
+                              // Verificar assignedTo (campo legacy)
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                // Verificar assignedUsers array
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                // Verificar assignedUserIds array
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return isInProgress && isAssignedToUser;
+                          });
+                          return inProgressWorks.length;
+                        })()}
                       </div>
                     </div>
                   </button>
 
-                  {/* Concluídas */}
-                  <button
-                    onClick={() => navigateToSection("obras")}
-                    className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-left">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Concluídas
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          Obras finalizadas
-                        </p>
-                      </div>
-                      <div className="text-4xl font-bold text-gray-900">
-                        {
-                          works.filter(
-                            (w) =>
-                              w.status === "completed" ||
-                              w.status === "concluida",
-                          ).length
-                        }
-                      </div>
-                    </div>
-                  </button>
+                  {/* Concluídas - REMOVIDO do Dashboard conforme solicitado */}
 
                   {/* Falta de Folhas de Obra */}
                   <button
@@ -2636,7 +2663,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas
+                          Folhas não geradas (atribuídas)
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -2668,7 +2695,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isNotCompleted && noSheetGenerated;
+                            return (
+                              isNotCompleted &&
+                              noSheetGenerated &&
+                              isAssignedToUser
+                            );
                           });
                           return worksWithoutSheets.length;
                         })()}
@@ -2684,9 +2715,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Todas as Obras
+                          Obras Atribuídas
                         </h3>
-                        <p className="text-sm text-gray-500">No sistema</p>
+                        <p className="text-sm text-gray-500">
+                          Atribuídas a mim
+                        </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
@@ -2718,50 +2751,59 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   w.assignedUserIds.includes(currentUser.id)));
                             return isNotCompleted && isAssignedToUser;
                           });
-                          return works.length;
+                          return assignedWorks.length;
                         })()}
                       </div>
                     </div>
                   </button>
                 </div>
 
-                                {/* Lista das Últimas 3 Obras */}
-                {works.length > 0 && (
+                {/* Lista das Últimas 3 Obras Atribuídas */}
+                {(() => {
+                  // Filtrar obras atribuídas ao utilizador atual (excluir concluídas) e pegar apenas as últimas 3
+                  const assignedWorks = works
+                    .filter((w) => {
+                      const isNotCompleted =
+                        w.status !== "completed" && w.status !== "concluida";
+                      const isAssignedToUser =
+                        currentUser &&
+                        // Verificar assignedTo (campo legacy)
+                        ((w.assignedTo &&
+                          (w.assignedTo === currentUser.name ||
+                            w.assignedTo
+                              .toLowerCase()
+                              .includes(currentUser.name.toLowerCase()) ||
+                            currentUser.name
+                              .toLowerCase()
+                              .includes(w.assignedTo.toLowerCase()))) ||
+                          // Verificar assignedUsers array
+                          (w.assignedUsers &&
+                            w.assignedUsers.some(
+                              (user) =>
+                                user.name === currentUser.name ||
+                                user.id === currentUser.id,
+                            )) ||
+                          // Verificar assignedUserIds array
+                          (w.assignedUserIds &&
+                            w.assignedUserIds.includes(currentUser.id)));
+                      return isNotCompleted && isAssignedToUser;
+                    })
+                    .slice(0, 3); // Pegar apenas as últimas 3 obras
+
+                  return assignedWorks.length > 0 ? (
                     <div className="bg-white rounded-lg shadow-sm">
                       <div className="flex items-center p-4 border-b border-gray-100">
                         <Building2 className="h-5 w-5 text-purple-600 mr-3" />
-                                                <h2 className="text-lg font-semibold text-gray-900">
-                          Últimas 3 Obras
+                        <h2 className="text-lg font-semibold text-gray-900">
+                          Últimas 3 Obras Atribuídas
                         </h2>
                       </div>
-                                            <div className="p-4 space-y-3">
-                        {works.slice(0, 3).map((work) => {
-                          // Verificar se a obra está atribuída ao utilizador atual
-                          const isAssignedToUser = currentUser && (
-                            // Verificar assignedTo (campo legacy)
-                            (work.assignedTo && (
-                              work.assignedTo === currentUser.name ||
-                              work.assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
-                              currentUser.name.toLowerCase().includes(work.assignedTo.toLowerCase())
-                            )) ||
-                            // Verificar assignedUsers array
-                            (work.assignedUsers && work.assignedUsers.some(user =>
-                              user.name === currentUser.name ||
-                              user.id === currentUser.id
-                            )) ||
-                            // Verificar assignedUserIds array
-                            (work.assignedUserIds && work.assignedUserIds.includes(currentUser.id))
-                          );
-
-                          return (
-                            <div
-                              key={work.id}
-                              className={`border-l-4 rounded-r-lg p-4 transition-colors ${
-                                isAssignedToUser
-                                  ? "border-purple-500 bg-purple-50 hover:bg-purple-100"
-                                  : "border-gray-300 bg-gray-50 hover:bg-gray-100"
-                              }`}
-                            >
+                      <div className="p-4 space-y-3">
+                        {assignedWorks.map((work) => (
+                          <div
+                            key={work.id}
+                            className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
+                          >
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
@@ -2887,10 +2929,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                             </div>
                           </div>
-                                                })}
+                        ))}
                       </div>
                     </div>
-                )}
+                  ) : null;
+                })()}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
@@ -3510,7 +3553,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <option>Todos os estados</option>
                       <option>Ativa</option>
                       <option>Inativa</option>
-                      <option>Em Manutenç��o</option>
+                      <option>Em Manutenção</option>
                     </select>
                   </div>
                 </div>
@@ -3995,7 +4038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenç��o "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -4270,7 +4313,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setCurrentTechnician(e.target.value)
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: Jo���o Santos"
+                              placeholder="Ex: Jo��o Santos"
                             />
                             <button
                               type="button"
@@ -4560,7 +4603,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ������� {assignedUser.name}
+                                    ���� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -5002,7 +5045,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               waterLevel:
                                 (
                                   form.querySelector(
-                                    'input[placeholder*="N��vel da Água"]',
+                                    'input[placeholder*="Nível da Água"]',
                                   ) as HTMLInputElement
                                 )?.value || "",
                               pumpDepth:
@@ -5424,7 +5467,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "❌ Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISSÃO NEGADA: clientes.create",
@@ -5491,7 +5534,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     {/* Location */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Localizaç���o Completa *
+                        Localizaç��o Completa *
                       </label>
                       <input
                         type="text"
@@ -5760,7 +5803,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç�����������o criada para nova piscina:",
+                                "Futura manutenç����������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6457,7 +6500,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   });
                                 } else {
                                   alert(
-                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configura����es do navegador.",
+                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
                                   );
                                 }
                               } else {
@@ -6677,7 +6720,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              �����️ ATENÇÃO: Esta operação é irrevers��vel!
+                              ���️ ATENÇÃO: Esta operação é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -6824,7 +6867,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>���� Equipas responsáveis</li>
+                        <li>�� Equipas responsáveis</li>
                         <li>��� Estados de progresso</li>
                       </ul>
                     </div>
@@ -6979,7 +7022,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       <div className="text-2xl font-bold text-green-600">
                         {maintenance.length}
                       </div>
-                      <div className="text-sm text-gray-600">Manutenç��es</div>
+                      <div className="text-sm text-gray-600">Manutenções</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-orange-600">
@@ -7281,7 +7324,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     {/* Basic Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informaç��es Básicas
+                        Informações Básicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -7917,7 +7960,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manuten���ão</option>
+                            <option value="manutencao">Manuten��ão</option>
                             <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -8047,7 +8090,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠���� Nenhum utilizador encontrado. Vá à Área
-                                de Administra����ão → "🔧 Correção de Atribuição
+                                de Administra��ão → "🔧 Correção de Atribuição
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -8120,7 +8163,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    �� {assignedUser.name}
+                                    👤 {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -8183,7 +8226,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ����� Detalhes do Furo de Água
+                        ���� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -9085,7 +9128,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte������do. Por favor, tente
+              Ocorreu um erro ao carregar o conte����do. Por favor, tente
               novamente.
             </p>
             <button
@@ -9245,7 +9288,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>✓</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -10125,7 +10168,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.boreDepth
                                   ? `${selectedWork.boreDepth} m`
-                                  : "N��o especificado"}
+                                  : "Não especificado"}
                               </p>
                             </div>
                             <div>
