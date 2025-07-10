@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import TestApp from "./TestApp";
+import App from "./App";
 import "./index.css";
 
-console.log("🚀 Main.tsx loaded - starting test app");
+console.log("🚀 Main.tsx loaded - starting app");
 
 // ReadableStream polyfill is handled by ./polyfills.ts
 console.log("🔧 ReadableStream polyfill loaded via polyfills.ts");
