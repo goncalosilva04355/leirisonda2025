@@ -61,6 +61,7 @@ import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNot
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/configWithoutFirestore";
+import "./firebase/realtimeDatabase"; // Initialize Realtime Database
 
 // SECURITY: RegisterForm removed - only super admin can create users
 // import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
@@ -1190,7 +1191,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -1716,7 +1717,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           if (result.success) {
             console.log(
-              `���� Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
+              `������ Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
             );
 
             // Show success message
@@ -3981,7 +3982,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <textarea
                               rows={3}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
+                              placeholder="Condi���ões do terreno, qualidade da água, dificuldades encontradas, etc..."
                             />
                           </div>
                         </div>
@@ -8891,7 +8892,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   if (result.success) {
                     alert(
-                      `🎉 REALTIME DATABASE WORKING!\n\n✅ Connection: Successful\n✅ Read/Write: Working\n✅ Test Value: ${result.testValue}\n\n🔥 FIREBASE SERVICES:\n- Auth: ✅ Working\n- Storage: ✅ Working\n- Realtime Database: ✅ Working\n- Project: leiria-1cfc9\n\n🌐 DATA SHARING:\n- Multi-user: ✅ Enabled\n- Multi-device: ✅ Enabled\n- Real-time sync: ✅ Working\n\nPerfect for sharing data between users and devices!`,
+                      `🎉 REALTIME DATABASE WORKING!\n\n✅ Connection: Successful\n✅ Read/Write: Working\n✅ Test Value: ${result.testValue}\n\n🔥 FIREBASE SERVICES:\n- Auth: ✅ Working\n- Storage: ✅ Working\n- Realtime Database: ✅ Working\n- Project: leiria-1cfc9\n\n🌐 DATA SHARING:\n- Multi-user: ✅ Enabled\n- Multi-device: ��� Enabled\n- Real-time sync: ✅ Working\n\nPerfect for sharing data between users and devices!`,
                     );
                   } else {
                     alert(
