@@ -4,12 +4,15 @@ struct ContentView: View {
     @State private var isLoggedIn = false
     @State private var currentUser: User? = nil
     
-    var body: some View {
+        var body: some View {
         Group {
             if isLoggedIn {
                 MainAppView(user: currentUser)
             } else {
-                LoginView()
+                LoginView(onLoginSuccess: {
+                    currentUser = User(email: "gongonsilva@gmail.com", name: "Gonçalo")
+                    isLoggedIn = true
+                })
             }
         }
         .onAppear {
