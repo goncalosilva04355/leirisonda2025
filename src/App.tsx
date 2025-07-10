@@ -1125,7 +1125,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç����o: ${pool.location}
+   Localizaç������o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -1432,7 +1432,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificações não estão ativadas. Active-as primeiro nas configuraç��es.",
+        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -6837,7 +6837,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? work.assignedUsers
                                       .map((u) => u.name)
                                       .join(", ")
-                                  : work.assignedTo || "Não atribuída"}
+                                  : work.assignedTo || "Não atribu��da"}
                               </div>
                               {work.budget && (
                                 <div>
@@ -7018,7 +7018,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manuten��ão</option>
-                            <option value="instalacao">Instala��ão</option>
+                            <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -8875,6 +8875,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               className="bg-white p-2 rounded-md shadow-md"
             >
               <ArrowLeft className="h-6 w-6 text-gray-600" />
+            </button>
+            <button
+              onClick={async () => {
+                console.log("🧪 Testing Firebase connectivity...");
+                const { testFirebaseConnectivity, testFirestoreOperations } =
+                  await import("../utils/firebaseTest");
+                const results = await testFirebaseConnectivity();
+                console.log("📊 Firebase Test Results:", results);
+
+                if (results.firestore) {
+                  const firestoreTest = await testFirestoreOperations();
+                  console.log(
+                    "📝 Firestore Operations Test:",
+                    firestoreTest ? "✅ PASSED" : "❌ FAILED",
+                  );
+                }
+
+                alert(
+                  `Firebase Test Results:\n✅ App: ${results.app}\n✅ Firestore: ${results.firestore}\n✅ Storage: ${results.storage}\n\nCheck console for details`,
+                );
+              }}
+              className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
+              title="Test Firebase Connectivity"
+            >
+              🧪
             </button>
           </div>
 
