@@ -2650,7 +2650,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas (atribuídas)
+                          Folhas não geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -8340,7 +8340,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           >
                             <option value="">Selecionar voltagem</option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif��sico)</option>
+                            <option value="400V">400V (trif���sico)</option>
                           </select>
                         </div>
                       </div>
