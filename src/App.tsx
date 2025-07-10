@@ -382,7 +382,7 @@ function App() {
     }
   };
 
-  // Função para enviar notifica��ões push quando uma obra é atribuída
+  // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
       console.log("📱 Enviando notificações de atribuição de obra...");
@@ -2627,31 +2627,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </button>
 
-                  {/* Concluídas */}
-                  <button
-                    onClick={() => navigateToSection("obras")}
-                    className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-left">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Concluídas
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          Obras finalizadas
-                        </p>
-                      </div>
-                      <div className="text-4xl font-bold text-gray-900">
-                        {
-                          works.filter(
-                            (w) =>
-                              w.status === "completed" ||
-                              w.status === "concluida",
-                          ).length
-                        }
-                      </div>
-                    </div>
-                  </button>
+                  {/* Concluídas - REMOVIDO do Dashboard conforme solicitado */}
 
                   {/* Falta de Folhas de Obra */}
                   <button
