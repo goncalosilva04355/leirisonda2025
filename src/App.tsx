@@ -513,7 +513,7 @@ function App() {
         const unsubscribe = authService.onAuthStateChanged((user) => {
           if (user) {
             console.log(
-              "������ Firebase Auth: User automatically restored",
+              "���� Firebase Auth: User automatically restored",
               user.email,
             );
             setCurrentUser(user);
@@ -623,7 +623,7 @@ function App() {
           .register("/sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "��� Service Worker registered successfully:",
+              "�� Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -2743,7 +2743,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ).length === 0 && (
                                 <div className="text-center py-8">
                                   <div className="text-gray-400 mb-2">
-                                    �����
+                                    �������
                                   </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
@@ -3646,7 +3646,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ���� Nenhum utilizador encontrado. V�� à Área de
-                                Administração → "🔧 Corre����ão de Atribuiç��o
+                                Administração → "🔧 Corre�����ão de Atribuiç��o
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -4753,7 +4753,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // SECURITY: Check if user has permission to create pools
                           if (!currentUser?.permissions?.piscinas?.create) {
                             alert(
-                              "Não tem permissão para criar piscinas. Contacte o administrador.",
+                              "Não tem permiss��o para criar piscinas. Contacte o administrador.",
                             );
                             return;
                           }
@@ -7063,7 +7063,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda não terminou
+                              Deixe vazio se ainda n��o terminou
                             </p>
                           </div>
                         </div>
@@ -7860,7 +7860,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç��o">Manutenção</option>
+                          <option value="Manutenç���o">Manutenção</option>
                           <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
@@ -9321,6 +9321,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* User Migration Indicator - Shows migration status */}
         <UserMigrationIndicator migrationStatus={userMigration} />
+
+        {/* Firestore Status Indicator - Passo 3 */}
+        <FirestoreStatusIndicator />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
