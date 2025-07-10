@@ -87,6 +87,7 @@ import { ForceInitialization } from "./utils/forceInitialization";
 // Sistema de diagnóstico de persistência
 import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
 import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
+import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import "./utils/testDataPersistence";
 
@@ -1327,7 +1328,7 @@ function App() {
         | "in_progress"
         | "completed"
         | "cancelled",
-      description: maintenanceForm.workPerformed || "Manutenç��o realizada",
+      description: maintenanceForm.workPerformed || "Manutenção realizada",
       notes: maintenanceForm.observations,
     };
 
@@ -1876,7 +1877,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBU���DA: "${workTitle}" ����� ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -3855,7 +3856,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ����‍🔧 {maint.technician}
+                                ����‍��� {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -6701,7 +6702,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>���� Estados de progresso</li>
+                        <li>��� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
