@@ -19,13 +19,26 @@ export const AUTHORIZED_USERS: AuthorizedUser[] = [
   // }
 ];
 
+// Função para obter lista atual de utilizadores (localStorage + padrão)
+export function getCurrentAuthorizedUsers(): AuthorizedUser[] {
+  try {
+    const savedUsers = localStorage.getItem("authorizedUsers");
+    if (savedUsers) {
+      return JSON.parse(savedUsers);
+    }
+  } catch (error) {
+    console.warn("Erro ao carregar utilizadores do localStorage:", error);
+  }
+  return [...AUTHORIZED_USERS];
+}
+
 // Função para verificar se um email está autorizado
 export function isEmailAuthorized(email: string): AuthorizedUser | null {
   const normalizedEmail = email.toLowerCase().trim();
+  const currentUsers = getCurrentAuthorizedUsers();
   return (
-    AUTHORIZED_USERS.find(
-      (user) => user.email.toLowerCase() === normalizedEmail,
-    ) || null
+    currentUsers.find((user) => user.email.toLowerCase() === normalizedEmail) ||
+    null
   );
 }
 
