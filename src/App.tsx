@@ -229,12 +229,12 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações autom��ticas desabilitadas para resolver instabilidade
+    // Verifica��ões autom��ticas desabilitadas para resolver instabilidade
     // Sistema funcionará normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
 
-  // Sincronizar configuraç��es entre componentes
+  // Sincronizar configurações entre componentes
   useEffect(() => {
     const handlePhoneDialerToggle = (event: CustomEvent) => {
       setEnablePhoneDialer(event.detail.enabled);
@@ -617,6 +617,7 @@ function App() {
   const [assignedUsers, setAssignedUsers] = useState<
     Array<{ id: string; name: string }>
   >([]);
+  const [autoSyncActive, setAutoSyncActive] = useState(false);
   const [editAssignedUsers, setEditAssignedUsers] = useState<
     Array<{ id: string; name: string }>
   >([]);
@@ -3500,7 +3501,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenções
+                          Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç��es agendadas e programadas
@@ -6185,7 +6186,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Trabalhos realizados</li>
+                        <li>���� Trabalhos realizados</li>
                         <li>�� T��cnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
