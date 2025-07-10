@@ -1598,7 +1598,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "�������� Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "�����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
@@ -2130,7 +2130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </span>
                             </div>
 
-                            {/* Estado e Ações */}
+                            {/* Estado e Aç��es */}
                             <div className="flex items-center justify-between pt-2 border-t border-purple-200">
                               <span
                                 className={`px-2 py-1 rounded-full text-xs font-semibold ${
@@ -2534,7 +2534,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenç��es
+                                  Manutenç���es
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -8391,7 +8391,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 (!isAuthenticated || !currentUser)
               ) {
                 console.log(
-                  "����� Access denied: User management requires authentication",
+                  "��� Access denied: User management requires authentication",
                 );
                 setLoginError(
                   "Por favor, faça login primeiro para aceder à gestão de utilizadores",
@@ -9292,6 +9292,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* User Migration Indicator - Shows migration status */}
         <UserMigrationIndicator migrationStatus={userMigration} />
+
+        {/* App Stability Status - Monitor para prevenir crashes */}
+        <AppStabilityStatus />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
