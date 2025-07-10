@@ -533,6 +533,101 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
           <p>Nenhum utilizador encontrado</p>
         </div>
       )}
+
+      {/* Modal de Edição de Permissões */}
+      {editingPermissions && tempPermissions && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-semibold">
+                  Editar Permissões - {editingPermissions}
+                </h3>
+                <button
+                  onClick={handleCancelPermissionsEdit}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="grid gap-6">
+                {Object.entries(tempPermissions).map(
+                  ([section, perms]: [string, any]) => (
+                    <div key={section} className="border rounded-lg p-4">
+                      <h4 className="font-medium text-gray-900 mb-3 capitalize">
+                        {section === "obras"
+                          ? "Obras"
+                          : section === "manutencoes"
+                            ? "Manutenções"
+                            : section === "piscinas"
+                              ? "Piscinas"
+                              : section === "utilizadores"
+                                ? "Utilizadores"
+                                : section === "relatorios"
+                                  ? "Relatórios"
+                                  : section === "clientes"
+                                    ? "Clientes"
+                                    : section}
+                      </h4>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {Object.entries(perms).map(
+                          ([action, value]: [string, any]) => (
+                            <label
+                              key={action}
+                              className="flex items-center space-x-2"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={Boolean(value)}
+                                onChange={(e) =>
+                                  updatePermission(
+                                    section,
+                                    action,
+                                    e.target.checked,
+                                  )
+                                }
+                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                              />
+                              <span className="text-sm text-gray-700 capitalize">
+                                {action === "view"
+                                  ? "Ver"
+                                  : action === "create"
+                                    ? "Criar"
+                                    : action === "edit"
+                                      ? "Editar"
+                                      : action === "delete"
+                                        ? "Eliminar"
+                                        : action}
+                              </span>
+                            </label>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  ),
+                )}
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6 pt-6 border-t">
+                <button
+                  onClick={handleCancelPermissionsEdit}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSavePermissions}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+                >
+                  Guardar Permissões
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
