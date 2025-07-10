@@ -2549,7 +2549,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras atribuídas pendentes
+                          Obras necessitam atenção
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -6187,7 +6187,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {[
                           "Limpeza de filtros",
-                          "Limpeza de pr��-filtro",
+                          "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimenta��ão",
                           "Enchimento automático",
@@ -6534,7 +6534,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                           >
-                            Ativar Notificaç������es
+                            Ativar Notificaç����es
                           </button>
                         </div>
                       </div>
@@ -8091,7 +8091,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                     </div>
 
-                    {/* T��cnicos Atribuídos */}
+                    {/* T���cnicos Atribuídos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -8113,7 +8113,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠���� Nenhum utilizador encontrado. Vá à Área
-                                de Administra��ão → "🔧 Correção de Atribuição
+                                de Administra��ão → "���� Correção de Atribuição
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -8382,7 +8382,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Espec��ficas do Furo
+                          Observaç��es Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
