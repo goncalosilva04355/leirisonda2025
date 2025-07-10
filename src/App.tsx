@@ -56,6 +56,7 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
+import "./utils/autoMigrationDemo"; // Passo 3: Migração automática de demonstração
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -3808,7 +3809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N��vel da Água (m) *
+                                  N����vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -7226,7 +7227,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa��ões
+                          Observa���ões
                         </h3>
                       </div>
 
@@ -8414,7 +8415,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   "��� Access denied: User management requires authentication",
                 );
                 setLoginError(
-                  "Por favor, faça login primeiro para aceder �� gestão de utilizadores",
+                  "Por favor, faça login primeiro para aceder à gestão de utilizadores",
                 );
                 setShowAdvancedSettings(false);
                 setIsAdvancedUnlocked(false);
