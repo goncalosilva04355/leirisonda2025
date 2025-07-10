@@ -2816,7 +2816,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="flex items-center p-4 border-b border-gray-100">
                         <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                         <h2 className="text-lg font-semibold text-gray-900">
-                          Últimas 3 Obras Atribuídas
+                          Últimas 3 Obras
                         </h2>
                       </div>
                       <div className="p-4 space-y-3">
@@ -4519,7 +4519,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }}
                                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                               >
-                                ���� Recarregar Utilizadores
+                                🔄 Recarregar Utilizadores
                               </button>
                             </div>
                           )}
@@ -6327,7 +6327,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         </h4>
                         <p className="text-gray-600 text-sm mb-4">
                           Arraste e solte ou clique para selecionar fotos da
-                          manutenção
+                          manutenç��o
                         </p>
                         <p className="text-gray-500 text-xs mb-4">
                           {uploadedPhotos.length}/20 fotografias
@@ -8701,7 +8701,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa����ões
+                        Observa��ões
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
@@ -9301,7 +9301,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>✓</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
