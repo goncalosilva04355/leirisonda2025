@@ -180,6 +180,7 @@ function App() {
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [activeAdminTab, setActiveAdminTab] = useState("relatorios");
   // SECURITY: Register form removed - only super admin can create users
   const [showNewClientForm, setShowNewClientForm] = useState(false);
   const [newClientForm, setNewClientForm] = useState({
@@ -550,7 +551,7 @@ function App() {
 
       console.log("✅ Processo de notificações concluído");
     } catch (error) {
-      console.error("�� Erro no sistema de notificações:", error);
+      console.error("❌ Erro no sistema de notificações:", error);
     }
   };
 
@@ -1436,7 +1437,7 @@ function App() {
       console.log("��� Auth result:", result);
 
       if (result.success && result.user) {
-        // console.log("�� Login successful for:", result.user.email);
+        // console.log("✅ Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -1689,7 +1690,7 @@ ${index + 1}. ${work.title}
 
   const generateClientsPDF = () => {
     const content = `
-LEIRISONDA - RELAT���RIO DE CLIENTES
+LEIRISONDA - RELAT��RIO DE CLIENTES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -2243,7 +2244,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
+            `⚠��� Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
             syncError,
           );
         }
@@ -3845,7 +3846,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��������������� {maint.clientContact}
+                                        ����������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -5114,7 +5115,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condi����ões do terreno"]',
+                                    'textarea[placeholder*="Condi��ões do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
