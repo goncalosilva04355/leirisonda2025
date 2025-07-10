@@ -66,26 +66,12 @@ import "./firebase/realtimeDatabase"; // Initialize Realtime Database
 // SECURITY: RegisterForm removed - only super admin can create users
 // import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
 // import { AdminPage } from "./admin/AdminPage"; // Now lazy loaded
-// Lazy loading para componentes pesados
-const LoginPage = lazy(() =>
-  import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
-);
-const SimpleFirebaseDebug = lazy(
-  () => import("./components/SimpleFirebaseDebug"),
-);
-const AdvancedSettings = lazy(() =>
-  import("./components/AdvancedSettings").then((module) => ({
-    default: module.AdvancedSettings,
-  })),
-);
-const AdminLogin = lazy(() =>
-  import("./admin/AdminLogin").then((module) => ({
-    default: module.AdminLogin,
-  })),
-);
-const AdminPage = lazy(() =>
-  import("./admin/AdminPage").then((module) => ({ default: module.AdminPage })),
-);
+// Imports diretos para evitar problemas de lazy loading
+import { LoginPage } from "./pages/LoginPage";
+import SimpleFirebaseDebug from "./components/SimpleFirebaseDebug";
+import { AdvancedSettings } from "./components/AdvancedSettings";
+import { AdminLogin } from "./admin/AdminLogin";
+import { AdminPage } from "./admin/AdminPage";
 
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
@@ -1354,7 +1340,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             "Agora vai receber notificações de obras atribu��das",
             "success",
           );
-          console.log("���� Notifications enabled successfully");
+          console.log("������ Notifications enabled successfully");
         } else {
           console.warn("❌ Notification permission denied or dismissed");
         }
@@ -5762,7 +5748,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               • A marcaç��o automática funciona melhor em
                               dispositivos móveis
                             </li>
-                            <li>��� O Google Maps abre numa nova janela/tab</li>
+                            <li>
+                              ���� O Google Maps abre numa nova janela/tab
+                            </li>
                             <li>
                               • Pode ativar ou desativar cada funcionalidade
                               independentemente
