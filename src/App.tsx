@@ -78,11 +78,7 @@ import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 import StabilityMonitor from "./utils/stabilityMonitor";
-import {
-  useSafeEffect,
-  useThrottledLog,
-  useRenderCounter,
-} from "./hooks/useSafeEffect";
+// import { useSafeEffect, useThrottledLog, useRenderCounter } from "./hooks/useSafeEffect"; // Temporarily disabled
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
 import { UserRestoreNotificationFixed } from "./components/UserRestoreNotificationFixed";
@@ -2130,7 +2126,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </span>
                             </div>
 
-                            {/* Estado e Aç��es */}
+                            {/* Estado e Ações */}
                             <div className="flex items-center justify-between pt-2 border-t border-purple-200">
                               <span
                                 className={`px-2 py-1 rounded-full text-xs font-semibold ${
@@ -2534,7 +2530,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenç���es
+                                  Manutenç��es
                                 </h4>
                                 {maintenance
                                   .filter(
