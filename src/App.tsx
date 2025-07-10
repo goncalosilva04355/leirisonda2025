@@ -1445,7 +1445,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura�����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -1705,7 +1705,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       (u) => u.id === userId || u.id === parseInt(userId),
     );
     if (user && user.email === "gongonsilva@gmail.com") {
-      alert("Não pode eliminar o utilizador principal!");
+      alert("N��o pode eliminar o utilizador principal!");
       return;
     }
 
@@ -5627,7 +5627,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As notificaç����es funcionam apenas com HTTPS
+                              • As notificaç�����es funcionam apenas com HTTPS
                             </li>
                             <li>
                               • Certifique-se de que permite notifica��ões no
@@ -5773,6 +5773,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
                 </div>
+
+                {/* Realtime Database Testing Section - Only for Super Admin */}
+                {currentUser?.role === "super_admin" && (
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <div className="flex items-center mb-4">
+                      <Database className="h-6 w-6 text-orange-600 mr-3" />
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Firebase Realtime Database
+                      </h3>
+                    </div>
+                    <p className="text-gray-600 mb-6">
+                      Teste a conectividade com o Firebase Realtime Database e
+                      configure as regras de segurança para partilha de dados em
+                      tempo real.
+                    </p>
+
+                    <RealtimeDatabaseTester />
+                  </div>
+                )}
 
                 {/* Data Management Section - Only for Super Admin */}
                 {currentUser?.role === "super_admin" && (
@@ -5927,7 +5946,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
-                        <li>���� T��cnicos responsáveis</li>
+                        <li>����� T��cnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
