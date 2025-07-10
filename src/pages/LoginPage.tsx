@@ -187,6 +187,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
           </div>
+
+          {/* Development Mode Info */}
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-xs text-blue-700 text-center">
+              <strong>Modo Desenvolvimento:</strong> Use qualquer email com
+              password "123"
+            </p>
+          </div>
         </form>
       </div>
 
