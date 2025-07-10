@@ -297,7 +297,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺�� Maps redirect synchronized:", event.detail.enabled);
+      console.log("������ Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -3953,7 +3953,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç����o</span>
+                      <span>Agendar Manutenç������o</span>
                     </button>
                   </div>
                 </div>
@@ -6371,6 +6371,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
 
         case "administracao":
+          // Safety check for activeAdminTab
+          const safeActiveAdminTab = activeAdminTab || "relatorios";
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
@@ -6899,7 +6901,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </button>
                           </div>
                           <p className="text-blue-700 text-sm mb-3">
-                            Quando ativado, clicar num n��mero de telefone
+                            Quando ativado, clicar num número de telefone
                             abrir�� diretamente o marcador do telefone.
                           </p>
                           <p className="text-blue-600 text-xs">
@@ -7136,7 +7138,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>�� Trabalhos realizados</li>
                         <li>�� T��cnicos responsáveis</li>
                         <li>• Datas e duraç��es</li>
-                        <li>• Estados e observações</li>
+                        <li>��� Estados e observações</li>
                       </ul>
                     </div>
                     <button
@@ -8546,7 +8548,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nível da Água (m)
+                            Nível da ��gua (m)
                           </label>
                           <input
                             type="number"
