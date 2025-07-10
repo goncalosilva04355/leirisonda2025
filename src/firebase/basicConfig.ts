@@ -87,10 +87,14 @@ export const auth = new Proxy(
   },
 );
 
+// Importar Auth do Passo 2
+import { getFirebaseAuth, isFirebaseAuthReady } from "./authConfig";
+
 // Funções de compatibilidade
 export const getDB = () => Promise.resolve(null);
-export const getAuthService = () => Promise.resolve(null);
+export const getAuthService = () => Promise.resolve(getFirebaseAuth());
 export const attemptFirestoreInit = () => Promise.resolve(null);
 export const waitForFirebaseInit = () => Promise.resolve(true);
+export const isFirebaseAuthAvailable = () => isFirebaseAuthReady();
 
 export default firebaseApp;
