@@ -2843,8 +2843,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? "border-purple-500 bg-purple-50 hover:bg-purple-100"
                                   : "border-gray-300 bg-gray-50 hover:bg-gray-100"
                               }`}
-                            >
+                                                        >
                             <div className="space-y-3">
+                              {/* Indicador de atribuição */}
+                              {isAssignedToUser && (
+                                <div className="flex items-center mb-2">
+                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                    ⭐ Atribuída a si
+                                  </span>
+                                </div>
+                              )}
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
                                   📍 Morada:
