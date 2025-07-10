@@ -1550,7 +1550,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         console.warn("⚠️ Maps redirect is disabled");
       }
       if (!address) {
-        console.warn("⚠️ No address provided");
+        console.warn("⚠��� No address provided");
       }
     }
   };
@@ -5531,7 +5531,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
+                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
                                   );
                                 }
                               } else {
@@ -8590,6 +8590,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
+              currentUser={currentUser}
               onLogout={() => {
                 setIsAdminAuthenticated(false);
                 setShowAdminLogin(false);
