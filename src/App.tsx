@@ -2549,7 +2549,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras atribuídas pendentes
+                          Obras necessitam atenção
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -5847,7 +5847,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenção
+                        Registar intervenç��o de manutenção
                       </p>
                     </div>
                   </div>
@@ -10033,7 +10033,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             ? `${selectedWork.startTime} - ${selectedWork.endTime}`
                             : selectedWork.startTime
                               ? `Das ${selectedWork.startTime}`
-                              : "Não definido"}
+                              : "N��o definido"}
                         </p>
                       </div>
                       <div>
