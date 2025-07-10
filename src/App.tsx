@@ -109,13 +109,20 @@ const initialUsers = [
 ];
 
 function App() {
+  // Monitorizar renders para detectar problemas
+  const renderCount = useRenderCounter("App");
+
   // Inicializar monitor de estabilidade
-  useEffect(() => {
-    StabilityMonitor.initialize();
-    console.log(
-      "🛡️ Stability Monitor ativo - previne crashes e loops infinitos",
-    );
-  }, []);
+  useSafeEffect(
+    () => {
+      StabilityMonitor.initialize();
+      console.log(
+        "🛡️ Stability Monitor ativo - previne crashes e loops infinitos",
+      );
+    },
+    [],
+    "stabilityInit",
+  );
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -1177,7 +1184,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu������das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -5863,7 +5870,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>�� Equipas responsáveis</li>
+                        <li>���� Equipas responsáveis</li>
                         <li>��� Estados de progresso</li>
                       </ul>
                     </div>
