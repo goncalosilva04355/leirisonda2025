@@ -10071,7 +10071,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         )}
                     </div>
 
-                    {/* Detalhes Completos - Seções Expandidas */}
+                    {/* Detalhes Completos - Se��ões Expandidas */}
                     <div className="mt-6 space-y-6">
                       {/* Informações Adicionais */}
                       <div>
@@ -10281,6 +10281,29 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                       >
                         Editar
+                      </button>
+                    )}
+                    {hasPermission("obras", "delete") && (
+                      <button
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
+                            )
+                          ) {
+                            dataSync.deleteWork(selectedWork.id);
+                            showNotification(
+                              "Obra Eliminada",
+                              `A obra "${selectedWork.title || selectedWork.client}" foi eliminada com sucesso`,
+                              "success",
+                            );
+                            setViewingWork(false);
+                            setSelectedWork(null);
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                      >
+                        Apagar
                       </button>
                     )}
                   </div>
