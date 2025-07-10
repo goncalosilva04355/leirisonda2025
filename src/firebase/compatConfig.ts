@@ -2,13 +2,43 @@
 import { firebaseService } from "./robustConfig";
 
 // Legacy exports that delegate to the robust service
-export const getAuthService = () => firebaseService.getAuth();
-export const attemptFirestoreInit = () => firebaseService.getFirestore();
-export const getDB = () => firebaseService.getFirestore();
+export const getAuthService = async () => {
+  try {
+    return await firebaseService.getAuth();
+  } catch (error) {
+    console.warn("⚠️ getAuthService failed:", error);
+    return null;
+  }
+};
+
+export const attemptFirestoreInit = async () => {
+  try {
+    return await firebaseService.getFirestore();
+  } catch (error) {
+    console.warn("⚠️ attemptFirestoreInit failed:", error);
+    return null;
+  }
+};
+
+export const getDB = async () => {
+  try {
+    return await firebaseService.getFirestore();
+  } catch (error) {
+    console.warn("⚠️ getDB failed:", error);
+    return null;
+  }
+};
+
 export const isFirebaseReady = () => firebaseService.isInitialized();
+
 export const waitForFirebaseInit = async () => {
-  await firebaseService.initialize();
-  return firebaseService.isInitialized();
+  try {
+    await firebaseService.initialize();
+    return firebaseService.isInitialized();
+  } catch (error) {
+    console.warn("⚠️ waitForFirebaseInit failed:", error);
+    return false;
+  }
 };
 
 // Legacy proxy objects for backward compatibility
