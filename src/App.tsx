@@ -388,7 +388,7 @@ function App() {
       const firestoreId = await firestoreService.createManutencao(data);
 
       if (firestoreId) {
-        console.log("✅ Manutenção criada no Firestore:", firestoreId);
+        console.log("✅ Manuten��ão criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -773,6 +773,35 @@ function App() {
     };
 
     syncAllData();
+  }, []);
+
+  // Inicializar sincronização automática em tempo real
+  useEffect(() => {
+    const initAutoSync = async () => {
+      // Aguardar Firestore estar pronto
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      if (isFirestoreReady()) {
+        console.log("🔄 Iniciando sincronização automática em tempo real...");
+
+        try {
+          await autoSyncService.startAutoSync();
+          console.log("✅ Sincronização automática ativa!");
+
+          // Adicionar indicador visual
+          window.dispatchEvent(new CustomEvent("autoSyncStarted"));
+        } catch (error) {
+          console.error("❌ Erro ao iniciar sincronização automática:", error);
+        }
+      }
+    };
+
+    initAutoSync();
+
+    // Cleanup quando componente for desmontado
+    return () => {
+      autoSyncService.stopAutoSync();
+    };
   }, []);
 
   // Auth state check disabled to prevent errors
@@ -5706,7 +5735,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* System Information */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Informações do Sistema
+                    Informaç��es do Sistema
                   </h3>
                   <div className="grid gap-3">
                     <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7065,7 +7094,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ����{work.budget}
+                                  ���{work.budget}
                                 </div>
                               )}
                             </div>
@@ -9233,7 +9262,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? `${selectedWork.startTime} - ${selectedWork.endTime}`
                             : selectedWork.startTime
                               ? `Das ${selectedWork.startTime}`
-                              : "N��o definido"}
+                              : "Não definido"}
                         </p>
                       </div>
                       <div>
