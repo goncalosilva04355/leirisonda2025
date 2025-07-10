@@ -598,7 +598,7 @@ function App() {
 
             // Auto-navega��ão removida para evitar loop de login
             console.log(
-              "✅ User authenticated - avoiding auto-navigation loop",
+              "��� User authenticated - avoiding auto-navigation loop",
             );
           } else {
             console.log("🔒 Firebase Auth: No user session found");
@@ -2554,7 +2554,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} �� {pool.location}
+                                            {pool.client} ���� {pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -8165,7 +8165,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                  P��gina não encontrada
+                  P���gina não encontrada
                 </h1>
                 <p className="text-gray-600">
                   A seç���o solicitada não foi encontrada.
@@ -8876,8 +8876,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               onClick={handleGoBack}
               className="bg-white p-2 rounded-md shadow-md"
             >
-              <ArrowLeft className="h-6 w-6 text-gray-600" />
-                        </button>
+                            <ArrowLeft className="h-6 w-6 text-gray-600" />
+            </button>
             <button
               onClick={() => {
                 try {
