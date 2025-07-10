@@ -84,6 +84,10 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
 
+// Sistema de diagnóstico de persistência
+import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
+import { dataPersistenceManager } from "./utils/dataPersstenceFix";
+
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
 import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
@@ -535,7 +539,7 @@ function App() {
         return await addObra(data);
       }
     } catch (error) {
-      console.error("❌ Erro no sistema de obras:", error);
+      console.error("�� Erro no sistema de obras:", error);
 
       // Fallback final para localStorage
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
@@ -3086,7 +3090,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenç��es
+                                  Manuten����es
                                 </h4>
                                 {maintenance
                                   .filter(
