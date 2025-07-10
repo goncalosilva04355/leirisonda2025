@@ -1218,7 +1218,7 @@ ${index + 1}. ${work.title}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(content, `Obras_${new Date().toISOString().split("T")[0]}.pdf`);
   };
@@ -8862,7 +8862,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 >
                   <LogOut className="h-5 w-5" />
-                  <span>Terminar Sessao</span>
+                  <span>Terminar Sessão</span>
                 </button>
                 <div className="mt-4 text-center">
                   <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
@@ -9186,7 +9186,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.waterLevel
                                   ? `${selectedWork.waterLevel} m`
-                                  : "N��o especificado"}
+                                  : "N����o especificado"}
                               </p>
                             </div>
                             <div>
