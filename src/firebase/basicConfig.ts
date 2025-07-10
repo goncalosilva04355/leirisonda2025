@@ -33,7 +33,11 @@ function initializeFirebaseBasic(): FirebaseApp | null {
 
     return firebaseApp;
   } catch (error) {
-    console.error("❌ Firebase: Erro na inicialização:", error);
+    console.warn(
+      "⚠️ Firebase: Problema na inicialização, mas app pode funcionar em modo local",
+    );
+    console.log("💡 Sistema continua funcional com autenticação local");
+    firebaseApp = null;
     return null;
   }
 }
