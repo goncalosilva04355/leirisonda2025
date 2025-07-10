@@ -60,7 +60,7 @@ import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNotificationsFixed";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-import { isFirebaseReady } from "./firebase/configFixed";
+import { isFirebaseReady } from "./firebase/configWithoutFirestore";
 
 // SECURITY: RegisterForm removed - only super admin can create users
 // import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
@@ -291,7 +291,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações autom���ticas desabilitadas para resolver instabilidade
+    // Verificações autom��ticas desabilitadas para resolver instabilidade
     // Sistema funcionará normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verifica��ões automáticas
   }, []);
