@@ -64,9 +64,9 @@ import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
 import {
-  localAuthService as authService,
+  hybridAuthService as authService,
   UserProfile,
-} from "./services/localAuthService";
+} from "./services/hybridAuthService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
@@ -3749,7 +3749,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    �� {assignedUser.name}
+                                    ���� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -4671,7 +4671,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Sistema de Filtraç��o
+                          Sistema de Filtração
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="">Selecionar sistema</option>
@@ -8219,7 +8219,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                Partilhar Relat���rio
+                Partilhar Relat��rio
               </h2>
               <button
                 onClick={() => {
@@ -8932,7 +8932,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Hora de Sa��da
+                          Hora de Saída
                         </label>
                         <p className="text-gray-900">
                           {selectedWork.endTime
