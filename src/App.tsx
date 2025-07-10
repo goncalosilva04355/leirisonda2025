@@ -397,7 +397,7 @@ function App() {
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
-          "⚠️ Nenhum utilizador atribuído, n��o enviando notificações",
+          "⚠️ Nenhum utilizador atribuído, n����o enviando notificações",
         );
         return;
       }
@@ -615,7 +615,7 @@ function App() {
       const firestoreId = await firestoreService.createManutencao(data);
 
       if (firestoreId) {
-        console.log("✅ Manutenç��o criada no Firestore:", firestoreId);
+        console.log("✅ Manutenção criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -1440,7 +1440,7 @@ function App() {
         loginForm.password,
       );
 
-      console.log("����� Auth result:", result);
+      console.log("��� Auth result:", result);
 
       if (result.success && result.user) {
         // console.log("✅ Login successful for:", result.user.email);
@@ -1739,7 +1739,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu��������das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu������das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -2201,7 +2201,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
 
-        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
+        console.log(`��� Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
@@ -11392,7 +11392,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Manuten��ões */}
+                    {/* Manutenções */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Manutenções
@@ -11619,6 +11619,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Data Input Status Indicator */}
         <DataInputStatusIndicator />
+
+        {/* Data Input Tutorial */}
+        <DataInputTutorial />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
