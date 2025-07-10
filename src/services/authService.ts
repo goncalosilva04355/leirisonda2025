@@ -152,6 +152,10 @@ class AuthService {
               return { success: true, user: userProfile };
             } else {
               // Create basic profile if doesn't exist
+              const role =
+                firebaseUser.email === "gongonsilva@gmail.com"
+                  ? "super_admin"
+                  : "technician";
               const userProfile: UserProfile = {
                 uid: firebaseUser.uid,
                 email: firebaseUser.email!,
@@ -159,10 +163,8 @@ class AuthService {
                   firebaseUser.email === "gongonsilva@gmail.com"
                     ? "Gonçalo Fonseca"
                     : "Utilizador",
-                role:
-                  firebaseUser.email === "gongonsilva@gmail.com"
-                    ? "super_admin"
-                    : "technician",
+                role: role,
+                permissions: this.getDefaultPermissions(role),
                 active: true,
                 createdAt: new Date().toISOString(),
               };
@@ -175,7 +177,7 @@ class AuthService {
             }
           } catch (firestoreError) {
             console.warn(
-              "���️ Firestore error, using basic profile:",
+              "⚠️ Firestore error, using basic profile:",
               firestoreError,
             );
             // Fallback to basic profile without Firestore
