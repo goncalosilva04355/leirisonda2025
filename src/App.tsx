@@ -508,7 +508,7 @@ function App() {
                 );
               } else {
                 console.warn(
-                  `⚠️ Permissão de notificação negada para ${assignedUser.name}`,
+                  `⚠��� Permissão de notificação negada para ${assignedUser.name}`,
                 );
               }
 
@@ -6726,36 +6726,108 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-        case "configuracoes":
+                case "configuracoes":
+          // Safety check for activeAdminTab
+          const safeActiveConfigTab = activeAdminTab || "configuracoes";
+
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
-                {/* System Information */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Informações do Sistema
-                  </h3>
-                  <div className="grid gap-3">
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600">Versão</span>
-                      <span className="font-medium">1.0.0</span>
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Settings className="h-4 w-4 text-blue-600" />
                     </div>
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600">Utilizador Ativo</span>
-                      <span className="font-medium">{currentUser?.name}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600">Perfil</span>
-                      <span className="font-medium capitalize">
-                        {currentUser?.role?.replace("_", " ")}
-                      </span>
-                    </div>
-                    <div className="flex justify-between py-2">
-                      <span className="text-gray-600">Modo de Dados</span>
-                      <span className="font-medium">Armazenamento Local</span>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Configurações
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Configurações do sistema, relatórios e utilizadores
+                      </p>
                     </div>
                   </div>
                 </div>
+
+                {/* Tabs Navigation - Show additional tabs for admin users */}
+                {(currentUser?.role === "super_admin" || currentUser?.role === "admin") ? (
+                  <div className="bg-white rounded-lg shadow-sm">
+                    <div className="border-b border-gray-200">
+                      <nav className="-mb-px flex space-x-8 px-6">
+                        <button
+                          onClick={() => setActiveAdminTab("configuracoes")}
+                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                            safeActiveConfigTab === "configuracoes"
+                              ? "border-blue-500 text-blue-600"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <Settings className="h-4 w-4" />
+                            <span>Configurações</span>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => setActiveAdminTab("relatorios")}
+                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                            safeActiveConfigTab === "relatorios"
+                              ? "border-blue-500 text-blue-600"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <BarChart3 className="h-4 w-4" />
+                            <span>Relatórios</span>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => setActiveAdminTab("utilizadores")}
+                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                            safeActiveConfigTab === "utilizadores"
+                              ? "border-blue-500 text-blue-600"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <UserPlus className="h-4 w-4" />
+                            <span>Utilizadores</span>
+                          </div>
+                        </button>
+                      </nav>
+                    </div>
+
+                    {/* Tab Content */}
+                    <div className="p-6">
+                      {/* Configurações Tab */}
+                      {safeActiveConfigTab === "configuracoes" && (
+                        <div className="space-y-6">
+                          {/* System Information */}
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                              Informações do Sistema
+                            </h3>
+                            <div className="grid gap-3">
+                              <div className="flex justify-between py-2 border-b border-gray-100">
+                                <span className="text-gray-600">Versão</span>
+                                <span className="font-medium">1.0.0</span>
+                              </div>
+                              <div className="flex justify-between py-2 border-b border-gray-100">
+                                <span className="text-gray-600">Utilizador Ativo</span>
+                                <span className="font-medium">{currentUser?.name}</span>
+                              </div>
+                              <div className="flex justify-between py-2 border-b border-gray-100">
+                                <span className="text-gray-600">Perfil</span>
+                                <span className="font-medium capitalize">
+                                  {currentUser?.role?.replace("_", " ")}
+                                </span>
+                              </div>
+                              <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Modo de Dados</span>
+                                <span className="font-medium">Armazenamento Local</span>
+                              </div>
+                            </div>
+                          </div>
 
                 {/* Notifications Section */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
@@ -9132,7 +9204,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç���o">Manutenç��o</option>
+                          <option value="Manutenç���o">Manutenção</option>
                           <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
@@ -9235,7 +9307,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         defaultValue={editingMaintenance?.observations}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={4}
-                        placeholder="Observaç��es sobre a manutenção"
+                        placeholder="Observações sobre a manutenção"
                       />
                     </div>
 
@@ -9732,7 +9804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura��ões avançadas
+                Insira a palavra-passe para aceder às configura����ões avançadas
               </p>
             </div>
 
@@ -10082,7 +10154,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                <button
+                                <button
                   onClick={handleLogout}
                   className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 >
