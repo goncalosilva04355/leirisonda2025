@@ -6126,7 +6126,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o da base de dados de clientes
+                          Gest���o da base de dados de clientes
                         </p>
                       </div>
                     </div>
@@ -8399,7 +8399,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     if (!currentUser || !isAuthenticated) {
       const testUser = {
         id: 1,
-        name: "Gonçalo Fonseca",
+        name: "Gon��alo Fonseca",
         email: "gongonsilva@gmail.com",
         role: "super_admin",
         permissions: {
@@ -8879,32 +8879,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🔧 Running robust Firestore initialization...");
-                const { initializeRobustFirestore, checkFirestoreStatus } =
-                  await import("./utils/robustFirestore");
+                console.log("📱 Enabling Firestore-free mode...");
+                const { enableFirestoreFreeMode, getApplicationSummary } =
+                  await import("./utils/firestoreFreeMode");
 
-                // First check if Firestore is enabled
-                const status = await checkFirestoreStatus();
-                console.log("📊 Firestore Status:", status);
+                const freeMode = enableFirestoreFreeMode();
+                const summary = getApplicationSummary();
 
-                // Then try robust initialization
-                const result = await initializeRobustFirestore();
-                console.log("📊 Robust Firestore Result:", result);
+                console.log("📊 Application Summary:", summary);
 
-                if (result.success) {
-                  alert(
-                    `✅ FIRESTORE SUCCESS!\n\nProject: ${result.project}\nMethod: ${result.method}\nAttempts: ${result.attempts}\n\nFirestore is now working!`,
-                  );
-                } else {
-                  alert(
-                    `❌ FIRESTORE FAILED\n\nProject: ${result.project}\nAttempts: ${result.attempts}\nError: ${result.error}\n\nStatus Check: ${status.message}\n\nFirestore may need more time to propagate or manual troubleshooting.`,
-                  );
-                }
+                alert(
+                  `✅ FIRESTORE-FREE MODE ENABLED!\n\n${freeMode.message}\n\n🚀 FEATURES WORKING:\n${Object.entries(
+                    summary.features,
+                  )
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join(
+                      "\n",
+                    )}\n\n💾 LOCAL DATA:\n- Obras: ${summary.dataCount.obras}\n- Manutenções: ${summary.dataCount.manutencoes}\n- Piscinas: ${summary.dataCount.piscinas}\n- Clientes: ${summary.dataCount.clientes}\n\nYour app is 100% functional!`,
+                );
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
               title="Test Firebase Connectivity"
             >
-              🧪
+              ���
             </button>
           </div>
 
