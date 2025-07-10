@@ -51,38 +51,41 @@ export interface UniversalSyncActions {
  * - Migração automática de dados locais
  * - Interface unificada para todos os tipos de dados
  */
-export function useUniversalDataSync(): UniversalSyncState &
-  UniversalSyncActions {
-  const [state, setState] = useState<UniversalSyncState>(() => {
-    try {
-      return {
-        obras: [],
-        manutencoes: [],
-        piscinas: [],
-        clientes: [],
-        totalItems: 0,
-        lastSync: "",
-        isGloballyShared: true,
-        isLoading: true,
-        error: null,
-        syncStatus: "disconnected",
-      };
-    } catch (error) {
-      console.error("❌ Error initializing useUniversalDataSync state:", error);
-      return {
-        obras: [],
-        manutencoes: [],
-        piscinas: [],
-        clientes: [],
-        totalItems: 0,
-        lastSync: "",
-        isGloballyShared: false,
-        isLoading: false,
-        error: "Initialization failed",
-        syncStatus: "error",
-      };
-    }
-  });
+// Safe wrapper function to handle any initialization errors
+function createSafeUseUniversalDataSync() {
+  try {
+    return function useUniversalDataSync(): UniversalSyncState &
+      UniversalSyncActions {
+      const [state, setState] = useState<UniversalSyncState>(() => {
+        try {
+          return {
+            obras: [],
+            manutencoes: [],
+            piscinas: [],
+            clientes: [],
+            totalItems: 0,
+            lastSync: "",
+            isGloballyShared: true,
+            isLoading: true,
+            error: null,
+            syncStatus: "disconnected",
+          };
+        } catch (error) {
+          console.error("❌ Error initializing useUniversalDataSync state:", error);
+          return {
+            obras: [],
+            manutencoes: [],
+            piscinas: [],
+            clientes: [],
+            totalItems: 0,
+            lastSync: "",
+            isGloballyShared: false,
+            isLoading: false,
+            error: "Initialization failed",
+            syncStatus: "error",
+          };
+        }
+      });
 
   // Inicializar sincronização universal
   useEffect(() => {
