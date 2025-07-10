@@ -82,7 +82,21 @@ class AuthService {
 
   // Logout
   async logout(): Promise<void> {
-    await signOut(auth);
+    try {
+      // Only sign out from Firebase if there's actually a Firebase user logged in
+      if (auth.currentUser) {
+        await signOut(auth);
+        console.log("✅ Signed out from Firebase");
+      } else {
+        console.log("✅ Local logout (no Firebase user to sign out)");
+      }
+    } catch (error) {
+      console.warn(
+        "⚠️ Firebase signOut error (continuing with local logout):",
+        error,
+      );
+      // Don't throw the error - allow local logout to proceed
+    }
   }
 
   // Auth state listener
