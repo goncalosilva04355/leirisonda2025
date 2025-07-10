@@ -65,6 +65,7 @@ import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
+import { FirebaseRulesGuide } from "./components/FirebaseRulesGuide";
 
 // Firebase works silently in background - no diagnostics or UI needed
 import("./firebase/ultimateSimpleFirebase");
@@ -1026,7 +1027,7 @@ function App() {
   // PDF Generation Functions
   const generatePoolsPDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO DE PISCINAS
+LEIRISONDA - RELAT���RIO DE PISCINAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -3828,7 +3829,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar diâmetro</option>
                                   <option value="1">1 polegada</option>
-                                  <option value="1.25">1¼ polegadas</option>
+                                  <option value="1.25">1�� polegadas</option>
                                   <option value="1.5">1½ polegadas</option>
                                   <option value="2">2 polegadas</option>
                                   <option value="2.5">2½ polegadas</option>
@@ -8260,7 +8261,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Dados da intervenção</span>
+                  <span>Dados da intervenç��o</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>������</span>
