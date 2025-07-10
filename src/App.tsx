@@ -86,6 +86,7 @@ import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 import StabilityMonitor from "./utils/stabilityMonitor";
+import PerformanceOptimizer from "./utils/performanceOptimizer";
 // import { useSafeEffect, useThrottledLog, useRenderCounter } from "./hooks/useSafeEffect"; // Temporarily disabled
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
@@ -1472,7 +1473,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       pdf.save(pdfFilename);
 
       // Show success message
-      alert(`Relat��rio "${pdfFilename}" gerado com sucesso!`);
+      alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
       alert("Erro ao gerar o relatório PDF. Tente novamente.");
@@ -4141,7 +4142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const budget =
                             (
                               form.querySelector(
-                                'input[placeholder*="Orçamento"]',
+                                'input[placeholder*="Or��amento"]',
                               ) as HTMLInputElement
                             )?.value || "";
 
@@ -4791,7 +4792,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutenção programada durante criação da piscina",
+                                  "Manutenção programada durante criaç��o da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -5498,7 +5499,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                   );
                                 }
                               } else {
@@ -5815,7 +5816,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Manutenções
+                          Relatório de Manuten��ões
                         </h3>
                         <p className="text-sm text-gray-600">
                           Hist��rico de intervenç��es
@@ -6735,7 +6736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������ {work.contact}
+                                        ����� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -6785,7 +6786,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  �����{work.budget}
+                                  ���{work.budget}
                                 </div>
                               )}
                             </div>
@@ -8817,7 +8818,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N����o especificado"}
+                          {selectedWork.type || "N�����o especificado"}
                         </p>
                       </div>
                       <div>
