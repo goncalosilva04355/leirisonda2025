@@ -2844,7 +2844,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão de piscinas no sistema
+                          Gest��o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -3341,7 +3341,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ����‍🔧 {maint.technician}
+                                �����‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -8592,17 +8592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
-        {/* Temporarily disabled to fix Firebase initialization errors
-        <Suspense
-          fallback={
-            <div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">
-              ⏳
-            </div>
-          }
-        >
-          <SimpleFirebaseDebug />
-        </Suspense>
-                */}
+                {/* SimpleFirebaseDebug disabled */}
         <Suspense
           fallback={
             <div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">
@@ -9275,7 +9265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.waterLevel
                                   ? `${selectedWork.waterLevel} m`
-                                  : "N��o especificado"}
+                                  : "N����o especificado"}
                               </p>
                             </div>
                             <div>
