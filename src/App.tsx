@@ -412,7 +412,7 @@ function App() {
 
       return result;
     } catch (error) {
-      console.error("❌ Erro no Firebase, tentando fallback:", error);
+      console.error("�� Erro no Firebase, tentando fallback:", error);
 
       // Fallback to localStorage if Firebase fails
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
@@ -3230,7 +3230,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç����es agendadas e programadas
+                          Manuten������es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -5725,7 +5725,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
-                            {enableMapsRedirect ? "✅ Ativo" : "�� Inativo"}
+                            {enableMapsRedirect ? "✅ Ativo" : "��� Inativo"}
                           </p>
                         </div>
                       </div>
@@ -8592,69 +8592,68 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
-                <SimpleFirebaseDebug />
+        <SimpleFirebaseDebug />
         <LoginPage
-            onLogin={async (email: string, password: string) => {
-              console.log("🔐 Login attempt for:", email);
+          onLogin={async (email: string, password: string) => {
+            console.log("🔐 Login attempt for:", email);
 
-              // Clear any previous errors
-              setLoginError("");
+            // Clear any previous errors
+            setLoginError("");
 
-              // Basic validation
-              if (!email?.trim() || !password?.trim()) {
-                setLoginError("Por favor, preencha todos os campos");
-                return;
-              }
+            // Basic validation
+            if (!email?.trim() || !password?.trim()) {
+              setLoginError("Por favor, preencha todos os campos");
+              return;
+            }
 
-              try {
-                // Auto-check Firebase before login attempt (disabled)
-                // await firebaseAutoFix.checkOnUserAction();
+            try {
+              // Auto-check Firebase before login attempt (disabled)
+              // await firebaseAutoFix.checkOnUserAction();
 
-                const result = await authService.login(email.trim(), password);
+              const result = await authService.login(email.trim(), password);
 
-                console.log("🔐 Auth result:", result);
+              console.log("🔐 Auth result:", result);
 
-                if (result.success && result.user) {
-                  console.log("✅ Login successful for:", result.user.email);
+              if (result.success && result.user) {
+                console.log("✅ Login successful for:", result.user.email);
 
-                  // Update state
-                  setCurrentUser(result.user);
-                  setIsAuthenticated(true);
-                  localStorage.setItem(
-                    "currentUser",
-                    JSON.stringify(result.user),
-                  );
-                  localStorage.setItem("isAuthenticated", "true");
-                  // Clear manual logout flag on successful login
-                  localStorage.removeItem("manualLogout");
-
-                  // Clear login form
-                  setLoginForm({ email: "", password: "" });
-
-                  // Navigate to dashboard or requested section
-                  const hash = window.location.hash.substring(1);
-                  if (hash && hash !== "login") {
-                    setActiveSection(hash);
-                  } else {
-                    navigateToSection("dashboard");
-                  }
-
-                  console.log("✅ Login state updated successfully");
-                } else {
-                  console.warn("❌ Login failed:", result.error);
-                  setLoginError(result.error || "Credenciais inválidas");
-                }
-              } catch (error: any) {
-                console.error("❌ Login error:", error);
-                setLoginError(
-                  "Erro de conexão. Verifique sua internet e tente novamente.",
+                // Update state
+                setCurrentUser(result.user);
+                setIsAuthenticated(true);
+                localStorage.setItem(
+                  "currentUser",
+                  JSON.stringify(result.user),
                 );
+                localStorage.setItem("isAuthenticated", "true");
+                // Clear manual logout flag on successful login
+                localStorage.removeItem("manualLogout");
+
+                // Clear login form
+                setLoginForm({ email: "", password: "" });
+
+                // Navigate to dashboard or requested section
+                const hash = window.location.hash.substring(1);
+                if (hash && hash !== "login") {
+                  setActiveSection(hash);
+                } else {
+                  navigateToSection("dashboard");
+                }
+
+                console.log("✅ Login state updated successfully");
+              } else {
+                console.warn("❌ Login failed:", result.error);
+                setLoginError(result.error || "Credenciais inválidas");
               }
-            }}
-            loginError={loginError}
-            isLoading={false}
-          />
-        </Suspense>
+            } catch (error: any) {
+              console.error("❌ Login error:", error);
+              setLoginError(
+                "Erro de conexão. Verifique sua internet e tente novamente.",
+              );
+            }
+          }}
+          loginError={loginError}
+          isLoading={false}
+        />
 
         {/* Admin Login Modal - também funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
