@@ -1500,7 +1500,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������ Address clicked:", address);
+    console.log("������� Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -1887,7 +1887,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
 
-                  {/* Firebase Status LED - Bottom Right Corner */}
+                  {/* Firebase & Firestore Status LEDs - Bottom Right Corner */}
                   <div className="absolute bottom-2 right-2 z-20">
                     <div className="flex items-center space-x-1">
                       <div
@@ -1898,6 +1898,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           isFirebaseReady()
                             ? "Firebase Ativo"
                             : "Firebase Inativo"
+                        }
+                      ></div>
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          isFirestoreReady() ? "bg-blue-500" : "bg-orange-500"
+                        }`}
+                        title={
+                          isFirestoreReady()
+                            ? "Firestore Ativo"
+                            : "Firestore Inativo"
                         }
                       ></div>
                     </div>
@@ -5540,7 +5550,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               seu navegador
                             </li>
                             <li>
-                              • Em dispositivos m��veis, adicione a app ao ecrã
+                              • Em dispositivos móveis, adicione a app ao ecrã
                               inicial
                             </li>
                             <li>
@@ -7579,7 +7589,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localizaç��o da piscina"
+                          placeholder="Localização da piscina"
                           required
                         />
                       </div>
