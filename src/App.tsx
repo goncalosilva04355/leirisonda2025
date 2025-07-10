@@ -150,8 +150,25 @@ function App() {
   }, []);
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // Check localStorage on initialization
+    const savedAuth = localStorage.getItem("isAuthenticated");
+    return savedAuth === "true";
+  });
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
+    // Check localStorage on initialization
+    const savedUser = localStorage.getItem("currentUser");
+    if (savedUser) {
+      try {
+        return JSON.parse(savedUser);
+      } catch (error) {
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("isAuthenticated");
+        return null;
+      }
+    }
+    return null;
+  });
 
   // Debug logging disabled for production
 
