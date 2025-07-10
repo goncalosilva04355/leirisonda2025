@@ -2650,7 +2650,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </button>
 
-                  {/* Concluídas - REMOVIDO do Dashboard conforme solicitado */}
+                  {/* Concluídas */}
+                  <button
+                    onClick={() => navigateToSection("obras")}
+                    className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Concluídas
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Obras finalizadas
+                        </p>
+                      </div>
+                      <div className="text-4xl font-bold text-gray-900">
+                        {
+                          works.filter(
+                            (w) =>
+                              w.status === "completed" ||
+                              w.status === "concluida",
+                          ).length
+                        }
+                      </div>
+                    </div>
+                  </button>
 
                   {/* Falta de Folhas de Obra */}
                   <button
@@ -6716,7 +6740,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 • Todas as piscinas ({pools.length} registos)
                               </li>
                               <li>
-                                ���� Dados do Firebase e armazenamento local
+                                🔥 Dados do Firebase e armazenamento local
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
@@ -8827,7 +8851,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç�����o">Manutenção</option>
+                          <option value="Manutenç���o">Manutenção</option>
                           <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
