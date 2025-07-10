@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { AlertCircle, CheckCircle, ExternalLink, Settings } from "lucide-react";
 
 export const FirebaseSetupChecker: React.FC = () => {
