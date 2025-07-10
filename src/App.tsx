@@ -2391,7 +2391,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            console.log("🔐 Login attempt for:", email);
+            // console.log("🔐 Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
@@ -9502,7 +9502,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            console.log("🔐 Login attempt for:", email);
+            // console.log("🔐 Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
