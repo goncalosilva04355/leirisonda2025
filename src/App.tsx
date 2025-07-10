@@ -598,7 +598,7 @@ function App() {
       if (permission === "granted") {
         console.log("�� Notifications already granted");
       } else if (permission === "denied") {
-        console.warn("❌ Notifications denied by user");
+        console.warn("�� Notifications denied by user");
       } else {
         console.log("⏳ Notifications permission not yet requested");
       }
@@ -718,7 +718,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "N��o tem permissão para criar manutenç���es. Contacte o administrador.",
+        "N���o tem permissão para criar manutenç���es. Contacte o administrador.",
       );
       return;
     }
@@ -1343,7 +1343,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     if (Notification.permission === "granted") {
       showNotification(
         "Teste de Notificação",
-        "As notificaç��es estão a funcionar corretamente!",
+        "As notificaç����es estão a funcionar corretamente!",
         "test",
       );
     } else {
@@ -1648,7 +1648,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincroniza��ão:`,
             syncError,
           );
         }
@@ -2139,7 +2139,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Eye className="h-4 w-4" />
                                 </button>
 
-                                {/* Bot��o Iniciar Obra (só se pendente) */}
+                                {/* Botão Iniciar Obra (só se pendente) */}
                                 {work.status === "pending" && (
                                   <button
                                     onClick={(e) => {
@@ -3164,7 +3164,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -8518,11 +8518,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Firebase Rules Guide Button - floating bottom left */}
-        <div className="fixed bottom-4 left-4">
+        {/* Firebase Buttons - floating bottom left */}
+        <div className="fixed bottom-4 left-4 space-y-2">
+          <button
+            onClick={() => setShowFirebaseChecker(true)}
+            className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 text-sm"
+            title="Verificar Estado Firebase"
+          >
+            ✅ Verificar Firebase
+          </button>
           <button
             onClick={() => setShowFirebaseRulesGuide(true)}
-            className="px-4 py-2 bg-orange-600 text-white rounded-lg shadow-lg hover:bg-orange-700 text-sm"
+            className="block w-full px-4 py-2 bg-orange-600 text-white rounded-lg shadow-lg hover:bg-orange-700 text-sm"
             title="Configurar Firebase"
           >
             🔥 Configurar Firebase
