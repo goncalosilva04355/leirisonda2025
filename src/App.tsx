@@ -1115,7 +1115,7 @@ function App() {
   // PDF Generation Functions
   const generatePoolsPDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO DE PISCINAS
+LEIRISONDA - RELAT����RIO DE PISCINAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -8894,8 +8894,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 }
                   
 
-                  if (result.success) {
-                    alert(
+                  
                       `🎉 REALTIME DATABASE WORKING!\n\n✅ Connection: Successful\n✅ Read/Write: Working\n✅ Test Value: ${result.testValue}\n\n🔥 FIREBASE SERVICES:\n- Auth: ✅ Working\n- Storage: ✅ Working\n- Realtime Database: ✅ Working\n- Project: leiria-1cfc9\n\n🌐 DATA SHARING:\n- Multi-user: ✅ Enabled\n- Multi-device: ��� Enabled\n- Real-time sync: ✅ Working\n\nPerfect for sharing data between users and devices!`,
                     );
                   } else {
