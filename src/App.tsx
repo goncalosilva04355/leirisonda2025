@@ -811,7 +811,7 @@ function App() {
     };
   }, []);
 
-  // Listeners para atualizações automáticas da UI
+  // Listeners para atualiza��ões automáticas da UI
   useEffect(() => {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
@@ -1373,7 +1373,7 @@ ${index + 1}. ${maint.poolName}
    Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
-   Descri��ão: ${maint.description}
+   Descrição: ${maint.description}
    ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
 `,
   )
@@ -1624,7 +1624,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }, 1000);
       }
     } else {
-      console.log("ℹ��� Notification not for current user:", {
+      console.log("ℹ️ Notification not for current user:", {
         currentUser: currentUser?.name,
         assignedTo,
         isAssignedToCurrentUser,
@@ -4235,7 +4235,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi������ões do Furo
+                              Medições do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -9617,7 +9617,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç��es Detalhadas
+                          Informaç����es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
