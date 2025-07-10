@@ -50,11 +50,13 @@ class FirebaseService {
 
     try {
       // Check if Firebase app already exists
-      if (getApps().length === 0) {
+      const existingApps = getApps();
+      if (existingApps.length === 0) {
         this.app = initializeApp(firebaseConfig);
         console.log("✅ Firebase app initialized");
       } else {
-        this.app = getApp();
+        // Use the first existing app
+        this.app = existingApps[0];
         console.log("✅ Using existing Firebase app");
       }
 
