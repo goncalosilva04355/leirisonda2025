@@ -1106,6 +1106,29 @@ function App() {
           .catch((error) => {
             console.error("❌ Service Worker registration failed:", error);
           });
+
+        // Listen for messages from service worker (notification clicks)
+        navigator.serviceWorker.addEventListener("message", (event) => {
+          if (event.data.type === "NOTIFICATION_CLICK") {
+            console.log("📱 Notification clicked, navigating...", event.data);
+
+            const { data } = event.data;
+
+            // Navigate to obras section if it's a work notification
+            if (data.workId) {
+              setActiveSection("obras");
+
+              // Show a success message
+              setTimeout(() => {
+                showNotification(
+                  "🔔 Notificação",
+                  `Navegando para obra: ${data.workTitle}`,
+                  "info",
+                );
+              }, 500);
+            }
+          }
+        });
       }, 1000);
     }
 
@@ -1780,7 +1803,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Send notification if user is assigned to current user and notifications are enabled
     if (isAssignedToCurrentUser) {
       if (notificationsEnabled && Notification.permission === "granted") {
-        console.log("✅ All conditions met, sending notification...");
+        console.log("�� All conditions met, sending notification...");
         showNotification(
           "Nova Obra Atribuída",
           `A obra "${workTitle}" foi-lhe atribuída`,
@@ -3603,7 +3626,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������������� {maint.clientContact}
+                                        ��������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -5459,7 +5482,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     {/* Additional Information */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações e Características Especiais
+                        Observa��ões e Características Especiais
                       </label>
                       <textarea
                         rows={3}
