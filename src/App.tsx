@@ -5544,7 +5544,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                   <p className="text-gray-600 mb-6">
                     Ative as notificações para receber alertas sobre novas obras
-                    atribuídas e atualizações importantes.
+                    atribu��das e atualizações importantes.
                   </p>
 
                   <div className="space-y-4">
@@ -5725,7 +5725,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
-                            {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
+                            {enableMapsRedirect ? "✅ Ativo" : "�� Inativo"}
                           </p>
                         </div>
                       </div>
@@ -8592,25 +8592,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
-        {/* Temporarily disabled to fix Firebase initialization errors
-        <Suspense
-          fallback={
-            <div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">
-              ⏳
-            </div>
-          }
-        >
-          <SimpleFirebaseDebug />
-        </Suspense>
-        */}
-        <Suspense
-          fallback={
-            <div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">
-              A carregar...
-            </div>
-          }
-        >
-          <LoginPage
+                <SimpleFirebaseDebug />
+        <LoginPage
             onLogin={async (email: string, password: string) => {
               console.log("🔐 Login attempt for:", email);
 
@@ -9100,7 +9083,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In������cio
+                          Data de In�������cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
