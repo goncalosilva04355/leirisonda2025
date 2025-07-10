@@ -50,6 +50,7 @@ type AdminSection =
   | "overview"
   | "complete-activation"
   | "user-management"
+  | "data-migration"
   | "work-assignment-fix"
   | "works-data-diagnostic"
   | "auth-diagnostic"
@@ -226,7 +227,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     },
     {
       id: "firebase-quota" as AdminSection,
-      title: "🚨 Gestão de Quota Firebase",
+      title: "🚨 Gest��o de Quota Firebase",
       description: "CRÍTICO: Monitorizar e gerir quota do Firebase",
       icon: AlertTriangle,
       color: "bg-red-600",
