@@ -175,7 +175,7 @@ class AuthService {
             }
           } catch (firestoreError) {
             console.warn(
-              "⚠️ Firestore error, using basic profile:",
+              "���️ Firestore error, using basic profile:",
               firestoreError,
             );
             // Fallback to basic profile without Firestore
@@ -247,6 +247,192 @@ class AuthService {
       }
 
       return { success: false, error: errorMessage };
+    }
+  }
+
+  // Register new user
+  async register(
+    email: string,
+    password: string,
+    name: string,
+    role: "super_admin" | "admin" | "manager" | "technician" = "technician",
+    permissions?: UserPermissions,
+  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
+    try {
+      if (!(await this.initialize())) {
+        // Fallback to local registration when Firebase is not available
+        console.log("🔧 Firebase not available - using local registration");
+        return this.localRegister(email, password, name, role, permissions);
+      }
+
+      // Firebase registration
+      const userCredential = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        password,
+      );
+      const firebaseUser = userCredential.user;
+
+      // Create user profile with permissions
+      const defaultPermissions =
+        permissions || this.getDefaultPermissions(role);
+      const userProfile: UserProfile = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email!,
+        name: name,
+        role: role,
+        permissions: defaultPermissions,
+        active: true,
+        createdAt: new Date().toISOString(),
+      };
+
+      // Save to Firestore if available
+      if (this.db) {
+        try {
+          await setDoc(doc(this.db, "users", firebaseUser.uid), userProfile);
+        } catch (firestoreError) {
+          console.warn("⚠️ Could not save to Firestore:", firestoreError);
+        }
+      }
+
+      // Also save to localStorage for backup
+      const savedUsers = localStorage.getItem("app-users") || "[]";
+      const users = JSON.parse(savedUsers);
+      users.push({
+        id: firebaseUser.uid,
+        ...userProfile,
+      });
+      localStorage.setItem("app-users", JSON.stringify(users));
+
+      console.log("✅ User registered successfully:", email);
+      return { success: true, user: userProfile };
+    } catch (error: any) {
+      console.error("❌ Registration error:", error);
+
+      let errorMessage = "Erro ao criar utilizador";
+
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          errorMessage = "Este email já está em uso";
+          break;
+        case "auth/invalid-email":
+          errorMessage = "Email inválido";
+          break;
+        case "auth/weak-password":
+          errorMessage = "Password muito fraca";
+          break;
+        case "auth/network-request-failed":
+          errorMessage = "Erro de conexão. Verifique sua internet";
+          break;
+        default:
+          errorMessage = error.message || "Erro desconhecido";
+      }
+
+      return { success: false, error: errorMessage };
+    }
+  }
+
+  // Local registration for fallback mode
+  private localRegister(
+    email: string,
+    password: string,
+    name: string,
+    role: "super_admin" | "admin" | "manager" | "technician",
+    permissions?: UserPermissions,
+  ): { success: boolean; error?: string; user?: UserProfile } {
+    try {
+      // Check if email already exists
+      const savedUsers = localStorage.getItem("app-users") || "[]";
+      const users = JSON.parse(savedUsers);
+
+      const existingUser = users.find((u: any) => u.email === email);
+      if (existingUser) {
+        return { success: false, error: "Este email já está em uso" };
+      }
+
+      // Create user profile
+      const defaultPermissions =
+        permissions || this.getDefaultPermissions(role);
+      const userProfile: UserProfile = {
+        uid: `local-${Date.now()}`,
+        email: email,
+        name: name,
+        role: role,
+        permissions: defaultPermissions,
+        active: true,
+        createdAt: new Date().toISOString(),
+      };
+
+      // Save to localStorage
+      users.push({
+        id: userProfile.uid,
+        ...userProfile,
+        password: password, // Only stored locally for demo purposes
+      });
+      localStorage.setItem("app-users", JSON.stringify(users));
+
+      console.log("✅ Local user registered successfully:", email);
+      return { success: true, user: userProfile };
+    } catch (error) {
+      console.error("❌ Local registration error:", error);
+      return { success: false, error: "Erro ao criar utilizador" };
+    }
+  }
+
+  // Get default permissions based on role
+  private getDefaultPermissions(role: string): UserPermissions {
+    switch (role) {
+      case "super_admin":
+        return {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
+        };
+      case "admin":
+        return {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: {
+            view: true,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: true, edit: true, delete: false },
+          clientes: { view: true, create: true, edit: true, delete: false },
+        };
+      case "manager":
+        return {
+          obras: { view: true, create: true, edit: true, delete: false },
+          manutencoes: { view: true, create: true, edit: true, delete: false },
+          piscinas: { view: true, create: true, edit: true, delete: false },
+          utilizadores: {
+            view: true,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: true, edit: false, delete: false },
+          clientes: { view: true, create: true, edit: true, delete: false },
+        };
+      default: // technician
+        return {
+          obras: { view: true, create: false, edit: true, delete: false },
+          manutencoes: { view: true, create: true, edit: true, delete: false },
+          piscinas: { view: true, create: false, edit: true, delete: false },
+          utilizadores: {
+            view: false,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: false, edit: false, delete: false },
+          clientes: { view: true, create: false, edit: false, delete: false },
+        };
     }
   }
 
