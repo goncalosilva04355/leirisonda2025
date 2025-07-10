@@ -40,7 +40,7 @@ import {
 } from "lucide-react";
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
-import { AdvancedSettings } from "./components/AdvancedSettings";
+// import { AdvancedSettings } from "./components/AdvancedSettings"; // Now lazy loaded
 import { InstallPromptFixed } from "./components/InstallPromptFixed";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
@@ -1358,7 +1358,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }, 1000);
       }
     } else {
-      console.log("��️ Notification not for current user:", {
+      console.log("ℹ️ Notification not for current user:", {
         currentUser: currentUser?.name,
         assignedTo,
         isAssignedToCurrentUser,
@@ -6754,7 +6754,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������� {work.contact}
+                                        ����� {work.contact}
                                       </button>
                                     </div>
                                   )}
