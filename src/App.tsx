@@ -1541,7 +1541,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("����️ Opening Google Maps:", mapsUrl);
+      console.log("���️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -4925,7 +4925,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Responsável *
+                          Técnico Respons��vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -6777,7 +6777,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ���{work.budget}
+                                  ����{work.budget}
                                 </div>
                               )}
                             </div>
@@ -7017,7 +7017,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               type="datetime-local"
                               defaultValue={editingWork?.endTime}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Deixe vazio se ainda não terminou"
+                              placeholder="Deixe vazio se ainda n��o terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
                               Deixe vazio se ainda não terminou
@@ -8271,7 +8271,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>�������</span>
+                  <span>������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -9258,11 +9258,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* Realtime Notifications - REMOVIDAS */}
         {/* <RealtimeNotifications /> */}
 
-        {/* Work Assignment Notifications */}
-        <WorkAssignmentNotificationsFixed currentUser={currentUser} />
+        {/* Work Assignment Notifications - Temporarily disabled to fix useState errors */}
+        {/* <WorkAssignmentNotificationsFixed currentUser={currentUser} /> */}
 
-        {/* User Restore Notification */}
-        <UserRestoreNotificationFixed />
+        {/* User Restore Notification - Temporarily disabled to fix useState errors */}
+        {/* <UserRestoreNotificationFixed /> */}
 
         {/* Firebase Auto-Monitor - Discrete indicator */}
         <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
