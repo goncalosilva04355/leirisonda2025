@@ -382,7 +382,7 @@ function App() {
     }
   };
 
-  // Função para enviar notificações push quando uma obra é atribuída
+  // Função para enviar notifica��ões push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
       console.log("📱 Enviando notificações de atribuição de obra...");
@@ -2588,17 +2588,41 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Em Progresso
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras em andamento
+                          Obras atribuídas em andamento
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {
-                          works.filter(
-                            (w) =>
+                        {(() => {
+                          // Filtrar obras em progresso atribuídas ao utilizador atual
+                          const inProgressWorks = works.filter((w) => {
+                            const isInProgress =
                               w.status === "in_progress" ||
-                              w.status === "em_progresso",
-                          ).length
-                        }
+                              w.status === "em_progresso";
+                            const isAssignedToUser =
+                              currentUser &&
+                              // Verificar assignedTo (campo legacy)
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                // Verificar assignedUsers array
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                // Verificar assignedUserIds array
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return isInProgress && isAssignedToUser;
+                          });
+                          return inProgressWorks.length;
+                        })()}
                       </div>
                     </div>
                   </button>
@@ -4468,7 +4492,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ������ {assignedUser.name}
+                                    ���� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -5355,7 +5379,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "�� Cliente adicionado com sucesso:",
+                                    "✅ Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
