@@ -2813,7 +2813,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="flex items-center p-4 border-b border-gray-100">
                         <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                         <h2 className="text-lg font-semibold text-gray-900">
-                          Últimas 3 Obras Atribuídas
+                          Últimas 3 Obras
                         </h2>
                       </div>
                       <div className="p-4 space-y-3">
@@ -4822,7 +4822,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observa��ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observações Específicas do Furo
+                              Observações Espec��ficas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -8108,7 +8108,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠���� Nenhum utilizador encontrado. Vá à Área
-                                de Administra����o → "🔧 Correção de Atribuição
+                                de Administra��ão → "🔧 Correção de Atribuição
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
