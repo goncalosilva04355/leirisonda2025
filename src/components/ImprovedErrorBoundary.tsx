@@ -1,5 +1,6 @@
 import React, { Component, ReactNode } from "react";
 import { AlertTriangle, RefreshCw, Home, Bug } from "lucide-react";
+import StabilityMonitor from "../utils/stabilityMonitor";
 
 interface Props {
   children: ReactNode;
