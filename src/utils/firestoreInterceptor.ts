@@ -16,9 +16,7 @@ export const blockFirestoreInitialization = () => {
           "🚫 Firestore initialization blocked - service not available",
         );
         console.warn("💡 Using local storage instead of Firestore");
-        throw new Error(
-          "Service firestore is not available - using local storage mode",
-        );
+        return null; // Return null instead of throwing to prevent crashes
       };
 
       // Create a mock initializeFirestore function
@@ -27,9 +25,15 @@ export const blockFirestoreInitialization = () => {
           "🚫 Firestore initialization blocked - service not available",
         );
         console.warn("💡 Using local storage instead of Firestore");
-        throw new Error(
-          "Service firestore is not available - using local storage mode",
-        );
+        return null; // Return null instead of throwing to prevent crashes
+      };
+
+      // Block common Firestore functions
+      const blockFirestoreFunction = (functionName: string) => {
+        return () => {
+          console.warn(`🚫 ${functionName} blocked - Firestore not available`);
+          return null;
+        };
       };
 
       // Override any existing Firestore references
@@ -40,12 +44,47 @@ export const blockFirestoreInitialization = () => {
         originalFirestore = (window as any).getFirestore;
       }
 
-      // Override with safe versions
+      // Override with safe versions - comprehensive list
       (window as any).getFirestore = mockGetFirestore;
       (window as any).initializeFirestore = mockInitializeFirestore;
+      (window as any).connectFirestoreEmulator = blockFirestoreFunction(
+        "connectFirestoreEmulator",
+      );
+      (window as any).enableNetwork = blockFirestoreFunction("enableNetwork");
+      (window as any).disableNetwork = blockFirestoreFunction("disableNetwork");
+
+      // Block Firestore operations
+      (window as any).collection = blockFirestoreFunction("collection");
+      (window as any).doc = blockFirestoreFunction("doc");
+      (window as any).addDoc = blockFirestoreFunction("addDoc");
+      (window as any).setDoc = blockFirestoreFunction("setDoc");
+      (window as any).updateDoc = blockFirestoreFunction("updateDoc");
+      (window as any).deleteDoc = blockFirestoreFunction("deleteDoc");
+      (window as any).getDoc = blockFirestoreFunction("getDoc");
+      (window as any).getDocs = blockFirestoreFunction("getDocs");
+      (window as any).onSnapshot = blockFirestoreFunction("onSnapshot");
+
+      // Override module system to block Firestore imports
+      if (typeof module !== "undefined" && module.exports) {
+        const originalRequire = module.require;
+        if (originalRequire) {
+          module.require = function (id: string) {
+            if (id.includes("firebase/firestore") || id.includes("firestore")) {
+              console.warn(`🚫 Blocked import: ${id}`);
+              return {
+                getFirestore: mockGetFirestore,
+                initializeFirestore: mockInitializeFirestore,
+                collection: blockFirestoreFunction("collection"),
+                doc: blockFirestoreFunction("doc"),
+              };
+            }
+            return originalRequire.apply(this, arguments);
+          };
+        }
+      }
 
       console.log(
-        "🛡️ Firestore interceptor active - all Firestore calls will be blocked",
+        "🛡️ Enhanced Firestore interceptor active - all Firestore calls will be blocked",
       );
     }
   } catch (error) {
