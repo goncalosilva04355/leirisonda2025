@@ -62,7 +62,10 @@ import { LoginPage } from "./pages/LoginPage";
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
-import { authService, UserProfile } from "./services/authService";
+import {
+  simpleAuthService as authService,
+  UserProfile,
+} from "./services/simpleAuthService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
@@ -1644,7 +1647,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincroniza��ão:`,
             syncError,
           );
         }
@@ -2503,7 +2506,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenç��es
+                                  Manutenç����es
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -9023,7 +9026,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                            �� Detalhes do Furo de Água
+                            🚰 Detalhes do Furo de Água
                           </h3>
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
@@ -9071,7 +9074,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 Tipo de Coluna
                               </label>
                               <p className="text-gray-900">
-                                {selectedWork.columnType || "N��o especificado"}
+                                {selectedWork.columnType || "Não especificado"}
                               </p>
                             </div>
                             <div>
