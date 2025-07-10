@@ -1,6 +1,11 @@
 // Configuração Firebase corrigida - evita completamente erro getImmediate
 import { initializeApp, getApps, getApp } from "firebase/app";
 
+// Import Firebase services statically to ensure they're available
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
+
 // Configuração Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
