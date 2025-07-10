@@ -191,9 +191,9 @@ function App() {
 
   // Backup and complex initialization temporarily disabled for stability
 
-  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
+  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log inicial apenas (corrigido para prevenir loops)
   useEffect(() => {
-    console.log("���� SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+    console.log("🔄 SINCRONIZAÇÃO UNIVERSAL INICIALIZADA:", {
       obras: universalSync.obras.length,
       manutencoes: universalSync.manutencoes.length,
       piscinas: universalSync.piscinas.length,
@@ -201,13 +201,7 @@ function App() {
       total: universalSync.totalItems,
       status: universalSync.syncStatus,
     });
-  }, [
-    universalSync.obras,
-    universalSync.manutencoes,
-    universalSync.piscinas,
-    universalSync.clientes,
-    universalSync.syncStatus,
-  ]);
+  }, []); // Remover dependências que causam loops infinitos
 
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
@@ -519,7 +513,7 @@ function App() {
             setCurrentUser(user);
             setIsAuthenticated(true);
 
-            // Auto-navegação removida para evitar loop de login
+            // Auto-navega��ão removida para evitar loop de login
             console.log(
               "✅ User authenticated - avoiding auto-navigation loop",
             );
@@ -3600,7 +3594,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ��️ Nenhum utilizador encontrado. V�� à Área de
+                                ���� Nenhum utilizador encontrado. V�� à Área de
                                 Administração → "🔧 Corre��ão de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
@@ -5808,7 +5802,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Histórico de intervenç��es
+                          Hist��rico de intervenç��es
                         </p>
                       </div>
                     </div>
