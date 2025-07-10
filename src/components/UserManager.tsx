@@ -20,13 +20,20 @@ interface UserManagerProps {
 const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   const { users, updateUsers, isLoading } = useAuthorizedUsers();
   const [editingUser, setEditingUser] = useState<AuthorizedUser | null>(null);
-  const [newUser, setNewUser] = useState<AuthorizedUser>({
+  const [newUser, setNewUser] = useState<
+    AuthorizedUser & { password?: string }
+  >({
     email: "",
     name: "",
     role: "technician",
+    password: "",
   });
   const [showAddForm, setShowAddForm] = useState(false);
   const [errors, setErrors] = useState<string>("");
+  const [editingPermissions, setEditingPermissions] = useState<string | null>(
+    null,
+  );
+  const [tempPermissions, setTempPermissions] = useState<any>(null);
 
   // Salvar utilizadores
   const saveUsers = (updatedUsers: AuthorizedUser[]) => {
@@ -41,11 +48,15 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   };
 
   // Validar utilizador
-  const validateUser = (user: AuthorizedUser): string => {
+  const validateUser = (
+    user: AuthorizedUser & { password?: string },
+  ): string => {
     if (!user.email.trim()) return "Email é obrigatório";
     if (!validateEmail(user.email)) return "Email inválido";
     if (!user.name.trim()) return "Nome é obrigatório";
     if (!user.role) return "Role é obrigatória";
+    if (!user.password || user.password.length < 4)
+      return "Password deve ter pelo menos 4 caracteres";
 
     // Verificar email duplicado
     const existingUser = users.find(
@@ -69,12 +80,46 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
       return;
     }
 
+    // Atualizar sistema de AuthorizedUsers
     const updatedUsers = [
       ...users,
-      { ...newUser, email: newUser.email.toLowerCase() },
+      {
+        email: newUser.email.toLowerCase(),
+        name: newUser.name,
+        role: newUser.role,
+      },
     ];
     saveUsers(updatedUsers);
-    setNewUser({ email: "", name: "", role: "technician" });
+
+    // Adicionar ao sistema principal de utilizadores (com password)
+    const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const newMainUser = {
+      id: Date.now(),
+      name: newUser.name,
+      email: newUser.email.toLowerCase(),
+      password: newUser.password,
+      role: newUser.role,
+      permissions: {
+        obras: { view: true, create: true, edit: true, delete: true },
+        manutencoes: { view: true, create: true, edit: true, delete: true },
+        piscinas: { view: true, create: true, edit: true, delete: true },
+        utilizadores: { view: true, create: true, edit: true, delete: true },
+        relatorios: { view: true, create: true, edit: true, delete: true },
+        clientes: { view: true, create: true, edit: true, delete: true },
+      },
+      active: true,
+      createdAt: new Date().toISOString(),
+    };
+
+    mainUsers.push(newMainUser);
+    localStorage.setItem("app-users", JSON.stringify(mainUsers));
+
+    // Triggerar evento para atualizar outros componentes
+    window.dispatchEvent(new CustomEvent("usersUpdated"));
+
+    console.log("✅ Utilizador criado com sucesso:", newMainUser.email);
+
+    setNewUser({ email: "", name: "", role: "technician", password: "" });
     setShowAddForm(false);
     setErrors("");
   };
@@ -155,6 +200,70 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
     }
   };
 
+  // Obter permissões do utilizador do sistema principal
+  const getUserPermissions = (email: string) => {
+    const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const user = mainUsers.find(
+      (u: any) => u.email.toLowerCase() === email.toLowerCase(),
+    );
+    return user?.permissions || null;
+  };
+
+  // Editar permissões
+  const handleEditPermissions = (email: string) => {
+    const permissions = getUserPermissions(email);
+    if (permissions) {
+      setTempPermissions({ ...permissions });
+      setEditingPermissions(email);
+    }
+  };
+
+  // Salvar permissões
+  const handleSavePermissions = () => {
+    if (!editingPermissions || !tempPermissions) return;
+
+    const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const userIndex = mainUsers.findIndex(
+      (u: any) => u.email.toLowerCase() === editingPermissions.toLowerCase(),
+    );
+
+    if (userIndex !== -1) {
+      mainUsers[userIndex].permissions = { ...tempPermissions };
+      localStorage.setItem("app-users", JSON.stringify(mainUsers));
+
+      // Triggerar evento para atualizar outros componentes
+      window.dispatchEvent(new CustomEvent("usersUpdated"));
+
+      console.log("✅ Permissões atualizadas para:", editingPermissions);
+    }
+
+    setEditingPermissions(null);
+    setTempPermissions(null);
+  };
+
+  // Cancelar edição de permissões
+  const handleCancelPermissionsEdit = () => {
+    setEditingPermissions(null);
+    setTempPermissions(null);
+  };
+
+  // Atualizar permissão específica
+  const updatePermission = (
+    section: string,
+    action: string,
+    value: boolean,
+  ) => {
+    if (!tempPermissions) return;
+
+    setTempPermissions({
+      ...tempPermissions,
+      [section]: {
+        ...tempPermissions[section],
+        [action]: value,
+      },
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -200,7 +309,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
           <h3 className="text-lg font-semibold mb-4">
             Adicionar Novo Utilizador
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -231,6 +340,21 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                value={newUser.password || ""}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, password: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Palavra-passe (mín. 4 caracteres)"
+                minLength={4}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Role
               </label>
               <select
@@ -250,7 +374,12 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
             <button
               onClick={() => {
                 setShowAddForm(false);
-                setNewUser({ email: "", name: "", role: "technician" });
+                setNewUser({
+                  email: "",
+                  name: "",
+                  role: "technician",
+                  password: "",
+                });
                 setErrors("");
               }}
               className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
@@ -364,15 +493,44 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
                               : "Técnico"}
                         </span>
                       </span>
+
+                      {/* Indicador de permissões */}
+                      {(() => {
+                        const permissions = getUserPermissions(user.email);
+                        if (!permissions) return null;
+
+                        const totalPerms = Object.values(permissions).reduce(
+                          (acc: number, section: any) => {
+                            return (
+                              acc +
+                              Object.values(section).filter(Boolean).length
+                            );
+                          },
+                          0,
+                        );
+
+                        return (
+                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                            {totalPerms} permissões
+                          </span>
+                        );
+                      })()}
                     </div>
                   </div>
                   <div className="flex items-center space-x-2 ml-4">
                     <button
                       onClick={() => handleEditUser(user)}
                       className="p-2 text-blue-600 hover:bg-blue-50 rounded"
-                      title="Editar"
+                      title="Editar utilizador"
                     >
                       <Edit className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleEditPermissions(user.email)}
+                      className="p-2 text-purple-600 hover:bg-purple-50 rounded"
+                      title="Editar permissões"
+                    >
+                      <Shield className="h-4 w-4" />
                     </button>
                     {user.email !== currentUser?.email && (
                       <button
@@ -395,6 +553,294 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
         <div className="text-center py-8 text-gray-500">
           <User className="h-12 w-12 mx-auto mb-4 text-gray-300" />
           <p>Nenhum utilizador encontrado</p>
+        </div>
+      )}
+
+      {/* Modal de Edição de Permissões */}
+      {editingPermissions && tempPermissions && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-semibold">
+                  Editar Permissões - {editingPermissions}
+                </h3>
+                <button
+                  onClick={handleCancelPermissionsEdit}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Botões de atalho para permissões */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <h4 className="text-sm font-medium text-gray-700 mb-3">
+                  Atalhos rápidos:
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      const fullPermissions = {
+                        obras: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                        manutencoes: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                        piscinas: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                        utilizadores: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                        relatorios: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                        clientes: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: true,
+                        },
+                      };
+                      setTempPermissions(fullPermissions);
+                    }}
+                    className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+                  >
+                    Todas as Permissões
+                  </button>
+                  <button
+                    onClick={() => {
+                      const viewOnlyPermissions = {
+                        obras: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        manutencoes: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        piscinas: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        utilizadores: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        relatorios: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        clientes: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                      };
+                      setTempPermissions(viewOnlyPermissions);
+                    }}
+                    className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                  >
+                    Apenas Visualização
+                  </button>
+                  <button
+                    onClick={() => {
+                      const technicianPermissions = {
+                        obras: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: false,
+                        },
+                        manutencoes: {
+                          view: true,
+                          create: true,
+                          edit: true,
+                          delete: false,
+                        },
+                        piscinas: {
+                          view: true,
+                          create: false,
+                          edit: true,
+                          delete: false,
+                        },
+                        utilizadores: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        relatorios: {
+                          view: true,
+                          create: true,
+                          edit: false,
+                          delete: false,
+                        },
+                        clientes: {
+                          view: true,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                      };
+                      setTempPermissions(technicianPermissions);
+                    }}
+                    className="px-3 py-1 bg-yellow-600 text-white rounded text-sm hover:bg-yellow-700"
+                  >
+                    Técnico Padrão
+                  </button>
+                  <button
+                    onClick={() => {
+                      const noPermissions = {
+                        obras: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        manutencoes: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        piscinas: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        utilizadores: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        relatorios: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                        clientes: {
+                          view: false,
+                          create: false,
+                          edit: false,
+                          delete: false,
+                        },
+                      };
+                      setTempPermissions(noPermissions);
+                    }}
+                    className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+                  >
+                    Remover Todas
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid gap-6">
+                {Object.entries(tempPermissions).map(
+                  ([section, perms]: [string, any]) => (
+                    <div key={section} className="border rounded-lg p-4">
+                      <h4 className="font-medium text-gray-900 mb-3 capitalize">
+                        {section === "obras"
+                          ? "Obras"
+                          : section === "manutencoes"
+                            ? "Manutenções"
+                            : section === "piscinas"
+                              ? "Piscinas"
+                              : section === "utilizadores"
+                                ? "Utilizadores"
+                                : section === "relatorios"
+                                  ? "Relatórios"
+                                  : section === "clientes"
+                                    ? "Clientes"
+                                    : section}
+                      </h4>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {Object.entries(perms).map(
+                          ([action, value]: [string, any]) => (
+                            <label
+                              key={action}
+                              className="flex items-center space-x-2"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={Boolean(value)}
+                                onChange={(e) =>
+                                  updatePermission(
+                                    section,
+                                    action,
+                                    e.target.checked,
+                                  )
+                                }
+                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                              />
+                              <span className="text-sm text-gray-700 capitalize">
+                                {action === "view"
+                                  ? "Ver"
+                                  : action === "create"
+                                    ? "Criar"
+                                    : action === "edit"
+                                      ? "Editar"
+                                      : action === "delete"
+                                        ? "Eliminar"
+                                        : action}
+                              </span>
+                            </label>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  ),
+                )}
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6 pt-6 border-t">
+                <button
+                  onClick={handleCancelPermissionsEdit}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSavePermissions}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+                >
+                  Guardar Permissões
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

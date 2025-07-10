@@ -84,6 +84,13 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
 
+// Sistema de diagnóstico de persistência
+import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
+import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
+import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
+import { dataPersistenceManager } from "./utils/dataPersistenceFix";
+import "./utils/testDataPersistence";
+
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
 import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
@@ -126,6 +133,40 @@ function App() {
   useEffect(() => {
     // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
+
+    // Monitorização automática de persistência de dados
+    const initDataPersistenceMonitoring = async () => {
+      try {
+        // Aguardar um pouco antes de iniciar verificação
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        // Verificar estado da persistência
+        const status = await dataPersistenceManager.diagnoseDataPersistence();
+
+        if (!status.working) {
+          console.warn("🚨 Problema de persistência detectado:", status);
+          setPersistenceIssueDetected(true);
+
+          // Tentar reparar automaticamente
+          const repaired = await dataPersistenceManager.repairDataPersistence();
+
+          if (repaired) {
+            setPersistenceIssueDetected(false);
+            console.log("✅ Persistência reparada automaticamente");
+          } else {
+            console.error(
+              "❌ Não foi possível reparar a persistência automaticamente",
+            );
+          }
+        } else {
+          console.log("✅ Sistema de persistência está funcional");
+        }
+      } catch (error) {
+        console.error("❌ Erro na monitoriza��ão de persistência:", error);
+      }
+    };
+
+    initDataPersistenceMonitoring();
 
     // Cleanup ao desmontar componente
     return () => {
@@ -177,6 +218,11 @@ function App() {
   // Admin area states
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+
+  // Data persistence diagnostic states
+  const [showDataDiagnostic, setShowDataDiagnostic] = useState(false);
+  const [persistenceIssueDetected, setPersistenceIssueDetected] =
+    useState(false);
 
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   // Firebase ativo como solicitado
@@ -974,7 +1020,7 @@ function App() {
           setAutoSyncActive(true);
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
         } catch (error) {
-          console.error("❌ Erro ao iniciar sincronização automática:", error);
+          console.error("❌ Erro ao iniciar sincronização autom��tica:", error);
         }
       }
     };
@@ -2169,7 +2215,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `���️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
+              `�����️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -3722,7 +3768,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç��o</span>
+                      <span>Agendar Manutenç����o</span>
                     </button>
                   </div>
                 </div>
@@ -6620,7 +6666,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
                         <li>�� T��cnicos responsáveis</li>
-                        <li>• Datas e durações</li>
+                        <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -10085,6 +10131,26 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
         {/* Firestore Status Indicator - Passo 3 */}
         <FirestoreStatusIndicator />
+
+        {/* Data Persistence Diagnostic - Modal for persistence issues */}
+        {showDataDiagnostic && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="max-w-4xl w-full max-h-screen overflow-y-auto">
+              <DataPersistenceDiagnostic
+                autoCheck={true}
+                onClose={() => setShowDataDiagnostic(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Data Persistence Alert - Smart automatic alert */}
+        <DataPersistenceAlert
+          onOpenDiagnostic={() => setShowDataDiagnostic(true)}
+        />
+
+        {/* Data Persistence Status Indicator */}
+        <DataPersistenceIndicator onClick={() => setShowDataDiagnostic(true)} />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );

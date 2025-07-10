@@ -37,6 +37,7 @@ import { DangerousUserDeletion } from "../components/DangerousUserDeletion";
 import { NotificationDemo } from "../components/NotificationDemo";
 import NuclearUserCleanup from "../components/NuclearUserCleanup";
 import CompleteDeviceActivation from "../components/CompleteDeviceActivation";
+import { DataPersistenceDiagnostic } from "../components/DataPersistenceDiagnostic";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -68,7 +69,8 @@ type AdminSection =
   | "user-deletion"
   | "notification-demo"
   | "nuclear-cleanup"
-  | "data-sharing-status";
+  | "data-sharing-status"
+  | "data-persistence-diagnostic";
 
 export const AdminPage: React.FC<AdminPageProps> = ({
   onLogout,
@@ -85,6 +87,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         "ATIVA TUDO: Notificações, localização, sincronização, utilizadores, PWA - tudo num só botão!",
       icon: Zap,
       color: "bg-gradient-to-r from-green-600 to-blue-600",
+    },
+    {
+      id: "data-persistence-diagnostic" as AdminSection,
+      title: "💾 Diagnóstico de Persistência",
+      description:
+        "CRÍTICO: Verificar e reparar problemas com guardado de dados - especial para app publicada",
+      icon: Database,
+      color: "bg-gradient-to-r from-red-600 to-orange-600",
     },
     {
       id: "user-management" as AdminSection,
@@ -256,6 +266,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     switch (currentSection) {
       case "complete-activation":
         return <CompleteDeviceActivation />;
+      case "data-persistence-diagnostic":
+        return <DataPersistenceDiagnostic autoCheck={true} />;
       case "user-management":
         return <UserManager currentUser={currentUser} />;
       case "data-migration":
