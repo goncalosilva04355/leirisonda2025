@@ -56,7 +56,7 @@ import "./utils/clearModalStates";
 
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
-import { RealtimeNotifications } from "./components/RealtimeNotifications";
+// import { RealtimeNotifications } from "./components/RealtimeNotifications"; // Disabled to fix casing issue
 import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNotificationsFixed";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
