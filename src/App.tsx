@@ -501,8 +501,8 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // Firebase Auth listener for automatic login restoration
-    console.log("🔥 Setting up Firebase Auth auto-login...");
+    // Local Auth listener for automatic login restoration
+    console.log("🔒 Setting up Local Auth auto-login...");
 
     const initializeAuth = async () => {
       try {
@@ -3597,7 +3597,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ��️ Nenhum utilizador encontrado. V�� à Área de
+                                ���� Nenhum utilizador encontrado. V�� à Área de
                                 Administração → "🔧 Corre��ão de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
