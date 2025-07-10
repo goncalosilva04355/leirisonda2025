@@ -3,7 +3,11 @@ import { Settings, Bug } from "lucide-react";
 import LoginDebugHelper from "../components/LoginDebugHelper";
 
 interface LoginPageProps {
-  onLogin: (email: string, password: string) => Promise<void>;
+  onLogin: (
+    email: string,
+    password: string,
+    rememberMe?: boolean,
+  ) => Promise<void>;
   loginError: string;
   isLoading?: boolean;
 }
