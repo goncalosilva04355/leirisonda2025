@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import React, { useState } from "react";
 import { AlertTriangle, ExternalLink, Copy, CheckCircle } from "lucide-react";
 
 export const FirebaseRulesGuide: React.FC = () => {
