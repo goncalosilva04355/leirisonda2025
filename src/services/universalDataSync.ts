@@ -56,9 +56,9 @@ class UniversalDataSyncService {
     // Inicializar sincronização universal silenciosa
 
     try {
-      const firebaseReady = await waitForFirebaseInit();
-      if (!firebaseReady || !isFirebaseReady()) {
-        console.warn("⚠️ Firebase não disponível - modo local apenas");
+      const db = await getFirestoreSafe();
+      if (!db || !isFirebaseReady()) {
+        console.log("📱 Firebase não disponível - modo local apenas");
         // Still return true to allow local operation
         this.isInitialized = true;
         return true;
