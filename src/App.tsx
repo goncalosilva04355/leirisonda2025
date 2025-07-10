@@ -417,7 +417,7 @@ function App() {
         try {
           await addCliente(data);
         } catch (syncError) {
-          console.warn("����� Erro na sincronização universal:", syncError);
+          console.warn("��️ Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
@@ -457,7 +457,7 @@ function App() {
   // Load users from Firestore and localStorage on app start
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("��� Loading users from Firestore + localStorage...");
+      console.log("🔄 Loading users from Firestore + localStorage...");
 
       try {
         // Aguardar Firestore estar pronto
@@ -1374,7 +1374,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa���ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -1850,7 +1850,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("⚠��� Maps redirect is disabled");
+        console.warn("⚠���� Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠��� No address provided");
@@ -5392,7 +5392,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç����������o criada para nova piscina:",
+                                "Futura manutenç������������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6063,7 +6063,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             Notificações de Obras
                           </h4>
                           <p className="text-blue-700 text-sm mb-3">
-                            Receba notifica��ões quando uma nova obra for
+                            Receba notificações quando uma nova obra for
                             atribuída a si.
                           </p>
                           <button
@@ -6383,7 +6383,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>���� Estado e localização</li>
+                        <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
                         <li>• Histórico de manuten������es</li>
                         <li>• Próximas interven��ões</li>
