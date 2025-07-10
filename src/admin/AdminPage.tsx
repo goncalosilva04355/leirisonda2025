@@ -261,6 +261,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         return <CompleteDeviceActivation />;
       case "user-management":
         return <UserManager currentUser={currentUser} />;
+      case "data-migration":
+        return <MigrationTester />;
       case "work-assignment-fix":
         return <WorkAssignmentFix />;
       case "works-data-diagnostic":
