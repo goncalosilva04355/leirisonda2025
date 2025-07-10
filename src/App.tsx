@@ -139,7 +139,7 @@ function App() {
       StabilityMonitor.initialize();
       PerformanceOptimizer.initialize();
       console.log(
-        "🛡️ Stability Monitor ativo - previne crashes e loops infinitos",
+        "���️ Stability Monitor ativo - previne crashes e loops infinitos",
       );
       console.log(
         "🚀 Performance Optimizer ativo - melhora velocidade drasticamente",
@@ -589,7 +589,7 @@ function App() {
         const unsubscribe = authService.onAuthStateChanged((user) => {
           if (user) {
             console.log(
-              "���� Firebase Auth: User automatically restored",
+              "����� Firebase Auth: User automatically restored",
               user.email,
             );
             setCurrentUser(user);
@@ -699,7 +699,7 @@ function App() {
           .register("/sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "�� Service Worker registered successfully:",
+              "��� Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -8878,45 +8878,21 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🧪 Testing Firebase connectivity...");
-                const {
-                  testFirebaseConnectivity,
-                  testFirestoreOperations,
-                  testFirestoreWithAuth,
-                } = await import("./utils/firebaseTest");
+                console.log("🧪 Testing Firebase with simple approach...");
+                const { testFirebaseSimple } = await import(
+                  "./utils/simpleFirebaseTest"
+                );
 
-                // Run basic connectivity test
-                const results = await testFirebaseConnectivity();
-                console.log("📊 Firebase Test Results:", results);
+                const results = await testFirebaseSimple();
+                console.log("📊 Simple Firebase Test Results:", results);
 
-                // Test authenticated Firestore if basic test fails
-                let authTest = null;
-                if (!results.firestore) {
-                  console.log("🔐 Trying authenticated Firestore test...");
-                  authTest = await testFirestoreWithAuth();
-                  console.log("🔐 Auth Test Results:", authTest);
-                }
-
-                // Test operations if Firestore works
-                if (results.firestore) {
-                  const firestoreTest = await testFirestoreOperations();
-                  console.log(
-                    "📝 Firestore Operations Test:",
-                    firestoreTest ? "✅ PASSED" : "❌ FAILED",
-                  );
-                }
-
-                let message = `Firebase Test Results:\n✅ App: ${results.app}\n✅ Firestore: ${results.firestore}\n✅ Storage: ${results.storage}`;
-
-                if (authTest) {
-                  message += `\n🔐 Auth Test: ${authTest.success ? "✅ PASSED" : "❌ FAILED"}`;
-                }
+                let message = `Firebase Test Results:\n✅ App: ${results.app}\n✅ Firestore: ${results.firestore}\n✅ Auth: ${results.auth}\n✅ Storage: ${results.storage}`;
 
                 if (results.errors.length > 0) {
                   message += `\n\n❌ Errors:\n${results.errors.join("\n")}`;
                 }
 
-                message += "\n\nCheck console for details";
+                message += "\n\nCheck console for detailed logs";
                 alert(message);
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
