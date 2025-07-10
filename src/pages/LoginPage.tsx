@@ -190,7 +190,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         </form>
       </div>
 
-      {/* Floating Action Buttons (Bottom Right) */}
+      {/* Floating Action Buttons (Bottom Right) - Hidden */}
+      {/*
       <div className="fixed bottom-4 right-4 flex flex-col space-y-2">
         <button
           onClick={() => (window.location.hash = "administracao")}
@@ -201,6 +202,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           <Settings className="h-5 w-5" />
         </button>
       </div>
+      */}
     </div>
   );
 };
