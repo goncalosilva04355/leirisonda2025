@@ -1872,7 +1872,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Send notification if user is assigned to current user and notifications are enabled
     if (isAssignedToCurrentUser) {
       if (notificationsEnabled && Notification.permission === "granted") {
-        console.log("�� All conditions met, sending notification...");
+        console.log("���� All conditions met, sending notification...");
         showNotification(
           "Nova Obra Atribuída",
           `A obra "${workTitle}" foi-lhe atribuída`,
@@ -2718,7 +2718,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   w.assignedUserIds.includes(currentUser.id)));
                             return isNotCompleted && isAssignedToUser;
                           });
-                          return assignedWorks.length;
+                          return works.length;
                         })()}
                       </div>
                     </div>
@@ -5434,7 +5434,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "❌ Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISSÃO NEGADA: clientes.create",
@@ -5770,7 +5770,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç����������o criada para nova piscina:",
+                                "Futura manutenç�����������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6834,7 +6834,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>�� Equipas responsáveis</li>
+                        <li>���� Equipas responsáveis</li>
                         <li>��� Estados de progresso</li>
                       </ul>
                     </div>
@@ -8057,7 +8057,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠���� Nenhum utilizador encontrado. Vá à Área
-                                de Administra��ão → "🔧 Correção de Atribuição
+                                de Administra����ão → "🔧 Correção de Atribuição
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -8130,7 +8130,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    👤 {assignedUser.name}
+                                    �� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -9255,7 +9255,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>���</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -10135,7 +10135,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.boreDepth
                                   ? `${selectedWork.boreDepth} m`
-                                  : "Não especificado"}
+                                  : "N��o especificado"}
                               </p>
                             </div>
                             <div>
