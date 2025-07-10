@@ -64,7 +64,7 @@ export const FirestoreActivationGuide: React.FC = () => {
                     2
                   </span>
                   <div>
-                    <strong>Selecione o projeto:</strong> leirisonda-16f8b
+                    <strong>Selecione o projeto:</strong> leiria-1cfc9
                   </div>
                 </li>
 
