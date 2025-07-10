@@ -293,6 +293,7 @@ export const FirebaseDebugUtility: React.FC = () => {
                 { id: "status", label: "Status", icon: Database },
                 { id: "test", label: "Test", icon: Play },
                 { id: "tools", label: "Tools", icon: Settings },
+                { id: "diagnostic", label: "Diagnóstico", icon: Bug },
               ].map((tab) => (
                 <button
                   key={tab.id}
