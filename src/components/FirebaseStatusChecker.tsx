@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import React, { useState, useEffect } from "react";
 import { CheckCircle, XCircle, RefreshCw, Database, Users } from "lucide-react";
 
 export const FirebaseStatusChecker: React.FC = () => {
@@ -366,7 +365,7 @@ export const FirebaseStatusChecker: React.FC = () => {
                             await IOSFirebaseFix.forceFirebaseClear();
 
                           if (success) {
-                            console.log("���� iOS FIX SUCCESSFUL!");
+                            console.log("🎉 iOS FIX SUCCESSFUL!");
                           } else {
                             console.log("❌ iOS FIX FAILED");
                           }
