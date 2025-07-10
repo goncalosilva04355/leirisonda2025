@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Settings, ArrowLeft, AlertCircle } from "lucide-react";
-import LoginDiagnostics from "../components/LoginDiagnostics";
 
 interface AdminLoginProps {
   onLogin: () => void;
@@ -104,10 +103,22 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
       </div>
 
       {/* Login Diagnostics Modal */}
-      <LoginDiagnostics
-        isOpen={showDiagnostics}
-        onClose={() => setShowDiagnostics(false)}
-      />
+      {showDiagnostics && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md">
+            <h3 className="text-lg font-semibold mb-4">Diagnóstico de Login</h3>
+            <p className="text-gray-600 mb-4">
+              Funcionalidade de diagnóstico temporariamente desabilitada
+            </p>
+            <button
+              onClick={() => setShowDiagnostics(false)}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
