@@ -3427,7 +3427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������������� {maint.clientContact}
+                                        �������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -4253,7 +4253,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N����vel da Água (m) *
+                                  N���vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -5260,7 +5260,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenç����o
+                          Frequência de Manutenção
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -6106,7 +6106,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                     </div>
 
-                    {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
+                    {/* Configurações de Localiza����ão Individual - Apenas para super_admin */}
                     {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
