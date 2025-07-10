@@ -198,8 +198,8 @@ struct LoginView: View {
             throw LoginError.invalidCredentials
         }
         
-        // Simulate Firebase error as shown in the image
-        throw LoginError.firebaseError("Firebase App named '[DEFAULT]' already deleted (app/app-deleted).")
+                // Login successful - no error thrown
+        print("Login successful for \(email)")
     }
 }
 
