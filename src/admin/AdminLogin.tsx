@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import React, { useState } from "react";
 import { Settings, ArrowLeft, AlertCircle } from "lucide-react";
 import LoginDiagnostics from "../components/LoginDiagnostics";
 
