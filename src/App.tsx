@@ -533,6 +533,33 @@ function App() {
     forceLogout();
   }, []);
 
+  // Passo 3: Teste automático do Firestore
+  useEffect(() => {
+    const testFirestoreStep3 = async () => {
+      console.log("🔥 Passo 3: Iniciando teste do Firestore...");
+
+      // Aguardar um pouco para Firebase se inicializar
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      try {
+        const firestoreResult = await testFirestore();
+
+        if (firestoreResult) {
+          console.log("✅ Passo 3: Firestore ativo e funcional!");
+          console.log("🎉 Firestore pronto para armazenar dados na nuvem");
+        } else {
+          console.log(
+            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
+          );
+        }
+      } catch (error) {
+        console.warn("❌ Passo 3: Erro no teste Firestore:", error);
+      }
+    };
+
+    testFirestoreStep3();
+  }, []);
+
   // Auth state check disabled to prevent errors
   // useEffect(() => {
   //   if (isAuthenticated && !currentUser) {
@@ -1500,7 +1527,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������� Address clicked:", address);
+    console.log("������ Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -4672,7 +4699,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resistência Elétrica
+                            Resistência El��trica
                           </option>
                           <option value="gas">Aquecimento a G��s</option>
                         </select>
@@ -7218,7 +7245,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descriç��o do trabalho realizado..."
+                            placeholder="Descriç���o do trabalho realizado..."
                           />
                         </div>
                         <div>
