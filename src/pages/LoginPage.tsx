@@ -114,10 +114,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
 
-        {/* Local Mode Indicator */}
+        {/* Authorized Users Info */}
         <div className="text-center mb-4">
-          <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            🔒 Modo Local - Qualquer email/palavra-passe funciona
+          <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            🔐 Apenas emails autorizados podem fazer login
           </div>
         </div>
 
