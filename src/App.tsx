@@ -3373,7 +3373,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: João Silva"
+                            placeholder="Ex: Jo��o Silva"
                             required
                           />
                         </div>
@@ -5542,7 +5542,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               • As notificaç����es funcionam apenas com HTTPS
                             </li>
                             <li>
-                              • Certifique-se de que permite notifica��ões no
+                              ��� Certifique-se de que permite notifica��ões no
                               seu navegador
                             </li>
                             <li>
@@ -8784,8 +8784,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden fixed top-20 left-4 z-[70] flex flex-col space-y-2">
+          {/* Mobile Menu Button - Always visible for debug */}
+          <div className="fixed top-4 left-4 z-[70] flex flex-col space-y-2">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="bg-white p-2 rounded-md shadow-md"
@@ -9033,7 +9033,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         )}
                     </div>
 
-                    {/* Detalhes Completos - Seções Expandidas */}
+                    {/* Detalhes Completos - Seç��es Expandidas */}
                     <div className="mt-6 space-y-6">
                       {/* Informações Adicionais */}
                       <div>
