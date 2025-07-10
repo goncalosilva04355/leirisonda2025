@@ -2687,7 +2687,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas (atribuídas)
+                          Folhas não geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -5988,7 +5988,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <input
                           type="text"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Ex: Furgão 1, Carrinha 2"
+                          placeholder="Ex: Furg��o 1, Carrinha 2"
                           value={maintenanceForm.vehicle}
                           onChange={(e) =>
                             setMaintenanceForm({
