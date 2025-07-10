@@ -477,7 +477,7 @@ function App() {
             try {
               const registration = await navigator.serviceWorker.ready;
 
-              // Verificar se o utilizador tem permissão para notificações
+              // Verificar se o utilizador tem permissão para notifica��ões
               const permission = await Notification.requestPermission();
 
               if (permission === "granted") {
@@ -707,7 +707,10 @@ function App() {
         const savedUsers = localStorage.getItem("app-users");
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
-          console.log("✅ Users loaded from localStorage:", parsedUsers.length);
+          console.log(
+            "��� Users loaded from localStorage:",
+            parsedUsers.length,
+          );
           setUsers(parsedUsers);
 
           // Sincronizar com Firestore se disponível
@@ -10567,13 +10570,27 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>Terminar Sessao</span>
-                </button>
+                {/* Settings and Logout buttons */}
+                <div className="space-y-2">
+                  <button
+                    onClick={() => {
+                      navigateToSection("configuracoes");
+                      setSidebarOpen(false);
+                    }}
+                    className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <Settings className="h-5 w-5" />
+                    <span>Configurações</span>
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    <span>Terminar Sessao</span>
+                  </button>
+                </div>
                 <div className="mt-4 text-center">
                   <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
                 </div>
