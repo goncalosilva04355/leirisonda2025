@@ -10,7 +10,10 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db, isFirebaseReady, waitForFirebaseInit } from "../firebase/config";
+import {
+  isFirebaseReady,
+  getFirestoreSafe,
+} from "../firebase/configWithoutFirestore";
 import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 
 export interface SharedDataState {
