@@ -2261,7 +2261,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         title={
                           autoSyncActive
                             ? "Sincronização Automática Ativa"
-                            : "Sincronização Autom��tica Inativa"
+                            : "Sincronização Automática Inativa"
                         }
                       ></div>
                     </div>
@@ -4817,6 +4817,50 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
+                {/* Diagnóstico de Permissões */}
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h3 className="text-sm font-medium text-yellow-800 mb-2">
+                    🔍 Diagnóstico de Permissões
+                  </h3>
+                  <div className="text-xs text-yellow-700 space-y-1">
+                    <div>Usuário: {currentUser?.name || "Não logado"}</div>
+                    <div>Role: {currentUser?.role || "Indefinido"}</div>
+                    <div>
+                      Clientes - Create:{" "}
+                      {hasPermission("clientes", "create")
+                        ? "✅ Sim"
+                        : "❌ Não"}
+                    </div>
+                    <div>
+                      Piscinas - Create:{" "}
+                      {hasPermission("piscinas", "create")
+                        ? "✅ Sim"
+                        : "❌ Não"}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      console.log("🔍 DIAGNÓSTICO COMPLETO:");
+                      console.log("Current User:", currentUser);
+                      console.log("Users list:", users);
+                      console.log(
+                        "localStorage app-users:",
+                        localStorage.getItem("app-users"),
+                      );
+                      alert(`
+Usuário: ${currentUser?.name}
+Role: ${currentUser?.role}
+Clientes Create: ${hasPermission("clientes", "create")}
+Super Admin: ${currentUser?.role === "super_admin"}
+                      `);
+                    }}
+                    className="mt-2 px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700"
+                  >
+                    🔍 Debug Completo
+                  </button>
+                </div>
+
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-6">
@@ -6208,7 +6252,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               dispositivo
                             </li>
                             <li>
-                              • A marcaç��o automática funciona melhor em
+                              • A marcaç����o automática funciona melhor em
                               dispositivos móveis
                             </li>
                             <li>��� O Google Maps abre numa nova janela/tab</li>
@@ -6371,7 +6415,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç��es
+                        <strong>{maintenance.length}</strong> manutenç����es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -7575,7 +7619,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda n��o terminou
+                              Deixe vazio se ainda n���o terminou
                             </p>
                           </div>
                         </div>
@@ -7634,7 +7678,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠������ Nenhum utilizador encontrado. Vá à Área
+                                ⚠���� Nenhum utilizador encontrado. Vá à Área
                                 de Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
@@ -8915,7 +8959,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              console.log(`🔄 Navegando para seção: ${section}`);
+              console.log(`���� Navegando para seção: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               if (
