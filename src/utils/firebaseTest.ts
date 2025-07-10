@@ -109,6 +109,58 @@ export const testFirebaseConnectivity = async () => {
   return results;
 };
 
+export const testFirestoreWithAuth = async () => {
+  console.log("🔐 Testing Firestore with Firebase Auth...");
+
+  try {
+    // First check if user is authenticated
+    const { getAuthSafe } = await import("../firebase/configFixed");
+    const auth = await getAuthSafe();
+
+    if (auth?.currentUser) {
+      console.log("✅ User is authenticated:", auth.currentUser.email);
+
+      // Now test Firestore with authenticated user
+      const db = await getFirestoreSafe();
+      if (!db) throw new Error("Firestore not available");
+
+      const { collection, doc, setDoc, getDoc, serverTimestamp } = await import(
+        "firebase/firestore"
+      );
+
+      // Test with authenticated write to user's own collection
+      const testDoc = doc(collection(db, "user_test"), auth.currentUser.uid);
+      await setDoc(testDoc, {
+        message: "Authenticated Firebase test",
+        timestamp: serverTimestamp(),
+        userId: auth.currentUser.uid,
+        email: auth.currentUser.email,
+      });
+      console.log("✅ Authenticated Firestore WRITE successful");
+
+      // Test authenticated read
+      const docSnap = await getDoc(testDoc);
+      if (docSnap.exists()) {
+        console.log(
+          "✅ Authenticated Firestore READ successful:",
+          docSnap.data(),
+        );
+        return { success: true, authenticated: true, data: docSnap.data() };
+      }
+    } else {
+      console.log("⚠️ No authenticated user found");
+      return {
+        success: false,
+        authenticated: false,
+        message: "No authenticated user",
+      };
+    }
+  } catch (error: any) {
+    console.error("❌ Authenticated Firestore test failed:", error.message);
+    return { success: false, authenticated: false, error: error.message };
+  }
+};
+
 export const testFirestoreOperations = async () => {
   try {
     const db = await getFirestoreSafe();
@@ -138,6 +190,11 @@ export const testFirestoreOperations = async () => {
     }
   } catch (error: any) {
     console.error("❌ Firestore operations test failed:", error.message);
+    if (error.code === "permission-denied") {
+      console.log(
+        "💡 Suggestion: Update Firestore security rules or authenticate user",
+      );
+    }
     return false;
   }
 };
