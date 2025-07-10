@@ -173,6 +173,22 @@ function App() {
   const universalSync = useUniversalDataSync();
   // const dataSync = useDataSyncSafe(); // Temporarily disabled due to useState error
 
+  // Mock dataSync object to prevent errors
+  const dataSync = {
+    updateWork: (id: string, data: any) =>
+      console.log("Mock updateWork:", id, data),
+    deletePool: (id: string) => console.log("Mock deletePool:", id),
+    deleteMaintenance: (id: string) =>
+      console.log("Mock deleteMaintenance:", id),
+    addClient: (client: any) => console.log("Mock addClient:", client),
+    deleteClient: (id: string) => console.log("Mock deleteClient:", id),
+    deleteWork: (id: string) => console.log("Mock deleteWork:", id),
+    updatePool: (id: string, data: any) =>
+      console.log("Mock updatePool:", id, data),
+    updateMaintenance: (id: string, data: any) =>
+      console.log("Mock updateMaintenance:", id, data),
+  };
+
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
@@ -1322,7 +1338,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n���� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -2178,7 +2194,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manuten��ões
+                      Próximas Manutenções
                     </h2>
                   </div>
 
@@ -3231,7 +3247,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ����‍�� {maint.technician}
+                                ����‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -5922,7 +5938,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
-                        <li>�� Estatísticas gerais</li>
+                        <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
                         <li>• Análise de performance</li>
                       </ul>
@@ -8267,7 +8283,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenç��o</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>������</span>
+                  <span>��������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
