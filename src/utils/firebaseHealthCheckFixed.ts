@@ -88,7 +88,7 @@ export class FirebaseHealthCheckFixed {
         if (app.options.projectId) {
           // Tentar inicializar Firestore de forma segura
           try {
-            const db = firestoreModule.getFirestore();
+            const db = firestoreModule.getFirestore(app);
 
             if (db) {
               result.firestore = true;
