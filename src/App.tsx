@@ -477,7 +477,7 @@ function App() {
             try {
               const registration = await navigator.serviceWorker.ready;
 
-              // Verificar se o utilizador tem permissão para notifica��ões
+              // Verificar se o utilizador tem permissão para notificações
               const permission = await Notification.requestPermission();
 
               if (permission === "granted") {
@@ -707,10 +707,7 @@ function App() {
         const savedUsers = localStorage.getItem("app-users");
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
-          console.log(
-            "��� Users loaded from localStorage:",
-            parsedUsers.length,
-          );
+          console.log("✅ Users loaded from localStorage:", parsedUsers.length);
           setUsers(parsedUsers);
 
           // Sincronizar com Firestore se disponível
@@ -914,7 +911,7 @@ function App() {
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
-      console.log("🧹 All mock and test data cleared");
+      console.log("�� All mock and test data cleared");
     };
 
     forceLogout();
@@ -4629,7 +4626,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ���� {assignedUser.name}
+                                    ������ {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -7777,7 +7774,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenç��es</span>
+                          <span className="text-xs">Manutenç���es</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -8882,7 +8879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠���� Nenhum utilizador encontrado. Vá à Área
+                                ������� Nenhum utilizador encontrado. Vá à Área
                                 de Administra��ão → "🔧 Correção de Atribuição
                                 de Obras" para corrigir este problema.
                               </p>
@@ -10166,7 +10163,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              console.log(`���� Navegando para seção: ${section}`);
+              console.log(`���� Navegando para seç��o: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               if (
@@ -10571,21 +10568,21 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
 
                 {/* Settings and Logout buttons */}
-                <div className="space-y-2">
+                <div className="flex items-center space-x-2">
                   <button
                     onClick={() => {
                       navigateToSection("configuracoes");
                       setSidebarOpen(false);
                     }}
-                    className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                    title="Configurações"
                   >
                     <Settings className="h-5 w-5" />
-                    <span>Configurações</span>
                   </button>
 
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="flex-1 flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                   >
                     <LogOut className="h-5 w-5" />
                     <span>Terminar Sessao</span>
