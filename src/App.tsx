@@ -1949,7 +1949,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   {/* Conteúdo por cima do overlay */}
                   <div className="relative z-10">
-                    {/* Logo and Time Row */}
+                    {/* Logo, Time and Logout Row */}
                     <div className="flex items-center justify-between mb-3">
                       <div className="w-20 h-12 bg-white rounded shadow-sm p-2">
                         <img
@@ -1958,12 +1958,21 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           className="w-full h-full object-contain"
                         />
                       </div>
-                      <span className="text-sm text-gray-800 font-medium">
-                        {new Date().toLocaleTimeString("pt-PT", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm text-gray-800 font-medium">
+                          {new Date().toLocaleTimeString("pt-PT", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                        <button
+                          onClick={handleLogout}
+                          className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md shadow-sm transition-colors"
+                          title="Terminar Sessão"
+                        >
+                          <LogOut className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
 
                     {/* Main Content */}
@@ -5358,7 +5367,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado da Manutenção
+                          Estado da Manutenç��o
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -5623,7 +5632,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                         <div className="flex-1">
                           <h4 className="font-medium text-gray-900 mb-2">
-                            Instruções
+                            Instruç��es
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
