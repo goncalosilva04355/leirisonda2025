@@ -2611,7 +2611,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Em Progresso
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras atribuídas em andamento
+                          Obras em andamento
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -5253,7 +5253,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     🔍 Diagn��stico de Permissões
                   </h3>
                   <div className="text-xs text-yellow-700 space-y-1">
-                    <div>Usuário: {currentUser?.name || "Não logado"}</div>
+                    <div>Usu��rio: {currentUser?.name || "Não logado"}</div>
                     <div>Role: {currentUser?.role || "Indefinido"}</div>
                     <div>
                       Clientes - Create:{" "}
@@ -8091,7 +8091,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                     </div>
 
-                    {/* T���cnicos Atribuídos */}
+                    {/* T��cnicos Atribuídos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -8113,7 +8113,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠���� Nenhum utilizador encontrado. Vá à Área
-                                de Administra��ão → "���� Correção de Atribuição
+                                de Administra��ão → "🔧 Correção de Atribuição
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -8382,7 +8382,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Espec��ficas do Furo
+                          Observações Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
