@@ -162,7 +162,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitoriza��ão de persistência:", error);
+        console.error("❌ Erro na monitoriza��ão de persist��ncia:", error);
       }
     };
 
@@ -1041,9 +1041,9 @@ function App() {
   useEffect(() => {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
-      console.log(
-        `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
-      );
+      // console.log(
+      //   `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      // );
 
       // Forçar re-render dos dados universais se necessário
       if (collection === "obras") {
