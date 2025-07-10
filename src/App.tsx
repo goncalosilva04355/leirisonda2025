@@ -269,7 +269,7 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTE��ÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
@@ -971,7 +971,7 @@ function App() {
                 writeError,
               );
               console.log(
-                "💡 Firestore conectado mas pode haver problema nas regras de segurança",
+                "💡 Firestore conectado mas pode haver problema nas regras de seguran��a",
               );
             }
           }
@@ -5778,7 +5778,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç����������o criada para nova piscina:",
+                                "Futura manutenç�����������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6444,7 +6444,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   {/* Tab Content */}
                   <div className="p-6">
-                    {activeAdminTab === "relatorios" && (
+                    {safeActiveAdminTab === "relatorios" && (
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
@@ -10048,7 +10048,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Administra��ão - Single Unified Page */}
+                {/* Administração - Single Unified Page */}
                 <button
                   onClick={() => {
                     navigateToSection("administracao");
