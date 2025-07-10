@@ -101,3 +101,24 @@ export const waitForFirebaseInit = () => Promise.resolve(isFirebaseAvailable());
 
 // Direct exports for immediate use
 export { auth as firebaseAuth, firestore as firebaseFirestore, firebaseApp };
+
+// Legacy db export for backward compatibility
+export const db = new Proxy(
+  {},
+  {
+    get(target, prop) {
+      const firestoreInstance = getFirebaseFirestore();
+      if (!firestoreInstance) return null;
+
+      try {
+        return (firestoreInstance as any)[prop];
+      } catch (error) {
+        console.warn("⚠️ Firestore db proxy error:", error);
+        return null;
+      }
+    },
+  },
+);
+
+// Legacy auth export for backward compatibility
+export { auth };
