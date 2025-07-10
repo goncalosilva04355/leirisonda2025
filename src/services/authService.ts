@@ -185,24 +185,71 @@ class AuthService {
 
   // Logout
   async logout(): Promise<void> {
-    await signOut(auth);
+    if (!(await this.initialize())) {
+      return;
+    }
+
+    try {
+      await signOut(this.auth);
+      console.log("✅ User logged out successfully");
+    } catch (error) {
+      console.error("❌ Logout error:", error);
+    }
   }
 
   // Auth state listener
   onAuthStateChanged(callback: (user: UserProfile | null) => void): () => void {
+    if (!this.auth) {
+      this.initialize().then(() => {
+        if (this.auth) {
+          this._setupAuthStateListener(callback);
+        } else {
+          callback(null);
+        }
+      });
+      return () => {};
+    }
+
+    return this._setupAuthStateListener(callback);
+  }
+
+  private _setupAuthStateListener(
+    callback: (user: UserProfile | null) => void,
+  ): () => void {
     return onAuthStateChanged(
-      auth,
+      this.auth,
       async (firebaseUser: FirebaseUser | null) => {
         if (firebaseUser) {
           try {
-            const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
-            if (userDoc.exists()) {
-              const userProfile = userDoc.data() as UserProfile;
-              callback(userProfile);
-            } else {
-              callback(null);
+            if (this.db) {
+              const userDoc = await getDoc(
+                doc(this.db, "users", firebaseUser.uid),
+              );
+              if (userDoc.exists()) {
+                const userProfile = userDoc.data() as UserProfile;
+                callback(userProfile);
+                return;
+              }
             }
+
+            // Fallback to basic profile if Firestore is not available
+            const userProfile: UserProfile = {
+              uid: firebaseUser.uid,
+              email: firebaseUser.email!,
+              name:
+                firebaseUser.email === "gongonsilva@gmail.com"
+                  ? "Gonçalo Fonseca"
+                  : "Utilizador",
+              role:
+                firebaseUser.email === "gongonsilva@gmail.com"
+                  ? "super_admin"
+                  : "technician",
+              active: true,
+              createdAt: new Date().toISOString(),
+            };
+            callback(userProfile);
           } catch (error) {
+            console.warn("⚠️ Error in auth state change:", error);
             callback(null);
           }
         } else {
@@ -214,12 +261,37 @@ class AuthService {
 
   // Get current user
   async getCurrentUserProfile(): Promise<UserProfile | null> {
-    if (!auth.currentUser) return null;
+    if (!(await this.initialize())) {
+      return null;
+    }
+
+    if (!this.auth.currentUser) return null;
 
     try {
-      const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
-      return userDoc.exists() ? (userDoc.data() as UserProfile) : null;
+      if (this.db) {
+        const userDoc = await getDoc(
+          doc(this.db, "users", this.auth.currentUser.uid),
+        );
+        return userDoc.exists() ? (userDoc.data() as UserProfile) : null;
+      }
+
+      // Fallback to basic profile
+      return {
+        uid: this.auth.currentUser.uid,
+        email: this.auth.currentUser.email!,
+        name:
+          this.auth.currentUser.email === "gongonsilva@gmail.com"
+            ? "Gonçalo Fonseca"
+            : "Utilizador",
+        role:
+          this.auth.currentUser.email === "gongonsilva@gmail.com"
+            ? "super_admin"
+            : "technician",
+        active: true,
+        createdAt: new Date().toISOString(),
+      };
     } catch (error) {
+      console.warn("⚠️ Error getting current user profile:", error);
       return null;
     }
   }
