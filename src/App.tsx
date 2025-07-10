@@ -212,17 +212,26 @@ function App() {
 
   // Backup and complex initialization temporarily disabled for stability
 
-  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log inicial apenas (corrigido para prevenir loops)
-  useEffect(() => {
-    console.log("🔄 SINCRONIZAÇÃO UNIVERSAL INICIALIZADA:", {
+  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log throttled para evitar spam
+  useThrottledLog(
+    "🔄 SINCRONIZAÇÃO UNIVERSAL STATUS:",
+    {
       obras: universalSync.obras.length,
       manutencoes: universalSync.manutencoes.length,
       piscinas: universalSync.piscinas.length,
       clientes: universalSync.clientes.length,
       total: universalSync.totalItems,
       status: universalSync.syncStatus,
-    });
-  }, []); // Remover dependências que causam loops infinitos
+    },
+    [
+      universalSync.obras.length,
+      universalSync.manutencoes.length,
+      universalSync.piscinas.length,
+      universalSync.clientes.length,
+      universalSync.syncStatus,
+    ],
+    10000, // Log apenas a cada 10 segundos
+  );
 
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
@@ -1184,7 +1193,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu������das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -1339,7 +1348,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notifica��ões nas configura����es para receber alertas autom����ticos.`,
           );
         }, 1000);
       }
@@ -5520,7 +5529,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
+                    {/* Configurações de Localiza�����ão Individual - Apenas para super_admin */}
                     {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
@@ -5870,7 +5879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>���� Equipas responsáveis</li>
+                        <li>�� Equipas responsáveis</li>
                         <li>��� Estados de progresso</li>
                       </ul>
                     </div>
