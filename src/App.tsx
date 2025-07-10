@@ -2858,7 +2858,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               )}
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  ���� Trabalho:
+                                  ������ Trabalho:
                                 </span>
                                 <span className="text-sm text-gray-900">
                                   {work.workPerformed ||
@@ -10349,6 +10349,287 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             );
                             setViewingWork(false);
                             setSelectedWork(null);
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                      >
+                        Apagar
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Pool View Modal */}
+          {viewingPool && selectedPool && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div className="p-6">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Waves className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">
+                          Detalhes Completos da Piscina
+                        </h2>
+                        <p className="text-gray-600">{selectedPool.name}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setViewingPool(false);
+                        setSelectedPool(null);
+                      }}
+                      className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Informações Básicas */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                        Informações Básicas
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Nome da Piscina
+                          </label>
+                          <p className="text-gray-900">{selectedPool.name}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Tipo
+                          </label>
+                          <p className="text-gray-900 capitalize">
+                            {selectedPool.type}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Estado
+                          </label>
+                          <span
+                            className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                              selectedPool.status === "Ativa"
+                                ? "bg-green-100 text-green-700"
+                                : selectedPool.status === "Inativa"
+                                  ? "bg-red-100 text-red-700"
+                                  : "bg-yellow-100 text-yellow-700"
+                            }`}
+                          >
+                            {selectedPool.status}
+                          </span>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Localização
+                          </label>
+                          <button
+                            onClick={() => {
+                              if (selectedPool?.location) {
+                                handleAddressClick(selectedPool.location);
+                              }
+                            }}
+                            className={`text-left ${
+                              enableMapsRedirect
+                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                : "text-gray-900"
+                            }`}
+                            disabled={!enableMapsRedirect}
+                          >
+                            📍 {selectedPool.location}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Informações do Cliente */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                        Informações do Cliente
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Nome do Cliente
+                          </label>
+                          <p className="text-gray-900">{selectedPool.client}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Email
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.clientEmail || "Não especificado"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Telefone
+                          </label>
+                          <button
+                            onClick={() => {
+                              if (selectedPool?.clientPhone) {
+                                handlePhoneClick(selectedPool.clientPhone);
+                              }
+                            }}
+                            className={`${
+                              enablePhoneDialer && selectedPool.clientPhone
+                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                : "text-gray-900"
+                            }`}
+                            disabled={
+                              !enablePhoneDialer || !selectedPool.clientPhone
+                            }
+                          >
+                            📞 {selectedPool.clientPhone || "Não especificado"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Especificações Técnicas */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                        Especificações Técnicas
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Volume de Água
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.waterVolume
+                              ? `${selectedPool.waterVolume} L`
+                              : "Não especificado"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Dimensões
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.dimensions || "Não especificado"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Profundidade
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.depth
+                              ? `${selectedPool.depth} m`
+                              : "Não especificado"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Manutenções */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                        Manutenções
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Última Manutenção
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.lastMaintenance
+                              ? new Date(
+                                  selectedPool.lastMaintenance,
+                                ).toLocaleDateString("pt-PT")
+                              : "Não especificado"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Próxima Manutenção
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.nextMaintenance
+                              ? new Date(
+                                  selectedPool.nextMaintenance,
+                                ).toLocaleDateString("pt-PT")
+                              : "Não especificado"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Observações */}
+                    {selectedPool.observations && (
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                          Observações
+                        </h3>
+                        <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                          {selectedPool.observations}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Data de Criação */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Data de Registo
+                      </label>
+                      <p className="text-gray-900">
+                        {new Date(
+                          selectedPool.createdAt || new Date(),
+                        ).toLocaleString("pt-PT")}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex justify-end space-x-3">
+                    <button
+                      onClick={() => {
+                        setViewingPool(false);
+                        setSelectedPool(null);
+                      }}
+                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                    >
+                      Fechar
+                    </button>
+                    {hasPermission("piscinas", "edit") && (
+                      <button
+                        onClick={() => {
+                          setEditingPool(selectedPool);
+                          setViewingPool(false);
+                          setSelectedPool(null);
+                          setActiveSection("editar-piscina");
+                        }}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      >
+                        Editar
+                      </button>
+                    )}
+                    {hasPermission("piscinas", "delete") && (
+                      <button
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta ação não pode ser desfeita.`,
+                            )
+                          ) {
+                            dataSync.deletePool(selectedPool.id);
+                            showNotification(
+                              "Piscina Eliminada",
+                              `A piscina "${selectedPool.name}" foi eliminada com sucesso`,
+                              "success",
+                            );
+                            setViewingPool(false);
+                            setSelectedPool(null);
                           }
                         }}
                         className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
