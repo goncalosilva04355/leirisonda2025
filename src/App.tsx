@@ -103,6 +103,9 @@ import UserMigrationIndicator from "./components/UserMigrationIndicator";
 import "./utils/datainput-diagnostic";
 import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
 import DataInputTutorial from "./components/DataInputTutorial";
+
+// Monitor de erros Firebase para detectar e corrigir automaticamente
+import "./utils/firebaseErrorMonitor";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
@@ -397,7 +400,7 @@ function App() {
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
-          "⚠️ Nenhum utilizador atribuído, n����o enviando notificações",
+          "⚠️ Nenhum utilizador atribuído, n��o enviando notificações",
         );
         return;
       }
@@ -2201,7 +2204,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
 
-        console.log(`��� Utilizador ${userForm.name} atualizado com sucesso`);
+        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
@@ -4205,7 +4208,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç����o</option>
+                            <option value="instalacao">Instalaç������o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -4890,7 +4893,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <textarea
                               rows={3}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
+                              placeholder="Condi���ões do terreno, qualidade da água, dificuldades encontradas, etc..."
                             />
                           </div>
                         </div>
@@ -7643,7 +7646,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>• Informaç��es de clientes</li>
+                        <li>• Informaç���es de clientes</li>
                         <li>• Histórico de manuten������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
