@@ -31,6 +31,19 @@ class HybridAuthService {
     password: string,
     rememberMe: boolean = false,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
+    // Verificar se o email está autorizado
+    const authorizedUser = getAuthorizedUser(email);
+    if (!authorizedUser) {
+      console.warn("❌ Email não autorizado:", email);
+      return {
+        success: false,
+        error:
+          "Email não autorizado. Contacte o administrador para obter acesso.",
+      };
+    }
+
+    console.log("✅ Email autorizado:", authorizedUser.name);
+
     // Tentar Firebase primeiro, se disponível
     if (this.useFirebase) {
       try {
