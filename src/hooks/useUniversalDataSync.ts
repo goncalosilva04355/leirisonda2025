@@ -84,7 +84,7 @@ export function useUniversalDataSync(): UniversalSyncState &
     }
   });
 
-  // Inicializar sincronização universal
+    // Inicializar sincronização universal
   useEffect(() => {
     let mounted = true;
 
@@ -154,12 +154,13 @@ export function useUniversalDataSync(): UniversalSyncState &
     };
   }, []);
 
-  // Configurar listeners universais em tempo real
+    // Configurar listeners universais em tempo real
   useEffect(() => {
-    if (!universalDataSync.isReady()) return;
+    try {
+      if (!universalDataSync || !universalDataSync.isReady()) return;
 
-    // Configurar listeners silenciosos
-    const cleanup = universalDataSync.setupUniversalListeners({
+      // Configurar listeners silenciosos
+      const cleanup = universalDataSync.setupUniversalListeners({
       onObrasChange: (obras) => {
         setState((prev) => ({
           ...prev,
@@ -282,7 +283,7 @@ export function useUniversalDataSync(): UniversalSyncState &
     }
   }, []);
 
-  // Ações para manutenç��es
+  // Ações para manutenções
   const addManutencao = useCallback(
     async (manutencaoData: any): Promise<string> => {
       try {
