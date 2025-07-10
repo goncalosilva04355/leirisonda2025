@@ -50,6 +50,7 @@ import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
+import FirestoreStatusIndicator from "./components/FirestoreStatusIndicator";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
@@ -512,7 +513,7 @@ function App() {
         const unsubscribe = authService.onAuthStateChanged((user) => {
           if (user) {
             console.log(
-              "���� Firebase Auth: User automatically restored",
+              "������ Firebase Auth: User automatically restored",
               user.email,
             );
             setCurrentUser(user);
@@ -622,7 +623,7 @@ function App() {
           .register("/sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "�� Service Worker registered successfully:",
+              "��� Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -1168,7 +1169,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu�����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
