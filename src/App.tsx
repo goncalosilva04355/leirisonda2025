@@ -404,7 +404,31 @@ function App() {
       return await addManutencao(data);
     }
   };
-  const addClient = (data: any) => addCliente(data);
+  const addClient = async (data: any) => {
+    try {
+      console.log("👥 addClient iniciado com Firestore ativo");
+
+      const firestoreId = await firestoreService.createCliente(data);
+
+      if (firestoreId) {
+        console.log("✅ Cliente criado no Firestore:", firestoreId);
+
+        // Sincronizar com sistema universal
+        try {
+          await addCliente(data);
+        } catch (syncError) {
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
+        }
+
+        return firestoreId;
+      } else {
+        return await addCliente(data);
+      }
+    } catch (error) {
+      console.error("❌ Erro no sistema de clientes:", error);
+      return await addCliente(data);
+    }
+  };
   const syncWithFirebase = () => forceSyncAll();
   const enableSync = (enabled: boolean) => {
     console.log("Sync is always enabled in Universal Sync mode:", enabled);
@@ -577,7 +601,7 @@ function App() {
       try {
         // Clear Firebase auth state
         await authService.logout();
-        console.log("���� Firebase auth cleared");
+        console.log("🔒 Firebase auth cleared");
       } catch (error) {
         console.log("🔒 Firebase logout error (expected):", error);
       }
@@ -710,7 +734,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("⚠️ Notifications not supported in this browser");
+      console.warn("��️ Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -1636,7 +1660,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������ Address clicked:", address);
+    console.log("������� Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
