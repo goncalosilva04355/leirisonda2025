@@ -6413,7 +6413,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <button
                         onClick={() => setActiveAdminTab("configuracoes")}
                         className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                          activeAdminTab === "configuracoes"
+                          safeActiveAdminTab === "configuracoes"
                             ? "border-red-500 text-red-600"
                             : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                         }`}
@@ -7729,7 +7729,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            C��digo Postal *
+                            Código Postal *
                           </label>
                           <input
                             type="text"
@@ -7756,7 +7756,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Additional Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informações Adicionais
+                        Informaç��es Adicionais
                       </h3>
                       <div className="space-y-4">
                         <div>
