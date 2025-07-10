@@ -389,7 +389,8 @@ class GlobalDataShareService {
    * Obter todos os dados globais
    */
   async getAllGlobalData(): Promise<SharedDataState> {
-    if (!isFirebaseReady() || !db) {
+    const db = await attemptFirestoreInit();
+    if (!db) {
       throw new Error("Firebase não disponível");
     }
 
