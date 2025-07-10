@@ -335,6 +335,179 @@ function App() {
       return await addPiscina(data);
     }
   };
+
+  // Função para enviar notificações push quando uma obra é atribuída
+  const sendWorkAssignmentNotifications = async (workData: any) => {
+    try {
+      console.log("📱 Enviando notificações de atribuição de obra...");
+
+      // Verificar se há utilizadores atribuídos
+      if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
+        console.log(
+          "⚠️ Nenhum utilizador atribuído, não enviando notificações",
+        );
+        return;
+      }
+
+      // Preparar dados da notificação
+      const notificationData = {
+        title: "🔔 Nova Obra Atribuída",
+        body: `${workData.title} - ${workData.client}`,
+        icon: "/icon.svg",
+        badge: "/icon.svg",
+        data: {
+          workId: workData.id,
+          workTitle: workData.title,
+          client: workData.client,
+          location: workData.location,
+          startDate: workData.startDate,
+          type: "work_assignment",
+          url: `/obras/${workData.id}`,
+        },
+      };
+
+      // Carregar todos os utilizadores para obter tokens FCM
+      const allUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+
+      // Para cada utilizador atribuído
+      for (const assignedUser of workData.assignedUsers) {
+        try {
+          const user = allUsers.find((u: any) => u.id === assignedUser.id);
+          if (!user) {
+            console.warn(
+              `⚠️ Utilizador ${assignedUser.name} não encontrado na lista`,
+            );
+            continue;
+          }
+
+          console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
+
+          // Salvar notificação local para o utilizador
+          const userNotifications = JSON.parse(
+            localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
+              "[]",
+          );
+
+          const newNotification = {
+            id: `${workData.id}-${Date.now()}`,
+            workId: workData.id,
+            workTitle: workData.title,
+            client: workData.client,
+            location: workData.location,
+            startDate: workData.startDate,
+            type: "new_assignment",
+            timestamp: Date.now(),
+            read: false,
+            urgent: workData.priority === "urgent",
+          };
+
+          userNotifications.unshift(newNotification);
+          // Manter apenas as últimas 50 notificações
+          const limitedNotifications = userNotifications.slice(0, 50);
+
+          localStorage.setItem(
+            `work-notifications-${assignedUser.id}`,
+            JSON.stringify(limitedNotifications),
+          );
+
+          // Disparar evento customizado para atualizar UI em tempo real
+          const customEvent = new CustomEvent("worksUpdated", {
+            detail: {
+              type: "assignment",
+              workId: workData.id,
+              workTitle: workData.title,
+              client: workData.client,
+              location: workData.location,
+              startDate: workData.startDate,
+              assignedUser: assignedUser,
+            },
+          });
+          window.dispatchEvent(customEvent);
+
+          // Tentar enviar notificação push via Firebase (se disponível)
+          if ("serviceWorker" in navigator && "PushManager" in window) {
+            try {
+              const registration = await navigator.serviceWorker.ready;
+
+              // Verificar se o utilizador tem permissão para notificações
+              const permission = await Notification.requestPermission();
+
+              if (permission === "granted") {
+                // Mostrar notificação local imediatamente
+                const notification = new Notification(notificationData.title, {
+                  body: notificationData.body,
+                  icon: notificationData.icon,
+                  badge: notificationData.badge,
+                  tag: `work-${workData.id}`,
+                  requireInteraction: true,
+                  data: notificationData.data,
+                });
+
+                // Auto-close notification after 10 seconds
+                setTimeout(() => {
+                  notification.close();
+                }, 10000);
+
+                // Handle notification click
+                notification.onclick = () => {
+                  window.focus();
+                  notification.close();
+                  // Opcional: navegar para a obra
+                };
+
+                console.log(
+                  `✅ Notificação local enviada para ${assignedUser.name}`,
+                );
+              } else {
+                console.warn(
+                  `⚠️ Permissão de notificação negada para ${assignedUser.name}`,
+                );
+              }
+
+              // TODO: Implementar FCM para notificações push quando app está fechada
+              // Isso requer configuração adicional do Firebase Messaging
+            } catch (pushError) {
+              console.warn("⚠️ Erro ao enviar notificação push:", pushError);
+            }
+          }
+
+          // Salvar notificação no Firestore (se disponível)
+          try {
+            if (firestoreService) {
+              await firestoreService.createNotification({
+                userId: assignedUser.id,
+                workId: workData.id,
+                type: "work_assignment",
+                title: notificationData.title,
+                body: notificationData.body,
+                data: notificationData.data,
+                timestamp: new Date().toISOString(),
+                read: false,
+              });
+              console.log(
+                `✅ Notificação salva no Firestore para ${assignedUser.name}`,
+              );
+            }
+          } catch (firestoreError) {
+            console.warn(
+              "⚠️ Erro ao salvar notificação no Firestore:",
+              firestoreError,
+            );
+          }
+        } catch (userError) {
+          console.error(
+            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
+            userError,
+          );
+        }
+      }
+
+      console.log("✅ Processo de notificações concluído");
+    } catch (error) {
+      console.error("❌ Erro no sistema de notificações:", error);
+    }
+  };
+
   const addWork = async (data: any) => {
     try {
       console.log("🔧 addWork iniciado com Firestore ativo");
@@ -3079,7 +3252,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ).length === 0 && (
                                 <div className="text-center py-8">
                                   <div className="text-gray-400 mb-2">
-                                    ��������
+                                    �������
                                   </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
@@ -6193,7 +6366,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           </p>
                           <p className="text-blue-600 text-xs">
                             Estado:{" "}
-                            {enablePhoneDialer ? "✅ Ativo" : "�� Inativo"}
+                            {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
@@ -7515,7 +7688,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 {/* Edit Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa���ões Básicas */}
+                    {/* Informa��ões Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
