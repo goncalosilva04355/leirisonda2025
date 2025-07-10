@@ -723,7 +723,7 @@ function App() {
               // Escrever teste
               await setDoc(testDoc, testData);
               console.log(
-                "�� Passo 3: Dados escritos no Firestore com sucesso",
+                "📝 Passo 3: Dados escritos no Firestore com sucesso",
               );
 
               // Ler teste
@@ -1118,7 +1118,7 @@ function App() {
 
     console.log("Manutenção salva com sucesso:", interventionData);
 
-    let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
+    let alertMessage = `Manuten��ão salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
 
     if (maintenanceForm.nextMaintenance) {
       const nextDate = new Date(
@@ -1970,7 +1970,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
+              `���️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -7369,7 +7369,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   ? work.assignedUsers
                                       .map((u) => u.name)
                                       .join(", ")
-                                  : work.assignedTo || "N��o atribuída"}
+                                  : work.assignedTo || "Não atribuída"}
                               </div>
                               {work.budget && (
                                 <div>
@@ -7806,7 +7806,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             defaultValue={editingWork?.observations}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observaç��es sobre a obra..."
+                            placeholder="Observações sobre a obra..."
                           />
                         </div>
                       </div>
@@ -8180,7 +8180,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenç��o">Em Manutenç��o</option>
+                          <option value="Em Manutenção">Em Manutenção</option>
                         </select>
                       </div>
                       <div>
@@ -8702,7 +8702,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                   Página não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A seç���o solicitada não foi encontrada.
+                  A seç����o solicitada não foi encontrada.
                 </p>
               </div>
             </div>
@@ -9617,7 +9617,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informa����es Detalhadas
+                          Informaç��es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
