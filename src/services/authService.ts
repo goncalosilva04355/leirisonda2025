@@ -66,9 +66,10 @@ class AuthService {
       const localUser: UserProfile = {
         uid: `local-${email.replace("@", "-").replace(".", "-")}`,
         email: email,
-        name: email.includes("goncalo")
-          ? "Gonçalo Fonseca"
-          : email.split("@")[0],
+        name:
+          email.includes("goncalo") || email.includes("gongonsilva")
+            ? "Gonçalo Fonseca"
+            : email.split("@")[0],
         role: "super_admin",
         active: true,
         createdAt: new Date().toISOString(),
