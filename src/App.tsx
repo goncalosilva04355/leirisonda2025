@@ -167,7 +167,8 @@ function App() {
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   // Firebase ativo como solicitado
   const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSafe();
+  // const dataSync = useDataSyncSafe(); // Temporarily disabled - useState error
+  const dataSync = universalSync; // Use universalSync as fallback
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
@@ -2069,7 +2070,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             {work.contact && (
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  📞 Contacto:
+                                  �� Contacto:
                                 </span>
                                 <button
                                   onClick={(e) => {
