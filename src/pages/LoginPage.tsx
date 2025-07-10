@@ -76,7 +76,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     // Save credentials if remember me is checked (using sessionStorage + Firebase persistence)
     if (rememberMe) {
-      console.log("💾 Saving credentials for auto-login");
+      console.log("�� Saving credentials for auto-login");
       sessionStorage.setItem(
         "savedLoginCredentials",
         JSON.stringify({
@@ -186,14 +186,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             >
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
-          </div>
-
-          {/* Development Mode Info */}
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <p className="text-xs text-blue-700 text-center">
-              <strong>Modo Desenvolvimento:</strong> Use qualquer email com
-              password "123"
-            </p>
           </div>
         </form>
       </div>
