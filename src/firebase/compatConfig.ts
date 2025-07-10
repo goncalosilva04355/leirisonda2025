@@ -46,10 +46,20 @@ export const auth = new Proxy(
   {},
   {
     get(target, prop) {
-      const authInstance = firebaseService.getAuth();
-      if (!authInstance) return null;
-
       try {
+        if (!firebaseService.isInitialized()) {
+          // Return null for properties when not initialized
+          return null;
+        }
+
+        const authInstance = firebaseService.getAuth();
+        if (!authInstance) return null;
+
+        // Handle special case for currentUser which might be accessed synchronously
+        if (prop === "currentUser") {
+          return (authInstance as any)[prop] || null;
+        }
+
         return (authInstance as any)[prop];
       } catch (error) {
         console.warn("⚠️ Auth proxy error:", error);
