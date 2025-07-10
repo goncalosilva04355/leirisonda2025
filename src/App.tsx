@@ -355,7 +355,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("⚠️ Firestore não disponível, usando sistema atual");
+        console.warn("��️ Firestore não disponível, usando sistema atual");
         return await addObra(data);
       }
     } catch (error) {
@@ -674,9 +674,16 @@ function App() {
       localStorage.removeItem("currentUser");
       sessionStorage.removeItem("savedLoginCredentials");
 
+      // Clear all mock and test data
+      localStorage.removeItem("mock-users");
+      localStorage.removeItem("mock-current-user");
+      localStorage.removeItem("test-data");
+      localStorage.removeItem("sample-data");
+
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
+      console.log("🧹 All mock and test data cleared");
     };
 
     forceLogout();
@@ -5753,7 +5760,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
                       >
                         <Save className="h-4 w-4" />
-                        <span>Guardar Intervenção</span>
+                        <span>Guardar Interven��ão</span>
                       </button>
                     </div>
                   </form>
@@ -7104,7 +7111,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����� {work.contact}
+                                        ������ {work.contact}
                                       </button>
                                     </div>
                                   )}
