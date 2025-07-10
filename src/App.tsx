@@ -114,17 +114,12 @@ const initialUsers = [
 ];
 
 function App() {
-  // Inicializar monitores de estabilidade e performance
+  // Inicializar monitores de estabilidade e performance - Temporarily disabled
   useEffect(() => {
     try {
-      StabilityMonitor.initialize();
-      PerformanceOptimizer.initialize();
-      console.log(
-        "🛡️ Stability Monitor ativo - previne crashes e loops infinitos",
-      );
-      console.log(
-        "🚀 Performance Optimizer ativo - melhora velocidade drasticamente",
-      );
+      // StabilityMonitor.initialize(); // Temporarily disabled
+      // PerformanceOptimizer.initialize(); // Temporarily disabled
+      console.log("🛡️ Monitors temporarily disabled - working in safe mode");
     } catch (error) {
       console.error("Error initializing monitors:", error);
     }
@@ -6839,7 +6834,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  ��� {work.address || work.location}
+                                  ���� {work.address || work.location}
                                 </button>
                               </div>
                               <div>
