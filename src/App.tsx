@@ -8316,7 +8316,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>������</span>
+                  <span>��������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -8656,6 +8656,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               {/* Navigation */}
               <nav className="flex-1 px-4 py-6 space-y-2">
+                {/* Debug temporário */}
+                {currentUser?.role === "super_admin" && (
+                  <div className="text-xs text-gray-500 mb-2 p-2 bg-yellow-50 rounded">
+                    Debug: Role={currentUser?.role}, Permissões=
+                    {currentUser?.permissions ? "Sim" : "Não"}
+                  </div>
+                )}
                 <button
                   onClick={() => {
                     navigateToSection("dashboard");
