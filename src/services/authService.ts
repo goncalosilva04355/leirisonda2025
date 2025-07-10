@@ -115,29 +115,15 @@ class AuthService {
         return this.localLogin(email, password, rememberMe);
       }
 
-      // Use retry mechanism for the entire login operation
-      return await firebaseService.retryOperation(async () => {
-        if (!(await this.initialize())) {
-          throw new Error(
-            "Firebase: Firebase App named '[DEFAULT]' already deleted (app/app-deleted).",
-          );
-        }
+            // Use the new Firebase Auth Fix for robust authentication
+      const { firebaseAuthFix } = await import('./firebaseAuthFix');
+      console.log("🔧 Using Firebase Auth Fix for login...");
 
-        // Set persistence based on remember me preference
-        try {
-          const persistence = rememberMe
-            ? browserLocalPersistence
-            : browserSessionPersistence;
-          await setPersistence(this.auth, persistence);
-        } catch (persistError) {
-          console.warn("⚠️ Could not set persistence:", persistError);
-        }
+      const authResult = await firebaseAuthFix.safeSignIn(email, password, rememberMe);
 
-        const userCredential = await signInWithEmailAndPassword(
-          this.auth,
-          email,
-          password,
-        );
+      if (authResult.success && authResult.user) {
+        console.log("✅ Firebase Auth Fix successful");
+        const firebaseUser = authResult.user;
         const firebaseUser = userCredential.user;
 
         // If Firestore is available, try to get user profile
