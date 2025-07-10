@@ -250,7 +250,7 @@ function App() {
 
     // Verificações autom��ticas desabilitadas para resolver instabilidade
     // Sistema funcionará normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações automáticas
+    // Sistema funcionará normalmente sem verifica��ões automáticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -1606,7 +1606,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "�����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "�������️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
@@ -7380,7 +7380,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Específicas do Furo
+                          Observações Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -8493,8 +8493,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
-        <SimpleFirebaseDebug />
-        <LoginPage
+                <Suspense fallback={<div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">⏳</div>}>
+          <SimpleFirebaseDebug />
+        </Suspense>
+        <Suspense fallback={<div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">A carregar...</div>}>
+          <LoginPage
           onLogin={async (email: string, password: string) => {
             console.log("🔐 Login attempt for:", email);
 
