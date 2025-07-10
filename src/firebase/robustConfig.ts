@@ -60,35 +60,44 @@ class FirebaseService {
         console.log("✅ Using existing Firebase app");
       }
 
-      // Initialize Auth
-      try {
-        this.auth = getAuth(this.app);
-        console.log("✅ Firebase Auth initialized");
-      } catch (authError) {
-        console.warn("⚠️ Firebase Auth initialization failed:", authError);
-        this.auth = null;
-      }
+      if (this.app) {
+        // Initialize Auth
+        try {
+          this.auth = getAuth(this.app);
+          console.log("✅ Firebase Auth initialized");
+        } catch (authError) {
+          console.warn("⚠️ Firebase Auth initialization failed:", authError);
+          this.auth = null;
+        }
 
-      // Initialize Firestore
-      try {
-        this.firestore = getFirestore(this.app);
-        console.log("✅ Firebase Firestore initialized");
-      } catch (firestoreError) {
-        console.warn(
-          "⚠️ Firebase Firestore initialization failed:",
-          firestoreError,
-        );
-        this.firestore = null;
-      }
+        // Initialize Firestore
+        try {
+          this.firestore = getFirestore(this.app);
+          console.log("✅ Firebase Firestore initialized");
+        } catch (firestoreError) {
+          console.warn(
+            "⚠️ Firebase Firestore initialization failed:",
+            firestoreError,
+          );
+          this.firestore = null;
+        }
 
-      this.initialized = true;
-      return true;
+        this.initialized = true;
+        return true;
+      } else {
+        throw new Error("Failed to initialize Firebase app");
+      }
     } catch (error) {
       console.error("❌ Firebase initialization failed:", error);
       this.app = null;
       this.auth = null;
       this.firestore = null;
       this.initialized = false;
+
+      // Try to provide fallback functionality
+      console.log(
+        "🔄 Firebase initialization failed, app will work in offline mode",
+      );
       return false;
     } finally {
       this.initializing = false;
