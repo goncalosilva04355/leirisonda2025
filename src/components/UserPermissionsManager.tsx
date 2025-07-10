@@ -21,7 +21,7 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db, isFirestoreReady } from "../firebase/config";
 
 interface PermissionsEditorProps {
   user: UserProfile;
