@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Settings, Bug } from "lucide-react";
+import { Settings } from "lucide-react";
 
 interface LoginPageProps {
   onLogin: (
