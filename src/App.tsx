@@ -796,7 +796,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "N��o tem permissão para criar manutenç���es. Contacte o administrador.",
+        "N���o tem permissão para criar manutenç���es. Contacte o administrador.",
       );
       return;
     }
@@ -8879,11 +8879,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <button
               onClick={async () => {
                 console.log("🧪 Testing Firebase connectivity...");
-                const { testFirebaseConnectivity, testFirestoreOperations } =
-                  await import("./utils/firebaseTest");
+                const {
+                  testFirebaseConnectivity,
+                  testFirestoreOperations,
+                  testFirestoreWithAuth,
+                } = await import("./utils/firebaseTest");
+
+                // Run basic connectivity test
                 const results = await testFirebaseConnectivity();
                 console.log("📊 Firebase Test Results:", results);
 
+                // Test authenticated Firestore if basic test fails
+                let authTest = null;
+                if (!results.firestore) {
+                  console.log("🔐 Trying authenticated Firestore test...");
+                  authTest = await testFirestoreWithAuth();
+                  console.log("🔐 Auth Test Results:", authTest);
+                }
+
+                // Test operations if Firestore works
                 if (results.firestore) {
                   const firestoreTest = await testFirestoreOperations();
                   console.log(
@@ -8892,9 +8906,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   );
                 }
 
-                alert(
-                  `Firebase Test Results:\n✅ App: ${results.app}\n✅ Firestore: ${results.firestore}\n✅ Storage: ${results.storage}\n\nCheck console for details`,
-                );
+                let message = `Firebase Test Results:\n✅ App: ${results.app}\n✅ Firestore: ${results.firestore}\n✅ Storage: ${results.storage}`;
+
+                if (authTest) {
+                  message += `\n🔐 Auth Test: ${authTest.success ? "✅ PASSED" : "❌ FAILED"}`;
+                }
+
+                if (results.errors.length > 0) {
+                  message += `\n\n❌ Errors:\n${results.errors.join("\n")}`;
+                }
+
+                message += "\n\nCheck console for details";
+                alert(message);
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
               title="Test Firebase Connectivity"
