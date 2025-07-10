@@ -506,64 +506,20 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // Local Auth listener for automatic login restoration
-    console.log("🔒 Setting up Local Auth auto-login...");
-
-    const initializeAuth = async () => {
-      try {
-        // Set up Firebase Auth state listener for automatic login
-        const unsubscribe = authService.onAuthStateChanged((user) => {
-          if (user) {
-            console.log(
-              "���� Firebase Auth: User automatically restored",
-              user.email,
-            );
-            setCurrentUser(user);
-            setIsAuthenticated(true);
-
-            // Auto-navegação removida para evitar loop de login
-            console.log(
-              "✅ User authenticated - avoiding auto-navigation loop",
-            );
-          } else {
-            console.log("🔒 Firebase Auth: No user session found");
-            setCurrentUser(null);
-            setIsAuthenticated(false);
-          }
-        });
-
-        return unsubscribe;
-      } catch (error) {
-        console.error("��� Firebase Auth setup error:", error);
-        setIsAuthenticated(false);
-        setCurrentUser(null);
-        return () => {}; // Return empty cleanup function
-      }
-    };
-
-    // Initialize auth
-    const authPromise = initializeAuth();
-
-    // Cleanup on unmount
-    return () => {
-      authPromise
-        .then((unsubscribe) => {
-          if (unsubscribe && typeof unsubscribe === "function") {
-            unsubscribe();
-          }
-        })
-        .catch(console.error);
-    };
-    // Firebase auth code removed to fix syntax errors
-
-    // DO NOT initialize default admin automatically - this was causing the security issue
-    // Users must always login manually for security
+    // SECURITY: No automatic login - users must always login manually
     console.log(
-      "🔒 SECURITY: No automatic admin initialization - manual login required",
+      "🔒 SECURITY: No automatic login - manual authentication required",
     );
 
-    // Return empty cleanup function since unsubscribe is handled inside the promise
-    return () => {};
+    // Ensure user starts in unauthenticated state
+    setCurrentUser(null);
+    setIsAuthenticated(false);
+
+    // Clear any stored auth data
+    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("savedLoginCredentials");
+
+    console.log("🔒 SECURITY: All automatic login mechanisms disabled");
   }, []);
 
   // Auth state check disabled to prevent errors
@@ -4882,7 +4838,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manuten��ão
+                        Registar intervenção de manuten���ão
                       </p>
                     </div>
                   </div>
@@ -6996,7 +6952,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manuten��ão</option>
-                            <option value="instalacao">Instalação</option>
+                            <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
