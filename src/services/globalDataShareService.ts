@@ -1,15 +1,16 @@
-import {
-  collection,
-  doc,
-  setDoc,
-  getDocs,
-  query,
-  orderBy,
-  onSnapshot,
-  Unsubscribe,
-  deleteDoc,
-  updateDoc,
-} from "firebase/firestore";
+// Firestore imports disabled - service not available
+// import {
+//   collection,
+//   doc,
+//   setDoc,
+//   getDocs,
+//   query,
+//   orderBy,
+//   onSnapshot,
+//   Unsubscribe,
+//   deleteDoc,
+//   updateDoc,
+// } from "firebase/firestore";
 import {
   isFirebaseReady,
   getFirestoreSafe,
@@ -124,7 +125,7 @@ class GlobalDataShareService {
   }
 
   /**
-   * Guardar dados na coleção global partilhada
+   * Guardar dados na coleç��o global partilhada
    */
   private async saveToGlobalCollection(
     collection: string,
