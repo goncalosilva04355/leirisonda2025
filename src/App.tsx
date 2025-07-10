@@ -1258,7 +1258,7 @@ function App() {
 
   const handleSaveIntervention = () => {
     // SECURITY: Check if user has permission to create maintenance
-    if (!currentUser?.permissions?.manutencoes?.create) {
+    if (!hasPermission("manutencoes", "create")) {
       alert(
         "N��o tem permissão para criar manutenç���es. Contacte o administrador.",
       );
@@ -2751,7 +2751,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </span>
 
                               <div className="flex items-center space-x-2">
-                                {/* Botão Visualizar */}
+                                {/* Bot��o Visualizar */}
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -2954,7 +2954,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">����</div>
+                            <div className="text-gray-400 mb-2">������</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
