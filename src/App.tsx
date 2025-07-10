@@ -5265,7 +5265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�������es, recomendações, pr��xima manutenção..."
+                          placeholder="Observaç�������es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7241,7 +7241,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descriç����o do trabalho realizado..."
+                            placeholder="Descriç��o do trabalho realizado..."
                           />
                         </div>
                         <div>
@@ -9316,7 +9316,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         <WorkAssignmentNotificationsSimple currentUser={currentUser} />
 
         {/* User Restore Notification */}
-        <UserRestoreNotification />
+        <UserRestoreNotificationSimple />
 
         {/* Firebase Auto-Monitor - Discrete indicator */}
         <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
