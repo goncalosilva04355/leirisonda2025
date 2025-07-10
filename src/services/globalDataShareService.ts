@@ -159,9 +159,25 @@ class GlobalDataShareService {
     onMaintenanceChange: (maintenance: any[]) => void;
     onClientsChange: (clients: any[]) => void;
   }): () => void {
-    if (!isFirebaseReady() || !db) {
+    this.initializeListeners(callbacks);
+    return () => this.cleanup();
+  }
+
+  private async initializeListeners(callbacks: {
+    onPoolsChange: (pools: any[]) => void;
+    onWorksChange: (works: any[]) => void;
+    onMaintenanceChange: (maintenance: any[]) => void;
+    onClientsChange: (clients: any[]) => void;
+  }): Promise<void> {
+    const db = await attemptFirestoreInit();
+    if (!db) {
       console.error("❌ Firebase não disponível para listeners globais");
-      return () => {};
+      // Provide empty arrays as fallback
+      callbacks.onPoolsChange([]);
+      callbacks.onWorksChange([]);
+      callbacks.onMaintenanceChange([]);
+      callbacks.onClientsChange([]);
+      return;
     }
 
     console.log("📡 CONFIGURANDO LISTENERS GLOBAIS COM PROTEÇÃO");
