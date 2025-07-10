@@ -8539,6 +8539,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
+        {/* Temporarily disabled to fix Firebase initialization errors
         <Suspense
           fallback={
             <div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">
@@ -8548,6 +8549,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         >
           <SimpleFirebaseDebug />
         </Suspense>
+        */}
         <Suspense
           fallback={
             <div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">
