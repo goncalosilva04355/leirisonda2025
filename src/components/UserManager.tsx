@@ -10,7 +10,8 @@ import {
   Mail,
   UserCheck,
 } from "lucide-react";
-import { AUTHORIZED_USERS, AuthorizedUser } from "../config/authorizedUsers";
+import { AuthorizedUser } from "../config/authorizedUsers";
+import { useAuthorizedUsers } from "../hooks/useAuthorizedUsers";
 
 interface UserManagerProps {
   currentUser: any;
