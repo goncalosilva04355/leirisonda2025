@@ -25,6 +25,7 @@ export default defineConfig({
           ],
         },
       },
+      external: ["firebase/firestore", "@firebase/firestore"],
     },
   },
   server: {
@@ -36,6 +37,16 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ["firebase/app", "firebase/auth", "firebase/database"],
-    exclude: ["@firebase/firestore", "firebase/firestore"],
+    exclude: [
+      "@firebase/firestore",
+      "firebase/firestore",
+      "@firebase/firestore-compat",
+    ],
+  },
+  resolve: {
+    alias: {
+      // Alias Firestore imports to our blocker
+      "firebase/firestore": "/src/utils/firestoreBlocker.ts",
+    },
   },
 });
