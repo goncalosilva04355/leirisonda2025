@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Settings, Bug } from "lucide-react";
-import LoginDebugHelper from "../components/LoginDebugHelper";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -218,7 +217,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 </button>
               </div>
 
-              <LoginDebugHelper />
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <p className="text-blue-800 text-sm">
+                  Debug helper temporariamente desabilitado
+                </p>
+              </div>
 
               <div className="flex justify-end mt-6 pt-4 border-t border-gray-200">
                 <button
