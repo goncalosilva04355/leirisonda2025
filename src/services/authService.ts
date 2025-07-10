@@ -84,7 +84,8 @@ class AuthService {
   async logout(): Promise<void> {
     try {
       // Only sign out from Firebase if there's actually a Firebase user logged in
-      if (auth.currentUser) {
+      const auth = await getAuthSafe();
+      if (auth && auth.currentUser) {
         await signOut(auth);
         console.log("✅ Signed out from Firebase");
       } else {
