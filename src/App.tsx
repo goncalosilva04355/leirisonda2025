@@ -614,7 +614,7 @@ function App() {
         try {
           await addManutencao(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("⚠️ Erro na sincronizaç��o universal:", syncError);
         }
 
         return firestoreId;
@@ -2668,11 +2668,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return (
-                              isNotCompleted &&
-                              noSheetGenerated &&
-                              isAssignedToUser
-                            );
+                            return isNotCompleted && noSheetGenerated;
                           });
                           return worksWithoutSheets.length;
                         })()}
@@ -5507,7 +5503,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     {/* Location */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Localizaç��o Completa *
+                        Localizaç���o Completa *
                       </label>
                       <input
                         type="text"
