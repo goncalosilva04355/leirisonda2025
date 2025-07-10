@@ -8,7 +8,7 @@ import {
   Download,
   Play,
 } from "lucide-react";
-import FirebaseHealthCheck from "../utils/firebaseHealthCheck";
+import FirebaseHealthCheckFixed from "../utils/firebaseHealthCheckFixed";
 
 export const SimpleFirebaseDebug: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
