@@ -441,7 +441,7 @@ function App() {
 
   // Load users from localStorage on app start
   useEffect(() => {
-    console.log("🔄 Loading users from localStorage on app start...");
+    console.log("���� Loading users from localStorage on app start...");
 
     try {
       // Load users from localStorage (app-users)
@@ -4008,7 +4008,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa��ões sobre a obra..."
+                            placeholder="Observa����ões sobre a obra..."
                           />
                         </div>
 
@@ -8827,6 +8827,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <p className="text-sm text-gray-500">{currentUser?.role}</p>
                   </div>
                 </div>
+
+                <button
+                  onClick={() => setShowAdminLogin(true)}
+                  className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  title="Administração"
+                >
+                  <Settings className="h-4 w-4" />
+                  <span className="text-sm">Admin</span>
+                </button>
 
                 <button
                   onClick={handleLogout}
