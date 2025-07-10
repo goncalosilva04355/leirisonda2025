@@ -7214,7 +7214,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ��� Detalhes do Furo de Água
+                        ����� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -9220,8 +9220,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="p-4 lg:p-6">{renderContent()}</div>
           </main>
 
-          {/* Install Prompt for Mobile */}
-          <InstallPrompt />
+          {/* Install Prompt for Mobile - Temporarily disabled */}
+          {/* <InstallPrompt /> */}
 
           {/* Data Sharing Fix Manager */}
 
