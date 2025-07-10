@@ -7400,6 +7400,57 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                             </div>
                           )}
+
+                          {/* System Diagnostics Section - Only for Super Admin */}
+                          {currentUser?.role === "super_admin" && (
+                            <div className="bg-white rounded-lg p-6 shadow-sm">
+                              <div className="flex items-center mb-4">
+                                <Settings className="h-6 w-6 text-purple-600 mr-3" />
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  Diagnósticos do Sistema
+                                </h3>
+                              </div>
+                              <p className="text-gray-600 mb-6">
+                                Ferramentas de diagnóstico e correção para
+                                problemas do sistema.
+                              </p>
+
+                              <div className="space-y-4">
+                                {/* Data Input Status */}
+                                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                  <DataInputStatusIndicator />
+                                </div>
+
+                                {/* Firebase Fix Button */}
+                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                  <div className="flex items-center justify-between mb-3">
+                                    <h4 className="font-medium text-blue-900">
+                                      Correção Firebase
+                                    </h4>
+                                    <FirebaseFixButton />
+                                  </div>
+                                  <p className="text-blue-700 text-sm">
+                                    Use este botão se encontrar problemas de
+                                    autenticação ou conexão.
+                                  </p>
+                                </div>
+
+                                {/* Tutorial Access */}
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                  <div className="flex items-center justify-between mb-3">
+                                    <h4 className="font-medium text-green-900">
+                                      Tutorial Interativo
+                                    </h4>
+                                    <DataInputTutorial />
+                                  </div>
+                                  <p className="text-green-700 text-sm">
+                                    Tutorial passo-a-passo para inserção de
+                                    dados.
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
 
