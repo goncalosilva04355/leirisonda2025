@@ -122,3 +122,6 @@ export const db = new Proxy(
 
 // Legacy auth export for backward compatibility
 export { auth };
+
+// Legacy app export for backward compatibility
+export const app = firebaseApp;
