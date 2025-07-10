@@ -2043,7 +2043,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <div className="space-y-3">
                             <div className="flex items-center space-x-2">
                               <span className="text-sm font-medium text-gray-600">
-                                📍 Morada:
+                                �� Morada:
                               </span>
                               {work.location ? (
                                 <button
@@ -7214,7 +7214,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ����� Detalhes do Furo de Água
+                        ��� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -9256,11 +9256,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* Realtime Notifications - REMOVIDAS */}
         {/* <RealtimeNotifications /> */}
 
-        {/* Work Assignment Notifications */}
-        <WorkAssignmentNotifications currentUser={currentUser} />
+        {/* Work Assignment Notifications - Temporarily disabled */}
+        {/* <WorkAssignmentNotifications currentUser={currentUser} /> */}
 
-        {/* User Restore Notification */}
-        <UserRestoreNotification />
+        {/* User Restore Notification - Temporarily disabled */}
+        {/* <UserRestoreNotification /> */}
 
         {/* Firebase Auto-Monitor - Discrete indicator */}
         <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
