@@ -186,7 +186,7 @@ function App() {
   // const dataSync = useDataSyncSafe(); // Temporarily disabled - useState error
   const dataSync = universalSync; // Use universalSync as fallback
 
-  // FIREBASE AUTO-CORRE��ÃO - Monitorização automática
+  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
@@ -206,26 +206,10 @@ function App() {
 
   // Backup and complex initialization temporarily disabled for stability
 
-  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log throttled para evitar spam
-  useThrottledLog(
-    "🔄 SINCRONIZAÇÃO UNIVERSAL STATUS:",
-    {
-      obras: universalSync.obras.length,
-      manutencoes: universalSync.manutencoes.length,
-      piscinas: universalSync.piscinas.length,
-      clientes: universalSync.clientes.length,
-      total: universalSync.totalItems,
-      status: universalSync.syncStatus,
-    },
-    [
-      universalSync.obras.length,
-      universalSync.manutencoes.length,
-      universalSync.piscinas.length,
-      universalSync.clientes.length,
-      universalSync.syncStatus,
-    ],
-    10000, // Log apenas a cada 10 segundos
-  );
+  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log inicial apenas
+  useEffect(() => {
+    console.log("🔄 SINCRONIZAÇÃO UNIVERSAL INICIALIZADA");
+  }, []);
 
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
@@ -898,7 +882,7 @@ function App() {
     }
 
     try {
-      console.log("🔐 Attempting login for:", loginForm.email);
+      console.log("��� Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -3004,7 +2988,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção registada
                       </h3>
                       <p className="text-gray-600 text-sm">
-                        As manutenções aparecerão aqui quando forem criadas
+                        As manutenções aparecer��o aqui quando forem criadas
                       </p>
                     </div>
                   ) : (
@@ -9093,7 +9077,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Di��metro da Coluna
+                                Diâmetro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
