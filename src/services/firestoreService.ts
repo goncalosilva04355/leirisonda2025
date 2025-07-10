@@ -147,6 +147,10 @@ export class FirestoreService {
       });
 
       console.log(`✅ ${collectionName}/${id} atualizado no Firestore`);
+
+      // Sincronização automática imediata
+      this.triggerAutoSync(collectionName, "update", data);
+
       return true;
     } catch (error) {
       console.error(`❌ Erro ao atualizar ${collectionName}/${id}:`, error);
