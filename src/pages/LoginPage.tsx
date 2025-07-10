@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Settings, Bug } from "lucide-react";
-import LoginDebugHelper from "../components/LoginDebugHelper";
+// import LoginDebugHelper from "../components/LoginDebugHelper"; // Temporarily disabled to fix error
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<void>;
