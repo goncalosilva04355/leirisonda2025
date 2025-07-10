@@ -372,6 +372,20 @@ export const UserPermissionsManager: React.FC = () => {
           relatorios: { view: true, create: true, edit: true, delete: true },
           clientes: { view: true, create: true, edit: true, delete: true },
         };
+      case "admin":
+        return {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: {
+            view: true,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: true, edit: true, delete: false },
+          clientes: { view: true, create: true, edit: true, delete: false },
+        };
       case "manager":
         return {
           obras: { view: true, create: true, edit: true, delete: false },
