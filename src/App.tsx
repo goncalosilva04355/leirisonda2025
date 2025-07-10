@@ -2817,11 +2817,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h2>
                       </div>
                       <div className="p-4 space-y-3">
-                        {assignedWorks.map((work) => (
-                          <div
-                            key={work.id}
-                            className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
-                          >
+                                                {assignedWorks.map((work) => {
+                          // Verificar se a obra está atribuída ao utilizador atual
+                          const isAssignedToUser = currentUser && (
+                            // Verificar assignedTo (campo legacy)
+                            (work.assignedTo && (
+                              work.assignedTo === currentUser.name ||
+                              work.assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
+                              currentUser.name.toLowerCase().includes(work.assignedTo.toLowerCase())
+                            )) ||
+                            // Verificar assignedUsers array
+                            (work.assignedUsers && work.assignedUsers.some(user =>
+                              user.name === currentUser.name ||
+                              user.id === currentUser.id
+                            )) ||
+                            // Verificar assignedUserIds array
+                            (work.assignedUserIds && work.assignedUserIds.includes(currentUser.id))
+                          );
+
+                          return (
+                            <div
+                              key={work.id}
+                              className={`border-l-4 rounded-r-lg p-4 transition-colors ${
+                                isAssignedToUser
+                                  ? "border-purple-500 bg-purple-50 hover:bg-purple-100"
+                                  : "border-gray-300 bg-gray-50 hover:bg-gray-100"
+                              }`}
+                            >
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
