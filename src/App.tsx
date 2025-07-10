@@ -8455,7 +8455,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     return (
       <div>
         <LoginPage
-          onLogin={async (email: string, password: string) => {
+          onLogin={async (
+            email: string,
+            password: string,
+            rememberMe: boolean = false,
+          ) => {
             console.log("🔐 Login attempt for:", email);
 
             // Clear any previous errors
