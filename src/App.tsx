@@ -130,26 +130,9 @@ function App() {
     }
   }, []);
 
-  // SECURITY: Always start as not authenticated - NUNCA mudar para true
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    // Check localStorage on initialization
-    const savedAuth = localStorage.getItem("isAuthenticated");
-    return savedAuth === "true";
-  });
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
-    // Check localStorage on initialization
-    const savedUser = localStorage.getItem("currentUser");
-    if (savedUser) {
-      try {
-        return JSON.parse(savedUser);
-      } catch (error) {
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem("isAuthenticated");
-        return null;
-      }
-    }
-    return null;
-  });
+  // SECURITY: Always start as not authenticated - força página de login
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
   // Debug logging disabled for production
 
@@ -1333,7 +1316,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             "Agora vai receber notificações de obras atribu��das",
             "success",
           );
-          console.log("������ Notifications enabled successfully");
+          console.log("������� Notifications enabled successfully");
         } else {
           console.warn("❌ Notification permission denied or dismissed");
         }
