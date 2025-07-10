@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./AppClean";
+import App from "./App";
 import "./index.css";
 
 console.log("🚀 Main.tsx loaded - starting app");
