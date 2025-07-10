@@ -9,7 +9,7 @@ import {
   ArrowRight,
   XCircle,
 } from "lucide-react";
-import LoginDiagnostics from "./LoginDiagnostics";
+
 import UserSyncManager from "../utils/userSyncManager";
 
 interface AuthTroubleshootingGuideProps {
