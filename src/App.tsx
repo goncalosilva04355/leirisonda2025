@@ -64,7 +64,7 @@ import SimpleFirebaseDebug from "./components/SimpleFirebaseDebug";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
-import HotReloadTest from "./components/HotReloadTest";
+// import HotReloadTest from "./components/HotReloadTest"; // Removed test component
 
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
@@ -3136,7 +3136,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����������� {maint.clientContact}
+                                        ���������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3687,9 +3687,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ������ Nenhum utilizador encontrado. V��� à Área
-                                de Administração → "🔧 Corre��ão de Atribuiç��o
-                                de Obras" para corrigir este problema.
+                                �������� Nenhum utilizador encontrado. V��� à
+                                Área de Administração → "🔧 Corre��ão de
+                                Atribuiç��o de Obras" para corrigir este
+                                problema.
                               </p>
                             </div>
                           )}
