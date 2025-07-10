@@ -86,7 +86,7 @@ import { ForceInitialization } from "./utils/forceInitialization";
 
 // Sistema de diagnóstico de persistência
 import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
-import { dataPersistenceManager } from "./utils/dataPersstenceFix";
+import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
@@ -102,7 +102,7 @@ import UserRestoreNotificationSimple from "./components/UserRestoreNotificationS
 const initialUsers = [
   {
     id: 1,
-    name: "Gonçalo Fonseca",
+    name: "Gon��alo Fonseca",
     email: "gongonsilva@gmail.com",
     password: "19867gsf",
     role: "super_admin",
@@ -384,7 +384,7 @@ function App() {
     try {
       console.log("📱 Enviando notificações de atribuição de obra...");
 
-      // Verificar se h�� utilizadores atribuídos
+      // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
           "⚠️ Nenhum utilizador atribuído, não enviando notificações",
@@ -1874,7 +1874,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
+    console.log(`��� OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -6540,7 +6540,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 • Todas as obras ({works.length} registos)
                               </li>
                               <li>
-                                • Todas as manutenções ({maintenance.length}{" "}
+                                • Todas as manuten��ões ({maintenance.length}{" "}
                                 registos)
                               </li>
                               <li>
@@ -9999,7 +9999,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <label className="block text-sm font-medium text-gray-700">
                           Orçamento
                         </label>
-                        <p className="text-gray-900">��{selectedWork.budget}</p>
+                        <p className="text-gray-900">€{selectedWork.budget}</p>
                       </div>
                     )}
 
