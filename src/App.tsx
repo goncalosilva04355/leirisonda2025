@@ -135,7 +135,7 @@ function App() {
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    console.log("🔥 Firebase handles auth state automatically");
+    console.log("��� Firebase handles auth state automatically");
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -1464,7 +1464,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu�����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -2569,7 +2569,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenç��o agendada
+                          Nenhuma manutenç����o agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenç��es aparecerão aqui
@@ -4253,7 +4253,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N��vel da Água (m) *
+                                  N���vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -7657,7 +7657,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                     </div>
 
-                    {/* Técnicos Atribuídos */}
+                    {/* T��cnicos Atribuídos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -7948,7 +7948,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Específicas do Furo
+                          Observações Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -9310,8 +9310,9 @@ Super Admin: ${currentUser?.role === "super_admin"}
                   </button>
                 )}
 
-                {/* Localizações - Apenas para super_admin */}
-                {currentUser?.role === "super_admin" && (
+                {/* Localizações - Para super_admin e admin */}
+                {(currentUser?.role === "super_admin" ||
+                  currentUser?.role === "admin") && (
                   <button
                     onClick={() => {
                       navigateToSection("localizacoes");
