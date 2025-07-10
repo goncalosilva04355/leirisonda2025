@@ -1,4 +1,4 @@
-// Firebase configuration using simple, direct implementation
-// This avoids complex async patterns that can cause app destruction issues
+// Passo 1: Firebase configuration - básica e simples
+// Usando o novo projeto Firebase passo a passo
 
-export * from "./simpleConfig";
+export * from "./basicConfig";
