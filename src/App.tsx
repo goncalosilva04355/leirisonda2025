@@ -61,31 +61,31 @@ import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNot
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/configWithoutFirestore";
-import "./firebase/realtimeDatabase"; // Initialize Realtime Database
+// // import "./firebase/realtimeDatabase"; // Initialize Realtime Database - disabled to simplify - disabled
 
 // SECURITY: RegisterForm removed - only super admin can create users
 // import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
 // import { AdminPage } from "./admin/AdminPage"; // Now lazy loaded
-// Lazy loading para componentes pesados
-const LoginPage = lazy(() =>
-  import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
-);
-const SimpleFirebaseDebug = lazy(
-  () => import("./components/SimpleFirebaseDebug"),
-);
-const AdvancedSettings = lazy(() =>
-  import("./components/AdvancedSettings").then((module) => ({
-    default: module.AdvancedSettings,
-  })),
-);
-const AdminLogin = lazy(() =>
-  import("./admin/AdminLogin").then((module) => ({
-    default: module.AdminLogin,
-  })),
-);
-const AdminPage = lazy(() =>
-  import("./admin/AdminPage").then((module) => ({ default: module.AdminPage })),
-);
+// Lazy loading removido temporariamente para simplificar
+// const LoginPage = lazy(() =>
+//   import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
+// );
+// const SimpleFirebaseDebug = lazy(
+//   () => import("./components/SimpleFirebaseDebug"),
+// );
+// const AdvancedSettings = lazy(() =>
+//   import("./components/AdvancedSettings").then((module) => ({
+//     default: module.AdvancedSettings,
+//   })),
+// );
+// const AdminLogin = lazy(() =>
+//   import("./admin/AdminLogin").then((module) => ({
+//     default: module.AdminLogin,
+//   })),
+// );
+// const AdminPage = lazy(() =>
+//   import("./admin/AdminPage").then((module) => ({ default: module.AdminPage })),
+// );
 
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
@@ -312,7 +312,7 @@ function App() {
         `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
       );
       console.log(
-        "✅ AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+        "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
       );
     }
   }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -708,7 +708,7 @@ function App() {
     console.log("��� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
-      console.log("������ Current notification permission:", permission);
+      console.log("������� Current notification permission:", permission);
       setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
@@ -1187,7 +1187,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manutenções: ${maintenance.length}
+- Total de Manuten��ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -1230,7 +1230,7 @@ ${index + 1}. ${work.title}
    Localização: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
-   Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
+   Data In��cio: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
@@ -1445,7 +1445,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura������es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n���� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura������es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -2288,7 +2288,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manutenções
+                      Próximas Manuten��ões
                     </h2>
                   </div>
 
@@ -3029,7 +3029,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Histórico de manutenç��es realizadas
+                          Histórico de manutenç���es realizadas
                         </p>
                       </div>
                     </div>
@@ -4453,7 +4453,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Cliente Proprietário *
+                          Cliente Propriet��rio *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -5321,7 +5321,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa��ões Gerais
+                          Observa����es Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -5751,7 +5751,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                         <div className="flex-1">
                           <h4 className="font-medium text-gray-900 mb-2">
-                            Instruções
+                            Instruç��es
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
@@ -5911,7 +5911,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten���������es</li>
+                        <li>• Histórico de manuten����������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -6852,7 +6852,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����� {work.contact}
+                                        ������� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -7841,7 +7841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instalação
+                          ).value; // Data de Instala��ão
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
@@ -8592,17 +8592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
-        {/* Temporarily disabled to fix Firebase initialization errors
-        <Suspense
-          fallback={
-            <div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">
-              ⏳
-            </div>
-          }
-        >
-          <SimpleFirebaseDebug />
-        </Suspense>
-        */}
+                {/* SimpleFirebaseDebug disabled */}
         <Suspense
           fallback={
             <div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">
@@ -8611,6 +8601,57 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         >
           <LoginPage
+            onLogin={async (email: string, password: string) => {
+              console.log("🔐 Login attempt for:", email);
+
+              // Clear any previous errors
+              setLoginError("");
+
+              // Basic validation
+              if (!email?.trim() || !password?.trim()) {
+                setLoginError("Por favor, preencha todos os campos");
+                return;
+              }
+
+              try {
+                const result = await authService.login(email, password);
+
+                if (result.success && result.user) {
+                  console.log("✅ Login successful for:", result.user.email);
+
+                  // Set user state and authentication
+                  setCurrentUser(result.user);
+                  setIsAuthenticated(true);
+                  localStorage.setItem("currentUser", JSON.stringify(result.user));
+                  localStorage.setItem("isAuthenticated", "true");
+                  // Clear manual logout flag on successful login
+                  localStorage.removeItem("manualLogout");
+
+                  // Clear login form
+                  setLoginForm({ email: "", password: "" });
+
+                  // Navigate to dashboard
+                  setTimeout(() => {
+                    const hash = window.location.hash.substring(1);
+                    if (hash && hash !== "login") {
+                      setActiveSection(hash);
+                    } else {
+                      navigateToSection("dashboard");
+                    }
+                  }, 100);
+                } else {
+                  console.warn("❌ Login failed:", result.error);
+                  setLoginError(result.error || "Credenciais inválidas");
+                }
+              } catch (error) {
+                console.error("❌ Login error:", error);
+                setLoginError("Erro de sistema. Por favor, tente novamente.");
+              }
+            }}
+            loginError={loginError}
+            isLoading={false}
+          />
+        {/* </LoginPage
             onLogin={async (email: string, password: string) => {
               console.log("🔐 Login attempt for:", email);
 
@@ -8668,10 +8709,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 );
               }
             }}
-            loginError={loginError}
+                        loginError={loginError}
             isLoading={false}
           />
-        </Suspense>
+        {/* </Suspense> */}
 
         {/* Admin Login Modal - também funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
@@ -8701,11 +8742,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         )}
       </div>
     );
-  }
+    }
 
   // Use sync manager to determine if sync should be enabled
-  const quotaStatus = syncManager.getSyncStatus();
-  const syncInterval = syncManager.getSafeInterval();
+  // const quotaStatus = syncManager.getSyncStatus();
+  // const syncInterval = syncManager.getSafeInterval();
 
   // Debug log for authenticated state
   console.log("🔐 Authentication Status:", {
@@ -9181,7 +9222,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     {/* Detalhes Completos - Seções Expandidas */}
                     <div className="mt-6 space-y-6">
-                      {/* Informações Adicionais */}
+                      {/* Informaç��es Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                           Informaç��es Detalhadas
