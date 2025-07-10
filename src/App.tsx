@@ -3543,7 +3543,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ).length === 0 && (
                                 <div className="text-center py-8">
                                   <div className="text-gray-400 mb-2">
-                                    �������
+                                    ��������
                                   </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
@@ -6884,7 +6884,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configurações
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configurações do sistema, relatórios e utilizadores
+                        Configura��ões do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
@@ -7069,7 +7069,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </li>
                                       <li>
                                         • Certifique-se de que permite
-                                        notifica��ões no seu navegador
+                                        notifica���ões no seu navegador
                                       </li>
                                       <li>
                                         • Em dispositivos móveis, adicione a app
@@ -11615,6 +11615,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Data Persistence Status Indicator */}
         <DataPersistenceIndicator onClick={() => setShowDataDiagnostic(true)} />
+
+        {/* Data Input Status Indicator */}
+        <DataInputStatusIndicator />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
