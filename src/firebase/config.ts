@@ -199,8 +199,19 @@ export const initializeFirebaseManually = async (): Promise<{
   return { db, auth, success };
 };
 
-// IMPORTANTE: NÃO inicializar automaticamente - apenas quando solicitado
-console.log("📱 Firebase configurado (inicialização sob demanda)");
+// Inicializar serviços automaticamente para resolver problemas de Auth/Firestore
+(async () => {
+  try {
+    console.log("🔄 Inicializando Firebase services automaticamente...");
+    await attemptAuthInit();
+    await attemptFirestoreInit();
+    console.log("✅ Firebase services inicializados");
+  } catch (error) {
+    console.warn("⚠️ Erro na inicialização automática do Firebase:", error);
+  }
+})();
+
+console.log("📱 Firebase configurado (inicialização automática)");
 
 // Exports
 export { app };
