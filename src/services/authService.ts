@@ -164,12 +164,16 @@ class AuthService {
 
   // Get current user
   async getCurrentUserProfile(): Promise<UserProfile | null> {
-    if (!auth.currentUser) return null;
-
     try {
+      const auth = await getAuthSafe();
+      const db = await getFirestoreSafe();
+
+      if (!auth || !db || !auth.currentUser) return null;
+
       const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
       return userDoc.exists() ? (userDoc.data() as UserProfile) : null;
     } catch (error) {
+      console.warn("Error getting current user profile:", error);
       return null;
     }
   }
