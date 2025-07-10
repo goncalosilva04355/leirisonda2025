@@ -54,6 +54,40 @@ class AuthService {
     }
   }
 
+  // Local authentication for development mode
+  private localLogin(
+    email: string,
+    password: string,
+    rememberMe: boolean = false,
+  ): { success: boolean; error?: string; user?: UserProfile } {
+    // Simple local authentication for development
+    // Accept any email with password "123"
+    if (password === "123") {
+      const localUser: UserProfile = {
+        uid: `local-${email.replace("@", "-").replace(".", "-")}`,
+        email: email,
+        name: email.split("@")[0],
+        role: "super_admin",
+        active: true,
+        createdAt: new Date().toISOString(),
+      };
+
+      // Store in localStorage for persistence
+      const storageKey = rememberMe
+        ? "leirisonda-user"
+        : "leirisonda-session-user";
+      localStorage.setItem(storageKey, JSON.stringify(localUser));
+
+      console.log("✅ Local login successful for:", email);
+      return { success: true, user: localUser };
+    }
+
+    return {
+      success: false,
+      error: "Credenciais inválidas (use password: 123)",
+    };
+  }
+
   // Login
   async login(
     email: string,
