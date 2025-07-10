@@ -117,9 +117,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         };
       default: // technician
         return {
-          obras: { view: true, create: false, edit: true, delete: false },
+          obras: { view: true, create: true, edit: true, delete: false },
           manutencoes: { view: true, create: true, edit: true, delete: false },
-          piscinas: { view: true, create: false, edit: true, delete: false },
+          piscinas: { view: true, create: true, edit: true, delete: false },
           utilizadores: {
             view: false,
             create: false,
