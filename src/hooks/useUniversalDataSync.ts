@@ -53,18 +53,36 @@ export interface UniversalSyncActions {
  */
 export function useUniversalDataSync(): UniversalSyncState &
   UniversalSyncActions {
-  const [state, setState] = useState<UniversalSyncState>(() => ({
-    obras: [],
-    manutencoes: [],
-    piscinas: [],
-    clientes: [],
-    totalItems: 0,
-    lastSync: "",
-    isGloballyShared: true,
-    isLoading: true,
-    error: null,
-    syncStatus: "disconnected",
-  }));
+  const [state, setState] = useState<UniversalSyncState>(() => {
+    try {
+      return {
+        obras: [],
+        manutencoes: [],
+        piscinas: [],
+        clientes: [],
+        totalItems: 0,
+        lastSync: "",
+        isGloballyShared: true,
+        isLoading: true,
+        error: null,
+        syncStatus: "disconnected",
+      };
+    } catch (error) {
+      console.error("❌ Error initializing useUniversalDataSync state:", error);
+      return {
+        obras: [],
+        manutencoes: [],
+        piscinas: [],
+        clientes: [],
+        totalItems: 0,
+        lastSync: "",
+        isGloballyShared: false,
+        isLoading: false,
+        error: "Initialization failed",
+        syncStatus: "error",
+      };
+    }
+  });
 
   // Inicializar sincronização universal
   useEffect(() => {
@@ -250,7 +268,7 @@ export function useUniversalDataSync(): UniversalSyncState &
     }
   }, []);
 
-  // Ações para manutenções
+  // Ações para manutenç��es
   const addManutencao = useCallback(
     async (manutencaoData: any): Promise<string> => {
       try {
