@@ -683,7 +683,7 @@ function App() {
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
-      console.log("�� All mock and test data cleared");
+      console.log("🧹 All mock and test data cleared");
     };
 
     forceLogout();
@@ -1850,7 +1850,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("⚠��� Maps redirect is disabled");
+        console.warn("⚠����� Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠��� No address provided");
@@ -2474,7 +2474,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             )}
                             <div className="flex items-center space-x-2">
                               <span className="text-sm font-medium text-gray-600">
-                                ���� Trabalho:
+                                ������ Trabalho:
                               </span>
                               <span className="text-sm text-gray-900">
                                 {work.workPerformed ||
@@ -3906,7 +3906,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setCurrentTechnician(e.target.value)
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: Jo���o Santos"
+                              placeholder="Ex: Jo��o Santos"
                             />
                             <button
                               type="button"
@@ -5819,7 +5819,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�������es, recomendações, próxima manutenção..."
+                          placeholder="Observações, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
