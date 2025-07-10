@@ -390,6 +390,22 @@ export class FirestoreService {
     return this.create("notificacoes", notificacao);
   }
 
+  async createNotification(notification: any): Promise<string | null> {
+    const notificationData = {
+      ...notification,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    const docId = await this.create("notificacoes", notificationData);
+    if (docId) {
+      // Atualizar localStorage
+      const notificacoes = await this.getNotificacoes();
+      localStorage.setItem("notifications", JSON.stringify(notificacoes));
+    }
+    return docId;
+  }
+
   async getNotificacoes(): Promise<any[]> {
     return this.syncWithLocalStorage("notificacoes", "notifications");
   }
