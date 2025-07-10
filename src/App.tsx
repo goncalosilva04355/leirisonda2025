@@ -312,7 +312,7 @@ function App() {
         `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
       );
       console.log(
-        "✅ AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+        "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
       );
     }
   }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -1230,7 +1230,7 @@ ${index + 1}. ${work.title}
    Localização: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
-   Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
+   Data In��cio: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
@@ -5911,7 +5911,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten���������es</li>
+                        <li>• Histórico de manuten����������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -6852,7 +6852,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����� {work.contact}
+                                        ������� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -8715,10 +8715,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 );
               }
             }}
-            loginError={loginError}
+                        loginError={loginError}
             isLoading={false}
           />
-        </Suspense>
+        {/* </Suspense> */}
 
         {/* Admin Login Modal - também funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
