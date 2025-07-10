@@ -517,7 +517,7 @@ function App() {
             }
           }
 
-          // Salvar notifica���ão no Firestore (se disponível)
+          // Salvar notifica��ão no Firestore (se disponível)
           try {
             if (firestoreService) {
               await firestoreService.createNotification({
@@ -1900,7 +1900,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" → ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -2549,7 +2549,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenção
+                          Obras atribuídas pendentes
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -2579,7 +2579,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isPending;
+                            return isPending && isAssignedToUser;
                           });
                           console.log(
                             "📊 Dashboard - Obras Pendentes Atribuídas:",
@@ -2611,7 +2611,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Em Progresso
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras em andamento
+                          Obras atribuídas em andamento
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -2642,7 +2642,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isInProgress;
+                            return isInProgress && isAssignedToUser;
                           });
                           return inProgressWorks.length;
                         })()}
@@ -2650,31 +2650,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </button>
 
-                  {/* Concluídas */}
-                  <button
-                    onClick={() => navigateToSection("obras")}
-                    className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-left">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Concluídas
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          Obras finalizadas
-                        </p>
-                      </div>
-                      <div className="text-4xl font-bold text-gray-900">
-                        {
-                          works.filter(
-                            (w) =>
-                              w.status === "completed" ||
-                              w.status === "concluida",
-                          ).length
-                        }
-                      </div>
-                    </div>
-                  </button>
+                  {/* Concluídas - REMOVIDO do Dashboard conforme solicitado */}
 
                   {/* Falta de Folhas de Obra */}
                   <button
@@ -2687,7 +2663,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas
+                          Folhas não geradas (atribuídas)
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -2719,7 +2695,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isNotCompleted && noSheetGenerated;
+                            return (
+                              isNotCompleted &&
+                              noSheetGenerated &&
+                              isAssignedToUser
+                            );
                           });
                           return worksWithoutSheets.length;
                         })()}
@@ -2735,9 +2715,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Todas as Obras
+                          Obras Atribuídas
                         </h3>
-                        <p className="text-sm text-gray-500">No sistema</p>
+                        <p className="text-sm text-gray-500">
+                          Atribuídas a mim
+                        </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
@@ -2767,7 +2749,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return true; // Mostrar todas as obras
+                            return isNotCompleted && isAssignedToUser;
                           });
                           return assignedWorks.length;
                         })()}
@@ -2804,7 +2786,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Verificar assignedUserIds array
                           (w.assignedUserIds &&
                             w.assignedUserIds.includes(currentUser.id)));
-                      return true; // Mostrar todas as obras
+                      return isNotCompleted && isAssignedToUser;
                     })
                     .slice(0, 3); // Pegar apenas as últimas 3 obras
 
@@ -2813,46 +2795,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="flex items-center p-4 border-b border-gray-100">
                         <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                         <h2 className="text-lg font-semibold text-gray-900">
-                          Últimas 3 Obras
+                          Últimas 3 Obras Atribuídas
                         </h2>
                       </div>
                       <div className="p-4 space-y-3">
-                                                {assignedWorks.map((work) => {
-                          // Verificar se a obra está atribuída ao utilizador atual
-                          const isAssignedToUser = currentUser && (
-                            // Verificar assignedTo (campo legacy)
-                            (work.assignedTo && (
-                              work.assignedTo === currentUser.name ||
-                              work.assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
-                              currentUser.name.toLowerCase().includes(work.assignedTo.toLowerCase())
-                            )) ||
-                            // Verificar assignedUsers array
-                            (work.assignedUsers && work.assignedUsers.some(user =>
-                              user.name === currentUser.name ||
-                              user.id === currentUser.id
-                            )) ||
-                            // Verificar assignedUserIds array
-                            (work.assignedUserIds && work.assignedUserIds.includes(currentUser.id))
-                          );
-
-                          return (
-                            <div
-                              key={work.id}
-                              className={`border-l-4 rounded-r-lg p-4 transition-colors ${
-                                isAssignedToUser
-                                  ? "border-purple-500 bg-purple-50 hover:bg-purple-100"
-                                  : "border-gray-300 bg-gray-50 hover:bg-gray-100"
-                              }`}
-                                                        >
+                        {assignedWorks.map((work) => (
+                          <div
+                            key={work.id}
+                            className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
+                          >
                             <div className="space-y-3">
-                              {/* Indicador de atribuição */}
-                              {isAssignedToUser && (
-                                <div className="flex items-center mb-2">
-                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                    ⭐ Atribuída a si
-                                  </span>
-                                </div>
-                              )}
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
                                   📍 Morada:
@@ -2917,7 +2869,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </span>
                               </div>
 
-                              {/* Estado e A��ões */}
+                              {/* Estado e Ações */}
                               <div className="flex items-center justify-between pt-2 border-t border-purple-200">
                                 <span
                                   className={`px-2 py-1 rounded-full text-xs font-semibold ${
@@ -2977,10 +2929,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                             </div>
                           </div>
-                                                })}
+                        ))}
                       </div>
                     </div>
-                )}
+                  ) : null;
+                })()}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
@@ -5069,7 +5022,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observa���ões sobre a obra"]',
+                                'textarea[placeholder*="Observa��ões sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -5894,7 +5847,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenç��o de manutenção
+                        Registar intervenção de manutenção
                       </p>
                     </div>
                   </div>
@@ -6011,7 +5964,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <input
                           type="text"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Ex: Furg��o 1, Carrinha 2"
+                          placeholder="Ex: Furgão 1, Carrinha 2"
                           value={maintenanceForm.vehicle}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -6215,7 +6168,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           "Limpeza filtro areia/vidro",
                           "Verificação alimenta��ão",
                           "Enchimento automático",
-                          "Limpeza linha de ��gua",
+                          "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
                           "Limpeza skimmers",
@@ -9952,7 +9905,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N������o especificado"}
+                          {selectedWork.type || "N����o especificado"}
                         </p>
                       </div>
                       <div>
@@ -10080,7 +10033,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             ? `${selectedWork.startTime} - ${selectedWork.endTime}`
                             : selectedWork.startTime
                               ? `Das ${selectedWork.startTime}`
-                              : "N��o definido"}
+                              : "Não definido"}
                         </p>
                       </div>
                       <div>
