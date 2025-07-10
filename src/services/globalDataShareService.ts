@@ -10,7 +10,11 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db, isFirebaseReady, waitForFirebaseInit } from "../firebase/config";
+import {
+  attemptFirestoreInit,
+  isFirebaseReady,
+  waitForFirebaseInit,
+} from "../firebase/config";
 import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 
 export interface SharedDataState {
@@ -243,7 +247,7 @@ class GlobalDataShareService {
             try {
               const clients = snapshot.docs.map((doc) => doc.data());
               console.log(
-                `👥 CLIENTS GLOBAIS: ${clients.length} disponíveis para todos`,
+                `��� CLIENTS GLOBAIS: ${clients.length} disponíveis para todos`,
               );
               callbacks.onClientsChange(clients);
             } catch (error) {
