@@ -130,7 +130,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
       // Test 5: Simulate data operation
       tests.push("✅ Estrutura de dados validada");
-      tests.push("✅ Permissões b��sicas verificadas");
+      tests.push("✅ Permissões básicas verificadas");
 
       setSyncTest({
         status: "success",
@@ -862,7 +862,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   </div>
                 </div>
                 <div className="text-sm text-yellow-800">
-                  💡 Este resumo mostra o estado atual do sistema de atribuição
+                  💡 Este resumo mostra o estado atual do sistema de atribui��ão
                   de obras. Quando uma obra é atribuída, automaticamente aparece
                   nas estatísticas e o utilizador responsável recebe uma
                   notificação push.
