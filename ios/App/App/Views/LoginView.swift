@@ -154,9 +154,10 @@ struct LoginView: View {
             do {
                 // Replace with actual authentication logic
                 try await performLogin(email: email, password: password)
-                await MainActor.run {
+                                await MainActor.run {
                     isLoading = false
                     // Handle successful login
+                    onLoginSuccess()
                 }
             } catch {
                 await MainActor.run {
