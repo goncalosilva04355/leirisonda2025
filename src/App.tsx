@@ -133,15 +133,19 @@ const initialUsers = [
 ];
 
 function App() {
-  // Inicializar monitor de estabilidade (versão simplificada)
+  // Inicializar monitores de estabilidade e performance
   useEffect(() => {
     try {
       StabilityMonitor.initialize();
+      PerformanceOptimizer.initialize();
       console.log(
         "🛡️ Stability Monitor ativo - previne crashes e loops infinitos",
       );
+      console.log(
+        "🚀 Performance Optimizer ativo - melhora velocidade drasticamente",
+      );
     } catch (error) {
-      console.error("Error initializing stability monitor:", error);
+      console.error("Error initializing monitors:", error);
     }
   }, []);
 
@@ -1353,7 +1357,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -4820,7 +4824,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç�����o criada para nova piscina:",
+                                "Futura manutenç������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -5522,7 +5526,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador não suporta notificaç��es.",
+                                  "Este navegador n��o suporta notificaç��es.",
                                 );
                               }
                             }}
@@ -5548,7 +5552,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As notificaç��es funcionam apenas com HTTPS
+                              • As notificaç����es funcionam apenas com HTTPS
                             </li>
                             <li>
                               • Certifique-se de que permite notifica��ões no
@@ -9031,7 +9035,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç���es Detalhadas
+                          Informaç��es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
