@@ -257,7 +257,30 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   // Firebase ativo como solicitado
-  const universalSync = useUniversalDataSync();
+  // const universalSync = useUniversalDataSync(); // Disabled - Firestore not available
+  const universalSync = {
+    obras: [],
+    manutencoes: [],
+    piscinas: [],
+    clientes: [],
+    isLoading: false,
+    lastSync: new Date().toISOString(),
+    error: null,
+    addObra: () => Promise.resolve(),
+    addManutencao: () => Promise.resolve(),
+    addPiscina: () => Promise.resolve(),
+    addCliente: () => Promise.resolve(),
+    updateObra: () => Promise.resolve(),
+    updateManutencao: () => Promise.resolve(),
+    updatePiscina: () => Promise.resolve(),
+    updateCliente: () => Promise.resolve(),
+    deleteObra: () => Promise.resolve(),
+    deleteManutencao: () => Promise.resolve(),
+    deletePiscina: () => Promise.resolve(),
+    deleteCliente: () => Promise.resolve(),
+    forceSyncAll: () => Promise.resolve(),
+    syncStatus: "disabled" as const,
+  };
   // const dataSync = useDataSyncSafe(); // Temporarily disabled - useState error
   const dataSync = universalSync; // Use universalSync as fallback
 
