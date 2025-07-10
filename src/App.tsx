@@ -199,7 +199,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
   useEffect(() => {
-    console.log("������ SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+    console.log("���� SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
       obras: universalSync.obras.length,
       manutencoes: universalSync.manutencoes.length,
       piscinas: universalSync.piscinas.length,
@@ -1034,7 +1034,7 @@ function App() {
   // PDF Generation Functions
   const generatePoolsPDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO DE PISCINAS
+LEIRISONDA - RELAT���RIO DE PISCINAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1326,7 +1326,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura�����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -1554,7 +1554,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         console.warn("⚠️ Maps redirect is disabled");
       }
       if (!address) {
-        console.warn("⚠��� No address provided");
+        console.warn("������ No address provided");
       }
     }
   };
@@ -3882,7 +3882,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <option value="">Selecionar diâmetro</option>
                                   <option value="1">1 polegada</option>
                                   <option value="1.25">1¼ polegadas</option>
-                                  <option value="1.5">1½ polegadas</option>
+                                  <option value="1.5">1�� polegadas</option>
                                   <option value="2">2 polegadas</option>
                                   <option value="2.5">2½ polegadas</option>
                                   <option value="3">3 polegadas</option>
@@ -4172,7 +4172,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observa����es sobre a obra"]',
+                                'textarea[placeholder*="Observa��ões sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -5265,7 +5265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç��������es, recomendações, próxima manutenção..."
+                          placeholder="Observaç�������es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5755,7 +5755,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ���️ ATENÇÃO: Esta operação é irrevers��vel!
+                              ���️ ATENÇÃO: Esta opera��ão é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -7358,7 +7358,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pot��ncia do Motor (HP)
+                            Potência do Motor (HP)
                           </label>
                           <select
                             defaultValue={editingWork?.motorPower}
@@ -8911,7 +8911,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enableMapsRedirect}
                         >
-                          �� {selectedWork.location}
+                          📍 {selectedWork.location}
                         </button>
                       </div>
                       <div>
@@ -9276,7 +9276,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </main>
 
           {/* Install Prompt for Mobile */}
-          <InstallPrompt />
+          <InstallPromptSimple />
 
           {/* Data Sharing Fix Manager */}
 
