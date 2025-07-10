@@ -269,7 +269,7 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTE��ÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
@@ -971,7 +971,7 @@ function App() {
                 writeError,
               );
               console.log(
-                "💡 Firestore conectado mas pode haver problema nas regras de seguran��a",
+                "💡 Firestore conectado mas pode haver problema nas regras de segurança",
               );
             }
           }
@@ -2102,7 +2102,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������ Address clicked:", address);
+    console.log("�������� Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -4336,7 +4336,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setCurrentTechnician(e.target.value)
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: Jo��o Santos"
+                              placeholder="Ex: Jo����o Santos"
                             />
                             <button
                               type="button"
@@ -4626,7 +4626,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ���� {assignedUser.name}
+                                    ������ {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -5778,7 +5778,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç�����������o criada para nova piscina:",
+                                "Futura manutenç����������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6567,7 +6567,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {activeAdminTab === "configuracoes" && (
+                    {safeActiveAdminTab === "configuracoes" && (
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
