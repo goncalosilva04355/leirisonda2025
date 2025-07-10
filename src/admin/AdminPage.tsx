@@ -28,6 +28,7 @@ import { DataSharingStatus } from "../components/DataSharingStatus";
 import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
+import UserManager from "../components/UserManager";
 import { MobileSettings } from "../components/MobileSettings";
 import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
 import { WorksDataDiagnostic } from "../components/WorksDataDiagnostic";
