@@ -1900,7 +1900,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -2917,7 +2917,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </span>
                               </div>
 
-                              {/* Estado e Ações */}
+                              {/* Estado e A��ões */}
                               <div className="flex items-center justify-between pt-2 border-t border-purple-200">
                                 <span
                                   className={`px-2 py-1 rounded-full text-xs font-semibold ${
@@ -2977,11 +2977,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                             </div>
                           </div>
-                        ))}
+                                                })}
                       </div>
                     </div>
-                  ) : null;
-                })()}
+                )}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
@@ -6216,7 +6215,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           "Limpeza filtro areia/vidro",
                           "Verificação alimenta��ão",
                           "Enchimento automático",
-                          "Limpeza linha de água",
+                          "Limpeza linha de ��gua",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
                           "Limpeza skimmers",
