@@ -550,7 +550,7 @@ function App() {
 
       console.log("✅ Processo de notificações concluído");
     } catch (error) {
-      console.error("❌ Erro no sistema de notificações:", error);
+      console.error("�� Erro no sistema de notificações:", error);
     }
   };
 
@@ -1436,7 +1436,7 @@ function App() {
       console.log("��� Auth result:", result);
 
       if (result.success && result.user) {
-        // console.log("✅ Login successful for:", result.user.email);
+        // console.log("�� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -1689,7 +1689,7 @@ ${index + 1}. ${work.title}
 
   const generateClientsPDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO DE CLIENTES
+LEIRISONDA - RELAT���RIO DE CLIENTES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -5114,7 +5114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condi��ões do terreno"]',
+                                    'textarea[placeholder*="Condi����ões do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -6363,6 +6363,334 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                     </div>
                   </form>
+                </div>
+              </div>
+            </div>
+          );
+
+        case "administracao":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                      <Shield className="h-4 w-4 text-red-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Administração
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Relatórios, configurações e gestão de utilizadores
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tabs Navigation */}
+                <div className="bg-white rounded-lg shadow-sm">
+                  <div className="border-b border-gray-200">
+                    <nav className="-mb-px flex space-x-8 px-6">
+                      <button
+                        onClick={() => setActiveAdminTab("relatorios")}
+                        className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                          activeAdminTab === "relatorios"
+                            ? "border-red-500 text-red-600"
+                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <BarChart3 className="h-4 w-4" />
+                          <span>Relatórios</span>
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => setActiveAdminTab("configuracoes")}
+                        className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                          activeAdminTab === "configuracoes"
+                            ? "border-red-500 text-red-600"
+                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <Settings className="h-4 w-4" />
+                          <span>Configurações</span>
+                        </div>
+                      </button>
+                      {(currentUser?.role === "super_admin" ||
+                        currentUser?.role === "admin") && (
+                        <button
+                          onClick={() => setActiveAdminTab("utilizadores")}
+                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                            activeAdminTab === "utilizadores"
+                              ? "border-red-500 text-red-600"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <UserPlus className="h-4 w-4" />
+                            <span>Utilizadores</span>
+                          </div>
+                        </button>
+                      )}
+                    </nav>
+                  </div>
+
+                  {/* Tab Content */}
+                  <div className="p-6">
+                    {activeAdminTab === "relatorios" && (
+                      <div className="space-y-6">
+                        <div>
+                          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                            Relatórios do Sistema
+                          </h2>
+                          <p className="text-gray-600 mb-6">
+                            Gere relatórios detalhados em PDF sobre piscinas,
+                            manutenções e obras.
+                          </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {/* Pool Reports */}
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <div className="flex items-center space-x-3 mb-4">
+                              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <Waves className="h-6 w-6 text-blue-600" />
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  Relatório de Piscinas
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                  Lista completa de piscinas
+                                </p>
+                              </div>
+                            </div>
+                            <div className="space-y-3 mb-4">
+                              <p className="text-sm text-gray-600">
+                                <strong>{pools.length}</strong> piscinas
+                                registadas
+                              </p>
+                              <ul className="text-xs text-gray-500 space-y-1">
+                                <li>🔍 Estado e localização</li>
+                                <li>• Informações de clientes</li>
+                                <li>• Histórico de manutenções</li>
+                                <li>• Próximas intervenções</li>
+                              </ul>
+                            </div>
+                            <button
+                              onClick={() => generatePoolsPDF()}
+                              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <Download className="h-4 w-4" />
+                              <span>Gerar PDF</span>
+                            </button>
+                          </div>
+
+                          {/* Maintenance Reports */}
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <div className="flex items-center space-x-3 mb-4">
+                              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                <Wrench className="h-6 w-6 text-green-600" />
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  Relatório de Manutenções
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                  Histórico de intervenções
+                                </p>
+                              </div>
+                            </div>
+                            <div className="space-y-3 mb-4">
+                              <p className="text-sm text-gray-600">
+                                <strong>{maintenance.length}</strong>{" "}
+                                manutenções registadas
+                              </p>
+                              <ul className="text-xs text-gray-500 space-y-1">
+                                <li>🔧 Trabalhos realizados</li>
+                                <li>👷 Técnicos responsáveis</li>
+                                <li>• Datas e durações</li>
+                                <li>• Estados e observações</li>
+                              </ul>
+                            </div>
+                            <button
+                              onClick={() => generateMaintenancePDF()}
+                              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <Download className="h-4 w-4" />
+                              <span>Gerar PDF</span>
+                            </button>
+                          </div>
+
+                          {/* Works Reports */}
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <div className="flex items-center space-x-3 mb-4">
+                              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                                <Building2 className="h-6 w-6 text-orange-600" />
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  Relatório de Obras
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                  Lista de projetos
+                                </p>
+                              </div>
+                            </div>
+                            <div className="space-y-3 mb-4">
+                              <p className="text-sm text-gray-600">
+                                <strong>{works.length}</strong> obras registadas
+                              </p>
+                              <ul className="text-xs text-gray-500 space-y-1">
+                                <li>🏗️ Estado dos projetos</li>
+                                <li>👥 Equipas atribuídas</li>
+                                <li>• Prazos e orçamentos</li>
+                                <li>• Clientes e localizações</li>
+                              </ul>
+                            </div>
+                            <button
+                              onClick={() => generateSystemPDF()}
+                              className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <Download className="h-4 w-4" />
+                              <span>Gerar PDF</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeAdminTab === "configuracoes" && (
+                      <div className="space-y-6">
+                        <div>
+                          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                            Configurações do Sistema
+                          </h2>
+                          <p className="text-gray-600 mb-6">
+                            Gerir configurações da aplicação, notificações e
+                            preferências.
+                          </p>
+                        </div>
+
+                        {/* Settings Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <h3 className="text-lg font-semibold mb-4">
+                              Notificações
+                            </h3>
+                            <div className="space-y-4">
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700">
+                                  Notificações Push
+                                </span>
+                                <button
+                                  onClick={requestNotificationPermission}
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none $\{
+                                    notificationsEnabled
+                                      ? "bg-red-600"
+                                      : "bg-gray-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out $\{
+                                      notificationsEnabled
+                                        ? "translate-x-5"
+                                        : "translate-x-0"
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700">
+                                  Sincronização Automática
+                                </span>
+                                <button
+                                  onClick={() =>
+                                    setAutoSyncEnabled(!autoSyncEnabled)
+                                  }
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none $\{
+                                    autoSyncEnabled
+                                      ? "bg-red-600"
+                                      : "bg-gray-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out $\{
+                                      autoSyncEnabled
+                                        ? "translate-x-5"
+                                        : "translate-x-0"
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <h3 className="text-lg font-semibold mb-4">
+                              Sistema
+                            </h3>
+                            <div className="space-y-4">
+                              <button
+                                onClick={() => setShowDataCleanup(true)}
+                                className="w-full text-left p-3 bg-yellow-50 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition-colors"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <Database className="h-5 w-5 text-yellow-600" />
+                                  <div>
+                                    <p className="font-medium text-yellow-800">
+                                      Limpeza de Dados
+                                    </p>
+                                    <p className="text-sm text-yellow-600">
+                                      Eliminar dados de teste
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+
+                              <button
+                                onClick={() => setShowAdvancedSettings(true)}
+                                className="w-full text-left p-3 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <Settings className="h-5 w-5 text-gray-600" />
+                                  <div>
+                                    <p className="font-medium text-gray-800">
+                                      Configurações Avançadas
+                                    </p>
+                                    <p className="text-sm text-gray-600">
+                                      Firebase, APIs e desenvolvimento
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeAdminTab === "utilizadores" &&
+                      (currentUser?.role === "super_admin" ||
+                        currentUser?.role === "admin") && (
+                        <div className="space-y-6">
+                          <div>
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                              Gestão de Utilizadores
+                            </h2>
+                            <p className="text-gray-600 mb-6">
+                              Criar, editar e gerir utilizadores do sistema.
+                            </p>
+                          </div>
+
+                          <UserPermissionsManager />
+                        </div>
+                      )}
+                  </div>
                 </div>
               </div>
             </div>
