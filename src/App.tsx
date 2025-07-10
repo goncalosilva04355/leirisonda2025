@@ -422,7 +422,7 @@ function App() {
           const user = allUsers.find((u: any) => u.id === assignedUser.id);
           if (!user) {
             console.warn(
-              `�����️ Utilizador ${assignedUser.name} não encontrado na lista`,
+              `���️ Utilizador ${assignedUser.name} não encontrado na lista`,
             );
             continue;
           }
@@ -648,7 +648,7 @@ function App() {
         return await addCliente(data);
       }
     } catch (error) {
-      console.error("��� Erro no sistema de clientes:", error);
+      console.error("❌ Erro no sistema de clientes:", error);
       return await addCliente(data);
     }
   };
@@ -1803,7 +1803,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error("����️ Error requesting notification permission:", error);
+        console.error("���️ Error requesting notification permission:", error);
         return "error";
       }
     }
@@ -2101,7 +2101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("�������� Address clicked:", address);
+    console.log("������ Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -2722,7 +2722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   w.assignedUserIds.includes(currentUser.id)));
                             return (
                               isNotCompleted && noSheetGenerated
-                              // Mostrar todas as obras sem folha gerada (não apenas atribuídas)
+                              // Mostrar todas as obras sem folha gerada (não apenas atribu��das)
                             );
                           });
                           return worksWithoutSheets.length;
@@ -6596,7 +6596,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                 >
                                   <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out $\{
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
                                       notificationsEnabled
                                         ? "translate-x-5"
                                         : "translate-x-0"
@@ -6898,7 +6898,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </button>
                           </div>
                           <p className="text-blue-700 text-sm mb-3">
-                            Quando ativado, clicar num número de telefone
+                            Quando ativado, clicar num n��mero de telefone
                             abrir�� diretamente o marcador do telefone.
                           </p>
                           <p className="text-blue-600 text-xs">
@@ -7228,7 +7228,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório Completo
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Todas as informaç��es
+                          Todas as informações
                         </p>
                       </div>
                     </div>
@@ -8262,7 +8262,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manuten���ão</option>
+                            <option value="manutencao">Manuten��ão</option>
                             <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -10296,7 +10296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In������cio
+                          Data de In����cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
