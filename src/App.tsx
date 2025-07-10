@@ -963,7 +963,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠️ Passo 3: Erro nas operaç��es Firestore:",
+                "⚠️ Passo 3: Erro nas operaç���es Firestore:",
                 writeError,
               );
               console.log(
@@ -3634,6 +3634,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             )}
                           </div>
                           <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => {
+                                setSelectedPool(pool);
+                                setViewingPool(true);
+                              }}
+                              className="p-2 text-gray-400 hover:text-blue-600"
+                              title="Visualizar detalhes"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
                             {hasPermission("piscinas", "edit") && (
                               <button
                                 onClick={() => {
@@ -7856,7 +7866,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 : activeWorkFilter === "in_progress"
                                   ? "Em Progresso"
                                   : activeWorkFilter === "completed"
-                                    ? "Concluídas"
+                                    ? "Conclu��das"
                                     : activeWorkFilter === "no_sheet"
                                       ? "Sem Folha de Obra"
                                       : activeWorkFilter
