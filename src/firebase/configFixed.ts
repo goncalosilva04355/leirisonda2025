@@ -75,11 +75,17 @@ export const getFirebaseApp = () => {
 
 export const getAuthSafe = async () => {
   try {
+    if (auth) {
+      console.log("✅ Returning pre-initialized Auth");
+      return auth;
+    }
+
     const app = getFirebaseApp();
     if (!app) return null;
 
-    const { getAuth } = await import("firebase/auth");
-    return getAuth(app);
+    const newAuth = getAuth(app);
+    auth = newAuth; // Cache for future use
+    return newAuth;
   } catch (error) {
     console.warn("Auth não disponível:", error);
     return null;
@@ -88,6 +94,11 @@ export const getAuthSafe = async () => {
 
 export const getFirestoreSafe = async () => {
   try {
+    if (db) {
+      console.log("✅ Returning pre-initialized Firestore");
+      return db;
+    }
+
     const app = getFirebaseApp();
     if (!app) {
       console.warn("Firebase App not available for Firestore");
@@ -96,16 +107,13 @@ export const getFirestoreSafe = async () => {
 
     console.log("🔥 Getting Firestore for app:", app.name);
 
-    const { getFirestore, connectFirestoreEmulator } = await import(
-      "firebase/firestore"
-    );
+    // Use static import since we imported at top
+    const newDb = getFirestore(app);
+    db = newDb; // Cache for future use
 
-    // Simple direct initialization
-    const db = getFirestore(app);
-
-    if (db) {
+    if (newDb) {
       console.log("✅ Firestore instance obtained successfully");
-      return db;
+      return newDb;
     } else {
       console.warn("❌ Failed to get Firestore instance");
       return null;
@@ -118,11 +126,17 @@ export const getFirestoreSafe = async () => {
 
 export const getStorageSafe = async () => {
   try {
+    if (storage) {
+      console.log("✅ Returning pre-initialized Storage");
+      return storage;
+    }
+
     const app = getFirebaseApp();
     if (!app) return null;
 
-    const { getStorage } = await import("firebase/storage");
-    return getStorage(app);
+    const newStorage = getStorage(app);
+    storage = newStorage; // Cache for future use
+    return newStorage;
   } catch (error) {
     console.warn("Storage não disponível:", error);
     return null;
