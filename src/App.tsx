@@ -1900,7 +1900,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -2735,11 +2735,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Obras Atribuídas
+                          Todas as Obras
                         </h3>
-                        <p className="text-sm text-gray-500">
-                          Atribuídas a mim
-                        </p>
+                        <p className="text-sm text-gray-500">No sistema</p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
@@ -4247,7 +4245,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Viaturas e T��cnicos */}
+                    {/* Viaturas e Técnicos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -8231,7 +8229,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações sobre a obra
+                            Observaç��es sobre a obra
                           </label>
                           <textarea
                             defaultValue={editingWork?.observations}
@@ -8847,7 +8845,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç���o">Manutenção</option>
+                          <option value="Manutenç����o">Manutenção</option>
                           <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
