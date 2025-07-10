@@ -5662,7 +5662,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                          🔧
+                          ����
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
@@ -6276,7 +6276,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enablePhoneDialer}
                                 >
-                                  📞 {client.phone}
+                                  ���� {client.phone}
                                 </button>
                               </div>
                               <div>
@@ -8381,7 +8381,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // TEMPORARY: Bypass authentication for testing - ENABLED FOR DEBUG
   useEffect(() => {
-    if (!currentUser) {
+    if (!currentUser && !isAuthenticated) {
       const testUser = {
         id: 1,
         name: "Gonçalo Fonseca",
@@ -8402,13 +8402,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         createdAt: new Date().toISOString(),
         lastLogin: new Date().toISOString(),
       };
-      console.log("🔧 DEBUG: Auto-login enabled for debugging");
+      console.log(
+        "🔧 DEBUG: Auto-login enabled for debugging - creating test user",
+      );
       setCurrentUser(testUser);
       setIsAuthenticated(true);
       localStorage.setItem("currentUser", JSON.stringify(testUser));
       localStorage.setItem("isAuthenticated", "true");
+    } else if (currentUser && isAuthenticated) {
+      console.log("🔧 DEBUG: User already authenticated:", currentUser.email);
     }
-  }, []);
+  }, [currentUser, isAuthenticated]);
 
   // Show login form if not authenticated
   if (!isAuthenticated) {
