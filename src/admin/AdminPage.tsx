@@ -251,14 +251,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "complete-activation":
         return <CompleteDeviceActivation />;
       case "user-management":
-        return (
-          <UserManager
-            currentUser={{
-              email: "gongonsilva@gmail.com",
-              name: "Gonçalo Fonseca",
-            }}
-          />
-        );
+        return <UserManager currentUser={currentUser} />;
       case "work-assignment-fix":
         return <WorkAssignmentFix />;
       case "works-data-diagnostic":
