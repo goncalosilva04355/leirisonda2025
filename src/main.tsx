@@ -1,9 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./AppMinimal";
+import App from "./App";
 import "./index.css";
 
 console.log("🚀 Main.tsx loaded - starting app");
+
+// Basic error handling without Firestore interference
+window.addEventListener("unhandledrejection", (event) => {
+  if (event.reason?.message?.includes("firestore")) {
+    console.warn("🚫 Firestore error suppressed:", event.reason.message);
+    event.preventDefault();
+  }
+});
 
 // ReadableStream polyfill is handled by ./polyfills.ts
 console.log("🔧 ReadableStream polyfill loaded via polyfills.ts");
