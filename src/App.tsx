@@ -104,6 +104,14 @@ const initialUsers = [
 ];
 
 function App() {
+  // Inicializar monitor de estabilidade
+  useEffect(() => {
+    StabilityMonitor.initialize();
+    console.log(
+      "🛡️ Stability Monitor ativo - previne crashes e loops infinitos",
+    );
+  }, []);
+
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
@@ -1534,7 +1542,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("����️ Opening Google Maps:", mapsUrl);
+      console.log("���️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
