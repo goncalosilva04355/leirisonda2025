@@ -3633,7 +3633,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ���� Nenhum utilizador encontrado. V�� à Área de
+                                ������ Nenhum utilizador encontrado. V�� à Área de
                                 Administração → "🔧 Corre��ão de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
@@ -5922,7 +5922,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>�� Piscinas associadas</li>
+                        <li>��� Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
@@ -8493,10 +8493,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
-                <Suspense fallback={<div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">⏳</div>}>
+                        <Suspense fallback={<div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">⏳</div>}>
           <SimpleFirebaseDebug />
         </Suspense>
-                <Suspense fallback={<div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">A carregar...</div>}>
+        <Suspense fallback={<div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">A carregar...</div>}>
           <LoginPage
             onLogin={async (email: string, password: string) => {
             console.log("🔐 Login attempt for:", email);
@@ -8954,7 +8954,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In����cio
+                          Data de In������cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
