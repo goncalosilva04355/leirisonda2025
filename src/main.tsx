@@ -64,4 +64,4 @@ if (typeof window !== "undefined") {
   });
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(<TestApp />);
+ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
