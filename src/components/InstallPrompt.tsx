@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Download, X, Smartphone, Share } from "lucide-react";
 
 interface InstallPromptProps {
