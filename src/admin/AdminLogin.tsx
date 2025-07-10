@@ -9,7 +9,6 @@ interface AdminLoginProps {
 export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showDiagnostics, setShowDiagnostics] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,18 +68,6 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
               </div>
             )}
 
-            {/* Login Diagnostics */}
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={() => setShowDiagnostics(true)}
-                className="text-sm text-blue-600 hover:text-blue-800 underline flex items-center justify-center gap-1 mx-auto"
-              >
-                <AlertCircle className="h-4 w-4" />
-                Problemas de Login? Diagnóstico
-              </button>
-            </div>
-
             {/* Buttons */}
             <div className="grid grid-cols-2 gap-4 pt-4">
               <button
@@ -101,12 +88,6 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onBack }) => {
           </form>
         </div>
       </div>
-
-      {/* Login Diagnostics Modal */}
-      <LoginDiagnostics
-        isOpen={showDiagnostics}
-        onClose={() => setShowDiagnostics(false)}
-      />
     </div>
   );
 };
