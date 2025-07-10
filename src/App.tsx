@@ -3633,9 +3633,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ������ Nenhum utilizador encontrado. V�� à Área de
-                                Administração → "🔧 Corre��ão de Atribuiç��o de
-                                Obras" para corrigir este problema.
+                                ������ Nenhum utilizador encontrado. V�� à Área
+                                de Administração → "🔧 Corre��ão de Atribuiç��o
+                                de Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
@@ -4158,7 +4158,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observa��ões sobre a obra"]',
+                                'textarea[placeholder*="Observa���ões sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -8493,71 +8493,84 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
-                        <Suspense fallback={<div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">⏳</div>}>
+        <Suspense
+          fallback={
+            <div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">
+              ⏳
+            </div>
+          }
+        >
           <SimpleFirebaseDebug />
         </Suspense>
-        <Suspense fallback={<div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">A carregar...</div>}>
+        <Suspense
+          fallback={
+            <div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">
+              A carregar...
+            </div>
+          }
+        >
           <LoginPage
             onLogin={async (email: string, password: string) => {
-            console.log("🔐 Login attempt for:", email);
+              console.log("🔐 Login attempt for:", email);
 
-            // Clear any previous errors
-            setLoginError("");
+              // Clear any previous errors
+              setLoginError("");
 
-            // Basic validation
-            if (!email?.trim() || !password?.trim()) {
-              setLoginError("Por favor, preencha todos os campos");
-              return;
-            }
-
-            try {
-              // Auto-check Firebase before login attempt
-              await firebaseAutoFix.checkOnUserAction();
-
-              const result = await authService.login(email.trim(), password);
-
-              console.log("🔐 Auth result:", result);
-
-              if (result.success && result.user) {
-                console.log("✅ Login successful for:", result.user.email);
-
-                // Update state
-                setCurrentUser(result.user);
-                setIsAuthenticated(true);
-                localStorage.setItem(
-                  "currentUser",
-                  JSON.stringify(result.user),
-                );
-                localStorage.setItem("isAuthenticated", "true");
-
-                // Clear login form
-                setLoginForm({ email: "", password: "" });
-
-                // Navigate to dashboard or requested section
-                const hash = window.location.hash.substring(1);
-                if (hash && hash !== "login") {
-                  setActiveSection(hash);
-                } else {
-                  navigateToSection("dashboard");
-                }
-
-                console.log("✅ Login state updated successfully");
-              } else {
-                console.warn("❌ Login failed:", result.error);
-                setLoginError(result.error || "Credenciais inválidas");
+              // Basic validation
+              if (!email?.trim() || !password?.trim()) {
+                setLoginError("Por favor, preencha todos os campos");
+                return;
               }
-            } catch (error: any) {
-              console.error("❌ Login error:", error);
-              setLoginError(
-                "Erro de conexão. Verifique sua internet e tente novamente.",
-              );
-            }
-          }}
-          loginError={loginError}
-          isLoading={false}
-        />
 
-        {/* Admin Login Modal - tamb���m funciona na página de login */}
+              try {
+                // Auto-check Firebase before login attempt
+                await firebaseAutoFix.checkOnUserAction();
+
+                const result = await authService.login(email.trim(), password);
+
+                console.log("🔐 Auth result:", result);
+
+                if (result.success && result.user) {
+                  console.log("✅ Login successful for:", result.user.email);
+
+                  // Update state
+                  setCurrentUser(result.user);
+                  setIsAuthenticated(true);
+                  localStorage.setItem(
+                    "currentUser",
+                    JSON.stringify(result.user),
+                  );
+                  localStorage.setItem("isAuthenticated", "true");
+
+                  // Clear login form
+                  setLoginForm({ email: "", password: "" });
+
+                  // Navigate to dashboard or requested section
+                  const hash = window.location.hash.substring(1);
+                  if (hash && hash !== "login") {
+                    setActiveSection(hash);
+                  } else {
+                    navigateToSection("dashboard");
+                  }
+
+                  console.log("✅ Login state updated successfully");
+                } else {
+                  console.warn("❌ Login failed:", result.error);
+                  setLoginError(result.error || "Credenciais inválidas");
+                }
+              } catch (error: any) {
+                console.error("❌ Login error:", error);
+                setLoginError(
+                  "Erro de conexão. Verifique sua internet e tente novamente.",
+                );
+              }
+            }}
+            loginError={loginError}
+            isLoading={false}
+          />
+        </Suspense>
+
+        {/* Admin Login Modal - também funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
@@ -9149,7 +9162,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {selectedWork.boreObservations && (
                             <div className="mt-4">
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Observações Específicas do Furo
+                                Observações Espec��ficas do Furo
                               </label>
                               <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
                                 <p className="text-gray-900">
