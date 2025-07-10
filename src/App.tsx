@@ -86,6 +86,7 @@ import { ForceInitialization } from "./utils/forceInitialization";
 
 // Sistema de diagnóstico de persistência
 import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
+import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -102,7 +103,7 @@ import UserRestoreNotificationSimple from "./components/UserRestoreNotificationS
 const initialUsers = [
   {
     id: 1,
-    name: "Gon��alo Fonseca",
+    name: "Gonçalo Fonseca",
     email: "gongonsilva@gmail.com",
     password: "19867gsf",
     role: "super_admin",
@@ -1874,7 +1875,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`��� OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -6540,7 +6541,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 • Todas as obras ({works.length} registos)
                               </li>
                               <li>
-                                • Todas as manuten��ões ({maintenance.length}{" "}
+                                • Todas as manutenções ({maintenance.length}{" "}
                                 registos)
                               </li>
                               <li>
