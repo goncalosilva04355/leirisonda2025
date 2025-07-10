@@ -14,7 +14,7 @@ export const HotReloadTest: React.FC = () => {
         fontSize: "12px",
       }}
     >
-      Hot Reload OK - {new Date().toLocaleTimeString()}
+      Hot Reload TESTE - {new Date().toLocaleTimeString()}
     </div>
   );
 };
