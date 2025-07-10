@@ -597,8 +597,8 @@ class UserDeletionService {
 
       // Count mock auth users
       try {
-        const allMockUsers = mockAuthService.getAllUsers();
-        stats.mockAuth = allMockUsers.length;
+        // Mock auth service removed
+        stats.mockAuth = 0;
       } catch (e) {
         console.error("Error counting mock auth users:", e);
       }
