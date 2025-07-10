@@ -1,18 +1,10 @@
-import { initializeApp, getApps } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage";
-
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "632599887141",
-  appId: "1:632599887141:web:6027bf35a9d908b264eecc",
-  measurementId: "G-51GLBMB6JQ",
-};
+import {
+  getFirebaseApp,
+  getFirestoreSafe,
+  getAuthSafe,
+  getStorageSafe,
+} from "../firebase/configFixed";
+import { collection, getDocs } from "firebase/firestore";
 
 export const testFirebaseSimple = async () => {
   const results = {
@@ -24,61 +16,88 @@ export const testFirebaseSimple = async () => {
   };
 
   try {
-    // Initialize Firebase App
-    let app;
-    const existingApps = getApps();
-    if (existingApps.length > 0) {
-      app = existingApps[0];
-      console.log("✅ Using existing Firebase app");
+    // Test Firebase App using existing configuration
+    const app = getFirebaseApp();
+    if (app) {
+      console.log("✅ Using existing Firebase app:", app.options.projectId);
+      results.app = true;
     } else {
-      app = initializeApp(firebaseConfig);
-      console.log("✅ Firebase app initialized");
+      console.log("❌ No Firebase app found");
+      results.errors.push("Firebase app not initialized");
+      return results;
     }
-    results.app = true;
 
-    // Test Firestore
+    // Test Firestore using safe method
     try {
       console.log("🔥 Testing Firestore...");
-      const db = getFirestore(app);
-      console.log("✅ Firestore instance created");
+      const db = await getFirestoreSafe();
+      if (db) {
+        console.log("✅ Firestore instance obtained");
+        results.firestore = true;
 
-      // Try to create a collection reference
-      const testRef = collection(db, "test");
-      console.log("✅ Collection reference created");
+        // Try to create a collection reference
+        try {
+          const testRef = collection(db, "test");
+          console.log("✅ Collection reference created");
 
-      results.firestore = true;
-
-      // Try to read (will fail if no permission but that's OK)
-      try {
-        const snapshot = await getDocs(testRef);
-        console.log("✅ Firestore read test completed, docs:", snapshot.size);
-      } catch (readError: any) {
-        if (readError.code === "permission-denied") {
-          console.log("⚠️ Permission denied (expected) - Firestore is working");
-        } else {
-          console.log("⚠️ Read error:", readError.message);
+          // Try to read (will fail if no permission but that's OK)
+          try {
+            const snapshot = await getDocs(testRef);
+            console.log(
+              "✅ Firestore read test completed, docs:",
+              snapshot.size,
+            );
+          } catch (readError: any) {
+            if (readError.code === "permission-denied") {
+              console.log(
+                "⚠️ Permission denied (expected) - Firestore is working",
+              );
+            } else {
+              console.log("⚠️ Read error:", readError.message);
+            }
+          }
+        } catch (collectionError: any) {
+          console.log(
+            "⚠️ Collection reference error:",
+            collectionError.message,
+          );
         }
+      } else {
+        console.log("❌ Failed to get Firestore instance");
+        results.errors.push("Firestore instance is null");
       }
     } catch (firestoreError: any) {
       console.error("❌ Firestore error:", firestoreError);
       results.errors.push(`Firestore: ${firestoreError.message}`);
     }
 
-    // Test Auth
+    // Test Auth using safe method
     try {
-      const auth = getAuth(app);
-      console.log("✅ Auth instance created");
-      results.auth = true;
+      console.log("🔐 Testing Auth...");
+      const auth = await getAuthSafe();
+      if (auth) {
+        console.log("✅ Auth instance obtained");
+        results.auth = true;
+      } else {
+        console.log("❌ Failed to get Auth instance");
+        results.errors.push("Auth instance is null");
+      }
     } catch (authError: any) {
       console.error("❌ Auth error:", authError);
       results.errors.push(`Auth: ${authError.message}`);
     }
 
-    // Test Storage
+    // Test Storage using safe method
     try {
-      const storage = getStorage(app);
-      console.log("✅ Storage instance created");
-      results.storage = true;
+      console.log("💾 Testing Storage...");
+      const storage = await getStorageSafe();
+      if (storage) {
+        console.log("✅ Storage instance obtained");
+        results.storage = true;
+      } else {
+        console.log("❌ Failed to get Storage instance");
+        results.errors.push("Storage instance is null");
+      }
     } catch (storageError: any) {
       console.error("❌ Storage error:", storageError);
       results.errors.push(`Storage: ${storageError.message}`);
