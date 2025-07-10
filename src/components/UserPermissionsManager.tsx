@@ -334,7 +334,7 @@ export const UserPermissionsManager: React.FC = () => {
           })) as UserProfile[];
           setUsers(firebaseUsers);
           firebaseSuccess = true;
-          console.log("✅ Users loaded from Firebase successfully");
+          // console.log("✅ Users loaded from Firebase successfully");
         } catch (firestoreError) {
           console.warn(
             "⚠️ Firebase/Firestore error, falling back to local storage:",
@@ -345,7 +345,7 @@ export const UserPermissionsManager: React.FC = () => {
 
       if (!firebaseSuccess) {
         // Fallback to local storage users
-        console.log("📱 Loading users from local storage...");
+        // console.log("📱 Loading users from local storage...");
 
         // Try multiple localStorage sources
         let localUsers: UserProfile[] = [];
@@ -365,7 +365,7 @@ export const UserPermissionsManager: React.FC = () => {
               createdAt: user.createdAt || new Date().toISOString(),
             })) as UserProfile[];
           } catch (e) {
-            console.warn("Error parsing mock-users:", e);
+            // console.warn("Error parsing mock-users:", e);
           }
         }
 
