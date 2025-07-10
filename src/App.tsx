@@ -537,10 +537,10 @@ function App() {
     forceLogout();
   }, []);
 
-  // Passo 3: Teste automático do Firestore
+  // Passo 3: Teste completo do Firestore com operações reais
   useEffect(() => {
     const testFirestoreStep3 = async () => {
-      console.log("🔥 Passo 3: Iniciando teste do Firestore...");
+      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
 
       // Aguardar um pouco para Firebase se inicializar
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -550,7 +550,51 @@ function App() {
 
         if (firestoreResult) {
           console.log("✅ Passo 3: Firestore ativo e funcional!");
-          console.log("🎉 Firestore pronto para armazenar dados na nuvem");
+
+          // Teste prático: tentar escrever e ler dados
+          const db = getFirebaseFirestore();
+          if (db) {
+            try {
+              // Importar funções do Firestore dinamicamente
+              const { doc, setDoc, getDoc } = await import(
+                "firebase/firestore"
+              );
+
+              // Documento de teste
+              const testDoc = doc(db, "system_tests", "firestore_test");
+              const testData = {
+                message: "Firestore funcional!",
+                timestamp: new Date().toISOString(),
+                step: "Passo 3 completado",
+              };
+
+              // Escrever teste
+              await setDoc(testDoc, testData);
+              console.log(
+                "📝 Passo 3: Dados escritos no Firestore com sucesso",
+              );
+
+              // Ler teste
+              const docSnap = await getDoc(testDoc);
+              if (docSnap.exists()) {
+                console.log(
+                  "📖 Passo 3: Dados lidos do Firestore:",
+                  docSnap.data(),
+                );
+                console.log(
+                  "🎉 PASSO 3 COMPLETADO: Firestore totalmente funcional!",
+                );
+              }
+            } catch (writeError) {
+              console.warn(
+                "⚠️ Passo 3: Erro nas operações Firestore:",
+                writeError,
+              );
+              console.log(
+                "💡 Firestore conectado mas pode haver problema nas regras de segurança",
+              );
+            }
+          }
         } else {
           console.log(
             "⚠️ Passo 3: Firestore não disponível, usando localStorage",
@@ -1114,7 +1158,7 @@ ${index + 1}. ${work.title}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
-   Descrição: ${work.description}
+   Descri��ão: ${work.description}
 `,
   )
   .join("\n")}
@@ -1324,7 +1368,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura������es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -7335,7 +7379,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Diâmetro da Coluna
+                            Di��metro da Coluna
                           </label>
                           <select
                             defaultValue={editingWork?.columnDiameter}
