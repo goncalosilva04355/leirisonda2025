@@ -1,4 +1,4 @@
-// Serviço de autenticação simples
+// Simplified Authentication Service - No Firestore dependencies
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -18,7 +18,7 @@ export interface UserProfile {
 }
 
 class AuthService {
-  // Login
+  // Login with simplified logic
   async login(
     email: string,
     password: string,
@@ -44,7 +44,7 @@ class AuthService {
         const auth = await getAuthSafe();
 
         if (!auth) {
-          throw new Error("Firebase Auth not available");
+          return { success: false, error: "Firebase Auth não disponível" };
         }
 
         const userCredential = await signInWithEmailAndPassword(
@@ -66,27 +66,28 @@ class AuthService {
 
         console.log("✅ Firebase authentication successful");
         return { success: true, user: userProfile };
-      } catch (firebaseError) {
-        console.warn(
-          "Firebase authentication failed, falling back to local auth",
-        );
-        return { success: false, error: "Credenciais inválidas" };
+      } catch (firebaseError: any) {
+        console.warn("⚠️ Firebase login failed:", firebaseError);
+        return {
+          success: false,
+          error: "Credenciais inválidas ou erro de conexão",
+        };
       }
     } catch (error: any) {
-      return { success: false, error: "Erro de sistema. Tente novamente." };
+      console.error("❌ Login error:", error);
+      return { success: false, error: "Erro interno do sistema" };
     }
   }
 
-  // Logout
+  // Simplified logout
   async logout(): Promise<void> {
+    console.log("🔐 Starting logout process...");
+
     try {
-      // Only sign out from Firebase if there's actually a Firebase user logged in
       const auth = await getAuthSafe();
-      if (auth && auth.currentUser) {
+      if (auth) {
         await signOut(auth);
-        console.log("✅ Signed out from Firebase");
-      } else {
-        console.log("✅ Local logout (no Firebase user to sign out)");
+        console.log("✅ Firebase signOut successful");
       }
     } catch (error) {
       console.warn(
@@ -97,9 +98,8 @@ class AuthService {
     }
   }
 
-  // Auth state listener
+  // Simplified auth state listener
   onAuthStateChanged(callback: (user: UserProfile | null) => void): () => void {
-    // Return a safe unsubscribe function
     let unsubscribe: (() => void) | null = null;
 
     (async () => {
@@ -116,20 +116,16 @@ class AuthService {
           auth,
           async (firebaseUser: FirebaseUser | null) => {
             if (firebaseUser) {
-              try {
-                const userDoc = await getDoc(
-                  doc(db, "users", firebaseUser.uid),
-                );
-                if (userDoc.exists()) {
-                  const userProfile = userDoc.data() as UserProfile;
-                  callback(userProfile);
-                } else {
-                  callback(null);
-                }
-              } catch (error) {
-                console.warn("Error getting user profile:", error);
-                callback(null);
-              }
+              // Create basic profile without Firestore lookup
+              const userProfile: UserProfile = {
+                uid: firebaseUser.uid,
+                email: firebaseUser.email!,
+                name: firebaseUser.displayName || "Utilizador",
+                role: "technician",
+                active: true,
+                createdAt: new Date().toISOString(),
+              };
+              callback(userProfile);
             } else {
               callback(null);
             }
@@ -149,22 +145,66 @@ class AuthService {
     };
   }
 
-  // Get current user
-  async getCurrentUserProfile(): Promise<UserProfile | null> {
+  // Simplified register (local only)
+  async register(
+    email: string,
+    password: string,
+    userData: Partial<UserProfile>,
+  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
+    try {
+      // Only super admin can register users
+      console.log("🔐 Register attempt for:", email);
+
+      const auth = await getAuthSafe();
+      if (!auth) {
+        return { success: false, error: "Firebase Auth não disponível" };
+      }
+
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      const firebaseUser = userCredential.user;
+
+      const userProfile: UserProfile = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email!,
+        name: userData.name || "Novo Utilizador",
+        role: userData.role || "technician",
+        active: userData.active ?? true,
+        createdAt: new Date().toISOString(),
+      };
+
+      console.log("✅ User registration successful");
+      return { success: true, user: userProfile };
+    } catch (error: any) {
+      console.error("❌ Registration error:", error);
+
+      let errorMessage = "Erro no registo";
+      if (error.code === "auth/email-already-in-use") {
+        errorMessage = "Este email já está em uso";
+      } else if (error.code === "auth/weak-password") {
+        errorMessage = "A palavra-passe é muito fraca";
+      } else if (error.code === "auth/invalid-email") {
+        errorMessage = "Email inválido";
+      }
+
+      return { success: false, error: errorMessage };
+    }
+  }
+
+  // Check if service is available
+  async isAvailable(): Promise<boolean> {
     try {
       const auth = await getAuthSafe();
-      const db = await getFirestoreSafe();
-
-      if (!auth || !db || !auth.currentUser) return null;
-
-      const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
-      return userDoc.exists() ? (userDoc.data() as UserProfile) : null;
+      return !!auth;
     } catch (error) {
-      console.warn("Error getting current user profile:", error);
-      return null;
+      return false;
     }
   }
 }
 
+// Export singleton instance
 export const authService = new AuthService();
 export default authService;
