@@ -8892,7 +8892,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 } catch (error: any) {
                   alert(`❌ Simple test error: ${error.message}`);
                 }
-                  console.log("📊 Realtime Database Test:", result);
+                  
 
                   if (result.success) {
                     alert(
