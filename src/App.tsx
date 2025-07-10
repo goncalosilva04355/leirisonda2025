@@ -384,7 +384,7 @@ function App() {
     try {
       console.log("📱 Enviando notificações de atribuição de obra...");
 
-      // Verificar se há utilizadores atribuídos
+      // Verificar se h�� utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
           "⚠️ Nenhum utilizador atribuído, não enviando notificações",
@@ -9999,7 +9999,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <label className="block text-sm font-medium text-gray-700">
                           Orçamento
                         </label>
-                        <p className="text-gray-900">€{selectedWork.budget}</p>
+                        <p className="text-gray-900">��{selectedWork.budget}</p>
                       </div>
                     )}
 
@@ -10128,6 +10128,55 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
         {/* Firestore Status Indicator - Passo 3 */}
         <FirestoreStatusIndicator />
+
+        {/* Data Persistence Diagnostic - Modal for persistence issues */}
+        {showDataDiagnostic && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="max-w-4xl w-full max-h-screen overflow-y-auto">
+              <DataPersistenceDiagnostic
+                autoCheck={true}
+                onClose={() => setShowDataDiagnostic(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Emergency Data Persistence Alert */}
+        {persistenceIssueDetected && (
+          <div className="fixed bottom-4 right-4 z-50">
+            <div className="bg-red-600 text-white p-4 rounded-lg shadow-lg max-w-sm">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-bold">🚨 Problema de Dados</h4>
+                <button
+                  onClick={() => setPersistenceIssueDetected(false)}
+                  className="text-white hover:text-gray-200"
+                >
+                  ✕
+                </button>
+              </div>
+              <p className="text-sm mb-3">
+                Dados podem não estar a ser guardados corretamente.
+              </p>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => {
+                    setShowDataDiagnostic(true);
+                    setPersistenceIssueDetected(false);
+                  }}
+                  className="px-3 py-1 bg-white text-red-600 rounded text-sm font-medium hover:bg-gray-100"
+                >
+                  Reparar Agora
+                </button>
+                <button
+                  onClick={() => setPersistenceIssueDetected(false)}
+                  className="px-3 py-1 bg-red-700 text-white rounded text-sm hover:bg-red-800"
+                >
+                  Mais Tarde
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
