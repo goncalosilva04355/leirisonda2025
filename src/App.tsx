@@ -355,7 +355,7 @@ function App() {
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
   );
 
-  // Fun��ões de compatibilidade simplificadas
+  // Fun���ões de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
@@ -851,6 +851,8 @@ function App() {
   const [viewingWork, setViewingWork] = useState(false);
   const [selectedPool, setSelectedPool] = useState(null);
   const [viewingPool, setViewingPool] = useState(false);
+  const [selectedMaintenance, setSelectedMaintenance] = useState(null);
+  const [viewingMaintenance, setViewingMaintenance] = useState(false);
 
   // Clickable links settings
   const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
@@ -1791,7 +1793,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           setNotificationsEnabled(true);
           showNotification(
             "Notifica����es Ativadas",
-            "Agora vai receber notificações de obras atribu��das",
+            "Agora vai receber notifica��ões de obras atribu��das",
             "success",
           );
           console.log("�� Notifications enabled successfully");
@@ -10468,7 +10470,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             Email
                           </label>
                           <p className="text-gray-900">
-                            {selectedPool.clientEmail || "Não especificado"}
+                            {selectedPool.clientEmail || "N��o especificado"}
                           </p>
                         </div>
                         <div>
