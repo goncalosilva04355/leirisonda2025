@@ -517,7 +517,7 @@ function App() {
             }
           }
 
-          // Salvar notifica��ão no Firestore (se disponível)
+          // Salvar notifica���ão no Firestore (se disponível)
           try {
             if (firestoreService) {
               await firestoreService.createNotification({
@@ -2611,7 +2611,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Em Progresso
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras atribuídas em andamento
+                          Obras em andamento
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -5022,7 +5022,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observa��ões sobre a obra"]',
+                                'textarea[placeholder*="Observa���ões sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -9905,7 +9905,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N����o especificado"}
+                          {selectedWork.type || "N������o especificado"}
                         </p>
                       </div>
                       <div>
