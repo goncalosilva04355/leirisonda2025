@@ -1621,7 +1621,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("���️ Opening Google Maps:", mapsUrl);
+      console.log("����️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -8387,7 +8387,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // TEMPORARY: Bypass authentication for testing - ENABLED FOR STABILITY
   useEffect(() => {
-    if (!currentUser && !isAuthenticated) {
+    const manualLogout = localStorage.getItem("manualLogout");
+
+    if (!currentUser && !isAuthenticated && manualLogout !== "true") {
       const testUser = {
         id: 1,
         name: "Gonçalo Fonseca",
@@ -8413,6 +8415,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       setIsAuthenticated(true);
       localStorage.setItem("currentUser", JSON.stringify(testUser));
       localStorage.setItem("isAuthenticated", "true");
+    } else if (manualLogout === "true") {
+      console.log("🚪 Manual logout detected, staying logged out");
     }
   }, [currentUser, isAuthenticated]);
 
