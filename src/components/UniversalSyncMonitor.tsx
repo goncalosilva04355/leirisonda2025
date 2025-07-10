@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { useUniversalDataSync } from "../hooks/useUniversalDataSync";
+import { useUniversalDataSyncSafe as useUniversalDataSync } from "../hooks/useUniversalDataSyncSafe";
 import {
   RefreshCw,
   CheckCircle,
