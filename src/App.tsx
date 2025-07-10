@@ -2261,7 +2261,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         title={
                           autoSyncActive
                             ? "Sincronização Automática Ativa"
-                            : "Sincronização Automática Inativa"
+                            : "Sincronização Autom��tica Inativa"
                         }
                       ></div>
                     </div>
@@ -4840,7 +4840,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           onChange={(e) => {
+                            console.log(
+                              "🔍 Select cliente onChange:",
+                              e.target.value,
+                            );
                             if (e.target.value === "novo") {
+                              console.log(
+                                "🔍 Tentando mostrar formulário de novo cliente...",
+                              );
+                              console.log("🔍 Current User:", currentUser);
+                              console.log(
+                                "🔍 hasPermission clientes create:",
+                                hasPermission("clientes", "create"),
+                              );
+
+                              if (!hasPermission("clientes", "create")) {
+                                alert(
+                                  "❌ Não tem permissão para criar clientes. Contacte o administrador.",
+                                );
+                                return;
+                              }
+
+                              console.log(
+                                "✅ Mostrando formulário de novo cliente",
+                              );
                               setShowNewClientForm(true);
                             }
                           }}
@@ -7611,7 +7634,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠���� Nenhum utilizador encontrado. Vá à Área
+                                ⚠������ Nenhum utilizador encontrado. Vá à Área
                                 de Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
