@@ -1752,28 +1752,52 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     try {
       if (editingUser) {
         // Update existing user
-        setUsers(
-          users.map((u) =>
-            u.id === editingUser.id
-              ? {
-                  ...u,
-                  ...userForm,
-                }
-              : u,
-          ),
+        console.log(
+          `👤 Atualizando utilizador ${userForm.name} no Firestore...`,
         );
 
-        console.log(`Utilizador ${userForm.name} atualizado com sucesso`);
+        const updatedUser = {
+          ...editingUser,
+          ...userForm,
+          updatedAt: new Date().toISOString(),
+        };
+
+        // Atualizar no Firestore
+        const firestoreSuccess = await firestoreService.updateUtilizador(
+          editingUser.id?.toString() || editingUser.id,
+          updatedUser,
+        );
+
+        if (firestoreSuccess) {
+          console.log("✅ Utilizador atualizado no Firestore");
+        }
+
+        // Atualizar estado local
+        setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
+
+        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
           id: Math.max(...users.map((u) => u.id)) + 1,
           ...userForm,
-          createdAt: new Date().toISOString().split("T")[0],
+          createdAt: new Date().toISOString(),
         };
+
+        console.log(`👤 Criando utilizador ${userForm.name} no Firestore...`);
+
+        // Criar no Firestore primeiro
+        const firestoreId = await firestoreService.createUtilizador(newUser);
+
+        if (firestoreId) {
+          console.log("✅ Utilizador criado no Firestore:", firestoreId);
+          newUser.firestoreId = firestoreId;
+        }
+
+        // Atualizar estado local
         setUsers([...users, newUser]);
 
-        // Try to register with Firebase for automatic synchronization
+        // Try to register with Firebase Auth for automatic synchronization
         try {
           const result = await authService.register(
             userForm.email,
@@ -1784,7 +1808,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           if (result.success) {
             console.log(
-              `���� Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
+              `🔥 Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase Auth + Firestore`,
             );
 
             // Show success message
@@ -1795,12 +1819,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠��� Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
+              `⚠️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
             );
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠️ Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
             syncError,
           );
         }
@@ -1808,7 +1832,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("Erro ao salvar utilizador:", error);
+      console.error("❌ Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -2195,7 +2219,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas
+                          Folhas n��o geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
