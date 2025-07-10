@@ -1694,7 +1694,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "��������️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "����������️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
@@ -8114,7 +8114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             observations,
                           });
 
-                          alert("Manutenção atualizada com sucesso!");
+                          alert("Manutenç��o atualizada com sucesso!");
                           setEditingMaintenance(null);
                           setActiveSection("manutencoes");
                         }}
@@ -8603,14 +8603,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <SimpleFirebaseDebug />
         </Suspense>
         */}
-        {/* <Suspense
-          fallback={
-            <div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">
-              A carregar...
-            </div>
-          }
-        >
-          <LoginPage */}
+        {/* Login Page - Simple inline version */}
         <div className="min-h-screen bg-blue-600 flex items-center justify-center">
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
