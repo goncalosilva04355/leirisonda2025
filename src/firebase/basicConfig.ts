@@ -100,12 +100,21 @@ export const auth = new Proxy(
 
 // Importar Auth do Passo 2
 import { getFirebaseAuth, isFirebaseAuthReady } from "./authConfig";
+// Importar Firestore do Passo 3
+import {
+  getFirebaseFirestore,
+  isFirestoreReady,
+  testFirestore,
+} from "./firestoreConfig";
 
 // Funções de compatibilidade
-export const getDB = () => Promise.resolve(null);
+export const getDB = () => Promise.resolve(getFirebaseFirestore());
 export const getAuthService = () => Promise.resolve(getFirebaseAuth());
-export const attemptFirestoreInit = () => Promise.resolve(null);
+export const attemptFirestoreInit = () =>
+  Promise.resolve(getFirebaseFirestore());
 export const waitForFirebaseInit = () => Promise.resolve(true);
 export const isFirebaseAuthAvailable = () => isFirebaseAuthReady();
+export const isFirebaseFirestoreAvailable = () => isFirestoreReady();
+export const testFirebaseFirestore = testFirestore;
 
 export default firebaseApp;
