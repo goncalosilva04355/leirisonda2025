@@ -20,7 +20,7 @@ export default defineConfig({
           "pdf-vendor": ["jspdf", "html2canvas"],
           "firebase-vendor": [
             "firebase/app",
-            "firebase/firestore",
+            "firebase/auth",
             "firebase/database",
           ],
         },
