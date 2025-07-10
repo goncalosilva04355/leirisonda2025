@@ -105,12 +105,9 @@ class AuthService {
     (async () => {
       try {
         const auth = await getAuthSafe();
-        const db = await getFirestoreSafe();
 
-        if (!auth || !db) {
-          console.warn(
-            "Firebase services not available for auth state listener",
-          );
+        if (!auth) {
+          console.warn("Firebase Auth not available for auth state listener");
           callback(null);
           return;
         }
