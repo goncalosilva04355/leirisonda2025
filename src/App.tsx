@@ -995,7 +995,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("�� Iniciando sincronização inicial com Firestore...");
+        console.log("�� Iniciando sincronizaç��o inicial com Firestore...");
 
         try {
           await firestoreService.syncAll();
@@ -2420,10 +2420,41 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setCurrentUser(result.user);
                 setIsAuthenticated(true);
 
-                // Navigate to dashboard or requested section
+                // Navigate to dashboard or requested section with validation
                 const hash = window.location.hash.substring(1);
                 if (hash && hash !== "login") {
-                  setActiveSection(hash);
+                  // Validate that the section exists and user has access
+                  const validSections = [
+                    "dashboard",
+                    "obras",
+                    "piscinas",
+                    "manutencoes",
+                    "futuras-manutencoes",
+                    "nova-obra",
+                    "nova-piscina",
+                    "nova-manutencao",
+                    "clientes",
+                    "novo-cliente",
+                    "configuracoes",
+                    "relatorios",
+                    "utilizadores",
+                    "localizacoes",
+                    "register",
+                    "editar-obra",
+                    "editar-piscina",
+                    "editar-manutencao",
+                  ];
+
+                  if (validSections.includes(hash)) {
+                    // Use setTimeout to ensure state is properly set before navigation
+                    setTimeout(() => {
+                      setActiveSection(hash);
+                    }, 100);
+                  } else {
+                    // Invalid hash, redirect to dashboard
+                    window.location.hash = "";
+                    navigateToSection("dashboard");
+                  }
                 } else {
                   navigateToSection("dashboard");
                 }
