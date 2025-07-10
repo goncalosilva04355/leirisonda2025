@@ -253,4 +253,12 @@ class FirebaseService {
 
 // Export singleton instance
 export const firebaseService = new FirebaseService();
+
+// Export service aliases for backward compatibility
+export const syncService = firebaseService;
+export const userService = firebaseService;
+export const poolService = firebaseService;
+export const maintenanceService = firebaseService;
+export const workService = firebaseService;
+
 export default firebaseService;
