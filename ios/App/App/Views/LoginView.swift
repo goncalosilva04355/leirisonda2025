@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var email: String = ""
-    @State private var password: String = ""
+    @State private var email: String = "gongonsilva@gmail.com"
+    @State private var password: String = "••••••••"
     @State private var rememberMe: Bool = false
-    @State private var loginError: String? = nil
+    @State private var loginError: String? = "Firebase: Firebase App named '[DEFAULT]' already deleted (app/app-deleted)."
     @State private var isLoading: Bool = false
     
     var body: some View {
@@ -43,40 +43,22 @@ struct LoginView: View {
                         // Login form
                         VStack(spacing: 20) {
                             // Email field
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Email")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.primary)
-                                
-                                TextField("exemplo@email.com", text: $email)
-                                    .textFieldStyle(.roundedBorder)
-                                    .keyboardType(.emailAddress)
-                                    .autocapitalization(.none)
-                                    .disabled(isLoading)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                    )
-                                    .background(Color(red: 0.95, green: 0.95, blue: 0.7))
-                            }
+                            FormTextField(
+                                title: "Email",
+                                placeholder: "exemplo@email.com",
+                                text: $email,
+                                keyboardType: .emailAddress,
+                                isDisabled: isLoading
+                            )
                             
                             // Password field
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Palavra-passe")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.primary)
-                                
-                                SecureField("Digite sua senha", text: $password)
-                                    .textFieldStyle(.roundedBorder)
-                                    .disabled(isLoading)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                    )
-                                    .background(Color(red: 0.95, green: 0.95, blue: 0.7))
-                            }
+                            FormTextField(
+                                title: "Palavra-passe",
+                                placeholder: "Digite sua senha",
+                                text: $password,
+                                isSecure: true,
+                                isDisabled: isLoading
+                            )
                             
                             // Remember me checkbox
                             HStack {
