@@ -102,6 +102,7 @@ import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Diagnóstico automático para problemas de inserção de dados
 import "./utils/datainput-diagnostic";
 import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
+import DataInputTutorial from "./components/DataInputTutorial";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
@@ -614,7 +615,7 @@ function App() {
       const firestoreId = await firestoreService.createManutencao(data);
 
       if (firestoreId) {
-        console.log("✅ Manutenção criada no Firestore:", firestoreId);
+        console.log("✅ Manutenç��o criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -1439,7 +1440,7 @@ function App() {
         loginForm.password,
       );
 
-      console.log("��� Auth result:", result);
+      console.log("����� Auth result:", result);
 
       if (result.success && result.user) {
         // console.log("✅ Login successful for:", result.user.email);
@@ -1738,7 +1739,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu������das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu��������das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -3543,7 +3544,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ).length === 0 && (
                                 <div className="text-center py-8">
                                   <div className="text-gray-400 mb-2">
-                                    ��������
+                                    �������
                                   </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
@@ -6884,7 +6885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configurações
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configura��ões do sistema, relatórios e utilizadores
+                        Configurações do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
@@ -7069,7 +7070,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </li>
                                       <li>
                                         • Certifique-se de que permite
-                                        notifica���ões no seu navegador
+                                        notifica��ões no seu navegador
                                       </li>
                                       <li>
                                         • Em dispositivos móveis, adicione a app
@@ -11391,7 +11392,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Manutenções */}
+                    {/* Manuten��ões */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Manutenções
