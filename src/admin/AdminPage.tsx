@@ -89,6 +89,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       color: "bg-gradient-to-r from-green-600 to-blue-600",
     },
     {
+      id: "data-persistence-diagnostic" as AdminSection,
+      title: "💾 Diagnóstico de Persistência",
+      description:
+        "CRÍTICO: Verificar e reparar problemas com guardado de dados - especial para app publicada",
+      icon: Database,
+      color: "bg-gradient-to-r from-red-600 to-orange-600",
+    },
+    {
       id: "user-management" as AdminSection,
       title: "Gestão de Utilizadores",
       description: "Criar, editar e gerir utilizadores do sistema",
