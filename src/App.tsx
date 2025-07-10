@@ -234,7 +234,7 @@ function App() {
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
 
-  // Sincronizar configurações entre componentes
+  // Sincronizar configuraç��es entre componentes
   useEffect(() => {
     const handlePhoneDialerToggle = (event: CustomEvent) => {
       setEnablePhoneDialer(event.detail.enabled);
@@ -388,7 +388,7 @@ function App() {
       const firestoreId = await firestoreService.createManutencao(data);
 
       if (firestoreId) {
-        console.log("✅ Manuten��ão criada no Firestore:", firestoreId);
+        console.log("✅ Manutenção criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -801,6 +801,54 @@ function App() {
     // Cleanup quando componente for desmontado
     return () => {
       autoSyncService.stopAutoSync();
+    };
+  }, []);
+
+  // Listeners para atualizações automáticas da UI
+  useEffect(() => {
+    const handleDataUpdate = (event: CustomEvent) => {
+      const { data, collection } = event.detail;
+      console.log(
+        `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      );
+
+      // Forçar re-render dos dados universais se necessário
+      if (collection === "obras") {
+        // Trigger re-fetch das obras
+        window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
+      } else if (collection === "utilizadores") {
+        // Atualizar lista de utilizadores
+        setUsers(data);
+        window.dispatchEvent(new CustomEvent("usersUpdated"));
+      }
+    };
+
+    // Adicionar listeners para todas as coleções
+    const collections = [
+      "obras",
+      "piscinas",
+      "manutencoes",
+      "utilizadores",
+      "clientes",
+      "localizacoes",
+      "notificacoes",
+    ];
+
+    collections.forEach((collection) => {
+      window.addEventListener(
+        `${collection}Updated`,
+        handleDataUpdate as EventListener,
+      );
+    });
+
+    // Cleanup listeners
+    return () => {
+      collections.forEach((collection) => {
+        window.removeEventListener(
+          `${collection}Updated`,
+          handleDataUpdate as EventListener,
+        );
+      });
     };
   }, []);
 
@@ -5735,7 +5783,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* System Information */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Informaç��es do Sistema
+                    Informações do Sistema
                   </h3>
                   <div className="grid gap-3">
                     <div className="flex justify-between py-2 border-b border-gray-100">
