@@ -595,7 +595,7 @@ function App() {
             setCurrentUser(user);
             setIsAuthenticated(true);
 
-            // Auto-navega��ão removida para evitar loop de login
+            // Auto-navega����ão removida para evitar loop de login
             console.log(
               "✅ User authenticated - avoiding auto-navigation loop",
             );
@@ -1001,7 +1001,7 @@ function App() {
           }
         }, 100);
       } else {
-        console.warn("�� Login failed:", result.error);
+        console.warn("❌ Login failed:", result.error);
         setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
@@ -2578,7 +2578,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenç��es
+                                  Manutenç���es
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -8879,22 +8879,36 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🔍 Testing final Firestore availability...");
-                const { testFirestoreAvailability, getApplicationStatus } =
-                  await import("./utils/finalFirestoreTest");
+                console.log("🔄 Forcing Firestore connection...");
+                const {
+                  forceFirestoreConnection,
+                  checkFirestorePropagation,
+                  getTroubleshootingSteps,
+                } = await import("./utils/forceFirestoreConnection");
 
-                const status = getApplicationStatus();
-                const firestoreResult = await testFirestoreAvailability();
+                // Check propagation first
+                const propagation = await checkFirestorePropagation();
+                console.log("📡 Propagation check:", propagation);
 
-                console.log("📊 Final Test Results:", firestoreResult);
-
-                if (firestoreResult.available) {
+                if (!propagation.propagated) {
+                  const troubleshooting = getTroubleshootingSteps();
                   alert(
-                    `🎉 SUCCESS! FIRESTORE IS AVAILABLE!\n\nProject: ${firestoreResult.project}\n\n✅ APPLICATION STATUS:\n- Rendering: ${status.rendering}\n- Navigation: ${status.navigation}\n- Authentication: ${status.authentication}\n- Firestore: ✅ Available\n\nYour app is 100% functional with full cloud storage!`,
+                    `⏳ FIRESTORE PROPAGATION ISSUE\n\n${propagation.message}\n\n🔧 TRY THESE STEPS:\n${troubleshooting.immediate.join("\n")}\n\n📋 ALSO CHECK:\n${troubleshooting.firebaseConsole.join("\n")}\n\nFirestore pode demorar até 10 minutos a propagar após ser habilitado.`,
+                  );
+                  return;
+                }
+
+                // Force connection
+                const result = await forceFirestoreConnection();
+                console.log("🔄 Force connection result:", result);
+
+                if (result.success) {
+                  alert(
+                    `🎉 FIRESTORE CONNECTION FORCED!\n\n✅ Steps completed:\n${result.steps.join("\n")}\n\nFirestore should now be working!`,
                   );
                 } else {
                   alert(
-                    `📱 APPLICATION FULLY FUNCTIONAL!\n\n✅ STATUS:\n- Rendering: ${status.rendering}\n- Navigation: ${status.navigation}\n- Authentication: ${status.authentication}\n- Firestore: ❌ ${firestoreResult.message}\n\nProject: ${firestoreResult.project}\n\nApp works perfectly with local storage!`,
+                    `❌ FORCE CONNECTION FAILED\n\nSteps attempted:\n${result.steps.join("\n")}\n\nError: ${result.error}\n\nTente aguardar mais 5-10 minutos e recarregar a página.`,
                   );
                 }
               }}
