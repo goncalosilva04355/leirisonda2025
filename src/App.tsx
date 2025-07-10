@@ -86,7 +86,7 @@ import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
-import UserRestoreNotification from "./components/UserRestoreNotification";
+import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -199,7 +199,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
   useEffect(() => {
-    console.log("���� SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+    console.log("������ SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
       obras: universalSync.obras.length,
       manutencoes: universalSync.manutencoes.length,
       piscinas: universalSync.piscinas.length,
@@ -1326,7 +1326,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura�����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -4172,7 +4172,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observa��ões sobre a obra"]',
+                                'textarea[placeholder*="Observa����es sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -5265,7 +5265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�������es, recomendações, próxima manutenção..."
+                          placeholder="Observaç��������es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7124,7 +7124,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠����� Nenhum utilizador encontrado. Vá à Área
+                                ⚠���� Nenhum utilizador encontrado. Vá à Área
                                 de Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
@@ -7358,7 +7358,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Potência do Motor (HP)
+                            Pot��ncia do Motor (HP)
                           </label>
                           <select
                             defaultValue={editingWork?.motorPower}
@@ -8911,7 +8911,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enableMapsRedirect}
                         >
-                          📍 {selectedWork.location}
+                          �� {selectedWork.location}
                         </button>
                       </div>
                       <div>
@@ -9226,7 +9226,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de Criaç��o
+                          Data de Criação
                         </label>
                         <p className="text-gray-900 text-sm">
                           {new Date(
