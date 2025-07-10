@@ -131,6 +131,40 @@ function App() {
     // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
 
+    // Monitorização automática de persistência de dados
+    const initDataPersistenceMonitoring = async () => {
+      try {
+        // Aguardar um pouco antes de iniciar verificação
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        // Verificar estado da persistência
+        const status = await dataPersistenceManager.diagnoseDataPersistence();
+
+        if (!status.working) {
+          console.warn("🚨 Problema de persistência detectado:", status);
+          setPersistenceIssueDetected(true);
+
+          // Tentar reparar automaticamente
+          const repaired = await dataPersistenceManager.repairDataPersistence();
+
+          if (repaired) {
+            setPersistenceIssueDetected(false);
+            console.log("✅ Persistência reparada automaticamente");
+          } else {
+            console.error(
+              "❌ Não foi possível reparar a persistência automaticamente",
+            );
+          }
+        } else {
+          console.log("✅ Sistema de persistência está funcional");
+        }
+      } catch (error) {
+        console.error("❌ Erro na monitorização de persistência:", error);
+      }
+    };
+
+    initDataPersistenceMonitoring();
+
     // Cleanup ao desmontar componente
     return () => {
       // Cleanup functions if needed
@@ -983,7 +1017,7 @@ function App() {
           setAutoSyncActive(true);
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
         } catch (error) {
-          console.error("❌ Erro ao iniciar sincronização automática:", error);
+          console.error("❌ Erro ao iniciar sincronização autom��tica:", error);
         }
       }
     };
@@ -1546,7 +1580,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç������o: ${pool.location}
+   Localizaç����o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -2178,7 +2212,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `���️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
+              `�����️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
             );
           }
         } catch (syncError) {
