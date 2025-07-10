@@ -355,7 +355,7 @@ function App() {
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
   );
 
-  // Fun���ões de compatibilidade simplificadas
+  // Fun��ões de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
@@ -965,7 +965,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠️ Passo 3: Erro nas operaç���es Firestore:",
+                "⚠��� Passo 3: Erro nas operaç���es Firestore:",
                 writeError,
               );
               console.log(
@@ -1793,7 +1793,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           setNotificationsEnabled(true);
           showNotification(
             "Notifica����es Ativadas",
-            "Agora vai receber notifica��ões de obras atribu��das",
+            "Agora vai receber notificações de obras atribu��das",
             "success",
           );
           console.log("�� Notifications enabled successfully");
@@ -3861,6 +3861,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => {
+                                setSelectedMaintenance(maint);
+                                setViewingMaintenance(true);
+                              }}
+                              className="p-2 text-gray-400 hover:text-blue-600"
+                              title="Visualizar detalhes"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
                             {hasPermission("manutencoes", "edit") && (
                               <button
                                 onClick={() => {
@@ -8216,7 +8226,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ��� Detalhes do Furo de Água
+                        ���� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -10470,7 +10480,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             Email
                           </label>
                           <p className="text-gray-900">
-                            {selectedPool.clientEmail || "N��o especificado"}
+                            {selectedPool.clientEmail || "Não especificado"}
                           </p>
                         </div>
                         <div>
