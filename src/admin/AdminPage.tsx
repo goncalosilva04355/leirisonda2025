@@ -42,6 +42,7 @@ import CompleteDeviceActivation from "../components/CompleteDeviceActivation";
 
 interface AdminPageProps {
   onLogout: () => void;
+  currentUser?: any;
 }
 
 type AdminSection =
