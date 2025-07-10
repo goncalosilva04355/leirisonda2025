@@ -1126,7 +1126,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("⚠️ Notifications not supported in this browser");
+      console.warn("���️ Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -2768,10 +2768,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         );
 
                         return (
-                          <div
+                                                    <div
                             key={work.id}
-                            className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
+                            className={`border-l-4 rounded-r-lg p-4 transition-colors ${
+                              isAssignedToUser
+                                ? "border-purple-500 bg-purple-50 hover:bg-purple-100"
+                                : "border-gray-300 bg-gray-50 hover:bg-gray-100"
+                            }`}
                           >
+                            {/* Indicador de atribuição */}
+                            {isAssignedToUser && (
+                              <div className="flex items-center mb-2">
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                  ⭐ Atribuída a si
+                                </span>
+                              </div>
+                            )}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
@@ -3792,7 +3804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���������������� {maint.clientContact}
+                                        ��������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -6906,7 +6918,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
-                        <li>• Análise de performance</li>
+                        <li>��� Análise de performance</li>
                       </ul>
                     </div>
                     <button
