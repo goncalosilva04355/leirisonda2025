@@ -66,26 +66,26 @@ import "./firebase/realtimeDatabase"; // Initialize Realtime Database
 // SECURITY: RegisterForm removed - only super admin can create users
 // import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
 // import { AdminPage } from "./admin/AdminPage"; // Now lazy loaded
-// Lazy loading para componentes pesados
-const LoginPage = lazy(() =>
-  import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
-);
-const SimpleFirebaseDebug = lazy(
-  () => import("./components/SimpleFirebaseDebug"),
-);
-const AdvancedSettings = lazy(() =>
-  import("./components/AdvancedSettings").then((module) => ({
-    default: module.AdvancedSettings,
-  })),
-);
-const AdminLogin = lazy(() =>
-  import("./admin/AdminLogin").then((module) => ({
-    default: module.AdminLogin,
-  })),
-);
-const AdminPage = lazy(() =>
-  import("./admin/AdminPage").then((module) => ({ default: module.AdminPage })),
-);
+// Lazy loading removido temporariamente para simplificar
+// const LoginPage = lazy(() =>
+//   import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
+// );
+// const SimpleFirebaseDebug = lazy(
+//   () => import("./components/SimpleFirebaseDebug"),
+// );
+// const AdvancedSettings = lazy(() =>
+//   import("./components/AdvancedSettings").then((module) => ({
+//     default: module.AdvancedSettings,
+//   })),
+// );
+// const AdminLogin = lazy(() =>
+//   import("./admin/AdminLogin").then((module) => ({
+//     default: module.AdminLogin,
+//   })),
+// );
+// const AdminPage = lazy(() =>
+//   import("./admin/AdminPage").then((module) => ({ default: module.AdminPage })),
+// );
 
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
@@ -256,7 +256,7 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
+  // SINCRONIZAÇÃO UNIVERSAL - Vers����o completa funcional
   // Firebase ativo como solicitado
   // const universalSync = useUniversalDataSync(); // Disabled - Firestore not available
   const universalSync = {
@@ -2844,7 +2844,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o de piscinas no sistema
+                          Gestão de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -3341,7 +3341,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                �����‍🔧 {maint.technician}
+                                ����‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -5941,7 +5941,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç��es
+                        <strong>{maintenance.length}</strong> manutenç����es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -9265,7 +9265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.waterLevel
                                   ? `${selectedWork.waterLevel} m`
-                                  : "N����o especificado"}
+                                  : "N��o especificado"}
                               </p>
                             </div>
                             <div>
