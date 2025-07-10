@@ -223,13 +223,8 @@ export const runCompleteUserFix = (): {
   const creationResult = createMissingUsers();
 
   // Reload auth services
-  try {
-    import("../services/mockAuthService").then(({ mockAuthService }) => {
-      mockAuthService.reloadUsers();
-    });
-  } catch (error) {
-    console.warn("Could not reload mock auth service");
-  }
+  // Mock auth service removed
+  console.log("Mock auth service disabled");
 
   const allErrors = [...passwordResult.errors, ...creationResult.errors];
 
