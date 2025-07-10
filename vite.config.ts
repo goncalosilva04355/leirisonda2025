@@ -35,7 +35,7 @@ export default defineConfig({
     postcss: "./postcss.config.cjs",
   },
   optimizeDeps: {
-    include: ["firebase/app", "firebase/firestore", "firebase/auth"],
-    exclude: ["@firebase/firestore"],
+    include: ["firebase/app", "firebase/auth", "firebase/database"],
+    exclude: ["@firebase/firestore", "firebase/firestore"],
   },
 });
