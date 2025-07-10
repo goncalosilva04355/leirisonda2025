@@ -1671,7 +1671,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -2574,7 +2574,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Em Progresso
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras atribuídas em andamento
+                          Obras em andamento
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -6789,7 +6789,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç����es
+                        <strong>{maintenance.length}</strong> manutenç�����es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
