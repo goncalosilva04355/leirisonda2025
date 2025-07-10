@@ -6309,7 +6309,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ���️ ATEN��ÃO: Esta operação é irrevers��vel!
+                              ���️ ATENÇÃO: Esta operação é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -6901,7 +6901,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente ���� base de dados
+                        Adicionar cliente à base de dados
                       </p>
                     </div>
                   </div>
@@ -9581,7 +9581,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         selectedWork.vehicles.length > 0 && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
-                              Ve�����culos
+                              Ve���culos
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.vehicles.join(", ")}
