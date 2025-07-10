@@ -162,7 +162,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitoriza��ão de persist��ncia:", error);
+        console.error("❌ Erro na monitoriza����ão de persist��ncia:", error);
       }
     };
 
@@ -504,7 +504,7 @@ function App() {
                 };
 
                 console.log(
-                  `✅ Notificação local enviada para ${assignedUser.name}`,
+                  `��� Notificação local enviada para ${assignedUser.name}`,
                 );
               } else {
                 console.warn(
@@ -2979,7 +2979,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenç����o agendada
+                          Nenhuma manutenç������o agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenç��es aparecerão aqui
@@ -6726,7 +6726,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-                case "configuracoes":
+        case "configuracoes":
           // Safety check for activeAdminTab
           const safeActiveConfigTab = activeAdminTab || "configuracoes";
 
@@ -6751,7 +6751,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
 
                 {/* Tabs Navigation - Show additional tabs for admin users */}
-                {(currentUser?.role === "super_admin" || currentUser?.role === "admin") ? (
+                {currentUser?.role === "super_admin" ||
+                currentUser?.role === "admin" ? (
                   <div className="bg-white rounded-lg shadow-sm">
                     <div className="border-b border-gray-200">
                       <nav className="-mb-px flex space-x-8 px-6">
@@ -6813,8 +6814,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span className="font-medium">1.0.0</span>
                               </div>
                               <div className="flex justify-between py-2 border-b border-gray-100">
-                                <span className="text-gray-600">Utilizador Ativo</span>
-                                <span className="font-medium">{currentUser?.name}</span>
+                                <span className="text-gray-600">
+                                  Utilizador Ativo
+                                </span>
+                                <span className="font-medium">
+                                  {currentUser?.name}
+                                </span>
                               </div>
                               <div className="flex justify-between py-2 border-b border-gray-100">
                                 <span className="text-gray-600">Perfil</span>
@@ -6823,300 +6828,625 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </span>
                               </div>
                               <div className="flex justify-between py-2">
-                                <span className="text-gray-600">Modo de Dados</span>
-                                <span className="font-medium">Armazenamento Local</span>
+                                <span className="text-gray-600">
+                                  Modo de Dados
+                                </span>
+                                <span className="font-medium">
+                                  Armazenamento Local
+                                </span>
                               </div>
                             </div>
                           </div>
 
-                {/* Notifications Section */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <div className="flex items-center mb-4">
-                    <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Notificações Push
-                    </h3>
-                  </div>
-                  <p className="text-gray-600 mb-6">
-                    Ative as notificações para receber alertas sobre novas obras
-                    atribuídas e atualizações importantes.
-                  </p>
-
-                  <div className="space-y-4">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-blue-900 mb-2">
-                            Notificações de Obras
-                          </h4>
-                          <p className="text-blue-700 text-sm mb-3">
-                            Receba notificações quando uma nova obra for
-                            atribuída a si.
-                          </p>
-                          <button
-                            onClick={() => {
-                              if ("Notification" in window) {
-                                if (Notification.permission === "default") {
-                                  Notification.requestPermission().then(
-                                    (permission) => {
-                                      if (permission === "granted") {
-                                        new Notification("Leirisonda", {
-                                          body: "Notificações ativadas com sucesso!",
-                                          icon: "/icon.svg",
-                                        });
-                                      }
-                                    },
-                                  );
-                                } else if (
-                                  Notification.permission === "granted"
-                                ) {
-                                  new Notification("Leirisonda", {
-                                    body: "Notificações já estão ativadas!",
-                                    icon: "/icon.svg",
-                                  });
-                                } else {
-                                  alert(
-                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
-                                  );
-                                }
-                              } else {
-                                alert(
-                                  "Este navegador não suporta notificaç�����es.",
-                                );
-                              }
-                            }}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                          >
-                            Ativar Notificaç����es
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
-                    {currentUser?.role === "super_admin" && (
-                      <PersonalLocationSettings />
-                    )}
-
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 mb-2">
-                            Instruções
-                          </h4>
-                          <ul className="text-gray-700 text-sm space-y-1">
-                            <li>
-                              • As notificaç���es funcionam apenas com HTTPS
-                            </li>
-                            <li>
-                              • Certifique-se de que permite notifica��ões no
-                              seu navegador
-                            </li>
-                            <li>
-                              • Em dispositivos móveis, adicione a app ao ecrã
-                              inicial
-                            </li>
-                            <li>
-                              • Configure a sua localização abaixo e veja o mapa
-                              da equipa na página "Localizações"
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Mobile Interaction Settings */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <div className="flex items-center mb-4">
-                    <Settings className="h-6 w-6 text-blue-600 mr-3" />
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Interação Mobile
-                    </h3>
-                  </div>
-                  <p className="text-gray-600 mb-6">
-                    Configure o comportamento de cliques em contactos e moradas
-                  </p>
-
-                  <div className="space-y-4">
-                    {/* Phone Dialer Setting */}
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                          🏊
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-medium text-blue-900">
-                              Marcação Automática
-                            </h4>
-                            <button
-                              onClick={() =>
-                                togglePhoneDialer(!enablePhoneDialer)
-                              }
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                enablePhoneDialer
-                                  ? "bg-blue-600"
-                                  : "bg-gray-300"
-                              }`}
-                            >
-                              <span
-                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                  enablePhoneDialer
-                                    ? "translate-x-6"
-                                    : "translate-x-1"
-                                }`}
-                              />
-                            </button>
-                          </div>
-                          <p className="text-blue-700 text-sm mb-3">
-                            Quando ativado, clicar num número de telefone
-                            abrir�� diretamente o marcador do telefone.
-                          </p>
-                          <p className="text-blue-600 text-xs">
-                            Estado:{" "}
-                            {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Maps Redirect Setting */}
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                          🔧
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-medium text-green-900">
-                              Navegação Maps
-                            </h4>
-                            <button
-                              onClick={() =>
-                                toggleMapsRedirect(!enableMapsRedirect)
-                              }
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                enableMapsRedirect
-                                  ? "bg-green-600"
-                                  : "bg-gray-300"
-                              }`}
-                            >
-                              <span
-                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                  enableMapsRedirect
-                                    ? "translate-x-6"
-                                    : "translate-x-1"
-                                }`}
-                              />
-                            </button>
-                          </div>
-                          <p className="text-green-700 text-sm mb-3">
-                            Quando ativado, clicar numa morada abrirá o Google
-                            Maps para navegação.
-                          </p>
-                          <p className="text-green-600 text-xs">
-                            Estado:{" "}
-                            {enableMapsRedirect ? "�� Ativo" : "⭕ Inativo"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Instructions */}
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 mb-2">
-                            Instruções
-                          </h4>
-                          <ul className="text-gray-700 text-sm space-y-1">
-                            <li>
-                              • As definições são guardadas localmente no
-                              dispositivo
-                            </li>
-                            <li>
-                              • A marcaç����o automática funciona melhor em
-                              dispositivos móveis
-                            </li>
-                            <li>��� O Google Maps abre numa nova janela/tab</li>
-                            <li>
-                              • Pode ativar ou desativar cada funcionalidade
-                              independentemente
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Data Management Section - Only for Super Admin */}
-                {currentUser?.role === "super_admin" && (
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="flex items-center mb-4">
-                      <Trash2 className="h-6 w-6 text-red-600 mr-3" />
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Gestão de Dados
-                      </h3>
-                    </div>
-                    <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manutencoes e piscinas
-                      para comecar com uma aplicacao limpa. Os utilizadores sao
-                      mantidos.
-                    </p>
-
-                    <div className="space-y-4">
-                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                        <div className="flex items-start space-x-3">
-                          <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
-                          <div className="flex-1">
-                            <h4 className="font-medium text-red-900 mb-2">
-                              Limpar Dados do Sistema
-                            </h4>
-                            <p className="text-red-700 text-sm mb-3">
-                              Esta ação eliminará permanentemente:
+                          {/* Notifications Section */}
+                          <div className="bg-white rounded-lg p-6 shadow-sm">
+                            <div className="flex items-center mb-4">
+                              <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                Notificações Push
+                              </h3>
+                            </div>
+                            <p className="text-gray-600 mb-6">
+                              Ative as notificações para receber alertas sobre
+                              novas obras atribuídas e atualizações importantes.
                             </p>
-                            <ul className="text-red-700 text-sm space-y-1 mb-4">
-                              <li>
-                                �� Todas as obras ({works.length} registos)
-                              </li>
-                              <li>
-                                • Todas as manutenções ({maintenance.length}{" "}
-                                registos)
-                              </li>
-                              <li>
-                                • Todas as piscinas ({pools.length} registos)
-                              </li>
-                              <li>
-                                🔥 Dados do Firebase e armazenamento local
-                              </li>
-                            </ul>
-                            <p className="text-red-700 text-sm font-medium mb-3">
-                              ���️ ATENÇÃO: Esta operação é irrevers��vel!
+
+                            <div className="space-y-4">
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                  <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
+                                  <div className="flex-1">
+                                    <h4 className="font-medium text-blue-900 mb-2">
+                                      Notificações de Obras
+                                    </h4>
+                                    <p className="text-blue-700 text-sm mb-3">
+                                      Receba notificações quando uma nova obra
+                                      for atribuída a si.
+                                    </p>
+                                    <button
+                                      onClick={() => {
+                                        if ("Notification" in window) {
+                                          if (
+                                            Notification.permission ===
+                                            "default"
+                                          ) {
+                                            Notification.requestPermission().then(
+                                              (permission) => {
+                                                if (permission === "granted") {
+                                                  new Notification(
+                                                    "Leirisonda",
+                                                    {
+                                                      body: "Notificações ativadas com sucesso!",
+                                                      icon: "/icon.svg",
+                                                    },
+                                                  );
+                                                }
+                                              },
+                                            );
+                                          } else if (
+                                            Notification.permission ===
+                                            "granted"
+                                          ) {
+                                            new Notification("Leirisonda", {
+                                              body: "Notificações já estão ativadas!",
+                                              icon: "/icon.svg",
+                                            });
+                                          } else {
+                                            alert(
+                                              "Notifica���ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
+                                            );
+                                          }
+                                        } else {
+                                          alert(
+                                            "Este navegador não suporta notificaç�����es.",
+                                          );
+                                        }
+                                      }}
+                                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                                    >
+                                      Ativar Notificaç����es
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
+                              {currentUser?.role === "super_admin" && (
+                                <PersonalLocationSettings />
+                              )}
+
+                              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                  <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                                  <div className="flex-1">
+                                    <h4 className="font-medium text-gray-900 mb-2">
+                                      Instruç��es
+                                    </h4>
+                                    <ul className="text-gray-700 text-sm space-y-1">
+                                      <li>
+                                        • As notificaç���es funcionam apenas com
+                                        HTTPS
+                                      </li>
+                                      <li>
+                                        • Certifique-se de que permite
+                                        notifica��ões no seu navegador
+                                      </li>
+                                      <li>
+                                        • Em dispositivos móveis, adicione a app
+                                        ao ecrã inicial
+                                      </li>
+                                      <li>
+                                        • Configure a sua localização abaixo e
+                                        veja o mapa da equipa na página
+                                        "Localizações"
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Mobile Interaction Settings */}
+                          <div className="bg-white rounded-lg p-6 shadow-sm">
+                            <div className="flex items-center mb-4">
+                              <Settings className="h-6 w-6 text-blue-600 mr-3" />
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                Interação Mobile
+                              </h3>
+                            </div>
+                            <p className="text-gray-600 mb-6">
+                              Configure o comportamento de cliques em contactos
+                              e moradas
                             </p>
-                            <button
-                              onClick={handleDataCleanup}
-                              disabled={cleanupLoading}
-                              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                              <span>
-                                {cleanupLoading
-                                  ? "A Eliminar..."
-                                  : "Eliminar Todos os Dados"}
-                              </span>
-                            </button>
-                            {cleanupError && (
-                              <p className="text-red-600 text-sm mt-2">
-                                {cleanupError}
+
+                            <div className="space-y-4">
+                              {/* Phone Dialer Setting */}
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    🏊
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <h4 className="font-medium text-blue-900">
+                                        Marcação Automática
+                                      </h4>
+                                      <button
+                                        onClick={() =>
+                                          togglePhoneDialer(!enablePhoneDialer)
+                                        }
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                          enablePhoneDialer
+                                            ? "bg-blue-600"
+                                            : "bg-gray-300"
+                                        }`}
+                                      >
+                                        <span
+                                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                            enablePhoneDialer
+                                              ? "translate-x-6"
+                                              : "translate-x-1"
+                                          }`}
+                                        />
+                                      </button>
+                                    </div>
+                                    <p className="text-blue-700 text-sm mb-3">
+                                      Quando ativado, clicar num número de
+                                      telefone abrir�� diretamente o marcador do
+                                      telefone.
+                                    </p>
+                                    <p className="text-blue-600 text-xs">
+                                      Estado:{" "}
+                                      {enablePhoneDialer
+                                        ? "✅ Ativo"
+                                        : "⭕ Inativo"}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Maps Redirect Setting */}
+                              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    🔧
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <h4 className="font-medium text-green-900">
+                                        Navegação Maps
+                                      </h4>
+                                      <button
+                                        onClick={() =>
+                                          toggleMapsRedirect(
+                                            !enableMapsRedirect,
+                                          )
+                                        }
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                          enableMapsRedirect
+                                            ? "bg-green-600"
+                                            : "bg-gray-300"
+                                        }`}
+                                      >
+                                        <span
+                                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                            enableMapsRedirect
+                                              ? "translate-x-6"
+                                              : "translate-x-1"
+                                          }`}
+                                        />
+                                      </button>
+                                    </div>
+                                    <p className="text-green-700 text-sm mb-3">
+                                      Quando ativado, clicar numa morada abrirá
+                                      o Google Maps para navegação.
+                                    </p>
+                                    <p className="text-green-600 text-xs">
+                                      Estado:{" "}
+                                      {enableMapsRedirect
+                                        ? "�� Ativo"
+                                        : "⭕ Inativo"}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Instructions */}
+                              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                  <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                                  <div className="flex-1">
+                                    <h4 className="font-medium text-gray-900 mb-2">
+                                      Instruções
+                                    </h4>
+                                    <ul className="text-gray-700 text-sm space-y-1">
+                                      <li>
+                                        • As definições são guardadas localmente
+                                        no dispositivo
+                                      </li>
+                                      <li>
+                                        • A marcaç����o automática funciona
+                                        melhor em dispositivos móveis
+                                      </li>
+                                      <li>
+                                        ��� O Google Maps abre numa nova
+                                        janela/tab
+                                      </li>
+                                      <li>
+                                        • Pode ativar ou desativar cada
+                                        funcionalidade independentemente
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Data Management Section - Only for Super Admin */}
+                          {currentUser?.role === "super_admin" && (
+                            <div className="bg-white rounded-lg p-6 shadow-sm">
+                              <div className="flex items-center mb-4">
+                                <Trash2 className="h-6 w-6 text-red-600 mr-3" />
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  Gestão de Dados
+                                </h3>
+                              </div>
+                              <p className="text-gray-600 mb-6">
+                                Elimine todos os dados de obras, manutencoes e
+                                piscinas para comecar com uma aplicacao limpa.
+                                Os utilizadores sao mantidos.
                               </p>
-                            )}
+
+                              <div className="space-y-4">
+                                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                  <div className="flex items-start space-x-3">
+                                    <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                                    <div className="flex-1">
+                                      <h4 className="font-medium text-red-900 mb-2">
+                                        Limpar Dados do Sistema
+                                      </h4>
+                                      <p className="text-red-700 text-sm mb-3">
+                                        Esta ação eliminará permanentemente:
+                                      </p>
+                                      <ul className="text-red-700 text-sm space-y-1 mb-4">
+                                        <li>
+                                          �� Todas as obras ({works.length}{" "}
+                                          registos)
+                                        </li>
+                                        <li>
+                                          • Todas as manutenções (
+                                          {maintenance.length} registos)
+                                        </li>
+                                        <li>
+                                          • Todas as piscinas ({pools.length}{" "}
+                                          registos)
+                                        </li>
+                                        <li>
+                                          🔥 Dados do Firebase e armazenamento
+                                          local
+                                        </li>
+                                      </ul>
+                                      <p className="text-red-700 text-sm font-medium mb-3">
+                                        ���️ ATENÇÃO: Esta operação é
+                                        irrevers��vel!
+                                      </p>
+                                      <button
+                                        onClick={handleDataCleanup}
+                                        disabled={cleanupLoading}
+                                        className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                        <span>
+                                          {cleanupLoading
+                                            ? "A Eliminar..."
+                                            : "Eliminar Todos os Dados"}
+                                        </span>
+                                      </button>
+                                      {cleanupError && (
+                                        <p className="text-red-600 text-sm mt-2">
+                                          {cleanupError}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Notifications and Settings content continues... */}
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <div className="flex items-center mb-4">
+                              <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                Notificações
+                              </h3>
+                            </div>
+                            <div className="space-y-4">
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700">
+                                  Notificações Push
+                                </span>
+                                <button
+                                  onClick={requestNotificationPermission}
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    notificationsEnabled
+                                      ? "bg-blue-600"
+                                      : "bg-gray-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                      notificationsEnabled
+                                        ? "translate-x-5"
+                                        : "translate-x-0"
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700">
+                                  Sincronização Automática
+                                </span>
+                                <button
+                                  onClick={() =>
+                                    setAutoSyncEnabled(!autoSyncEnabled)
+                                  }
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    autoSyncEnabled
+                                      ? "bg-blue-600"
+                                      : "bg-gray-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                      autoSyncEnabled
+                                        ? "translate-x-5"
+                                        : "translate-x-0"
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+                            </div>
                           </div>
+
+                          {currentUser?.role === "super_admin" && (
+                            <div className="bg-gray-50 rounded-lg p-6">
+                              <h3 className="text-lg font-semibold mb-4">
+                                Sistema
+                              </h3>
+                              <div className="space-y-4">
+                                <button
+                                  onClick={() => setShowDataCleanup(true)}
+                                  className="w-full text-left p-3 bg-yellow-50 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition-colors"
+                                >
+                                  <div className="flex items-center space-x-3">
+                                    <Database className="h-5 w-5 text-yellow-600" />
+                                    <div>
+                                      <p className="font-medium text-yellow-800">
+                                        Limpeza de Dados
+                                      </p>
+                                      <p className="text-sm text-yellow-600">
+                                        Eliminar dados de teste
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
+
+                                <button
+                                  onClick={() => setShowAdvancedSettings(true)}
+                                  className="w-full text-left p-3 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
+                                >
+                                  <div className="flex items-center space-x-3">
+                                    <Settings className="h-5 w-5 text-gray-600" />
+                                    <div>
+                                      <p className="font-medium text-gray-800">
+                                        Configurações Avançadas
+                                      </p>
+                                      <p className="text-sm text-gray-600">
+                                        Firebase, APIs e desenvolvimento
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Reports Tab */}
+                      {safeActiveConfigTab === "relatorios" && (
+                        <div className="space-y-6">
+                          <div>
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                              Relatórios do Sistema
+                            </h2>
+                            <p className="text-gray-600 mb-6">
+                              Gere relatórios detalhados em PDF sobre piscinas,
+                              manutenções e obras.
+                            </p>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {/* Pool Reports */}
+                            <div className="bg-gray-50 rounded-lg p-6">
+                              <div className="flex items-center space-x-3 mb-4">
+                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                  <Waves className="h-6 w-6 text-blue-600" />
+                                </div>
+                                <div>
+                                  <h3 className="text-lg font-semibold text-gray-900">
+                                    Relatório de Piscinas
+                                  </h3>
+                                  <p className="text-sm text-gray-600">
+                                    Lista completa de piscinas
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="space-y-3 mb-4">
+                                <p className="text-sm text-gray-600">
+                                  <strong>{pools.length}</strong> piscinas
+                                  registadas
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => generatePoolsPDF()}
+                                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                              >
+                                <Download className="h-4 w-4" />
+                                <span>Gerar PDF</span>
+                              </button>
+                            </div>
+
+                            {/* Maintenance Reports */}
+                            <div className="bg-gray-50 rounded-lg p-6">
+                              <div className="flex items-center space-x-3 mb-4">
+                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                  <Wrench className="h-6 w-6 text-green-600" />
+                                </div>
+                                <div>
+                                  <h3 className="text-lg font-semibold text-gray-900">
+                                    Relatório de Manutenções
+                                  </h3>
+                                  <p className="text-sm text-gray-600">
+                                    Histórico de intervenções
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="space-y-3 mb-4">
+                                <p className="text-sm text-gray-600">
+                                  <strong>{maintenance.length}</strong>{" "}
+                                  manutenções registadas
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => generateMaintenancePDF()}
+                                className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                              >
+                                <Download className="h-4 w-4" />
+                                <span>Gerar PDF</span>
+                              </button>
+                            </div>
+
+                            {/* Works Reports */}
+                            <div className="bg-gray-50 rounded-lg p-6">
+                              <div className="flex items-center space-x-3 mb-4">
+                                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                                  <Building2 className="h-6 w-6 text-orange-600" />
+                                </div>
+                                <div>
+                                  <h3 className="text-lg font-semibold text-gray-900">
+                                    Relatório de Obras
+                                  </h3>
+                                  <p className="text-sm text-gray-600">
+                                    Lista de projetos
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="space-y-3 mb-4">
+                                <p className="text-sm text-gray-600">
+                                  <strong>{works.length}</strong> obras
+                                  registadas
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => generateWorksPDF()}
+                                className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
+                              >
+                                <Download className="h-4 w-4" />
+                                <span>Gerar PDF</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Users Tab */}
+                      {safeActiveConfigTab === "utilizadores" && (
+                        <div className="space-y-6">
+                          <div>
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                              Gestão de Utilizadores
+                            </h2>
+                            <p className="text-gray-600 mb-6">
+                              Criar, editar e gerir utilizadores do sistema.
+                            </p>
+                          </div>
+
+                          <UserPermissionsManager />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  /* Simple configuration for non-admin users */
+                  <div className="space-y-6">
+                    {/* System Information */}
+                    <div className="bg-white rounded-lg p-6 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Informações do Sistema
+                      </h3>
+                      <div className="grid gap-3">
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Versão</span>
+                          <span className="font-medium">1.0.0</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">
+                            Utilizador Ativo
+                          </span>
+                          <span className="font-medium">
+                            {currentUser?.name}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Perfil</span>
+                          <span className="font-medium capitalize">
+                            {currentUser?.role?.replace("_", " ")}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2">
+                          <span className="text-gray-600">Modo de Dados</span>
+                          <span className="font-medium">
+                            Armazenamento Local
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Basic Notifications for all users */}
+                    <div className="bg-white rounded-lg p-6 shadow-sm">
+                      <div className="flex items-center mb-4">
+                        <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Notificações
+                        </h3>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-700">
+                            Notificações Push
+                          </span>
+                          <button
+                            onClick={requestNotificationPermission}
+                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                              notificationsEnabled
+                                ? "bg-blue-600"
+                                : "bg-gray-200"
+                            }`}
+                          >
+                            <span
+                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                notificationsEnabled
+                                  ? "translate-x-5"
+                                  : "translate-x-0"
+                              }`}
+                            />
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -10154,7 +10484,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                                <button
+                <button
                   onClick={handleLogout}
                   className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 >
