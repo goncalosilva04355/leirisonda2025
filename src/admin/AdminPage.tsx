@@ -71,14 +71,17 @@ type AdminSection =
   | "nuclear-cleanup"
   | "data-sharing-status";
 
-export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
+export const AdminPage: React.FC<AdminPageProps> = ({
+  onLogout,
+  currentUser,
+}) => {
   const [currentSection, setCurrentSection] =
     useState<AdminSection>("overview");
 
   const adminSections = [
     {
       id: "complete-activation" as AdminSection,
-      title: "🚀 ATIVAÇÃO COMPLETA DO DISPOSITIVO",
+      title: "�� ATIVAÇÃO COMPLETA DO DISPOSITIVO",
       description:
         "ATIVA TUDO: Notificações, localização, sincronização, utilizadores, PWA - tudo num só botão!",
       icon: Zap,
