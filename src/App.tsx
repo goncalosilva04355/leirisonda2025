@@ -849,6 +849,8 @@ function App() {
   const [editingMaintenance, setEditingMaintenance] = useState(null);
   const [selectedWork, setSelectedWork] = useState(null);
   const [viewingWork, setViewingWork] = useState(false);
+  const [selectedPool, setSelectedPool] = useState(null);
+  const [viewingPool, setViewingPool] = useState(false);
 
   // Clickable links settings
   const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
