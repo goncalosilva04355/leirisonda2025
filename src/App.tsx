@@ -1221,7 +1221,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
 - Manutenç��es Realizadas: ${maintenance.length}
-- Futuras Manutenções: ${futureMaintenance.length}
+- Futuras Manuten��ões: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
@@ -5830,7 +5830,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten��������es</li>
+                        <li>• Histórico de manuten���������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -8362,30 +8362,36 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // TEMPORARY: Bypass authentication for testing - COMMENTED OUT TO ALLOW LOGOUT
-  // useEffect(() => {
-  //   if (!currentUser) {
-  //     const testUser = {
-  //       id: 1,
-  //       name: "Gonçalo Fonseca",
-  //       email: "gongonsilva@gmail.com",
-  //       role: "super_admin",
-  //       permissions: {
-  //         obras: { view: true, create: true, edit: true, delete: true },
-  //         manutencoes: { view: true, create: true, edit: true, delete: true },
-  //         piscinas: { view: true, create: true, edit: true, delete: true },
-  //         relatorios: { view: true, create: true, edit: true, delete: true },
-  //         utilizadores: { view: true, create: true, edit: true, delete: true },
-  //         admin: { view: true, create: true, edit: true, delete: true },
-  //         dashboard: { view: true },
-  //       },
-  //     };
-  //     setCurrentUser(testUser);
-  //     setIsAuthenticated(true);
-  //     localStorage.setItem("currentUser", JSON.stringify(testUser));
-  //     localStorage.setItem("isAuthenticated", "true");
-  //   }
-  // }, []);
+  // TEMPORARY: Bypass authentication for testing - ENABLED FOR DEBUG
+  useEffect(() => {
+    if (!currentUser) {
+      const testUser = {
+        id: 1,
+        name: "Gonçalo Fonseca",
+        email: "gongonsilva@gmail.com",
+        role: "super_admin",
+        permissions: {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          admin: { view: true, create: true, edit: true, delete: true },
+          dashboard: { view: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
+          configuracoes: { view: true, edit: true },
+        },
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+      };
+      console.log("🔧 DEBUG: Auto-login enabled for debugging");
+      setCurrentUser(testUser);
+      setIsAuthenticated(true);
+      localStorage.setItem("currentUser", JSON.stringify(testUser));
+      localStorage.setItem("isAuthenticated", "true");
+    }
+  }, []);
 
   // Show login form if not authenticated
   if (!isAuthenticated) {
