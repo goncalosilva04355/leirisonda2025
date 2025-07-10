@@ -171,6 +171,11 @@ function App() {
     const savedUser = localStorage.getItem("currentUser");
     const savedAuth = localStorage.getItem("isAuthenticated");
 
+    console.log("🔍 Checking localStorage:", {
+      savedUser: !!savedUser,
+      savedAuth,
+    });
+
     if (savedUser && savedAuth === "true") {
       try {
         const user = JSON.parse(savedUser);
@@ -182,6 +187,8 @@ function App() {
         localStorage.removeItem("currentUser");
         localStorage.removeItem("isAuthenticated");
       }
+    } else {
+      console.log("🔍 No valid auth state in localStorage, showing login");
     }
   }, []);
 
@@ -5527,7 +5534,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
                                   );
                                 }
                               } else {
@@ -6375,7 +6382,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade P��blica</option>
+                            <option value="publico">Entidade P���blica</option>
                           </select>
                         </div>
                       </div>
