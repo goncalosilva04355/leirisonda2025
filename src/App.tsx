@@ -531,7 +531,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("��️ Firestore não disponível, usando sistema atual");
+        console.warn("����️ Firestore não disponível, usando sistema atual");
         return await addObra(data);
       }
     } catch (error) {
@@ -4604,7 +4604,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa���ões sobre a obra..."
+                            placeholder="Observa��ões sobre a obra..."
                           />
                         </div>
 
@@ -10049,7 +10049,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
         {/* <RealtimeNotifications /> */}
 
         {/* Work Assignment Notifications */}
-        <WorkAssignmentNotificationsSimple currentUser={currentUser} />
+        <WorkAssignmentNotifications currentUser={currentUser} />
 
         {/* User Restore Notification */}
         <UserRestoreNotificationSimple />
