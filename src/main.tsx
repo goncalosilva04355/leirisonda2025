@@ -10,6 +10,9 @@ import "./index.css";
 // Restauração imediata de utilizadores
 import "./utils/immediateUserRestore";
 
+// Firestore error monitoring
+import "./utils/firestoreErrorCheck";
+
 // ReadableStream polyfill is handled by ./polyfills.ts
 console.log("🔧 ReadableStream polyfill loaded via polyfills.ts");
 
