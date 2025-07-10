@@ -681,7 +681,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("⚠️ Notifications not supported in this browser");
+      console.warn("���️ Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -1716,7 +1716,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           if (result.success) {
             console.log(
-              `������ Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
+              `���� Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
             );
 
             // Show success message
@@ -3670,7 +3670,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ������ Nenhum utilizador encontrado. V�� à Área
-                                de Administração → "🔧 Corre��ão de Atribui����o
+                                de Administração → "🔧 Corre��ão de Atribuiç��o
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -5224,7 +5224,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento automático",
+                          "Enchimento autom��tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
@@ -8395,7 +8395,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       localStorage.removeItem("manualLogout");
     }
 
-    if (!currentUser && !isAuthenticated) {
+    // Force auto-login to restore access
+    if (!currentUser || !isAuthenticated) {
       const testUser = {
         id: 1,
         name: "Gonçalo Fonseca",
