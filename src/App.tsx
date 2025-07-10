@@ -8892,22 +8892,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 } catch (error: any) {
                   alert(`❌ Simple test error: ${error.message}`);
                 }
-                  
-
-                  if (result.success) {
-                    alert(
-                      `🎉 REALTIME DATABASE WORKING!\n\n✅ Connection: Successful\n✅ Read/Write: Working\n✅ Test Value: ${result.testValue}\n\n🔥 FIREBASE SERVICES:\n- Auth: ✅ Working\n- Storage: ✅ Working\n- Realtime Database: ✅ Working\n- Project: leiria-1cfc9\n\n🌐 DATA SHARING:\n- Multi-user: ✅ Enabled\n- Multi-device: ��� Enabled\n- Real-time sync: ✅ Working\n\nPerfect for sharing data between users and devices!`,
-                    );
-                  } else {
-                    alert(
-                      `⚠️ REALTIME DATABASE NOT ENABLED\n\nError: ${result.error}\n\n🔧 TO ENABLE:\n1. Go to: https://console.firebase.google.com/project/leiria-1cfc9/database\n2. Click "Create database" under Realtime Database\n3. Choose location: europe-west1\n4. Set security rules\n\n💡 SUGGESTION:\nRealtime Database is simpler than Firestore and perfect for real-time data sharing!\n\n${result.suggestion || ""}`,
-                    );
-                  }
-                } catch (error: any) {
-                  alert(
-                    `❌ Test error: ${error.message}\n\nTry enabling Realtime Database in Firebase Console.`,
-                  );
-                }
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
               title="Test Realtime Database"
