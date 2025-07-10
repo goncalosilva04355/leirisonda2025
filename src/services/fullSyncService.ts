@@ -7,7 +7,6 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { mockAuthService } from "./mockAuthService";
 
 export interface SyncResult {
   success: boolean;
