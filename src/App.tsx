@@ -61,6 +61,7 @@ import {
 } from "./firebase/firestoreConfig";
 import { firestoreService } from "./services/firestoreService";
 import { firebaseStorageService } from "./services/firebaseStorageService";
+import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/createSampleData"; // Criar dados de exemplo para demonstração
@@ -3995,7 +3996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ������ {assignedUser.name}
+                                    ���� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -6261,7 +6262,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenç����es</span>
+                          <span className="text-xs">Manutenç��es</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -7064,7 +7065,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ���{work.budget}
+                                  ����{work.budget}
                                 </div>
                               )}
                             </div>
@@ -7237,7 +7238,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manuten���ão</option>
+                            <option value="manutencao">Manuten��ão</option>
                             <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -9232,7 +9233,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? `${selectedWork.startTime} - ${selectedWork.endTime}`
                             : selectedWork.startTime
                               ? `Das ${selectedWork.startTime}`
-                              : "Não definido"}
+                              : "N��o definido"}
                         </p>
                       </div>
                       <div>
