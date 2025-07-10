@@ -20,7 +20,6 @@ interface AuthTroubleshootingGuideProps {
 export const AuthTroubleshootingGuide: React.FC<
   AuthTroubleshootingGuideProps
 > = ({ isOpen, onClose }) => {
-  const [showDiagnostics, setShowDiagnostics] = useState(false);
   const [syncResult, setSyncResult] = useState<any>(null);
   const [isRunningSync, setIsRunningSync] = useState(false);
 
@@ -127,13 +126,6 @@ export const AuthTroubleshootingGuide: React.FC<
                       exactos
                     </p>
                   </div>
-                  <button
-                    onClick={() => setShowDiagnostics(true)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
-                  >
-                    <Settings className="h-4 w-4 mr-1" />
-                    Diagnóstico
-                  </button>
                 </div>
               </div>
             </div>
@@ -308,12 +300,6 @@ export const AuthTroubleshootingGuide: React.FC<
           </div>
         </div>
       </div>
-
-      {/* Diagnostics Modal */}
-      <LoginDiagnostics
-        isOpen={showDiagnostics}
-        onClose={() => setShowDiagnostics(false)}
-      />
     </div>
   );
 };
