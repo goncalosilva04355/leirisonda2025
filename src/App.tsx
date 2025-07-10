@@ -693,6 +693,27 @@ function App() {
     testFirestoreStep3();
   }, []);
 
+  // Sincronização inicial de todos os dados com Firestore
+  useEffect(() => {
+    const syncAllData = async () => {
+      // Aguardar um pouco para o Firestore estar pronto
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      if (isFirestoreReady()) {
+        console.log("🔄 Iniciando sincronização inicial com Firestore...");
+
+        try {
+          await firestoreService.syncAll();
+          console.log("✅ Sincronização inicial completa!");
+        } catch (error) {
+          console.error("❌ Erro na sincronização inicial:", error);
+        }
+      }
+    };
+
+    syncAllData();
+  }, []);
+
   // Auth state check disabled to prevent errors
   // useEffect(() => {
   //   if (isAuthenticated && !currentUser) {
@@ -734,7 +755,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("��️ Notifications not supported in this browser");
+      console.warn("⚠️ Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -1660,7 +1681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������� Address clicked:", address);
+    console.log("������ Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -6241,7 +6262,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o da base de dados de clientes
+                          Gest���o da base de dados de clientes
                         </p>
                       </div>
                     </div>
@@ -7537,7 +7558,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
