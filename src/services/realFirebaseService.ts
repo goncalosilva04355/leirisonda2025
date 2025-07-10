@@ -80,6 +80,7 @@ class RealFirebaseService {
   // Initialize Firebase using existing app instance
   initialize(): boolean {
     try {
+      const firebaseApp = getFirebaseApp();
       if (!firebaseApp) {
         console.log(
           "⏸️ Firebase app not available from config - quota protection mode",
