@@ -349,9 +349,8 @@ class UserDeletionService {
         }
       }
 
-      // Force reload mock auth users from cleaned localStorage
-      mockAuthService.reloadUsers();
-      result.details.mockAuthUsersDeleted = deletedFromMockAuth;
+      // Mock auth service removed
+      result.details.mockAuthUsersDeleted = 0;
 
       console.log(
         `✅ Mock auth deletion complete: ${result.details.mockAuthUsersDeleted} users deleted`,
