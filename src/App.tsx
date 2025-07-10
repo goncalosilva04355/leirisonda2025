@@ -2569,7 +2569,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenção agendada
+                          Nenhuma manutenç��o agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenç��es aparecerão aqui
@@ -4971,7 +4971,35 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <button
                             type="button"
                             onClick={() => {
+                              console.log(
+                                "🔍 DEBUG: Tentando adicionar cliente...",
+                              );
+                              console.log("🔍 Current User:", currentUser);
+                              console.log("🔍 User Role:", currentUser?.role);
+                              console.log(
+                                "🔍 User Permissions:",
+                                currentUser?.permissions,
+                              );
+                              console.log(
+                                "🔍 hasPermission clientes create:",
+                                hasPermission("clientes", "create"),
+                              );
+
                               if (newClientForm.name.trim()) {
+                                // Check permissions first
+                                if (!hasPermission("clientes", "create")) {
+                                  alert(
+                                    "❌ Não tem permissão para criar clientes. Contacte o administrador.",
+                                  );
+                                  console.error(
+                                    "❌ PERMISSÃO NEGADA: clientes.create",
+                                  );
+                                  return;
+                                }
+
+                                console.log(
+                                  "✅ Permissão validada, criando cliente...",
+                                );
                                 // Add client to the system
                                 const newClient = {
                                   name: newClientForm.name,
@@ -4980,7 +5008,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   address: newClientForm.address,
                                   pools: [],
                                 };
-                                dataSync.addClient(newClient);
+
+                                try {
+                                  dataSync.addClient(newClient);
+                                  console.log(
+                                    "✅ Cliente adicionado com sucesso:",
+                                    newClient,
+                                  );
+                                } catch (error) {
+                                  console.error(
+                                    "❌ Erro ao adicionar cliente:",
+                                    error,
+                                  );
+                                  alert(
+                                    "❌ Erro ao adicionar cliente: " + error,
+                                  );
+                                  return;
+                                }
 
                                 // Reset form and close
                                 setNewClientForm({
