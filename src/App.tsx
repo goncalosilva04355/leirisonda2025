@@ -33,7 +33,7 @@ import {
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
-import { InstallPrompt } from "./components/InstallPrompt";
+import InstallPromptSimple from "./components/InstallPromptSimple";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
@@ -782,7 +782,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç����o Regular",
+      type: "Manutenç�����o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -2343,7 +2343,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">����</span>
+                      <span className="text-blue-600">��</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -5902,7 +5902,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>�� Equipas responsáveis</li>
+                        <li>��� Equipas responsáveis</li>
                         <li>��� Estados de progresso</li>
                       </ul>
                     </div>
