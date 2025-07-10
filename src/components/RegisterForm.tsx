@@ -11,7 +11,7 @@ import {
   CheckCircle,
   AlertTriangle,
 } from "lucide-react";
-import { authService } from "../services/authService";
+import { robustLoginService } from "../services/robustLoginService";
 
 interface RegisterFormProps {
   onRegisterSuccess: () => void;
