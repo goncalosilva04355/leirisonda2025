@@ -297,7 +297,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("������ Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺�� Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -3953,7 +3953,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç������o</span>
+                      <span>Agendar Manutenç����o</span>
                     </button>
                   </div>
                 </div>
@@ -6400,7 +6400,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <button
                         onClick={() => setActiveAdminTab("relatorios")}
                         className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                          activeAdminTab === "relatorios"
+                          safeActiveAdminTab === "relatorios"
                             ? "border-red-500 text-red-600"
                             : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                         }`}
@@ -7138,7 +7138,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>�� Trabalhos realizados</li>
                         <li>�� T��cnicos responsáveis</li>
                         <li>• Datas e duraç��es</li>
-                        <li>��� Estados e observações</li>
+                        <li>• Estados e observações</li>
                       </ul>
                     </div>
                     <button
@@ -7729,7 +7729,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Código Postal *
+                            C��digo Postal *
                           </label>
                           <input
                             type="text"
@@ -8548,7 +8548,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nível da ��gua (m)
+                            Nível da Água (m)
                           </label>
                           <input
                             type="number"
