@@ -7688,7 +7688,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa��ões
+                        Observa���ões
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
@@ -8590,6 +8590,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // Use sync manager to determine if sync should be enabled
   const quotaStatus = syncManager.getSyncStatus();
   const syncInterval = syncManager.getSafeInterval();
+
+  // Debug log for authenticated state
+  console.log("🔐 Authentication Status:", {
+    isAuthenticated,
+    hasUser: !!currentUser,
+    userEmail: currentUser?.email,
+    activeSection,
+    timestamp: new Date().toISOString(),
+  });
 
   return (
     <AutoSyncProviderSafe
