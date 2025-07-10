@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Bug,
   Database,
-  Storage,
+  HardDrive,
   Shield,
   CheckCircle,
   XCircle,
