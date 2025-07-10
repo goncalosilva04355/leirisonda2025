@@ -10,7 +10,7 @@ import {
   browserSessionPersistence,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { getAuthService, attemptFirestoreInit } from "../firebase/config";
+import { firebaseService } from "../firebase/robustConfig";
 
 export interface UserProfile {
   uid: string;
