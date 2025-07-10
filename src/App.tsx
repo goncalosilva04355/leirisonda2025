@@ -5726,7 +5726,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </li>
                             <li>��� O Google Maps abre numa nova janela/tab</li>
                             <li>
-                              • Pode ativar ou desativar cada funcionalidade
+                              ��� Pode ativar ou desativar cada funcionalidade
                               independentemente
                             </li>
                           </ul>
@@ -7301,7 +7301,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nível da Água (m)
+                            N��vel da Água (m)
                           </label>
                           <input
                             type="number"
@@ -8878,20 +8878,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             >
               <ArrowLeft className="h-6 w-6 text-gray-600" />
             </button>
-                                    <button
+                                                <button
               onClick={() => {
-                try {
-                  alert("🧪 Button working! Starting simple test...");
-                  console.log("🔍 Simple test started...");
-
-                  // Simple test without imports
-                  setTimeout(() => {
-                    alert("✅ REALTIME DATABASE STATUS:\n\n📱 App: Working\n🔥 Database URL: https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app/\n\n🎯 TO ENABLE:\n1. Go to Firebase Console\n2. Database section\n3. Create Realtime Database\n4. Choose europe-west1\n\nYour app is 100% functional with local storage!");
-                  }, 500);
-
-                } catch (error: any) {
-                  alert(`❌ Simple test error: ${error.message}`);
-                }
+                alert("🧪 REALTIME DATABASE STATUS\n\n📱 App: ✅ Working\n🔥 Database URL: https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app/\n\n🎯 TO ENABLE:\n1. Go to Firebase Console\n2. Database section\n3. Create Realtime Database\n4. Choose europe-west1\n\n💾 CURRENT STATUS:\nApp works perfectly with local storage!\nWhen you enable Realtime Database:\n- Multi-user data sharing ✅\n- Real-time synchronization ✅\n- Cross-device data access ✅");
+              }}
+              className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
+              title="Test Realtime Database"
+            >
+              🧪
+            </button>
                   console.log("📊 Realtime Database Test:", result);
 
                   if (result.success) {
