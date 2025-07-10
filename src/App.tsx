@@ -182,6 +182,11 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
+  // Data persistence diagnostic states
+  const [showDataDiagnostic, setShowDataDiagnostic] = useState(false);
+  const [persistenceIssueDetected, setPersistenceIssueDetected] =
+    useState(false);
+
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   // Firebase ativo como solicitado
   const universalSync = useUniversalDataSync();
@@ -539,7 +544,7 @@ function App() {
         return await addObra(data);
       }
     } catch (error) {
-      console.error("�� Erro no sistema de obras:", error);
+      console.error("❌ Erro no sistema de obras:", error);
 
       // Fallback final para localStorage
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
@@ -1541,7 +1546,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç����o: ${pool.location}
+   Localizaç������o: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -3090,7 +3095,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manuten����es
+                                  Manutenç��es
                                 </h4>
                                 {maintenance
                                   .filter(
