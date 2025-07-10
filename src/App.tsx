@@ -58,7 +58,7 @@ import { isFirebaseReady } from "./firebase/config";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
-import { FirebaseDebugUtility } from "./components/FirebaseDebugUtility";
+import SimpleFirebaseDebug from "./components/SimpleFirebaseDebug";
 
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
@@ -4925,7 +4925,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons��vel *
+                          Técnico Responsável *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -6777,7 +6777,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ����{work.budget}
+                                  ���{work.budget}
                                 </div>
                               )}
                             </div>
@@ -7017,7 +7017,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               type="datetime-local"
                               defaultValue={editingWork?.endTime}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Deixe vazio se ainda n��o terminou"
+                              placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
                               Deixe vazio se ainda não terminou
@@ -8920,7 +8920,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In����cio
+                          Data de In������cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
