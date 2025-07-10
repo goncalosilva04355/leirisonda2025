@@ -3973,7 +3973,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa��ões Espec��ficas do Furo */}
+                          {/* Observa��ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -5945,7 +5945,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio de Clientes
+                          Relatório de Clientes
                         </h3>
                         <p className="text-sm text-gray-600">
                           Base de dados de clientes
@@ -8879,20 +8879,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🧹 Clearing old Firebase data and refreshing...");
-                const { clearOldFirebaseData, forceFirebaseRefresh } =
-                  await import("./utils/clearOldFirebaseData");
+                console.log("🔧 Running robust Firestore initialization...");
+                const { initializeRobustFirestore, checkFirestoreStatus } =
+                  await import("./utils/robustFirestore");
 
-                const cleared = clearOldFirebaseData();
+                // First check if Firestore is enabled
+                const status = await checkFirestoreStatus();
+                console.log("📊 Firestore Status:", status);
 
-                if (cleared > 0) {
+                // Then try robust initialization
+                const result = await initializeRobustFirestore();
+                console.log("📊 Robust Firestore Result:", result);
+
+                if (result.success) {
                   alert(
-                    `🧹 CLEARING OLD DATA\n\nCleared ${cleared} old Firebase entries.\n\nThe page will reload to apply changes with the correct project (leiria-1cfc9).`,
+                    `✅ FIRESTORE SUCCESS!\n\nProject: ${result.project}\nMethod: ${result.method}\nAttempts: ${result.attempts}\n\nFirestore is now working!`,
                   );
-                  await forceFirebaseRefresh();
                 } else {
                   alert(
-                    "🔍 No old Firebase data found. If still showing wrong project, try refreshing manually.",
+                    `❌ FIRESTORE FAILED\n\nProject: ${result.project}\nAttempts: ${result.attempts}\nError: ${result.error}\n\nStatus Check: ${status.message}\n\nFirestore may need more time to propagate or manual troubleshooting.`,
                   );
                 }
               }}
