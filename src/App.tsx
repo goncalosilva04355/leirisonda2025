@@ -9132,7 +9132,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç���o">Manutenção</option>
+                          <option value="Manutenç���o">Manutenç��o</option>
                           <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
@@ -9235,7 +9235,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         defaultValue={editingMaintenance?.observations}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={4}
-                        placeholder="Observações sobre a manutenção"
+                        placeholder="Observaç��es sobre a manutenção"
                       />
                     </div>
 
@@ -10082,26 +10082,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => {
-                      setActiveAdminTab("configuracoes");
-                      navigateToSection("administracao");
-                      setSidebarOpen(false);
-                    }}
-                    className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
-                    title="Configurações"
-                  >
-                    <Settings className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="flex-1 flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    <LogOut className="h-5 w-5" />
-                    <span>Terminar Sessao</span>
-                  </button>
-                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Terminar Sessao</span>
+                </button>
                 <div className="mt-4 text-center">
                   <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
                 </div>
