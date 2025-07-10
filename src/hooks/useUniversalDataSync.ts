@@ -90,6 +90,20 @@ export function useUniversalDataSync(): UniversalSyncState &
 
     const initializeUniversalSync = async () => {
       try {
+        // Check if universalDataSync is available
+        if (!universalDataSync) {
+          console.warn("⚠️ universalDataSync service not available");
+          if (mounted) {
+            setState((prev) => ({
+              ...prev,
+              error: "Service not available",
+              isLoading: false,
+              syncStatus: "error",
+            }));
+          }
+          return;
+        }
+
         // Inicializar sincronização silenciosa
         setState((prev) => ({ ...prev, syncStatus: "connecting" }));
 
