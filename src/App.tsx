@@ -61,7 +61,7 @@ import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNot
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/configWithoutFirestore";
-import "./firebase/realtimeDatabase"; // Initialize Realtime Database
+// import "./firebase/realtimeDatabase"; // Initialize Realtime Database - temporarily disabled
 
 // SECURITY: RegisterForm removed - only super admin can create users
 // import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
@@ -894,7 +894,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç����o Regular",
+      type: "Manutenç������o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -935,7 +935,7 @@ function App() {
       }
     }
 
-    console.log("Manutenç��o salva com sucesso:", interventionData);
+    console.log("Manutenção salva com sucesso:", interventionData);
 
     let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
 
@@ -5963,7 +5963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>��� Estados de progresso</li>
+                        <li>����� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -5996,7 +5996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>����� Piscinas associadas</li>
+                        <li>��� Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
