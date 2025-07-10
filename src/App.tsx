@@ -1,12 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  lazy,
-  Suspense,
-  memo,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, memo, useMemo, useCallback } from "react";
 import {
   Building2,
   Menu,
@@ -412,7 +404,7 @@ function App() {
 
       return result;
     } catch (error) {
-      console.error("�� Erro no Firebase, tentando fallback:", error);
+      console.error("❌ Erro no Firebase, tentando fallback:", error);
 
       // Fallback to localStorage if Firebase fails
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
@@ -1182,7 +1174,7 @@ ${maintenance
     (maint, index) => `
 ${index + 1}. ${maint.poolName}
    Tipo: ${maint.type}
-   Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${maint.status === "completed" ? "Conclu��da" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
@@ -3230,7 +3222,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manuten������es agendadas e programadas
+                          Manutenç����es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -3327,7 +3319,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ����‍🔧 {maint.technician}
+                                ������‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -5725,7 +5717,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
-                            {enableMapsRedirect ? "✅ Ativo" : "��� Inativo"}
+                            {enableMapsRedirect ? "✅ Ativo" : "�� Inativo"}
                           </p>
                         </div>
                       </div>
