@@ -66,7 +66,8 @@ import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase bási
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 
-// SECURITY: RegisterForm removed - only super admin can create users
+// SECURITY: RegisterForm for super admin only
+import { RegisterForm } from "./components/RegisterForm";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
@@ -1039,7 +1040,7 @@ function App() {
           await firestoreService.syncAll();
           console.log("✅ Sincronização inicial completa!");
         } catch (error) {
-          console.error("❌ Erro na sincronização inicial:", error);
+          console.error("❌ Erro na sincronizaç��o inicial:", error);
         }
       }
     };
