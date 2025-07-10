@@ -568,7 +568,7 @@ function App() {
         try {
           await addObra(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincroniza��ão universal:", syncError);
+          console.warn("⚠️ Erro na sincroniza���ão universal:", syncError);
         }
 
         // Enviar notificações push para utilizadores atribuídos
@@ -1126,7 +1126,7 @@ function App() {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("���️ Notifications not supported in this browser");
+      console.warn("⚠️ Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -1732,7 +1732,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu�����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç�����es Conclu�����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -2867,7 +2867,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     : work.status === "in_progress"
                                       ? "Em Progresso"
                                       : work.status === "completed"
-                                        ? "Conclu��da"
+                                        ? "Conclu���da"
                                         : work.status}
                                 </span>
 
@@ -2909,11 +2909,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
+                                                });
+                      })}
                     </div>
-                  ) : null;
-                })()}
+                  </div>
+                )}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
@@ -3685,7 +3685,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenç����o</span>
+                      <span>Nova Manuten������o</span>
                     </button>
                   </div>
                 </div>
@@ -6918,7 +6918,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
-                        <li>��� Análise de performance</li>
+                        <li>• Análise de performance</li>
                       </ul>
                     </div>
                     <button
