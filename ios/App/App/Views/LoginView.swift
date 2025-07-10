@@ -224,5 +224,7 @@ enum LoginError: LocalizedError {
 }
 
 #Preview {
-    LoginView()
+    LoginView(onLoginSuccess: {
+        print("Login successful in preview")
+    })
 }
