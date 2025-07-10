@@ -1,7 +1,7 @@
-// Configuração Firebase que evita COMPLETAMENTE o erro getImmediate
-// NÃO inicializa Firestore automaticamente
+// Legacy Firebase configuration - now using robust implementation
+// This file maintains backward compatibility while using the new robust Firebase service
 
-import { initializeApp } from "firebase/app";
+export * from "./compatConfig";
 
 // Configuração Firebase
 const firebaseConfig = {
