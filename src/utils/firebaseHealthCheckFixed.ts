@@ -53,7 +53,7 @@ export class FirebaseHealthCheckFixed {
         const app = getApps()[0];
 
         // Usar método mais seguro para obter auth
-        const auth = getAuth();
+        const auth = getAuth(app);
         if (auth && auth.app === app) {
           result.auth = true;
           result.details.auth = {
