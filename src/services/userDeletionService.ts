@@ -317,9 +317,8 @@ class UserDeletionService {
     console.log("🔧 Starting mock auth users deletion...");
 
     try {
-      // Get all users from mock auth
-      const allMockUsers = mockAuthService.getAllUsers();
-      console.log(`Found ${allMockUsers.length} users in mock auth service`);
+      // Mock auth service removed - using only Firebase
+      console.log("Mock auth service disabled - using only Firebase");
 
       let deletedFromMockAuth = 0;
 
