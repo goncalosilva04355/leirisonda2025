@@ -120,5 +120,6 @@ export const waitForFirebaseInit = () => Promise.resolve(true);
 export const isFirebaseAuthAvailable = () => isFirebaseAuthReady();
 export const isFirebaseFirestoreAvailable = () => isFirestoreReady();
 export const testFirebaseFirestore = testFirestore;
+export { getFirebaseFirestore };
 
 export default firebaseApp;
