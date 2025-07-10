@@ -266,6 +266,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     switch (currentSection) {
       case "complete-activation":
         return <CompleteDeviceActivation />;
+      case "data-persistence-diagnostic":
+        return <DataPersistenceDiagnostic autoCheck={true} />;
       case "user-management":
         return <UserManager currentUser={currentUser} />;
       case "data-migration":
