@@ -77,6 +77,7 @@ import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
 import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
+import StabilityMonitor from "./utils/stabilityMonitor";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
 import { UserRestoreNotificationFixed } from "./components/UserRestoreNotificationFixed";
@@ -1533,7 +1534,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("���️ Opening Google Maps:", mapsUrl);
+      console.log("����️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
