@@ -33,6 +33,27 @@ export class FirestoreService {
     return this.db !== null;
   }
 
+  // Triggerar sincronização automática após operações
+  private async triggerAutoSync(
+    collectionName: string,
+    operation: "create" | "update" | "delete",
+    data?: any,
+  ): Promise<void> {
+    try {
+      const { autoSyncService } = await import("./autoSyncService");
+      await autoSyncService.forceSyncAfterOperation(
+        collectionName,
+        operation,
+        data,
+      );
+    } catch (error) {
+      console.warn(
+        `⚠️ Erro na sincronização automática de ${collectionName}:`,
+        error,
+      );
+    }
+  }
+
   // CRUD genérico para qualquer coleção
   async create<T extends FirestoreEntity>(
     collectionName: string,
