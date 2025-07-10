@@ -60,6 +60,7 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
 
   const roleDescriptions = {
     super_admin: "Super Administrador - Acesso total",
+    admin: "Administrador - Acesso de gestão completo",
     manager: "Gestor - Acesso limitado à gestão",
     technician: "Técnico - Acesso operacional",
   };
