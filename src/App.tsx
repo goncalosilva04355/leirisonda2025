@@ -352,6 +352,9 @@ function App() {
           console.warn("⚠️ Erro na sincronização universal:", syncError);
         }
 
+        // Enviar notificações push para utilizadores atribuídos
+        await sendWorkAssignmentNotifications(data);
+
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
@@ -3076,7 +3079,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ).length === 0 && (
                                 <div className="text-center py-8">
                                   <div className="text-gray-400 mb-2">
-                                    �������
+                                    ��������
                                   </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
@@ -6190,7 +6193,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           </p>
                           <p className="text-blue-600 text-xs">
                             Estado:{" "}
-                            {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
+                            {enablePhoneDialer ? "✅ Ativo" : "�� Inativo"}
                           </p>
                         </div>
                       </div>
@@ -7512,7 +7515,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 {/* Edit Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa��ões Básicas */}
+                    {/* Informa���ões Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
