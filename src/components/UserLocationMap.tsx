@@ -196,6 +196,74 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
     window.open(url, "_blank");
   };
 
+  // Add sample team locations for testing
+  const addSampleTeamLocations = async () => {
+    if (!currentUser) return;
+
+    setIsLoading(true);
+
+    // Sample locations around Leiria, Portugal (assuming this is the base)
+    const sampleLocations: UserLocation[] = [
+      {
+        id: "user-2",
+        name: "João Silva",
+        email: "joao.silva@leirisonda.pt",
+        latitude: 39.7436 + (Math.random() - 0.5) * 0.02, // Small random offset around Leiria
+        longitude: -8.8071 + (Math.random() - 0.5) * 0.02,
+        accuracy: 10 + Math.random() * 20,
+        timestamp: Date.now() - Math.random() * 3600000, // Random time in last hour
+        address: "Leiria, Portugal",
+      },
+      {
+        id: "user-3",
+        name: "Maria Santos",
+        email: "maria.santos@leirisonda.pt",
+        latitude: 39.7436 + (Math.random() - 0.5) * 0.05,
+        longitude: -8.8071 + (Math.random() - 0.5) * 0.05,
+        accuracy: 15 + Math.random() * 25,
+        timestamp: Date.now() - Math.random() * 7200000, // Random time in last 2 hours
+        address: "Área de Leiria, Portugal",
+      },
+      {
+        id: "user-4",
+        name: "Carlos Mendes",
+        email: "carlos.mendes@leirisonda.pt",
+        latitude: 39.7436 + (Math.random() - 0.5) * 0.03,
+        longitude: -8.8071 + (Math.random() - 0.5) * 0.03,
+        accuracy: 8 + Math.random() * 15,
+        timestamp: Date.now() - Math.random() * 1800000, // Random time in last 30 min
+        address: "Próximo de Leiria, Portugal",
+      },
+    ];
+
+    // Get existing locations and merge with samples (exclude duplicates)
+    const existingLocations = localStorage.getItem("user-locations");
+    let allLocations: UserLocation[] = [];
+
+    if (existingLocations) {
+      allLocations = JSON.parse(existingLocations);
+    }
+
+    // Add sample locations that don't already exist
+    sampleLocations.forEach((sample) => {
+      const exists = allLocations.find((loc) => loc.email === sample.email);
+      if (!exists) {
+        allLocations.push(sample);
+      }
+    });
+
+    // Save updated locations
+    localStorage.setItem("user-locations", JSON.stringify(allLocations));
+
+    // Reload to show new locations
+    await loadUserLocations();
+    setIsLoading(false);
+
+    alert(
+      `✅ Adicionadas ${sampleLocations.length} localizações de exemplo da equipa!`,
+    );
+  };
+
   // Open all locations in Google Maps
   const openAllInMaps = () => {
     if (userLocations.length === 0) return;
