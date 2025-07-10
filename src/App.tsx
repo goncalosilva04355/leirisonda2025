@@ -59,6 +59,7 @@ import {
   testFirestore,
   getFirebaseFirestore,
 } from "./firebase/firestoreConfig";
+import { firestoreService } from "./services/firestoreService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/createSampleData"; // Criar dados de exemplo para demonstração
@@ -1158,7 +1159,7 @@ ${index + 1}. ${work.title}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
-   Descri��ão: ${work.description}
+   Descrição: ${work.description}
 `,
   )
   .join("\n")}
@@ -1368,7 +1369,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura������es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -2870,7 +2871,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -5592,7 +5593,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador não suporta notificaç��es.",
+                                  "Este navegador não suporta notificaç���es.",
                                 );
                               }
                             }}
@@ -5989,7 +5990,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>• Histórico de serviços</li>
+                        <li>�� Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -7379,7 +7380,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Di��metro da Coluna
+                            Diâmetro da Coluna
                           </label>
                           <select
                             defaultValue={editingWork?.columnDiameter}
