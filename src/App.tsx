@@ -1024,7 +1024,7 @@ function App() {
           setAutoSyncActive(true);
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
         } catch (error) {
-          console.error("❌ Erro ao iniciar sincronização autom��tica:", error);
+          console.error("�� Erro ao iniciar sincronização autom��tica:", error);
         }
       }
     };
@@ -2636,7 +2636,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas (atribuídas)
+                          Folhas não geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -4011,7 +4011,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manutenç��o "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -5018,7 +5018,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               waterLevel:
                                 (
                                   form.querySelector(
-                                    'input[placeholder*="Nível da Água"]',
+                                    'input[placeholder*="N��vel da Água"]',
                                   ) as HTMLInputElement
                                 )?.value || "",
                               pumpDepth:
