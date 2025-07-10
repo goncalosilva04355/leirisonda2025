@@ -935,7 +935,7 @@ function App() {
       }
     }
 
-    console.log("Manutenção salva com sucesso:", interventionData);
+    console.log("Manutenç��o salva com sucesso:", interventionData);
 
     let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
 
@@ -5996,7 +5996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>��� Piscinas associadas</li>
+                        <li>����� Piscinas associadas</li>
                         <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
@@ -8616,8 +8616,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               }
 
               try {
-                // Auto-check Firebase before login attempt
-                await firebaseAutoFix.checkOnUserAction();
+                // Auto-check Firebase before login attempt (disabled)
+                // await firebaseAutoFix.checkOnUserAction();
 
                 const result = await authService.login(email.trim(), password);
 
