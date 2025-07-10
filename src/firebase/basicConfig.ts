@@ -61,25 +61,29 @@ initializeFirebaseBasic();
 // Exportações para compatibilidade com código existente
 export const app = firebaseApp;
 
-// Proxy inteligente para db que falha graciosamente quando Firestore não está disponível
+// Proxy inteligente para db que usa Firestore real quando disponível
 export const db = new Proxy(
   {},
   {
     get(target, prop) {
+      const firestoreInstance = getFirebaseFirestore();
+
+      // Se Firestore está disponível, usar instância real
+      if (firestoreInstance) {
+        try {
+          return (firestoreInstance as any)[prop];
+        } catch (error) {
+          console.warn("⚠️ Erro ao acessar Firestore:", error);
+          return null;
+        }
+      }
+
+      // Fallback para propriedades especiais
       if (prop === "type" || prop === "app" || prop === "toJSON") {
-        // Propriedades que Firestore deveria ter
         return undefined;
       }
 
-      console.warn(
-        "⚠️ Firestore ainda não configurado no Passo 2 - usando fallback local",
-      );
-
-      // Para collection(), retornar null que causará erro controlado
-      if (prop === "collection" || typeof prop === "string") {
-        return null;
-      }
-
+      console.warn("⚠️ Firestore não disponível - usando fallback local");
       return null;
     },
   },
