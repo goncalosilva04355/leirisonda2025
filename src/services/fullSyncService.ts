@@ -1,12 +1,5 @@
-import {
-  collection,
-  getDocs,
-  doc,
-  setDoc,
-  deleteDoc,
-  writeBatch,
-} from "firebase/firestore";
-import { db } from "../firebase/config";
+// Full Sync Service - Simplified without Firestore
+import { isFirebaseReady } from "../firebase/configWithoutFirestore";
 import { mockAuthService } from "./mockAuthService";
 
 export interface SyncResult {
@@ -22,406 +15,233 @@ export interface SyncResult {
   };
 }
 
+/**
+ * Full Sync Service - Simplified
+ * Works only with local storage since Firestore is disabled
+ */
 class FullSyncService {
-  async syncAllData(): Promise<SyncResult> {
-    // Check if Firebase is available and not in quota cooldown
-    const { isFirebaseReady, getFirebaseStatus, markQuotaExceeded } =
-      await import("../firebase/config");
-    const status = getFirebaseStatus();
+  private isSyncing = false;
 
-    if (status.quotaExceeded) {
-      console.log("⏸️ Firebase sync paused - quota cooldown period");
+  /**
+   * Perform full synchronization (local only)
+   */
+  async performFullSync(): Promise<SyncResult> {
+    if (this.isSyncing) {
       return {
-        success: true,
-        message: "Sync paused - quota cooldown period",
-        details: ["Firebase temporarily paused due to quota limit"],
-        stats: {
-          usersSync: { local: 0, firebase: 0, merged: 0 },
-          poolsSync: { local: 0, firebase: 0, merged: 0 },
-          worksSync: { local: 0, firebase: 0, merged: 0 },
-          maintenanceSync: { local: 0, firebase: 0, merged: 0 },
-          clientsSync: { local: 0, firebase: 0, merged: 0 },
-        },
+        success: false,
+        message: "Sync already in progress",
+        details: ["Another sync operation is currently running"],
+        stats: this.getEmptyStats(),
       };
     }
 
-    const details: string[] = [];
-    const stats = {
+    this.isSyncing = true;
+
+    try {
+      console.log("🔄 Starting full sync (local only)...");
+
+      const result: SyncResult = {
+        success: false,
+        message: "",
+        details: [],
+        stats: this.getEmptyStats(),
+      };
+
+      // 1. Sync users (local only)
+      const usersResult = await this.syncUsers();
+      result.stats.usersSync = usersResult;
+      result.details.push(`Users: ${usersResult.local} local`);
+
+      // 2. Sync pools (local only)
+      const poolsResult = await this.syncPools();
+      result.stats.poolsSync = poolsResult;
+      result.details.push(`Pools: ${poolsResult.local} local`);
+
+      // 3. Sync works (local only)
+      const worksResult = await this.syncWorks();
+      result.stats.worksSync = worksResult;
+      result.details.push(`Works: ${worksResult.local} local`);
+
+      // 4. Sync maintenance (local only)
+      const maintenanceResult = await this.syncMaintenance();
+      result.stats.maintenanceSync = maintenanceResult;
+      result.details.push(`Maintenance: ${maintenanceResult.local} local`);
+
+      // 5. Sync clients (local only)
+      const clientsResult = await this.syncClients();
+      result.stats.clientsSync = clientsResult;
+      result.details.push(`Clients: ${clientsResult.local} local`);
+
+      const totalLocal =
+        usersResult.local +
+        poolsResult.local +
+        worksResult.local +
+        maintenanceResult.local +
+        clientsResult.local;
+
+      result.success = true;
+      result.message = `Sync completed successfully (local only) - ${totalLocal} items`;
+      result.details.push(
+        "Note: Firestore sync disabled - working with local data only",
+      );
+
+      console.log("✅ Full sync completed:", result);
+      return result;
+    } catch (error: any) {
+      console.error("❌ Full sync failed:", error);
+      return {
+        success: false,
+        message: `Sync failed: ${error.message}`,
+        details: [`Error: ${error.message}`],
+        stats: this.getEmptyStats(),
+      };
+    } finally {
+      this.isSyncing = false;
+    }
+  }
+
+  /**
+   * Sync users (local only)
+   */
+  private async syncUsers(): Promise<{
+    local: number;
+    firebase: number;
+    merged: number;
+  }> {
+    try {
+      const localUsers = this.getLocalData("app-users") || [];
+
+      // Ensure at least the admin user exists
+      if (localUsers.length === 0) {
+        const adminUser = {
+          id: 1,
+          name: "Gonçalo Fonseca",
+          email: "gongonsilva@gmail.com",
+          password: "19867gsf",
+          role: "super_admin",
+          isActive: true,
+          createdAt: new Date().toISOString(),
+        };
+        localUsers.push(adminUser);
+        localStorage.setItem("app-users", JSON.stringify(localUsers));
+      }
+
+      return { local: localUsers.length, firebase: 0, merged: 0 };
+    } catch (error) {
+      console.warn("⚠️ Users sync error:", error);
+      return { local: 0, firebase: 0, merged: 0 };
+    }
+  }
+
+  /**
+   * Sync pools (local only)
+   */
+  private async syncPools(): Promise<{
+    local: number;
+    firebase: number;
+    merged: number;
+  }> {
+    try {
+      const localPools = this.getLocalData("pools") || [];
+      return { local: localPools.length, firebase: 0, merged: 0 };
+    } catch (error) {
+      console.warn("⚠️ Pools sync error:", error);
+      return { local: 0, firebase: 0, merged: 0 };
+    }
+  }
+
+  /**
+   * Sync works (local only)
+   */
+  private async syncWorks(): Promise<{
+    local: number;
+    firebase: number;
+    merged: number;
+  }> {
+    try {
+      const localWorks = this.getLocalData("works") || [];
+      return { local: localWorks.length, firebase: 0, merged: 0 };
+    } catch (error) {
+      console.warn("⚠️ Works sync error:", error);
+      return { local: 0, firebase: 0, merged: 0 };
+    }
+  }
+
+  /**
+   * Sync maintenance (local only)
+   */
+  private async syncMaintenance(): Promise<{
+    local: number;
+    firebase: number;
+    merged: number;
+  }> {
+    try {
+      const localMaintenance = this.getLocalData("maintenance") || [];
+      return { local: localMaintenance.length, firebase: 0, merged: 0 };
+    } catch (error) {
+      console.warn("⚠️ Maintenance sync error:", error);
+      return { local: 0, firebase: 0, merged: 0 };
+    }
+  }
+
+  /**
+   * Sync clients (local only)
+   */
+  private async syncClients(): Promise<{
+    local: number;
+    firebase: number;
+    merged: number;
+  }> {
+    try {
+      const localClients = this.getLocalData("clients") || [];
+      return { local: localClients.length, firebase: 0, merged: 0 };
+    } catch (error) {
+      console.warn("⚠️ Clients sync error:", error);
+      return { local: 0, firebase: 0, merged: 0 };
+    }
+  }
+
+  /**
+   * Get local data safely
+   */
+  private getLocalData(key: string): any[] {
+    try {
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.warn(`⚠️ Error reading ${key} from localStorage:`, error);
+      return [];
+    }
+  }
+
+  /**
+   * Get empty stats structure
+   */
+  private getEmptyStats() {
+    return {
       usersSync: { local: 0, firebase: 0, merged: 0 },
       poolsSync: { local: 0, firebase: 0, merged: 0 },
       worksSync: { local: 0, firebase: 0, merged: 0 },
       maintenanceSync: { local: 0, firebase: 0, merged: 0 },
       clientsSync: { local: 0, firebase: 0, merged: 0 },
     };
-
-    // Firebase sync enabled for cross-device functionality with quota protection
-    console.log(
-      "🔥 Firebase sync enabled - cross-device sync with quota protection",
-    );
-
-    if (!db) {
-      console.log("📱 Firebase not available - working in local-only mode");
-      return {
-        success: true,
-        message: "Local-only mode - Firebase não disponível",
-        details: [
-          "Dados mantidos apenas localmente - Firebase não configurado",
-        ],
-        stats,
-      };
-    }
-
-    try {
-      details.push("🔄 Iniciando sincronização completa...");
-
-      // 1. Sync Users with quota protection
-      const usersResult = await this.syncUsersWithQuotaProtection();
-      details.push(...usersResult.details);
-      stats.usersSync = usersResult.stats;
-
-      // 2. Sync Pools
-      const poolsResult = await this.syncCollectionWithQuotaProtection("pools");
-      details.push(...poolsResult.details);
-      stats.poolsSync = poolsResult.stats;
-
-      // 3. Sync Works
-      const worksResult = await this.syncCollectionWithQuotaProtection("works");
-      details.push(...worksResult.details);
-      stats.worksSync = worksResult.stats;
-
-      // 4. Sync Maintenance
-      const maintenanceResult =
-        await this.syncCollectionWithQuotaProtection("maintenance");
-      details.push(...maintenanceResult.details);
-      stats.maintenanceSync = maintenanceResult.stats;
-
-      // 5. Sync Clients
-      const clientsResult =
-        await this.syncCollectionWithQuotaProtection("clients");
-      details.push(...clientsResult.details);
-      stats.clientsSync = clientsResult.stats;
-
-      details.push("✅ Sincronização completa finalizada!");
-
-      return {
-        success: true,
-        message: "Sincronização completa realizada com sucesso",
-        details,
-        stats,
-      };
-    } catch (error: any) {
-      // Check if it's a quota exceeded error
-      if (
-        error.message?.includes("quota") ||
-        error.message?.includes("resource-exhausted")
-      ) {
-        markQuotaExceeded();
-        details.push(
-          "🚨 Quota Firebase excedido - sincronização pausada temporariamente",
-        );
-        return {
-          success: false,
-          message: "Quota Firebase excedido",
-          details,
-          stats,
-        };
-      }
-
-      details.push(`�� Erro na sincronização: ${error.message}`);
-      return {
-        success: false,
-        message: "Erro durante sincronização",
-        details,
-        stats,
-      };
-    }
   }
 
-  private async syncUsersWithQuotaProtection(): Promise<{
-    details: string[];
-    stats: { local: number; firebase: number; merged: number };
-  }> {
-    try {
-      return await this.syncUsers();
-    } catch (error: any) {
-      if (
-        error.message?.includes("quota") ||
-        error.message?.includes("resource-exhausted")
-      ) {
-        const { markQuotaExceeded } = await import("../firebase/config");
-        markQuotaExceeded();
-        throw error;
-      }
-      throw error;
-    }
+  /**
+   * Check if sync is in progress
+   */
+  isSyncInProgress(): boolean {
+    return this.isSyncing;
   }
 
-  private async syncCollectionWithQuotaProtection(
-    collectionName: string,
-  ): Promise<{
-    details: string[];
-    stats: { local: number; firebase: number; merged: number };
-  }> {
-    try {
-      return await this.syncCollection(collectionName);
-    } catch (error: any) {
-      if (
-        error.message?.includes("quota") ||
-        error.message?.includes("resource-exhausted")
-      ) {
-        const { markQuotaExceeded } = await import("../firebase/config");
-        markQuotaExceeded();
-        throw error;
-      }
-      throw error;
-    }
-  }
-
-  private async syncUsers(): Promise<{
-    details: string[];
-    stats: { local: number; firebase: number; merged: number };
-  }> {
-    const details: string[] = [];
-    const stats = { local: 0, firebase: 0, merged: 0 };
-
-    try {
-      // Get local users
-      const localUsersData = localStorage.getItem("mock-users");
-      const localUsers = localUsersData ? JSON.parse(localUsersData) : [];
-      stats.local = localUsers.length;
-      details.push(`📱 Utilizadores locais: ${localUsers.length}`);
-
-      // Get Firebase users
-      const usersCollection = collection(db!, "users");
-      const usersSnapshot = await getDocs(usersCollection);
-      const firebaseUsers = usersSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      stats.firebase = firebaseUsers.length;
-      details.push(`☁️ Utilizadores Firebase: ${firebaseUsers.length}`);
-
-      // Merge users by email
-      const mergedUsers = new Map();
-
-      // Add local users
-      localUsers.forEach((user: any) => {
-        mergedUsers.set(user.email, {
-          ...user,
-          source: "local",
-        });
-      });
-
-      // Add Firebase users (Firebase takes precedence for conflicts)
-      firebaseUsers.forEach((user: any) => {
-        const existingUser = mergedUsers.get(user.email);
-        if (existingUser) {
-          // Merge data, preferring Firebase but keeping local password if Firebase doesn't have it
-          mergedUsers.set(user.email, {
-            ...existingUser,
-            ...user,
-            password: existingUser.password || user.password || "123456",
-            source: "merged",
-          });
-        } else {
-          mergedUsers.set(user.email, {
-            ...user,
-            password: user.password || "123456",
-            source: "firebase",
-          });
-        }
-      });
-
-      const finalUsers = Array.from(mergedUsers.values());
-      stats.merged = finalUsers.length;
-
-      // Update localStorage
-      const localUpdateUsers = finalUsers.map((user) => ({
-        uid: user.uid || user.id,
-        email: user.email,
-        password: user.password,
-        name: user.name,
-        role: user.role,
-        active: user.active !== false,
-        createdAt: user.createdAt || new Date().toISOString(),
-      }));
-
-      localStorage.setItem("mock-users", JSON.stringify(localUpdateUsers));
-      details.push(
-        `📱 localStorage atualizado com ${localUpdateUsers.length} utilizadores`,
-      );
-
-      // Update Firebase
-      const batch = writeBatch(db!);
-      finalUsers.forEach((user: any) => {
-        const userRef = doc(
-          db!,
-          "users",
-          user.uid || user.id || `user-${Date.now()}-${Math.random()}`,
-        );
-        const firebaseUserData = {
-          uid: user.uid || user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          permissions:
-            user.permissions || this.getDefaultPermissions(user.role),
-          active: user.active !== false,
-          createdAt: user.createdAt || new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        batch.set(userRef, firebaseUserData);
-      });
-
-      await batch.commit();
-      details.push(
-        `☁️ Firebase atualizado com ${finalUsers.length} utilizadores`,
-      );
-
-      // Force reload mockAuthService
-      mockAuthService.reloadUsers();
-      details.push("🔄 MockAuthService recarregado");
-
-      return { details, stats };
-    } catch (error: any) {
-      details.push(
-        `❌ Erro na sincronização de utilizadores: ${error.message}`,
-      );
-      return { details, stats };
-    }
-  }
-
-  private async syncCollection(collectionName: string): Promise<{
-    details: string[];
-    stats: { local: number; firebase: number; merged: number };
-  }> {
-    const details: string[] = [];
-    const stats = { local: 0, firebase: 0, merged: 0 };
-
-    try {
-      // Get local data
-      const localData = localStorage.getItem(collectionName);
-      const localItems = localData ? JSON.parse(localData) : [];
-      stats.local = localItems.length;
-      details.push(`📱 ${collectionName} locais: ${localItems.length}`);
-
-      // Get Firebase data
-      const firebaseCollection = collection(db!, collectionName);
-      const firebaseSnapshot = await getDocs(firebaseCollection);
-      const firebaseItems = firebaseSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      stats.firebase = firebaseItems.length;
-      details.push(`☁️ ${collectionName} Firebase: ${firebaseItems.length}`);
-
-      // Merge by ID
-      const mergedItems = new Map();
-
-      // Add local items
-      localItems.forEach((item: any) => {
-        mergedItems.set(item.id, {
-          ...item,
-          source: "local",
-        });
-      });
-
-      // Add Firebase items (Firebase data takes precedence)
-      firebaseItems.forEach((item: any) => {
-        const existingItem = mergedItems.get(item.id);
-        if (existingItem) {
-          mergedItems.set(item.id, {
-            ...existingItem,
-            ...item,
-            source: "merged",
-          });
-        } else {
-          mergedItems.set(item.id, {
-            ...item,
-            source: "firebase",
-          });
-        }
-      });
-
-      const finalItems = Array.from(mergedItems.values());
-      stats.merged = finalItems.length;
-
-      // Update localStorage
-      localStorage.setItem(collectionName, JSON.stringify(finalItems));
-      details.push(
-        `📱 localStorage ${collectionName} atualizado: ${finalItems.length} itens`,
-      );
-
-      // Update Firebase
-      const batch = writeBatch(db!);
-      finalItems.forEach((item: any) => {
-        const itemRef = doc(
-          db!,
-          collectionName,
-          item.id || `${collectionName}-${Date.now()}-${Math.random()}`,
-        );
-        const { source, ...itemData } = item; // Remove source field
-        batch.set(itemRef, {
-          ...itemData,
-          updatedAt: new Date().toISOString(),
-        });
-      });
-
-      await batch.commit();
-      details.push(
-        `☁️ Firebase ${collectionName} atualizado: ${finalItems.length} itens`,
-      );
-
-      return { details, stats };
-    } catch (error: any) {
-      details.push(
-        `❌ Erro na sincronização de ${collectionName}: ${error.message}`,
-      );
-      return { details, stats };
-    }
-  }
-
-  private getDefaultPermissions(role: string) {
-    switch (role) {
-      case "super_admin":
-        return {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          clientes: { view: true, create: true, edit: true, delete: true },
-        };
-      case "manager":
-        return {
-          obras: { view: true, create: true, edit: true, delete: false },
-          manutencoes: { view: true, create: true, edit: true, delete: false },
-          piscinas: { view: true, create: true, edit: true, delete: false },
-          utilizadores: {
-            view: true,
-            create: false,
-            edit: false,
-            delete: false,
-          },
-          relatorios: { view: true, create: true, edit: false, delete: false },
-          clientes: { view: true, create: true, edit: true, delete: false },
-        };
-      default: // technician
-        return {
-          obras: { view: true, create: false, edit: true, delete: false },
-          manutencoes: { view: true, create: true, edit: true, delete: false },
-          piscinas: { view: true, create: false, edit: true, delete: false },
-          utilizadores: {
-            view: false,
-            create: false,
-            edit: false,
-            delete: false,
-          },
-          relatorios: { view: true, create: false, edit: false, delete: false },
-          clientes: { view: true, create: false, edit: false, delete: false },
-        };
-    }
+  /**
+   * Check if service is available
+   */
+  isAvailable(): boolean {
+    return true; // Always available for local operations
   }
 }
 
+// Export singleton instance
 export const fullSyncService = new FullSyncService();
+export default fullSyncService;
