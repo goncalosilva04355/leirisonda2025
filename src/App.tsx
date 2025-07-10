@@ -166,6 +166,25 @@ function App() {
     };
   }, []);
 
+  // Restore authentication state from localStorage on app initialization
+  useEffect(() => {
+    const savedUser = localStorage.getItem("currentUser");
+    const savedAuth = localStorage.getItem("isAuthenticated");
+
+    if (savedUser && savedAuth === "true") {
+      try {
+        const user = JSON.parse(savedUser);
+        console.log("🔄 Restoring authentication state for:", user.email);
+        setCurrentUser(user);
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("❌ Error restoring user from localStorage:", error);
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("isAuthenticated");
+      }
+    }
+  }, []);
+
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
     console.log("🔥 Firebase handles auth state automatically");
