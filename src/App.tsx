@@ -392,7 +392,7 @@ function App() {
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
-          "⚠️ Nenhum utilizador atribuído, não enviando notificações",
+          "⚠️ Nenhum utilizador atribuído, n��o enviando notificações",
         );
         return;
       }
@@ -6370,10 +6370,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-        case "configuracoes":
-          // Safety check for activeAdminTab
-          const safeActiveConfigTab = activeAdminTab || "configuracoes";
-
+        case "configuracoes_unused":
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
