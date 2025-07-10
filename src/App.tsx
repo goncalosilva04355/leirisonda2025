@@ -1034,7 +1034,7 @@ function App() {
   // PDF Generation Functions
   const generatePoolsPDF = () => {
     const content = `
-LEIRISONDA - RELAT���RIO DE PISCINAS
+LEIRISONDA - RELAT��RIO DE PISCINAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1554,7 +1554,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         console.warn("⚠️ Maps redirect is disabled");
       }
       if (!address) {
-        console.warn("������ No address provided");
+        console.warn("⚠��� No address provided");
       }
     }
   };
@@ -3882,7 +3882,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <option value="">Selecionar diâmetro</option>
                                   <option value="1">1 polegada</option>
                                   <option value="1.25">1¼ polegadas</option>
-                                  <option value="1.5">1�� polegadas</option>
+                                  <option value="1.5">1½ polegadas</option>
                                   <option value="2">2 polegadas</option>
                                   <option value="2.5">2½ polegadas</option>
                                   <option value="3">3 polegadas</option>
@@ -5265,7 +5265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�������es, recomendações, próxima manutenção..."
+                          placeholder="Observaç�������es, recomendações, pr��xima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5755,7 +5755,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ���️ ATENÇÃO: Esta opera��ão é irrevers��vel!
+                              ���️ ATENÇÃO: Esta operação é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -7241,7 +7241,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descriç��o do trabalho realizado..."
+                            placeholder="Descriç����o do trabalho realizado..."
                           />
                         </div>
                         <div>
@@ -9313,7 +9313,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* <RealtimeNotifications /> */}
 
         {/* Work Assignment Notifications */}
-        <WorkAssignmentNotifications currentUser={currentUser} />
+        <WorkAssignmentNotificationsSimple currentUser={currentUser} />
 
         {/* User Restore Notification */}
         <UserRestoreNotification />
