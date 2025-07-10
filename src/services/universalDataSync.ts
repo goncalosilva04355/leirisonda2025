@@ -11,7 +11,10 @@ import {
   updateDoc,
   writeBatch,
 } from "firebase/firestore";
-import { db, isFirebaseReady, waitForFirebaseInit } from "../firebase/config";
+import {
+  isFirebaseReady,
+  getFirestoreSafe,
+} from "../firebase/configWithoutFirestore";
 
 export interface UniversalDataState {
   obras: any[];
