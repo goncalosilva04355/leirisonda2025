@@ -20,9 +20,9 @@ export const SimpleFirebaseDebug: React.FC = () => {
     try {
       console.log("🔍 Executando verificação completa do Firebase...");
 
-      const healthCheck = await FirebaseHealthCheck.runCompleteCheck();
-      const operations = await FirebaseHealthCheck.testFirestoreOperations();
-      const report = FirebaseHealthCheck.generateHealthReport(
+      const healthCheck = await FirebaseHealthCheckFixed.runCompleteCheck();
+      const operations = await FirebaseHealthCheckFixed.testBasicOperations();
+      const report = FirebaseHealthCheckFixed.generateHealthReport(
         healthCheck,
         operations,
       );
