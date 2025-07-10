@@ -1432,7 +1432,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
+        "As notificações não estão ativadas. Active-as primeiro nas configuraç��es.",
       );
     }
   };
@@ -7018,7 +7018,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manuten��ão</option>
-                            <option value="instalacao">Instalação</option>
+                            <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -8389,7 +8389,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   useEffect(() => {
     const manualLogout = localStorage.getItem("manualLogout");
 
-    if (!currentUser && !isAuthenticated && manualLogout !== "true") {
+    // Clear manual logout flag for debugging
+    if (manualLogout === "true") {
+      console.log("🔧 Clearing manual logout flag for debugging");
+      localStorage.removeItem("manualLogout");
+    }
+
+    if (!currentUser && !isAuthenticated) {
       const testUser = {
         id: 1,
         name: "Gonçalo Fonseca",
