@@ -4003,7 +4003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠️ Nenhum utilizador encontrado. Vá à Área de
+                                ⚠️ Nenhum utilizador encontrado. Vá à Área de de
                                 Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
@@ -6309,7 +6309,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ���️ ATENÇÃO: Esta operação é irrevers��vel!
+                              ���️ ATEN��ÃO: Esta operação é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -9581,7 +9581,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         selectedWork.vehicles.length > 0 && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
-                              Ve���culos
+                              Ve�����culos
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.vehicles.join(", ")}
