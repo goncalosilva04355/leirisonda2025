@@ -986,7 +986,7 @@ function App() {
     testFirestoreStep3();
   }, []);
 
-  // Sincroniza��ão inicial de todos os dados com Firestore
+  // Sincroniza����o inicial de todos os dados com Firestore
   useEffect(() => {
     const syncAllData = async () => {
       // Aguardar um pouco para o Firestore estar pronto
@@ -1264,7 +1264,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!hasPermission("manutencoes", "create")) {
       alert(
-        "N��o tem permissão para criar manutenç���es. Contacte o administrador.",
+        "N��o tem permissão para criar manutenç�����es. Contacte o administrador.",
       );
       return;
     }
@@ -2599,7 +2599,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </button>
 
-                  {/* Concluídas - REMOVIDO do Dashboard conforme solicitado */}
+                  {/* Concluídas */}
+                  <button
+                    onClick={() => navigateToSection("obras")}
+                    className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Concluídas
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Obras finalizadas
+                        </p>
+                      </div>
+                      <div className="text-4xl font-bold text-gray-900">
+                        {
+                          works.filter(
+                            (w) =>
+                              w.status === "completed" ||
+                              w.status === "concluida",
+                          ).length
+                        }
+                      </div>
+                    </div>
+                  </button>
 
                   {/* Falta de Folhas de Obra */}
                   <button
@@ -4552,7 +4576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ���� {assignedUser.name}
+                                    ������ {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -7909,7 +7933,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manuten��ão</option>
+                            <option value="manutencao">Manuten���ão</option>
                             <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
@@ -9854,7 +9878,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N�����o especificado"}
+                          {selectedWork.type || "N����o especificado"}
                         </p>
                       </div>
                       <div>
