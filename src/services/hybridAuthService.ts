@@ -59,12 +59,8 @@ class HybridAuthService {
           const userProfile: UserProfile = {
             uid: userCredential.user.uid,
             email: userCredential.user.email!,
-            name:
-              email === "gongonsilva@gmail.com"
-                ? "Gonçalo Fonseca"
-                : "Utilizador Firebase",
-            role:
-              email === "gongonsilva@gmail.com" ? "super_admin" : "technician",
+            name: authorizedUser.name,
+            role: authorizedUser.role,
             active: true,
             createdAt: new Date().toISOString(),
           };
