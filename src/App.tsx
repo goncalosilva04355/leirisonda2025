@@ -3260,7 +3260,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                       >
                         <Plus className="h-4 w-4" />
-                        <span>Agendar Manutenção</span>
+                        <span>Agendar Manutenç��o</span>
                       </button>
                     </div>
                   ) : (
@@ -5889,7 +5889,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
-                        <li>�� T��cnicos responsáveis</li>
+                        <li>���� T��cnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -8892,7 +8892,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 } catch (error: any) {
                   alert(`❌ Simple test error: ${error.message}`);
                 }
-                  console.log("📊 Realtime Database Test:", result);
+                  
 
                   if (result.success) {
                     alert(
