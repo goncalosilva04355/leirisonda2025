@@ -3136,7 +3136,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���������� {maint.clientContact}
+                                        ����������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -8689,6 +8689,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
+          <HotReloadTest />
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
