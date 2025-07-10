@@ -2868,8 +2868,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         ))}
                       </div>
                     </div>
-                  ) : null;
-                })()}
+                                    )
+                )}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
@@ -7260,7 +7260,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     {/* Basic Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informações Básicas
+                        Informaç��es Básicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -8162,7 +8162,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ���� Detalhes do Furo de Água
+                        ����� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
