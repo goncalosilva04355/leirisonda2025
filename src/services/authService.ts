@@ -16,6 +16,39 @@ export interface UserProfile {
   role: "super_admin" | "manager" | "technician";
   active: boolean;
   createdAt: string;
+  permissions?: {
+    obras?: { view: boolean; create: boolean; edit: boolean; delete: boolean };
+    manutencoes?: {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    };
+    piscinas?: {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    };
+    utilizadores?: {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    };
+    relatorios?: {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    };
+    clientes?: {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    };
+  };
 }
 
 class AuthService {
