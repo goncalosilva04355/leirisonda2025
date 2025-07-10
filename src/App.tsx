@@ -249,23 +249,23 @@ function App() {
 
   // Backup and complex initialization temporarily disabled for stability
 
-  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
-  useEffect(() => {
-    console.log("���� SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
-      obras: universalSync.obras.length,
-      manutencoes: universalSync.manutencoes.length,
-      piscinas: universalSync.piscinas.length,
-      clientes: universalSync.clientes.length,
-      total: universalSync.totalItems,
-      status: universalSync.syncStatus,
-    });
-  }, [
-    universalSync.obras,
-    universalSync.manutencoes,
-    universalSync.piscinas,
-    universalSync.clientes,
-    universalSync.syncStatus,
-  ]);
+  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
+  // useEffect(() => {
+  //   console.log("���� SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+  //     obras: universalSync.obras.length,
+  //     manutencoes: universalSync.manutencoes.length,
+  //     piscinas: universalSync.piscinas.length,
+  //     clientes: universalSync.clientes.length,
+  //     total: universalSync.totalItems,
+  //     status: universalSync.syncStatus,
+  //   });
+  // }, [
+  //   universalSync.obras,
+  //   universalSync.manutencoes,
+  //   universalSync.piscinas,
+  //   universalSync.clientes,
+  //   universalSync.syncStatus,
+  // ]);
 
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
@@ -273,7 +273,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações autom��ticas desabilitadas para resolver instabilidade
+    // Verificaç��es autom��ticas desabilitadas para resolver instabilidade
     // Sistema funcionar�� normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
@@ -1762,7 +1762,7 @@ ${maintenance
   .map(
     (maint, index) => `
 ${index + 1}. ${maint.poolName} - ${maint.type}
-   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | Técnico: ${maint.technician}
+   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | T��cnico: ${maint.technician}
 `,
   )
   .join("")}
