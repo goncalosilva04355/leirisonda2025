@@ -76,14 +76,14 @@ export interface SyncActions {
 }
 
 export function useDataSyncSafe(): SyncState & SyncActions {
-  const [state, setState] = useState<SyncState>(() => ({
+  const [state, setState] = useState<SyncState>({
     pools: [],
     maintenance: [],
     futureMaintenance: [],
     works: [],
     clients: [],
     lastSync: null,
-  }));
+  });
 
   // Safe no-op actions
   const actions: SyncActions = {
