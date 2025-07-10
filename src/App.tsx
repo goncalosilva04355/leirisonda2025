@@ -60,7 +60,7 @@ import { isFirebaseReady } from "./firebase/configWithoutFirestore";
 // import { AdminPage } from "./admin/AdminPage"; // Now lazy loaded
 // Imports diretos para evitar problemas de lazy loading
 import { LoginPage } from "./pages/LoginPage";
-import SimpleFirebaseDebug from "./components/SimpleFirebaseDebug";
+// import SimpleFirebaseDebug from "./components/SimpleFirebaseDebug"; // Temporarily disabled
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
@@ -6541,7 +6541,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic�����vel)
+                            Pessoa de Contacto (se aplic����vel)
                           </label>
                           <input
                             type="text"
