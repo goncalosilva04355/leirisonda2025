@@ -3421,7 +3421,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���������� {maint.clientContact}
+                                        ����������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -9136,12 +9136,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             >
               <Menu className="h-6 w-6 text-gray-600" />
             </button>
-            <button
-              onClick={handleGoBack}
-              className="bg-white p-2 rounded-md shadow-md"
-            >
-              <ArrowLeft className="h-6 w-6 text-gray-600" />
-            </button>
+            {activeSection !== "dashboard" && (
+              <button
+                onClick={handleGoBack}
+                className="bg-white p-2 rounded-md shadow-md"
+              >
+                <ArrowLeft className="h-6 w-6 text-gray-600" />
+              </button>
+            )}
           </div>
 
           {/* Mobile Overlay */}
