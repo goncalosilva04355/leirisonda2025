@@ -13,9 +13,9 @@ const firebaseConfig = {
   messagingSenderId: "632599887141",
   appId: "1:632599887141:web:6027bf35a9d908b264eecc",
   measurementId: "G-51GLBMB6JQ",
-  // Realtime Database URL
+  // Realtime Database URL (provided by user)
   databaseURL:
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app/",
 };
 
 // Initialize Firebase
