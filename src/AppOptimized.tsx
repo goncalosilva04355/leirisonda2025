@@ -37,9 +37,11 @@ function AppOptimized() {
   useEffect(() => {
     try {
       PerformanceOptimizer.initialize();
+      CacheManager.initialize();
       console.log("🚀 Performance Optimizer ativo - aplicação optimizada!");
+      console.log("💾 Cache Manager ativo - velocidade máxima!");
     } catch (error) {
-      console.error("Error initializing performance optimizer:", error);
+      console.error("Error initializing optimizers:", error);
     }
   }, []);
 
