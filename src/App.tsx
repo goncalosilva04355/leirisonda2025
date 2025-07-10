@@ -683,7 +683,7 @@ function App() {
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
-      console.log("🧹 All mock and test data cleared");
+      console.log("�� All mock and test data cleared");
     };
 
     forceLogout();
@@ -3906,7 +3906,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setCurrentTechnician(e.target.value)
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: Jo��o Santos"
+                              placeholder="Ex: Jo���o Santos"
                             />
                             <button
                               type="button"
@@ -4253,7 +4253,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N����vel da Água (m) *
+                                  N���vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -5814,7 +5814,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa��ões Gerais
+                          Observações Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -9132,7 +9132,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb�����m funciona na página de login */}
+        {/* Admin Login Modal - tamb���m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
