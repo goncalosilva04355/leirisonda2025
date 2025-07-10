@@ -62,7 +62,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 
-import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
+import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
 import {
@@ -1169,7 +1169,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç�����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
