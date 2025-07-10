@@ -454,66 +454,125 @@ function App() {
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
 
-  // Load users from localStorage on app start
+  // Load users from Firestore and localStorage on app start
   useEffect(() => {
-    console.log("🔄 Loading users from localStorage on app start...");
+    const loadUsers = async () => {
+      console.log("🔄 Loading users from Firestore + localStorage...");
 
-    try {
-      // Load users from localStorage (app-users)
-      const savedUsers = localStorage.getItem("app-users");
-      if (savedUsers) {
-        const parsedUsers = JSON.parse(savedUsers);
-        console.log(
-          "✅ Users loaded successfully:",
-          parsedUsers.length,
-          parsedUsers,
-        );
-        setUsers(parsedUsers);
-      } else {
-        console.log("📝 No saved users found, initializing with default users");
-        // Initialize with default admin user and save to localStorage
-        const defaultUsers = [
-          {
-            id: 1,
-            name: "Gonçalo Fonseca",
-            email: "gongonsilva@gmail.com",
-            active: true,
-            role: "super_admin",
-            password: "19867gsf",
-            permissions: {
-              obras: { view: true, create: true, edit: true, delete: true },
-              manutencoes: {
-                view: true,
-                create: true,
-                edit: true,
-                delete: true,
+      try {
+        // Aguardar Firestore estar pronto
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        if (isFirestoreReady()) {
+          console.log("📱 Carregando utilizadores do Firestore...");
+
+          // Tentar carregar do Firestore
+          const firestoreUsers = await firestoreService.getUtilizadores();
+
+          if (firestoreUsers.length > 0) {
+            console.log(
+              "✅ Utilizadores carregados do Firestore:",
+              firestoreUsers.length,
+            );
+            setUsers(firestoreUsers);
+            return;
+          }
+        }
+
+        // Fallback para localStorage se Firestore não tiver dados
+        const savedUsers = localStorage.getItem("app-users");
+        if (savedUsers) {
+          const parsedUsers = JSON.parse(savedUsers);
+          console.log("✅ Users loaded from localStorage:", parsedUsers.length);
+          setUsers(parsedUsers);
+
+          // Sincronizar com Firestore se disponível
+          if (isFirestoreReady()) {
+            console.log(
+              "🔄 Sincronizando utilizadores locais para Firestore...",
+            );
+            for (const user of parsedUsers) {
+              if (!user.firestoreId) {
+                const firestoreId =
+                  await firestoreService.createUtilizador(user);
+                if (firestoreId) {
+                  user.firestoreId = firestoreId;
+                }
+              }
+            }
+          }
+        } else {
+          console.log(
+            "���� No saved users found, initializing with default users",
+          );
+
+          // Initialize with default admin user
+          const defaultUsers = [
+            {
+              id: 1,
+              name: "Gonçalo Fonseca",
+              email: "gongonsilva@gmail.com",
+              active: true,
+              role: "super_admin",
+              password: "19867gsf",
+              permissions: {
+                obras: { view: true, create: true, edit: true, delete: true },
+                manutencoes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                piscinas: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                utilizadores: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                relatorios: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                clientes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
               },
-              piscinas: { view: true, create: true, edit: true, delete: true },
-              utilizadores: {
-                view: true,
-                create: true,
-                edit: true,
-                delete: true,
-              },
-              relatorios: {
-                view: true,
-                create: true,
-                edit: true,
-                delete: true,
-              },
-              clientes: { view: true, create: true, edit: true, delete: true },
+              createdAt: new Date().toISOString(),
             },
-            createdAt: "2024-01-01",
-          },
-        ];
-        setUsers(defaultUsers);
-        localStorage.setItem("app-users", JSON.stringify(defaultUsers));
+          ];
+
+          setUsers(defaultUsers);
+          localStorage.setItem("app-users", JSON.stringify(defaultUsers));
+
+          // Criar no Firestore também
+          if (isFirestoreReady()) {
+            for (const user of defaultUsers) {
+              const firestoreId = await firestoreService.createUtilizador(user);
+              if (firestoreId) {
+                user.firestoreId = firestoreId;
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error("❌ Error loading users:", error);
+        // Fallback to initial users
+        setUsers(initialUsers);
       }
-    } catch (error) {
-      console.error("❌ Error loading users:", error);
-      // Fallback to initial users
-      setUsers(initialUsers);
-    }
+    };
+
+    loadUsers();
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
