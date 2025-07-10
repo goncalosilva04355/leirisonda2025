@@ -3005,7 +3005,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Manutenções
+                          Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Histórico de manutenç��es realizadas
@@ -7924,7 +7924,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenç��o">Manutenção</option>
-                          <option value="Reparaç����o">Reparação</option>
+                          <option value="Reparaç������o">Reparação</option>
                         </select>
                       </div>
                       <div>
@@ -8573,6 +8573,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
+        <HotReloadTest />
         <SimpleFirebaseDebug />
         <LoginPage
           onLogin={async (email: string, password: string) => {
