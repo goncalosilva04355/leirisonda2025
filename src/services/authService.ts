@@ -12,11 +12,21 @@ import {
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { firebaseService } from "../firebase/robustConfig";
 
+export interface UserPermissions {
+  [module: string]: {
+    view: boolean;
+    create: boolean;
+    edit: boolean;
+    delete: boolean;
+  };
+}
+
 export interface UserProfile {
   uid: string;
   email: string;
   name: string;
-  role: "super_admin" | "manager" | "technician";
+  role: "super_admin" | "admin" | "manager" | "technician";
+  permissions: UserPermissions;
   active: boolean;
   createdAt: string;
 }
