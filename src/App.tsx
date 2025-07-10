@@ -2549,53 +2549,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras atribuídas pendentes
+                          Obras necessitam atenção
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {(() => {
-                          // Filtrar obras pendentes atribuídas ao utilizador atual
-                          const pendingWorks = works.filter((w) => {
-                            const isPending =
-                              w.status === "pending" || w.status === "pendente";
-                            const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return isPending && isAssignedToUser;
-                          });
-                          console.log(
-                            "📊 Dashboard - Obras Pendentes Atribuídas:",
-                            pendingWorks.length,
-                            "Utilizador:",
-                            currentUser?.name,
-                            pendingWorks.map((w) => ({
-                              id: w.id,
-                              status: w.status,
-                              title: w.workSheetNumber,
-                              assignedTo: w.assignedTo,
-                              assignedUsers: w.assignedUsers,
-                            })),
-                          );
-                          return pendingWorks.length;
-                        })()}
+                        {
+                          works.filter(
+                            (w) =>
+                              w.status === "pending" || w.status === "pendente",
+                          ).length
+                        }
                       </div>
                     </div>
                   </button>
