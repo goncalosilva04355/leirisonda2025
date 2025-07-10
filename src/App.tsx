@@ -2526,22 +2526,49 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenção
+                          Obras atribuídas pendentes
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          const pendingWorks = works.filter(
-                            (w) =>
-                              w.status === "pending" || w.status === "pendente",
-                          );
+                          // Filtrar obras pendentes atribuídas ao utilizador atual
+                          const pendingWorks = works.filter((w) => {
+                            const isPending =
+                              w.status === "pending" || w.status === "pendente";
+                            const isAssignedToUser =
+                              currentUser &&
+                              // Verificar assignedTo (campo legacy)
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                // Verificar assignedUsers array
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                // Verificar assignedUserIds array
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return isPending && isAssignedToUser;
+                          });
                           console.log(
-                            "📊 Dashboard - Obras Pendentes:",
+                            "📊 Dashboard - Obras Pendentes Atribuídas:",
                             pendingWorks.length,
+                            "Utilizador:",
+                            currentUser?.name,
                             pendingWorks.map((w) => ({
                               id: w.id,
                               status: w.status,
                               title: w.workSheetNumber,
+                              assignedTo: w.assignedTo,
+                              assignedUsers: w.assignedUsers,
                             })),
                           );
                           return pendingWorks.length;
@@ -4441,7 +4468,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ���� {assignedUser.name}
+                                    ������ {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -5328,7 +5355,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "✅ Cliente adicionado com sucesso:",
+                                    "�� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
