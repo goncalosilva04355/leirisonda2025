@@ -81,16 +81,16 @@ import { authService, UserProfile } from "./services/authService";
 // import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe"; // Temporarily disabled
 // import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix"; // Disabled - Firestore not available
 // import { useAutoUserMigration } from "./hooks/useAutoUserMigration"; // Disabled - Firestore not available
-import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
-import UserMigrationIndicator from "./components/UserMigrationIndicator";
-import RealtimeDatabaseTester from "./components/RealtimeDatabaseTester";
-import StabilityMonitor from "./utils/stabilityMonitor";
-import PerformanceOptimizer from "./utils/performanceOptimizer";
+// import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor"; // Temporarily disabled
+// import UserMigrationIndicator from "./components/UserMigrationIndicator"; // Temporarily disabled
+// import RealtimeDatabaseTester from "./components/RealtimeDatabaseTester"; // Temporarily disabled
+// import StabilityMonitor from "./utils/stabilityMonitor"; // Temporarily disabled
+// import PerformanceOptimizer from "./utils/performanceOptimizer"; // Temporarily disabled
 // import { useSafeEffect, useThrottledLog, useRenderCounter } from "./hooks/useSafeEffect"; // Temporarily disabled
 // Firebase components removed - Firebase works automatically in background
-import { userRestoreService } from "./services/userRestoreService";
-import { UserRestoreNotificationFixed } from "./components/UserRestoreNotificationFixed";
-import AppStabilityStatus from "./components/AppStabilityStatus";
+// import { userRestoreService } from "./services/userRestoreService"; // Temporarily disabled
+// import { UserRestoreNotificationFixed } from "./components/UserRestoreNotificationFixed"; // Temporarily disabled
+// import AppStabilityStatus from "./components/AppStabilityStatus"; // Temporarily disabled
 
 // Production users - only real admin account
 const initialUsers = [
@@ -4778,7 +4778,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // SECURITY: Check if user has permission to create pools
                           if (!currentUser?.permissions?.piscinas?.create) {
                             alert(
-                              "Não tem permiss��o para criar piscinas. Contacte o administrador.",
+                              "Não tem permissão para criar piscinas. Contacte o administrador.",
                             );
                             return;
                           }
@@ -5589,7 +5589,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              �� As notificaç����es funcionam apenas com HTTPS
+                              • As notificaç����es funcionam apenas com HTTPS
                             </li>
                             <li>
                               • Certifique-se de que permite notifica��ões no
@@ -5875,7 +5875,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten�����������es</li>
+                        <li>• Histórico de manuten����������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -8845,7 +8845,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Terminar Sessão</span>
                 </button>
                 <div className="mt-4 text-center">
-                  <p className="text-xs text-gray-400">�� 2025 Leirisonda</p>
+                  <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
                 </div>
               </div>
             </div>
