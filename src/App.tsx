@@ -6899,7 +6899,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </button>
                           </div>
                           <p className="text-blue-700 text-sm mb-3">
-                            Quando ativado, clicar num número de telefone
+                            Quando ativado, clicar num n��mero de telefone
                             abrir�� diretamente o marcador do telefone.
                           </p>
                           <p className="text-blue-600 text-xs">
@@ -10939,7 +10939,48 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           {/* Main Content */}
           <main className="lg:ml-80 min-h-screen">
-            <div className="p-4 lg:p-6">{renderContent()}</div>
+            <div className="p-4 lg:p-6">
+              {(() => {
+                try {
+                  return renderContent();
+                } catch (error) {
+                  console.error("Error rendering content:", error);
+                  return (
+                    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                      <div className="bg-white p-8 rounded-lg shadow-sm max-w-md w-full text-center">
+                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <AlertCircle className="h-8 w-8 text-red-600" />
+                        </div>
+                        <h1 className="text-xl font-bold text-gray-900 mb-2">
+                          Erro de Renderização
+                        </h1>
+                        <p className="text-gray-600 mb-4">
+                          Ocorreu um erro ao carregar a página. Por favor, tente
+                          novamente.
+                        </p>
+                        <div className="space-y-2">
+                          <button
+                            onClick={() => window.location.reload()}
+                            className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+                          >
+                            Recarregar Página
+                          </button>
+                          <button
+                            onClick={() => {
+                              setActiveSection("dashboard");
+                              setActiveAdminTab("relatorios");
+                            }}
+                            className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300"
+                          >
+                            Voltar ao Dashboard
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+              })()}
+            </div>
           </main>
 
           {/* Install Prompt for Mobile */}
