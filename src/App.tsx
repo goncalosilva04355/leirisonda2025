@@ -1014,7 +1014,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       if (isFirestoreReady()) {
-        console.log("🔄 Iniciando sincronização automática em tempo real...");
+        console.log("���� Iniciando sincronização automática em tempo real...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -4546,7 +4546,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                   console.log(
-                                    "���� FILTRO UTILIZADOR:",
+                                    "����� FILTRO UTILIZADOR:",
                                     user.name,
                                     "| Role:",
                                     user.role,
@@ -9716,58 +9716,65 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Relatórios */}
-                {hasPermission("relatorios", "view") && (
+                {/* Administração - Grouped Section */}
+                <div className="border-t border-gray-200 pt-4 mt-4">
+                  <p className="px-4 text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
+                    Administração
+                  </p>
+
+                  {/* Relatórios */}
+                  {hasPermission("relatorios", "view") && (
+                    <button
+                      onClick={() => {
+                        navigateToSection("relatorios");
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                        activeSection === "relatorios"
+                          ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      <BarChart3 className="h-5 w-5" />
+                      <span>Relatórios</span>
+                    </button>
+                  )}
+
+                  {/* Configurações */}
                   <button
                     onClick={() => {
-                      navigateToSection("relatorios");
+                      navigateToSection("configuracoes");
                       setSidebarOpen(false);
                     }}
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "relatorios"
+                      activeSection === "configuracoes"
                         ? "bg-red-50 text-red-700 border-l-4 border-red-500"
                         : "text-gray-700 hover:bg-gray-100"
                     }`}
                   >
-                    <BarChart3 className="h-5 w-5" />
-                    <span>Relatórios</span>
+                    <Settings className="h-5 w-5" />
+                    <span>Configurações</span>
                   </button>
-                )}
 
-                {/* Configurações */}
-                <button
-                  onClick={() => {
-                    navigateToSection("configuracoes");
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeSection === "configuracoes"
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <Settings className="h-5 w-5" />
-                  <span>Configurações</span>
-                </button>
-
-                {/* Gestão de Utilizadores - Para super_admin e admin */}
-                {(currentUser?.role === "super_admin" ||
-                  currentUser?.role === "admin") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("utilizadores");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "utilizadores"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <UserPlus className="h-5 w-5" />
-                    <span>Utilizadores</span>
-                  </button>
-                )}
+                  {/* Gestão de Utilizadores - Para super_admin e admin */}
+                  {(currentUser?.role === "super_admin" ||
+                    currentUser?.role === "admin") && (
+                    <button
+                      onClick={() => {
+                        navigateToSection("utilizadores");
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                        activeSection === "utilizadores"
+                          ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      <UserPlus className="h-5 w-5" />
+                      <span>Utilizadores</span>
+                    </button>
+                  )}
+                </div>
 
                 {/* Localizações - Para super_admin e admin */}
                 {(currentUser?.role === "super_admin" ||
@@ -9803,13 +9810,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>Terminar Sessao</span>
-                </button>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => {
+                      navigateToSection("configuracoes");
+                      setSidebarOpen(false);
+                    }}
+                    className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                    title="Configurações"
+                  >
+                    <Settings className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="flex-1 flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    <span>Terminar Sessao</span>
+                  </button>
+                </div>
                 <div className="mt-4 text-center">
                   <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
                 </div>
