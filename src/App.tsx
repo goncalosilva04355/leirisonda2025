@@ -78,6 +78,11 @@ import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 import StabilityMonitor from "./utils/stabilityMonitor";
+import {
+  useSafeEffect,
+  useThrottledLog,
+  useRenderCounter,
+} from "./hooks/useSafeEffect";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
 import { UserRestoreNotificationFixed } from "./components/UserRestoreNotificationFixed";
