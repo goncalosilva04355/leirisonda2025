@@ -94,7 +94,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
 // Firebase works silently in background - no diagnostics or UI needed
-import("./firebase/ultimateSimpleFirebase");
+// Removed problematic import that was using old project
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
@@ -7410,7 +7410,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar voltagem</option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif���sico)</option>
+                            <option value="400V">400V (trif��sico)</option>
                           </select>
                         </div>
                       </div>
