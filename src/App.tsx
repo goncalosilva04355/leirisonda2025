@@ -66,26 +66,26 @@ import "./firebase/realtimeDatabase"; // Initialize Realtime Database
 // SECURITY: RegisterForm removed - only super admin can create users
 // import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
 // import { AdminPage } from "./admin/AdminPage"; // Now lazy loaded
-// Lazy loading removido temporariamente para simplificar
-// const LoginPage = lazy(() =>
-//   import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
-// );
-// const SimpleFirebaseDebug = lazy(
-//   () => import("./components/SimpleFirebaseDebug"),
-// );
-// const AdvancedSettings = lazy(() =>
-//   import("./components/AdvancedSettings").then((module) => ({
-//     default: module.AdvancedSettings,
-//   })),
-// );
-// const AdminLogin = lazy(() =>
-//   import("./admin/AdminLogin").then((module) => ({
-//     default: module.AdminLogin,
-//   })),
-// );
-// const AdminPage = lazy(() =>
-//   import("./admin/AdminPage").then((module) => ({ default: module.AdminPage })),
-// );
+// Lazy loading para componentes pesados
+const LoginPage = lazy(() =>
+  import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
+);
+const SimpleFirebaseDebug = lazy(
+  () => import("./components/SimpleFirebaseDebug"),
+);
+const AdvancedSettings = lazy(() =>
+  import("./components/AdvancedSettings").then((module) => ({
+    default: module.AdvancedSettings,
+  })),
+);
+const AdminLogin = lazy(() =>
+  import("./admin/AdminLogin").then((module) => ({
+    default: module.AdminLogin,
+  })),
+);
+const AdminPage = lazy(() =>
+  import("./admin/AdminPage").then((module) => ({ default: module.AdminPage })),
+);
 
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
@@ -256,7 +256,7 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Vers����o completa funcional
+  // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   // Firebase ativo como solicitado
   // const universalSync = useUniversalDataSync(); // Disabled - Firestore not available
   const universalSync = {
@@ -1694,7 +1694,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "��������️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "����������️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
@@ -5321,7 +5321,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa����es Gerais
+                          Observa��ões Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -5751,7 +5751,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                         <div className="flex-1">
                           <h4 className="font-medium text-gray-900 mb-2">
-                            Instruç��es
+                            Instruções
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
@@ -5941,7 +5941,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç����es
+                        <strong>{maintenance.length}</strong> manutenç��es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -8114,7 +8114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             observations,
                           });
 
-                          alert("Manutenção atualizada com sucesso!");
+                          alert("Manutenç��o atualizada com sucesso!");
                           setEditingMaintenance(null);
                           setActiveSection("manutencoes");
                         }}
@@ -8592,65 +8592,64 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
-                {/* SimpleFirebaseDebug disabled */}
+        {/* Temporarily disabled to fix Firebase initialization errors
         <Suspense
           fallback={
-            <div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">
-              A carregar...
+            <div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">
+              ⏳
             </div>
           }
         >
-          <LoginPage
-            onLogin={async (email: string, password: string) => {
-              console.log("🔐 Login attempt for:", email);
-
-              // Clear any previous errors
-              setLoginError("");
-
-              // Basic validation
-              if (!email?.trim() || !password?.trim()) {
-                setLoginError("Por favor, preencha todos os campos");
-                return;
-              }
-
-              try {
-                const result = await authService.login(email, password);
-
-                if (result.success && result.user) {
-                  console.log("✅ Login successful for:", result.user.email);
-
-                  // Set user state and authentication
-                  setCurrentUser(result.user);
-                  setIsAuthenticated(true);
-                  localStorage.setItem("currentUser", JSON.stringify(result.user));
-                  localStorage.setItem("isAuthenticated", "true");
-                  // Clear manual logout flag on successful login
-                  localStorage.removeItem("manualLogout");
-
-                  // Clear login form
-                  setLoginForm({ email: "", password: "" });
-
-                  // Navigate to dashboard
-                  setTimeout(() => {
-                    const hash = window.location.hash.substring(1);
-                    if (hash && hash !== "login") {
-                      setActiveSection(hash);
-                    } else {
-                      navigateToSection("dashboard");
-                    }
-                  }, 100);
-                } else {
-                  console.warn("❌ Login failed:", result.error);
-                  setLoginError(result.error || "Credenciais inválidas");
-                }
-              } catch (error) {
-                console.error("❌ Login error:", error);
-                setLoginError("Erro de sistema. Por favor, tente novamente.");
-              }
-            }}
-            loginError={loginError}
-            isLoading={false}
-          />
+          <SimpleFirebaseDebug />
+        </Suspense>
+        */}
+        {/* Login Page - Simple inline version */}
+        <div className="min-h-screen bg-blue-600 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              Login Leirisonda
+            </h2>
+            <form onSubmit={handleLogin}>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={loginForm.email}
+                  onChange={(e) =>
+                    setLoginForm({ ...loginForm, email: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={loginForm.password}
+                  onChange={(e) =>
+                    setLoginForm({ ...loginForm, password: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              {loginError && (
+                <div className="mb-4 text-red-600 text-sm">{loginError}</div>
+              )}
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Entrar
+              </button>
+            </form>
+          </div>
+        </div>
         {/* </LoginPage
             onLogin={async (email: string, password: string) => {
               console.log("🔐 Login attempt for:", email);
