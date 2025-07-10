@@ -1020,7 +1020,7 @@ function App() {
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização automática ativa!");
+          console.log("✅ Sincroniza��ão automática ativa!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -10571,8 +10571,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => {
-                      navigateToSection("configuracoes");
-                      setSidebarOpen(false);
+                      const password = prompt(
+                        "Digite a palavra-passe para aceder às configurações:",
+                      );
+                      if (password === "19867") {
+                        navigateToSection("configuracoes");
+                        setSidebarOpen(false);
+                      } else if (password !== null) {
+                        alert("Palavra-passe incorreta!");
+                      }
                     }}
                     className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
                     title="Configurações"
