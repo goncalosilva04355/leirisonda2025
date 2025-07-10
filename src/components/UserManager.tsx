@@ -493,6 +493,28 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
                               : "Técnico"}
                         </span>
                       </span>
+
+                      {/* Indicador de permissões */}
+                      {(() => {
+                        const permissions = getUserPermissions(user.email);
+                        if (!permissions) return null;
+
+                        const totalPerms = Object.values(permissions).reduce(
+                          (acc: number, section: any) => {
+                            return (
+                              acc +
+                              Object.values(section).filter(Boolean).length
+                            );
+                          },
+                          0,
+                        );
+
+                        return (
+                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                            {totalPerms} permissões
+                          </span>
+                        );
+                      })()}
                     </div>
                   </div>
                   <div className="flex items-center space-x-2 ml-4">
