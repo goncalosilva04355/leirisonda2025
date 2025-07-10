@@ -1373,7 +1373,7 @@ ${index + 1}. ${maint.poolName}
    Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
-   Descrição: ${maint.description}
+   Descri��ão: ${maint.description}
    ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
 `,
   )
@@ -1624,7 +1624,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }, 1000);
       }
     } else {
-      console.log("ℹ️ Notification not for current user:", {
+      console.log("ℹ��� Notification not for current user:", {
         currentUser: currentUser?.name,
         assignedTo,
         isAssignedToCurrentUser,
@@ -7091,7 +7091,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         onClick={(e) => {
                           e.preventDefault();
                           alert(
-                            "Cliente criado com sucesso! (Fun����o em desenvolvimento)",
+                            "Cliente criado com sucesso! (Função em desenvolvimento)",
                           );
                           setActiveSection("clientes");
                         }}
