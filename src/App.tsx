@@ -1633,7 +1633,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     // Console log for debugging purposes (admin view)
     console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
-    console.log(`���� Total de obras atribuídas: ${assignedWorks.length + 1}`);
+    console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
   const testPushNotification = () => {
@@ -4253,7 +4253,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N���vel da Água (m) *
+                                  N����vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -5436,7 +5436,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manuten���ão
+                        Registar intervenção de manutenção
                       </p>
                     </div>
                   </div>
@@ -6526,7 +6526,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>���� Dados consolidados</li>
+                        <li>📊 Dados consolidados</li>
                         <li>• Análise de performance</li>
                       </ul>
                     </div>
@@ -7832,7 +7832,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nível da ��gua (m)
+                            Nível da Água (m)
                           </label>
                           <input
                             type="number"
@@ -9132,7 +9132,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb���m funciona na página de login */}
+        {/* Admin Login Modal - tamb�����m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
