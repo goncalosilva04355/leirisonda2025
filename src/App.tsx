@@ -1023,7 +1023,10 @@ function App() {
 
       // Clear saved login credentials when user manually logs out
       sessionStorage.removeItem("savedLoginCredentials");
-      // Firebase handles auth state clearing automatically
+      // Clear localStorage to prevent auto-login
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("isAuthenticated");
+      localStorage.setItem("manualLogout", "true");
 
       // Clear form
       setLoginForm({ email: "", password: "" });
