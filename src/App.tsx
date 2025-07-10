@@ -1074,7 +1074,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "�� Forced logout state clear completed - redirected to login",
+        "���� Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -1210,7 +1210,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: ���${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -3686,7 +3686,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ������ Nenhum utilizador encontrado. V�� à Área
+                                ������ Nenhum utilizador encontrado. V��� à Área
                                 de Administração → "🔧 Corre��ão de Atribuiç��o
                                 de Obras" para corrigir este problema.
                               </p>
@@ -5815,7 +5815,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              �����️ ATENÇÃO: Esta operação é irrevers��vel!
+                              �������️ ATENÇÃO: Esta operação é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -8423,47 +8423,35 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // TEMPORARY: Bypass authentication for testing - ENABLED FOR STABILITY
+  // Restore proper authentication - Check for saved session on app load
   useEffect(() => {
     const manualLogout = localStorage.getItem("manualLogout");
 
-    // Clear manual logout flag for debugging
+    // Respect manual logout - don't auto-login if user manually logged out
     if (manualLogout === "true") {
-      console.log("🔧 Clearing manual logout flag for debugging");
-      localStorage.removeItem("manualLogout");
+      console.log("🚪 Manual logout detected, staying logged out");
+      setCurrentUser(null);
+      setIsAuthenticated(false);
+      return;
     }
 
-    // Force auto-login to restore access
-    if (!currentUser || !isAuthenticated) {
-      const testUser = {
-        id: 1,
-        name: "Gonçalo Fonseca",
-        email: "gongonsilva@gmail.com",
-        role: "super_admin",
-        permissions: {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          admin: { view: true, create: true, edit: true, delete: true },
-          dashboard: { view: true },
-          clientes: { view: true, create: true, edit: true, delete: true },
-          configuracoes: { view: true, edit: true },
-        },
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        lastLogin: new Date().toISOString(),
-      };
-      console.log("🔧 AUTO-LOGIN: Creating authenticated session");
-      setCurrentUser(testUser);
-      setIsAuthenticated(true);
-      localStorage.setItem("currentUser", JSON.stringify(testUser));
-      localStorage.setItem("isAuthenticated", "true");
-    } else if (manualLogout === "true") {
-      console.log("🚪 Manual logout detected, staying logged out");
+    // Only auto-restore if there's a valid saved session
+    const savedUser = localStorage.getItem("currentUser");
+    const savedAuth = localStorage.getItem("isAuthenticated");
+
+    if (savedUser && savedAuth === "true" && !currentUser) {
+      try {
+        const user = JSON.parse(savedUser);
+        console.log("🔄 Restoring saved session for:", user.email);
+        setCurrentUser(user);
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("❌ Error restoring session:", error);
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("isAuthenticated");
+      }
     }
-  }, [currentUser, isAuthenticated]);
+  }, []); // Remove dependencies to prevent auto-login loop
 
   // Show login form if not authenticated
   if (!isAuthenticated) {
