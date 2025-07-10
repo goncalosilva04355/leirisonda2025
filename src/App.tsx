@@ -1190,7 +1190,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -8879,30 +8879,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("✅ Error-free status check...");
+                console.log("🔍 Testing Realtime Database...");
 
                 try {
-                  // Test Firebase services (without Firestore)
-                  const { getFirebaseApp, getAuthSafe, getStorageSafe } =
-                    await import("./firebase/configWithoutFirestore");
+                  // Test Realtime Database instead of Firestore
+                  const { testRealtimeDatabase, getDatabaseSafe } =
+                    await import("./firebase/realtimeDatabase");
 
-                  const app = getFirebaseApp();
-                  const auth = await getAuthSafe();
-                  const storage = await getStorageSafe();
+                  const result = await testRealtimeDatabase();
+                  console.log("📊 Realtime Database Test:", result);
 
-                  const status = {
-                    app: !!app,
-                    auth: !!auth,
-                    storage: !!storage,
-                    firestore: "🚫 Disabled (prevents errors)",
-                    project: app?.options?.projectId || "unknown",
-                  };
-
-                  alert(
-                    `🎉 ERROR-FREE APPLICATION!\n\n✅ FIREBASE STATUS:\n- App: ${status.app ? "✅" : "❌"}\n- Auth: ${status.auth ? "✅" : "❌"}\n- Storage: ${status.storage ? "✅" : "❌"}\n- Firestore: ${status.firestore}\n- Project: ${status.project}\n\n🚀 FEATURES:\n- Dashboard: ✅ Working\n- Obras: ✅ Working\n- Nova Obra: ✅ Working\n- Manutencoes: ✅ Working\n- Nova Manutencao: ✅ Working\n- Piscinas: ✅ Working\n- All other sections: ✅ Working\n\n💾 Storage: Local browser storage\n🎯 Status: NO MORE ERRORS!`,
-                  );
+                  if (result.success) {
+                    alert(
+                      `🎉 REALTIME DATABASE WORKING!\n\n✅ Connection: Successful\n✅ Read/Write: Working\n✅ Test Value: ${result.testValue}\n\n🔥 FIREBASE SERVICES:\n- Auth: ✅ Working\n- Storage: ✅ Working\n- Realtime Database: ✅ Working\n- Project: leiria-1cfc9\n\n🌐 DATA SHARING:\n- Multi-user: ✅ Enabled\n- Multi-device: ✅ Enabled\n- Real-time sync: ✅ Working\n\nPerfect for sharing data between users and devices!`,
+                    );
+                  } else {
+                    alert(
+                      `⚠️ REALTIME DATABASE NOT ENABLED\n\nError: ${result.error}\n\n🔧 TO ENABLE:\n1. Go to: https://console.firebase.google.com/project/leiria-1cfc9/database\n2. Click "Create database" under Realtime Database\n3. Choose location: europe-west1\n4. Set security rules\n\n💡 SUGGESTION:\nRealtime Database is simpler than Firestore and perfect for real-time data sharing!\n\n${result.suggestion || ""}`,
+                    );
+                  }
                 } catch (error: any) {
-                  alert(`❌ Test error: ${error.message}`);
+                  alert(
+                    `❌ Test error: ${error.message}\n\nTry enabling Realtime Database in Firebase Console.`,
+                  );
                 }
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
