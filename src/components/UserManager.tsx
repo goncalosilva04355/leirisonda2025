@@ -207,7 +207,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
           <h3 className="text-lg font-semibold mb-4">
             Adicionar Novo Utilizador
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -234,6 +234,21 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Nome do utilizador"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                value={newUser.password || ""}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, password: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Palavra-passe (mín. 4 caracteres)"
+                minLength={4}
               />
             </div>
             <div>
