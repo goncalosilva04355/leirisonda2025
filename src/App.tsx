@@ -50,7 +50,7 @@ import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
-import FirestoreStatusIndicator from "./components/FirestoreStatusIndicator";
+
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
@@ -162,7 +162,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitoriza��ão de persistência:", error);
+        console.error("❌ Erro na monitoriza����ão de persist��ncia:", error);
       }
     };
 
@@ -180,6 +180,8 @@ function App() {
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [activeAdminTab, setActiveAdminTab] = useState("relatorios");
+  const [autoSyncEnabled, setAutoSyncEnabled] = useState(true);
   // SECURITY: Register form removed - only super admin can create users
   const [showNewClientForm, setShowNewClientForm] = useState(false);
   const [newClientForm, setNewClientForm] = useState({
@@ -229,7 +231,7 @@ function App() {
   const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
 
-  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
+  // FIREBASE AUTO-CORREÇÃO - Monitorização autom��tica
   const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
@@ -249,23 +251,23 @@ function App() {
 
   // Backup and complex initialization temporarily disabled for stability
 
-  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Log dos dados partilhados
-  useEffect(() => {
-    console.log("���� SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
-      obras: universalSync.obras.length,
-      manutencoes: universalSync.manutencoes.length,
-      piscinas: universalSync.piscinas.length,
-      clientes: universalSync.clientes.length,
-      total: universalSync.totalItems,
-      status: universalSync.syncStatus,
-    });
-  }, [
-    universalSync.obras,
-    universalSync.manutencoes,
-    universalSync.piscinas,
-    universalSync.clientes,
-    universalSync.syncStatus,
-  ]);
+  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
+  // useEffect(() => {
+  //   console.log("���� SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+  //     obras: universalSync.obras.length,
+  //     manutencoes: universalSync.manutencoes.length,
+  //     piscinas: universalSync.piscinas.length,
+  //     clientes: universalSync.clientes.length,
+  //     total: universalSync.totalItems,
+  //     status: universalSync.syncStatus,
+  //   });
+  // }, [
+  //   universalSync.obras,
+  //   universalSync.manutencoes,
+  //   universalSync.piscinas,
+  //   universalSync.clientes,
+  //   universalSync.syncStatus,
+  // ]);
 
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
@@ -273,8 +275,8 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações autom��ticas desabilitadas para resolver instabilidade
-    // Sistema funcionará normalmente sem verificações constantes
+    // Verificaç��es autom��ticas desabilitadas para resolver instabilidade
+    // Sistema funcionar�� normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
 
@@ -355,7 +357,7 @@ function App() {
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
   );
 
-  // Funções de compatibilidade simplificadas
+  // Fun��ões de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
@@ -385,12 +387,12 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notificações de atribuição de obra...");
+      console.log("📱 Enviando notificações de atribui���ão de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
-          "⚠️ Nenhum utilizador atribuído, não enviando notificações",
+          "⚠️ Nenhum utilizador atribuído, n��o enviando notificações",
         );
         return;
       }
@@ -421,12 +423,12 @@ function App() {
           const user = allUsers.find((u: any) => u.id === assignedUser.id);
           if (!user) {
             console.warn(
-              `⚠️ Utilizador ${assignedUser.name} não encontrado na lista`,
+              `���️ Utilizador ${assignedUser.name} não encontrado na lista`,
             );
             continue;
           }
 
-          console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
+          // console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
 
           // Salvar notificação local para o utilizador
           const userNotifications = JSON.parse(
@@ -502,11 +504,11 @@ function App() {
                 };
 
                 console.log(
-                  `✅ Notificação local enviada para ${assignedUser.name}`,
+                  `��� Notificação local enviada para ${assignedUser.name}`,
                 );
               } else {
                 console.warn(
-                  `⚠️ Permissão de notificação negada para ${assignedUser.name}`,
+                  `⚠��� Permissão de notificação negada para ${assignedUser.name}`,
                 );
               }
 
@@ -517,7 +519,7 @@ function App() {
             }
           }
 
-          // Salvar notificação no Firestore (se disponível)
+          // Salvar notifica��ão no Firestore (se disponível)
           try {
             if (firestoreService) {
               await firestoreService.createNotification({
@@ -568,7 +570,7 @@ function App() {
         try {
           await addObra(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("���️ Erro na sincroniza��ão universal:", syncError);
         }
 
         // Enviar notificações push para utilizadores atribuídos
@@ -849,6 +851,10 @@ function App() {
   const [editingMaintenance, setEditingMaintenance] = useState(null);
   const [selectedWork, setSelectedWork] = useState(null);
   const [viewingWork, setViewingWork] = useState(false);
+  const [selectedPool, setSelectedPool] = useState(null);
+  const [viewingPool, setViewingPool] = useState(false);
+  const [selectedMaintenance, setSelectedMaintenance] = useState(null);
+  const [viewingMaintenance, setViewingMaintenance] = useState(false);
 
   // Clickable links settings
   const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
@@ -905,7 +911,7 @@ function App() {
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
-      console.log("🧹 All mock and test data cleared");
+      console.log("�� All mock and test data cleared");
     };
 
     forceLogout();
@@ -961,7 +967,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠️ Passo 3: Erro nas operaç��es Firestore:",
+                "⚠��� Passo 3: Erro nas operaç���es Firestore:",
                 writeError,
               );
               console.log(
@@ -989,7 +995,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("🔄 Iniciando sincronização inicial com Firestore...");
+        console.log("�� Iniciando sincronização inicial com Firestore...");
 
         try {
           await firestoreService.syncAll();
@@ -1010,11 +1016,11 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       if (isFirestoreReady()) {
-        console.log("🔄 Iniciando sincronização automática em tempo real...");
+        console.log("���� Iniciando sincronização automática em tempo real...");
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização automática ativa!");
+          console.log("✅ Sincroniza��ão automática ativa!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -1037,9 +1043,9 @@ function App() {
   useEffect(() => {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
-      console.log(
-        `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
-      );
+      // console.log(
+      //   `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      // );
 
       // Forçar re-render dos dados universais se necessário
       if (collection === "obras") {
@@ -1107,7 +1113,7 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
-    console.log("��� Initializing notifications...");
+    // console.log("���� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
       console.log("������ Current notification permission:", permission);
@@ -1328,7 +1334,7 @@ function App() {
         | "in_progress"
         | "completed"
         | "cancelled",
-      description: maintenanceForm.workPerformed || "Manutenção realizada",
+      description: maintenanceForm.workPerformed || "Manutenç��o realizada",
       notes: maintenanceForm.observations,
     };
 
@@ -1369,7 +1375,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenç��o agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -1432,7 +1438,7 @@ function App() {
       console.log("��� Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("✅ Login successful for:", result.user.email);
+        // console.log("✅ Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -1515,7 +1521,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "�� Forced logout state clear completed - redirected to login",
+        "���� Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -1561,11 +1567,30 @@ function App() {
 
   // Fixed back button function
   const handleGoBack = () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      // Fallback to dashboard if no history
+    // Manter histórico de navegação simples
+    const sectionHistory = {
+      "nova-obra": "obras",
+      "nova-manutencao": "manutencoes",
+      utilizadores: "configuracoes",
+      relatorios: "dashboard",
+      configuracoes: "dashboard",
+      clientes: "dashboard",
+      localizacoes: "dashboard",
+    };
+
+    const previousSection =
+      sectionHistory[activeSection as keyof typeof sectionHistory];
+
+    if (previousSection) {
+      navigateToSection(previousSection);
+    } else if (activeSection !== "dashboard") {
+      // Se não estiver no dashboard e não tiver regra específica, vai para dashboard
       navigateToSection("dashboard");
+    } else {
+      // Se já estiver no dashboard, tenta usar o history do browser
+      if (window.history.length > 1) {
+        window.history.back();
+      }
     }
   };
 
@@ -1619,7 +1644,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa����ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -1709,7 +1734,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu�����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu������das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -1739,7 +1764,7 @@ ${maintenance
   .map(
     (maint, index) => `
 ${index + 1}. ${maint.poolName} - ${maint.type}
-   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | Técnico: ${maint.technician}
+   Data: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")} | T��cnico: ${maint.technician}
 `,
   )
   .join("")}
@@ -1769,7 +1794,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         if (permission === "granted") {
           setNotificationsEnabled(true);
           showNotification(
-            "Notificaç��es Ativadas",
+            "Notifica������es Ativadas",
             "Agora vai receber notificações de obras atribu��das",
             "success",
           );
@@ -1864,7 +1889,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1877,7 +1902,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -2078,7 +2103,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const handleAddressClick = (address: string) => {
     console.log("������ Address clicked:", address);
-    console.log("��️ Maps redirect enabled:", enableMapsRedirect);
+    console.log("����️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
       // Open Google Maps with the address
@@ -2368,7 +2393,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            console.log("🔐 Login attempt for:", email);
+            // console.log("🔐 Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
@@ -2386,24 +2411,55 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 rememberMe,
               );
 
-              console.log("🔐 Auth result:", result);
+              // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
-                console.log("✅ Login successful for:", result.user.email);
+                // console.log("✅ Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
                 setIsAuthenticated(true);
 
-                // Navigate to dashboard or requested section
+                // Navigate to dashboard or requested section with validation
                 const hash = window.location.hash.substring(1);
                 if (hash && hash !== "login") {
-                  setActiveSection(hash);
+                  // Validate that the section exists and user has access
+                  const validSections = [
+                    "dashboard",
+                    "obras",
+                    "piscinas",
+                    "manutencoes",
+                    "futuras-manutencoes",
+                    "nova-obra",
+                    "nova-piscina",
+                    "nova-manutencao",
+                    "clientes",
+                    "novo-cliente",
+                    "configuracoes",
+                    "relatorios",
+                    "utilizadores",
+                    "localizacoes",
+                    "register",
+                    "editar-obra",
+                    "editar-piscina",
+                    "editar-manutencao",
+                  ];
+
+                  if (validSections.includes(hash)) {
+                    // Use setTimeout to ensure state is properly set before navigation
+                    setTimeout(() => {
+                      setActiveSection(hash);
+                    }, 100);
+                  } else {
+                    // Invalid hash, redirect to dashboard
+                    window.location.hash = "";
+                    navigateToSection("dashboard");
+                  }
                 } else {
                   navigateToSection("dashboard");
                 }
 
-                console.log("✅ Login state updated successfully");
+                // console.log("✅ Login state updated successfully");
               } else {
                 console.warn("❌ Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
@@ -2531,17 +2587,44 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          const pendingWorks = works.filter(
-                            (w) =>
-                              w.status === "pending" || w.status === "pendente",
-                          );
+                          // Filtrar obras pendentes atribuídas ao utilizador atual
+                          const pendingWorks = works.filter((w) => {
+                            const isPending =
+                              w.status === "pending" || w.status === "pendente";
+                            const isAssignedToUser =
+                              currentUser &&
+                              // Verificar assignedTo (campo legacy)
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                // Verificar assignedUsers array
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                // Verificar assignedUserIds array
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return isPending; // Mostrar todas as obras pendentes
+                          });
                           console.log(
-                            "📊 Dashboard - Obras Pendentes:",
+                            "📊 Dashboard - Obras Pendentes Atribuídas:",
                             pendingWorks.length,
+                            "Utilizador:",
+                            currentUser?.name,
                             pendingWorks.map((w) => ({
                               id: w.id,
                               status: w.status,
                               title: w.workSheetNumber,
+                              assignedTo: w.assignedTo,
+                              assignedUsers: w.assignedUsers,
                             })),
                           );
                           return pendingWorks.length;
@@ -2565,13 +2648,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {
-                          works.filter(
-                            (w) =>
+                        {(() => {
+                          // Filtrar obras em progresso atribuídas ao utilizador atual
+                          const inProgressWorks = works.filter((w) => {
+                            const isInProgress =
                               w.status === "in_progress" ||
-                              w.status === "em_progresso",
-                          ).length
-                        }
+                              w.status === "em_progresso";
+                            const isAssignedToUser =
+                              currentUser &&
+                              // Verificar assignedTo (campo legacy)
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                // Verificar assignedUsers array
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                // Verificar assignedUserIds array
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return isInProgress; // Mostrar todas as obras em progresso
+                          });
+                          return inProgressWorks.length;
+                        })()}
                       </div>
                     </div>
                   </button>
@@ -2613,18 +2720,45 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas n��o geradas
+                          Folhas não geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {
-                          works.filter(
-                            (w) =>
-                              !w.folhaGerada &&
+                        {(() => {
+                          // Filtrar obras sem folha gerada atribuídas ao utilizador atual (excluir concluídas)
+                          const worksWithoutSheets = works.filter((w) => {
+                            const isNotCompleted =
                               w.status !== "completed" &&
-                              w.status !== "concluida",
-                          ).length
-                        }
+                              w.status !== "concluida";
+                            const noSheetGenerated = !w.folhaGerada;
+                            const isAssignedToUser =
+                              currentUser &&
+                              // Verificar assignedTo (campo legacy)
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                // Verificar assignedUsers array
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                // Verificar assignedUserIds array
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return (
+                              isNotCompleted && noSheetGenerated
+                              // Mostrar todas as obras sem folha gerada (não apenas atribuídas)
+                            );
+                          });
+                          return worksWithoutSheets.length;
+                        })()}
                       </div>
                     </div>
                   </button>
@@ -2642,156 +2776,218 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <p className="text-sm text-gray-500">No sistema</p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {works.length}
+                        {(() => {
+                          // Filtrar TODAS as obras atribuídas ao utilizador atual (excluir concluídas)
+                          const assignedWorks = works.filter((w) => {
+                            const isNotCompleted =
+                              w.status !== "completed" &&
+                              w.status !== "concluida";
+                            const isAssignedToUser =
+                              currentUser &&
+                              // Verificar assignedTo (campo legacy)
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                // Verificar assignedUsers array
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                // Verificar assignedUserIds array
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return true; // Mostrar todas as obras (não apenas atribuídas)
+                          });
+                          return assignedWorks.length;
+                        })()}
                       </div>
                     </div>
                   </button>
                 </div>
 
-                {/* Lista de Todas as Obras */}
-                {works.length > 0 && (
-                  <div className="bg-white rounded-lg shadow-sm">
-                    <div className="flex items-center p-4 border-b border-gray-100">
-                      <Building2 className="h-5 w-5 text-purple-600 mr-3" />
-                      <h2 className="text-lg font-semibold text-gray-900">
-                        Todas as Obras
-                      </h2>
-                    </div>
-                    <div className="p-4 space-y-3">
-                      {works.map((work) => (
-                        <div
-                          key={work.id}
-                          className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
-                        >
-                          <div className="space-y-3">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm font-medium text-gray-600">
-                                📍 Morada:
-                              </span>
-                              {work.location ? (
-                                <button
-                                  onClick={() =>
-                                    handleAddressClick(work.location)
-                                  }
-                                  className={`text-sm cursor-pointer hover:opacity-80 ${
-                                    enableMapsRedirect
-                                      ? "text-blue-600 hover:text-blue-800 underline"
-                                      : "text-gray-900 hover:text-blue-600"
-                                  }`}
-                                >
-                                  {work.location}
-                                </button>
-                              ) : (
-                                <span className="text-sm text-gray-500">
-                                  N��o especificada
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm font-medium text-gray-600">
-                                👤 Cliente:
-                              </span>
-                              <span className="text-sm text-gray-900">
-                                {work.client || "Não especificado"}
-                              </span>
-                            </div>
-                            {work.contact && (
+                {/* Lista das Últimas 3 Obras */}
+                {(() => {
+                  // Filtrar obras atribuídas ao utilizador atual (excluir concluídas) e pegar apenas as últimas 3
+                  const assignedWorks = works
+                    .filter((w) => {
+                      const isNotCompleted =
+                        w.status !== "completed" && w.status !== "concluida";
+                      const isAssignedToUser =
+                        currentUser &&
+                        // Verificar assignedTo (campo legacy)
+                        ((w.assignedTo &&
+                          (w.assignedTo === currentUser.name ||
+                            w.assignedTo
+                              .toLowerCase()
+                              .includes(currentUser.name.toLowerCase()) ||
+                            currentUser.name
+                              .toLowerCase()
+                              .includes(w.assignedTo.toLowerCase()))) ||
+                          // Verificar assignedUsers array
+                          (w.assignedUsers &&
+                            w.assignedUsers.some(
+                              (user) =>
+                                user.name === currentUser.name ||
+                                user.id === currentUser.id,
+                            )) ||
+                          // Verificar assignedUserIds array
+                          (w.assignedUserIds &&
+                            w.assignedUserIds.includes(currentUser.id)));
+                      return true; // Mostrar todas as obras na lista
+                    })
+                    .slice(0, 3); // Pegar apenas as últimas 3 obras
+
+                  return assignedWorks.length > 0 ? (
+                    <div className="bg-white rounded-lg shadow-sm">
+                      <div className="flex items-center p-4 border-b border-gray-100">
+                        <Building2 className="h-5 w-5 text-purple-600 mr-3" />
+                        <h2 className="text-lg font-semibold text-gray-900">
+                          Últimas 3 Obras
+                        </h2>
+                      </div>
+                      <div className="p-4 space-y-3">
+                        {assignedWorks.map((work) => (
+                          <div
+                            key={work.id}
+                            className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
+                          >
+                            <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  📞 Contacto:
+                                  📍 Morada:
                                 </span>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (enablePhoneDialer) {
-                                      window.location.href = `tel:${work.contact}`;
+                                {work.location ? (
+                                  <button
+                                    onClick={() =>
+                                      handleAddressClick(work.location)
                                     }
-                                  }}
-                                  className={`text-sm ${
-                                    enablePhoneDialer
-                                      ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                      : "text-gray-900"
-                                  }`}
-                                >
-                                  {work.contact}
-                                </button>
+                                    className={`text-sm cursor-pointer hover:opacity-80 ${
+                                      enableMapsRedirect
+                                        ? "text-blue-600 hover:text-blue-800 underline"
+                                        : "text-gray-900 hover:text-blue-600"
+                                    }`}
+                                  >
+                                    {work.location}
+                                  </button>
+                                ) : (
+                                  <span className="text-sm text-gray-500">
+                                    N��o especificada
+                                  </span>
+                                )}
                               </div>
-                            )}
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm font-medium text-gray-600">
-                                ���� Trabalho:
-                              </span>
-                              <span className="text-sm text-gray-900">
-                                {work.workPerformed ||
-                                  work.type ||
-                                  "Não especificado"}
-                              </span>
-                            </div>
-
-                            {/* Estado e Ações */}
-                            <div className="flex items-center justify-between pt-2 border-t border-purple-200">
-                              <span
-                                className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                                  work.status === "pending"
-                                    ? "bg-red-100 text-red-700"
-                                    : work.status === "in_progress"
-                                      ? "bg-orange-100 text-orange-700"
-                                      : work.status === "completed"
-                                        ? "bg-green-100 text-green-700"
-                                        : "bg-gray-100 text-gray-700"
-                                }`}
-                              >
-                                {work.status === "pending"
-                                  ? "Pendente"
-                                  : work.status === "in_progress"
-                                    ? "Em Progresso"
-                                    : work.status === "completed"
-                                      ? "Conclu��da"
-                                      : work.status}
-                              </span>
-
                               <div className="flex items-center space-x-2">
-                                {/* Botão Visualizar */}
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedWork(work);
-                                    setViewingWork(true);
-                                  }}
-                                  className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-colors"
-                                  title="Visualizar detalhes"
-                                >
-                                  <Eye className="h-4 w-4" />
-                                </button>
-
-                                {/* Botão Iniciar Obra (só se pendente) */}
-                                {work.status === "pending" && (
+                                <span className="text-sm font-medium text-gray-600">
+                                  👤 Cliente:
+                                </span>
+                                <span className="text-sm text-gray-900">
+                                  {work.client || "Não especificado"}
+                                </span>
+                              </div>
+                              {work.contact && (
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-600">
+                                    📞 Contacto:
+                                  </span>
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      dataSync.updateWork(work.id, {
-                                        status: "in_progress",
-                                      });
-                                      showNotification(
-                                        "Obra Iniciada",
-                                        `A obra "${work.client}" foi iniciada`,
-                                        "success",
-                                      );
+                                      if (enablePhoneDialer) {
+                                        window.location.href = `tel:${work.contact}`;
+                                      }
                                     }}
-                                    className="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition-colors"
-                                    title="Iniciar obra"
+                                    className={`text-sm ${
+                                      enablePhoneDialer
+                                        ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                        : "text-gray-900"
+                                    }`}
                                   >
-                                    <Play className="h-4 w-4" />
+                                    {work.contact}
                                   </button>
-                                )}
+                                </div>
+                              )}
+                              <div className="flex items-center space-x-2">
+                                <span className="text-sm font-medium text-gray-600">
+                                  ������ Trabalho:
+                                </span>
+                                <span className="text-sm text-gray-900">
+                                  {work.workPerformed ||
+                                    work.type ||
+                                    "Não especificado"}
+                                </span>
+                              </div>
+
+                              {/* Estado e Ações */}
+                              <div className="flex items-center justify-between pt-2 border-t border-purple-200">
+                                <span
+                                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                    work.status === "pending"
+                                      ? "bg-red-100 text-red-700"
+                                      : work.status === "in_progress"
+                                        ? "bg-orange-100 text-orange-700"
+                                        : work.status === "completed"
+                                          ? "bg-green-100 text-green-700"
+                                          : "bg-gray-100 text-gray-700"
+                                  }`}
+                                >
+                                  {work.status === "pending"
+                                    ? "Pendente"
+                                    : work.status === "in_progress"
+                                      ? "Em Progresso"
+                                      : work.status === "completed"
+                                        ? "Conclu��da"
+                                        : work.status}
+                                </span>
+
+                                <div className="flex items-center space-x-2">
+                                  {/* Botão Visualizar */}
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedWork(work);
+                                      setViewingWork(true);
+                                    }}
+                                    className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-colors"
+                                    title="Visualizar detalhes"
+                                  >
+                                    <Eye className="h-4 w-4" />
+                                  </button>
+
+                                  {/* Botão Iniciar Obra (só se pendente) */}
+                                  {work.status === "pending" && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        dataSync.updateWork(work.id, {
+                                          status: "in_progress",
+                                        });
+                                        showNotification(
+                                          "Obra Iniciada",
+                                          `A obra "${work.client}" foi iniciada`,
+                                          "success",
+                                        );
+                                      }}
+                                      className="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition-colors"
+                                      title="Iniciar obra"
+                                    >
+                                      <Play className="h-4 w-4" />
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  ) : null;
+                })()}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
@@ -2814,7 +3010,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenç����o agendada
+                          Nenhuma manutenç������o agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenç��es aparecerão aqui
@@ -2871,7 +3067,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {maint.poolName}
                                     </h3>
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                      <span>���</span>
+                                      <span>�����</span>
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -3486,7 +3682,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr��xima manutenção:{" "}
+                                Pr���xima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -3494,6 +3690,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             )}
                           </div>
                           <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => {
+                                setSelectedPool(pool);
+                                setViewingPool(true);
+                              }}
+                              className="p-2 text-gray-400 hover:text-blue-600"
+                              title="Visualizar detalhes"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
                             {hasPermission("piscinas", "edit") && (
                               <button
                                 onClick={() => {
@@ -3672,7 +3878,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��������������� {maint.clientContact}
+                                        ���������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3709,6 +3915,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => {
+                                setSelectedMaintenance(maint);
+                                setViewingMaintenance(true);
+                              }}
+                              className="p-2 text-gray-400 hover:text-blue-600"
+                              title="Visualizar detalhes"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
                             {hasPermission("manutencoes", "edit") && (
                               <button
                                 onClick={() => {
@@ -3724,7 +3940,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manuten��ão "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -3856,7 +4072,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ����‍🔧 {maint.technician}
+                                ���������‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -4227,7 +4443,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               try {
                                 const parsed = JSON.parse(localStorageUsers);
                                 console.log(
-                                  "✅ PARSED USERS:",
+                                  "�� PARSED USERS:",
                                   parsed.length,
                                   parsed,
                                 );
@@ -4363,7 +4579,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                   console.log(
-                                    "🔍 FILTRO UTILIZADOR:",
+                                    "����� FILTRO UTILIZADOR:",
                                     user.name,
                                     "| Role:",
                                     user.role,
@@ -4441,7 +4657,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ���� {assignedUser.name}
+                                    ������ {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -4480,7 +4696,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medições do Furo
+                              Medi��ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4639,7 +4855,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa��ões Específicas do Furo */}
+                          {/* Observa����ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -4673,7 +4889,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa��ões sobre a obra..."
+                            placeholder="Observa���ões sobre a obra..."
                           />
                         </div>
 
@@ -5062,54 +5278,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Diagnóstico de Permissões */}
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <h3 className="text-sm font-medium text-yellow-800 mb-2">
-                    🔍 Diagnóstico de Permissões
-                  </h3>
-                  <div className="text-xs text-yellow-700 space-y-1">
-                    <div>Usuário: {currentUser?.name || "Não logado"}</div>
-                    <div>Role: {currentUser?.role || "Indefinido"}</div>
-                    <div>
-                      Clientes - Create:{" "}
-                      {hasPermission("clientes", "create")
-                        ? "✅ Sim"
-                        : "❌ Não"}
-                    </div>
-                    <div>
-                      Piscinas - Create:{" "}
-                      {hasPermission("piscinas", "create")
-                        ? "✅ Sim"
-                        : "❌ Não"}
-                    </div>
-                    <div>
-                      Obras - Create:{" "}
-                      {hasPermission("obras", "create") ? "✅ Sim" : "❌ Não"}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      console.log("🔍 DIAGNÓSTICO COMPLETO:");
-                      console.log("Current User:", currentUser);
-                      console.log("Users list:", users);
-                      console.log(
-                        "localStorage app-users:",
-                        localStorage.getItem("app-users"),
-                      );
-                      alert(`
-Usuário: ${currentUser?.name}
-Role: ${currentUser?.role}
-Clientes Create: ${hasPermission("clientes", "create")}
-Super Admin: ${currentUser?.role === "super_admin"}
-                      `);
-                    }}
-                    className="mt-2 px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700"
-                  >
-                    🔍 Debug Completo
-                  </button>
-                </div>
-
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-6">
@@ -5288,7 +5456,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             type="button"
                             onClick={() => {
                               console.log(
-                                "🔍 DEBUG: Tentando adicionar cliente...",
+                                "���� DEBUG: Tentando adicionar cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log("🔍 User Role:", currentUser?.role);
@@ -5333,7 +5501,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   );
                                 } catch (error) {
                                   console.error(
-                                    "❌ Erro ao adicionar cliente:",
+                                    "��� Erro ao adicionar cliente:",
                                     error,
                                   );
                                   alert(
@@ -5641,7 +5809,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç����������o criada para nova piscina:",
+                                "Futura manutenç�����������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6144,7 +6312,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         </h4>
                         <p className="text-gray-600 text-sm mb-4">
                           Arraste e solte ou clique para selecionar fotos da
-                          manutenção
+                          manutenç����o
                         </p>
                         <p className="text-gray-500 text-xs mb-4">
                           {uploadedPhotos.length}/20 fotografias
@@ -6233,6 +6401,419 @@ Super Admin: ${currentUser?.role === "super_admin"}
             </div>
           );
 
+        case "configuracoes_unused":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Settings className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Configurações
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Configurações do sistema, relatórios e utilizadores
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {/* Tabs Navigation */}
+                <div className="bg-white rounded-lg shadow-sm">
+                  <div className="border-b border-gray-200">
+                    <nav className="-mb-px flex space-x-8 px-6">
+                      <button
+                        onClick={() => setActiveAdminTab("relatorios")}
+                        className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                          safeActiveAdminTab === "relatorios"
+                            ? "border-red-500 text-red-600"
+                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <BarChart3 className="h-4 w-4" />
+                          <span>Relatórios</span>
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => setActiveAdminTab("configuracoes")}
+                        className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                          safeActiveAdminTab === "configuracoes"
+                            ? "border-red-500 text-red-600"
+                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <Settings className="h-4 w-4" />
+                          <span>Configurações</span>
+                        </div>
+                      </button>
+                      {(currentUser?.role === "super_admin" ||
+                        currentUser?.role === "admin") && (
+                        <button
+                          onClick={() => setActiveAdminTab("utilizadores")}
+                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                            safeActiveAdminTab === "utilizadores"
+                              ? "border-red-500 text-red-600"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <UserPlus className="h-4 w-4" />
+                            <span>Utilizadores</span>
+                          </div>
+                        </button>
+                      )}
+                    </nav>
+                  </div>
+
+                  {/* Tab Content */}
+                  <div className="p-6">
+                    {safeActiveAdminTab === "relatorios" && (
+                      <div className="space-y-6">
+                        <div>
+                          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                            Relat��rios do Sistema
+                          </h2>
+                          <p className="text-gray-600 mb-6">
+                            Gere relatórios detalhados em PDF sobre piscinas,
+                            manutenções e obras.
+                          </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {/* Pool Reports */}
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <div className="flex items-center space-x-3 mb-4">
+                              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <Waves className="h-6 w-6 text-blue-600" />
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  Relatório de Piscinas
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                  Lista completa de piscinas
+                                </p>
+                              </div>
+                            </div>
+                            <div className="space-y-3 mb-4">
+                              <p className="text-sm text-gray-600">
+                                <strong>{pools.length}</strong> piscinas
+                                registadas
+                              </p>
+                              <ul className="text-xs text-gray-500 space-y-1">
+                                <li>🔍 Estado e localização</li>
+                                <li>• Informações de clientes</li>
+                                <li>• Histórico de manutenções</li>
+                                <li>• Próximas intervenções</li>
+                              </ul>
+                            </div>
+                            <button
+                              onClick={() => generatePoolsPDF()}
+                              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <Download className="h-4 w-4" />
+                              <span>Gerar PDF</span>
+                            </button>
+                          </div>
+
+                          {/* Maintenance Reports */}
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <div className="flex items-center space-x-3 mb-4">
+                              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                <Wrench className="h-6 w-6 text-green-600" />
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  Relatório de Manutenções
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                  Hist��rico de intervenções
+                                </p>
+                              </div>
+                            </div>
+                            <div className="space-y-3 mb-4">
+                              <p className="text-sm text-gray-600">
+                                <strong>{maintenance.length}</strong>{" "}
+                                manutenções registadas
+                              </p>
+                              <ul className="text-xs text-gray-500 space-y-1">
+                                <li>🔧 Trabalhos realizados</li>
+                                <li>👷 Técnicos responsáveis</li>
+                                <li>• Datas e durações</li>
+                                <li>• Estados e observações</li>
+                              </ul>
+                            </div>
+                            <button
+                              onClick={() => generateMaintenancePDF()}
+                              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <Download className="h-4 w-4" />
+                              <span>Gerar PDF</span>
+                            </button>
+                          </div>
+
+                          {/* Works Reports */}
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <div className="flex items-center space-x-3 mb-4">
+                              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                                <Building2 className="h-6 w-6 text-orange-600" />
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  Relatório de Obras
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                  Lista de projetos
+                                </p>
+                              </div>
+                            </div>
+                            <div className="space-y-3 mb-4">
+                              <p className="text-sm text-gray-600">
+                                <strong>{works.length}</strong> obras registadas
+                              </p>
+                              <ul className="text-xs text-gray-500 space-y-1">
+                                <li>🏗️ Estado dos projetos</li>
+                                <li>👥 Equipas atribuídas</li>
+                                <li>• Prazos e orçamentos</li>
+                                <li>• Clientes e localizações</li>
+                              </ul>
+                            </div>
+                            <button
+                              onClick={() => generateWorksPDF()}
+                              className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <Download className="h-4 w-4" />
+                              <span>Gerar PDF</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {safeActiveAdminTab === "configuracoes" && (
+                      <div className="space-y-6">
+                        <div>
+                          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                            Configurações do Sistema
+                          </h2>
+                          <p className="text-gray-600 mb-6">
+                            Gerir configurações da aplicação, notificações e
+                            preferências.
+                          </p>
+                        </div>
+
+                        {/* Settings Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <h3 className="text-lg font-semibold mb-4">
+                              Notificações
+                            </h3>
+                            <div className="space-y-4">
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700">
+                                  Notificações Push
+                                </span>
+                                <button
+                                  onClick={requestNotificationPermission}
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    notificationsEnabled
+                                      ? "bg-red-600"
+                                      : "bg-gray-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                      notificationsEnabled
+                                        ? "translate-x-5"
+                                        : "translate-x-0"
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700">
+                                  Sincronização Automática
+                                </span>
+                                <button
+                                  onClick={() =>
+                                    setAutoSyncEnabled(!autoSyncEnabled)
+                                  }
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    autoSyncEnabled
+                                      ? "bg-red-600"
+                                      : "bg-gray-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                      autoSyncEnabled
+                                        ? "translate-x-5"
+                                        : "translate-x-0"
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <h3 className="text-lg font-semibold mb-4">
+                              Sistema
+                            </h3>
+                            <div className="space-y-4">
+                              <button
+                                onClick={() => setShowDataCleanup(true)}
+                                className="w-full text-left p-3 bg-yellow-50 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition-colors"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <Database className="h-5 w-5 text-yellow-600" />
+                                  <div>
+                                    <p className="font-medium text-yellow-800">
+                                      Limpeza de Dados
+                                    </p>
+                                    <p className="text-sm text-yellow-600">
+                                      Eliminar dados de teste
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+
+                              <button
+                                onClick={() => setShowAdvancedSettings(true)}
+                                className="w-full text-left p-3 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <Settings className="h-5 w-5 text-gray-600" />
+                                  <div>
+                                    <p className="font-medium text-gray-800">
+                                      Configurações Avançadas
+                                    </p>
+                                    <p className="text-sm text-gray-600">
+                                      Firebase, APIs e desenvolvimento
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {safeActiveAdminTab === "utilizadores" &&
+                      (currentUser?.role === "super_admin" ||
+                        currentUser?.role === "admin") && (
+                        <div className="space-y-6">
+                          <div>
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                              Gestão de Utilizadores
+                            </h2>
+                            <p className="text-gray-600 mb-6">
+                              Criar, editar e gerir utilizadores do sistema.
+                            </p>
+                          </div>
+
+                          <UserPermissionsManager />
+                        </div>
+                      )}
+                  </div>
+                </div>
+                ) : ( /* Simple configuration for non-admin users */
+                <div className="space-y-6">
+                  {/* System Information */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Informações do Sistema
+                    </h3>
+                    <div className="grid gap-3">
+                      <div className="flex justify-between py-2 border-b border-gray-100">
+                        <span className="text-gray-600">Versão</span>
+                        <span className="font-medium">1.0.0</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-gray-100">
+                        <span className="text-gray-600">Utilizador Ativo</span>
+                        <span className="font-medium">{currentUser?.name}</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-gray-100">
+                        <span className="text-gray-600">Perfil</span>
+                        <span className="font-medium capitalize">
+                          {currentUser?.role?.replace("_", " ")}
+                        </span>
+                      </div>
+                      <div className="flex justify-between py-2">
+                        <span className="text-gray-600">Modo de Dados</span>
+                        <span className="font-medium">Armazenamento Local</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Basic Notifications for all users */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <div className="flex items-center mb-4">
+                      <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Notificações
+                      </h3>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-700">
+                          Notificações Push
+                        </span>
+                        <button
+                          onClick={requestNotificationPermission}
+                          className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            notificationsEnabled ? "bg-blue-600" : "bg-gray-200"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                              notificationsEnabled
+                                ? "translate-x-5"
+                                : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+
+        case "relatorios":
+          return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+              <div className="bg-white p-8 rounded-lg shadow-sm max-w-md w-full text-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <BarChart3 className="h-8 w-8 text-blue-600" />
+                </div>
+                <h1 className="text-xl font-bold text-gray-900 mb-2">
+                  Relatórios Movidos
+                </h1>
+                <p className="text-gray-600 mb-4">
+                  Os relatórios agora estão na página de Configurações.
+                </p>
+                <button
+                  onClick={() => {
+                    setActiveAdminTab("relatorios");
+                    navigateToSection("configuracoes");
+                  }}
+                  className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+                >
+                  Ir para Configurações
+                </button>
+              </div>
+            </div>
+          );
+
         case "utilizadores":
           // SECURITY: Only super admin can access user management
           if (currentUser?.role !== "super_admin") {
@@ -6260,324 +6841,726 @@ Super Admin: ${currentUser?.role === "super_admin"}
           );
 
         case "configuracoes":
+          // Safety check for activeAdminTab
+          const safeActiveConfigTab = activeAdminTab || "configuracoes";
+
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
-                {/* System Information */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Informações do Sistema
-                  </h3>
-                  <div className="grid gap-3">
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600">Versão</span>
-                      <span className="font-medium">1.0.0</span>
+                {/* Header */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Settings className="h-4 w-4 text-blue-600" />
                     </div>
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600">Utilizador Ativo</span>
-                      <span className="font-medium">{currentUser?.name}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600">Perfil</span>
-                      <span className="font-medium capitalize">
-                        {currentUser?.role?.replace("_", " ")}
-                      </span>
-                    </div>
-                    <div className="flex justify-between py-2">
-                      <span className="text-gray-600">Modo de Dados</span>
-                      <span className="font-medium">Armazenamento Local</span>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        Configurações
+                      </h1>
+                      <p className="text-gray-600 text-sm">
+                        Configurações do sistema, relatórios e utilizadores
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Notifications Section */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <div className="flex items-center mb-4">
-                    <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Notificações Push
-                    </h3>
-                  </div>
-                  <p className="text-gray-600 mb-6">
-                    Ative as notificações para receber alertas sobre novas obras
-                    atribuídas e atualizações importantes.
-                  </p>
-
-                  <div className="space-y-4">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-blue-900 mb-2">
-                            Notificações de Obras
-                          </h4>
-                          <p className="text-blue-700 text-sm mb-3">
-                            Receba notificações quando uma nova obra for
-                            atribuída a si.
-                          </p>
-                          <button
-                            onClick={() => {
-                              if ("Notification" in window) {
-                                if (Notification.permission === "default") {
-                                  Notification.requestPermission().then(
-                                    (permission) => {
-                                      if (permission === "granted") {
-                                        new Notification("Leirisonda", {
-                                          body: "Notificações ativadas com sucesso!",
-                                          icon: "/icon.svg",
-                                        });
-                                      }
-                                    },
-                                  );
-                                } else if (
-                                  Notification.permission === "granted"
-                                ) {
-                                  new Notification("Leirisonda", {
-                                    body: "Notificações já estão ativadas!",
-                                    icon: "/icon.svg",
-                                  });
-                                } else {
-                                  alert(
-                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
-                                  );
-                                }
-                              } else {
-                                alert(
-                                  "Este navegador não suporta notificaç�����es.",
-                                );
-                              }
-                            }}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                          >
-                            Ativar Notificaç����es
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
-                    {currentUser?.role === "super_admin" && (
-                      <PersonalLocationSettings />
-                    )}
-
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 mb-2">
-                            Instruções
-                          </h4>
-                          <ul className="text-gray-700 text-sm space-y-1">
-                            <li>
-                              • As notificaç���es funcionam apenas com HTTPS
-                            </li>
-                            <li>
-                              • Certifique-se de que permite notifica��ões no
-                              seu navegador
-                            </li>
-                            <li>
-                              • Em dispositivos móveis, adicione a app ao ecrã
-                              inicial
-                            </li>
-                            <li>
-                              • Configure a sua localização abaixo e veja o mapa
-                              da equipa na página "Localizações"
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Mobile Interaction Settings */}
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <div className="flex items-center mb-4">
-                    <Settings className="h-6 w-6 text-blue-600 mr-3" />
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Interação Mobile
-                    </h3>
-                  </div>
-                  <p className="text-gray-600 mb-6">
-                    Configure o comportamento de cliques em contactos e moradas
-                  </p>
-
-                  <div className="space-y-4">
-                    {/* Phone Dialer Setting */}
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                          🏊
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-medium text-blue-900">
-                              Marcação Automática
-                            </h4>
-                            <button
-                              onClick={() =>
-                                togglePhoneDialer(!enablePhoneDialer)
-                              }
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                enablePhoneDialer
-                                  ? "bg-blue-600"
-                                  : "bg-gray-300"
-                              }`}
-                            >
-                              <span
-                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                  enablePhoneDialer
-                                    ? "translate-x-6"
-                                    : "translate-x-1"
-                                }`}
-                              />
-                            </button>
+                {/* Tabs Navigation - Show additional tabs for admin users */}
+                {currentUser?.role === "super_admin" ||
+                currentUser?.role === "admin" ? (
+                  <div className="bg-white rounded-lg shadow-sm">
+                    <div className="border-b border-gray-200">
+                      <nav className="-mb-px flex space-x-8 px-6">
+                        <button
+                          onClick={() => setActiveAdminTab("configuracoes")}
+                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                            safeActiveConfigTab === "configuracoes"
+                              ? "border-blue-500 text-blue-600"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <Settings className="h-4 w-4" />
+                            <span>Configurações</span>
                           </div>
-                          <p className="text-blue-700 text-sm mb-3">
-                            Quando ativado, clicar num número de telefone
-                            abrir�� diretamente o marcador do telefone.
-                          </p>
-                          <p className="text-blue-600 text-xs">
-                            Estado:{" "}
-                            {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Maps Redirect Setting */}
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                          🔧
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-medium text-green-900">
-                              Navegação Maps
-                            </h4>
-                            <button
-                              onClick={() =>
-                                toggleMapsRedirect(!enableMapsRedirect)
-                              }
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                enableMapsRedirect
-                                  ? "bg-green-600"
-                                  : "bg-gray-300"
-                              }`}
-                            >
-                              <span
-                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                  enableMapsRedirect
-                                    ? "translate-x-6"
-                                    : "translate-x-1"
-                                }`}
-                              />
-                            </button>
+                        </button>
+                        <button
+                          onClick={() => setActiveAdminTab("relatorios")}
+                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                            safeActiveConfigTab === "relatorios"
+                              ? "border-blue-500 text-blue-600"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <BarChart3 className="h-4 w-4" />
+                            <span>Relatórios</span>
                           </div>
-                          <p className="text-green-700 text-sm mb-3">
-                            Quando ativado, clicar numa morada abrirá o Google
-                            Maps para navegação.
-                          </p>
-                          <p className="text-green-600 text-xs">
-                            Estado:{" "}
-                            {enableMapsRedirect ? "�� Ativo" : "⭕ Inativo"}
-                          </p>
-                        </div>
-                      </div>
+                        </button>
+                        <button
+                          onClick={() => setActiveAdminTab("utilizadores")}
+                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                            safeActiveConfigTab === "utilizadores"
+                              ? "border-blue-500 text-blue-600"
+                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <UserPlus className="h-4 w-4" />
+                            <span>Utilizadores</span>
+                          </div>
+                        </button>
+                      </nav>
                     </div>
 
-                    {/* Instructions */}
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 mb-2">
-                            Instruções
-                          </h4>
-                          <ul className="text-gray-700 text-sm space-y-1">
-                            <li>
-                              • As definições são guardadas localmente no
-                              dispositivo
-                            </li>
-                            <li>
-                              • A marcaç����o automática funciona melhor em
-                              dispositivos móveis
-                            </li>
-                            <li>��� O Google Maps abre numa nova janela/tab</li>
-                            <li>
-                              • Pode ativar ou desativar cada funcionalidade
-                              independentemente
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                    {/* Tab Content */}
+                    <div className="p-6">
+                      {/* Configurações Tab */}
+                      {safeActiveConfigTab === "configuracoes" && (
+                        <div className="space-y-6">
+                          {/* System Information */}
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                              Informações do Sistema
+                            </h3>
+                            <div className="grid gap-3">
+                              <div className="flex justify-between py-2 border-b border-gray-100">
+                                <span className="text-gray-600">Versão</span>
+                                <span className="font-medium">1.0.0</span>
+                              </div>
+                              <div className="flex justify-between py-2 border-b border-gray-100">
+                                <span className="text-gray-600">
+                                  Utilizador Ativo
+                                </span>
+                                <span className="font-medium">
+                                  {currentUser?.name}
+                                </span>
+                              </div>
+                              <div className="flex justify-between py-2 border-b border-gray-100">
+                                <span className="text-gray-600">Perfil</span>
+                                <span className="font-medium capitalize">
+                                  {currentUser?.role?.replace("_", " ")}
+                                </span>
+                              </div>
+                              <div className="flex justify-between py-2">
+                                <span className="text-gray-600">
+                                  Modo de Dados
+                                </span>
+                                <span className="font-medium">
+                                  Armazenamento Local
+                                </span>
+                              </div>
+                            </div>
+                          </div>
 
-                {/* Data Management Section - Only for Super Admin */}
-                {currentUser?.role === "super_admin" && (
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="flex items-center mb-4">
-                      <Trash2 className="h-6 w-6 text-red-600 mr-3" />
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Gestão de Dados
-                      </h3>
-                    </div>
-                    <p className="text-gray-600 mb-6">
-                      Elimine todos os dados de obras, manutencoes e piscinas
-                      para comecar com uma aplicacao limpa. Os utilizadores sao
-                      mantidos.
-                    </p>
-
-                    <div className="space-y-4">
-                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                        <div className="flex items-start space-x-3">
-                          <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
-                          <div className="flex-1">
-                            <h4 className="font-medium text-red-900 mb-2">
-                              Limpar Dados do Sistema
-                            </h4>
-                            <p className="text-red-700 text-sm mb-3">
-                              Esta ação eliminará permanentemente:
+                          {/* Notifications Section */}
+                          <div className="bg-white rounded-lg p-6 shadow-sm">
+                            <div className="flex items-center mb-4">
+                              <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                Notificações Push
+                              </h3>
+                            </div>
+                            <p className="text-gray-600 mb-6">
+                              Ative as notificações para receber alertas sobre
+                              novas obras atribuídas e atualizações importantes.
                             </p>
-                            <ul className="text-red-700 text-sm space-y-1 mb-4">
-                              <li>
-                                �� Todas as obras ({works.length} registos)
-                              </li>
-                              <li>
-                                • Todas as manutenções ({maintenance.length}{" "}
-                                registos)
-                              </li>
-                              <li>
-                                • Todas as piscinas ({pools.length} registos)
-                              </li>
-                              <li>
-                                🔥 Dados do Firebase e armazenamento local
-                              </li>
-                            </ul>
-                            <p className="text-red-700 text-sm font-medium mb-3">
-                              ���️ ATENÇÃO: Esta operação é irrevers��vel!
+
+                            <div className="space-y-4">
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                  <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
+                                  <div className="flex-1">
+                                    <h4 className="font-medium text-blue-900 mb-2">
+                                      Notificações de Obras
+                                    </h4>
+                                    <p className="text-blue-700 text-sm mb-3">
+                                      Receba notificações quando uma nova obra
+                                      for atribuída a si.
+                                    </p>
+                                    <button
+                                      onClick={() => {
+                                        if ("Notification" in window) {
+                                          if (
+                                            Notification.permission ===
+                                            "default"
+                                          ) {
+                                            Notification.requestPermission().then(
+                                              (permission) => {
+                                                if (permission === "granted") {
+                                                  new Notification(
+                                                    "Leirisonda",
+                                                    {
+                                                      body: "Notificações ativadas com sucesso!",
+                                                      icon: "/icon.svg",
+                                                    },
+                                                  );
+                                                }
+                                              },
+                                            );
+                                          } else if (
+                                            Notification.permission ===
+                                            "granted"
+                                          ) {
+                                            new Notification("Leirisonda", {
+                                              body: "Notificações já estão ativadas!",
+                                              icon: "/icon.svg",
+                                            });
+                                          } else {
+                                            alert(
+                                              "Notifica���ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
+                                            );
+                                          }
+                                        } else {
+                                          alert(
+                                            "Este navegador não suporta notificaç�����es.",
+                                          );
+                                        }
+                                      }}
+                                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                                    >
+                                      Ativar Notificaç����es
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
+                              {currentUser?.role === "super_admin" && (
+                                <PersonalLocationSettings />
+                              )}
+
+                              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                  <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                                  <div className="flex-1">
+                                    <h4 className="font-medium text-gray-900 mb-2">
+                                      Instruç��es
+                                    </h4>
+                                    <ul className="text-gray-700 text-sm space-y-1">
+                                      <li>
+                                        • As notificaç���es funcionam apenas com
+                                        HTTPS
+                                      </li>
+                                      <li>
+                                        • Certifique-se de que permite
+                                        notifica��ões no seu navegador
+                                      </li>
+                                      <li>
+                                        • Em dispositivos móveis, adicione a app
+                                        ao ecrã inicial
+                                      </li>
+                                      <li>
+                                        • Configure a sua localização abaixo e
+                                        veja o mapa da equipa na página
+                                        "Localizações"
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Mobile Interaction Settings */}
+                          <div className="bg-white rounded-lg p-6 shadow-sm">
+                            <div className="flex items-center mb-4">
+                              <Settings className="h-6 w-6 text-blue-600 mr-3" />
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                Interação Mobile
+                              </h3>
+                            </div>
+                            <p className="text-gray-600 mb-6">
+                              Configure o comportamento de cliques em contactos
+                              e moradas
                             </p>
-                            <button
-                              onClick={handleDataCleanup}
-                              disabled={cleanupLoading}
-                              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                              <span>
-                                {cleanupLoading
-                                  ? "A Eliminar..."
-                                  : "Eliminar Todos os Dados"}
-                              </span>
-                            </button>
-                            {cleanupError && (
-                              <p className="text-red-600 text-sm mt-2">
-                                {cleanupError}
+
+                            <div className="space-y-4">
+                              {/* Phone Dialer Setting */}
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    🏊
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <h4 className="font-medium text-blue-900">
+                                        Marcação Automática
+                                      </h4>
+                                      <button
+                                        onClick={() =>
+                                          togglePhoneDialer(!enablePhoneDialer)
+                                        }
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                          enablePhoneDialer
+                                            ? "bg-blue-600"
+                                            : "bg-gray-300"
+                                        }`}
+                                      >
+                                        <span
+                                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                            enablePhoneDialer
+                                              ? "translate-x-6"
+                                              : "translate-x-1"
+                                          }`}
+                                        />
+                                      </button>
+                                    </div>
+                                    <p className="text-blue-700 text-sm mb-3">
+                                      Quando ativado, clicar num número de
+                                      telefone abrir�� diretamente o marcador do
+                                      telefone.
+                                    </p>
+                                    <p className="text-blue-600 text-xs">
+                                      Estado:{" "}
+                                      {enablePhoneDialer
+                                        ? "✅ Ativo"
+                                        : "⭕ Inativo"}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Maps Redirect Setting */}
+                              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    🔧
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="flex items-center justify-between mb-2">
+                                      <h4 className="font-medium text-green-900">
+                                        Navegação Maps
+                                      </h4>
+                                      <button
+                                        onClick={() =>
+                                          toggleMapsRedirect(
+                                            !enableMapsRedirect,
+                                          )
+                                        }
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                          enableMapsRedirect
+                                            ? "bg-green-600"
+                                            : "bg-gray-300"
+                                        }`}
+                                      >
+                                        <span
+                                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                            enableMapsRedirect
+                                              ? "translate-x-6"
+                                              : "translate-x-1"
+                                          }`}
+                                        />
+                                      </button>
+                                    </div>
+                                    <p className="text-green-700 text-sm mb-3">
+                                      Quando ativado, clicar numa morada abrirá
+                                      o Google Maps para navegação.
+                                    </p>
+                                    <p className="text-green-600 text-xs">
+                                      Estado:{" "}
+                                      {enableMapsRedirect
+                                        ? "�� Ativo"
+                                        : "⭕ Inativo"}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Instructions */}
+                              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                <div className="flex items-start space-x-3">
+                                  <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                                  <div className="flex-1">
+                                    <h4 className="font-medium text-gray-900 mb-2">
+                                      Instruções
+                                    </h4>
+                                    <ul className="text-gray-700 text-sm space-y-1">
+                                      <li>
+                                        • As definições são guardadas localmente
+                                        no dispositivo
+                                      </li>
+                                      <li>
+                                        • A marcaç����o automática funciona
+                                        melhor em dispositivos móveis
+                                      </li>
+                                      <li>
+                                        ��� O Google Maps abre numa nova
+                                        janela/tab
+                                      </li>
+                                      <li>
+                                        • Pode ativar ou desativar cada
+                                        funcionalidade independentemente
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Data Management Section - Only for Super Admin */}
+                          {currentUser?.role === "super_admin" && (
+                            <div className="bg-white rounded-lg p-6 shadow-sm">
+                              <div className="flex items-center mb-4">
+                                <Trash2 className="h-6 w-6 text-red-600 mr-3" />
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  Gestão de Dados
+                                </h3>
+                              </div>
+                              <p className="text-gray-600 mb-6">
+                                Elimine todos os dados de obras, manutencoes e
+                                piscinas para comecar com uma aplicacao limpa.
+                                Os utilizadores sao mantidos.
                               </p>
-                            )}
+
+                              <div className="space-y-4">
+                                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                  <div className="flex items-start space-x-3">
+                                    <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                                    <div className="flex-1">
+                                      <h4 className="font-medium text-red-900 mb-2">
+                                        Limpar Dados do Sistema
+                                      </h4>
+                                      <p className="text-red-700 text-sm mb-3">
+                                        Esta ação eliminará permanentemente:
+                                      </p>
+                                      <ul className="text-red-700 text-sm space-y-1 mb-4">
+                                        <li>
+                                          �� Todas as obras ({works.length}{" "}
+                                          registos)
+                                        </li>
+                                        <li>
+                                          • Todas as manutenções (
+                                          {maintenance.length} registos)
+                                        </li>
+                                        <li>
+                                          • Todas as piscinas ({pools.length}{" "}
+                                          registos)
+                                        </li>
+                                        <li>
+                                          🔥 Dados do Firebase e armazenamento
+                                          local
+                                        </li>
+                                      </ul>
+                                      <p className="text-red-700 text-sm font-medium mb-3">
+                                        ���️ ATENÇÃO: Esta operação é
+                                        irrevers��vel!
+                                      </p>
+                                      <button
+                                        onClick={handleDataCleanup}
+                                        disabled={cleanupLoading}
+                                        className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                        <span>
+                                          {cleanupLoading
+                                            ? "A Eliminar..."
+                                            : "Eliminar Todos os Dados"}
+                                        </span>
+                                      </button>
+                                      {cleanupError && (
+                                        <p className="text-red-600 text-sm mt-2">
+                                          {cleanupError}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Notifications and Settings content continues... */}
+                          <div className="bg-gray-50 rounded-lg p-6">
+                            <div className="flex items-center mb-4">
+                              <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                Notificações
+                              </h3>
+                            </div>
+                            <div className="space-y-4">
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700">
+                                  Notificações Push
+                                </span>
+                                <button
+                                  onClick={requestNotificationPermission}
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    notificationsEnabled
+                                      ? "bg-blue-600"
+                                      : "bg-gray-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                      notificationsEnabled
+                                        ? "translate-x-5"
+                                        : "translate-x-0"
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700">
+                                  Sincronização Automática
+                                </span>
+                                <button
+                                  onClick={() =>
+                                    setAutoSyncEnabled(!autoSyncEnabled)
+                                  }
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                    autoSyncEnabled
+                                      ? "bg-blue-600"
+                                      : "bg-gray-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                      autoSyncEnabled
+                                        ? "translate-x-5"
+                                        : "translate-x-0"
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+                            </div>
                           </div>
+
+                          {currentUser?.role === "super_admin" && (
+                            <div className="bg-gray-50 rounded-lg p-6">
+                              <h3 className="text-lg font-semibold mb-4">
+                                Sistema
+                              </h3>
+                              <div className="space-y-4">
+                                <button
+                                  onClick={() => setShowDataCleanup(true)}
+                                  className="w-full text-left p-3 bg-yellow-50 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition-colors"
+                                >
+                                  <div className="flex items-center space-x-3">
+                                    <Database className="h-5 w-5 text-yellow-600" />
+                                    <div>
+                                      <p className="font-medium text-yellow-800">
+                                        Limpeza de Dados
+                                      </p>
+                                      <p className="text-sm text-yellow-600">
+                                        Eliminar dados de teste
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
+
+                                <button
+                                  onClick={() => setShowAdvancedSettings(true)}
+                                  className="w-full text-left p-3 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
+                                >
+                                  <div className="flex items-center space-x-3">
+                                    <Settings className="h-5 w-5 text-gray-600" />
+                                    <div>
+                                      <p className="font-medium text-gray-800">
+                                        Configurações Avançadas
+                                      </p>
+                                      <p className="text-sm text-gray-600">
+                                        Firebase, APIs e desenvolvimento
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Reports Tab */}
+                      {safeActiveConfigTab === "relatorios" && (
+                        <div className="space-y-6">
+                          <div>
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                              Relatórios do Sistema
+                            </h2>
+                            <p className="text-gray-600 mb-6">
+                              Gere relat��rios detalhados em PDF sobre piscinas,
+                              manutenções e obras.
+                            </p>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {/* Pool Reports */}
+                            <div className="bg-gray-50 rounded-lg p-6">
+                              <div className="flex items-center space-x-3 mb-4">
+                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                  <Waves className="h-6 w-6 text-blue-600" />
+                                </div>
+                                <div>
+                                  <h3 className="text-lg font-semibold text-gray-900">
+                                    Relatório de Piscinas
+                                  </h3>
+                                  <p className="text-sm text-gray-600">
+                                    Lista completa de piscinas
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="space-y-3 mb-4">
+                                <p className="text-sm text-gray-600">
+                                  <strong>{pools.length}</strong> piscinas
+                                  registadas
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => generatePoolsPDF()}
+                                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                              >
+                                <Download className="h-4 w-4" />
+                                <span>Gerar PDF</span>
+                              </button>
+                            </div>
+
+                            {/* Maintenance Reports */}
+                            <div className="bg-gray-50 rounded-lg p-6">
+                              <div className="flex items-center space-x-3 mb-4">
+                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                  <Wrench className="h-6 w-6 text-green-600" />
+                                </div>
+                                <div>
+                                  <h3 className="text-lg font-semibold text-gray-900">
+                                    Relatório de Manutenções
+                                  </h3>
+                                  <p className="text-sm text-gray-600">
+                                    Histórico de intervenções
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="space-y-3 mb-4">
+                                <p className="text-sm text-gray-600">
+                                  <strong>{maintenance.length}</strong>{" "}
+                                  manutenções registadas
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => generateMaintenancePDF()}
+                                className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                              >
+                                <Download className="h-4 w-4" />
+                                <span>Gerar PDF</span>
+                              </button>
+                            </div>
+
+                            {/* Works Reports */}
+                            <div className="bg-gray-50 rounded-lg p-6">
+                              <div className="flex items-center space-x-3 mb-4">
+                                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                                  <Building2 className="h-6 w-6 text-orange-600" />
+                                </div>
+                                <div>
+                                  <h3 className="text-lg font-semibold text-gray-900">
+                                    Relatório de Obras
+                                  </h3>
+                                  <p className="text-sm text-gray-600">
+                                    Lista de projetos
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="space-y-3 mb-4">
+                                <p className="text-sm text-gray-600">
+                                  <strong>{works.length}</strong> obras
+                                  registadas
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => generateWorksPDF()}
+                                className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
+                              >
+                                <Download className="h-4 w-4" />
+                                <span>Gerar PDF</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Users Tab */}
+                      {safeActiveConfigTab === "utilizadores" && (
+                        <div className="space-y-6">
+                          <div>
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                              Gestão de Utilizadores
+                            </h2>
+                            <p className="text-gray-600 mb-6">
+                              Criar, editar e gerir utilizadores do sistema.
+                            </p>
+                          </div>
+
+                          <UserPermissionsManager />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  /* Simple configuration for non-admin users */
+                  <div className="space-y-6">
+                    {/* System Information */}
+                    <div className="bg-white rounded-lg p-6 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Informações do Sistema
+                      </h3>
+                      <div className="grid gap-3">
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Versão</span>
+                          <span className="font-medium">1.0.0</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">
+                            Utilizador Ativo
+                          </span>
+                          <span className="font-medium">
+                            {currentUser?.name}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-100">
+                          <span className="text-gray-600">Perfil</span>
+                          <span className="font-medium capitalize">
+                            {currentUser?.role?.replace("_", " ")}
+                          </span>
+                        </div>
+                        <div className="flex justify-between py-2">
+                          <span className="text-gray-600">Modo de Dados</span>
+                          <span className="font-medium">
+                            Armazenamento Local
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Basic Notifications for all users */}
+                    <div className="bg-white rounded-lg p-6 shadow-sm">
+                      <div className="flex items-center mb-4">
+                        <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Notificações
+                        </h3>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-700">
+                            Notificações Push
+                          </span>
+                          <button
+                            onClick={requestNotificationPermission}
+                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                              notificationsEnabled
+                                ? "bg-blue-600"
+                                : "bg-gray-200"
+                            }`}
+                          >
+                            <span
+                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                notificationsEnabled
+                                  ? "translate-x-5"
+                                  : "translate-x-0"
+                              }`}
+                            />
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -6664,7 +7647,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç����es
+                        <strong>{maintenance.length}</strong> manutenç������es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -6691,7 +7674,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Obras
+                          Relat��rio de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
                           Projetos e construções
@@ -6822,7 +7805,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenç��es</span>
+                          <span className="text-xs">Manutenç���es</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -7575,7 +8558,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        �������� {work.contact}
+                                        ���������� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -7716,7 +8699,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 : activeWorkFilter === "in_progress"
                                   ? "Em Progresso"
                                   : activeWorkFilter === "completed"
-                                    ? "Concluídas"
+                                    ? "Conclu��das"
                                     : activeWorkFilter === "no_sheet"
                                       ? "Sem Folha de Obra"
                                       : activeWorkFilter
@@ -7927,9 +8910,9 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠���� Nenhum utilizador encontrado. Vá à Área
-                                de Administração → "🔧 Correção de Atribuição de
-                                Obras" para corrigir este problema.
+                                ������� Nenhum utilizador encontrado. Vá à Área
+                                de Administra��ão → "🔧 Correção de Atribuição
+                                de Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
@@ -8001,7 +8984,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    👤 {assignedUser.name}
+                                    ���� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -8064,7 +9047,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ��� Detalhes do Furo de Água
+                        ���� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -8415,7 +9398,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localização da piscina"
+                          placeholder="Localizaç���o da piscina"
                           required
                         />
                       </div>
@@ -8812,7 +9795,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           const materialsUsed = (inputs[9] as HTMLInputElement)
                             .value; // Materiais Utilizados
                           const observations = (inputs[10] as HTMLInputElement)
-                            .value; // Observaç��es
+                            .value; // Observaç����es
 
                           dataSync.updateMaintenance(editingMaintenance.id, {
                             scheduledDate: scheduledDate
@@ -8966,7 +9949,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte��do. Por favor, tente
+              Ocorreu um erro ao carregar o conte����do. Por favor, tente
               novamente.
             </p>
             <button
@@ -9122,7 +10105,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>������</span>
+                  <span>�������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -9139,7 +10122,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observaç����es e próxima manutenção</span>
+                  <span>Observaç����es e próxima manuten��ão</span>
                 </div>
               </div>
             </div>
@@ -9211,7 +10194,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              console.log(`���� Navegando para seção: ${section}`);
+              console.log(`���� Navegando para seç��o: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               if (
@@ -9265,7 +10248,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configurações avançadas
+                Insira a palavra-passe para aceder às configura����ões avançadas
               </p>
             </div>
 
@@ -9319,7 +10302,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            console.log("🔐 Login attempt for:", email);
+            // console.log("🔐 Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
@@ -9340,10 +10323,10 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 rememberMe,
               );
 
-              console.log("🔐 Auth result:", result);
+              // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
-                console.log("✅ Login successful for:", result.user.email);
+                // console.log("✅ Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
@@ -9357,15 +10340,46 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 // Clear login form
                 setLoginForm({ email: "", password: "" });
 
-                // Navigate to dashboard or requested section
+                // Navigate to dashboard or requested section with validation
                 const hash = window.location.hash.substring(1);
                 if (hash && hash !== "login") {
-                  setActiveSection(hash);
+                  // Validate that the section exists and user has access
+                  const validSections = [
+                    "dashboard",
+                    "obras",
+                    "piscinas",
+                    "manutencoes",
+                    "futuras-manutencoes",
+                    "nova-obra",
+                    "nova-piscina",
+                    "nova-manutencao",
+                    "clientes",
+                    "novo-cliente",
+                    "configuracoes",
+                    "relatorios",
+                    "utilizadores",
+                    "localizacoes",
+                    "register",
+                    "editar-obra",
+                    "editar-piscina",
+                    "editar-manutencao",
+                  ];
+
+                  if (validSections.includes(hash)) {
+                    // Use setTimeout to ensure state is properly set before navigation
+                    setTimeout(() => {
+                      setActiveSection(hash);
+                    }, 100);
+                  } else {
+                    // Invalid hash, redirect to dashboard
+                    window.location.hash = "";
+                    navigateToSection("dashboard");
+                  }
                 } else {
                   navigateToSection("dashboard");
                 }
 
-                console.log("✅ Login state updated successfully");
+                // console.log("✅ Login state updated successfully");
               } else {
                 console.warn("❌ Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
@@ -9396,7 +10410,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
           </div>
         )}
 
-        {/* Admin Page - também funciona na página de login */}
+        {/* Admin Page - também funciona na p��gina de login */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
@@ -9563,6 +10577,25 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 )}
 
                 {/* Localizações - Para super_admin e admin */}
+                {/* Clientes */}
+                {hasPermission("clientes", "view") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("clientes");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "clientes"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <Users className="h-5 w-5" />
+                    <span>Clientes</span>
+                  </button>
+                )}
+
+                {/* Localizações - Para super_admin e admin */}
                 {(currentUser?.role === "super_admin" ||
                   currentUser?.role === "admin") && (
                   <button
@@ -9577,7 +10610,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     }`}
                   >
                     <MapPin className="h-5 w-5" />
-                    <span>Localizacoes</span>
+                    <span>Localizações</span>
                   </button>
                 )}
               </nav>
@@ -9596,13 +10629,34 @@ Super Admin: ${currentUser?.role === "super_admin"}
                   </div>
                 </div>
 
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>Terminar Sessao</span>
-                </button>
+                {/* Settings and Logout buttons */}
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => {
+                      const password = prompt(
+                        "Digite a palavra-passe para aceder às configurações:",
+                      );
+                      if (password === "19867") {
+                        navigateToSection("configuracoes");
+                        setSidebarOpen(false);
+                      } else if (password !== null) {
+                        alert("Palavra-passe incorreta!");
+                      }
+                    }}
+                    className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                    title="Configurações"
+                  >
+                    <Settings className="h-5 w-5" />
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    className="flex-1 flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    <span>Terminar Sessao</span>
+                  </button>
+                </div>
                 <div className="mt-4 text-center">
                   <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
                 </div>
@@ -9861,12 +10915,12 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         )}
                     </div>
 
-                    {/* Detalhes Completos - Seções Expandidas */}
+                    {/* Detalhes Completos - Se��ões Expandidas */}
                     <div className="mt-6 space-y-6">
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç��es Detalhadas
+                          Informaç���es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
@@ -9875,9 +10929,47 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.budget
-                                ? `€${selectedWork.budget}`
+                                ? `€${selectedWork.budget.toLocaleString("pt-PT")}`
+                                : "N��o especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Custo Real
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.actualCost
+                                ? `€${selectedWork.actualCost.toLocaleString("pt-PT")}`
                                 : "Não especificado"}
                             </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Data de Conclusão Prevista
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.expectedEndDate
+                                ? new Date(
+                                    selectedWork.expectedEndDate,
+                                  ).toLocaleDateString("pt-PT")
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Folha de Obra
+                            </label>
+                            <span
+                              className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                                selectedWork.folhaGerada
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-red-100 text-red-700"
+                              }`}
+                            >
+                              {selectedWork.folhaGerada
+                                ? "✓ Gerada"
+                                : "✗ Não gerada"}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -9939,7 +11031,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Diâmetro da Coluna
+                                Di��metro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
@@ -10073,6 +11165,310 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         Editar
                       </button>
                     )}
+                    {hasPermission("obras", "delete") && (
+                      <button
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
+                            )
+                          ) {
+                            dataSync.deleteWork(selectedWork.id);
+                            showNotification(
+                              "Obra Eliminada",
+                              `A obra "${selectedWork.title || selectedWork.client}" foi eliminada com sucesso`,
+                              "success",
+                            );
+                            setViewingWork(false);
+                            setSelectedWork(null);
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                      >
+                        Apagar
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Pool View Modal */}
+          {viewingPool && selectedPool && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div className="p-6">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Waves className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">
+                          Detalhes Completos da Piscina
+                        </h2>
+                        <p className="text-gray-600">{selectedPool.name}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setViewingPool(false);
+                        setSelectedPool(null);
+                      }}
+                      className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Informações Básicas */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                        Informações Básicas
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Nome da Piscina
+                          </label>
+                          <p className="text-gray-900">{selectedPool.name}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Tipo
+                          </label>
+                          <p className="text-gray-900 capitalize">
+                            {selectedPool.type}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Estado
+                          </label>
+                          <span
+                            className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                              selectedPool.status === "Ativa"
+                                ? "bg-green-100 text-green-700"
+                                : selectedPool.status === "Inativa"
+                                  ? "bg-red-100 text-red-700"
+                                  : "bg-yellow-100 text-yellow-700"
+                            }`}
+                          >
+                            {selectedPool.status}
+                          </span>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Localização
+                          </label>
+                          <button
+                            onClick={() => {
+                              if (selectedPool?.location) {
+                                handleAddressClick(selectedPool.location);
+                              }
+                            }}
+                            className={`text-left ${
+                              enableMapsRedirect
+                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                : "text-gray-900"
+                            }`}
+                            disabled={!enableMapsRedirect}
+                          >
+                            📍 {selectedPool.location}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Informações do Cliente */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                        Informações do Cliente
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Nome do Cliente
+                          </label>
+                          <p className="text-gray-900">{selectedPool.client}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Email
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.clientEmail || "Não especificado"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Telefone
+                          </label>
+                          <button
+                            onClick={() => {
+                              if (selectedPool?.clientPhone) {
+                                handlePhoneClick(selectedPool.clientPhone);
+                              }
+                            }}
+                            className={`${
+                              enablePhoneDialer && selectedPool.clientPhone
+                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                : "text-gray-900"
+                            }`}
+                            disabled={
+                              !enablePhoneDialer || !selectedPool.clientPhone
+                            }
+                          >
+                            📞 {selectedPool.clientPhone || "Não especificado"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Especificações Técnicas */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                        Especificações Técnicas
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Volume de Água
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.waterVolume
+                              ? `${selectedPool.waterVolume} L`
+                              : "Não especificado"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Dimensões
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.dimensions || "Não especificado"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Profundidade
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.depth
+                              ? `${selectedPool.depth} m`
+                              : "Não especificado"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Manutenções */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                        Manutenções
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Última Manutenção
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.lastMaintenance
+                              ? new Date(
+                                  selectedPool.lastMaintenance,
+                                ).toLocaleDateString("pt-PT")
+                              : "Não especificado"}
+                          </p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Próxima Manutenção
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedPool.nextMaintenance
+                              ? new Date(
+                                  selectedPool.nextMaintenance,
+                                ).toLocaleDateString("pt-PT")
+                              : "Não especificado"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Observações */}
+                    {selectedPool.observations && (
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
+                          Observações
+                        </h3>
+                        <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                          {selectedPool.observations}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Data de Criação */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Data de Registo
+                      </label>
+                      <p className="text-gray-900">
+                        {new Date(
+                          selectedPool.createdAt || new Date(),
+                        ).toLocaleString("pt-PT")}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex justify-end space-x-3">
+                    <button
+                      onClick={() => {
+                        setViewingPool(false);
+                        setSelectedPool(null);
+                      }}
+                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                    >
+                      Fechar
+                    </button>
+                    {hasPermission("piscinas", "edit") && (
+                      <button
+                        onClick={() => {
+                          setEditingPool(selectedPool);
+                          setViewingPool(false);
+                          setSelectedPool(null);
+                          setActiveSection("editar-piscina");
+                        }}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      >
+                        Editar
+                      </button>
+                    )}
+                    {hasPermission("piscinas", "delete") && (
+                      <button
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta ação não pode ser desfeita.`,
+                            )
+                          ) {
+                            dataSync.deletePool(selectedPool.id);
+                            showNotification(
+                              "Piscina Eliminada",
+                              `A piscina "${selectedPool.name}" foi eliminada com sucesso`,
+                              "success",
+                            );
+                            setViewingPool(false);
+                            setSelectedPool(null);
+                          }
+                        }}
+                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                      >
+                        Apagar
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -10081,7 +11477,48 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
           {/* Main Content */}
           <main className="lg:ml-80 min-h-screen">
-            <div className="p-4 lg:p-6">{renderContent()}</div>
+            <div className="p-4 lg:p-6">
+              {(() => {
+                try {
+                  return renderContent();
+                } catch (error) {
+                  console.error("Error rendering content:", error);
+                  return (
+                    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                      <div className="bg-white p-8 rounded-lg shadow-sm max-w-md w-full text-center">
+                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <AlertCircle className="h-8 w-8 text-red-600" />
+                        </div>
+                        <h1 className="text-xl font-bold text-gray-900 mb-2">
+                          Erro de Renderização
+                        </h1>
+                        <p className="text-gray-600 mb-4">
+                          Ocorreu um erro ao carregar a página. Por favor, tente
+                          novamente.
+                        </p>
+                        <div className="space-y-2">
+                          <button
+                            onClick={() => window.location.reload()}
+                            className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+                          >
+                            Recarregar Página
+                          </button>
+                          <button
+                            onClick={() => {
+                              setActiveSection("dashboard");
+                              setActiveAdminTab("relatorios");
+                            }}
+                            className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300"
+                          >
+                            Voltar ao Dashboard
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+              })()}
+            </div>
           </main>
 
           {/* Install Prompt for Mobile */}
@@ -10132,9 +11569,6 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
         {/* User Migration Indicator - Shows migration status */}
         <UserMigrationIndicator migrationStatus={userMigration} />
-
-        {/* Firestore Status Indicator - Passo 3 */}
-        <FirestoreStatusIndicator />
 
         {/* Data Persistence Diagnostic - Modal for persistence issues */}
         {showDataDiagnostic && (

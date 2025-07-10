@@ -21,7 +21,7 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db, isFirestoreReady } from "../firebase/config";
 
 interface PermissionsEditorProps {
   user: UserProfile;
@@ -320,33 +320,98 @@ export const UserPermissionsManager: React.FC = () => {
     setError(null);
 
     try {
-      if (db) {
-        // Load from Firebase
-        const usersCollection = collection(db, "users");
-        const usersSnapshot = await getDocs(usersCollection);
-        const firebaseUsers = usersSnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          uid: doc.id,
-        })) as UserProfile[];
-        setUsers(firebaseUsers);
-      } else {
-        // Fallback to mock users if Firebase not available
+      let firebaseSuccess = false;
+
+      // Try to load from Firebase first if it's available
+      if (db && typeof isFirestoreReady === "function" && isFirestoreReady()) {
+        try {
+          // Attempt to create collection reference and get data
+          const usersCollection = collection(db, "users");
+          const usersSnapshot = await getDocs(usersCollection);
+          const firebaseUsers = usersSnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            uid: doc.id,
+          })) as UserProfile[];
+          setUsers(firebaseUsers);
+          firebaseSuccess = true;
+          // console.log("✅ Users loaded from Firebase successfully");
+        } catch (firestoreError) {
+          console.warn(
+            "⚠️ Firebase/Firestore error, falling back to local storage:",
+            firestoreError,
+          );
+        }
+      }
+
+      if (!firebaseSuccess) {
+        // Fallback to local storage users
+        // console.log("📱 Loading users from local storage...");
+
+        // Try multiple localStorage sources
+        let localUsers: UserProfile[] = [];
+
+        // First try mock-users
         const mockUsers = localStorage.getItem("mock-users");
         if (mockUsers) {
-          const parsedUsers = JSON.parse(mockUsers);
-          const formattedUsers = Object.values(parsedUsers).map(
-            (user: any) => ({
-              uid: user.uid,
+          try {
+            const parsedUsers = JSON.parse(mockUsers);
+            localUsers = Object.values(parsedUsers).map((user: any) => ({
+              uid: user.uid || user.id,
               email: user.email,
               name: user.name,
-              role: user.role,
-              permissions: getDefaultPermissions(user.role),
-              active: user.active,
-              createdAt: user.createdAt,
-            }),
-          ) as UserProfile[];
-          setUsers(formattedUsers);
+              role: user.role || "user",
+              permissions: getDefaultPermissions(user.role || "user"),
+              active: user.active !== false,
+              createdAt: user.createdAt || new Date().toISOString(),
+            })) as UserProfile[];
+          } catch (e) {
+            // console.warn("Error parsing mock-users:", e);
+          }
         }
+
+        // If no mock users, try regular users
+        if (localUsers.length === 0) {
+          const users = localStorage.getItem("users");
+          if (users) {
+            try {
+              const parsedUsers = JSON.parse(users);
+              localUsers = (
+                Array.isArray(parsedUsers)
+                  ? parsedUsers
+                  : Object.values(parsedUsers)
+              ).map((user: any) => ({
+                uid: user.uid || user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role || "user",
+                permissions: getDefaultPermissions(user.role || "user"),
+                active: user.active !== false,
+                createdAt: user.createdAt || new Date().toISOString(),
+              })) as UserProfile[];
+            } catch (e) {
+              console.warn("Error parsing users:", e);
+            }
+          }
+        }
+
+        // If still no users, create a default admin user
+        if (localUsers.length === 0) {
+          localUsers = [
+            {
+              uid: "default-admin",
+              email: "admin@leirisonda.com",
+              name: "Administrador",
+              role: "super_admin",
+              permissions: getDefaultPermissions("super_admin"),
+              active: true,
+              createdAt: new Date().toISOString(),
+            },
+          ];
+          console.log("Created default admin user");
+        }
+
+        setUsers(localUsers);
+        console.log(`✅ Loaded ${localUsers.length} users from local storage`);
       }
     } catch (err) {
       console.error("Error loading users:", err);

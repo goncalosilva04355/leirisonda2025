@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 export interface UniversalSyncState {
   obras: any[];
@@ -284,27 +284,46 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
   }, []);
 
   const resetSync = useCallback(async (): Promise<void> => {
-    console.log("resetSync called");
+    // console.log("resetSync called");
   }, []);
 
-  return {
-    // State
-    ...state,
+  return useMemo(
+    () => ({
+      // State
+      ...state,
 
-    // Actions
-    addObra,
-    updateObra,
-    deleteObra,
-    addManutencao,
-    updateManutencao,
-    deleteManutencao,
-    addPiscina,
-    updatePiscina,
-    deletePiscina,
-    addCliente,
-    updateCliente,
-    deleteCliente,
-    forceSyncAll,
-    resetSync,
-  };
+      // Actions
+      addObra,
+      updateObra,
+      deleteObra,
+      addManutencao,
+      updateManutencao,
+      deleteManutencao,
+      addPiscina,
+      updatePiscina,
+      deletePiscina,
+      addCliente,
+      updateCliente,
+      deleteCliente,
+      forceSyncAll,
+      resetSync,
+    }),
+    [
+      state,
+      addObra,
+      updateObra,
+      deleteObra,
+      addManutencao,
+      updateManutencao,
+      deleteManutencao,
+      addPiscina,
+      updatePiscina,
+      deletePiscina,
+      addCliente,
+      updateCliente,
+      deleteCliente,
+      forceSyncAll,
+      resetSync,
+    ],
+  );
 }
