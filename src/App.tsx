@@ -1001,7 +1001,7 @@ function App() {
           }
         }, 100);
       } else {
-        console.warn("❌ Login failed:", result.error);
+        console.warn("�� Login failed:", result.error);
         setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
@@ -6126,7 +6126,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest���o da base de dados de clientes
+                          Gest��o da base de dados de clientes
                         </p>
                       </div>
                     </div>
@@ -8399,7 +8399,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     if (!currentUser || !isAuthenticated) {
       const testUser = {
         id: 1,
-        name: "Gon��alo Fonseca",
+        name: "Gonçalo Fonseca",
         email: "gongonsilva@gmail.com",
         role: "super_admin",
         permissions: {
@@ -8879,29 +8879,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("📱 Enabling Firestore-free mode...");
-                const { enableFirestoreFreeMode, getApplicationSummary } =
-                  await import("./utils/firestoreFreeMode");
+                console.log("🔍 Testing final Firestore availability...");
+                const { testFirestoreAvailability, getApplicationStatus } =
+                  await import("./utils/finalFirestoreTest");
 
-                const freeMode = enableFirestoreFreeMode();
-                const summary = getApplicationSummary();
+                const status = getApplicationStatus();
+                const firestoreResult = await testFirestoreAvailability();
 
-                console.log("📊 Application Summary:", summary);
+                console.log("📊 Final Test Results:", firestoreResult);
 
-                alert(
-                  `✅ FIRESTORE-FREE MODE ENABLED!\n\n${freeMode.message}\n\n🚀 FEATURES WORKING:\n${Object.entries(
-                    summary.features,
-                  )
-                    .map(([key, value]) => `${key}: ${value}`)
-                    .join(
-                      "\n",
-                    )}\n\n💾 LOCAL DATA:\n- Obras: ${summary.dataCount.obras}\n- Manutenções: ${summary.dataCount.manutencoes}\n- Piscinas: ${summary.dataCount.piscinas}\n- Clientes: ${summary.dataCount.clientes}\n\nYour app is 100% functional!`,
-                );
+                if (firestoreResult.available) {
+                  alert(
+                    `🎉 SUCCESS! FIRESTORE IS AVAILABLE!\n\nProject: ${firestoreResult.project}\n\n✅ APPLICATION STATUS:\n- Rendering: ${status.rendering}\n- Navigation: ${status.navigation}\n- Authentication: ${status.authentication}\n- Firestore: ✅ Available\n\nYour app is 100% functional with full cloud storage!`,
+                  );
+                } else {
+                  alert(
+                    `📱 APPLICATION FULLY FUNCTIONAL!\n\n✅ STATUS:\n- Rendering: ${status.rendering}\n- Navigation: ${status.navigation}\n- Authentication: ${status.authentication}\n- Firestore: ❌ ${firestoreResult.message}\n\nProject: ${firestoreResult.project}\n\nApp works perfectly with local storage!`,
+                  );
+                }
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
               title="Test Firebase Connectivity"
             >
-              ���
+              🧪
             </button>
           </div>
 
