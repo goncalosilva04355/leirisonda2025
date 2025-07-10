@@ -155,7 +155,7 @@ function App() {
             console.log("✅ Persistência reparada automaticamente");
           } else {
             console.error(
-              "❌ Não foi possível reparar a persistência automaticamente",
+              "❌ N��o foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -572,7 +572,7 @@ function App() {
           console.warn("⚠️ Erro na sincroniza��ão universal:", syncError);
         }
 
-        // Enviar notificações push para utilizadores atribuídos
+        // Enviar notificaç��es push para utilizadores atribuídos
         await sendWorkAssignmentNotifications(data);
 
         return firestoreId;
@@ -2722,7 +2722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   w.assignedUserIds.includes(currentUser.id)));
                             return (
                               isNotCompleted && noSheetGenerated
-                              // Mostrar todas as obras sem folha gerada (não apenas atribu��das)
+                              // Mostrar todas as obras sem folha gerada (não apenas atribuídas)
                             );
                           });
                           return worksWithoutSheets.length;
@@ -6613,7 +6613,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   onClick={() =>
                                     setAutoSyncEnabled(!autoSyncEnabled)
                                   }
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none $\{
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
                                     autoSyncEnabled
                                       ? "bg-red-600"
                                       : "bg-gray-200"
@@ -6898,7 +6898,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </button>
                           </div>
                           <p className="text-blue-700 text-sm mb-3">
-                            Quando ativado, clicar num n��mero de telefone
+                            Quando ativado, clicar num número de telefone
                             abrir�� diretamente o marcador do telefone.
                           </p>
                           <p className="text-blue-600 text-xs">
