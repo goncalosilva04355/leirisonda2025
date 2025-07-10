@@ -2804,7 +2804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Verificar assignedUserIds array
                           (w.assignedUserIds &&
                             w.assignedUserIds.includes(currentUser.id)));
-                      return isNotCompleted && isAssignedToUser;
+                      return true; // Mostrar todas as obras
                     })
                     .slice(0, 3); // Pegar apenas as últimas 3 obras
 
@@ -4822,7 +4822,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observa��ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observações Espec��ficas do Furo
+                              Observações Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
