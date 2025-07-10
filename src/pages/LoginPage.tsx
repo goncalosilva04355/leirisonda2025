@@ -114,6 +114,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
 
+        {/* Local Mode Indicator */}
+        <div className="text-center mb-4">
+          <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            🔒 Modo Local - Qualquer email/palavra-passe funciona
+          </div>
+        </div>
+
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
