@@ -2751,7 +2751,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </span>
 
                               <div className="flex items-center space-x-2">
-                                {/* Bot��o Visualizar */}
+                                {/* Botão Visualizar */}
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -2954,7 +2954,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">������</div>
+                            <div className="text-gray-400 mb-2">����</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
@@ -5552,7 +5552,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           e.preventDefault();
 
                           // SECURITY: Check if user has permission to create pools
-                          if (!currentUser?.permissions?.piscinas?.create) {
+                          if (!hasPermission("piscinas", "create")) {
                             alert(
                               "Não tem permissão para criar piscinas. Contacte o administrador.",
                             );
@@ -5627,7 +5627,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutenção programada durante criação da piscina",
+                                  "Manuten��ão programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -6220,7 +6220,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
                       >
                         <Save className="h-4 w-4" />
-                        <span>Guardar Intervenção</span>
+                        <span>Guardar Interven��ão</span>
                       </button>
                     </div>
                   </form>
@@ -6540,7 +6540,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             </p>
                             <ul className="text-red-700 text-sm space-y-1 mb-4">
                               <li>
-                                • Todas as obras ({works.length} registos)
+                                �� Todas as obras ({works.length} registos)
                               </li>
                               <li>
                                 • Todas as manutenções ({maintenance.length}{" "}
