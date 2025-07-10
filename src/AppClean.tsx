@@ -60,11 +60,60 @@ function AppClean() {
 
   if (!isAuthenticated) {
     return (
-      <LoginPage
-        onLogin={handleLogin}
-        loginError={loginError}
-        isLoading={false}
-      />
+      <div className="min-h-screen bg-blue-600 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <h1 className="text-2xl font-bold text-center mb-6">Leirisonda</h1>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target as HTMLFormElement);
+              const email = formData.get("email") as string;
+              const password = formData.get("password") as string;
+              handleLogin(email, password);
+            }}
+            className="space-y-4"
+          >
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                name="email"
+                type="email"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                required
+                defaultValue="gongonsilva@gmail.com"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Palavra-passe
+              </label>
+              <input
+                name="password"
+                type="password"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+
+            {loginError && (
+              <div className="text-red-600 text-sm text-center">
+                {loginError}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+            >
+              Entrar
+            </button>
+          </form>
+        </div>
+      </div>
     );
   }
 
