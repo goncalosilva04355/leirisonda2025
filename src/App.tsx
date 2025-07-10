@@ -4613,7 +4613,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
-                          <option value="manutencao">Em Manutenção</option>
+                          <option value="manutencao">Em Manuten��ão</option>
                           <option value="construcao">Em Construção</option>
                         </select>
                       </div>
@@ -8656,13 +8656,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               {/* Navigation */}
               <nav className="flex-1 px-4 py-6 space-y-2">
-                {/* Debug temporário */}
-                {currentUser?.role === "super_admin" && (
-                  <div className="text-xs text-gray-500 mb-2 p-2 bg-yellow-50 rounded">
-                    Debug: Role={currentUser?.role}, Permissões=
-                    {currentUser?.permissions ? "Sim" : "Não"}
-                  </div>
-                )}
                 <button
                   onClick={() => {
                     navigateToSection("dashboard");
