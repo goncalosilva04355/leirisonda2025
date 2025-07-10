@@ -107,8 +107,8 @@ export const attemptAuthInit = async (): Promise<any> => {
     authAvailable = true;
     console.log("✅ Firebase Auth inicializado");
     return _auth;
-  } catch (error) {
-    console.warn("⚠️ Firebase Auth não disponível");
+  } catch (error: any) {
+    console.warn("⚠️ Firebase Auth não disponível:", error.message);
     _auth = false;
     authAvailable = false;
     return null;
