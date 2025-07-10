@@ -6,11 +6,7 @@ import {
   onAuthStateChanged,
   User as FirebaseUser,
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import {
-  getAuthSafe,
-  getFirestoreSafe,
-} from "../firebase/configWithoutFirestore";
+import { getAuthSafe } from "../firebase/configWithoutFirestore";
 
 export interface UserProfile {
   uid: string;
