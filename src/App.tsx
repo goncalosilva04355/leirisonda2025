@@ -33,12 +33,12 @@ import {
 import jsPDF from "jspdf";
 // import { FirebaseConfig } from "./components/FirebaseConfig"; // Disabled - not used
 // import { AdvancedSettings } from "./components/AdvancedSettings"; // Now lazy loaded
-import { InstallPromptFixed } from "./components/InstallPromptFixed";
+// import { InstallPromptFixed } from "./components/InstallPromptFixed"; // Temporarily disabled
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
-import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
-import { RegisterForm } from "./components/RegisterForm";
-import { LocationPage } from "./components/LocationPage";
-import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+// import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager"; // Temporarily disabled
+// import { RegisterForm } from "./components/RegisterForm"; // Temporarily disabled
+// import { LocationPage } from "./components/LocationPage"; // Temporarily disabled
+// import { PersonalLocationSettings } from "./components/PersonalLocationSettings"; // Temporarily disabled
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -6541,7 +6541,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic����vel)
+                            Pessoa de Contacto (se aplic�����vel)
                           </label>
                           <input
                             type="text"
