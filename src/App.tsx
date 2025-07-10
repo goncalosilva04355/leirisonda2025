@@ -166,6 +166,7 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [showFirebaseRulesGuide, setShowFirebaseRulesGuide] = useState(false);
+  const [showFirebaseChecker, setShowFirebaseChecker] = useState(false);
 
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   // Firebase ativo como solicitado
@@ -1536,7 +1537,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("����️ Opening Google Maps:", mapsUrl);
+      console.log("���️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -2138,7 +2139,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Eye className="h-4 w-4" />
                                 </button>
 
-                                {/* Botão Iniciar Obra (só se pendente) */}
+                                {/* Bot��o Iniciar Obra (só se pendente) */}
                                 {work.status === "pending" && (
                                   <button
                                     onClick={(e) => {
