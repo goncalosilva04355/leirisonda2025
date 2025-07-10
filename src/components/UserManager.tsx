@@ -20,10 +20,13 @@ interface UserManagerProps {
 const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   const { users, updateUsers, isLoading } = useAuthorizedUsers();
   const [editingUser, setEditingUser] = useState<AuthorizedUser | null>(null);
-  const [newUser, setNewUser] = useState<AuthorizedUser>({
+  const [newUser, setNewUser] = useState<
+    AuthorizedUser & { password?: string }
+  >({
     email: "",
     name: "",
     role: "technician",
+    password: "",
   });
   const [showAddForm, setShowAddForm] = useState(false);
   const [errors, setErrors] = useState<string>("");
