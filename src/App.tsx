@@ -56,6 +56,7 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
+import "./utils/createSampleData"; // Criar dados de exemplo para demonstração
 import "./utils/autoMigrationDemo"; // Passo 3: Migração automática de demonstração
 
 // SECURITY: RegisterForm removed - only super admin can create users
@@ -2342,7 +2343,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">��</span>
+                      <span className="text-blue-600">����</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -3809,7 +3810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N����vel da Água (m) *
+                                  N��vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -7227,7 +7228,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa���ões
+                          Observa��ões
                         </h3>
                       </div>
 
