@@ -2408,11 +2408,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
-              const result = await authService.login(
+              // Importar serviço robusto
+              const { robustLoginService } = await import(
+                "./services/robustLoginService"
+              );
+
+              console.log("🔐 Usando serviço de login robusto...");
+              const result = await robustLoginService.login(
                 email.trim(),
                 password,
                 rememberMe,
               );
+
+              // Fallback para authService se necessário
+              if (!result.success) {
+                console.log("🔄 Tentando authService como fallback...");
+                const fallbackResult = await authService.login(
+                  email.trim(),
+                  password,
+                  rememberMe,
+                );
+
+                if (fallbackResult.success) {
+                  console.log("✅ AuthService fallback bem-sucedido");
+                  result.success = true;
+                  result.user = fallbackResult.user;
+                }
+              }
 
               // console.log("🔐 Auth result:", result);
 
@@ -6923,7 +6945,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informações do Sistema
+                              Informa��ões do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7654,7 +7676,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Trabalhos realizados</li>
+                        <li>��� Trabalhos realizados</li>
                         <li>�� T��cnicos responsáveis</li>
                         <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
