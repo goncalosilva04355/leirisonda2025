@@ -212,7 +212,7 @@ function App() {
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    console.log("🔥 Firebase handles auth state automatically");
+    console.log("��� Firebase handles auth state automatically");
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -289,6 +289,16 @@ function App() {
 
   // FIREBASE AUTO-CORREÇÃO - Disabled (Firestore not available)
   // const firebaseAutoFix = useAutoFirebaseFix();
+  const firebaseAutoFix = {
+    status: {
+      isHealthy: false,
+      authAvailable: false,
+      dbAvailable: false,
+      autoFixAttempts: 0,
+    },
+    isMonitoring: false,
+    checkOnUserAction: () => Promise.resolve(),
+  };
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Disabled (Firestore not available)
   // const userMigration = useAutoUserMigration();
@@ -6409,7 +6419,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Basic Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informações Básicas
+                        Informações B��sicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
