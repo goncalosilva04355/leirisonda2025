@@ -139,18 +139,6 @@ class HybridAuthService {
   }
 
   async getCurrentUserProfile(): Promise<UserProfile | null> {
-    // Check for local user first
-    const localUser =
-      localStorage.getItem("leirisonda-user") ||
-      localStorage.getItem("leirisonda-session-user");
-    if (localUser) {
-      try {
-        return JSON.parse(localUser) as UserProfile;
-      } catch (error) {
-        console.error("❌ Error parsing local user:", error);
-      }
-    }
-
     // Verificar Firebase primeiro
     if (this.useFirebase) {
       const auth = getFirebaseAuth();
