@@ -995,7 +995,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("🔄 Iniciando sincronização inicial com Firestore...");
+        console.log("�� Iniciando sincronização inicial com Firestore...");
 
         try {
           await firestoreService.syncAll();
@@ -3847,7 +3847,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��������������� {maint.clientContact}
+                                        ���������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -4665,7 +4665,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medições do Furo
+                              Medi��ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4824,7 +4824,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa��ões Específicas do Furo */}
+                          {/* Observa����ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -6370,10 +6370,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-        case "administracao":
-          // Safety check for activeAdminTab
-          const safeActiveAdminTab = activeAdminTab || "relatorios";
-          return (
+        
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
                 {/* Header */}
@@ -10265,7 +10262,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Admin Page - também funciona na página de login */}
+        {/* Admin Page - também funciona na p��gina de login */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
