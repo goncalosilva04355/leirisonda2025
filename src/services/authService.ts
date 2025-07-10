@@ -7,7 +7,7 @@ import {
   User as FirebaseUser,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/config";
+import { getAuthSafe, getFirestoreSafe } from "../firebase/configFixed";
 
 export interface UserProfile {
   uid: string;
