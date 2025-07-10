@@ -67,6 +67,19 @@ class AuthService {
           role: "super_admin",
           active: true,
           createdAt: new Date().toISOString(),
+          permissions: {
+            obras: { view: true, create: true, edit: true, delete: true },
+            manutencoes: { view: true, create: true, edit: true, delete: true },
+            piscinas: { view: true, create: true, edit: true, delete: true },
+            utilizadores: {
+              view: true,
+              create: true,
+              edit: true,
+              delete: true,
+            },
+            relatorios: { view: true, create: true, edit: true, delete: true },
+            clientes: { view: true, create: true, edit: true, delete: true },
+          },
         };
 
         console.log("✅ Login successful for admin user");
