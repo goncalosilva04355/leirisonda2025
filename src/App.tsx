@@ -711,7 +711,7 @@ function App() {
           // Sincronizar com Firestore se disponível
           if (isFirestoreReady()) {
             console.log(
-              "���� Sincronizando utilizadores locais para Firestore...",
+              "🔄 Sincronizando utilizadores locais para Firestore...",
             );
             for (const user of parsedUsers) {
               if (!user.firestoreId) {
@@ -1642,7 +1642,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa����ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -1732,7 +1732,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu�����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu������das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -5245,53 +5245,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <h3 className="text-sm font-medium text-yellow-800 mb-2">
-                    🔍 Diagn��stico de Permissões
-                  </h3>
-                  <div className="text-xs text-yellow-700 space-y-1">
-                    <div>Usuário: {currentUser?.name || "Não logado"}</div>
-                    <div>Role: {currentUser?.role || "Indefinido"}</div>
-                    <div>
-                      Clientes - Create:{" "}
-                      {hasPermission("clientes", "create")
-                        ? "✅ Sim"
-                        : "❌ Não"}
-                    </div>
-                    <div>
-                      Piscinas - Create:{" "}
-                      {hasPermission("piscinas", "create")
-                        ? "✅ Sim"
-                        : "❌ Não"}
-                    </div>
-                    <div>
-                      Obras - Create:{" "}
-                      {hasPermission("obras", "create") ? "✅ Sim" : "❌ Não"}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      console.log("🔍 DIAGNÓSTICO COMPLETO:");
-                      console.log("Current User:", currentUser);
-                      console.log("Users list:", users);
-                      console.log(
-                        "localStorage app-users:",
-                        localStorage.getItem("app-users"),
-                      );
-                      alert(`
-Usuário: ${currentUser?.name}
-Role: ${currentUser?.role}
-Clientes Create: ${hasPermission("clientes", "create")}
-Super Admin: ${currentUser?.role === "super_admin"}
-                      `);
-                    }}
-                    className="mt-2 px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700"
-                  >
-                    🔍 Debug Completo
-                  </button>
-                </div>
-
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-6">
@@ -8437,7 +8390,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observaç��es
+                          ).value; // Observações
 
                           // Prepare update data
                           let updateData: any = {
@@ -8839,7 +8792,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Manutenç��o
+                          Tipo de Manutenção
                         </label>
                         <select
                           defaultValue={editingMaintenance?.type}
