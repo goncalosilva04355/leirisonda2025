@@ -320,10 +320,22 @@ class UniversalDataSyncService {
     onPiscinasChange: (piscinas: any[]) => void;
     onClientesChange: (clientes: any[]) => void;
   }): () => void {
-    if (!isFirebaseReady() || !db) {
+    // Verificação mais robusta para Firestore
+    try {
+      if (!isFirebaseReady() || !db || typeof db !== "object") {
+        throw new Error("Firestore não disponível");
+      }
+
+      // Teste básico para ver se Firestore funciona
+      const testCollection = collection(db, "test");
+      if (!testCollection) {
+        throw new Error("Firestore collection não funciona");
+      }
+    } catch (error) {
       console.log(
-        "📱 Firebase não disponível - usando localStorage como fallback",
+        "📱 Firebase/Firestore não disponível - usando localStorage como fallback",
       );
+      console.log("💡 Razão:", (error as Error).message);
 
       // Use localStorage listeners as stable fallback
       return this.setupLocalStorageListeners(callbacks);
