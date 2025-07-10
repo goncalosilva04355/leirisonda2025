@@ -131,7 +131,13 @@ class GlobalDataShareService {
     collection: string,
     data: any,
   ): Promise<void> {
-    if (!db) return;
+    const db = await attemptFirestoreInit();
+    if (!db) {
+      console.warn(
+        "⚠️ Firestore not available, cannot save to global collection",
+      );
+      return;
+    }
 
     const id = data.id || `${collection}-${Date.now()}-${Math.random()}`;
     await setDoc(doc(db, collection, id), {
