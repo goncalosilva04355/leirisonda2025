@@ -54,7 +54,11 @@ import FirestoreStatusIndicator from "./components/FirestoreStatusIndicator";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
-import { isFirestoreReady, testFirestore } from "./firebase/firestoreConfig";
+import {
+  isFirestoreReady,
+  testFirestore,
+  getFirebaseFirestore,
+} from "./firebase/firestoreConfig";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/createSampleData"; // Criar dados de exemplo para demonstração
@@ -4699,7 +4703,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resistência El��trica
+                            Resistência Elétrica
                           </option>
                           <option value="gas">Aquecimento a G��s</option>
                         </select>
@@ -7245,7 +7249,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descriç���o do trabalho realizado..."
+                            placeholder="Descriç��o do trabalho realizado..."
                           />
                         </div>
                         <div>
