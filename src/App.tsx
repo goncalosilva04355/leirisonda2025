@@ -9295,6 +9295,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           {isAdminAuthenticated && (
             <div className="fixed inset-0 bg-white z-50">
               <AdminPage
+                currentUser={currentUser}
                 onLogout={() => {
                   setIsAdminAuthenticated(false);
                   setShowAdminLogin(false);
