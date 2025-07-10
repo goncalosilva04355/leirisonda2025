@@ -1,6 +1,9 @@
 // Load polyfills first
 import "./polyfills";
 
+// Block Firestore initialization before anything else
+import "./utils/firestoreInterceptor";
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
