@@ -1,4 +1,9 @@
 // Simple localStorage-based authentication service (no Firebase required)
+import {
+  isEmailAuthorized,
+  getAuthorizedUser,
+} from "../config/authorizedUsers";
+
 export interface UserProfile {
   uid: string;
   email: string;
