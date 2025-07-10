@@ -8,7 +8,6 @@ import {
 } from "firebase/firestore";
 import { deleteUser as deleteFirebaseUser } from "firebase/auth";
 import { db, auth, isFirebaseReady } from "../firebase/config";
-import { mockAuthService } from "./mockAuthService";
 
 export interface UserDeletionResult {
   success: boolean;
