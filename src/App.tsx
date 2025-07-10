@@ -882,7 +882,7 @@ function App() {
     }
 
     try {
-      console.log("��� Attempting login for:", loginForm.email);
+      console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -1541,7 +1541,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("���️ Opening Google Maps:", mapsUrl);
+      console.log("����️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -2988,7 +2988,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção registada
                       </h3>
                       <p className="text-gray-600 text-sm">
-                        As manutenções aparecer��o aqui quando forem criadas
+                        As manutenções aparecerão aqui quando forem criadas
                       </p>
                     </div>
                   ) : (
@@ -8271,7 +8271,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>������</span>
+                  <span>�������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -9270,8 +9270,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* User Migration Indicator - Shows migration status */}
         <UserMigrationIndicator migrationStatus={userMigration} />
 
-        {/* App Stability Status - Monitor para prevenir crashes */}
-        <AppStabilityStatus />
+        {/* App Stability Status - Temporarily disabled to fix useState errors */}
+        {/* <AppStabilityStatus /> */}
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
