@@ -3272,7 +3272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} ��� {pool.location}
+                                            {pool.client} �� {pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -5778,7 +5778,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç����������o criada para nova piscina:",
+                                "Futura manutenç�����������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6556,7 +6556,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </ul>
                             </div>
                             <button
-                              onClick={() => generateSystemPDF()}
+                              onClick={() => generateWorksPDF()}
                               className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
                             >
                               <Download className="h-4 w-4" />
