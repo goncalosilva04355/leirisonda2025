@@ -1316,7 +1316,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             "Agora vai receber notificações de obras atribu��das",
             "success",
           );
-          console.log("������� Notifications enabled successfully");
+          console.log("������ Notifications enabled successfully");
         } else {
           console.warn("❌ Notification permission denied or dismissed");
         }
@@ -2264,7 +2264,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenção agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenç��es aparecerão aqui
+                          As futuras manutenç���es aparecerão aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -6613,7 +6613,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Obras ({works.length})
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão de obras e projetos
+                          Gest��o de obras e projetos
                         </p>
                       </div>
                     </div>
@@ -6843,7 +6843,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </button>
                               </div>
                               <div>
-                                <span className="font-medium">Início:</span>{" "}
+                                <span className="font-medium">In��cio:</span>{" "}
                                 {new Date(
                                   work.entryTime ||
                                     work.startDate ||
@@ -8407,35 +8407,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // Restore proper authentication - Check for saved session on app load
+  // Authentication initialization - Always require manual login
   useEffect(() => {
+    console.log("🔐 App initialized - user must login manually");
+
+    // Clear any existing auto-login flags to ensure clean state
     const manualLogout = localStorage.getItem("manualLogout");
 
-    // Respect manual logout - don't auto-login if user manually logged out
     if (manualLogout === "true") {
-      console.log("🚪 Manual logout detected, staying logged out");
-      setCurrentUser(null);
-      setIsAuthenticated(false);
-      return;
+      console.log("🚪 Manual logout flag detected - keeping logged out");
     }
 
-    // Only auto-restore if there's a valid saved session
-    const savedUser = localStorage.getItem("currentUser");
-    const savedAuth = localStorage.getItem("isAuthenticated");
+    // Force logged out state on app start
+    setCurrentUser(null);
+    setIsAuthenticated(false);
 
-    if (savedUser && savedAuth === "true" && !currentUser) {
-      try {
-        const user = JSON.parse(savedUser);
-        console.log("🔄 Restoring saved session for:", user.email);
-        setCurrentUser(user);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error("❌ Error restoring session:", error);
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem("isAuthenticated");
-      }
-    }
-  }, []); // Remove dependencies to prevent auto-login loop
+    console.log("✅ Login page will be shown - user must authenticate");
+  }, []); // Run once on app load
 
   // Show login form if not authenticated
   if (!isAuthenticated) {
