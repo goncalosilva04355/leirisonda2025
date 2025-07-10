@@ -2841,7 +2841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -5724,7 +5724,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               • A marcaç��o automática funciona melhor em
                               dispositivos móveis
                             </li>
-                            <li>��� O Google Maps abre numa nova janela/tab</li>
+                            <li>
+                              ����� O Google Maps abre numa nova janela/tab
+                            </li>
                             <li>
                               • Pode ativar ou desativar cada funcionalidade
                               independentemente
@@ -8880,6 +8882,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
+                alert("🧪 Button clicked! Testing...");
                 console.log("🔍 Testing Realtime Database...");
 
                 try {
