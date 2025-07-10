@@ -1561,11 +1561,30 @@ function App() {
 
   // Fixed back button function
   const handleGoBack = () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      // Fallback to dashboard if no history
+    // Manter histórico de navegação simples
+    const sectionHistory = {
+      "nova-obra": "obras",
+      "nova-manutencao": "manutencoes",
+      utilizadores: "configuracoes",
+      relatorios: "dashboard",
+      configuracoes: "dashboard",
+      clientes: "dashboard",
+      localizacoes: "dashboard",
+    };
+
+    const previousSection =
+      sectionHistory[activeSection as keyof typeof sectionHistory];
+
+    if (previousSection) {
+      navigateToSection(previousSection);
+    } else if (activeSection !== "dashboard") {
+      // Se não estiver no dashboard e não tiver regra específica, vai para dashboard
       navigateToSection("dashboard");
+    } else {
+      // Se já estiver no dashboard, tenta usar o history do browser
+      if (window.history.length > 1) {
+        window.history.back();
+      }
     }
   };
 
