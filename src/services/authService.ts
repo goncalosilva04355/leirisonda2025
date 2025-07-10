@@ -109,26 +109,57 @@ class AuthService {
 
   // Auth state listener
   onAuthStateChanged(callback: (user: UserProfile | null) => void): () => void {
-    return onAuthStateChanged(
-      auth,
-      async (firebaseUser: FirebaseUser | null) => {
-        if (firebaseUser) {
-          try {
-            const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
-            if (userDoc.exists()) {
-              const userProfile = userDoc.data() as UserProfile;
-              callback(userProfile);
+    // Return a safe unsubscribe function
+    let unsubscribe: (() => void) | null = null;
+
+    (async () => {
+      try {
+        const auth = await getAuthSafe();
+        const db = await getFirestoreSafe();
+
+        if (!auth || !db) {
+          console.warn(
+            "Firebase services not available for auth state listener",
+          );
+          callback(null);
+          return;
+        }
+
+        unsubscribe = onAuthStateChanged(
+          auth,
+          async (firebaseUser: FirebaseUser | null) => {
+            if (firebaseUser) {
+              try {
+                const userDoc = await getDoc(
+                  doc(db, "users", firebaseUser.uid),
+                );
+                if (userDoc.exists()) {
+                  const userProfile = userDoc.data() as UserProfile;
+                  callback(userProfile);
+                } else {
+                  callback(null);
+                }
+              } catch (error) {
+                console.warn("Error getting user profile:", error);
+                callback(null);
+              }
             } else {
               callback(null);
             }
-          } catch (error) {
-            callback(null);
-          }
-        } else {
-          callback(null);
-        }
-      },
-    );
+          },
+        );
+      } catch (error) {
+        console.warn("Error setting up auth state listener:", error);
+        callback(null);
+      }
+    })();
+
+    // Return cleanup function
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }
 
   // Get current user
