@@ -893,7 +893,7 @@ function App() {
         };
 
         addMaintenance(futureMaintenance);
-        console.log("Futura manutenç��o criada:", futureMaintenance);
+        console.log("Futura manutenção criada:", futureMaintenance);
       }
     }
 
@@ -1057,7 +1057,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "��� Forced logout state clear completed - redirected to login",
+        "�� Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -1406,7 +1406,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura������es para receber alertas autom��ticos.`,
+            `�� Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -8878,15 +8878,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🔬 Running minimal Firebase diagnostic...");
-                const { testMinimalFirebase } = await import(
-                  "./utils/minimalFirebaseTest"
+                console.log("🧹 Running clean Firebase test...");
+                const { testCleanFirebase } = await import(
+                  "./utils/cleanFirebaseTest"
                 );
 
-                const results = await testMinimalFirebase();
-                console.log("📊 Minimal Firebase Test Results:", results);
+                const results = await testCleanFirebase();
+                console.log("📊 Clean Firebase Test Results:", results);
 
-                let message = `Firebase Diagnostic Results:\n✅ Imports: ${results.imports}\n✅ App: ${results.app}\n✅ Firestore: ${results.firestore}`;
+                let message = `Firebase Clean Test Results:\n✅ Cleanup: ${results.cleanup}\n✅ App: ${results.app}\n✅ Firestore: ${results.firestore}`;
 
                 if (results.errors.length > 0) {
                   message += `\n\n❌ Errors:\n${results.errors.join("\n")}`;
