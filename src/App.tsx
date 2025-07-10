@@ -54,6 +54,7 @@ import FirestoreStatusIndicator from "./components/FirestoreStatusIndicator";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
+import { isFirestoreReady, testFirestore } from "./firebase/firestoreConfig";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/createSampleData"; // Criar dados de exemplo para demonstração
@@ -5539,7 +5540,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               seu navegador
                             </li>
                             <li>
-                              • Em dispositivos móveis, adicione a app ao ecrã
+                              • Em dispositivos m��veis, adicione a app ao ecrã
                               inicial
                             </li>
                             <li>
@@ -7578,7 +7579,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localização da piscina"
+                          placeholder="Localizaç��o da piscina"
                           required
                         />
                       </div>
