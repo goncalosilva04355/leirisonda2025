@@ -598,7 +598,7 @@ function App() {
       if (permission === "granted") {
         console.log("�� Notifications already granted");
       } else if (permission === "denied") {
-        console.warn("�� Notifications denied by user");
+        console.warn("❌ Notifications denied by user");
       } else {
         console.log("⏳ Notifications permission not yet requested");
       }
@@ -718,7 +718,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "N���o tem permissão para criar manutenç���es. Contacte o administrador.",
+        "N��o tem permissão para criar manutenç���es. Contacte o administrador.",
       );
       return;
     }
@@ -1167,7 +1167,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manuten������es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -1343,7 +1343,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     if (Notification.permission === "granted") {
       showNotification(
         "Teste de Notificação",
-        "As notificaç����es estão a funcionar corretamente!",
+        "As notificaç��es estão a funcionar corretamente!",
         "test",
       );
     } else {
@@ -1648,7 +1648,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincroniza��ão:`,
+            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
             syncError,
           );
         }
@@ -3164,7 +3164,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manuten��ões
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
@@ -8535,6 +8535,38 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             🔥 Configurar Firebase
           </button>
         </div>
+
+        {/* Firebase Status Checker Modal */}
+        {showFirebaseChecker && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Estado do Firebase
+                  </h2>
+                  <button
+                    onClick={() => setShowFirebaseChecker(false)}
+                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <FirebaseSetupChecker />
+
+                <div className="flex justify-end mt-6 pt-4 border-t border-gray-200">
+                  <button
+                    onClick={() => setShowFirebaseChecker(false)}
+                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                  >
+                    Fechar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Firebase Rules Guide Modal */}
         {showFirebaseRulesGuide && (
