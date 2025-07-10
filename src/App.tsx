@@ -106,20 +106,17 @@ const initialUsers = [
 ];
 
 function App() {
-  // Monitorizar renders para detectar problemas
-  const renderCount = useRenderCounter("App");
-
-  // Inicializar monitor de estabilidade
-  useSafeEffect(
-    () => {
+  // Inicializar monitor de estabilidade (versão simplificada)
+  useEffect(() => {
+    try {
       StabilityMonitor.initialize();
       console.log(
         "🛡️ Stability Monitor ativo - previne crashes e loops infinitos",
       );
-    },
-    [],
-    "stabilityInit",
-  );
+    } catch (error) {
+      console.error("Error initializing stability monitor:", error);
+    }
+  }, []);
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -189,7 +186,7 @@ function App() {
   // const dataSync = useDataSyncSafe(); // Temporarily disabled - useState error
   const dataSync = universalSync; // Use universalSync as fallback
 
-  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
+  // FIREBASE AUTO-CORRE��ÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
@@ -9096,7 +9093,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Diâmetro da Coluna
+                                Di��metro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
