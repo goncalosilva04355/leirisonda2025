@@ -426,7 +426,7 @@ function App() {
             continue;
           }
 
-          console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
+          // console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
 
           // Salvar notificação local para o utilizador
           const userNotifications = JSON.parse(
@@ -1436,7 +1436,7 @@ function App() {
       console.log("��� Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("✅ Login successful for:", result.user.email);
+        // console.log("✅ Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -2409,10 +2409,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 rememberMe,
               );
 
-              console.log("🔐 Auth result:", result);
+              // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
-                console.log("✅ Login successful for:", result.user.email);
+                // console.log("✅ Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
@@ -2426,7 +2426,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   navigateToSection("dashboard");
                 }
 
-                console.log("✅ Login state updated successfully");
+                // console.log("✅ Login state updated successfully");
               } else {
                 console.warn("❌ Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
@@ -8995,7 +8995,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           const materialsUsed = (inputs[9] as HTMLInputElement)
                             .value; // Materiais Utilizados
                           const observations = (inputs[10] as HTMLInputElement)
-                            .value; // Observaç��es
+                            .value; // Observaç����es
 
                           dataSync.updateMaintenance(editingMaintenance.id, {
                             scheduledDate: scheduledDate
@@ -9523,10 +9523,10 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 rememberMe,
               );
 
-              console.log("🔐 Auth result:", result);
+              // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
-                console.log("✅ Login successful for:", result.user.email);
+                // console.log("✅ Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
@@ -9548,7 +9548,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                   navigateToSection("dashboard");
                 }
 
-                console.log("✅ Login state updated successfully");
+                // console.log("✅ Login state updated successfully");
               } else {
                 console.warn("❌ Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
@@ -10121,7 +10121,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç��es Detalhadas
+                          Informaç���es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
