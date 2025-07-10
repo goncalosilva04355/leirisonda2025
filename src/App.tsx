@@ -1788,7 +1788,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         if (permission === "granted") {
           setNotificationsEnabled(true);
           showNotification(
-            "Notificaç��es Ativadas",
+            "Notifica����es Ativadas",
             "Agora vai receber notificações de obras atribu��das",
             "success",
           );
@@ -10085,9 +10085,47 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.budget
-                                ? `€${selectedWork.budget}`
+                                ? `€${selectedWork.budget.toLocaleString("pt-PT")}`
                                 : "Não especificado"}
                             </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Custo Real
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.actualCost
+                                ? `€${selectedWork.actualCost.toLocaleString("pt-PT")}`
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Data de Conclusão Prevista
+                            </label>
+                            <p className="text-gray-900">
+                              {selectedWork.expectedEndDate
+                                ? new Date(
+                                    selectedWork.expectedEndDate,
+                                  ).toLocaleDateString("pt-PT")
+                                : "Não especificado"}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                              Folha de Obra
+                            </label>
+                            <span
+                              className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                                selectedWork.folhaGerada
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-red-100 text-red-700"
+                              }`}
+                            >
+                              {selectedWork.folhaGerada
+                                ? "✓ Gerada"
+                                : "✗ Não gerada"}
+                            </span>
                           </div>
                         </div>
                       </div>
