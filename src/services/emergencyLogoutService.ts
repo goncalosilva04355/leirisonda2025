@@ -4,7 +4,10 @@
  */
 
 import { signOut, getAuth } from "firebase/auth";
-import { auth, isFirebaseReady } from "../firebase/config";
+import {
+  getAuthSafe,
+  isFirebaseReady,
+} from "../firebase/configWithoutFirestore";
 
 export interface EmergencyLogoutResult {
   success: boolean;
