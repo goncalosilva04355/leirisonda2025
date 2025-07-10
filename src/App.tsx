@@ -933,7 +933,7 @@ function App() {
           const db = getFirebaseFirestore();
           if (db) {
             try {
-              // Importar funções do Firestore dinamicamente
+              // Importar fun��ões do Firestore dinamicamente
               const { doc, setDoc, getDoc } = await import(
                 "firebase/firestore"
               );
@@ -2720,9 +2720,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
                             return (
-                              isNotCompleted &&
-                              noSheetGenerated &&
-                              isAssignedToUser
+                              isNotCompleted && noSheetGenerated
+                              // Mostrar todas as obras sem folha gerada (não apenas atribuídas)
                             );
                           });
                           return worksWithoutSheets.length;
@@ -4405,7 +4404,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const localStorageUsers =
                               localStorage.getItem("app-users");
                             console.log(
-                              "💾 USERS NO LOCALSTORAGE (app-users):",
+                              "���� USERS NO LOCALSTORAGE (app-users):",
                               localStorageUsers,
                             );
 
