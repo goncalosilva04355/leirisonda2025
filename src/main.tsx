@@ -48,15 +48,10 @@ if (typeof window !== "undefined") {
       console.log("🔧 Handling Firebase ReadableStream error");
       event.preventDefault(); // Prevent the error from crashing the app
 
-      // Try to recover by reinitializing Firebase after a delay
-      setTimeout(async () => {
-        try {
-          const { FirebaseErrorFix } = await import("./utils/firebaseErrorFix");
-          await FirebaseErrorFix.safeFirebaseReinitialization();
-        } catch (error) {
-          console.error("Failed to reinitialize Firebase:", error);
-        }
-      }, 1000);
+      // Firebase auto-recovery disabled - Firestore not available
+      console.log(
+        "🚫 Firebase auto-recovery disabled - Firestore not available",
+      );
     } else {
       event.preventDefault();
     }
