@@ -1,0 +1,22 @@
+import React from "react";
+
+export const HotReloadTest: React.FC = () => {
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 10,
+        left: 10,
+        background: "green",
+        color: "white",
+        padding: "5px",
+        zIndex: 9999,
+        fontSize: "12px",
+      }}
+    >
+      Hot Reload OK - {new Date().toLocaleTimeString()}
+    </div>
+  );
+};
+
+export default HotReloadTest;
