@@ -2531,7 +2531,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         title={
                           autoSyncActive
                             ? "Sincronização Automática Ativa"
-                            : "Sincronização Automática Inativa"
+                            : "Sincroniza��ão Automática Inativa"
                         }
                       ></div>
                     </div>
@@ -3847,7 +3847,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���������������� {maint.clientContact}
+                                        ����������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3876,7 +3876,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {maint.observations && (
                                 <div className="col-span-2">
                                   <span className="font-medium">
-                                    Observações:
+                                    Observaç��es:
                                   </span>{" "}
                                   {maint.observations}
                                 </div>
@@ -5116,7 +5116,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condi��ões do terreno"]',
+                                    'textarea[placeholder*="Condi���ões do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -6370,18 +6370,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-        
+        case "configuracoes":
+          // Safety check for activeAdminTab
+          const safeActiveConfigTab = activeAdminTab || "configuracoes";
+
+          return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
                 {/* Header */}
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                      <Shield className="h-4 w-4 text-red-600" />
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Settings className="h-4 w-4 text-blue-600" />
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Administração
+                        Configurações
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Relatórios, configurações e gestão de utilizadores
@@ -6389,7 +6393,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
                 </div>
-
                 {/* Tabs Navigation */}
                 <div className="bg-white rounded-lg shadow-sm">
                   <div className="border-b border-gray-200">
@@ -6688,74 +6691,71 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </p>
                           </div>
 
-                                                                              <UserPermissionsManager />
+                          <UserPermissionsManager />
                         </div>
                       )}
-                    </div>
                   </div>
-                ) : (
-                  /* Simple configuration for non-admin users */
-                  <div className="space-y-6">
-                    {/* System Information */}
-                    <div className="bg-white rounded-lg p-6 shadow-sm">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informações do Sistema
-                      </h3>
-                      <div className="grid gap-3">
-                        <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Versão</span>
-                          <span className="font-medium">1.0.0</span>
-                        </div>
-                        <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Utilizador Ativo</span>
-                          <span className="font-medium">{currentUser?.name}</span>
-                        </div>
-                        <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Perfil</span>
-                          <span className="font-medium capitalize">
-                            {currentUser?.role?.replace("_", " ")}
-                          </span>
-                        </div>
-                        <div className="flex justify-between py-2">
-                          <span className="text-gray-600">Modo de Dados</span>
-                          <span className="font-medium">Armazenamento Local</span>
-                        </div>
+                </div>
+                ) : ( /* Simple configuration for non-admin users */
+                <div className="space-y-6">
+                  {/* System Information */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Informações do Sistema
+                    </h3>
+                    <div className="grid gap-3">
+                      <div className="flex justify-between py-2 border-b border-gray-100">
+                        <span className="text-gray-600">Versão</span>
+                        <span className="font-medium">1.0.0</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-gray-100">
+                        <span className="text-gray-600">Utilizador Ativo</span>
+                        <span className="font-medium">{currentUser?.name}</span>
+                      </div>
+                      <div className="flex justify-between py-2 border-b border-gray-100">
+                        <span className="text-gray-600">Perfil</span>
+                        <span className="font-medium capitalize">
+                          {currentUser?.role?.replace("_", " ")}
+                        </span>
+                      </div>
+                      <div className="flex justify-between py-2">
+                        <span className="text-gray-600">Modo de Dados</span>
+                        <span className="font-medium">Armazenamento Local</span>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Basic Notifications for all users */}
-                    <div className="bg-white rounded-lg p-6 shadow-sm">
-                      <div className="flex items-center mb-4">
-                        <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Notificações
-                        </h3>
-                      </div>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-700">
-                            Notificações Push
-                          </span>
-                          <button
-                            onClick={requestNotificationPermission}
-                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  {/* Basic Notifications for all users */}
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <div className="flex items-center mb-4">
+                      <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Notificações
+                      </h3>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-700">
+                          Notificações Push
+                        </span>
+                        <button
+                          onClick={requestNotificationPermission}
+                          className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                            notificationsEnabled ? "bg-blue-600" : "bg-gray-200"
+                          }`}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
                               notificationsEnabled
-                                ? "bg-blue-600"
-                                : "bg-gray-200"
+                                ? "translate-x-5"
+                                : "translate-x-0"
                             }`}
-                          >
-                            <span
-                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                notificationsEnabled
-                                  ? "translate-x-5"
-                                  : "translate-x-0"
-                              }`}
-                                                        />
-                          </button>
-                        </div>
+                          />
+                        </button>
                       </div>
                     </div>
                   </div>
+                </div>
               </div>
             </div>
           );
