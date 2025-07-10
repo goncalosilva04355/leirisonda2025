@@ -2,7 +2,7 @@ import SwiftUI
 
 struct LoginView: View {
     @State private var email: String = "gongonsilva@gmail.com"
-    @State private var password: String = "••••••••"
+        @State private var password: String = "19867gsf"
     @State private var rememberMe: Bool = true
     @State private var loginError: String? = nil
     @State private var isLoading: Bool = false
