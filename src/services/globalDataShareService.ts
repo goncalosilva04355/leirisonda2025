@@ -351,7 +351,8 @@ class GlobalDataShareService {
     id: string,
     data: any,
   ): Promise<void> {
-    if (!isFirebaseReady() || !db) {
+    const db = await attemptFirestoreInit();
+    if (!db) {
       throw new Error("Firebase não disponível");
     }
 
