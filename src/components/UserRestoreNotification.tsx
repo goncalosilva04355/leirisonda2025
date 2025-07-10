@@ -51,5 +51,3 @@ export const UserRestoreNotification: React.FC = () => {
     </div>
   );
 };
-
-export default UserRestoreNotification;
