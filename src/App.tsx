@@ -98,6 +98,9 @@ import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
+
+// Diagnóstico automático para problemas de inserção de dados
+import "./utils/datainput-diagnostic";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
