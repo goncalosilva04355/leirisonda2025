@@ -164,6 +164,10 @@ export class FirestoreService {
     try {
       await deleteDoc(doc(this.db!, collectionName, id));
       console.log(`✅ ${collectionName}/${id} eliminado do Firestore`);
+
+      // Sincronização automática imediata
+      this.triggerAutoSync(collectionName, "delete", { id });
+
       return true;
     } catch (error) {
       console.error(`❌ Erro ao eliminar ${collectionName}/${id}:`, error);
