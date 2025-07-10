@@ -36,7 +36,6 @@ import { AdvancedSettings } from "./components/AdvancedSettings";
 import InstallPromptSimple from "./components/InstallPromptSimple";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
-import { UserAssignmentHelper } from "./components/UserAssignmentHelper";
 
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
@@ -1841,7 +1840,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("����️ Opening Google Maps:", mapsUrl);
+      console.log("���️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -1976,7 +1975,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `��️ Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
+            `⚠️ Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
             syncError,
           );
         }
@@ -2480,7 +2479,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <span className="text-sm text-gray-900">
                                 {work.workPerformed ||
                                   work.type ||
-                                  "N��o especificado"}
+                                  "Não especificado"}
                               </span>
                             </div>
 
@@ -3959,16 +3958,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           )}
                         </div>
 
-                                                <UserAssignmentHelper
-                          assignedUsers={assignedUsers}
-                          onAssignUser={(user) => {
-                            console.log("🔗 Assigning user via UserAssignmentHelper:", user);
-                            setAssignedUsers(prev => [...prev, user]);
-                          }}
-                          onRemoveUser={(index) => {
-                            console.log("❌ Removing user at index:", index);
-                            setAssignedUsers(prev => prev.filter((_, i) => i !== index));
-                          }}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Usuarios Atribuidos ({users.length} utilizadores
+                            disponiveis)
+                          </label>
                           {(() => {
                             console.log(
                               "📊 TOTAL UTILIZADORES CARREGADOS:",
@@ -4147,7 +4141,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N����vel da Água (m) *
+                                  N��vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
