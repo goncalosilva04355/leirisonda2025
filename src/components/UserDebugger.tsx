@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Users, Search, Eye, Trash2, Database } from "lucide-react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase/config";
+// Firestore imports disabled - using local storage only
 
 export const UserDebugger: React.FC = () => {
   const [users, setUsers] = useState({
