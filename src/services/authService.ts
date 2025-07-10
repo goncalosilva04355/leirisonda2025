@@ -42,6 +42,13 @@ class AuthService {
 
       // For other users, try Firebase if available
       try {
+        const auth = await getAuthSafe();
+        const db = await getFirestoreSafe();
+
+        if (!auth || !db) {
+          throw new Error("Firebase services not available");
+        }
+
         const userCredential = await signInWithEmailAndPassword(
           auth,
           email,
