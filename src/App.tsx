@@ -5674,7 +5674,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <p className="text-green-700 text-sm mb-3">
                             Quando ativado, clicar numa morada abrirá o Google
-                            Maps para navegaç��o.
+                            Maps para navegação.
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
@@ -8316,7 +8316,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>�������</span>
+                  <span>������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -8772,58 +8772,52 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 )}
 
                 {/* Utilizadores */}
-                {hasPermission("utilizadores", "view") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("utilizadores");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "utilizadores"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <UserCheck className="h-5 w-5" />
-                    <span>Utilizadores</span>
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    navigateToSection("utilizadores");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "utilizadores"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <UserCheck className="h-5 w-5" />
+                  <span>Utilizadores</span>
+                </button>
 
                 {/* Relatórios */}
-                {hasPermission("relatorios", "view") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("relatorios");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "relatorios"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <BarChart3 className="h-5 w-5" />
-                    <span>Relatorios</span>
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    navigateToSection("relatorios");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "relatorios"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <BarChart3 className="h-5 w-5" />
+                  <span>Relatorios</span>
+                </button>
 
                 {/* Clientes */}
-                {hasPermission("clientes", "view") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("clientes");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "clientes"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Users className="h-5 w-5" />
-                    <span>Clientes</span>
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    navigateToSection("clientes");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "clientes"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Users className="h-5 w-5" />
+                  <span>Clientes</span>
+                </button>
 
                 {/* Configurações */}
                 <button
