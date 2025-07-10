@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { CheckCircle, Users, AlertTriangle } from "lucide-react";
 
 export const UserRestoreNotification: React.FC = () => {
