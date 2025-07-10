@@ -155,7 +155,7 @@ function App() {
             console.log("✅ Persistência reparada automaticamente");
           } else {
             console.error(
-              "❌ N��o foi possível reparar a persistência automaticamente",
+              "❌ Não foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -572,7 +572,7 @@ function App() {
           console.warn("⚠️ Erro na sincroniza��ão universal:", syncError);
         }
 
-        // Enviar notificaç��es push para utilizadores atribuídos
+        // Enviar notificações push para utilizadores atribuídos
         await sendWorkAssignmentNotifications(data);
 
         return firestoreId;
@@ -6620,7 +6620,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                 >
                                   <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out $\{
+                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
                                       autoSyncEnabled
                                         ? "translate-x-5"
                                         : "translate-x-0"
@@ -10806,7 +10806,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Dimensões
+                            Dimens��es
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.dimensions || "Não especificado"}
