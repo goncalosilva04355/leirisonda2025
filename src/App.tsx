@@ -8906,7 +8906,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 }
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
-              title="Test Firebase Connectivity"
+              title="Test Realtime Database"
             >
               🧪
             </button>
