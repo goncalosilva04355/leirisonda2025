@@ -2584,41 +2584,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Em Progresso
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras atribuídas em andamento
+                          Obras em andamento
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {(() => {
-                          // Filtrar obras em progresso atribuídas ao utilizador atual
-                          const inProgressWorks = works.filter((w) => {
-                            const isInProgress =
+                        {
+                          works.filter(
+                            (w) =>
                               w.status === "in_progress" ||
-                              w.status === "em_progresso";
-                            const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return isInProgress && isAssignedToUser;
-                          });
-                          return inProgressWorks.length;
-                        })()}
+                              w.status === "em_progresso",
+                          ).length
+                        }
                       </div>
                     </div>
                   </button>
@@ -9878,7 +9854,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N����o especificado"}
+                          {selectedWork.type || "N�����o especificado"}
                         </p>
                       </div>
                       <div>
