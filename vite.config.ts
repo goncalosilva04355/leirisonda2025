@@ -43,10 +43,4 @@ export default defineConfig({
       "@firebase/firestore-compat",
     ],
   },
-  resolve: {
-    alias: {
-      // Alias Firestore imports to our blocker
-      "firebase/firestore": "/src/utils/firestoreBlocker.ts",
-    },
-  },
 });
