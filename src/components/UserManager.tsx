@@ -44,11 +44,15 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   };
 
   // Validar utilizador
-  const validateUser = (user: AuthorizedUser): string => {
+  const validateUser = (
+    user: AuthorizedUser & { password?: string },
+  ): string => {
     if (!user.email.trim()) return "Email é obrigatório";
     if (!validateEmail(user.email)) return "Email inválido";
     if (!user.name.trim()) return "Nome é obrigatório";
     if (!user.role) return "Role é obrigatória";
+    if (!user.password || user.password.length < 4)
+      return "Password deve ter pelo menos 4 caracteres";
 
     // Verificar email duplicado
     const existingUser = users.find(
