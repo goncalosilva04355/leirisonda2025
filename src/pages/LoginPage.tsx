@@ -144,7 +144,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               required
               disabled={isLoading}
               autoComplete="current-password"
-              placeholder="Digite sua senha"
+              placeholder="Digite a sua palavra-passe"
             />
           </div>
 
