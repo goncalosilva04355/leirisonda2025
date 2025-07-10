@@ -711,7 +711,7 @@ function App() {
           // Sincronizar com Firestore se disponível
           if (isFirestoreReady()) {
             console.log(
-              "🔄 Sincronizando utilizadores locais para Firestore...",
+              "���� Sincronizando utilizadores locais para Firestore...",
             );
             for (const user of parsedUsers) {
               if (!user.firestoreId) {
@@ -5245,7 +5245,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Diagnóstico de Permissões */}
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <h3 className="text-sm font-medium text-yellow-800 mb-2">
                     🔍 Diagn��stico de Permissões
@@ -8438,7 +8437,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observações
+                          ).value; // Observaç��es
 
                           // Prepare update data
                           let updateData: any = {
@@ -8840,7 +8839,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Manutenção
+                          Tipo de Manutenç��o
                         </label>
                         <select
                           defaultValue={editingMaintenance?.type}
