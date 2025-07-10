@@ -2264,7 +2264,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenção agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenç���es aparecerão aqui
+                          As futuras manutenç��es aparecerão aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -5875,7 +5875,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten���������es</li>
+                        <li>• Histórico de manuten����������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -6613,7 +6613,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Obras ({works.length})
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o de obras e projetos
+                          Gestão de obras e projetos
                         </p>
                       </div>
                     </div>
@@ -6843,7 +6843,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </button>
                               </div>
                               <div>
-                                <span className="font-medium">In��cio:</span>{" "}
+                                <span className="font-medium">Início:</span>{" "}
                                 {new Date(
                                   work.entryTime ||
                                     work.startDate ||
@@ -8411,18 +8411,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   useEffect(() => {
     console.log("🔐 App initialized - user must login manually");
 
-    // Clear any existing auto-login flags to ensure clean state
-    const manualLogout = localStorage.getItem("manualLogout");
-
-    if (manualLogout === "true") {
-      console.log("🚪 Manual logout flag detected - keeping logged out");
-    }
+    // Clear any existing session data to force fresh login
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("isAuthenticated");
+    localStorage.setItem("manualLogout", "true");
 
     // Force logged out state on app start
     setCurrentUser(null);
     setIsAuthenticated(false);
 
-    console.log("✅ Login page will be shown - user must authenticate");
+    console.log(
+      "✅ Session cleared - login page will be shown - user must authenticate",
+    );
   }, []); // Run once on app load
 
   // Show login form if not authenticated
