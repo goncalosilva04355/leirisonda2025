@@ -11,7 +11,7 @@ import {
   remove,
   update,
 } from "firebase/database";
-import { app as firebaseApp } from "../firebase/config";
+import { getFirebaseApp } from "../firebase/configWithoutFirestore";
 
 interface FirebaseConfig {
   apiKey: string;
