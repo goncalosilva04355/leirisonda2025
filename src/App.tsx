@@ -173,7 +173,7 @@ function App() {
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   // Firebase ativo como solicitado
   const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSafe();
+  const dataSync = useDataSyncSimple();
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
@@ -1169,7 +1169,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç�����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -2376,7 +2376,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">📅</div>
+                            <div className="text-gray-400 mb-2">����</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
