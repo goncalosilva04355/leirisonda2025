@@ -2102,7 +2102,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("�������� Address clicked:", address);
+    console.log("������ Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -3272,7 +3272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} �� {pool.location}
+                                            {pool.client} ��� {pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -4336,7 +4336,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setCurrentTechnician(e.target.value)
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: Jo����o Santos"
+                              placeholder="Ex: Jo��o Santos"
                             />
                             <button
                               type="button"
@@ -4626,7 +4626,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ������ {assignedUser.name}
+                                    ���� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -6678,7 +6678,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {activeAdminTab === "utilizadores" &&
+                    {safeActiveAdminTab === "utilizadores" &&
                       (currentUser?.role === "super_admin" ||
                         currentUser?.role === "admin") && (
                         <div className="space-y-6">
