@@ -338,7 +338,7 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
             Localizações de todos os utilizadores da equipa
           </p>
         </div>
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={shareMyLocation}
             disabled={isLoading}
@@ -359,6 +359,18 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
             />
             <span>Atualizar</span>
           </button>
+          {userLocations.length < 3 && (
+            <button
+              onClick={addSampleTeamLocations}
+              disabled={isLoading}
+              className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400"
+            >
+              <Users
+                className={`h-4 w-4 ${isLoading ? "animate-pulse" : ""}`}
+              />
+              <span>Adicionar Equipa</span>
+            </button>
+          )}
         </div>
       </div>
 
