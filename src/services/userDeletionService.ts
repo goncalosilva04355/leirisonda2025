@@ -428,8 +428,7 @@ class UserDeletionService {
       localStorage.setItem("mock-users", JSON.stringify(mockUsers));
     }
 
-    // Force reload mock auth to pick up changes
-    mockAuthService.reloadUsers();
+    // Mock auth service removed
 
     result.details.superAdminPreserved = true;
     console.log("✅ Super admin ensured in all systems");
