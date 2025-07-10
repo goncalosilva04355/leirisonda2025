@@ -65,8 +65,6 @@ import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
 import { authService, UserProfile } from "./services/authService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
-import { FirebaseRulesGuide } from "./components/FirebaseRulesGuide";
-import { FirebaseSetupChecker } from "./components/FirebaseSetupChecker";
 
 // Firebase works silently in background - no diagnostics or UI needed
 import("./firebase/ultimateSimpleFirebase");
@@ -165,50 +163,17 @@ function App() {
   // Admin area states
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
-  const [showFirebaseRulesGuide, setShowFirebaseRulesGuide] = useState(false);
-  const [showFirebaseChecker, setShowFirebaseChecker] = useState(false);
 
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   // Firebase ativo como solicitado
   const universalSync = useUniversalDataSync();
-  // const dataSync = useDataSyncSafe(); // Temporarily disabled due to useState error
-
-  // Mock dataSync object to prevent errors
-  const dataSync = {
-    updateWork: (id: string, data: any) =>
-      console.log("Mock updateWork:", id, data),
-    deletePool: (id: string) => console.log("Mock deletePool:", id),
-    deleteMaintenance: (id: string) =>
-      console.log("Mock deleteMaintenance:", id),
-    addClient: (client: any) => console.log("Mock addClient:", client),
-    deleteClient: (id: string) => console.log("Mock deleteClient:", id),
-    deleteWork: (id: string) => console.log("Mock deleteWork:", id),
-    updatePool: (id: string, data: any) =>
-      console.log("Mock updatePool:", id, data),
-    updateMaintenance: (id: string, data: any) =>
-      console.log("Mock updateMaintenance:", id, data),
-  };
+  const dataSync = useDataSyncSafe();
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  // const firebaseAutoFix = useAutoFirebaseFix(); // Temporarily disabled due to useState error
-  const firebaseAutoFix = {
-    checkOnUserAction: () => Promise.resolve(),
-    status: {
-      isHealthy: true,
-      authAvailable: true,
-      dbAvailable: true,
-      lastCheck: Date.now(),
-      autoFixAttempts: 0,
-    },
-  };
+  const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
-  // const userMigration = useAutoUserMigration(); // Temporarily disabled due to useState error
-  const userMigration = {
-    status: { completed: true, migrated: 0, errors: [] },
-    migrate: () => Promise.resolve(),
-    reset: () => {},
-  };
+  const userMigration = useAutoUserMigration();
 
   // Log migration status changes
   useEffect(() => {
@@ -1061,7 +1026,7 @@ function App() {
   // PDF Generation Functions
   const generatePoolsPDF = () => {
     const content = `
-LEIRISONDA - RELAT����RIO DE PISCINAS
+LEIRISONDA - RELAT��RIO DE PISCINAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1198,7 +1163,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manuten������es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -3863,7 +3828,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar diâmetro</option>
                                   <option value="1">1 polegada</option>
-                                  <option value="1.25">1�� polegadas</option>
+                                  <option value="1.25">1¼ polegadas</option>
                                   <option value="1.5">1½ polegadas</option>
                                   <option value="2">2 polegadas</option>
                                   <option value="2.5">2½ polegadas</option>
@@ -8295,10 +8260,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Dados da intervenç��o</span>
+                  <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��������</span>
+                  <span>������</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -8548,88 +8513,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           loginError={loginError}
           isLoading={false}
         />
-
-        {/* Firebase Buttons - floating bottom left */}
-        <div className="fixed bottom-4 left-4 space-y-2">
-          <button
-            onClick={() => setShowFirebaseChecker(true)}
-            className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 text-sm"
-            title="Verificar Estado Firebase"
-          >
-            ✅ Verificar Firebase
-          </button>
-          <button
-            onClick={() => setShowFirebaseRulesGuide(true)}
-            className="block w-full px-4 py-2 bg-orange-600 text-white rounded-lg shadow-lg hover:bg-orange-700 text-sm"
-            title="Configurar Firebase"
-          >
-            🔥 Configurar Firebase
-          </button>
-        </div>
-
-        {/* Firebase Status Checker Modal */}
-        {showFirebaseChecker && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    Estado do Firebase
-                  </h2>
-                  <button
-                    onClick={() => setShowFirebaseChecker(false)}
-                    className="text-gray-400 hover:text-gray-600 text-2xl"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <FirebaseSetupChecker />
-
-                <div className="flex justify-end mt-6 pt-4 border-t border-gray-200">
-                  <button
-                    onClick={() => setShowFirebaseChecker(false)}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-                  >
-                    Fechar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Firebase Rules Guide Modal */}
-        {showFirebaseRulesGuide && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    Configurar Firebase
-                  </h2>
-                  <button
-                    onClick={() => setShowFirebaseRulesGuide(false)}
-                    className="text-gray-400 hover:text-gray-600 text-2xl"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <FirebaseRulesGuide />
-
-                <div className="flex justify-end mt-6 pt-4 border-t border-gray-200">
-                  <button
-                    onClick={() => setShowFirebaseRulesGuide(false)}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-                  >
-                    Fechar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Admin Login Modal - tamb���m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (

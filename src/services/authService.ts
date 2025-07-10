@@ -16,39 +16,6 @@ export interface UserProfile {
   role: "super_admin" | "manager" | "technician";
   active: boolean;
   createdAt: string;
-  permissions?: {
-    obras?: { view: boolean; create: boolean; edit: boolean; delete: boolean };
-    manutencoes?: {
-      view: boolean;
-      create: boolean;
-      edit: boolean;
-      delete: boolean;
-    };
-    piscinas?: {
-      view: boolean;
-      create: boolean;
-      edit: boolean;
-      delete: boolean;
-    };
-    utilizadores?: {
-      view: boolean;
-      create: boolean;
-      edit: boolean;
-      delete: boolean;
-    };
-    relatorios?: {
-      view: boolean;
-      create: boolean;
-      edit: boolean;
-      delete: boolean;
-    };
-    clientes?: {
-      view: boolean;
-      create: boolean;
-      edit: boolean;
-      delete: boolean;
-    };
-  };
 }
 
 class AuthService {
@@ -58,35 +25,6 @@ class AuthService {
     password: string,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
-      // Check if it's the main admin user
-      if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
-        const userProfile: UserProfile = {
-          uid: "admin-uid",
-          email: "gongonsilva@gmail.com",
-          name: "Gonçalo Fonseca",
-          role: "super_admin",
-          active: true,
-          createdAt: new Date().toISOString(),
-          permissions: {
-            obras: { view: true, create: true, edit: true, delete: true },
-            manutencoes: { view: true, create: true, edit: true, delete: true },
-            piscinas: { view: true, create: true, edit: true, delete: true },
-            utilizadores: {
-              view: true,
-              create: true,
-              edit: true,
-              delete: true,
-            },
-            relatorios: { view: true, create: true, edit: true, delete: true },
-            clientes: { view: true, create: true, edit: true, delete: true },
-          },
-        };
-
-        console.log("✅ Login successful for admin user");
-        return { success: true, user: userProfile };
-      }
-
-      // Try Firebase auth for other users
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -105,8 +43,14 @@ class AuthService {
         const userProfile: UserProfile = {
           uid: firebaseUser.uid,
           email: firebaseUser.email!,
-          name: "Utilizador",
-          role: "technician",
+          name:
+            firebaseUser.email === "gongonsilva@gmail.com"
+              ? "Gonçalo Fonseca"
+              : "Utilizador",
+          role:
+            firebaseUser.email === "gongonsilva@gmail.com"
+              ? "super_admin"
+              : "technician",
           active: true,
           createdAt: new Date().toISOString(),
         };
@@ -115,36 +59,7 @@ class AuthService {
         return { success: true, user: userProfile };
       }
     } catch (error: any) {
-      // For the specific admin user, always allow login
-      if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
-        const userProfile: UserProfile = {
-          uid: "admin-uid",
-          email: "gongonsilva@gmail.com",
-          name: "Gonçalo Fonseca",
-          role: "super_admin",
-          active: true,
-          createdAt: new Date().toISOString(),
-          permissions: {
-            obras: { view: true, create: true, edit: true, delete: true },
-            manutencoes: { view: true, create: true, edit: true, delete: true },
-            piscinas: { view: true, create: true, edit: true, delete: true },
-            utilizadores: {
-              view: true,
-              create: true,
-              edit: true,
-              delete: true,
-            },
-            relatorios: { view: true, create: true, edit: true, delete: true },
-            clientes: { view: true, create: true, edit: true, delete: true },
-          },
-        };
-
-        console.log("✅ Login successful for admin user (fallback)");
-        return { success: true, user: userProfile };
-      }
-
-      console.error("❌ Login failed:", error.message);
-      return { success: false, error: "Credenciais inválidas" };
+      return { success: false, error: error.message };
     }
   }
 

@@ -27,7 +27,7 @@ export const FirestoreActivationSteps: React.FC = () => {
       description: "Clique no link para abrir o Firebase Console",
       action: (
         <a
-          href="https://console.firebase.google.com/project/leiria-1cfc9/overview"
+          href="https://console.firebase.google.com/project/leirisonda-16f8b/overview"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
