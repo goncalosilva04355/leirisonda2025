@@ -506,20 +506,30 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // SECURITY: No automatic login - users must always login manually
-    console.log(
-      "🔒 SECURITY: No automatic login - manual authentication required",
-    );
+    // SECURITY: Force complete logout on app start
+    const forceLogout = async () => {
+      try {
+        // Clear Firebase auth state
+        await authService.logout();
+        console.log("🔒 Firebase auth cleared");
+      } catch (error) {
+        console.log("🔒 Firebase logout error (expected):", error);
+      }
 
-    // Ensure user starts in unauthenticated state
-    setCurrentUser(null);
-    setIsAuthenticated(false);
+      // Ensure user starts in unauthenticated state
+      setCurrentUser(null);
+      setIsAuthenticated(false);
 
-    // Clear any stored auth data
-    localStorage.removeItem("currentUser");
-    sessionStorage.removeItem("savedLoginCredentials");
+      // Clear any stored auth data
+      localStorage.removeItem("currentUser");
+      sessionStorage.removeItem("savedLoginCredentials");
 
-    console.log("🔒 SECURITY: All automatic login mechanisms disabled");
+      console.log(
+        "🔒 SECURITY: Forced logout completed - manual login required",
+      );
+    };
+
+    forceLogout();
   }, []);
 
   // Auth state check disabled to prevent errors
