@@ -318,10 +318,36 @@ class AuthService {
   // Get current user
   async getCurrentUserProfile(): Promise<UserProfile | null> {
     if (!(await this.initialize())) {
+      // Check for local user when Firebase is not available
+      const localUser =
+        localStorage.getItem("leirisonda-user") ||
+        localStorage.getItem("leirisonda-session-user");
+      if (localUser) {
+        try {
+          return JSON.parse(localUser) as UserProfile;
+        } catch (error) {
+          console.error("❌ Error parsing local user:", error);
+          return null;
+        }
+      }
       return null;
     }
 
-    if (!this.auth.currentUser) return null;
+    if (!this.auth.currentUser) {
+      // Also check for local user if no Firebase user
+      const localUser =
+        localStorage.getItem("leirisonda-user") ||
+        localStorage.getItem("leirisonda-session-user");
+      if (localUser) {
+        try {
+          return JSON.parse(localUser) as UserProfile;
+        } catch (error) {
+          console.error("❌ Error parsing local user:", error);
+          return null;
+        }
+      }
+      return null;
+    }
 
     try {
       if (this.db) {
