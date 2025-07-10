@@ -31,30 +31,6 @@ class HybridAuthService {
     password: string,
     rememberMe: boolean = false,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-    // Local development authentication - bypass authorization check
-    if (password === "123") {
-      console.log("🔧 Local development login for:", email);
-      const localUser: UserProfile = {
-        uid: `local-${email.replace("@", "-").replace(".", "-")}`,
-        email: email,
-        name:
-          email.includes("goncalo") || email.includes("gongonsilva")
-            ? "Gonçalo Fonseca"
-            : email.split("@")[0],
-        role: "super_admin",
-        active: true,
-        createdAt: new Date().toISOString(),
-      };
-
-      // Store in localStorage for persistence
-      const storageKey = rememberMe
-        ? "leirisonda-user"
-        : "leirisonda-session-user";
-      localStorage.setItem(storageKey, JSON.stringify(localUser));
-
-      return { success: true, user: localUser };
-    }
-
     // Verificar se o email está autorizado
     const authorizedUser = getAuthorizedUser(email);
     if (!authorizedUser) {
