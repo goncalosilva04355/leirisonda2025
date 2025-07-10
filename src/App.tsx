@@ -162,7 +162,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitorização de persistência:", error);
+        console.error("❌ Erro na monitoriza��ão de persistência:", error);
       }
     };
 
@@ -3768,7 +3768,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç��o</span>
+                      <span>Agendar Manutenç����o</span>
                     </button>
                   </div>
                 </div>
@@ -3856,7 +3856,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ����‍��� {maint.technician}
+                                ����‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -6666,7 +6666,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
                         <li>�� T��cnicos responsáveis</li>
-                        <li>• Datas e durações</li>
+                        <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -10148,6 +10148,9 @@ Super Admin: ${currentUser?.role === "super_admin"}
         <DataPersistenceAlert
           onOpenDiagnostic={() => setShowDataDiagnostic(true)}
         />
+
+        {/* Data Persistence Status Indicator */}
+        <DataPersistenceIndicator onClick={() => setShowDataDiagnostic(true)} />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
