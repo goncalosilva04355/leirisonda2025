@@ -108,21 +108,25 @@ class HybridAuthService {
       if (auth) {
         return onAuthStateChanged(auth, async (firebaseUser) => {
           if (firebaseUser) {
-            const userProfile: UserProfile = {
-              uid: firebaseUser.uid,
-              email: firebaseUser.email!,
-              name:
-                firebaseUser.email === "gongonsilva@gmail.com"
-                  ? "Gonçalo Fonseca"
-                  : "Utilizador Firebase",
-              role:
-                firebaseUser.email === "gongonsilva@gmail.com"
-                  ? "super_admin"
-                  : "technician",
-              active: true,
-              createdAt: new Date().toISOString(),
-            };
-            callback(userProfile);
+            const authorizedUser = getAuthorizedUser(firebaseUser.email!);
+            if (authorizedUser) {
+              const userProfile: UserProfile = {
+                uid: firebaseUser.uid,
+                email: firebaseUser.email!,
+                name: authorizedUser.name,
+                role: authorizedUser.role,
+                active: true,
+                createdAt: new Date().toISOString(),
+              };
+              callback(userProfile);
+            } else {
+              // Utilizador não autorizado, fazer logout
+              console.warn(
+                "❌ Utilizador não autorizado detectado, fazendo logout",
+              );
+              await this.logout();
+              callback(null);
+            }
           } else {
             callback(null);
           }
