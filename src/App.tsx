@@ -7078,8 +7078,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠���� Nenhum utilizador encontrado. Vá à Área
-                                de Administração → "🔧 Correção de Atribuição de
-                                Obras" para corrigir este problema.
+                                de Administra��ão → "🔧 Correção de Atribuição
+                                de Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
@@ -7766,7 +7766,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manuten�����o
+                        Editar Manuten����o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
@@ -8459,7 +8459,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     return (
-      <div>
+      <div className="relative">
+        <FirebaseDebugUtility />
         <LoginPage
           onLogin={async (email: string, password: string) => {
             console.log("🔐 Login attempt for:", email);
