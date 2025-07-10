@@ -202,39 +202,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           <Settings className="h-5 w-5" />
         </button>
       </div>
-
-      {/* Diagnostic Modal */}
-      {showDiagnostic && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                  <Bug className="h-6 w-6 mr-2 text-purple-600" />
-                  Diagnóstico de Login
-                </h2>
-                <button
-                  onClick={() => setShowDiagnostic(false)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <LoginDebugHelper />
-
-              <div className="flex justify-end mt-6 pt-4 border-t border-gray-200">
-                <button
-                  onClick={() => setShowDiagnostic(false)}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-                >
-                  Fechar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
