@@ -218,10 +218,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 </button>
               </div>
 
-              {/* <LoginDebugHelper /> */}
-              <div className="p-4 text-center text-gray-600">
-                Debug helper temporariamente desabilitado
-              </div>
+              <LoginDebugHelper />
 
               <div className="flex justify-end mt-6 pt-4 border-t border-gray-200">
                 <button
