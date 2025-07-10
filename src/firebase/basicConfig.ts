@@ -54,6 +54,39 @@ export function isFirebaseReady(): boolean {
 // Inicializar automaticamente quando o módulo é carregado
 initializeFirebaseBasic();
 
-// Exportar a app para compatibilidade
+// Exportações para compatibilidade com código existente
 export const app = firebaseApp;
+
+// Proxy simples para db (retorna null por enquanto - será implementado no próximo passo)
+export const db = new Proxy(
+  {},
+  {
+    get() {
+      console.warn(
+        "⚠️ Firestore ainda não configurado - Passo 1 apenas inicializa Firebase App",
+      );
+      return null;
+    },
+  },
+);
+
+// Proxy simples para auth (retorna null por enquanto - será implementado no próximo passo)
+export const auth = new Proxy(
+  {},
+  {
+    get() {
+      console.warn(
+        "⚠️ Firebase Auth ainda não configurado - Passo 1 apenas inicializa Firebase App",
+      );
+      return null;
+    },
+  },
+);
+
+// Funções de compatibilidade
+export const getDB = () => Promise.resolve(null);
+export const getAuthService = () => Promise.resolve(null);
+export const attemptFirestoreInit = () => Promise.resolve(null);
+export const waitForFirebaseInit = () => Promise.resolve(true);
+
 export default firebaseApp;
