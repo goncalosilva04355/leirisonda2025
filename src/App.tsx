@@ -88,6 +88,7 @@ import { ForceInitialization } from "./utils/forceInitialization";
 import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
 import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
+import "./utils/testDataPersistence";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
@@ -132,7 +133,7 @@ function App() {
     // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
 
-    // Monitorização autom��tica de persistência de dados
+    // Monitorização automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
         // Aguardar um pouco antes de iniciar verificação
@@ -1326,7 +1327,7 @@ function App() {
         | "in_progress"
         | "completed"
         | "cancelled",
-      description: maintenanceForm.workPerformed || "Manutenção realizada",
+      description: maintenanceForm.workPerformed || "Manutenç��o realizada",
       notes: maintenanceForm.observations,
     };
 
@@ -1875,7 +1876,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBU���DA: "${workTitle}" ����� ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -3319,7 +3320,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ).length === 0 && (
                                 <div className="text-center py-8">
                                   <div className="text-gray-400 mb-2">
-                                    ���������
+                                    �������
                                   </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
@@ -6700,7 +6701,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>��� Estados de progresso</li>
+                        <li>���� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
