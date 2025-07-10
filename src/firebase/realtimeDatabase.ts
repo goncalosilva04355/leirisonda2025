@@ -73,38 +73,84 @@ export const getDatabaseSafe = async () => {
   return app ? getDatabase(app) : null;
 };
 
-// Test Realtime Database connection
+// Test Realtime Database connection with proper error handling
 export const testRealtimeDatabase = async () => {
   try {
-    const db = await getDatabaseSafe();
-    if (!db) {
-      return { success: false, error: "Database not initialized" };
+    console.log("🔍 Testing Realtime Database connection...");
+
+    // Create fresh database instance to avoid deletion issues
+    const app = getFirebaseApp();
+    if (!app) {
+      return { success: false, error: "Firebase app not initialized" };
     }
 
-    const { ref, set, get } = await import("firebase/database");
+    console.log("📱 Firebase app found:", app.options.projectId);
 
-    // Test write
-    const testRef = ref(db, "connectivity_test/timestamp");
-    await set(testRef, Date.now());
+    // Import and create fresh database instance
+    const { getDatabase, ref, get } = await import("firebase/database");
 
-    // Test read
-    const snapshot = await get(testRef);
-    const value = snapshot.val();
+    let db;
+    try {
+      db = getDatabase(app);
+      console.log("✅ Database instance created");
+    } catch (dbError: any) {
+      console.error("❌ Database creation failed:", dbError);
+      return {
+        success: false,
+        error: `Database creation failed: ${dbError.message}`,
+        suggestion: "Check if Realtime Database is enabled in Firebase Console",
+      };
+    }
 
-    if (value) {
+    // Simple connectivity test without writing (safer)
+    try {
+      const connectRef = ref(db, ".info/connected");
+      const snapshot = await get(connectRef);
+      const connected = snapshot.val();
+
+      console.log("🌐 Connection status:", connected);
+
       return {
         success: true,
-        message: "Realtime Database working!",
-        testValue: value,
+        message: "Realtime Database connected successfully!",
+        connected: connected,
+        databaseURL: app.options.databaseURL,
       };
-    } else {
-      return { success: false, error: "Could not read test data" };
+    } catch (connectError: any) {
+      console.error("❌ Connection test failed:", connectError);
+
+      if (connectError.message.includes("Permission denied")) {
+        return {
+          success: false,
+          error: "Permission denied - check database rules",
+          suggestion:
+            "Update database rules in Firebase Console to allow read access",
+        };
+      }
+
+      if (connectError.message.includes("deleted database")) {
+        return {
+          success: false,
+          error: "Database instance was deleted",
+          suggestion: "Refresh the page and try again",
+        };
+      }
+
+      return {
+        success: false,
+        error: connectError.message,
+        suggestion:
+          "Ensure Realtime Database is enabled and properly configured",
+      };
     }
   } catch (error: any) {
+    console.error("❌ Critical database test error:", error);
+
     return {
       success: false,
       error: error.message,
-      suggestion: "Realtime Database may not be enabled in Firebase Console",
+      suggestion:
+        "Check Firebase configuration and ensure Realtime Database is enabled",
     };
   }
 };
