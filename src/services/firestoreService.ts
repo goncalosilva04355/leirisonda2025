@@ -52,6 +52,10 @@ export class FirestoreService {
       });
 
       console.log(`✅ ${collectionName} criado no Firestore:`, docRef.id);
+
+      // Sincronização automática imediata
+      this.triggerAutoSync(collectionName, "create", data);
+
       return docRef.id;
     } catch (error) {
       console.error(`❌ Erro ao criar ${collectionName}:`, error);
