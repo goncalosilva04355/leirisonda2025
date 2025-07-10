@@ -41,8 +41,8 @@ export class ImprovedErrorBoundary extends Component<Props, State> {
       errorInfo,
     );
 
-    // Registar erro no monitor de estabilidade
-    StabilityMonitor.recordError(error, "ErrorBoundary");
+    // Registar erro no monitor de estabilidade (temporarily disabled)
+    // StabilityMonitor.recordError(error, 'ErrorBoundary');
 
     this.setState({
       error,
