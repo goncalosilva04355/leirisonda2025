@@ -61,18 +61,11 @@ class AuthService {
     rememberMe: boolean = false,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
-      // Demo account for immediate access
-      if (email === "admin@leirisonda.pt" && password === "admin123") {
-        console.log("✅ Demo login successful");
-        const demoUser: UserProfile = {
-          uid: "demo-admin-uid",
-          email: "admin@leirisonda.pt",
-          name: "Administrador Demo",
-          role: "super_admin",
-          active: true,
-          createdAt: new Date().toISOString(),
-        };
-        return { success: true, user: demoUser };
+      // Local development authentication fallback
+      // When Firebase is not available, use localStorage authentication
+      if (!(await this.initialize())) {
+        console.log("🔧 Firebase not available - using local authentication");
+        return this.localLogin(email, password, rememberMe);
       }
 
       // Use retry mechanism for the entire login operation
