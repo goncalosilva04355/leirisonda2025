@@ -60,6 +60,7 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
 
   const roleDescriptions = {
     super_admin: "Super Administrador - Acesso total",
+    admin: "Administrador - Acesso de gestão completo",
     manager: "Gestor - Acesso limitado à gestão",
     technician: "Técnico - Acesso operacional",
   };
@@ -96,6 +97,20 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
           utilizadores: { view: true, create: true, edit: true, delete: true },
           relatorios: { view: true, create: true, edit: true, delete: true },
           clientes: { view: true, create: true, edit: true, delete: true },
+        };
+      case "admin":
+        return {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: {
+            view: true,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: true, edit: true, delete: false },
+          clientes: { view: true, create: true, edit: true, delete: false },
         };
       case "manager":
         return {
@@ -357,6 +372,20 @@ export const UserPermissionsManager: React.FC = () => {
           relatorios: { view: true, create: true, edit: true, delete: true },
           clientes: { view: true, create: true, edit: true, delete: true },
         };
+      case "admin":
+        return {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: {
+            view: true,
+            create: false,
+            edit: false,
+            delete: false,
+          },
+          relatorios: { view: true, create: true, edit: true, delete: false },
+          clientes: { view: true, create: true, edit: true, delete: false },
+        };
       case "manager":
         return {
           obras: { view: true, create: true, edit: true, delete: false },
@@ -468,6 +497,8 @@ export const UserPermissionsManager: React.FC = () => {
     switch (role) {
       case "super_admin":
         return "bg-red-100 text-red-800";
+      case "admin":
+        return "bg-purple-100 text-purple-800";
       case "manager":
         return "bg-blue-100 text-blue-800";
       default:
@@ -479,6 +510,8 @@ export const UserPermissionsManager: React.FC = () => {
     switch (role) {
       case "super_admin":
         return "Super Admin";
+      case "admin":
+        return "Administrador";
       case "manager":
         return "Gestor";
       default:

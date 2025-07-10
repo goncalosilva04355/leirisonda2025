@@ -56,18 +56,36 @@ self.addEventListener("message", (event) => {
 self.addEventListener("push", (event) => {
   console.log("Push event received:", event);
 
+  let notificationData = {
+    title: "Leirisonda",
+    body: "Nova notificação",
+    icon: "/icon.svg",
+    badge: "/icon.svg",
+    data: {},
+  };
+
+  // Parse notification data if available
+  if (event.data) {
+    try {
+      notificationData = event.data.json();
+    } catch (error) {
+      console.warn("Could not parse notification data:", error);
+      notificationData.body = event.data.text();
+    }
+  }
+
   const options = {
-    body: event.data ? event.data.text() : "Nova notificação Leirisonda",
-    icon: "https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=192",
-    badge:
-      "https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=96",
-    tag: "leirisonda-notification",
+    body: notificationData.body,
+    icon: notificationData.icon || "/icon.svg",
+    badge: notificationData.badge || "/icon.svg",
+    tag: notificationData.data?.type || "leirisonda-notification",
     timestamp: Date.now(),
     requireInteraction: true,
+    data: notificationData.data,
     actions: [
       {
         action: "view",
-        title: "Ver Detalhes",
+        title: "Ver Obra",
       },
       {
         action: "dismiss",
@@ -76,7 +94,9 @@ self.addEventListener("push", (event) => {
     ],
   };
 
-  event.waitUntil(self.registration.showNotification("Leirisonda", options));
+  event.waitUntil(
+    self.registration.showNotification(notificationData.title, options),
+  );
 });
 
 // Notification click event
@@ -85,21 +105,42 @@ self.addEventListener("notificationclick", (event) => {
 
   event.notification.close();
 
-  if (event.action === "view") {
-    // Open or focus the app
-    event.waitUntil(
-      self.clients.matchAll({ type: "window" }).then((clientList) => {
-        for (const client of clientList) {
-          if (client.url.includes("leirisonda") && "focus" in client) {
-            return client.focus();
-          }
-        }
-        if (self.clients.openWindow) {
-          return self.clients.openWindow("/");
-        }
-      }),
-    );
+  if (event.action === "dismiss") {
+    return; // Just close the notification
   }
+
+  // Handle view action or default click
+  const notificationData = event.notification.data || {};
+  let targetUrl = "/";
+
+  // Navigate to specific work if available
+  if (notificationData.workId) {
+    targetUrl = `/#obras`; // Navigate to obras section
+  } else if (notificationData.url) {
+    targetUrl = notificationData.url;
+  }
+
+  event.waitUntil(
+    self.clients.matchAll({ type: "window" }).then((clientList) => {
+      // Check if app is already open
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && "focus" in client) {
+          // Focus existing window and navigate if needed
+          client.postMessage({
+            type: "NOTIFICATION_CLICK",
+            data: notificationData,
+            targetUrl: targetUrl,
+          });
+          return client.focus();
+        }
+      }
+
+      // Open new window if none is open
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(targetUrl);
+      }
+    }),
+  );
 });
 
 // Background sync for offline functionality

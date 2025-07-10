@@ -49,7 +49,7 @@ import "./utils/clearModalStates";
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import WorkAssignmentNotificationsSimple from "./components/WorkAssignmentNotificationsSimple";
+import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
 import FirestoreStatusIndicator from "./components/FirestoreStatusIndicator";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
@@ -135,7 +135,7 @@ function App() {
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    console.log("🔥 Firebase handles auth state automatically");
+    console.log("��� Firebase handles auth state automatically");
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -335,6 +335,179 @@ function App() {
       return await addPiscina(data);
     }
   };
+
+  // Função para enviar notificações push quando uma obra é atribuída
+  const sendWorkAssignmentNotifications = async (workData: any) => {
+    try {
+      console.log("📱 Enviando notificações de atribuição de obra...");
+
+      // Verificar se há utilizadores atribuídos
+      if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
+        console.log(
+          "⚠️ Nenhum utilizador atribuído, não enviando notificações",
+        );
+        return;
+      }
+
+      // Preparar dados da notificação
+      const notificationData = {
+        title: "🔔 Nova Obra Atribuída",
+        body: `${workData.title} - ${workData.client}`,
+        icon: "/icon.svg",
+        badge: "/icon.svg",
+        data: {
+          workId: workData.id,
+          workTitle: workData.title,
+          client: workData.client,
+          location: workData.location,
+          startDate: workData.startDate,
+          type: "work_assignment",
+          url: `/obras/${workData.id}`,
+        },
+      };
+
+      // Carregar todos os utilizadores para obter tokens FCM
+      const allUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+
+      // Para cada utilizador atribuído
+      for (const assignedUser of workData.assignedUsers) {
+        try {
+          const user = allUsers.find((u: any) => u.id === assignedUser.id);
+          if (!user) {
+            console.warn(
+              `⚠️ Utilizador ${assignedUser.name} não encontrado na lista`,
+            );
+            continue;
+          }
+
+          console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
+
+          // Salvar notificação local para o utilizador
+          const userNotifications = JSON.parse(
+            localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
+              "[]",
+          );
+
+          const newNotification = {
+            id: `${workData.id}-${Date.now()}`,
+            workId: workData.id,
+            workTitle: workData.title,
+            client: workData.client,
+            location: workData.location,
+            startDate: workData.startDate,
+            type: "new_assignment",
+            timestamp: Date.now(),
+            read: false,
+            urgent: workData.priority === "urgent",
+          };
+
+          userNotifications.unshift(newNotification);
+          // Manter apenas as últimas 50 notificações
+          const limitedNotifications = userNotifications.slice(0, 50);
+
+          localStorage.setItem(
+            `work-notifications-${assignedUser.id}`,
+            JSON.stringify(limitedNotifications),
+          );
+
+          // Disparar evento customizado para atualizar UI em tempo real
+          const customEvent = new CustomEvent("worksUpdated", {
+            detail: {
+              type: "assignment",
+              workId: workData.id,
+              workTitle: workData.title,
+              client: workData.client,
+              location: workData.location,
+              startDate: workData.startDate,
+              assignedUser: assignedUser,
+            },
+          });
+          window.dispatchEvent(customEvent);
+
+          // Tentar enviar notificação push via Firebase (se disponível)
+          if ("serviceWorker" in navigator && "PushManager" in window) {
+            try {
+              const registration = await navigator.serviceWorker.ready;
+
+              // Verificar se o utilizador tem permissão para notificações
+              const permission = await Notification.requestPermission();
+
+              if (permission === "granted") {
+                // Mostrar notificação local imediatamente
+                const notification = new Notification(notificationData.title, {
+                  body: notificationData.body,
+                  icon: notificationData.icon,
+                  badge: notificationData.badge,
+                  tag: `work-${workData.id}`,
+                  requireInteraction: true,
+                  data: notificationData.data,
+                });
+
+                // Auto-close notification after 10 seconds
+                setTimeout(() => {
+                  notification.close();
+                }, 10000);
+
+                // Handle notification click
+                notification.onclick = () => {
+                  window.focus();
+                  notification.close();
+                  // Opcional: navegar para a obra
+                };
+
+                console.log(
+                  `✅ Notificação local enviada para ${assignedUser.name}`,
+                );
+              } else {
+                console.warn(
+                  `⚠️ Permissão de notificação negada para ${assignedUser.name}`,
+                );
+              }
+
+              // TODO: Implementar FCM para notificações push quando app está fechada
+              // Isso requer configuração adicional do Firebase Messaging
+            } catch (pushError) {
+              console.warn("⚠️ Erro ao enviar notificação push:", pushError);
+            }
+          }
+
+          // Salvar notificação no Firestore (se disponível)
+          try {
+            if (firestoreService) {
+              await firestoreService.createNotification({
+                userId: assignedUser.id,
+                workId: workData.id,
+                type: "work_assignment",
+                title: notificationData.title,
+                body: notificationData.body,
+                data: notificationData.data,
+                timestamp: new Date().toISOString(),
+                read: false,
+              });
+              console.log(
+                `✅ Notificação salva no Firestore para ${assignedUser.name}`,
+              );
+            }
+          } catch (firestoreError) {
+            console.warn(
+              "⚠️ Erro ao salvar notificação no Firestore:",
+              firestoreError,
+            );
+          }
+        } catch (userError) {
+          console.error(
+            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
+            userError,
+          );
+        }
+      }
+
+      console.log("✅ Processo de notificações concluído");
+    } catch (error) {
+      console.error("❌ Erro no sistema de notificações:", error);
+    }
+  };
+
   const addWork = async (data: any) => {
     try {
       console.log("🔧 addWork iniciado com Firestore ativo");
@@ -352,10 +525,13 @@ function App() {
           console.warn("⚠️ Erro na sincronização universal:", syncError);
         }
 
+        // Enviar notificações push para utilizadores atribuídos
+        await sendWorkAssignmentNotifications(data);
+
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("��️ Firestore não disponível, usando sistema atual");
+        console.warn("����️ Firestore não disponível, usando sistema atual");
         return await addObra(data);
       }
     } catch (error) {
@@ -417,7 +593,7 @@ function App() {
         try {
           await addCliente(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("��️ Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
@@ -663,7 +839,7 @@ function App() {
         await authService.logout();
         console.log("🔒 Firebase auth cleared");
       } catch (error) {
-        console.log("🔒 Firebase logout error (expected):", error);
+        console.log("��� Firebase logout error (expected):", error);
       }
 
       // Ensure user starts in unauthenticated state
@@ -760,7 +936,7 @@ function App() {
     testFirestoreStep3();
   }, []);
 
-  // Sincronização inicial de todos os dados com Firestore
+  // Sincroniza��ão inicial de todos os dados com Firestore
   useEffect(() => {
     const syncAllData = async () => {
       // Aguardar um pouco para o Firestore estar pronto
@@ -930,6 +1106,29 @@ function App() {
           .catch((error) => {
             console.error("❌ Service Worker registration failed:", error);
           });
+
+        // Listen for messages from service worker (notification clicks)
+        navigator.serviceWorker.addEventListener("message", (event) => {
+          if (event.data.type === "NOTIFICATION_CLICK") {
+            console.log("📱 Notification clicked, navigating...", event.data);
+
+            const { data } = event.data;
+
+            // Navigate to obras section if it's a work notification
+            if (data.workId) {
+              setActiveSection("obras");
+
+              // Show a success message
+              setTimeout(() => {
+                showNotification(
+                  "🔔 Notificação",
+                  `Navegando para obra: ${data.workTitle}`,
+                  "info",
+                );
+              }, 500);
+            }
+          }
+        });
       }, 1000);
     }
 
@@ -1118,7 +1317,7 @@ function App() {
 
     console.log("Manutenção salva com sucesso:", interventionData);
 
-    let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
+    let alertMessage = `Manuten��ão salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
 
     if (maintenanceForm.nextMaintenance) {
       const nextDate = new Date(
@@ -1464,7 +1663,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu�����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -1604,7 +1803,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Send notification if user is assigned to current user and notifications are enabled
     if (isAssignedToCurrentUser) {
       if (notificationsEnabled && Notification.permission === "granted") {
-        console.log("✅ All conditions met, sending notification...");
+        console.log("�� All conditions met, sending notification...");
         showNotification(
           "Nova Obra Atribuída",
           `A obra "${workTitle}" foi-lhe atribuída`,
@@ -1970,7 +2169,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
+              `���️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -2569,7 +2768,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenção agendada
+                          Nenhuma manutenç����o agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenç��es aparecerão aqui
@@ -3427,7 +3626,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������������� {maint.clientContact}
+                                        ��������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3969,6 +4168,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               users.length,
                               users,
                             );
+
+                            // Check localStorage directly
+                            const localStorageUsers =
+                              localStorage.getItem("app-users");
+                            console.log(
+                              "💾 USERS NO LOCALSTORAGE (app-users):",
+                              localStorageUsers,
+                            );
+
+                            if (localStorageUsers) {
+                              try {
+                                const parsed = JSON.parse(localStorageUsers);
+                                console.log(
+                                  "✅ PARSED USERS:",
+                                  parsed.length,
+                                  parsed,
+                                );
+                              } catch (e) {
+                                console.error(
+                                  "❌ ERRO AO FAZER PARSE DOS USERS:",
+                                  e,
+                                );
+                              }
+                            }
+
                             return null;
                           })()}
                           <p className="text-sm text-gray-600 mb-2">
@@ -3978,12 +4202,99 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ���� Nenhum utilizador encontrado. V�� à Área de
-                                Administração → "🔧 Corre�����ão de Atribuiç��o
-                                de Obras" para corrigir este problema.
+                                ⚠️ Nenhum utilizador encontrado. Vá à Área de de
+                                Administração → "🔧 Correção de Atribuição de
+                                Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
+
+                          {/* Botão para recarregar utilizadores quando lista está vazia */}
+                          {users.length === 0 && (
+                            <div className="mb-3">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  console.log(
+                                    "🔄 Recarregando utilizadores...",
+                                  );
+                                  const savedUsers =
+                                    localStorage.getItem("app-users");
+                                  if (savedUsers) {
+                                    try {
+                                      const parsedUsers =
+                                        JSON.parse(savedUsers);
+                                      setUsers(parsedUsers);
+                                      alert(
+                                        `✅ ${parsedUsers.length} utilizadores carregados!`,
+                                      );
+                                    } catch (error) {
+                                      console.error("Erro:", error);
+                                      alert("❌ Erro ao carregar utilizadores");
+                                    }
+                                  } else {
+                                    const defaultUser = {
+                                      id: 1,
+                                      name: "Gonçalo Fonseca",
+                                      email: "gongonsilva@gmail.com",
+                                      active: true,
+                                      role: "super_admin",
+                                      password: "19867gsf",
+                                      permissions: {
+                                        obras: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                        manutencoes: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                        piscinas: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                        utilizadores: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                        relatorios: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                        clientes: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                      },
+                                      createdAt: new Date().toISOString(),
+                                    };
+                                    setUsers([defaultUser]);
+                                    localStorage.setItem(
+                                      "app-users",
+                                      JSON.stringify([defaultUser]),
+                                    );
+                                    alert("✅ Utilizador padrão criado!");
+                                  }
+                                }}
+                                className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                              >
+                                🔄 Recarregar Utilizadores
+                              </button>
+                            </div>
+                          )}
+
                           <div className="flex space-x-2">
                             <select
                               value={currentAssignedUser}
@@ -4123,7 +4434,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi������ões do Furo
+                              Medições do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4141,7 +4452,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N��vel da Água (m) *
+                                  N���vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -4297,7 +4608,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Observações e Trabalho */}
+                    {/* Observaç��es e Trabalho */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -4705,6 +5016,50 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
+                {/* Diagnóstico de Permissões */}
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h3 className="text-sm font-medium text-yellow-800 mb-2">
+                    🔍 Diagnóstico de Permissões
+                  </h3>
+                  <div className="text-xs text-yellow-700 space-y-1">
+                    <div>Usuário: {currentUser?.name || "Não logado"}</div>
+                    <div>Role: {currentUser?.role || "Indefinido"}</div>
+                    <div>
+                      Clientes - Create:{" "}
+                      {hasPermission("clientes", "create")
+                        ? "✅ Sim"
+                        : "❌ Não"}
+                    </div>
+                    <div>
+                      Piscinas - Create:{" "}
+                      {hasPermission("piscinas", "create")
+                        ? "✅ Sim"
+                        : "❌ Não"}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      console.log("🔍 DIAGNÓSTICO COMPLETO:");
+                      console.log("Current User:", currentUser);
+                      console.log("Users list:", users);
+                      console.log(
+                        "localStorage app-users:",
+                        localStorage.getItem("app-users"),
+                      );
+                      alert(`
+Usuário: ${currentUser?.name}
+Role: ${currentUser?.role}
+Clientes Create: ${hasPermission("clientes", "create")}
+Super Admin: ${currentUser?.role === "super_admin"}
+                      `);
+                    }}
+                    className="mt-2 px-3 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700"
+                  >
+                    🔍 Debug Completo
+                  </button>
+                </div>
+
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-6">
@@ -4728,7 +5083,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           onChange={(e) => {
+                            console.log(
+                              "🔍 Select cliente onChange:",
+                              e.target.value,
+                            );
                             if (e.target.value === "novo") {
+                              console.log(
+                                "🔍 Tentando mostrar formulário de novo cliente...",
+                              );
+                              console.log("🔍 Current User:", currentUser);
+                              console.log(
+                                "🔍 hasPermission clientes create:",
+                                hasPermission("clientes", "create"),
+                              );
+
+                              if (!hasPermission("clientes", "create")) {
+                                alert(
+                                  "❌ Não tem permissão para criar clientes. Contacte o administrador.",
+                                );
+                                return;
+                              }
+
+                              console.log(
+                                "✅ Mostrando formulário de novo cliente",
+                              );
                               setShowNewClientForm(true);
                             }
                           }}
@@ -4859,7 +5237,35 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <button
                             type="button"
                             onClick={() => {
+                              console.log(
+                                "🔍 DEBUG: Tentando adicionar cliente...",
+                              );
+                              console.log("🔍 Current User:", currentUser);
+                              console.log("🔍 User Role:", currentUser?.role);
+                              console.log(
+                                "🔍 User Permissions:",
+                                currentUser?.permissions,
+                              );
+                              console.log(
+                                "🔍 hasPermission clientes create:",
+                                hasPermission("clientes", "create"),
+                              );
+
                               if (newClientForm.name.trim()) {
+                                // Check permissions first
+                                if (!hasPermission("clientes", "create")) {
+                                  alert(
+                                    "❌ Não tem permissão para criar clientes. Contacte o administrador.",
+                                  );
+                                  console.error(
+                                    "❌ PERMISSÃO NEGADA: clientes.create",
+                                  );
+                                  return;
+                                }
+
+                                console.log(
+                                  "✅ Permissão validada, criando cliente...",
+                                );
                                 // Add client to the system
                                 const newClient = {
                                   name: newClientForm.name,
@@ -4868,7 +5274,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   address: newClientForm.address,
                                   pools: [],
                                 };
-                                dataSync.addClient(newClient);
+
+                                try {
+                                  dataSync.addClient(newClient);
+                                  console.log(
+                                    "✅ Cliente adicionado com sucesso:",
+                                    newClient,
+                                  );
+                                } catch (error) {
+                                  console.error(
+                                    "❌ Erro ao adicionar cliente:",
+                                    error,
+                                  );
+                                  alert(
+                                    "❌ Erro ao adicionar cliente: " + error,
+                                  );
+                                  return;
+                                }
 
                                 // Reset form and close
                                 setNewClientForm({
@@ -5037,7 +5459,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenç��o
+                          Frequência de Manutenção
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -5060,7 +5482,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Additional Information */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações e Características Especiais
+                        Observa��ões e Características Especiais
                       </label>
                       <textarea
                         rows={3}
@@ -5086,7 +5508,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // SECURITY: Check if user has permission to create pools
                           if (!currentUser?.permissions?.piscinas?.create) {
                             alert(
-                              "Não tem permiss��o para criar piscinas. Contacte o administrador.",
+                              "Não tem permissão para criar piscinas. Contacte o administrador.",
                             );
                             return;
                           }
@@ -5169,7 +5591,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç��������o criada para nova piscina:",
+                                "Futura manutenç����������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -5213,7 +5635,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manuten���ão
+                        Registar intervenção de manutenção
                       </p>
                     </div>
                   </div>
@@ -5591,12 +6013,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa��ões Gerais
+                          Observações Gerais
                         </label>
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�������es, recomendações, próxima manutenção..."
+                          placeholder="Observações, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5752,7 +6174,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
                       >
                         <Save className="h-4 w-4" />
-                        <span>Guardar Interven��ão</span>
+                        <span>Guardar Intervenção</span>
                       </button>
                     </div>
                   </form>
@@ -5840,7 +6262,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Notificações de Obras
                           </h4>
                           <p className="text-blue-700 text-sm mb-3">
-                            Receba notifica��ões quando uma nova obra for
+                            Receba notificações quando uma nova obra for
                             atribuída a si.
                           </p>
                           <button
@@ -5871,7 +6293,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador não suporta notificaç���es.",
+                                  "Este navegador não suporta notificaç�����es.",
                                 );
                               }
                             }}
@@ -6029,7 +6451,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               dispositivo
                             </li>
                             <li>
-                              • A marcaç��o automática funciona melhor em
+                              • A marcaç����o automática funciona melhor em
                               dispositivos móveis
                             </li>
                             <li>��� O Google Maps abre numa nova janela/tab</li>
@@ -6192,7 +6614,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç��es
+                        <strong>{maintenance.length}</strong> manutenç����es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -6616,7 +7038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </button>
                               </div>
                               <div>
-                                <p className="font-medium">Informa��ões:</p>
+                                <p className="font-medium">Informações:</p>
                                 <p>Tipo: {client.type}</p>
                                 <p>
                                   Cliente desde:{" "}
@@ -6678,7 +7100,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente ���� base de dados
+                        Adicionar cliente à base de dados
                       </p>
                     </div>
                   </div>
@@ -6868,7 +7290,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={(e) => {
                           e.preventDefault();
                           alert(
-                            "Cliente criado com sucesso! (Fun����o em desenvolvimento)",
+                            "Cliente criado com sucesso! (Função em desenvolvimento)",
                           );
                           setActiveSection("clientes");
                         }}
@@ -7103,7 +7525,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������� {work.contact}
+                                        �������� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -7153,7 +7575,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  �����{work.budget}
+                                  �������{work.budget}
                                 </div>
                               )}
                             </div>
@@ -7396,7 +7818,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda n��o terminou
+                              Deixe vazio se ainda n���o terminou
                             </p>
                           </div>
                         </div>
@@ -7434,7 +7856,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Técnicos Atribuídos */}
+                    {/* T��cnicos Atribuídos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -7725,7 +8147,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Específicas do Furo
+                          Observações Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -7957,7 +8379,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenç��o">Em Manutenç��o</option>
+                          <option value="Em Manutenção">Em Manutenção</option>
                         </select>
                       </div>
                       <div>
@@ -8144,7 +8566,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manuten����o
+                        Editar Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
@@ -8417,7 +8839,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onRegisterSuccess={() => {
                       navigateToSection("utilizadores");
                     }}
-                    onBackToLogin={() => {
+                    onCancel={() => {
                       navigateToSection("utilizadores");
                     }}
                   />
@@ -8427,8 +8849,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
 
         case "localizacoes":
-          // SECURITY: Only super_admin can access location features
-          if (currentUser?.role !== "super_admin") {
+          // SECURITY: Only super_admin and admin can access location features
+          if (
+            currentUser?.role !== "super_admin" &&
+            currentUser?.role !== "admin"
+          ) {
             return (
               <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
@@ -8476,7 +8901,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Página não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A seç���o solicitada não foi encontrada.
+                  A seç����o solicitada não foi encontrada.
                 </p>
               </div>
             </div>
@@ -8664,7 +9089,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observaç���es e próxima manutenção</span>
+                  <span>Observaç����es e próxima manutenção</span>
                 </div>
               </div>
             </div>
@@ -8736,7 +9161,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              console.log(`🔄 Navegando para seção: ${section}`);
+              console.log(`���� Navegando para seção: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               if (
@@ -9087,8 +9512,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Localizações - Apenas para super_admin */}
-                {currentUser?.role === "super_admin" && (
+                {/* Localizações - Para super_admin e admin */}
+                {(currentUser?.role === "super_admin" ||
+                  currentUser?.role === "admin") && (
                   <button
                     onClick={() => {
                       navigateToSection("localizacoes");
@@ -9646,7 +10072,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* <RealtimeNotifications /> */}
 
         {/* Work Assignment Notifications */}
-        <WorkAssignmentNotificationsSimple currentUser={currentUser} />
+        <WorkAssignmentNotifications currentUser={currentUser} />
 
         {/* User Restore Notification */}
         <UserRestoreNotificationSimple />
