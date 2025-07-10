@@ -1,4 +1,4 @@
-// Passo 2: Serviço de autenticação híbrido (Firebase + Local)
+// Passo 2: Serviço de autenticação híbrido (Firebase + Local) com emails autorizados
 import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
@@ -6,6 +6,10 @@ import {
 } from "firebase/auth";
 import { getFirebaseAuth, isFirebaseAuthReady } from "../firebase/authConfig";
 import { localAuthService, UserProfile } from "./localAuthService";
+import {
+  isEmailAuthorized,
+  getAuthorizedUser,
+} from "../config/authorizedUsers";
 
 class HybridAuthService {
   private useFirebase = false;
