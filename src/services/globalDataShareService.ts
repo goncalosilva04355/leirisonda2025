@@ -38,9 +38,9 @@ class GlobalDataShareService {
    * Garante que TODOS os dados são sempre partilhados entre utilizadores
    */
   async initialize(): Promise<boolean> {
-    const firebaseReady = await waitForFirebaseInit();
-    if (!firebaseReady || !isFirebaseReady() || !db) {
-      console.error("❌ Firebase não disponível - partilha global impossível");
+    const db = await getFirestoreSafe();
+    if (!db || !isFirebaseReady()) {
+      console.log("📱 Firestore não disponível - usando modo local");
       return false;
     }
 
