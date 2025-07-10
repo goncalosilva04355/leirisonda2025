@@ -1,0 +1,67 @@
+/**
+ * Autenticação Firebase-Only - DESABILITADO
+ * Remove dependência do mockAuthService e localStorage
+ */
+
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  User as FirebaseUser,
+  updateProfile,
+} from "firebase/auth";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { UnifiedSafeFirebase } from "../firebase/unifiedSafeFirebase";
+
+export interface UserProfile {
+  uid: string;
+  email: string;
+  name: string;
+  role: "super_admin" | "manager" | "technician";
+  permissions: {
+    obras: { view: boolean; create: boolean; edit: boolean; delete: boolean };
+    manutencoes: {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    };
+    piscinas: {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    };
+    utilizadores: {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    };
+    relatorios: {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    };
+    clientes: {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    };
+  };
+  active: boolean;
+  createdAt: string;
+}
+
+// Rest of the file content...
