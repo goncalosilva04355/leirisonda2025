@@ -933,7 +933,7 @@ function App() {
           const db = getFirebaseFirestore();
           if (db) {
             try {
-              // Importar fun��ões do Firestore dinamicamente
+              // Importar funções do Firestore dinamicamente
               const { doc, setDoc, getDoc } = await import(
                 "firebase/firestore"
               );
@@ -2772,7 +2772,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isNotCompleted && isAssignedToUser;
+                            return true; // Mostrar todas as obras (não apenas atribuídas)
                           });
                           return assignedWorks.length;
                         })()}
@@ -4041,7 +4041,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                �������‍🔧 {maint.technician}
+                                �������‍���� {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -4404,7 +4404,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const localStorageUsers =
                               localStorage.getItem("app-users");
                             console.log(
-                              "���� USERS NO LOCALSTORAGE (app-users):",
+                              "💾 USERS NO LOCALSTORAGE (app-users):",
                               localStorageUsers,
                             );
 
@@ -5116,7 +5116,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condi��ões do terreno"]',
+                                    'textarea[placeholder*="Condi���ões do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -8113,7 +8113,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠���� Nenhum utilizador encontrado. Vá à Área
-                                de Administra��ão → "🔧 Correção de Atribuição
+                                de Administra����ão → "🔧 Correção de Atribuição
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -8186,7 +8186,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    👤 {assignedUser.name}
+                                    �� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
