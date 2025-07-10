@@ -1812,7 +1812,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Permission check function
   const hasPermission = (module: string, action: string): boolean => {
-    if (!currentUser || !currentUser.permissions) return false;
+    if (!currentUser) return false;
+
+    // Super admins have access to everything
+    if (currentUser.role === "super_admin") return true;
+
+    // Check specific permissions for other roles
+    if (!currentUser.permissions) return false;
     return currentUser.permissions[module]?.[action] || false;
   };
 
@@ -3421,7 +3427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����������� {maint.clientContact}
+                                        ������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -4268,7 +4274,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monofásico)
+                                    230V (monof��sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -5891,7 +5897,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As notificaç��es funcionam apenas com HTTPS
+                              • As notificaç���es funcionam apenas com HTTPS
                             </li>
                             <li>
                               • Certifique-se de que permite notifica��ões no
