@@ -1,0 +1,118 @@
+{
+  "backup_info": {
+    "name": "100725leirisonda2345",
+    "created_at": "2024-10-07T23:45:00Z",
+    "description": "Backup completo da aplicação Leirisonda",
+    "version": "1.0.0",
+    "type": "full_backup"
+  },
+  "project_structure": {
+    "root_files": [
+      "package.json",
+      "tailwind.config.js",
+      "tailwind.config.ts",
+      "vite.config.ts",
+      "tsconfig.json",
+      "tsconfig.build.json",
+      "index.html",
+      "README.md",
+      "netlify.toml",
+      "vercel.json"
+    ],
+    "main_directories": [
+      "src/",
+      "public/",
+      "ios/",
+      "android/",
+      "scripts/",
+      "server/",
+      "netlify/",
+      "shared/"
+    ]
+  },
+  "dependencies": {
+    "main": {
+      "@capacitor/android": "^7.4.0",
+      "@capacitor/cli": "^7.4.0",
+      "@capacitor/core": "^7.4.0",
+      "@capacitor/ios": "^7.4.0",
+      "@capacitor/splash-screen": "^7.0.1",
+      "@capacitor/status-bar": "^7.0.1",
+      "archiver": "^7.0.1",
+      "express": "^4.18.2",
+      "firebase": "^11.10.0",
+      "html2canvas": "^1.4.1",
+      "jspdf": "^3.0.1",
+      "xlsx": "^0.18.5",
+      "zod": "^3.23.8"
+    },
+    "dev": {
+      "react": "^18.3.1",
+      "react-dom": "^18.3.1",
+      "typescript": "^5.5.3",
+      "vite": "^6.2.2",
+      "tailwindcss": "^3.4.11",
+      "@vitejs/plugin-react-swc": "^3.10.2"
+    }
+  },
+  "key_features": [
+    "Aplicação React com TypeScript",
+    "Capacitor para mobile (iOS/Android)",
+    "Firebase para backend/autenticação",
+    "Tailwind CSS para styling",
+    "Sistema de gestão de utilizadores",
+    "Funcionalidades de sincronização automática",
+    "Geração de relatórios PDF",
+    "Sistema de obras e atribuições",
+    "Autenticação e autorização",
+    "PWA capabilities"
+  ],
+  "mobile_support": {
+    "ios": {
+      "platform": "iOS 14.0+",
+      "views": ["LoginView.swift", "UserManagementView.swift"],
+      "pods": ["Capacitor", "CapacitorSplashScreen", "CapacitorStatusBar"]
+    },
+    "android": {
+      "platform": "Android API 21+",
+      "build_files": ["build.gradle", "capacitor.build.gradle"]
+    }
+  },
+  "firebase_integration": {
+    "services": ["Authentication", "Firestore", "Storage"],
+    "config_files": [
+      "src/firebase/config.ts",
+      "src/firebase/authConfig.ts",
+      "src/firebase/firestoreConfig.ts"
+    ]
+  },
+  "src_structure": {
+    "components": "UI components e componentes customizados",
+    "pages": "Páginas principais da aplicação",
+    "services": "Serviços de backend e APIs",
+    "hooks": "React hooks customizados",
+    "utils": "Utilitários e funções auxiliares",
+    "firebase": "Configurações e integrações Firebase",
+    "admin": "Painel administrativo"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "node dist/server/node-build.mjs",
+    "test": "vitest --run",
+    "typecheck": "tsc --noEmit --skipLibCheck"
+  },
+  "deployment": {
+    "platforms": ["Netlify", "Vercel"],
+    "mobile": ["iOS App Store", "Google Play Store"],
+    "pwa": "Progressive Web App support"
+  },
+  "backup_notes": [
+    "Este backup inclui toda a estrutura do projeto",
+    "Configurações Firebase protegidas em arquivos separados",
+    "Dependências mobile (Capacitor) configuradas",
+    "Sistema de sincronização automática implementado",
+    "Funcionalidades administrativas incluídas",
+    "Suporte completo para iOS e Android"
+  ]
+}
