@@ -2215,7 +2215,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `�����️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
+              `������️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -5081,6 +5081,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {hasPermission("piscinas", "create")
                         ? "✅ Sim"
                         : "❌ Não"}
+                    </div>
+                    <div>
+                      Obras - Create:{" "}
+                      {hasPermission("obras", "create") ? "✅ Sim" : "❌ Não"}
                     </div>
                   </div>
                   <button
