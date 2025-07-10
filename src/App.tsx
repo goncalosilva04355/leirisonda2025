@@ -2531,7 +2531,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         title={
                           autoSyncActive
                             ? "Sincronização Automática Ativa"
-                            : "Sincroniza��ão Automática Inativa"
+                            : "Sincronização Automática Inativa"
                         }
                       ></div>
                     </div>
@@ -3651,7 +3651,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr��xima manutenção:{" "}
+                                Pr���xima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -3847,7 +3847,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����������������� {maint.clientContact}
+                                        ���������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3876,7 +3876,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {maint.observations && (
                                 <div className="col-span-2">
                                   <span className="font-medium">
-                                    Observaç��es:
+                                    Observações:
                                   </span>{" "}
                                   {maint.observations}
                                 </div>
@@ -5116,7 +5116,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condi���ões do terreno"]',
+                                    'textarea[placeholder*="Condi��ões do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -6388,7 +6388,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configurações
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Relatórios, configurações e gestão de utilizadores
+                        Configurações do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
@@ -8956,7 +8956,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    👤 {assignedUser.name}
+                                    ���� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -10094,7 +10094,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observaç����es e próxima manutenção</span>
+                  <span>Observaç����es e próxima manuten��ão</span>
                 </div>
               </div>
             </div>
