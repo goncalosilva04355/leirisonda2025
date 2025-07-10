@@ -497,6 +497,8 @@ export const UserPermissionsManager: React.FC = () => {
     switch (role) {
       case "super_admin":
         return "bg-red-100 text-red-800";
+      case "admin":
+        return "bg-purple-100 text-purple-800";
       case "manager":
         return "bg-blue-100 text-blue-800";
       default:
@@ -508,6 +510,8 @@ export const UserPermissionsManager: React.FC = () => {
     switch (role) {
       case "super_admin":
         return "Super Admin";
+      case "admin":
+        return "Administrador";
       case "manager":
         return "Gestor";
       default:
