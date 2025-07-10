@@ -1798,7 +1798,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
           console.log("�� Notifications enabled successfully");
         } else {
-          console.warn("❌ Notification permission denied or dismissed");
+          console.warn("��� Notification permission denied or dismissed");
         }
         return permission;
       } catch (error) {
@@ -2642,7 +2642,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isInProgress && isAssignedToUser;
+                            return isInProgress;
                           });
                           return inProgressWorks.length;
                         })()}
@@ -4038,7 +4038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manuten��ão "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -6643,7 +6643,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
-                            {enableMapsRedirect ? "�� Ativo" : "⭕ Inativo"}
+                            {enableMapsRedirect ? "�� Ativo" : "��� Inativo"}
                           </p>
                         </div>
                       </div>
