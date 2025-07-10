@@ -36,6 +36,7 @@ import { AdvancedSettings } from "./components/AdvancedSettings";
 import InstallPromptSimple from "./components/InstallPromptSimple";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
+import { UserAssignmentHelper } from "./components/UserAssignmentHelper";
 
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
@@ -1840,7 +1841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("���️ Opening Google Maps:", mapsUrl);
+      console.log("����️ Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -1975,7 +1976,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
+            `��️ Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
             syncError,
           );
         }
@@ -2479,7 +2480,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <span className="text-sm text-gray-900">
                                 {work.workPerformed ||
                                   work.type ||
-                                  "Não especificado"}
+                                  "N��o especificado"}
                               </span>
                             </div>
 
