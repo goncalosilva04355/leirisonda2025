@@ -2730,7 +2730,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isNotCompleted && isAssignedToUser;
+                            return true; // Mostrar todas as obras
                           });
                           return assignedWorks.length;
                         })()}
@@ -3827,7 +3827,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    ����� {maint.location}
+                                    ������� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -10563,7 +10563,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     {selectedPool.observations && (
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Observações
+                          Observaç��es
                         </h3>
                         <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
                           {selectedPool.observations}
