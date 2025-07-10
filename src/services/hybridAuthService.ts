@@ -143,20 +143,21 @@ class HybridAuthService {
     if (this.useFirebase) {
       const auth = getFirebaseAuth();
       if (auth?.currentUser) {
-        return {
-          uid: auth.currentUser.uid,
-          email: auth.currentUser.email!,
-          name:
-            auth.currentUser.email === "gongonsilva@gmail.com"
-              ? "Gonçalo Fonseca"
-              : "Utilizador Firebase",
-          role:
-            auth.currentUser.email === "gongonsilva@gmail.com"
-              ? "super_admin"
-              : "technician",
-          active: true,
-          createdAt: new Date().toISOString(),
-        };
+        const authorizedUser = getAuthorizedUser(auth.currentUser.email!);
+        if (authorizedUser) {
+          return {
+            uid: auth.currentUser.uid,
+            email: auth.currentUser.email!,
+            name: authorizedUser.name,
+            role: authorizedUser.role,
+            active: true,
+            createdAt: new Date().toISOString(),
+          };
+        } else {
+          // Utilizador não autorizado, limpar sessão
+          await this.logout();
+          return null;
+        }
       }
     }
 
