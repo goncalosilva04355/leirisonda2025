@@ -1,4 +1,4 @@
-// Legacy Firebase configuration - now using robust implementation
-// This file maintains backward compatibility while using the new robust Firebase service
+// Firebase configuration using simple, direct implementation
+// This avoids complex async patterns that can cause app destruction issues
 
-export * from "./compatConfig";
+export * from "./simpleConfig";
