@@ -1809,7 +1809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
           console.log("�� Notifications enabled successfully");
         } else {
-          console.warn("❌ Notification permission denied or dismissed");
+          console.warn("�� Notification permission denied or dismissed");
         }
         return permission;
       } catch (error) {
@@ -2145,7 +2145,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
-    // Firebase handles settings persistence automatically
+
+    // Save to localStorage
+    try {
+      localStorage.setItem("enableMapsRedirect", JSON.stringify(enabled));
+      console.log(
+        `✅ Configuração Google Maps guardada: ${enabled ? "ativado" : "desativado"}`,
+      );
+    } catch (error) {
+      console.error("❌ Erro ao guardar configuração Google Maps:", error);
+    }
 
     // Show notification
     console.log(`🗺️ Google Maps ${enabled ? "ativado" : "desativado"}`);
@@ -10821,7 +10830,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Cliente
                         </label>
                         <p className="text-gray-900">
-                          {selectedWork.client || "Não especificado"}
+                          {selectedWork.client || "N��o especificado"}
                         </p>
                         {selectedWork.contact && (
                           <button
