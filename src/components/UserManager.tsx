@@ -499,9 +499,16 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
                     <button
                       onClick={() => handleEditUser(user)}
                       className="p-2 text-blue-600 hover:bg-blue-50 rounded"
-                      title="Editar"
+                      title="Editar utilizador"
                     >
                       <Edit className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleEditPermissions(user.email)}
+                      className="p-2 text-purple-600 hover:bg-purple-50 rounded"
+                      title="Editar permissões"
+                    >
+                      <Shield className="h-4 w-4" />
                     </button>
                     {user.email !== currentUser?.email && (
                       <button
