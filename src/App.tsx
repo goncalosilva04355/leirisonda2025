@@ -1374,7 +1374,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenç��o agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -10101,7 +10101,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => {
-                      navigateToSection("configuracoes");
+                      setActiveAdminTab("configuracoes");
+                      navigateToSection("administracao");
                       setSidebarOpen(false);
                     }}
                     className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
@@ -10806,7 +10807,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Dimens��es
+                            Dimensões
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.dimensions || "Não especificado"}
