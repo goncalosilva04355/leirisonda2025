@@ -30,8 +30,9 @@ class AuthService {
     if (this.initialized) return true;
 
     try {
-      this.auth = await getAuthService();
-      this.db = await attemptFirestoreInit();
+      await firebaseService.initialize();
+      this.auth = await firebaseService.getAuth();
+      this.db = await firebaseService.getFirestore();
 
       if (this.auth) {
         this.initialized = true;
