@@ -85,6 +85,7 @@ class EmergencyLogoutService {
       console.log("🔥 Forcing Firebase logout...");
 
       // Force sign out current Firebase user
+      const auth = await getAuthSafe();
       if (isFirebaseReady() && auth && auth.currentUser) {
         console.log(`🚪 Logging out Firebase user: ${auth.currentUser.email}`);
         await signOut(auth);
