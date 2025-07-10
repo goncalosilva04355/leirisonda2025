@@ -261,11 +261,12 @@ function App() {
   // const dataSync = useDataSyncSafe(); // Temporarily disabled - useState error
   const dataSync = universalSync; // Use universalSync as fallback
 
-  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  const firebaseAutoFix = useAutoFirebaseFix();
+  // FIREBASE AUTO-CORREÇÃO - Disabled (Firestore not available)
+  // const firebaseAutoFix = useAutoFirebaseFix();
 
-  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
-  const userMigration = useAutoUserMigration();
+  // AUTO-MIGRAÇÃO DE UTILIZADORES - Disabled (Firestore not available)
+  // const userMigration = useAutoUserMigration();
+  const userMigration = { status: { completed: false, migrated: 0 } };
 
   // Log migration status changes
   useEffect(() => {
@@ -1614,7 +1615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("������ Address clicked:", address);
+    console.log("������� Address clicked:", address);
     console.log("��️ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -3215,7 +3216,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç��o</span>
+                      <span>Agendar Manutenç���o</span>
                     </button>
                   </div>
                 </div>
@@ -8877,7 +8878,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               className="bg-white p-2 rounded-md shadow-md"
             >
               <ArrowLeft className="h-6 w-6 text-gray-600" />
-                        </button>
+            </button>
             <button
               onClick={() => {
                 try {
@@ -8886,9 +8887,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                   // Simple test without imports
                   setTimeout(() => {
-                    alert("✅ REALTIME DATABASE STATUS:\n\n📱 App: Working\n🔥 Database URL: https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app/\n\n🎯 TO ENABLE:\n1. Go to Firebase Console\n2. Database section\n3. Create Realtime Database\n4. Choose europe-west1\n\nYour app is 100% functional with local storage!");
+                    alert(
+                      "✅ REALTIME DATABASE STATUS:\n\n📱 App: Working\n🔥 Database URL: https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app/\n\n🎯 TO ENABLE:\n1. Go to Firebase Console\n2. Database section\n3. Create Realtime Database\n4. Choose europe-west1\n\nYour app is 100% functional with local storage!",
+                    );
                   }, 500);
-
                 } catch (error: any) {
                   alert(`❌ Simple test error: ${error.message}`);
                 }
