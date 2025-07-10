@@ -85,21 +85,28 @@ class LocalAuthService {
         };
       }
 
-      // Simple validation - accept any email that looks like an email
+      // Verificar se o email está autorizado
+      const authorizedUser = getAuthorizedUser(email);
+      if (!authorizedUser) {
+        return {
+          success: false,
+          error:
+            "Email não autorizado. Contacte o administrador para obter acesso.",
+        };
+      }
+
+      // Simple validation - check email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         return { success: false, error: "Formato de email inválido" };
       }
 
-      // Create user profile
+      // Create user profile with authorized user data
       const userProfile: UserProfile = {
         uid: `local_${Date.now()}`,
         email: email.toLowerCase(),
-        name:
-          email === "gongonsilva@gmail.com"
-            ? "Gonçalo Fonseca"
-            : "Utilizador Local",
-        role: email === "gongonsilva@gmail.com" ? "super_admin" : "technician",
+        name: authorizedUser.name,
+        role: authorizedUser.role,
         active: true,
         createdAt: new Date().toISOString(),
       };
