@@ -417,7 +417,7 @@ function App() {
         try {
           await addCliente(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("��️ Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
@@ -3969,6 +3969,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               users.length,
                               users,
                             );
+
+                            // Check localStorage directly
+                            const localStorageUsers =
+                              localStorage.getItem("app-users");
+                            console.log(
+                              "💾 USERS NO LOCALSTORAGE (app-users):",
+                              localStorageUsers,
+                            );
+
+                            if (localStorageUsers) {
+                              try {
+                                const parsed = JSON.parse(localStorageUsers);
+                                console.log(
+                                  "✅ PARSED USERS:",
+                                  parsed.length,
+                                  parsed,
+                                );
+                              } catch (e) {
+                                console.error(
+                                  "❌ ERRO AO FAZER PARSE DOS USERS:",
+                                  e,
+                                );
+                              }
+                            }
+
                             return null;
                           })()}
                           <p className="text-sm text-gray-600 mb-2">
@@ -5871,7 +5896,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador não suporta notificaç���es.",
+                                  "Este navegador não suporta notificaç�����es.",
                                 );
                               }
                             }}
@@ -7103,7 +7128,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ������� {work.contact}
+                                        �������� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -7153,7 +7178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  �����{work.budget}
+                                  �������{work.budget}
                                 </div>
                               )}
                             </div>
