@@ -5295,7 +5295,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             })
                           }
                         >
-                          <option value="completed">Concluída</option>
+                          <option value="completed">Conclu��da</option>
                           <option value="pending">Pendente</option>
                           <option value="in_progress">Em Progresso</option>
                         </select>
@@ -8496,9 +8496,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <Suspense fallback={<div className="fixed top-4 right-4 bg-gray-100 p-2 rounded animate-pulse">⏳</div>}>
           <SimpleFirebaseDebug />
         </Suspense>
-        <Suspense fallback={<div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">A carregar...</div>}>
+                <Suspense fallback={<div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">A carregar...</div>}>
           <LoginPage
-          onLogin={async (email: string, password: string) => {
+            onLogin={async (email: string, password: string) => {
             console.log("🔐 Login attempt for:", email);
 
             // Clear any previous errors
