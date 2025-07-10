@@ -1187,7 +1187,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manutenções: ${maintenance.length}
+- Total de Manuten��ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -1445,7 +1445,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura������es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n���� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura������es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -8603,14 +8603,61 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <SimpleFirebaseDebug />
         </Suspense>
         */}
-        <Suspense
+        {/* <Suspense
           fallback={
             <div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">
               A carregar...
             </div>
           }
         >
-          <LoginPage
+          <LoginPage */}
+        <div className="min-h-screen bg-blue-600 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              Login Leirisonda
+            </h2>
+            <form onSubmit={handleLogin}>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={loginForm.email}
+                  onChange={(e) =>
+                    setLoginForm({ ...loginForm, email: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={loginForm.password}
+                  onChange={(e) =>
+                    setLoginForm({ ...loginForm, password: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              {loginError && (
+                <div className="mb-4 text-red-600 text-sm">{loginError}</div>
+              )}
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Entrar
+              </button>
+            </form>
+          </div>
+        </div>
+        {/* </LoginPage
             onLogin={async (email: string, password: string) => {
               console.log("🔐 Login attempt for:", email);
 
