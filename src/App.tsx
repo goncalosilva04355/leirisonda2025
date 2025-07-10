@@ -131,10 +131,10 @@ function App() {
 
   // Debug logging disabled for production
 
-  // Monitoramento de integridade de dados e restauração de utilizadores
+  // Monitoramento de integridade de dados e restauração de utilizadores - Temporarily disabled
   useEffect(() => {
     // Restaurar utilizadores automaticamente se necessário
-    userRestoreService.autoRestore();
+    // userRestoreService.autoRestore(); // Temporarily disabled
 
     // Cleanup ao desmontar componente
     return () => {
@@ -3810,7 +3810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi������ões do Furo
+                              Medi��������ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4213,7 +4213,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               waterLevel:
                                 (
                                   form.querySelector(
-                                    'input[placeholder*="Nível da Água"]',
+                                    'input[placeholder*="Nível da ��gua"]',
                                   ) as HTMLInputElement
                                 )?.value || "",
                               pumpDepth:
@@ -4632,7 +4632,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
                           <option value="manutencao">Em Manutenção</option>
-                          <option value="construcao">Em Construção</option>
+                          <option value="construcao">Em Construç��o</option>
                         </select>
                       </div>
                     </div>
@@ -4735,7 +4735,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenção
+                          Próxima Manutenç��o
                         </label>
                         <input
                           type="date"
@@ -6834,7 +6834,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  ���� {work.address || work.location}
+                                  ��� {work.address || work.location}
                                 </button>
                               </div>
                               <div>
