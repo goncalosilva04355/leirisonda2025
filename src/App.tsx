@@ -63,8 +63,8 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
 
 // SECURITY: RegisterForm removed - only super admin can create users
-import { AdminLogin } from "./admin/AdminLogin";
-import { AdminPage } from "./admin/AdminPage";
+// import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
+// import { AdminPage } from "./admin/AdminPage"; // Now lazy loaded
 // Lazy loading para componentes pesados
 const LoginPage = lazy(() =>
   import("./pages/LoginPage").then((module) => ({ default: module.LoginPage })),
@@ -9031,7 +9031,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç��es Detalhadas
+                          Informaç���es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
