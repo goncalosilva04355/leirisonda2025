@@ -5004,7 +5004,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             })
                           }
                         >
-                          <option value="">Selecionar t��cnico</option>
+                          <option value="">Selecionar técnico</option>
                           {users
                             .filter((user) => user.role !== "super_admin")
                             .map((user) => (
@@ -7410,7 +7410,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar voltagem</option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif��sico)</option>
+                            <option value="400V">400V (trif���sico)</option>
                           </select>
                         </div>
                       </div>
@@ -8879,23 +8879,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🔥 Attempting to enable Firestore...");
-                const { tryEnableFirestore, openFirebaseConsole } =
-                  await import("./utils/enableFirestore");
+                console.log("🔍 Diagnosing Firestore connection...");
+                const { diagnoseFirestoreConnection } = await import(
+                  "./utils/firestoreConnectionTest"
+                );
 
-                const results = await tryEnableFirestore();
-                console.log("🔥 Firestore Enable Results:", results);
+                const results = await diagnoseFirestoreConnection();
+                console.log("📊 Firestore Connection Diagnosis:", results);
 
-                if (results.success) {
-                  alert("✅ Firestore enabled successfully! Test again.");
-                } else {
-                  // Show instructions and try to open console
-                  console.log(results.instructions);
-                  openFirebaseConsole();
-                  alert(
-                    `⚠️ Firestore needs manual setup.\n\nOpening Firebase Console...\n\nFollow the instructions in the browser console.`,
-                  );
+                let message = `Firestore Diagnosis:\n✅ Config: ${results.configCheck}\n✅ Network: ${results.networkCheck}\n✅ Rules: ${results.rulesCheck}\n✅ Success: ${results.connectionSuccess}`;
+
+                if (results.projectId) {
+                  message += `\n\nProject: ${results.projectId}`;
                 }
+
+                if (results.errors.length > 0) {
+                  message += `\n\n❌ Errors:\n${results.errors.join("\n")}`;
+                }
+
+                if (results.suggestions.length > 0) {
+                  message += `\n\n💡 Suggestions:\n${results.suggestions.join("\n")}`;
+                }
+
+                alert(message);
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
               title="Test Firebase Connectivity"
