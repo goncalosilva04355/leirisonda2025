@@ -5,13 +5,30 @@ import "./index.css";
 
 console.log("🚀 Main.tsx loaded - starting app");
 
-// Basic error handling without Firestore interference
-window.addEventListener("unhandledrejection", (event) => {
-  if (event.reason?.message?.includes("firestore")) {
-    console.warn("🚫 Firestore error suppressed:", event.reason.message);
-    event.preventDefault();
-  }
-});
+// Enhanced error handling for Firebase issues
+if (typeof window !== "undefined") {
+  window.addEventListener("unhandledrejection", (event) => {
+    if (
+      event.reason?.message?.includes("firestore") ||
+      event.reason?.message?.includes("ReadableStream") ||
+      event.reason?.stack?.includes("firebase")
+    ) {
+      console.warn("🚫 Firebase error suppressed:", event.reason.message);
+      event.preventDefault();
+    }
+  });
+
+  window.addEventListener("error", (event) => {
+    if (
+      event.error?.message?.includes("firestore") ||
+      event.error?.message?.includes("ReadableStream") ||
+      event.error?.stack?.includes("firebase")
+    ) {
+      console.warn("🚫 Firebase error suppressed via error event");
+      event.preventDefault();
+    }
+  });
+}
 
 // ReadableStream polyfill is handled by ./polyfills.ts
 console.log("🔧 ReadableStream polyfill loaded via polyfills.ts");
