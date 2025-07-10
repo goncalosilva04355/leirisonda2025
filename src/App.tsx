@@ -397,7 +397,7 @@ function App() {
 
       // Preparar dados da notificação
       const notificationData = {
-        title: "🔔 Nova Obra Atribuída",
+        title: "�� Nova Obra Atribuída",
         body: `${workData.title} - ${workData.client}`,
         icon: "/icon.svg",
         badge: "/icon.svg",
@@ -2698,11 +2698,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Obras Atribuídas
+                          Todas as Obras
                         </h3>
-                        <p className="text-sm text-gray-500">
-                          Atribuídas a mim
-                        </p>
+                        <p className="text-sm text-gray-500">No sistema</p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
@@ -7052,7 +7050,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest���o da base de dados de clientes
+                          Gest����o da base de dados de clientes
                         </p>
                       </div>
                     </div>
@@ -8907,7 +8905,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa��ões
+                        Observa����es
                       </label>
                       <textarea
                         defaultValue={editingMaintenance?.observations}
