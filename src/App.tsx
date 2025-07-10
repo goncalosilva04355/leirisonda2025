@@ -2739,48 +2739,35 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 </div>
 
-                {/* Lista das Últimas 3 Obras Atribuídas */}
-                {(() => {
-                  // Filtrar obras atribuídas ao utilizador atual (excluir concluídas) e pegar apenas as últimas 3
-                  const assignedWorks = works
-                    .filter((w) => {
-                      const isNotCompleted =
-                        w.status !== "completed" && w.status !== "concluida";
-                      const isAssignedToUser =
-                        currentUser &&
-                        // Verificar assignedTo (campo legacy)
-                        ((w.assignedTo &&
-                          (w.assignedTo === currentUser.name ||
-                            w.assignedTo
-                              .toLowerCase()
-                              .includes(currentUser.name.toLowerCase()) ||
-                            currentUser.name
-                              .toLowerCase()
-                              .includes(w.assignedTo.toLowerCase()))) ||
+                                {/* Lista das Últimas 3 Obras */}
+                {works.length > 0 && (
+                  <div className="bg-white rounded-lg shadow-sm">
+                    <div className="flex items-center p-4 border-b border-gray-100">
+                      <Building2 className="h-5 w-5 text-purple-600 mr-3" />
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Últimas 3 Obras
+                      </h2>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      {works.slice(0, 3).map((work) => {
+                        // Verificar se a obra está atribuída ao utilizador atual
+                        const isAssignedToUser = currentUser && (
+                          // Verificar assignedTo (campo legacy)
+                          (work.assignedTo && (
+                            work.assignedTo === currentUser.name ||
+                            work.assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
+                            currentUser.name.toLowerCase().includes(work.assignedTo.toLowerCase())
+                          )) ||
                           // Verificar assignedUsers array
-                          (w.assignedUsers &&
-                            w.assignedUsers.some(
-                              (user) =>
-                                user.name === currentUser.name ||
-                                user.id === currentUser.id,
-                            )) ||
+                          (work.assignedUsers && work.assignedUsers.some(user =>
+                            user.name === currentUser.name ||
+                            user.id === currentUser.id
+                          )) ||
                           // Verificar assignedUserIds array
-                          (w.assignedUserIds &&
-                            w.assignedUserIds.includes(currentUser.id)));
-                      return isNotCompleted && isAssignedToUser;
-                    })
-                    .slice(0, 3); // Pegar apenas as últimas 3 obras
+                          (work.assignedUserIds && work.assignedUserIds.includes(currentUser.id))
+                        );
 
-                  return assignedWorks.length > 0 ? (
-                    <div className="bg-white rounded-lg shadow-sm">
-                      <div className="flex items-center p-4 border-b border-gray-100">
-                        <Building2 className="h-5 w-5 text-purple-600 mr-3" />
-                        <h2 className="text-lg font-semibold text-gray-900">
-                          Últimas 3 Obras Atribuídas
-                        </h2>
-                      </div>
-                      <div className="p-4 space-y-3">
-                        {assignedWorks.map((work) => (
+                        return (
                           <div
                             key={work.id}
                             className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
@@ -3805,7 +3792,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��������������� {maint.clientContact}
+                                        ���������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
